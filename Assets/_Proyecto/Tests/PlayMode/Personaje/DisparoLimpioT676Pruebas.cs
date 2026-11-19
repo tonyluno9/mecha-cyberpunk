@@ -76,10 +76,8 @@ namespace MechaCyberpunk.Tests.Personaje
             sonidos.Ids.Clear();
             yield return Disparar(); // al muñeco
             yield return Esperar(0.4f);
-            foreach (string id in sonidos.Ids)
-            {
-                Assert.IsFalse(id.Contains("IMPACTO"), "Pegarle a una persona no suena: " + id);
-            }
+            // T-1472: pegarle a una persona suena una vez, con el impacto de carne.
+            Assert.AreEqual(1, sonidos.Ids.FindAll(i => i == "IMP_BALA_CARNE" || i == "IMP_BALA_CABEZA").Count, "Un impacto de carne (o de cabeza) por tiro: " + string.Join(",", sonidos.Ids));
             Object.Destroy(muneco);
             Caja(new Vector3(0f, 1f, 8f), new Vector3(6f, 3f, 0.5f)); // ahora una pared en la mira
             yield return null;
@@ -90,10 +88,10 @@ namespace MechaCyberpunk.Tests.Personaje
             // T-977: el tiro que falla suena una vez en la pared (ARM_BALA_IMPACTO_CONCRETO); lo demás es el disparo de siempre.
             foreach (string id in sonidos.Ids)
             {
-                Assert.IsTrue(id == "ARM_PIS_DISPARO" || id == "ARM_CASQUILLO" || id == "ARM_PIS_RECARGA" || id == PistolaAPie.SonidoImpactoSuperficie,
+                Assert.IsTrue(id == "ARM_W01_DISPARO" || id == "ARM_CASQUILLO" || id == "ARM_PIS_RECARGA" || id == PistolaAPie.SonidoImpactoSuperficie,
                     "Solo el disparo del arma, el casquillo y el impacto en la pared: " + id);
             }
-            Assert.Contains("ARM_PIS_DISPARO", sonidos.Ids);
+            Assert.Contains("ARM_W01_DISPARO", sonidos.Ids);
             Assert.AreEqual(1, sonidos.Ids.FindAll(i => i == PistolaAPie.SonidoImpactoSuperficie).Count, "Un solo impacto en la pared por tiro");
         }
 

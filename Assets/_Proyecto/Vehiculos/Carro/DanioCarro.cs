@@ -96,6 +96,7 @@ namespace MechaCyberpunk.Vehiculos.Carro
         private float finArdiendo;
         private float finDestello;
         private bool ardiendo;
+        private int bucleFuego = Sonidos.SinBucle;
         private float inicioArdiendo;
         private float quietoDesde = -1f;
         private ParticleSystem[] llamasChatarra;
@@ -183,7 +184,11 @@ namespace MechaCyberpunk.Vehiculos.Carro
                 return;
             }
             proximoChoque = Time.time + config.SegundosEntreChoques;
-            Sonidos.ReproducirEn(rapidez >= config.UmbralChoqueFuerte ? "VEH_CHOQUE_FUERTE" : "VEH_CHOQUE_LEVE", transform.position);
+            // T-1475: choque leve, fuerte y, si es muy fuerte, también cristal roto.
+            foreach (string idChoque in ReglasSonidoVehiculoT1475.IdsChoque(rapidez, config.UmbralChoque, config.UmbralChoqueFuerte))
+            {
+                Sonidos.ReproducirEn(idChoque, transform.position);
+            }
             float danio = DanioDeChoque(rapidez, config.UmbralChoque, config.DanioPorChoque, calculo.Maxima, config.DanioMaximoPorChoque);
             if (danio <= 0f)
             {
@@ -256,6 +261,7 @@ namespace MechaCyberpunk.Vehiculos.Carro
             if (ardiendo && Explotado && Time.time >= finArdiendo)
             {
                 ardiendo = false;
+                DetenerSonidoFuego();
                 Apagar(fuego);
                 Apagar(humo);
                 if (luz != null)
@@ -279,6 +285,7 @@ namespace MechaCyberpunk.Vehiculos.Carro
             {
                 // T-692: aviso claro antes de explotar: ya salen humo y fuego; además chisporrotea (T-696).
                 Sonidos.ReproducirEn(IdAvisoFuego, transform.position);
+                IniciarSonidoFuego();
                 // T-532: con alguien adentro, aviso para que se baje antes de que explote.
                 IMontable montable = GetComponent<IMontable>();
                 if (montable != null && montable.Ocupado)
@@ -317,6 +324,31 @@ namespace MechaCyberpunk.Vehiculos.Carro
             }
         }
 
+        // T-1472: el fuego chico suena en bucle siguiendo al carro mientras arde; se corta al apagarse, desactivarse o destruirse.
+        private void IniciarSonidoFuego()
+        {
+            if (bucleFuego == Sonidos.SinBucle)
+            {
+                bucleFuego = Sonidos.ReproducirBucle(LimiteSonidoExplosion.IdFuegoChico, transform);
+            }
+        }
+
+        private void DetenerSonidoFuego()
+        {
+            if (bucleFuego != Sonidos.SinBucle)
+            {
+                Sonidos.DetenerBucle(bucleFuego);
+                bucleFuego = Sonidos.SinBucle;
+            }
+        }
+
+        /// <summary>true mientras suena el bucle del fuego (para pruebas).</summary>
+        public bool FuegoSonando => bucleFuego != Sonidos.SinBucle;
+
+        private void OnDisable() => DetenerSonidoFuego();
+
+        private void OnDestroy() => DetenerSonidoFuego();
+
         private static void Apagar(ParticleSystem sistema)
         {
             if (sistema != null)
@@ -347,6 +379,7 @@ namespace MechaCyberpunk.Vehiculos.Carro
             gameObject.SendMessage(MensajeExplosion, SendMessageOptions.DontRequireReceiver); // T-692: las patrullas dejan de manejar
 
             Sonidos.ReproducirEn("VEH_CHOQUE_FUERTE", centro);
+            IniciarSonidoFuego();
             UltimaExplosion = ExplosionCarro.Crear(centro, config.RadioExplosion);
             DanarAlrededor(centro);
             SumarCalorSiEstaCerca(centro);

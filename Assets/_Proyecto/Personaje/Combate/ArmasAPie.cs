@@ -180,11 +180,8 @@ namespace MechaCyberpunk.Personaje.Combate
             }
             armaActiva = arma;
             Aplicar();
-            Sonidos.Reproducir("ARM_CAMBIAR");
-            if (arma == ArmaAPie.Pistola)
-            {
-                Sonidos.Reproducir("ARM_PIS_SACAR");
-            }
+            // T-1472: sacar un arma suena ARM_W06_SACAR (la de mano más parecida); los puños, el cambio de siempre.
+            Sonidos.Reproducir(SonidosArmasT1472.IdSacar(arma) ?? SonidosArmasT1472.CambiarPunos);
             if (arma != ArmaAPie.Punos)
             {
                 // T-533: los guardias de Nova (y quien escuche) ven que sacaste un arma.

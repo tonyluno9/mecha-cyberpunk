@@ -89,12 +89,12 @@ namespace MechaCyberpunk.Tests.Trafico
         }
 
         [Test]
-        public void Config_CincoEstrellasTraeMasPatrullasYDrones_YRadioVacia()
+        public void Config_CincoEstrellasTraeMasPatrullasYDrones_YRadioConID()
         {
             ConfigPersecucion config = ScriptableObject.CreateInstance<ConfigPersecucion>();
             Assert.GreaterOrEqual(config.PatrullasExtraCincoEstrellas, 1);
             Assert.GreaterOrEqual(config.DronesExtraCincoEstrellas, 1);
-            Assert.IsEmpty(config.IdSonidoRadio, "Sin clip de radio todavía");
+            Assert.AreEqual("POL_RADIO_AVISO", config.IdSonidoRadio);
             UnityEngine.Object.DestroyImmediate(config);
         }
     }

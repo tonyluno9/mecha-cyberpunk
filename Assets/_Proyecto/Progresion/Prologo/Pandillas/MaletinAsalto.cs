@@ -149,6 +149,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
                 return;
             }
             recogido = true;
+            Sonidos.ReproducirEn("INT_MALETIN_CERRAR", transform.position); // T-1474
             Recogido?.Invoke();
         }
     }

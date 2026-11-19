@@ -302,10 +302,12 @@ namespace MechaCyberpunk.Personaje.Combate
                     return;
                 }
                 bool pidio = !controlador.EntradaBloqueada && (d.Automatica ? atacar.action.IsPressed() : atacar.action.WasPressedThisFrame());
-                if (!pidio && disparabaAutomatica && activa == ArmaAPie.Fusil)
+                bool sigueRafaga = pidio && activa == ArmaAPie.Fusil && actual.Balas > 0;
+                if (colaRafaga.Avanzar(dispararEsteFrame, sigueRafaga))
                 {
-                    Sonidos.ReproducirEn("ARM_FUS_RAFAGA_COLA", transform.position);
+                    Sonidos.Reproducir(SonidosArmasT1472.ColaCalle); // T-1472: cola de la calle al soltar o acabarse la ráfaga
                 }
+                dispararEsteFrame = false;
                 disparabaAutomatica = pidio && d.Automatica;
                 // T-936: agachado, al pulsar disparar se para solo y dispara con esa misma pulsación (si hay techo encima y no cabe de pie, dispara agachado).
                 bool agachado = !enCarro && cubierta != null && cubierta.AgachadoLibre;
@@ -320,6 +322,7 @@ namespace MechaCyberpunk.Personaje.Combate
                         controlador.MirarAlDisparar(); // T-943: si dispara hacia atrás o de lado, el cuerpo gira hacia allá
                     }
                     Disparar(activa, d);
+                    dispararEsteFrame = activa == ArmaAPie.Fusil;
                 }
                 else if (pidio && !actual.Recargando && actual.Balas <= 0 && Time.time >= finEsperaVacio)
                 {
@@ -445,40 +448,17 @@ namespace MechaCyberpunk.Personaje.Combate
         }
         private readonly System.Collections.Generic.List<SonidoDiferido> diferidos = new System.Collections.Generic.List<SonidoDiferido>();
         private bool disparabaAutomatica;
+        private readonly ReglaColaRafaga colaRafaga = new ReglaColaRafaga();
+        private bool dispararEsteFrame;
 
         private const float EsperaClicVacio = 0.3f;
         private float finEsperaVacio;
 
-        /// <summary>T-593: el ID de sonido del disparo de cada arma (ARM_PIS/ESC/FUS/SNI).</summary>
-        public static string IdDisparo(ArmaAPie arma)
-        {
-            switch (arma)
-            {
-                case ArmaAPie.Escopeta: return "ARM_ESC_DISPARO";
-                case ArmaAPie.Fusil: return "ARM_FUS_DISPARO";
-                case ArmaAPie.Sniper: return "ARM_SNI_DISPARO";
-                case ArmaAPie.Subfusil: return "ARM_SUB_DISPARO";
-                case ArmaAPie.Revolver: return "ARM_REV_DISPARO"; // T-1309: mismo clip de siempre (ARM_SNI_DISPARO_01), con su propio ID
-                case ArmaAPie.Lanzagranadas: return "ARM_LGR_DISPARO";
-                case ArmaAPie.RiflePlasma: return "ARM_PLA_DISPARO";
-                default: return "ARM_PIS_DISPARO";
-            }
-        }
+        /// <summary>T-593 / T-1472: el ID de sonido del disparo de cada arma (ver <see cref="SonidosArmasT1472"/>).</summary>
+        public static string IdDisparo(ArmaAPie arma) => SonidosArmasT1472.IdDisparo(arma);
 
-        /// <summary>T-593: el ID de sonido de la recarga de cada arma.</summary>
-        public static string IdRecarga(ArmaAPie arma)
-        {
-            switch (arma)
-            {
-                case ArmaAPie.Escopeta: return "ARM_ESC_RECARGA_CARTUCHO";
-                case ArmaAPie.Lanzagranadas: return "ARM_ESC_RECARGA_CARTUCHO";
-                case ArmaAPie.Fusil: return "ARM_FUS_RECARGA";
-                case ArmaAPie.RiflePlasma: return "ARM_FUS_RECARGA";
-                case ArmaAPie.Sniper: return "ARM_SNI_RECARGA";
-                case ArmaAPie.Subfusil: return "ARM_SUB_RECARGA";
-                default: return "ARM_PIS_RECARGA";
-            }
-        }
+        /// <summary>T-593 / T-1472: el ID de sonido de la recarga de cada arma.</summary>
+        public static string IdRecarga(ArmaAPie arma) => SonidosArmasT1472.IdRecarga(arma);
 
         // T-442: programa un sonido para dentro de unos segundos.
         private void Diferir(string id, float segundos, Vector3 posicion)
@@ -502,13 +482,10 @@ namespace MechaCyberpunk.Personaje.Combate
         private void ProgramarSonidosTrasDisparo(ArmaAPie arma)
         {
             Diferir("ARM_CASQUILLO", SegundosCasquillo, transform.position + Vector3.up * AlturaCasquillo);
-            if (arma == ArmaAPie.Escopeta)
+            string tras = SonidosArmasT1472.IdTrasDisparo(arma);
+            if (tras != null)
             {
-                Diferir("ARM_ESC_BOMBEO", SegundosBombeo, transform.position);
-            }
-            else if (arma == ArmaAPie.Sniper)
-            {
-                Diferir("ARM_SNI_CERROJO", SegundosCerrojo, transform.position);
+                Diferir(tras, arma == ArmaAPie.Escopeta ? SegundosBombeo : SegundosCerrojo, transform.position);
             }
         }
 
@@ -532,7 +509,7 @@ namespace MechaCyberpunk.Personaje.Combate
         }
 
         /// <summary>T-977: el sonido del tiro que falla y pega en una superficie (pared, piso, carro): uno por tiro, aunque la escopeta lance varios perdigones.</summary>
-        public const string SonidoImpactoSuperficie = "ARM_BALA_IMPACTO_CONCRETO";
+        public const string SonidoImpactoSuperficie = ReglaMaterialImpacto.Concreto;
 
         private bool sonoImpactoEsteTiro;
 
@@ -565,7 +542,7 @@ namespace MechaCyberpunk.Personaje.Combate
             // T-448: el armero de la guarida da más daño a las armas de fuego.
             IGuarida guarida = Registro<IGuarida>.Actual;
             float multiplicadorGuarida = 1f + (guarida != null ? guarida.BonoDanioArmas : 0f);
-            Sonidos.ReproducirEn(IdDisparo(arma), origen);
+            Sonidos.Reproducir(IdDisparo(arma)); // T-1472: el disparo del jugador suena en 2D
             EventosRuido.PublicarDisparo(origen);
             RaycastHit tapa = default;
             bool tapada = !desdeCarro && BocaTapada(origen, out tapa);
@@ -616,15 +593,38 @@ namespace MechaCyberpunk.Personaje.Combate
                 mato = objetivo.RecibirDanio(new InfoDanio(danio * ReglaZonaDanio.Multiplicador(cabeza), TipoDanio.Disparo, mejor.point, direccion, null)).CausoKO;
             }
             BalaImpacto?.Invoke(arma, new ImpactoBala(mejor.point, mejor.normal, esCarne, mato, cabeza));
-            if (!esCarne && !sonoImpactoEsteTiro)
+            // T-1472: un impacto por tiro, con el sonido del material golpeado (carne, cabeza, robot, metal, cristal o concreto).
+            if (!sonoImpactoEsteTiro)
             {
                 sonoImpactoEsteTiro = true;
-                Sonidos.ReproducirEn(SonidoImpactoSuperficie, mejor.point);
+                Sonidos.ReproducirEn(IdImpacto(mejor.collider, esCarne, cabeza), mejor.point);
             }
             if (ReglaHuecosBala.HayHueco(mejor.collider.isTrigger, esCarne, SuperficieImpacto.Visible(mejor.collider, mejor.point)))
             {
                 PonerMarca(mejor.point, mejor.normal);
             }
+        }
+
+        /// <summary>T-1472: el ID del impacto según el collider golpeado (componentes y nombres del objeto, la raíz y el material).</summary>
+        public static string IdImpacto(Collider collider, bool esPersona, bool esCabeza)
+        {
+            bool esVehiculo = collider.GetComponentInParent<IMontable>() != null;
+            return ReglaMaterialImpacto.Id(esPersona, esCabeza, esVehiculo, NombresDe(collider));
+        }
+
+        private static string NombresDe(Collider collider)
+        {
+            string nombres = collider.name + " " + collider.transform.root.name;
+            Renderer r = collider.GetComponent<Renderer>();
+            if (r == null)
+            {
+                r = collider.GetComponentInChildren<Renderer>();
+            }
+            if (r != null && r.sharedMaterial != null)
+            {
+                nombres += " " + r.sharedMaterial.name;
+            }
+            return nombres;
         }
 
         // El primer collider que no sea del propio jugador; los triggers se ignoran.

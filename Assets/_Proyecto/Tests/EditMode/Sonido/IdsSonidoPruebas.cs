@@ -14,7 +14,7 @@ namespace MechaCyberpunk.Tests.Sonido
     /// <summary>T-470: cada ID usado en el código tiene archivo, cada archivo está en el catálogo y los AMB van en streaming.</summary>
     public class IdsSonidoPruebas
     {
-        private static readonly string[] Secciones = { "JUG", "PUN", "ARM", "VEH", "PAN", "CAL", "ZON", "ECO", "UI", "MUN", "AMB", "MUS" };
+        private static readonly string[] Secciones = { "JUG", "PUN", "ARM", "VEH", "PAN", "CAL", "ZON", "ECO", "UI", "MUN", "AMB", "MUS", "01_UI", "02_Armas", "03_Impactos", "04_Explosiones", "05_Pasos", "06_Jugador", "07_Interaccion", "08_Consumibles", "09_Vehiculos", "10_Policia" }; // T-1471: y las 10 carpetas nuevas
         private static readonly Regex Literal = new Regex("\"((?:JUG|PUN|ARM|VEH|PAN|CAL|ZON|ECO|UI|MUN|AMB|MUS)_[A-Z0-9_]+)\"");
         private static readonly Regex Variante = new Regex(@"^(.+?)(_\d\d)?$");
 

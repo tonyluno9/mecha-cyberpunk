@@ -74,6 +74,11 @@ namespace MechaCyberpunk.IA.APie
             bool acierta = libre && Azar() <= probabilidad;
             if (!acierta)
             {
+                // T-1472: la bala enemiga que falla pasa pegada al jugador: zumbido (a menos de ~2 m de él).
+                if (libre && MechaCyberpunk.Personaje.Combate.ReglaMaterialImpacto.Zumba(Vector3.Distance(punto, pecho)))
+                {
+                    Sonidos.ReproducirEn(MechaCyberpunk.Personaje.Combate.SonidosArmasT1472.BalaZumbido, pecho);
+                }
                 return false;
             }
             Aciertos++;

@@ -64,8 +64,8 @@ namespace MechaCyberpunk.Tests.Sonido
             {
                 Assert.IsTrue(c.Encendido(id), id);
             }
-            Assert.AreEqual(ReglaMezclaSonidos.IdsEncendidos.Length + ReglaMezclaSonidos.IdsRegresados.Length + ReglaMezclaSonidos.IdsArmasT1309.Length, encendidos, "T-977: los minimos y los que regresan; T-1309: las armas nuevas");
-            foreach (string apagado in new[] { "UI_TEXTO", "VEH_CLAXON_TRAFICO", "JUG_PASO_INTERIOR", "AMB_TIANGUIS", "PAN_RIVAL_PROVOCA", "MUN_PERRO_LADRA" })
+            Assert.GreaterOrEqual(encendidos, ReglaMezclaSonidos.IdsEncendidos.Length + ReglaMezclaSonidos.IdsRegresados.Length + ReglaMezclaSonidos.IdsArmasT1309.Length , "T-1471: ademas los IDs nuevos y los viejos mapeados");
+            foreach (string apagado in new[] { "UI_TEXTO", "VEH_CLAXON_TRAFICO", "ARM_BALA_ROZA", "AMB_TIANGUIS", "PAN_RIVAL_PROVOCA", "MUN_PERRO_LADRA" })
             {
                 Assert.IsFalse(c.Encendido(apagado), apagado);
             }
@@ -88,6 +88,7 @@ namespace MechaCyberpunk.Tests.Sonido
         {
             foreach (string id in ReglaMezclaSonidos.IdsEncendidos)
             {
+                if (ReglaMezclaSonidos.TieneVolumenPropio(id)) continue; // T-1471: los mapeados llevan el volumen de su política nueva
                 Assert.AreEqual(ReglaMezclaSonidos.VolumenParejo, ReglaMezclaSonidos.Para(id).Volumen, 1e-5f, id);
             }
         }

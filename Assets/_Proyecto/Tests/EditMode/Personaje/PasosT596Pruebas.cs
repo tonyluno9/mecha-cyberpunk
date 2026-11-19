@@ -50,15 +50,15 @@ namespace MechaCyberpunk.Tests
             Assert.AreEqual(3, z.Avanzar(3.2f, false, true));
         }
 
-        [TestCase(IdLugar.Calle, "Asfalto_Seco", false, "JUG_PASO_ASFALTO")]
-        [TestCase(IdLugar.Calle, null, false, "JUG_PASO_ASFALTO")]
-        [TestCase(IdLugar.Calle, "Asfalto_Mojado", false, "JUG_PASO_ASFALTO_MOJADO")]
-        [TestCase(IdLugar.Calle, "Charco", false, "JUG_PASO_ASFALTO_MOJADO")]
-        [TestCase(IdLugar.Calle, "Rejilla_Metal", false, "JUG_PASO_METAL")]
-        [TestCase(IdLugar.Calle, "Pintura", true, "JUG_PASO_METAL")]
-        [TestCase(IdLugar.Casa, "Asfalto", false, "JUG_PASO_INTERIOR")]
-        [TestCase(IdLugar.Clinica, "Metal", false, "JUG_PASO_INTERIOR")]
-        [TestCase(IdLugar.Bar, null, false, "JUG_PASO_INTERIOR")]
+        [TestCase(IdLugar.Calle, "Asfalto_Seco", false, "PAS_CONCRETO")]
+        [TestCase(IdLugar.Calle, null, false, "PAS_CONCRETO")]
+        [TestCase(IdLugar.Calle, "Asfalto_Mojado", false, "PAS_MOJADO")]
+        [TestCase(IdLugar.Calle, "Charco", false, "PAS_MOJADO")]
+        [TestCase(IdLugar.Calle, "Rejilla_Metal", false, "PAS_METAL")]
+        [TestCase(IdLugar.Calle, "Pintura", true, "PAS_METAL")]
+        [TestCase(IdLugar.Casa, "Asfalto", false, "PAS_MADERA")]
+        [TestCase(IdLugar.Clinica, "Metal", false, "PAS_MADERA")]
+        [TestCase(IdLugar.Bar, null, false, "PAS_MADERA")]
         public void Superficie_ElIdDependeDelLugarYDelMaterial(IdLugar lugar, string piso, bool montable, string esperado)
         {
             Assert.AreEqual(esperado, ReglaSuperficiePaso.IdPaso(lugar, piso, montable));

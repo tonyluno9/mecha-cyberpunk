@@ -61,13 +61,25 @@ namespace MechaCyberpunk.Progresion.Sonido
         public static readonly string[] IdsMolestos =
         {
             "PAN_VECINO_AUXILIO", "PAN_SILBIDO_LLAMAR", "PAN_RIVAL_PROVOCA", "PAN_ALIADO_SIGUE", "PAN_ALIADO_ESPERA", "JUG_CORRER_RESPIRA", "VEH_CLAXON_TRAFICO",
-            "VEH_CLAXON_VIEJO", "MUN_HOLOGRAMA", "MUN_NEON_ZUMBIDO", "AMB_NEON_ALTO", "MUN_PERRO_LADRA", "MUN_AIRE_ACONDICIONADO", "ARM_DISPARO_LEJANO", "UI_TEXTO",
+            "MUN_HOLOGRAMA", "MUN_NEON_ZUMBIDO", "AMB_NEON_ALTO", "MUN_PERRO_LADRA", "MUN_AIRE_ACONDICIONADO", "ARM_DISPARO_LEJANO", "UI_TEXTO",
         };
+
+        /// <summary>T-1471: variación chica del tono del disparo (±2.5 %).</summary>
+        public const float VariacionDisparo = 0.025f;
+
+        /// <summary>T-1471: variación chica del volumen del disparo (hasta -5 %).</summary>
+        public const float VariacionVolumenDisparo = 0.05f;
 
         public const string IdDerrape = "VEH_FRENO_DERRAPE";
 
         /// <summary>Si el ID es de los que suenan por defecto (los minimos de T-620 y los que regresan en T-977).</summary>
-        public static bool EncendidoPorDefecto(string id) => Array.IndexOf(IdsEncendidos, id) >= 0 || Array.IndexOf(IdsRegresados, id) >= 0 || Array.IndexOf(IdsArmasT1309, id) >= 0;
+        public static bool EncendidoPorDefecto(string id) =>
+            Array.IndexOf(IdsEncendidos, id) >= 0 || Array.IndexOf(IdsRegresados, id) >= 0 || Array.IndexOf(IdsArmasT1309, id) >= 0
+            || MapaSonidos19nov.EsNuevo(id) || MapaSonidos19nov.Enciende(id); // T-1471: los nuevos y los viejos mapeados
+
+        /// <summary>T-1471: los mapeados que no son disparo ni recarga llevan el volumen de su política nueva (UI 0.55, impactos 0.65...), no el parejo de T-620.</summary>
+        public static bool TieneVolumenPropio(string id) =>
+            MapaSonidos19nov.EsNuevo(id) || (MapaSonidos19nov.EstaMapeado(id) && (!id.StartsWith("ARM_", StringComparison.Ordinal) || id.StartsWith("ARM_" + "BALA_", StringComparison.Ordinal)));
 
         /// <summary>
         /// T-977: nivel de cada ambiente sobre la ganancia de la seccion, para que todos queden cerca de -45 dB aunque sus archivos no:
@@ -94,13 +106,67 @@ namespace MechaCyberpunk.Progresion.Sonido
         public static PoliticaSonido Para(string id)
         {
             PoliticaSonido p = ParaBase(id);
-            if (Array.IndexOf(IdsEncendidos, id) < 0) return p;
-            return new PoliticaSonido(p.Grupo, p.MaxVoces, VolumenParejo, p.VariacionTono, p.SegundosMinimos, p.DistanciaMaxima);
+            if (EsSinPolitica(p) && MapaSonidos19nov.Nuevo(id) != null)
+            {
+                // T-1471: un ID viejo sin regla propia usa la del ID nuevo con el que suena.
+                PoliticaSonido n = ParaNuevo(MapaSonidos19nov.Nuevo(id));
+                p = new PoliticaSonido(n.Grupo, n.MaxVoces, n.Volumen, n.VariacionTono, n.SegundosMinimos, n.DistanciaMaxima, MapaSonidos19nov.TonoBase(id), n.VariacionVolumen);
+            }
+            if (Array.IndexOf(IdsEncendidos, id) < 0 || TieneVolumenPropio(id)) return p;
+            return new PoliticaSonido(p.Grupo, p.MaxVoces, VolumenParejo, p.VariacionTono, p.SegundosMinimos, p.DistanciaMaxima, p.TonoBase, p.VariacionVolumen);
         }
+
+        private static bool EsSinPolitica(PoliticaSonido p) => p.Grupo == null && p.MaxVoces == 0 && p.Volumen == 1f && p.VariacionTono == 0f && p.SegundosMinimos == 0f;
+
+        /// <summary>T-1471: prioridad de AudioSource (0 = más alta, 256 = más baja): disparos y voces arriba, impactos y vehículos en medio, ambiente abajo.</summary>
+        public static int Prioridad(string id)
+        {
+            if (string.IsNullOrEmpty(id)) return 128;
+            if (id.StartsWith("AMB_", StringComparison.Ordinal) || id == "FUE_LOOP_CHICO") return 200;
+            if (id.StartsWith("ARM_", StringComparison.Ordinal) && id.Contains("_DISPARO")) return 32;
+            if (id.StartsWith("PAN_", StringComparison.Ordinal) || id.StartsWith("JUG_", StringComparison.Ordinal) || id.StartsWith("POL_", StringComparison.Ordinal)) return 48;
+            if (id.StartsWith("EXP_", StringComparison.Ordinal) || id.StartsWith("IMP_", StringComparison.Ordinal) || id.StartsWith("MEL_", StringComparison.Ordinal)) return 64;
+            if (id.StartsWith("PAS_", StringComparison.Ordinal) || id.StartsWith(PrefijoPaso, StringComparison.Ordinal)) return 160;
+            return 100;
+        }
+
+        /// <summary>T-1471: si este ID abate un poco el ambiente un instante (disparos y explosiones).</summary>
+        public static bool BajaAmbiente(string id) =>
+            !string.IsNullOrEmpty(id) && ((id.StartsWith("ARM_", StringComparison.Ordinal) && id.EndsWith("_DISPARO", StringComparison.Ordinal)) || id.StartsWith("EXP_", StringComparison.Ordinal) || id == IdExplosion);
+
+        /// <summary>T-1471: cuántos bucles del mismo ID pueden sonar a la vez: la sirena tantos como voces de su política (patrullas); el resto, uno.</summary>
+        public static int MaxBuclesDelId(string id)
+        {
+            switch (id)
+            {
+                case "POL_SIRENA_LOOP":
+                case "CAL_PATRULLA_SIRENA": return Math.Max(1, Para(id).MaxVoces); // una por patrulla
+                case "VEH_NORMAL_RALENTI":
+                case "MOTO_RALENTI":
+                case "VEH_PESADO_RALENTI": return MaxMotoresRalenti; // un ralentí por carro cercano
+                case "VEH_ELECTRICO_MOVER":
+                case "FUE_LOOP_CHICO": return 3;
+                case "VEH_ALARMA": return 2;
+                default: return 1;
+            }
+        }
+
+        /// <summary>T-1471: ralentís de carros que pueden sonar a la vez (de las 12 voces del gestor).</summary>
+        public const int MaxMotoresRalenti = 4;
+
+        /// <summary>T-1471: un tiro 3D a menos de esta distancia (m) del jugador cuenta como suyo (grupo de arma de una voz); más lejos es ajeno.</summary>
+        public const float DistanciaPropia = 3f;
+
+        /// <summary>T-1471: el ambiente baja a este factor (0.3 s) cuando suena un disparo o una explosión.</summary>
+        public const float FactorDucking = 0.7f;
+
+        /// <summary>T-1471: duración (s) del bajón del ambiente.</summary>
+        public const float SegundosDucking = 0.3f;
 
         private static PoliticaSonido ParaBase(string id)
         {
             if (string.IsNullOrEmpty(id)) return SinPolitica;
+            if (MapaSonidos19nov.EsNuevo(id)) return ParaNuevo(id);
             if (id.StartsWith("ARM_", StringComparison.Ordinal))
             {
                 return Arma(id);
@@ -169,8 +235,8 @@ namespace MechaCyberpunk.Progresion.Sonido
             if (id == "ARM_DISPARO_LEJANO") return new PoliticaSonido(GrupoArmaEnemiga, 3, 0.6f, 0.05f, 0.05f);
             if (id.EndsWith("_DISPARO", StringComparison.Ordinal))
             {
-                // T-676: el disparo suena siempre igual (sin variación de tono; el catálogo también elige siempre el mismo clip).
-                return new PoliticaSonido(GrupoArma, 1, id == "ARM_SNI_DISPARO" ? 0.9f : 0.8f, 0f, 0f);
+                // T-676 (T-1471): el mismo clip por arma (lo elige el catálogo) pero con variación chica de tono (±2.5 %) y de volumen (5 %): nada suena idéntico.
+                return new PoliticaSonido(GrupoArma, 1, id == "ARM_SNI_DISPARO" ? 0.9f : 0.8f, VariacionDisparo, 0f, 100f, MapaSonidos19nov.TonoBase(id), VariacionVolumenDisparo);
             }
             if (id.EndsWith("_RECARGA", StringComparison.Ordinal) || id == "ARM_ESC_RECARGA_CARTUCHO")
             {
@@ -195,6 +261,122 @@ namespace MechaCyberpunk.Progresion.Sonido
                 default: return SinPolitica;
             }
         }
+
+        private static PoliticaSonido P(string grupo, int voces, float vol, float tono, float minimo, float distancia, float vvol = 0.06f)
+        {
+            return new PoliticaSonido(grupo, voces, vol, tono, minimo, distancia, 1f, vvol);
+        }
+
+        /// <summary>T-1471: política de cada ID nuevo (por ID y por prefijo). Todos varían tono o volumen; los del mundo traen distancia máxima.</summary>
+        public static PoliticaSonido ParaNuevo(string id)
+        {
+            switch (id)
+            {
+                // Armas: disparos arriba (0.8 a 0.9), con el mismo clip por arma y variación chica (T-676).
+                case "ARM_W01_DISPARO": return new PoliticaSonido(GrupoArma, 1, 0.8f, VariacionDisparo, 0f, 100f, 1f, VariacionVolumenDisparo);
+                case "ARM_W02_DISPARO": return new PoliticaSonido(GrupoArma, 1, 0.85f, VariacionDisparo, 0f, 100f, 1f, VariacionVolumenDisparo);
+                case "ARM_W03_DISPARO": return new PoliticaSonido(GrupoArma, 1, 0.8f, VariacionDisparo, 0f, 120f, 1f, VariacionVolumenDisparo);
+                case "ARM_W04_DISPARO": return new PoliticaSonido(GrupoArma, 1, 0.9f, VariacionDisparo, 0f, 150f, 1f, VariacionVolumenDisparo);
+                case "ARM_W06_DISPARO": return new PoliticaSonido(GrupoArma, 1, 0.85f, VariacionDisparo, 0f, 110f, 1f, VariacionVolumenDisparo);
+                case "ARM_W07_DISPARO": return new PoliticaSonido(GrupoArma, 1, 0.8f, VariacionDisparo, 0f, 100f, 1f, VariacionVolumenDisparo);
+                case "ARM_NOVA_DISPARO": return new PoliticaSonido("arma-nova", 1, 0.85f, VariacionDisparo, 0f, 100f, 1f, VariacionVolumenDisparo);
+                case "ARM_NOVA_CARGA_DISPARO": return new PoliticaSonido("arma-nova", 1, 0.8f, VariacionDisparo, 0f, 100f, 1f, VariacionVolumenDisparo);
+                case "ARM_W03_RECARGA_CARGADOR": return P(GrupoArma, 1, 0.7f, 0.02f, 0f, 0f, 0.05f);
+                case "ARM_W06_SACAR": return P(GrupoArma, 1, 0.6f, 0.03f, 0f, 0f, 0.05f);
+                case "ARM_W02_BOMBA":
+                case "ARM_W04_CERROJO": return P(GrupoArmaAccesorio, 2, 0.7f, 0.02f, 0f, 0f, 0.05f);
+                case "ARM_W07_CARGA": return P(GrupoArmaAccesorio, 1, 0.5f, 0.03f, 0f, 0f, 0.05f);
+                case "ARM_W07_RAYO": return P(GrupoArmaAccesorio, 1, 0.7f, 0.03f, 0.1f, 80f, 0.05f);
+                case "ARM_GRANADA_SEGURO": return P(GrupoArmaAccesorio, 2, 0.6f, 0.04f, 0.1f, 40f);
+                case "ARM_GRANADA_REBOTE": return P("granada-rebote", 2, 0.55f, 0.06f, 0.1f, 40f);
+                case "ARM_COLA_CALLE": return P("arma-cola", 1, 0.5f, 0.03f, 0.1f, 150f);
+                case "IMP_LASER_DISPARO": return P("laser", 1, 0.7f, 0.04f, 0.1f, 80f);
+                case "IMP_MISILES_FIJAR": return P("misiles", 1, 0.6f, 0.03f, 0.5f, 60f);
+                // Impactos 0.6 a 0.7, de poco alcance y sin metralleta.
+                case "IMP_BALA_CABEZA": return P(GrupoImpacto, 2, 0.7f, 0.06f, 0.1f, 35f, 0.08f);
+                case "IMP_BALA_CRISTAL": return P(GrupoImpacto, 2, 0.6f, 0.06f, 0.1f, 35f, 0.08f);
+                case "IMP_BALA_CARNE":
+                case "IMP_BALA_CONCRETO":
+                case "IMP_BALA_METAL":
+                case "IMP_BALA_ROBOT": return P(GrupoImpacto, 2, 0.65f, 0.06f, 0.1f, 35f, 0.08f);
+                case "IMP_BALA_ZUMBIDO": return P("bala-zumbido", 2, 0.5f, 0.08f, 0.25f, 30f, 0.08f);
+                // Explosiones y fuego.
+                case "EXP_GRANADA": return P("explosion", 2, 0.9f, 0.04f, 0.1f, 160f, 0.05f);
+                case "EXP_ONDA": return P("explosion", 2, 0.9f, 0.04f, 0.1f, 200f, 0.05f);
+                case "FUE_LOOP_CHICO": return P("fuego", 3, 0.3f, 0f, 0.5f, 30f, 0.1f);
+                // Jugador y cuerpo a cuerpo.
+                case "JUG_ATERRIZAJE": return P("jugador-cuerpo", 1, 0.6f, 0.05f, 0.3f, 25f);
+                case "JUG_RODADA": return P("jugador-cuerpo", 1, 0.55f, 0.05f, 0.3f, 25f);
+                case "JUG_TREPAR": return P("jugador-cuerpo", 1, 0.5f, 0.05f, 0.3f, 25f);
+                case "MEL_GOLPE":
+                case "MEL_GOLPE_AIRE":
+                case "MEL_GOLPE_CARNE": return P("melee", 2, 0.75f, 0.05f, 0.1f, 30f);
+                // Interacción.
+                case "INT_PUERTA_CRISTAL":
+                case "INT_PUERTA_MADERA":
+                case "INT_PUERTA_METAL":
+                case "INT_PUERTA_REJA": return P("puerta-interaccion", 2, 0.6f, 0.04f, 0.3f, 22f);
+                case "INT_HACKEO_EXITO":
+                case "INT_HACKEO_FALLO": return P("hackeo", 1, 0.6f, 0.03f, 0.5f, 15f);
+                case "INT_TECLEO_HACKEO": return P("hackeo-tecleo", 1, 0.4f, 0.05f, 0.1f, 10f);
+                case "INT_INTERRUPTOR_LUZ":
+                case "INT_MALETIN_CERRAR": return P("interaccion", 1, 0.5f, 0.04f, 0.2f, 15f);
+                case "INT_RECOGER_OBJETO": return P("dinero", 1, 0.55f, 0.05f, 0.25f, 20f);
+                // Vehículos.
+                case "VEH_NORMAL_ARRANQUE":
+                case "VEH_NORMAL_APAGAR":
+                case "MOTO_ARRANQUE":
+                case "MOTO_APAGAR":
+                case "VEH_ELECTRICO_ARRANQUE": return P("arranque", 1, 0.6f, 0.03f, 0.3f, 50f, 0.05f);
+                case "VEH_PESADO_ARRANQUE":
+                case "VEH_PESADO_APAGAR": return P("arranque", 1, 0.6f, 0.03f, 0.3f, 60f, 0.05f);
+                case "VEH_NORMAL_RALENTI":
+                case "MOTO_RALENTI": return P("motor", 4, 0.5f, 0.03f, 0.3f, 45f, 0.05f);
+                case "VEH_PESADO_RALENTI": return P("motor", 4, 0.5f, 0.03f, 0.3f, 60f, 0.05f);
+                case "VEH_ELECTRICO_MOVER": return P("motor", 4, 0.45f, 0.03f, 0.3f, 40f, 0.05f);
+                case "VEH_ACELERON":
+                case "VEH_ELECTRICO_ACELERAR": return P("motor-acelera", 2, 0.55f, 0.05f, 0.5f, 50f, 0.06f);
+                case "VEH_ELECTRICO_PASAR": return P("pasa-cerca", 1, 0.7f, 0.06f, 1.5f, 45f);
+                case "VEH_ALARMA": return P("alarma", 1, 0.45f, 0.02f, 1f, 60f, 0.05f);
+                case "VEH_CHOQUE": return P("choque", 2, 0.75f, 0.05f, 0.15f, 60f);
+                case "VEH_CHOQUE_FUERTE": return P("choque", 2, 0.85f, 0.05f, 0.15f, 80f);
+                case "VEH_CLAXON_CAMION": return P(GrupoClaxon, 2, 0.6f, 0.06f, 0.8f, 70f);
+                case "VEH_CLAXON_NORMAL": return P(GrupoClaxon, 2, 0.6f, 0.08f, 0.8f, 40f);
+                case "VEH_CRISTAL_ROMPER": return P("cristal", 2, 0.65f, 0.05f, 0.2f, 40f);
+                case "VEH_FRENO_FUERTE": return P("derrape", 1, 0.5f, 0.05f, 1.5f, 40f);
+                case "VEH_LLANTAS_GRAVA": return P("llantas", 1, 0.4f, 0.03f, 1f, 30f);
+                case "VEH_PUENTE": return P("puente", 1, 0.5f, 0.04f, 1f, 40f);
+                case "VEH_PUERTA_ABRIR":
+                case "VEH_PUERTA_CERRAR": return P("puerta-carro", 1, 0.6f, 0.04f, 0.5f, 25f);
+                case "VEH_TOPE": return P("tope", 1, 0.5f, 0.04f, 0.5f, 30f);
+                // Policía.
+                case "POL_SIRENA_LOOP": return P("sirena", 3, 0.7f, 0f, 0.5f, 120f, 0.05f);
+                case "POL_SIRENA_CORTA": return P("sirena-corta", 1, 0.7f, 0.03f, 1f, 100f);
+                case "POL_NOVA_AVISO": return P("nova-voz", 1, 0.85f, 0.03f, 3f, 40f, 0.05f);
+                case "POL_RADIO_AVISO": return P("radio-policia", 1, 0.6f, 0.03f, 2f, 25f);
+                case "POL_RADIO_DESPACHO": return P("radio-policia", 1, 0.6f, 0.03f, 3f, 25f);
+                // Interfaz y HUD (2D, sin distancia).
+                case "UI_LOGO_INTRO": return P("ui-logo", 1, 0.6f, 0f, 1f, 0f, 0.03f);
+                case "UI_MENU_ABRIR":
+                case "UI_MENU_CERRAR": return P("ui-menu", 1, 0.55f, 0.02f, 0.1f, 0f, 0.05f);
+                case "UI_ERROR": return P("ui", 2, 0.6f, 0.03f, 0.1f, 0f, 0.05f);
+                case "HUD_LOGRO":
+                case "HUD_NOTIFICACION": return P("objetivo", 1, 0.6f, 0.02f, 1f, 0f, 0.05f);
+                case "HUD_VIDA_BAJA": return P("vida-baja", 1, 0.55f, 0.02f, 2f, 0f, 0.05f);
+                case "TIE_COMPRAR":
+                case "TIE_EQUIPAR":
+                case "TIE_DESEQUIPAR": return P("tienda", 1, 0.55f, 0.03f, 0.2f, 0f, 0.05f);
+            }
+            if (id.StartsWith("PAS_", StringComparison.Ordinal))
+            {
+                // Igual que JUG_PASO_: grupo "paso", una voz, bajitos, ±6 % de tono y poco alcance.
+                return P("paso", 1, 0.45f, 0.06f, 0.15f, 20f, 0.1f);
+            }
+            if (id.StartsWith("UI_", StringComparison.Ordinal)) return P("ui", 2, 0.55f, 0.03f, 0.05f, 0f, 0.05f);
+            if (id.StartsWith("CON_", StringComparison.Ordinal)) return P("consumible", 1, 0.6f, 0.03f, 0.3f, 0f, 0.05f);
+            return P("nuevo", 2, 0.6f, 0.04f, 0.1f, 30f);
+        }
+
 
         /// <summary>Tono para un valor al azar en [0, 1): entre 1 - variacion y 1 + variacion.</summary>
         public static float Tono(float variacion, float azar)

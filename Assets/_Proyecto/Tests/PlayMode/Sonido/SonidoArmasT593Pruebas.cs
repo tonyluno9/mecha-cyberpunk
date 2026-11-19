@@ -81,9 +81,10 @@ namespace MechaCyberpunk.Tests.Sonido
                 Assert.Less(g.UltimoVolumenRelativo, 1f);
                 yield return new WaitForSecondsRealtime(0.11f); // T-620: el mismo ID no se repite antes de 0.1 s
             }
-            // T-676 (y T-977): el disparo suena siempre igual, sin variar el tono.
-            Assert.AreEqual(1f, minimo, 1e-4f);
-            Assert.AreEqual(1f, maximo, 1e-4f, "El tono del disparo no varía.");
+            // T-676 (y T-977): el mismo clip por arma; T-1471: con variación chica de tono (±2.5 %), nada suena idéntico.
+            Assert.GreaterOrEqual(minimo, 1f - ReglaMezclaSonidos.VariacionDisparo - 1e-4f);
+            Assert.LessOrEqual(maximo, 1f + ReglaMezclaSonidos.VariacionDisparo + 1e-4f);
+            Assert.Greater(maximo - minimo, 0f, "El tono del disparo varía un poco.");
         }
 
         [UnityTest]

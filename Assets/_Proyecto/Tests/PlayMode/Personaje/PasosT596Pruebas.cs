@@ -17,7 +17,7 @@ namespace MechaCyberpunk.Tests.Personaje
         {
             CatalogoSonidos catalogo = ScriptableObject.CreateInstance<CatalogoSonidos>();
             List<CatalogoSonidos.Entrada> entradas = new List<CatalogoSonidos.Entrada>();
-            foreach (string id in new[] { "JUG_PASO_ASFALTO", "JUG_PASO_INTERIOR", "JUG_PASO_METAL", "JUG_PASO_ASFALTO_MOJADO" })
+            foreach (string id in new[] { "PAS_CONCRETO", "PAS_MADERA", "PAS_METAL", "PAS_MOJADO" })
             {
                 entradas.Add(new CatalogoSonidos.Entrada { id = id, finales = new[] { AudioClip.Create("p_" + id, 4410, 1, 44100, false) } });
             }
@@ -49,7 +49,7 @@ namespace MechaCyberpunk.Tests.Personaje
             int pasos = controlador.PasosDados - antes;
             float esperados = (avance + 0.7f) / 1.4f;
             Assert.That(pasos, Is.InRange(esperados - 1.01f, esperados + 1.01f), "Un paso por cada zancada de " + avance + " m");
-            Assert.AreEqual(pasos, g.Pedidos("JUG_PASO_ASFALTO"), "Cada paso pide el sonido de asfalto.");
+            Assert.AreEqual(pasos, g.Pedidos("PAS_CONCRETO"), "Cada paso pide el sonido de asfalto.");
         }
 
         [UnityTest]
@@ -73,8 +73,8 @@ namespace MechaCyberpunk.Tests.Personaje
             Press(teclado.wKey);
             yield return Esperar(1.5f);
             Release(teclado.wKey);
-            Assert.Greater(g.Pedidos("JUG_PASO_INTERIOR"), 0);
-            Assert.AreEqual(0, g.Pedidos("JUG_PASO_ASFALTO"));
+            Assert.Greater(g.Pedidos("PAS_MADERA"), 0);
+            Assert.AreEqual(0, g.Pedidos("PAS_CONCRETO"));
             EventosLugares.PublicarSalio(IdLugar.Casa);
         }
     }

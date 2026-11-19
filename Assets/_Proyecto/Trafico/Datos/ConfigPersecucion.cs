@@ -275,11 +275,14 @@ namespace MechaCyberpunk.Trafico.Datos
         [SerializeField] private int patrullasExtraCincoEstrellas = 3;
         [Min(0)] [Tooltip("Drones que se suman a los del nivel cuando tienes 5 estrellas.")]
         [SerializeField] private int dronesExtraCincoEstrellas = 3;
-        [Tooltip("ID de sonido de la radio de la policía. Vacío: no hay clip de radio todavía y no suena nada (el ID debe existir en CatalogoSonidos y en ReglaMezclaSonidos).")]
-        [SerializeField] private string idSonidoRadio = "";
+        [Tooltip("ID de sonido de la radio de la policía. T-1476: POL_RADIO_AVISO. Vacío: no suena nada (el ID debe existir en CatalogoSonidos y en ReglaMezclaSonidos).")]
+        [SerializeField] private string idSonidoRadio = "POL_RADIO_AVISO";
+        [Tooltip("T-1476: ID de sonido de la radio cuando la central manda unidades (sube el nivel de búsqueda). Vacío: no suena.")]
+        [SerializeField] private string idSonidoDespacho = "POL_RADIO_DESPACHO";
         public int PatrullasExtraCincoEstrellas => patrullasExtraCincoEstrellas;
         public int DronesExtraCincoEstrellas => dronesExtraCincoEstrellas;
         public string IdSonidoRadio => idSonidoRadio;
+        public string IdSonidoDespacho => idSonidoDespacho;
 
         public int NivelDisparoDron => nivelDisparoDron;
         public float SegundosEntreTirosDron => segundosEntreTirosDron;

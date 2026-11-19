@@ -410,7 +410,7 @@ namespace MechaCyberpunk.UI.Tiendas
                         MostrarAviso(string.Format(config.FormatoComprado, ReglaVistaMercado.Nombre(objeto).ToUpperInvariant()));
                         break;
                     case ResultadoCompra.SinDinero:
-                        Sonidos.Reproducir("ECO_SIN_DINERO");
+                        Sonidos.Reproducir("UI_ERROR"); // T-1474
                         MostrarAviso(config.TextoNoAlcanza);
                         break;
                     default:

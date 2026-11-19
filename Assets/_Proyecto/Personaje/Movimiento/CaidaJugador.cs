@@ -138,6 +138,7 @@ namespace MechaCyberpunk.Personaje.Movimiento
             if (config.RodarCaida != null && ReglaParkour.DebeRodar(caida, config.AlturaRodar) && visual != null)
             {
                 IniciarRodada(config);
+                Sonidos.ReproducirEn(ReglaSonidosJugador.Rodada, transform.position);
             }
         }
 

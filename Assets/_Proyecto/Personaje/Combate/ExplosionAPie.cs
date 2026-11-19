@@ -11,7 +11,8 @@ namespace MechaCyberpunk.Personaje.Combate
     /// </summary>
     public static class ExplosionAPie
     {
-        private const string Sonido = "VEH_EXPLOSION";
+        private const string Sonido = SonidosArmasT1472.ExplosionGranada;
+        private static readonly LimiteExplosionesSonido limiteSonido = new LimiteExplosionesSonido();
         private const int MaxCercanos = 64;
         /// <summary>T-1325: daño de la explosión dentro del radio letal.</summary>
         public const float DanioLetal = 9999f;
@@ -33,6 +34,7 @@ namespace MechaCyberpunk.Personaje.Combate
             Ultima = Vector3.zero;
             vistos.Clear();
             empujados.Clear();
+            limiteSonido.Reiniciar();
         }
 
         /// <summary>Explota en <paramref name="centro"/>. <paramref name="raizJugador"/> es quien la lanzó (recibe solo una parte). Devuelve cuántos recibieron daño.</summary>
@@ -79,7 +81,10 @@ namespace MechaCyberpunk.Personaje.Combate
                     cuerpo.AddForce((direccion + Vector3.up * 0.5f).normalized * fuerza, ForceMode.VelocityChange);
                 }
             }
-            Sonidos.ReproducirEn(Sonido, centro);
+            if (limiteSonido.Permite(Time.time)) // T-1472: en cadena no se suman diez estruendos iguales
+            {
+                Sonidos.ReproducirEn(Sonido, centro);
+            }
             EventosRuido.PublicarDisparo(centro);
             Efecto(centro, radio, cfg);
             return danados;

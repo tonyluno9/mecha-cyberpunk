@@ -90,12 +90,23 @@ namespace MechaCyberpunk.Progresion.Sonido
             }
             foreach (string id in ReglaMezclaSonidos.IdsEncendidos) ids.Add(id);
             foreach (string id in ReglaMezclaSonidos.IdsRegresados) ids.Add(id);
+            foreach (string id in MapaSonidos19nov.IdsNuevos) ids.Add(id);
+            foreach (MapaSonidos19nov.Par par in MapaSonidos19nov.Pares)
+            {
+                if (par.Encender) ids.Add(par.Viejo);
+            }
             interruptores.RemoveAll(i => i == null || !ids.Contains(i.id));
             HashSet<string> tienen = new HashSet<string>();
             foreach (Interruptor i in interruptores) tienen.Add(i.id);
             foreach (string id in ids)
             {
                 if (!tienen.Contains(id)) interruptores.Add(new Interruptor { id = id, encendido = ReglaMezclaSonidos.EncendidoPorDefecto(id) });
+            }
+            // T-1471: los IDs nuevos siempre quedan encendidos, y un ID viejo mapeado se prende aunque antes estuviera apagado cuando el nuevo ya tiene clips.
+            foreach (Interruptor i in interruptores)
+            {
+                if (MapaSonidos19nov.EsNuevo(i.id)) i.encendido = true;
+                else if (MapaSonidos19nov.Enciende(i.id) && Tiene(MapaSonidos19nov.Nuevo(i.id))) i.encendido = true;
             }
             interruptores.Sort((a, b) => string.CompareOrdinal(a.id, b.id));
         }
@@ -157,7 +168,10 @@ namespace MechaCyberpunk.Progresion.Sonido
         public AudioClip Elegir(string id)
         {
             if (string.IsNullOrEmpty(id)) return null;
-            AudioClip clip = Alias.TryGetValue(id, out string otro) ? ElegirDe(otro) : null;
+            // T-1471: un ID viejo mapeado suena con el archivo nuevo si el catalogo lo tiene; si no, con el viejo.
+            string nuevo = MapaSonidos19nov.Nuevo(id);
+            AudioClip clip = nuevo != null ? ElegirDe(nuevo) : null;
+            if (clip == null && Alias.TryGetValue(id, out string otro)) clip = ElegirDe(otro);
             if (clip == null) clip = ElegirDe(id);
             if (clip == null && avisados.Add(id))
             {

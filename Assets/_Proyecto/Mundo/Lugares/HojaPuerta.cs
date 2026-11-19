@@ -127,7 +127,7 @@ namespace MechaCyberpunk.Mundo.Lugares
             abierta = true;
             segundosSinNadie = 0f;
             colliderHoja.enabled = false;
-            SonarPuerta(SonidoAbrir);
+            SonarPuerta();
             Cambio?.Invoke(true);
         }
 
@@ -139,21 +139,14 @@ namespace MechaCyberpunk.Mundo.Lugares
             }
             abierta = false;
             colliderHoja.enabled = true;
-            SonarPuerta(SonidoCerrar);
+            SonarPuerta();
             Cambio?.Invoke(false);
         }
 
-        /// <summary>T-977: la puerta de bisagra (de casa o de local) suena al abrir y al cerrar. Las cortinas y las de cristal no suenan.</summary>
-        public const string SonidoAbrir = "MUN_PUERTA_CASA_ABRIR";
-
-        public const string SonidoCerrar = "MUN_PUERTA_CASA_CERRAR";
-
-        private void SonarPuerta(string id)
+        /// <summary>T-1474: la hoja suena al abrir y al cerrar con el sonido de su tipo (madera, metal, cristal o reja; ver <see cref="ReglaSonidoPuerta"/>).</summary>
+        private void SonarPuerta()
         {
-            if (conBisagra)
-            {
-                Sonidos.ReproducirEn(id, transform.position);
-            }
+            Sonidos.ReproducirEn(ReglaSonidoPuerta.Id(name, conBisagra, corrediza), transform.position);
         }
 
         private void Update()

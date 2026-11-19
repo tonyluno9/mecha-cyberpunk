@@ -38,6 +38,8 @@ namespace MechaCyberpunk.Progresion.Sonido
         private IdLugar lugar => lugares.Count > 0 ? lugares[lugares.Count - 1] : IdLugar.Calle;
         private int siguienteBucle;
         private float proximaRevision;
+        private float duckHasta;
+        private float factorDuck = 1f;
 
         // T-593: una voz es un sonido puntual que sigue sonando; sirve para limitar cuántas del mismo grupo suenan juntas (por tiempo, no por isPlaying).
         private struct VozActiva
@@ -130,6 +132,7 @@ namespace MechaCyberpunk.Progresion.Sonido
             {
                 a.loop = true;
                 a.spatialBlend = 0f;
+                a.priority = ReglaMezclaSonidos.Prioridad("AMB_");
             }
         }
 
@@ -296,8 +299,20 @@ namespace MechaCyberpunk.Progresion.Sonido
             SeccionSonido seccion = ReglaCatalogoSonidos.SeccionDe(id);
             PoliticaSonido politica = ReglaMezclaSonidos.Para(id);
             float ahora = Time.unscaledTime;
-            if (ultimoPedido.TryGetValue(id, out float antes) && ReglaMezclaSonidos.Repite(ahora, antes, politica.SegundosMinimos)) return;
-            ultimoPedido[id] = ahora;
+            // T-1471: un tiro 3D lejos del jugador (enemigos, otros) no comparte la voz del arma del jugador ni su tiempo mínimo: grupo aparte de 3 voces.
+            bool ajeno = false;
+            if (en3D == true && politica.Grupo == ReglaMezclaSonidos.GrupoArma)
+            {
+                IJugador jugador = Registro<IJugador>.Actual;
+                ajeno = jugador != null && (jugador.Raiz.position - posicion).sqrMagnitude > ReglaMezclaSonidos.DistanciaPropia * ReglaMezclaSonidos.DistanciaPropia;
+                if (ajeno)
+                {
+                    politica = new PoliticaSonido(ReglaMezclaSonidos.GrupoArmaEnemiga, 3, politica.Volumen, politica.VariacionTono, politica.SegundosMinimos, politica.DistanciaMaxima, politica.TonoBase, politica.VariacionVolumen);
+                }
+            }
+            string llavePedido = ajeno ? id + "@ajeno" : id;
+            if (ultimoPedido.TryGetValue(llavePedido, out float antes) && ReglaMezclaSonidos.Repite(ahora, antes, politica.SegundosMinimos)) return;
+            ultimoPedido[llavePedido] = ahora;
             PodarVoces();
             if (politica.MaxVoces > 0)
             {
@@ -308,19 +323,22 @@ namespace MechaCyberpunk.Progresion.Sonido
             {
                 if (b.id == id) return;
             }
-            CortarVoz(id);
+            if (!ajeno) CortarVoz(id);
             if (!HacerEspacio()) return;
             AudioSource f = FuenteLibre();
             f.Stop();
             voces.RemoveAll(v => v.fuente == f);
-            float tono = ReglaMezclaSonidos.Tono(politica.VariacionTono, (float)azarTono.NextDouble()) * tonoGenero;
+            float tono = politica.TonoBase * ReglaMezclaSonidos.Tono(politica.VariacionTono, (float)azarTono.NextDouble()) * tonoGenero;
+            float relativo = politica.Volumen * (1f - (float)azarTono.NextDouble() * politica.VariacionVolumen);
+            f.priority = ReglaMezclaSonidos.Prioridad(id);
+            if (ReglaMezclaSonidos.BajaAmbiente(id)) duckHasta = ahora + ReglaMezclaSonidos.SegundosDucking;
             f.clip = clip;
             f.loop = false;
             f.pitch = tono;
             f.maxDistance = politica.DistanciaMaxima > 0f ? politica.DistanciaMaxima : distanciaMaxima;
-            f.volume = VolumenFinal(seccion) * politica.Volumen;
+            f.volume = VolumenFinal(seccion) * relativo;
             UltimoTono = tono;
-            UltimoVolumenRelativo = politica.Volumen;
+            UltimoVolumenRelativo = relativo;
             UltimoClip = clip;
             UltimoIdClip = idClip;
             UltimaFuente = f;
@@ -336,11 +354,13 @@ namespace MechaCyberpunk.Progresion.Sonido
         {
             AudioClip clip = Preparar(id);
             if (clip == null) return Sonidos.SinBucle;
-            // T-620: un bucle por ID y cabe en las 12 voces.
+            // T-620: un bucle por ID y cabe en las 12 voces. T-1471: la sirena permite varios (una por patrulla, hasta su MaxVoces).
+            int iguales = 0;
             foreach (Bucle otro in bucles.Values)
             {
-                if (otro.id == id) return Sonidos.SinBucle;
+                if (otro.id == id) iguales++;
             }
+            if (iguales >= ReglaMezclaSonidos.MaxBuclesDelId(id)) return Sonidos.SinBucle;
             if (!HacerEspacio()) return Sonidos.SinBucle;
             SeccionSonido seccion = ReglaCatalogoSonidos.SeccionDe(id);
             AudioSource f = CrearFuente("Bucle_" + id);
@@ -349,6 +369,8 @@ namespace MechaCyberpunk.Progresion.Sonido
             // T-977: el bucle también lleva el volumen relativo de su ID (la sirena es fuerte; el derrape, bajo).
             float relativo = ReglaMezclaSonidos.Para(id).Volumen;
             f.volume = VolumenFinal(seccion) * relativo;
+            f.pitch = ReglaMezclaSonidos.Para(id).TonoBase;
+            f.priority = ReglaMezclaSonidos.Prioridad(id);
             f.spatialBlend = sigue != null ? 1f : 0f;
             if (sigue != null) f.transform.position = sigue.position;
             f.Play();
@@ -418,13 +440,16 @@ namespace MechaCyberpunk.Progresion.Sonido
                 proximaRevision = Time.unscaledTime + segundosRevision;
                 ActualizarAmbiente();
             }
+            // T-1471: ducking simple: un disparo o una explosión bajan el ambiente 0.3 s (rápido para bajar, suave para volver).
+            float metaDuck = Time.unscaledTime < duckHasta ? ReglaMezclaSonidos.FactorDucking : 1f;
+            factorDuck = Mathf.MoveTowards(factorDuck, metaDuck, Time.unscaledDeltaTime * (metaDuck < factorDuck ? 8f : 2f));
             float paso = Time.unscaledDeltaTime / segundosCruce;
             for (int i = 0; i < 2; i++)
             {
                 float meta = i == cruceActivo && idCruce[i] != null ? 1f : 0f;
                 nivelCruce[i] = Mathf.MoveTowards(nivelCruce[i], meta, paso);
                 // T-977: cada ambiente con su nivel; en el cruce de 1 s uno baja mientras el otro sube (nunca dos a todo volumen).
-                cruce[i].volume = nivelCruce[i] * VolumenFinal(SeccionSonido.Ambiente) * ReglaMezclaSonidos.VolumenAmbiente(idCruce[i]);
+                cruce[i].volume = nivelCruce[i] * VolumenFinal(SeccionSonido.Ambiente) * ReglaMezclaSonidos.VolumenAmbiente(idCruce[i]) * factorDuck;
                 if (meta == 0f && nivelCruce[i] == 0f && cruce[i].isPlaying) cruce[i].Stop();
             }
             foreach (Bucle b in bucles.Values)

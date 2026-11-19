@@ -175,7 +175,7 @@ namespace MechaCyberpunk.Personaje.Jugador
                 velocidadHasta = Mathf.Max(velocidadHasta, Time.time + c.SegundosVelocidad);
                 controlador.FactorExtraVelocidad = factorVelocidad;
             }
-            Sonidos.Reproducir("UI_ACEPTAR");
+            ReglaSonidoConsumible.Sonar(c.Id); // T-1474: sonido propio de cada consumible (antes UI_ACEPTAR)
             Usado?.Invoke(c);
             return true;
         }

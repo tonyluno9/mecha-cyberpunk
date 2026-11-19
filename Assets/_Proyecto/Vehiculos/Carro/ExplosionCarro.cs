@@ -40,8 +40,8 @@ namespace MechaCyberpunk.Vehiculos.Carro
             Chispas = Efectos.Chispas;
             Onda = Efectos.Onda;
             Luz = Efectos.Luz;
-            // T-620: el estruendo pasa por el gestor (interruptor VEH_EXPLOSION y limite de voces).
-            Sonidos.ReproducirEn("VEH_EXPLOSION", centro);
+            // T-620 / T-1472: el estruendo (EXP_ONDA) pasa por el gestor, con tope para las explosiones en cadena.
+            LimiteSonidoExplosion.Sonar(centro);
             Destroy(gameObject, SegundosVida);
         }
     }

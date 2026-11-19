@@ -416,6 +416,7 @@ namespace MechaCyberpunk.UI.MenuPausa
             AnimH10.EntrarPanel(panelDatos, new Vector2(AnimH10.DesplazamientoEntrada, 0f), AnimH10.SegundosEscalon);
             menu.enabled = true;
             menu.Recargar();
+            Sonidos.Reproducir("UI_MENU_ABRIR"); // T-1474
             Debug.Log("[UI] Pausa abierta.");
         }
 
@@ -446,6 +447,7 @@ namespace MechaCyberpunk.UI.MenuPausa
                 controlCongelado = null;
             }
             PilaPantallas.Cerrar(this);
+            Sonidos.Reproducir("UI_MENU_CERRAR"); // T-1474
             Debug.Log("[UI] Pausa cerrada.");
         }
 

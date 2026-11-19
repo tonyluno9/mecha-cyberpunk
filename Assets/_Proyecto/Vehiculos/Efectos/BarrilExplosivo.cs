@@ -15,7 +15,7 @@ namespace MechaCyberpunk.Vehiculos.Efectos
         public const float DanioExplosion = 70f;
         public const float VelocidadEmpuje = 9f;
         public const float SegundosLlamas = 8f;
-        public const string IdExplosion = "VEH_EXPLOSION";
+        public const string IdExplosion = LimiteSonidoExplosion.IdOnda;
         private const float SubidaEmpuje = 0.6f;
         /// <summary>T-1317: segundos entre que un barril recibe una explosión y revienta, para que la cadena se vea barril por barril.</summary>
         public const float RetrasoCadena = 0.15f;
@@ -78,7 +78,7 @@ namespace MechaCyberpunk.Vehiculos.Efectos
         {
             Exploto = true;
             Vector3 centro = CentroDelBarril();
-            Sonidos.ReproducirEn(IdExplosion, centro);
+            LimiteSonidoExplosion.Sonar(centro); // T-1472: con tope en cadena
             Explosion = EfectosExplosion.Explosion(centro, RadioExplosion);
             EfectosExplosion.FuegoSuelo(new Vector3(centro.x, EntradaSuelo(centro), centro.z), SegundosLlamas);
             Esconder();

@@ -426,8 +426,15 @@ namespace MechaCyberpunk.Trafico.Persecucion
         }
 
         // Deja exactamente las cantidades que pide el nivel: crea las que faltan y retira las que sobran.
+        private int nivelDespachado;
+
         private void Reconciliar(int nivel)
         {
+            if (nivel > nivelDespachado && nivel > 0)
+            {
+                RadioPolicia.SonarDespacho(PosicionDelJugador() ?? transform.position, config); // T-1476: la central manda más unidades
+            }
+            nivelDespachado = nivel;
             patrullas.RemoveAll(p => p == null || p.Robada || p.Destruida); // T-707
             ActualizarBusqueda(nivel);
             int dronesPedidos = DronesPedidos(nivel);

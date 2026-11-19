@@ -25,6 +25,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
         // T-710: trazo de la bala (hilo finísimo y cortísimo, como el del pandillero) y silbido de la bala que pasa cerca.
         public const string IdDisparo = "ARM_PIS_DISPARO";
         public const string IdRoce = "ARM_BALA_ROZA";
+        public const string IdZumbido = "IMP_BALA_ZUMBIDO";
         private const float BajoElDron = 0.2f;
 
         private Light[] luces;
@@ -123,7 +124,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
         /// <summary>Radio (m) de la explosión chica al estrellarse.</summary>
         public const float RadioExplosion = 2.5f;
 
-        public const string IdExplosion = "VEH_EXPLOSION";
+        public const string IdExplosion = MechaCyberpunk.Vehiculos.Efectos.LimiteSonidoExplosion.IdOnda;
         private const float GravedadCaida = 14f;
         private const float GiroCaida = 540f;
         private const float SegundosMaximosCayendo = 4f;
@@ -203,7 +204,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
         {
             Exploto = true;
             Explosion = EfectosExplosion.Explosion(donde, RadioExplosion);
-            Sonidos.ReproducirEn(IdExplosion, donde);
+            MechaCyberpunk.Vehiculos.Efectos.LimiteSonidoExplosion.Sonar(donde); // T-1472: EXP_ONDA con tope en cadena
             Destroy(gameObject);
         }
 
@@ -292,6 +293,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
             {
                 Rozaduras++;
                 Sonidos.ReproducirEn(IdRoce, masCercano);
+                Sonidos.ReproducirEn(IdZumbido, masCercano); // T-1472: la bala enemiga que pasa cerca del jugador
             }
         }
 
