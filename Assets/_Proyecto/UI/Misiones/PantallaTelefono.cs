@@ -38,6 +38,9 @@ namespace MechaCyberpunk.UI.Misiones
     public class PantallaTelefono : MonoBehaviour
     {
         private const int Pestanas = 5;
+        public const string SonidoPestana = "UI_PESTANA";
+        public const string SonidoAbrir = "UI_MENU_ABRIR";
+        public const string SonidoCerrar = "UI_MENU_CERRAR";
         private const int BarrasReputacion = 2;
         private const float MinimoDeslizamiento = 600f;
 
@@ -195,6 +198,7 @@ namespace MechaCyberpunk.UI.Misiones
                 return;
             }
             congela.Congelar();
+            Sonidos.Reproducir(SonidoAbrir); // T-1474
             // T-623: el jugador saca el teléfono (Inter_Telefono).
             JugadorAPie jugadorGesto = Registro<IJugador>.Actual as JugadorAPie;
             if (jugadorGesto != null)
@@ -224,6 +228,7 @@ namespace MechaCyberpunk.UI.Misiones
                 return;
             }
             abierto = false;
+            Sonidos.Reproducir(SonidoCerrar); // T-1474
             confirmando = false;
             DesactivarEntrada();
             PantallaMisiones lista = Registro<PantallaMisiones>.Actual;
@@ -345,6 +350,7 @@ namespace MechaCyberpunk.UI.Misiones
         private void CambiarPestana(PestanaTelefono nueva)
         {
             pestana = nueva;
+            Sonidos.Reproducir(SonidoPestana); // T-1474
             confirmando = false;
             Pintar();
         }

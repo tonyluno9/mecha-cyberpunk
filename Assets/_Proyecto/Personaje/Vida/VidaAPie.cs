@@ -273,7 +273,7 @@ namespace MechaCyberpunk.Personaje.Vida
                     if (!avisoVidaBaja && actual < modelo.Maxima * FraccionVidaBaja)
                     {
                         avisoVidaBaja = true;
-                        Sonidos.ReproducirEn("JUG_VIDA_BAJA", transform.position);
+                        Sonidos.Reproducir("HUD_VIDA_BAJA"); // T-1474: aviso del HUD en 2D, una vez al cruzar el umbral
                     }
                 }
                 else if (actual > vidaAnterior && !avisoRegenera)
