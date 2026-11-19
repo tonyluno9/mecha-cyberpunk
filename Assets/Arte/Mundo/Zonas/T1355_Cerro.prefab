@@ -17653,7 +17653,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2104262865841987774
 Transform:
   m_ObjectHideFlags: 0
@@ -664169,6 +664169,10 @@ PrefabInstance:
       value: CC08_Muro
       objectReference: {fileID: 0}
     - target: {fileID: 7027898535268726389, guid: 44d1e77b1ca5cef4090410c8efd6f2a5, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7027898535268726389, guid: 44d1e77b1ca5cef4090410c8efd6f2a5, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 22
       objectReference: {fileID: 0}
@@ -972277,6 +972281,10 @@ PrefabInstance:
       value: Poste_2
       objectReference: {fileID: 0}
     - target: {fileID: 4582312852918402241, guid: 82f2ee221414abe48831629adbf8cff5, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4582312852918402241, guid: 82f2ee221414abe48831629adbf8cff5, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 22
       objectReference: {fileID: 0}
@@ -1000884,6 +1000892,10 @@ PrefabInstance:
     - target: {fileID: 2405114081984466040, guid: ce8016fc06f688340ae10d883a96b927, type: 3}
       propertyPath: m_Name
       value: CarroViejo_T1385_4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2405114081984466040, guid: ce8016fc06f688340ae10d883a96b927, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7230821679537695864, guid: ce8016fc06f688340ae10d883a96b927, type: 3}
       propertyPath: m_LocalPosition.x

@@ -133,20 +133,39 @@ namespace MechaCyberpunk.Arte.Editor
         /// <summary>Apaga, dentro de T1388_Uniones, lo que tenga collider en las bocas U1..U9 entre 1 y 3 m (lo que mide OrillasT1358Pruebas).</summary>
         public static void DespejarBocasUniones()
         {
-            const string ruta = "Assets/Arte/Mundo/Zonas/T1388_Uniones.prefab";
-            var raiz = PrefabUtility.LoadPrefabContents(ruta);
             var log = new StringBuilder();
+            DespejarBocas("Assets/Arte/Mundo/Zonas/T1388_Uniones.prefab", null, log);
+            DespejarBocas("Assets/Arte/Mundo/Zonas/T1355_Cerro.prefab", new[] { "T1385_", "T1394_", "T1401_" }, log);
+            System.IO.File.WriteAllText("Logs/despejar-bocas.txt", log.ToString());
+        }
+
+        private static void DespejarBocas(string ruta, string[] soloBajo, StringBuilder log)
+        {
+            var raiz = PrefabUtility.LoadPrefabContents(ruta);
             foreach (var col in raiz.GetComponentsInChildren<Collider>())
             {
                 var b = col.bounds;
                 if (b.max.y < 1f || b.min.y > 3f) continue;
+                if (soloBajo != null)
+                {
+                    bool nuevo = false;
+                    for (var p = col.transform; p != null; p = p.parent) foreach (var pre in soloBajo) if (p.name.StartsWith(pre)) nuevo = true;
+                    if (!nuevo) continue;
+                }
                 foreach (var u in ColocarT1358Orillas.Uniones)
                 {
                     var r = u.rect;
                     if (b.max.x > r.x && b.min.x < r.z && b.max.z > r.y && b.min.z < r.w)
                     {
                         Transform t = col.transform;
-                        while (t.parent != null && t.parent != raiz.transform && t.parent.parent != raiz.transform) t = t.parent;
+                        if (soloBajo == null) { while (t.parent != null && t.parent != raiz.transform && t.parent.parent != raiz.transform) t = t.parent; }
+                        else
+                        {
+                            var cadena = new System.Collections.Generic.List<Transform>();
+                            for (var q = col.transform; q != null && q != raiz.transform; q = q.parent) cadena.Insert(0, q);
+                            int iNuevo = cadena.FindIndex(q => System.Array.Exists(soloBajo, pre => q.name.StartsWith(pre)));
+                            t = cadena[System.Math.Min(cadena.Count - 1, iNuevo + 2)];
+                        }
                         log.AppendLine(u.nombre + "	" + t.name + "	" + b.center);
                         t.gameObject.SetActive(false);
                         break;
@@ -155,7 +174,6 @@ namespace MechaCyberpunk.Arte.Editor
             }
             PrefabUtility.SaveAsPrefabAsset(raiz, ruta);
             PrefabUtility.UnloadPrefabContents(raiz);
-            System.IO.File.WriteAllText("Logs/despejar-bocas.txt", log.ToString());
         }
     }
 }
