@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using MechaCyberpunk.Core.Trepar;
 using MechaCyberpunk.Mundo.Ambiente;
 using UnityEditor;
 using UnityEditor.Animations;
@@ -83,6 +84,8 @@ namespace MechaCyberpunk.Arte.Editor
             public float Y;
             public readonly List<Bounds> Enlaces = new List<Bounds>();
             public readonly List<(Vector2 a, Vector2 b)> Pasillos = new List<(Vector2, Vector2)>();
+            /// <summary>Corredores de salto entre azoteas vecinas (como los recorre RecorridoCerroT1361Pruebas.SaltarEntre): del punto 1 m dentro del borde lejano al centro de la vecina.</summary>
+            public readonly List<(Vector2 a, Vector2 b)> Corredores = new List<(Vector2, Vector2)>();
             public Transform Grupo;
         }
 
@@ -99,6 +102,8 @@ namespace MechaCyberpunk.Arte.Editor
             public readonly List<Bounds> Enlaces = new List<Bounds>();
             public readonly List<Vector3> Postes = new List<Vector3>();
             public int Contador;
+            /// <summary>Cuadros libres (al pie y en la salida de cada escalera, junto a cada PuntoTrepar): nada mío adentro (ni carros, basura, gente, postes, tinacos, rejas ni neones).</summary>
+            public readonly List<Bounds> Libres = new List<Bounds>();
             /// <summary>Posición de las lámparas y neones de fachada (la gente se pone junto a ellos para que se lea).</summary>
             public readonly List<(Vector3 pos, float normal)> LucesFachada = new List<(Vector3, float)>();
             public int Carros, Letreros, Fachadas, Azoteas, Cables, Gente, Basura, Charcos;
@@ -158,6 +163,7 @@ namespace MechaCyberpunk.Arte.Editor
                 Directory.CreateDirectory(Path.Combine(Directory.GetParent(Application.dataPath).FullName, "Logs"));
                 File.WriteAllLines(Path.Combine(Directory.GetParent(Application.dataPath).FullName, "Logs", "t1441-npcs.txt"),
                     planNpc.Select(p => p.Key + "|" + p.Value.x.ToString("R", CultureInfo.InvariantCulture) + "|" + p.Value.y.ToString("R", CultureInfo.InvariantCulture) + "|" + p.Value.z.ToString("R", CultureInfo.InvariantCulture)).ToArray());
+                Paso("poda", () => Podar(c));
                 Paso("LOD", () => AgruparLod(c));
                 Estatico(c);
                 KitS2c.Terminar(c.Obra);
@@ -692,6 +698,69 @@ namespace MechaCyberpunk.Arte.Editor
         }
 
         /// <summary>Las piezas de prefab que no se pudieron combinar (malla no leíble) se agrupan por cuadro de 40 m bajo un LODGroup de un solo nivel que se apaga bajo el 2 % de la pantalla.</summary>
+        private static bool EnCuadroDe(Vector3 desde, Vector3 hacia, float campo, Vector3 punto, float min, float max)
+        {
+            Vector3 adelante = (hacia - desde).normalized;
+            Vector3 derecha = Vector3.Cross(Vector3.up, adelante).normalized;
+            Vector3 arriba = Vector3.Cross(adelante, derecha);
+            Vector3 d = punto - desde;
+            float prof = Vector3.Dot(d, adelante);
+            if (prof < min || prof > max)
+            {
+                return false;
+            }
+            float tanV = Mathf.Tan(campo * 0.5f * Mathf.Deg2Rad);
+            float tanH = tanV * (1376f / 768f);
+            return Mathf.Abs(Vector3.Dot(d, derecha) / prof) < tanH && Mathf.Abs(Vector3.Dot(d, arriba) / prof) < tanV;
+        }
+
+        private static int ContarRenderers(Transform raiz)
+        {
+            return raiz.GetComponentsInChildren<Renderer>(true).Count(r => !(r is ParticleSystemRenderer));
+        }
+
+        /// <summary>
+        /// Rendimiento: las piezas de prefab sueltas (mallas no leíbles, no se pueden combinar) que son puro adorno (antenas, chatarra, cajas, tambos, lavaderos, tendederos, aires, medidores,
+        /// toldos, macetas, basura) y que no están en el cuadro de K13, ni a 60 m o menos de su cámara, ni en el cuadro de A13, se quitan. Tinacos y gente no se tocan.
+        /// </summary>
+        private static void Podar(Ctx c)
+        {
+            int antes = ContarRenderers(c.Nuevo);
+            int quitados = 0, revisados = 0;
+            Dictionary<string, int> porTipo = new Dictionary<string, int>();
+            foreach (string ruta in new[] { "Techos", "Fachadas", "Calle/Basura" })
+            {
+                Transform padre = c.Nuevo.Find(ruta);
+                if (padre == null)
+                {
+                    continue;
+                }
+                foreach (Transform t in padre.Cast<Transform>().ToList())
+                {
+                    if (t.name.StartsWith("NPC_") || t.name.StartsWith("Tinaco_") || t.GetComponentInChildren<Animator>() != null || t.GetComponentInChildren<Light>() != null || t.GetComponentInChildren<Renderer>() == null)
+                    {
+                        continue;
+                    }
+                    revisados++;
+                    Vector3 p = Cubierta(t).center;
+                    bool enK13 = EnCuadroDe(K13Desde, K13Hacia, CampoK13, p, 1f, 400f);
+                    bool cerca = new Vector2(p.x - K13Desde.x, p.z - K13Desde.z).magnitude <= 60f;
+                    bool enA13 = EnCuadroDe(ZonaCerroT1440.A13Desde, ZonaCerroT1440.A13Hacia, CampoA13, p, 1f, 600f);
+                    if (enK13 || cerca || enA13)
+                    {
+                        continue;
+                    }
+                    string tipo = t.name.Split('_')[0];
+                    porTipo[tipo] = (porTipo.TryGetValue(tipo, out int v) ? v : 0) + 1;
+                    Object.DestroyImmediate(t.gameObject);
+                    quitados++;
+                }
+            }
+            Physics.SyncTransforms();
+            Log("Poda de adornos sueltos fuera de K13 (cuadro y 60 m) y de A13: " + quitados + " quitados de " + revisados + " (" + string.Join(", ", porTipo.Select(q => q.Key + " " + q.Value)) + "); quedan " + (revisados - quitados) + " sueltos.");
+            Log("Renderers de " + Raiz + " antes de la poda: " + antes + ", después: " + ContarRenderers(c.Nuevo) + ".");
+        }
+
         private static void AgruparLod(Ctx c)
         {
             int grupos = 0, piezas = 0;
@@ -814,7 +883,9 @@ namespace MechaCyberpunk.Arte.Editor
             Renderer[] rs = t.GetComponentsInChildren<Renderer>(true).Where(r => !(r is ParticleSystemRenderer)).ToArray();
             if (rs.Length == 0)
             {
-                return new Bounds(t.position, Vector3.zero);
+                // Sin malla propia (p. ej. el tinaco: la malla va en el lote): vale la caja de su collider.
+                Collider col = t.GetComponentInChildren<Collider>();
+                return col != null ? col.bounds : new Bounds(t.position, Vector3.zero);
             }
             Bounds b = rs[0].bounds;
             for (int i = 1; i < rs.Length; i++)
@@ -937,8 +1008,87 @@ namespace MechaCyberpunk.Arte.Editor
             return false;
         }
 
+        /// <summary>true si el punto (con un radio) cae en un cuadro libre de escaleras o accesos (también en altura: ±4 m del punto de la escalera).</summary>
+        private static bool EnLibre(Ctx c, Vector3 p, float radio)
+        {
+            foreach (Bounds b in c.Libres)
+            {
+                if (Mathf.Abs(p.x - b.center.x) < b.extents.x + radio && Mathf.Abs(p.z - b.center.z) < b.extents.z + radio && Mathf.Abs(p.y - b.center.y) < b.extents.y + radio)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private static void AgregarLibre(Ctx c, Vector3 centro, float mitad)
+        {
+            c.Libres.Add(new Bounds(centro, new Vector3(mitad * 2f, 10f, mitad * 2f)));
+        }
+
+        /// <summary>
+        /// Cuadros libres (5 x 5 m: 4 x 4 más margen) al pie y en la salida de cada escalera CE01 (se agrupan por z como lo hace RecorridoCerroT1361Pruebas), de cada escalera de ladera de T-1440 y
+        /// junto a cada PuntoTrepar (accesos y enlaces de azotea).
+        /// </summary>
+        private static void ZonasLibres(Ctx c)
+        {
+            int escaleras = 0, trepar = 0;
+            List<Transform> grupos = new List<Transform>();
+            Transform ce = c.Zona.transform.Find("Escaleras");
+            Transform ladera = c.Zona.transform.Find(ZonaCerroT1440.Raiz + "/EscalerasLadera");
+            foreach (Transform raiz in new[] { ce, ladera })
+            {
+                if (raiz == null)
+                {
+                    continue;
+                }
+                SortedDictionary<int, List<Renderer>> porZ = new SortedDictionary<int, List<Renderer>>();
+                foreach (Renderer r in raiz.GetComponentsInChildren<Renderer>(true))
+                {
+                    if (!r.gameObject.activeInHierarchy || (raiz == ce && (r.transform.parent == null || !r.transform.parent.name.StartsWith("CE01_EscaleraCerro"))))
+                    {
+                        continue;
+                    }
+                    int clave = Mathf.RoundToInt(r.bounds.center.z / 2f);
+                    if (!porZ.ContainsKey(clave))
+                    {
+                        porZ[clave] = new List<Renderer>();
+                    }
+                    porZ[clave].Add(r);
+                }
+                foreach (List<Renderer> lista in porZ.Values)
+                {
+                    if (lista.Count < 5)
+                    {
+                        continue;
+                    }
+                    Renderer bajo = lista.OrderBy(r => r.bounds.center.y).First();
+                    Renderer alto = lista.OrderByDescending(r => r.bounds.center.y).First();
+                    Vector3 pb = new Vector3(bajo.bounds.center.x, bajo.bounds.max.y, bajo.bounds.center.z);
+                    Vector3 pa = new Vector3(alto.bounds.center.x, alto.bounds.max.y, alto.bounds.center.z);
+                    Vector3 d = pa - pb;
+                    d.y = 0f;
+                    d = d.sqrMagnitude < 0.01f ? Vector3.right : d.normalized;
+                    AgregarLibre(c, pb - d * 1.5f, 2.5f);
+                    AgregarLibre(c, pa + d * 1.5f, 2.5f);
+                    escaleras++;
+                }
+            }
+            foreach (PuntoTrepar p in c.Zona.GetComponentsInChildren<PuntoTrepar>(false))
+            {
+                if (p.transform.IsChildOf(c.Nuevo))
+                {
+                    continue;
+                }
+                AgregarLibre(c, p.transform.position, 3f);
+                trepar++;
+            }
+            Log("Cuadros libres de 5 x 5 m: " + c.Libres.Count + " (escaleras " + escaleras + ", PuntoTrepar " + trepar + ").");
+        }
+
         private static void Escanear(Ctx c)
         {
+            ZonasLibres(c);
             List<Vector3> detalles = new List<Vector3>();
             foreach (Transform t in c.Zona.GetComponentsInChildren<Transform>(false))
             {
@@ -998,6 +1148,43 @@ namespace MechaCyberpunk.Arte.Editor
                 }
                 c.Techos.Add(t);
             }
+            // Corredores de salto de las cadenas de parkour: para cada par de casas del kit a menos de 4 m (hueco) y con menos de 3 m de desnivel, del punto 1 m dentro del borde lejano de una
+            // al centro de la otra (como SaltarEntre), 1.5 m de ancho; se guardan en las dos azoteas.
+            List<Techo> kit = c.Techos.Where(q => q.H.Kit).ToList();
+            int corredores = 0;
+            for (int i = 0; i < kit.Count; i++)
+            {
+                VariarCerroT1364.CasaT h1 = kit[i].H;
+                Vector2 c1 = new Vector2((h1.X0 + h1.X1) * 0.5f, (h1.Z0 + h1.Z1) * 0.5f);
+                float ex1 = (h1.X1 - h1.X0) * 0.5f, ez1 = (h1.Z1 - h1.Z0) * 0.5f;
+                for (int j = 0; j < kit.Count; j++)
+                {
+                    if (i == j)
+                    {
+                        continue;
+                    }
+                    VariarCerroT1364.CasaT h2 = kit[j].H;
+                    Vector2 c2 = new Vector2((h2.X0 + h2.X1) * 0.5f, (h2.Z0 + h2.Z1) * 0.5f);
+                    if ((c2 - c1).sqrMagnitude > 900f)
+                    {
+                        continue;
+                    }
+                    float ex2 = (h2.X1 - h2.X0) * 0.5f, ez2 = (h2.Z1 - h2.Z0) * 0.5f;
+                    float dx = Mathf.Max(0f, Mathf.Abs(c1.x - c2.x) - (ex1 + ex2));
+                    float dz = Mathf.Max(0f, Mathf.Abs(c1.y - c2.y) - (ez1 + ez2));
+                    if (new Vector2(dx, dz).magnitude >= 4f || Mathf.Abs(h1.Top - h2.Top) > 3f)
+                    {
+                        continue;
+                    }
+                    Vector2 dir = (c2 - c1).normalized;
+                    float mitad = Mathf.Abs(dir.x) * ex1 + Mathf.Abs(dir.y) * ez1;
+                    Vector2 ini = c1 - dir * Mathf.Max(0f, mitad - 1f);
+                    kit[i].Corredores.Add((ini, c2));
+                    kit[j].Corredores.Add((ini, c2));
+                    corredores++;
+                }
+            }
+            Log("Corredores de salto entre azoteas (1.5 m de ancho): " + corredores + ".");
             Log("Azoteas planas medidas: " + c.Techos.Count + " de " + c.Casas.Count + " casas.");
         }
 
@@ -1092,7 +1279,7 @@ namespace MechaCyberpunk.Arte.Editor
                 {
                     continue;
                 }
-                if (EnPasillo(t, x, z, Mathf.Max(hx, hz) * 1.15f + 0.1f))
+                if (EnPasillo(t, x, z, Mathf.Max(hx, hz) * 1.15f + 0.1f) || EnLibre(c, new Vector3(x, t.Nivel, z), Mathf.Max(hx, hz)))
                 {
                     continue;
                 }
@@ -1152,6 +1339,13 @@ namespace MechaCyberpunk.Arte.Editor
             foreach ((Vector2 a, Vector2 b) in t.Pasillos)
             {
                 if (Distancia2D(p, a, b) < AnchoPasillo * 0.5f + radio)
+                {
+                    return true;
+                }
+            }
+            foreach ((Vector2 a, Vector2 b) in t.Corredores)
+            {
+                if (Distancia2D(p, a, b) < 0.75f + radio)
                 {
                     return true;
                 }
@@ -1367,9 +1561,17 @@ namespace MechaCyberpunk.Arte.Editor
                 }
                 q -= peso;
             }
-            GameObject g = Generado(t.Grupo, "Tinaco_" + (c.Contador++), malla, new[] { ladrillo, color }, new Vector3(pos.x, t.Y, pos.y), Quaternion.Euler(0f, c.Obra.Rango(0f, 360f), 0f), Vector3.one * e, true, true);
+            // Un objeto vacío con un BoxCollider del tamaño del tinaco (base de ladrillo + tanque, ~1.7 x 2.1 x 1.7 m a escala 1): la malla visible va en el lote por material.
+            Quaternion giro = Quaternion.Euler(0f, c.Obra.Rango(0f, 360f), 0f);
+            Vector3 donde = new Vector3(pos.x, t.Y, pos.y);
+            GameObject g = new GameObject("Tinaco_" + (c.Contador++));
+            g.transform.SetParent(t.Grupo, false);
+            g.transform.SetPositionAndRotation(donde, giro);
+            BoxCollider caja = g.AddComponent<BoxCollider>();
+            caja.size = new Vector3(1.72f, 2.1f, 1.72f) * e;
+            caja.center = new Vector3(0f, 1.05f * e, 0f);
             Physics.SyncTransforms();
-            Bounds fin = Cubierta(g.transform);
+            Bounds fin = caja.bounds;
             VariarCerroT1364.CasaT hh = t.H;
             if (EnPasillo(t, fin.center.x, fin.center.z, Mathf.Max(fin.extents.x, fin.extents.z) + 0.1f) || fin.min.x < hh.X0 || fin.max.x > hh.X1 || fin.min.z < hh.Z0 || fin.max.z > hh.Z1)
             {
@@ -1384,6 +1586,7 @@ namespace MechaCyberpunk.Arte.Editor
                 Physics.SyncTransforms();
                 return false;
             }
+            Pegar(malla, new[] { ladrillo, color }, Matrix4x4.TRS(donde, giro, Vector3.one * e));
             c.Ocupado.Add(fin);
             return true;
         }
@@ -1537,7 +1740,7 @@ namespace MechaCyberpunk.Arte.Editor
                     zl = Mathf.Clamp(zl, h.Z0 + 0.4f, h.Z1 - 0.4f);
                     float yl = (hayPuerta ? puerta.y : h.Base) + 2.4f;
                     Vector3 p;
-                    if (Pared(c, h, yl, zl, out p) && Libre3D(prohibidos, c.OcupadoPared, p, yl, zl, 0.3f, 0.4f))
+                    if (Pared(c, h, yl, zl, out p) && !EnLibre(c, p, 0.5f) && Libre3D(prohibidos, c.OcupadoPared, p, yl, zl, 0.3f, 0.4f))
                     {
                         Pegar(lampara, new[] { c.Marco, c.Calido }, Matrix4x4.TRS(p, Quaternion.LookRotation(salida), Vector3.one));
                         c.OcupadoPared.Add(new Bounds(new Vector3(p.x, yl, zl), new Vector3(0.6f, 0.6f, 0.6f)));
@@ -1552,7 +1755,7 @@ namespace MechaCyberpunk.Arte.Editor
                     float lado = c.Obra.Chance(0.5f) ? 1f : -1f;
                     float zm = Mathf.Clamp(puerta.z + lado * (anchoPuerta * 0.5f + 0.6f), h.Z0 + 0.4f, h.Z1 - 0.4f);
                     Vector3 p;
-                    if (Pared(c, h, puerta.y + 1.1f, zm, out p))
+                    if (Pared(c, h, puerta.y + 1.1f, zm, out p) && !EnLibre(c, p, 0.5f))
                     {
                         GameObject g = Instanciar(medidor, asegurar(), "Medidor");
                         Montar(g, p, puerta.y + 0.9f, h.Normal);
@@ -1576,7 +1779,7 @@ namespace MechaCyberpunk.Arte.Editor
                     float za = c.Obra.Rango(h.Z0 + 0.9f, h.Z1 - 0.9f);
                     float ya = Mathf.Min(h.Base + (h.Top - h.Base > 5.4f ? 3.5f : 2.1f), h.Top - 1.4f);
                     Vector3 p;
-                    if (Pared(c, h, ya + 0.3f, za, out p))
+                    if (Pared(c, h, ya + 0.3f, za, out p) && !EnLibre(c, p, 0.5f))
                     {
                         GameObject g = Instanciar(aire, asegurar(), "Aire");
                         Montar(g, p, ya, h.Normal);
@@ -1595,7 +1798,7 @@ namespace MechaCyberpunk.Arte.Editor
                     }
                 }
                 // Toldo de lámina sobre la puerta de los locales.
-                if (toldo != null && hayPuerta && baja.name.StartsWith("C01_Fachada") && c.Obra.Chance(fuerte ? 0.95f : 0.6f) && anchoPuerta > 1.1f)
+                if (toldo != null && hayPuerta && !EnLibre(c, puerta, 0.8f) && baja.name.StartsWith("C01_Fachada") && c.Obra.Chance(fuerte ? 0.95f : 0.6f) && anchoPuerta > 1.1f)
                 {
                     Bounds bt = Medida(toldo);
                     float e = (anchoPuerta + 0.5f) / Mathf.Max(0.1f, bt.size.x);
@@ -1625,7 +1828,7 @@ namespace MechaCyberpunk.Arte.Editor
                     float zm = Mathf.Clamp(puerta.z + lado * (anchoPuerta * 0.5f + 0.7f), h.Z0 + 0.5f, h.Z1 - 0.5f);
                     float yg;
                     float xBanq = (h.Normal > 0f ? h.X1 : h.X0) + h.Normal * 0.4f;
-                    if (Suelo(c, xBanq, zm, puerta.y, out yg) && Mathf.Abs(yg - puerta.y) < 0.4f)
+                    if (Suelo(c, xBanq, zm, puerta.y, out yg) && Mathf.Abs(yg - puerta.y) < 0.4f && !EnLibre(c, new Vector3(xBanq, yg, zm), 0.6f))
                     {
                         GameObject g = Instanciar(macetas, asegurar(), "Macetas");
                         g.transform.SetPositionAndRotation(Vector3.zero, Quaternion.LookRotation(-salida));
@@ -1661,6 +1864,10 @@ namespace MechaCyberpunk.Arte.Editor
                         {
                             continue;
                         }
+                        if (EnLibre(c, baja.TransformPoint(new Vector3(r.center.x, r.center.y, mb.Muro)), 0.4f))
+                        {
+                            continue;
+                        }
                         Matrix4x4 local = Matrix4x4.TRS(new Vector3(r.center.x, r.center.y, mb.Muro), Quaternion.identity, new Vector3(r.width * 1.04f, r.height * 1.04f, 1f));
                         Pegar(reja, new[] { c.MarcoOxido }, baja.localToWorldMatrix * local);
                         rej++;
@@ -1677,7 +1884,7 @@ namespace MechaCyberpunk.Arte.Editor
                     float zn = Mathf.Clamp(zc + lado * (h.Z1 - h.Z0) * 0.42f, h.Z0 + 0.5f, h.Z1 - 0.5f);
                     float yn = Mathf.Min(h.Base + 3.0f + alto * 0.5f + c.Obra.Rango(0f, 0.5f), h.Top - 0.4f - alto * 0.5f);
                     Vector3 p;
-                    if (yn - alto * 0.5f > h.Base + 2.0f && Pared(c, h, yn, zn, out p))
+                    if (yn - alto * 0.5f > h.Base + 2.0f && Pared(c, h, yn, zn, out p) && !EnLibre(c, p, 0.5f))
                     {
                         Material mat = c.Neon[(c.Letreros) % c.Neon.Length];
                         Mesh malla = bandera ? banderas[variante] : planos[variante];
@@ -1774,7 +1981,7 @@ namespace MechaCyberpunk.Arte.Editor
                         float z = s.z + dz;
                         float x = XCentroCalle + s.lado * (4.5f - ancho * 0.5f - 0.1f);
                         // Nada a menos de 10 m del lente de K13 (tapaba el cuarto inferior de la foto); la referencia tiene el carro cercano a ~8–10 m.
-                        if (new Vector2(x - K13Desde.x, z - K13Desde.z).magnitude < 10f)
+                        if (new Vector2(x - K13Desde.x, z - K13Desde.z).magnitude < 10f || EnLibre(c, new Vector3(x, YCalle(z), z), largo * 0.5f + 0.5f))
                         {
                             continue;
                         }
@@ -1890,6 +2097,10 @@ namespace MechaCyberpunk.Arte.Editor
                 {
                     continue;
                 }
+                if (EnLibre(c, new Vector3(x, y, z), 0.8f))
+                {
+                    continue;
+                }
                 bool prefabToca = nPrefabs < lista.Length && (nBolsas >= 14 || c.Obra.Chance(0.5f));
                 if (prefabToca && lista[nPrefabs] != null)
                 {
@@ -1983,7 +2194,7 @@ namespace MechaCyberpunk.Arte.Editor
                     continue;
                 }
                 Vector3 pl = new Vector3(xp, yp, zp);
-                if (puestos.Any(q => (q - pl).magnitude < 3f) || !Libre(c, pl + Vector3.up * 0.95f, new Vector3(0.3f, 0.8f, 0.3f)))
+                if (EnLibre(c, pl, 0.6f) || puestos.Any(q => (q - pl).magnitude < 3f) || !Libre(c, pl + Vector3.up * 0.95f, new Vector3(0.3f, 0.8f, 0.3f)))
                 {
                     continue;
                 }
@@ -2033,6 +2244,11 @@ namespace MechaCyberpunk.Arte.Editor
                     continue;
                 }
                 Vector3 p = new Vector3(x, y, z);
+                if (EnLibre(c, p, 0.6f))
+                {
+                    rechazo(donde + " dentro del cuadro libre de una escalera o un acceso");
+                    continue;
+                }
                 if (puestos.Any(q => (q - p).magnitude < (enCuadro ? 3.5f : 5f)))
                 {
                     rechazo(donde + " muy cerca de otra persona");
@@ -2116,6 +2332,58 @@ namespace MechaCyberpunk.Arte.Editor
             return "Assets/Arte/Personajes/" + codigo + "/" + nombre + ".fbx";
         }
 
+        /// <summary>Los fbx de NP salen blancos en Play si no traen su material: se asigna NP*_Base.mat de su carpeta Materiales (o una copia con la textura base si el material no la trae) a toda ranura vacía o sin textura.</summary>
+        private static void ArreglarBlanco(GameObject go, string nombre)
+        {
+            string carpeta = "Assets/Arte/Personajes/" + nombre.Substring(0, nombre.LastIndexOf('_'));
+            Material baseMat = AssetDatabase.LoadAssetAtPath<Material>(carpeta + "/Materiales/" + nombre + "_Base.mat");
+            if (baseMat == null)
+            {
+                Log("AVISO: no existe " + carpeta + "/Materiales/" + nombre + "_Base.mat; " + nombre + " puede salir blanco.");
+                faltan.Add(carpeta + "/Materiales/" + nombre + "_Base.mat");
+                return;
+            }
+            Material usar = baseMat;
+            string prop = baseMat.HasProperty("_BaseMap") ? "_BaseMap" : "_MainTex";
+            if (baseMat.GetTexture(prop) == null)
+            {
+                string[] rutas = AssetDatabase.FindAssets("t:Texture2D", new[] { carpeta + "/Texturas" }).Select(AssetDatabase.GUIDToAssetPath).ToArray();
+                string elegida = rutas.FirstOrDefault(r => Path.GetFileName(r).ToLowerInvariant().Contains("base") && r.Contains(nombre))
+                    ?? rutas.FirstOrDefault(r => r.Contains(nombre) && !Path.GetFileName(r).ToLowerInvariant().Contains("normal")) ?? rutas.FirstOrDefault();
+                Texture2D tex = elegida == null ? null : AssetDatabase.LoadAssetAtPath<Texture2D>(elegida);
+                if (tex != null)
+                {
+                    CarpetaMat();
+                    string rutaCopia = CarpetaMateriales + "/T1441_" + nombre + "_Base.mat";
+                    Material copia = AssetDatabase.LoadAssetAtPath<Material>(rutaCopia);
+                    if (copia == null)
+                    {
+                        copia = new Material(baseMat) { name = "T1441_" + nombre + "_Base" };
+                        AssetDatabase.CreateAsset(copia, rutaCopia);
+                    }
+                    copia.SetTexture(prop, tex);
+                    EditorUtility.SetDirty(copia);
+                    usar = copia;
+                }
+                else
+                {
+                    Log("AVISO: " + nombre + " no tiene textura base en " + carpeta + "/Texturas; queda con el color de su material.");
+                }
+            }
+            foreach (Renderer r in go.GetComponentsInChildren<Renderer>(true))
+            {
+                Material[] ms = r.sharedMaterials;
+                for (int i = 0; i < ms.Length; i++)
+                {
+                    if (ms[i] == null || !ms[i].HasProperty("_BaseMap") || ms[i].GetTexture("_BaseMap") == null)
+                    {
+                        ms[i] = usar;
+                    }
+                }
+                r.sharedMaterials = ms;
+            }
+        }
+
         private static bool PonerNpc(Ctx c, Transform padre, string nombre, Vector3 pos, float yaw, bool muestrear = true)
         {
             GameObject fbx = AssetDatabase.LoadAssetAtPath<GameObject>(RutaFbx(nombre));
@@ -2126,6 +2394,7 @@ namespace MechaCyberpunk.Arte.Editor
             GameObject g = (GameObject)PrefabUtility.InstantiatePrefab(fbx, padre);
             g.name = "NPC_" + nombre + "_" + (c.Contador++);
             Vector3 escalaNpc = g.transform.localScale;
+            ArreglarBlanco(g, nombre);
             g.transform.SetPositionAndRotation(pos, Quaternion.Euler(0f, yaw, 0f));
             RuntimeAnimatorController ctrl = AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>(RutaFbx(nombre).Replace(".fbx", ".controller"));
             Animator an = g.GetComponent<Animator>();
@@ -2345,7 +2614,7 @@ namespace MechaCyberpunk.Arte.Editor
                     continue;
                 }
                 Vector3 pie = new Vector3(x, y, zq);
-                if (!Libre(c, pie + Vector3.up * 2f, new Vector3(0.45f, 2f, 0.45f)) || c.Postes.Any(p => new Vector2(p.x - x, p.z - zq).magnitude < 8f))
+                if (EnLibre(c, pie, 1f) || !Libre(c, pie + Vector3.up * 2f, new Vector3(0.45f, 2f, 0.45f)) || c.Postes.Any(p => new Vector2(p.x - x, p.z - zq).magnitude < 8f))
                 {
                     Log("Poste del paseo en z = " + zq + ": hay algo o ya hay un poste a menos de 8 m; no se pone.");
                     continue;
@@ -2675,7 +2944,7 @@ namespace MechaCyberpunk.Arte.Editor
             }
             foreach (Transform t in items)
             {
-                if (t.GetComponentInChildren<Animator>() != null || t.GetComponentInChildren<Renderer>() == null)
+                if (t.GetComponentInChildren<Animator>() != null || (t.GetComponentInChildren<Renderer>() == null && t.GetComponent<Collider>() == null))
                 {
                     continue;
                 }
@@ -2911,7 +3180,8 @@ namespace MechaCyberpunk.Arte.Editor
                 }
                 total++;
                 Renderer r = col.GetComponent<Renderer>() ?? col.GetComponentInParent<Renderer>();
-                if (r == null)
+                // El tinaco lleva un BoxCollider del tamaño de su malla, que va combinada en el lote por material (a petición de rendimiento): no es un muro invisible.
+                if (r == null && !col.name.StartsWith("Tinaco_"))
                 {
                     bool hijo = col.GetComponentInChildren<Renderer>() != null;
                     if (!hijo)
