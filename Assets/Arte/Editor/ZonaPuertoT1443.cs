@@ -140,6 +140,7 @@ namespace MechaCyberpunk.Arte.Editor
                 obra = KitS2c.Empezar(Raiz, Semilla, zona.transform);
                 raiz = obra.Raiz;
                 RestaurarApartados();
+                RestaurarGruas();
                 CargarOcupados();
                 Paso("grúas", Gruas);
                 Paso("cámara A15", BuscarCamara);
@@ -860,6 +861,46 @@ namespace MechaCyberpunk.Arte.Editor
             return y;
         }
 
+        private const string MarcaGrua = "T1443_dy_";
+        private static readonly RaycastHit[] golpes = new RaycastHit[24];
+
+        /// <summary>Piso del muelle bajo (x, z): solo cuentan las losas Patio, MuelleSur y MuelleEste (nada de la grúa, el agua ni los bordillos). NaN si ningún rayo da con una.</summary>
+        private static float SueloMuelle(float x, float z)
+        {
+            int n = fisica.Raycast(new Vector3(x, 8f, z), Vector3.down, golpes, 14f, ~0, QueryTriggerInteraction.Ignore);
+            float mejor = float.NaN, dist = float.MaxValue;
+            for (int i = 0; i < n; i++)
+            {
+                string nombre = golpes[i].collider.gameObject.name;
+                if ((nombre.Contains("Muelle") || nombre == "Patio") && !nombre.Contains("Bordillo") && golpes[i].distance < dist)
+                {
+                    dist = golpes[i].distance;
+                    mejor = golpes[i].point.y;
+                }
+            }
+            return mejor;
+        }
+
+        /// <summary>Deshace el ajuste de y de cada grúa de la corrida anterior (la marca hija T1443_dy_&lt;valor&gt; guarda cuánto se movió) para partir de la y original.</summary>
+        private static void RestaurarGruas()
+        {
+            int n = 0;
+            foreach (Transform t in zona.GetComponentsInChildren<Transform>(true).ToList())
+            {
+                float dy;
+                if (t.name.StartsWith(MarcaGrua) && t.parent != null)
+                {
+                    if (float.TryParse(t.name.Substring(MarcaGrua.Length), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out dy))
+                    {
+                        t.parent.position -= new Vector3(0f, dy, 0f);
+                        n++;
+                    }
+                    Object.DestroyImmediate(t.gameObject);
+                }
+            }
+            Log("Grúas: " + n + " ajustes de y de la corrida anterior deshechos (parten de su y original).");
+        }
+
         private static Transform Grupo(string nombre)
         {
             Transform t = raiz.Find(nombre);
@@ -1164,9 +1205,9 @@ namespace MechaCyberpunk.Arte.Editor
             string[] codigos = { "PU03_Bodega", "PU04_Bodega" };
             Lote ventilador = LoteDe("Ventiladores", Opaco("Ventilador", new Color(0.3f, 0.32f, 0.36f), 0.4f, 0.5f));
             Lote tapa = LoteDe("VentiladoresTapa", Opaco("VentiladorTapa", new Color(0.5f, 0.52f, 0.55f), 0.35f, 0.5f));
-            Lote magenta = LoteDe("NeonMagenta", Emisivo("NeonMagenta", new Color(0.3f, 0.02f, 0.2f), new Color(7f, 0.6f, 4.5f)));
-            Lote turquesa = LoteDe("NeonTurquesa", Emisivo("NeonTurquesa", new Color(0.02f, 0.25f, 0.22f), new Color(0.5f, 6.5f, 6f)));
-            Lote lampara = LoteDe("LamparasBodega", Emisivo("LamparaBodega", new Color(0.3f, 0.2f, 0.08f), new Color(9f, 4.5f, 1.4f)));
+            Lote magenta = LoteDe("NeonMagenta", Emisivo("NeonMagenta", new Color(0.3f, 0.02f, 0.2f), new Color(22f, 1.8f, 14f)));
+            Lote turquesa = LoteDe("NeonTurquesa", Emisivo("NeonTurquesa", new Color(0.02f, 0.25f, 0.22f), new Color(1.5f, 20f, 19f)));
+            Lote lampara = LoteDe("LamparasBodega", Emisivo("LamparaBodega", new Color(0.3f, 0.2f, 0.08f), new Color(30f, 15f, 4.5f)));
             int puestas = 0;
             int indiceSitio = -1;
             foreach (Vector3 s in sitiosBodega)
@@ -1225,8 +1266,41 @@ namespace MechaCyberpunk.Arte.Editor
             razones[r] = n + 1;
         }
 
+        /// <summary>Lámina más clara y con un poco de emisión propia (material T1443_L__&lt;original&gt;) para que el techo de dos aguas se lea de noche. La bodega es nueva en cada corrida, así que no hay nada que restaurar.</summary>
+        private static void AclararLamina(GameObject go)
+        {
+            foreach (Renderer r in go.GetComponentsInChildren<Renderer>(true))
+            {
+                Material[] ms = r.sharedMaterials;
+                for (int i = 0; i < ms.Length; i++)
+                {
+                    Material orig = ms[i];
+                    if (orig == null || !orig.HasProperty("_BaseColor") || orig.name.StartsWith(Prefijo))
+                    {
+                        continue;
+                    }
+                    ms[i] = MatPropio(Prefijo + "L__" + orig.name, () =>
+                    {
+                        Material m = new Material(orig);
+                        Color c = orig.GetColor("_BaseColor");
+                        m.SetColor("_BaseColor", new Color(Mathf.Min(1f, c.r * 2.6f + 0.14f), Mathf.Min(1f, c.g * 2.2f + 0.09f), Mathf.Min(1f, c.b * 1.8f + 0.05f), c.a));
+                        if (m.HasProperty("_Smoothness"))
+                        {
+                            m.SetFloat("_Smoothness", 0.45f);
+                        }
+                        m.EnableKeyword("_EMISSION");
+                        m.SetColor("_EmissionColor", new Color(0.12f, 0.07f, 0.05f));
+                        m.globalIlluminationFlags = MaterialGlobalIlluminationFlags.RealtimeEmissive;
+                        return m;
+                    });
+                }
+                r.sharedMaterials = ms;
+            }
+        }
+
         private static void DetallesBodega(GameObject go, Transform d, float yaw, Lote ventilador, Lote tapa, Lote magenta, Lote turquesa, Lote lampara)
         {
+            AclararLamina(go);
             Bounds b = Medir(go);
             List<Vector3> vs = Vertices(go.transform);
             Quaternion giro = Quaternion.Euler(0f, yaw, 0f);
@@ -1253,13 +1327,14 @@ namespace MechaCyberpunk.Arte.Editor
                 Caja(tapa, new Vector3(p.x, yt + 0.88f, p.z), new Vector3(1.8f, 0.18f, 1.8f));
             }
             Vector3 cara = b.center + puerta * (pared + 0.12f);
-            Vector3 grosor = ejeX ? new Vector3(0.14f, 1f, 0.4f) : new Vector3(0.4f, 1f, 0.14f);
-            Caja(magenta, new Vector3(cara.x, 4.6f, cara.z) + lado * (mitadLargo * 0.55f), new Vector3(grosor.x, 1.8f, grosor.z));
-            Caja(turquesa, new Vector3(cara.x, 3.4f, cara.z) - lado * (mitadLargo * 0.6f), new Vector3(grosor.x, 1.3f, grosor.z));
-            Vector3 gl = ejeX ? new Vector3(0.5f, 0.25f, 0.3f) : new Vector3(0.3f, 0.25f, 0.5f);
+            Vector3 grosor = ejeX ? new Vector3(0.22f, 1f, 0.8f) : new Vector3(0.8f, 1f, 0.22f);
+            Caja(magenta, new Vector3(cara.x, 4.6f, cara.z) + lado * (mitadLargo * 0.55f), new Vector3(grosor.x, 2.6f, grosor.z));
+            Caja(turquesa, new Vector3(cara.x, 3.4f, cara.z) - lado * (mitadLargo * 0.6f), new Vector3(grosor.x, 1.9f, grosor.z));
+            Vector3 gl = ejeX ? new Vector3(0.9f, 0.4f, 0.5f) : new Vector3(0.5f, 0.4f, 0.9f);
             Caja(lampara, new Vector3(cara.x, 5.6f, cara.z) + lado * 4f + puerta * 0.13f, gl);
             Caja(lampara, new Vector3(cara.x, 5.6f, cara.z) - lado * 4f + puerta * 0.13f, gl);
             Vector3 frente = b.center + puerta * (pared + 1.8f);
+            Tira(LoteDe("PozasLuz", MatPoza()), frente + puerta * 3f, Vector3.right, 16f, 16f, 0.14f); // charco de luz de las lámparas frente a la puerta
             float ry = Mathf.Atan2(puerta.x, puerta.z) * Mathf.Rad2Deg;
             Poner(d, "PU06_Pallets", frente - lado * 6f, ry + obra.Rango(-20f, 20f), 0f, 1.2f);
             Poner(d, "PU06_Pallets", frente + lado * 7f, ry + obra.Rango(-20f, 20f), 0f, 1.0f);
@@ -1644,50 +1719,29 @@ namespace MechaCyberpunk.Arte.Editor
                 {
                     peor = Mathf.Max(peor, Mathf.Abs(p.y - Suelo(p.x, p.z)));
                 }
-                // Muestras de las patas (una por cuadro de 0.5 m) y búsqueda del ajuste (dy, dz de hasta 3 m) con el peor error mínimo contra el piso.
+                // Ronda 8: la base va al piso del muelle medido con rayos que solo cuentan las losas Patio, MuelleSur y MuelleEste (no la grúa ni el agua). Parte de la y original: RestaurarGruas deshizo el ajuste anterior.
                 List<Vector3> muestras = pies.GroupBy(p => new Vector2Int(Mathf.RoundToInt(p.x * 2f), Mathf.RoundToInt(p.z * 2f))).Select(gp => gp.First()).Take(40).ToList();
-                float mejorCosto = float.MaxValue, mejorDy = 0f, mejorDz = 0f;
-                for (float dz = -3f; dz <= 3.01f; dz += 0.5f)
+                List<float> pisos = muestras.Select(m => SueloMuelle(m.x, m.z)).Where(s => !float.IsNaN(s)).OrderBy(s => s).ToList();
+                if (pisos.Count == 0)
                 {
-                    List<float> suelos = muestras.Select(m => Suelo(m.x, m.z + dz)).ToList();
-                    foreach (float s0 in suelos.Distinct().ToList())
+                    Log("AVISO grúa " + g.name + ": ningún rayo dio con una losa del muelle bajo las patas; no se mueve (base y " + minY.ToString("F2") + ").");
+                }
+                else
+                {
+                    float mediana = pisos[pisos.Count / 2];
+                    Log("Grúa " + g.name + ": losa bajo las patas min " + pisos[0].ToString("F2") + " / mediana " + mediana.ToString("F2") + " / max " + pisos[pisos.Count - 1].ToString("F2") + " (" + pisos.Count + " de " + muestras.Count + " rayos); base original y " + minY.ToString("F2") + ".");
+                    float dyMed = mediana - minY;
+                    if (Mathf.Abs(dyMed) > 0.02f && Mathf.Abs(dyMed) < 3f)
                     {
-                        float dy = s0 - minY;
-                        float costo = 0f;
-                        for (int i = 0; i < muestras.Count; i++)
-                        {
-                            costo = Mathf.Max(costo, Mathf.Abs(muestras[i].y + dy - suelos[i]));
-                        }
-                        costo += 0.01f * (Mathf.Abs(dz) + Mathf.Abs(dy));
-                        if (costo < mejorCosto)
-                        {
-                            mejorCosto = costo; mejorDy = dy; mejorDz = dz;
-                        }
+                        g.position += new Vector3(0f, dyMed, 0f);
+                        GameObject marca = new GameObject(MarcaGrua + dyMed.ToString("R", System.Globalization.CultureInfo.InvariantCulture));
+                        marca.transform.SetParent(g, false);
+                        Physics.SyncTransforms();
+                        vs = Vertices(g);
+                        minY += dyMed;
+                        maxY += dyMed;
+                        Log("Grúa " + g.name + ": base subida/bajada dy " + dyMed.ToString("F2") + " m hasta y = piso " + mediana.ToString("F2") + " (marca " + marca.name + " para deshacerlo).");
                     }
-                }
-                // Regla de la ronda 2: el piso del muelle es la mediana del piso bajo las patas; la base de la grúa sube o baja hasta ahí (dy), sin mover en z.
-                List<float> pisos = muestras.Select(m => Suelo(m.x, m.z)).OrderBy(s => s).ToList();
-                float mediana = pisos[pisos.Count / 2];
-                Log("Grúa " + g.name + ": piso bajo las patas min " + pisos[0].ToString("F2") + " / mediana " + mediana.ToString("F2") + " / max " + pisos[pisos.Count - 1].ToString("F2") + "; base de la grúa y " + minY.ToString("F2") + ".");
-                float dyMed = mediana - minY;
-                if (Mathf.Abs(dyMed) > 0.05f && Mathf.Abs(dyMed) < 3f)
-                {
-                    mejorDy = dyMed;
-                    mejorDz = 0f;
-                    mejorCosto = -1f;
-                }
-                if (mejorCosto + 0.01f < peor && Mathf.Abs(mejorDy) < 3f)
-                {
-                    g.position += new Vector3(0f, mejorDy, mejorDz);
-                    Physics.SyncTransforms();
-                    vs = Vertices(g);
-                    minY += mejorDy;
-                    maxY += mejorDy;
-                    Log("Grúa " + g.name + ": movida dy " + mejorDy.ToString("F2") + " m (a y = piso) y dz " + mejorDz.ToString("F1") + " m; peor apoyo " + peor.ToString("F2") + " -> " + mejorCosto.ToString("F2") + " m.");
-                }
-                else if (peor > 0.05f)
-                {
-                    Log("AVISO grúa " + g.name + ": peor apoyo " + peor.ToString("F2") + " m y ningún ajuste de ±3 m lo mejora (mejor " + mejorCosto.ToString("F2") + ").");
                 }
                 List<Vector3> puntos = new List<Vector3>();
                 System.Action<Vector3, bool> agregar = (p, verde) =>
@@ -2172,7 +2226,7 @@ namespace MechaCyberpunk.Arte.Editor
                             List<Vector3> vs = Vertices(g);
                             if (vs.Count == 0) continue;
                             float minY = vs.Min(p => p.y);
-                            List<float> pisosPata = vs.Where(q => q.y < minY + 0.3f).Take(60).Select(pp => Suelo(pp.x, pp.z)).OrderBy(s2 => s2).ToList();
+                            List<float> pisosPata = vs.Where(q => q.y < minY + 0.3f).Take(60).Select(pp => SueloMuelle(pp.x, pp.z)).Where(s2 => !float.IsNaN(s2)).OrderBy(s2 => s2).ToList();
                             float peorPata = pisosPata.Count == 0 ? 0f : Mathf.Abs(minY - pisosPata[pisosPata.Count / 2]); // contra la mediana del piso bajo las patas
                             bool bien = peorPata <= 0.05f;
                             v.AppendLine((bien ? "Grúa " : "FALLA grúa ") + g.name + ": pata baja y " + minY.ToString("F2") + ", peor error contra el piso " + peorPata.ToString("F2") + " m");

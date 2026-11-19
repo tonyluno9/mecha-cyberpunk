@@ -99,6 +99,8 @@ namespace MechaCyberpunk.Arte.Editor
             public readonly List<Bounds> Enlaces = new List<Bounds>();
             public readonly List<Vector3> Postes = new List<Vector3>();
             public int Contador;
+            /// <summary>Posición de las lámparas y neones de fachada (la gente se pone junto a ellos para que se lea).</summary>
+            public readonly List<(Vector3 pos, float normal)> LucesFachada = new List<(Vector3, float)>();
             public int Carros, Letreros, Fachadas, Azoteas, Cables, Gente, Basura, Charcos;
             public Material Marco, MarcoOxido, Concreto, Gris, Negro, Madera;
             public Material[] Neon;
@@ -514,14 +516,15 @@ namespace MechaCyberpunk.Arte.Editor
             public readonly List<int> T = new List<int>();
         }
 
-        private const float LadoLote = 40f;
+        private const float LadoLod = 40f;
 
         private static readonly Dictionary<string, LoteDatos> lotes = new Dictionary<string, LoteDatos>();
         private static int pegados, conservados;
 
         private static LoteDatos Lote(Material m, Vector3 donde)
         {
-            int cx = Mathf.FloorToInt(donde.x / LadoLote), cz = Mathf.FloorToInt(donde.z / LadoLote);
+            // Una sola malla por material para todo el Cerro (menos batches); la ubicación solo se usa para nombrar.
+            int cx = 0, cz = 0;
             string clave = m.GetInstanceID() + "|" + cx + "|" + cz;
             if (!lotes.TryGetValue(clave, out LoteDatos l))
             {
@@ -624,7 +627,24 @@ namespace MechaCyberpunk.Arte.Editor
                 mr.shadowCastingMode = ShadowCastingMode.Off;
                 n++;
             }
-            Log("Lotes combinados: " + n + " objetos con " + pegados + " piezas pegadas; piezas de prefab que no se pudieron combinar (malla no leíble): " + conservados + ".");
+            int sueltos = 0, skin = 0;
+            foreach (Renderer r in c.Nuevo.GetComponentsInChildren<Renderer>(true))
+            {
+                if (r.transform.IsChildOf(padre) || r is ParticleSystemRenderer)
+                {
+                    continue;
+                }
+                if (r is SkinnedMeshRenderer)
+                {
+                    skin++;
+                }
+                else
+                {
+                    sueltos++;
+                }
+            }
+            Log("Lotes combinados: " + n + " mallas (una por material, todo el Cerro) con " + pegados + " piezas pegadas; piezas de prefab que no se pudieron combinar (malla no leíble): " + conservados + ".");
+            Log("Renderers de " + Raiz + ": antes de combinar " + (pegados + sueltos + skin) + " (" + pegados + " piezas + " + sueltos + " sueltos + " + skin + " con huesos); después " + (n + sueltos + skin) + " (" + n + " lotes + " + sueltos + " sueltos + " + skin + " con huesos).");
         }
 
         /// <summary>Las piezas de prefab que no se pudieron combinar (malla no leíble) se agrupan por cuadro de 40 m bajo un LODGroup de un solo nivel que se apaga bajo el 2 % de la pantalla.</summary>
@@ -646,7 +666,7 @@ namespace MechaCyberpunk.Arte.Editor
                         continue;
                     }
                     Bounds b = Cubierta(t);
-                    string clave = Mathf.FloorToInt(b.center.x / LadoLote) + "_" + Mathf.FloorToInt(b.center.z / LadoLote);
+                    string clave = Mathf.FloorToInt(b.center.x / LadoLod) + "_" + Mathf.FloorToInt(b.center.z / LadoLod);
                     if (!celdas.TryGetValue(clave, out List<Transform> lista))
                     {
                         lista = new List<Transform>();
@@ -1463,6 +1483,7 @@ namespace MechaCyberpunk.Arte.Editor
                     {
                         Pegar(lampara, new[] { c.Marco, c.Calido }, Matrix4x4.TRS(p, Quaternion.LookRotation(salida), Vector3.one));
                         c.OcupadoPared.Add(new Bounds(new Vector3(p.x, yl, zl), new Vector3(0.6f, 0.6f, 0.6f)));
+                        c.LucesFachada.Add((p, h.Normal));
                         lam++;
                         cuantas++;
                     }
@@ -1607,6 +1628,7 @@ namespace MechaCyberpunk.Arte.Editor
                         {
                             Pegar(malla, new[] { c.Marco, mat }, Matrix4x4.TRS(new Vector3(p.x, yn, zn), Quaternion.LookRotation(salida), Vector3.one));
                             c.OcupadoPared.Add(caja);
+                            c.LucesFachada.Add((new Vector3(p.x, yn, zn), h.Normal));
                             c.Letreros++;
                             neon++;
                             cuantas++;
@@ -1668,7 +1690,7 @@ namespace MechaCyberpunk.Arte.Editor
             // Pegados a la banqueta (calle de 9 m, banquetas en ±4.5 m): lado -1 = oeste (mira al norte, hacia K13), +1 = este (mira al sur). El primero lleva los faros encendidos.
             (float lado, float z, bool hero)[] sitios =
             {
-                (-1f, 136f, true), (1f, 118f, false), (-1f, 108f, false), (1f, 92f, false), (-1f, 76f, false), (1f, 58f, false), (-1f, 44f, false), (1f, 36f, false),
+                (-1f, 140f, true), (1f, 118f, false), (-1f, 108f, false), (1f, 92f, false), (-1f, 76f, false), (1f, 58f, false), (-1f, 44f, false), (1f, 36f, false),
             };
             int n = 0, usados = 0;
             foreach (var s in sitios)
@@ -1693,6 +1715,11 @@ namespace MechaCyberpunk.Arte.Editor
                         }
                         float z = s.z + dz;
                         float x = XCentroCalle + s.lado * (4.5f - ancho * 0.5f - 0.1f);
+                        // Nada a menos de 10 m del lente de K13 (tapaba el cuarto inferior de la foto); la referencia tiene el carro cercano a ~8–10 m.
+                        if (new Vector2(x - K13Desde.x, z - K13Desde.z).magnitude < 10f)
+                        {
+                            continue;
+                        }
                         float yN, yS;
                         if (!Suelo(c, x, z + largo * 0.35f, YCalle(z), out yN) || !Suelo(c, x, z - largo * 0.35f, YCalle(z), out yS))
                         {
@@ -1881,6 +1908,39 @@ namespace MechaCyberpunk.Arte.Editor
             int total = 0;
             List<Vector3> puestos = new List<Vector3>();
             // Banquetas (oeste y este de la calle, entre las zonas visibles de K13).
+            // 2 personas a 8–12 m del lente, en la banqueta bajo una lámpara o un neón de fachada, mirando hacia la cámara, para que se lean.
+            int bajoLuz = 0;
+            foreach ((Vector3 luz, float normal) in c.LucesFachada.OrderBy(q => Mathf.Abs(Vector3.Distance(new Vector3(q.pos.x, K13Desde.y, q.pos.z), K13Desde) - 10f)))
+            {
+                if (bajoLuz >= 2)
+                {
+                    break;
+                }
+                float xp = luz.x + normal * 1.0f;
+                float zp = luz.z + (bajoLuz == 0 ? 0.8f : -0.8f);
+                float yRefL = YCalle(zp);
+                float yp;
+                if (!EnCuadroPunto(new Vector3(xp, yRefL + 0.9f, zp), 8f, 12f) || !Suelo(c, xp, zp, yRefL, out yp) || Mathf.Abs(yp - yRefL) > 0.6f)
+                {
+                    continue;
+                }
+                Vector3 pl = new Vector3(xp, yp, zp);
+                if (puestos.Any(q => (q - pl).magnitude < 3f) || !Libre(c, pl + Vector3.up * 0.95f, new Vector3(0.3f, 0.8f, 0.3f)))
+                {
+                    continue;
+                }
+                if (PonerNpc(c, padre, disponibles[c.Obra.Azar.Next(disponibles.Count)], pl, c.Obra.Rango(-20f, 20f)))
+                {
+                    puestos.Add(pl);
+                    total++;
+                    bajoLuz++;
+                    Log("  NPC bajo una luz de fachada en " + pl.ToString("F1") + " (" + Vector3.Distance(pl, K13Desde).ToString("0.0", CultureInfo.InvariantCulture) + " m del lente).");
+                }
+            }
+            if (bajoLuz < 2)
+            {
+                Log("AVISO: solo " + bajoLuz + " personas bajo una luz a 8–12 m del lente (" + c.LucesFachada.Count + " luces de fachada).");
+            }
             float[] columnas = { XCentroCalle - 5.2f, XCentroCalle + 5.2f, XCentroCalle + 7f, XCentroCalle - 4.0f, XCentroCalle + 4.0f };
             int rechazos = 0;
             Action<string> rechazo = motivo =>
