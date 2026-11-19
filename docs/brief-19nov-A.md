@@ -37,5 +37,5 @@ Lo dirige Opus en la carpeta principal (rama `integ/look-19nov-A`). Tú eres un 
   en voz alta (`Debug.LogError`) si algo no cumple.
 
 ## Cupos de luces
-- T-1441 (look): hasta +80 Light nuevas, y puede quitar luces redundantes de las zonas nuevas.
-- T-1443 (Malecón): hasta +40. T-1444 (Autopista): hasta +40. T-1442 (aéreas): 0.
+- T-1461 (look): hasta +80 Light nuevas, y puede quitar luces redundantes de las zonas nuevas.
+- T-1463 (Malecón): hasta +40. T-1464 (Autopista): hasta +40. T-1462 (aéreas): 0.
