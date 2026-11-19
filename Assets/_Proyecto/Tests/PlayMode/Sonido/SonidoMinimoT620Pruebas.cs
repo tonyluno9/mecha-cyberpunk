@@ -50,7 +50,7 @@ namespace MechaCyberpunk.Tests.Sonido
             GestorSonidos g = CrearGestor(out _);
             yield return null;
             g.Reproducir("UI_TEXTO");
-            g.ReproducirEn("JUG_PASO_INTERIOR", Vector3.zero); // T-977: el de asfalto ya regresó
+            g.ReproducirEn("MUN_PERRO_LADRA", Vector3.zero); // T-1471: JUG_PASO_INTERIOR ya suena (PAS_MADERA); el perro sigue apagado
             Assert.AreEqual(1, g.Pedidos("UI_TEXTO"));
             Assert.AreEqual(0, g.VocesTotales, "apagados: no suena nada");
             Assert.AreEqual(Sonidos.SinBucle, g.ReproducirBucle("AMB_TIANGUIS", null));
@@ -120,6 +120,7 @@ namespace MechaCyberpunk.Tests.Sonido
                 g.Reproducir(todosLosIds[cuadro % todosLosIds.Count]);
                 maxVoces = Mathf.Max(maxVoces, g.VocesTotales);
                 List<string> ids = g.IdsSonando();
+                ids.RemoveAll(i => i == "CAL_PATRULLA_SIRENA"); // T-1471: la sirena permite hasta 3 bucles (una por patrulla)
                 HashSet<string> distintos = new HashSet<string>(ids);
                 if (distintos.Count != ids.Count) repetidos++;
                 int reales = 0;
@@ -128,7 +129,15 @@ namespace MechaCyberpunk.Tests.Sonido
                     if (!a.isPlaying || a.clip == null || a.name.StartsWith("Ambiente_")) continue;
                     reales++;
                     if (!idDelClip.TryGetValue(a.clip, out string id) || !catalogo.Encendido(id)) apagadosSonando++;
-                    else sonaron.Add(id);
+                    else
+                    {
+                        sonaron.Add(id);
+                        // T-1471: un ID viejo mapeado suena con el clip del nuevo.
+                        foreach (MapaSonidos19nov.Par par in MapaSonidos19nov.Pares)
+                        {
+                            if (par.Nuevo == id && par.Encender) sonaron.Add(par.Viejo);
+                        }
+                    }
                 }
                 maxFuentesReales = Mathf.Max(maxFuentesReales, reales);
                 yield return null;

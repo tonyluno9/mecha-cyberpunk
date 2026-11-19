@@ -55,7 +55,7 @@ namespace MechaCyberpunk.Tests.Sonido
                 Assert.IsFalse(c.Encendido(id), id + " es de los molestos");
                 Assert.IsFalse(ReglaMezclaSonidos.EncendidoPorDefecto(id), id);
             }
-            foreach (string id in new[] { "AMB_TIANGUIS", "AMB_INTERIOR_CASA", "AMB_MERCADO", "AMB_BAR", "AMB_CLANDESTINO", "AMB_CALLE_DIA", "JUG_PASO_INTERIOR", "ARM_BALA_ROZA" })
+            foreach (string id in new[] { "AMB_TIANGUIS", "AMB_INTERIOR_CASA", "AMB_MERCADO", "AMB_BAR", "AMB_CLANDESTINO", "AMB_CALLE_DIA", "ARM_BALA_ROZA" })
             {
                 Assert.IsFalse(c.Encendido(id), id + " no estaba en la lista");
             }
