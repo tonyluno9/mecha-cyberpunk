@@ -17,6 +17,12 @@ namespace MechaCyberpunk.Progresion.Editor
         public const string RutaCatalogo = "Assets/_Proyecto/Progresion/Datos/CatalogoSonidos.asset";
         public const string CarpetaAudio = "Assets/Arte/Audio";
         private static readonly string[] Secciones = { "JUG", "PUN", "ARM", "VEH", "PAN", "CAL", "ZON", "ECO", "UI", "MUN", "AMB", "MUS" };
+        /// <summary>T-1471: carpetas de los sonidos nuevos (T-1470), dentro de Assets/Arte/Audio.</summary>
+        public static readonly string[] CarpetasNuevas =
+        {
+            "01_UI", "02_Armas", "03_Impactos", "04_Explosiones", "05_Pasos", "06_Jugador", "07_Interaccion", "08_Consumibles", "09_Vehiculos", "10_Policia",
+        };
+
         private static readonly Regex Variante = new Regex(@"^(.+?)(_\d\d)?$");
 
         [MenuItem("Mecha Cyberpunk/Sonido/Crear catalogo")]
@@ -29,6 +35,13 @@ namespace MechaCyberpunk.Progresion.Editor
                 Leer(CarpetaAudio + "/" + seccion, entradas, false);
                 Leer(CarpetaAudio + "/Provisional/" + seccion, entradas, true);
             }
+            // T-1471: las 10 carpetas nuevas (19-nov). Si un ID nuevo ya existia (UI_MOVER, UI_ERROR, VEH_PUERTA_ABRIR...), sus archivos REEMPLAZAN a los finales viejos.
+            SortedDictionary<string, CatalogoSonidos.Entrada> nuevas = new SortedDictionary<string, CatalogoSonidos.Entrada>();
+            foreach (string carpeta in CarpetasNuevas)
+            {
+                Leer(CarpetaAudio + "/" + carpeta, nuevas, false);
+            }
+            MapaSonidos19nov.Reemplazar(entradas, nuevas.Values);
             CatalogoSonidos catalogo = AssetDatabase.LoadAssetAtPath<CatalogoSonidos>(RutaCatalogo);
             if (catalogo == null)
             {

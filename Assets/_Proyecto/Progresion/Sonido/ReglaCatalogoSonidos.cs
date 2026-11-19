@@ -19,6 +19,8 @@ namespace MechaCyberpunk.Progresion.Sonido
                 case "AMB": return SeccionSonido.Ambiente;
                 case "MUS": return SeccionSonido.Musica;
                 case "UI_": return SeccionSonido.Interfaz;
+                case "HUD": return SeccionSonido.Interfaz; // T-1471
+                case "TIE": return SeccionSonido.Interfaz; // T-1471
                 default: return SeccionSonido.Efectos;
             }
         }
