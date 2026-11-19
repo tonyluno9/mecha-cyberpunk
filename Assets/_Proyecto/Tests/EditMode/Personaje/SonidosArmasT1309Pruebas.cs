@@ -31,9 +31,9 @@ namespace MechaCyberpunk.Tests.Personaje
         [Test]
         public void IdDisparo_ElRevolverConservaSuClipDeSiempre()
         {
-            Assert.AreEqual("ARM_REV_DISPARO", PistolaAPie.IdDisparo(ArmaAPie.Revolver));
-            // El ID viejo sigue siendo del sniper.
-            Assert.AreEqual("ARM_SNI_DISPARO", PistolaAPie.IdDisparo(ArmaAPie.Sniper));
+            // T-1472: ahora cada arma pide su ID nuevo (W06 revólver, W04 francotirador); T-1471 los mapea a los archivos.
+            Assert.AreEqual("ARM_W06_DISPARO", PistolaAPie.IdDisparo(ArmaAPie.Revolver));
+            Assert.AreEqual("ARM_W04_DISPARO", PistolaAPie.IdDisparo(ArmaAPie.Sniper));
         }
 
         [Test]
@@ -41,20 +41,22 @@ namespace MechaCyberpunk.Tests.Personaje
         {
             CatalogoSonidos catalogo = AssetDatabase.LoadAssetAtPath<CatalogoSonidos>(RutaCatalogo);
             Assert.IsNotNull(catalogo);
-            if (!catalogo.Tiene("ARM_PLA_DISPARO"))
+            if (!catalogo.Tiene("ARM_W07_DISPARO") || !catalogo.Tiene("ARM_W06_DISPARO"))
             {
                 Assert.Ignore("Falta correr MechaCyberpunk.Personaje.Editor.SonidosArmasT1309.Aplicar (asigna los clips nuevos al catalogo).");
             }
             HashSet<AudioClip> clips = new HashSet<AudioClip>();
             foreach (ArmaAPie arma in ArmasDeFuego)
             {
+                if (arma == ArmaAPie.Subfusil)
+                {
+                    continue; // T-1472: el subfusil suena con el clip de la pistola a tono alto (lo pone T-1471)
+                }
                 string id = PistolaAPie.IdDisparo(arma);
                 AudioClip clip = catalogo.Elegir(id);
                 Assert.IsNotNull(clip, "Sin clip para " + id);
                 Assert.IsTrue(clips.Add(clip), "Clip repetido para " + arma + " (" + clip.name + ")");
             }
-            Assert.AreEqual("ARM_SNI_DISPARO_01", catalogo.Elegir("ARM_REV_DISPARO").name.Replace("ARM_REV", "ARM_SNI"),
-                "El revolver suena igual que antes (copia exacta de ARM_SNI_DISPARO_01)");
         }
 
         [Test]

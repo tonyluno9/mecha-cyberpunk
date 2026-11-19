@@ -719,6 +719,7 @@ namespace MechaCyberpunk.IA.APie
                 float probabilidad = PistolaPandillero.ProbabilidadAcierto(distancia, datos.DistanciaAciertoCerca,
                     datos.DistanciaAciertoLejos, datos.AciertoCerca, datos.AciertoLejos);
                 DanioDeLaPolicia = datos.EsPolicia; // T-729: lo que caiga por este disparo no suma búsqueda al jugador
+                Sonidos.ReproducirEn(MechaCyberpunk.Personaje.Combate.SonidosArmasT1472.IdDisparoEnemigo(datos.Perdigones), boca); // T-1472: el disparo enemigo, en 3D
                 for (int perdigon = 0; perdigon < datos.Perdigones; perdigon++)
                 {
                     pistola.Disparar(boca, pecho, recibe, datos.DanioDisparo, probabilidad);

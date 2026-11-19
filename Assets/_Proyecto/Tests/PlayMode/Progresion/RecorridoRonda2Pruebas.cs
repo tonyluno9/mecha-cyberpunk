@@ -324,7 +324,7 @@ namespace MechaCyberpunk.Tests.Progresion
             Assert.AreEqual(ArmaAPie.Escopeta, armas.ArmaActiva, "La escopeta se equipa.");
             Assert.AreEqual(armas.TamanoCargador, armas.Balas, "Sale con el cargador lleno.");
             int balas = armas.Balas;
-            int disparosAntes = gestor.Pedidos("ARM_ESC_DISPARO");
+            int disparosAntes = gestor.Pedidos("ARM_W02_DISPARO");
             Press(raton.rightButton);
             yield return new WaitForSecondsRealtime(0.3f);
             yield return Pulsar(raton.leftButton);
@@ -332,7 +332,7 @@ namespace MechaCyberpunk.Tests.Progresion
             yield return new WaitForSecondsRealtime(0.2f);
             Assert.AreEqual(balas - 1, armas.Balas, "Disparar baja el cargador.");
             Assert.Less(muneco.Actual, vidaAntes, "Los perdigones dañan al muñeco a 8 m.");
-            Assert.AreEqual(disparosAntes + 1, gestor.Pedidos("ARM_ESC_DISPARO"), "El disparo suena.");
+            Assert.AreEqual(disparosAntes + 1, gestor.Pedidos("ARM_W02_DISPARO"), "El disparo suena.");
             Assert.AreEqual(8, armas.GetComponent<PistolaAPie>().DatosActuales.Perdigones, "La escopeta lanza 8 perdigones.");
             yield return Pulsar(teclado.rKey);
             Assert.IsTrue(armas.Recargando, "R recarga.");

@@ -24,6 +24,8 @@ namespace MechaCyberpunk.Personaje.Combate
         private float vida;
         private bool explotado;
         private bool quieta;
+        private float proximoRebote;
+        private const float SegundosEntreRebotes = 0.15f;
 
         /// <summary>True mientras sigue en el aire o en el piso sin explotar.</summary>
         public bool Viva => !explotado;
@@ -102,6 +104,12 @@ namespace MechaCyberpunk.Personaje.Combate
                 {
                     Explotar(golpe.point + golpe.normal * 0.05f);
                     return;
+                }
+                // T-1472: el rebote suena, con un tiempo mínimo para que no sea una ametralladora de golpecitos.
+                if (Time.time >= proximoRebote)
+                {
+                    proximoRebote = Time.time + SegundosEntreRebotes;
+                    Sonidos.ReproducirEn(SonidosArmasT1472.GranadaRebote, golpe.point);
                 }
                 // Rebota: refleja la velocidad y pierde fuerza; si ya casi no se mueve, se queda en el piso.
                 transform.position = golpe.point + golpe.normal * RadioChoque;
