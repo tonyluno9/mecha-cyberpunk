@@ -219,7 +219,18 @@ namespace MechaCyberpunk.Arte.Editor
                 Estelas(o, Hijo(o.Raiz, "Estelas"));
                 Vida(o, raiz);
                 EngrosarColumnasRampa(raiz);
+                ArcoBoca(o, Hijo(o.Raiz, "ArcoBoca"));
+                Vector3? pilarK18 = PilarK18();
+                if (pilarK18.HasValue)
+                {
+                    PrimerPlanoK18(o, raiz, pilarK18.Value, CamaraK18Construida().Value.desde);
+                }
+                else
+                {
+                    informe.AppendLine("K18: no hay columna de rampa cerca de (-236, 232); no se construye el primer plano.");
+                }
                 PonerMarcasEn(o.Raiz);
+                ApagarAltosA18(raiz, o.Raiz);
                 KitS2c.Terminar(o);
                 int lucesDespues = contenido.GetComponentsInChildren<Light>(true).Length;
                 informe.AppendLine("Luces: antes " + lucesAntes + ", despues " + lucesDespues + " (nuevas " + (lucesDespues - lucesAntes) + ", tope " + MaxLucesNuevas + ").");
@@ -498,7 +509,7 @@ namespace MechaCyberpunk.Arte.Editor
             List<Bounds> lista = new List<Bounds>();
             foreach (Renderer r in raiz.GetComponentsInChildren<Renderer>(false))
             {
-                if (!r.gameObject.activeInHierarchy || r.transform.IsChildOf(mia) || r.name.StartsWith("Halo") || r.name.StartsWith("Charco"))
+                if (!r.gameObject.activeInHierarchy || (mia != null && r.transform.IsChildOf(mia)) || r.name.StartsWith("Halo") || r.name.StartsWith("Charco"))
                 {
                     continue;
                 }
@@ -727,6 +738,232 @@ namespace MechaCyberpunk.Arte.Editor
             informe.AppendLine("Columnas de la rampa norte engrosadas a ~5 m: " + hechas + " (ya gruesas: " + ya + ", candidatas con tablero >= 3 m: " + cols.Count + ").");
         }
 
+        // ---------------------------------------------------------------- K18 construida: pilar en primer plano, arco de la boca y suelo con vida
+
+        /// <summary>La columna de la rampa norte (tablero a 3 m o mas) mas cercana a (-236, 232): es el pilar de primer plano de K18.</summary>
+        private static Vector3? PilarK18()
+        {
+            Vector3 deseada = new Vector3(-236f, 0f, 232f);
+            List<Vector3> cols = ColumnasRampaAltas().Where(c => c.x > -290f && c.x < -190f).OrderBy(c => T.Planta(c - deseada).magnitude).ToList();
+            return cols.Count == 0 ? (Vector3?)null : cols[0];
+        }
+
+        /// <summary>Camara K18: 12 m al este y 10 m al sur del pilar, a 6 m de alto, con el pilar en x 0.58 de la pantalla y mirando 10 grados hacia arriba.</summary>
+        private static (Vector3 desde, Vector3 hacia)? CamaraK18Construida()
+        {
+            Vector3? pilar = PilarK18();
+            if (!pilar.HasValue)
+            {
+                return null;
+            }
+            Vector3 desde = new Vector3(pilar.Value.x + 12f, 6f, pilar.Value.z - 10f);
+            Vector3 d = pilar.Value - desde;
+            float yawPilar = Mathf.Atan2(d.x, d.z) * Mathf.Rad2Deg;
+            Quaternion rot = Quaternion.Euler(-10f, yawPilar - 11.2f, 0f);
+            return (desde, desde + rot * Vector3.forward * 30f);
+        }
+
+        private static void ArcoBoca(KitS2c.Obra o, Transform padre)
+        {
+            Material arco = KitS2c.Mat("T1464_ArcoBoca", () =>
+            {
+                Material m = KitS2c.Emision(new Color(4.5f, 3.8f, 2.6f), Texture2D.whiteTexture);
+                m.globalIlluminationFlags = MaterialGlobalIlluminationFlags.RealtimeEmissive;
+                return m;
+            });
+            float y0 = T.YTablero;
+            float xs = A.CaraAcantiladoX + 1.4f; // un poco dentro de la boca
+            int n = 0;
+            foreach (float marco in new[] { 0f, 3.6f })
+            {
+                float semi = 7.6f - marco * 0.2f;
+                float alto = A.AltoTunel - 0.3f - marco * 0.15f;
+                float x = xs - marco;
+                foreach (float lado in new[] { -1f, 1f })
+                {
+                    Estatico(KitS2c.Losa(o, padre, "ArcoPoste_" + n++, new Vector3(x, y0 + alto * 0.5f, T.ZTablero + lado * semi), Quaternion.identity, new Vector3(0.3f, alto, 0.4f), arco, 1f, false));
+                }
+                Estatico(KitS2c.Losa(o, padre, "ArcoDintel_" + n++, new Vector3(x, y0 + alto, T.ZTablero), Quaternion.identity, new Vector3(0.3f, 0.4f, semi * 2f + 0.4f), arco, 1f, false));
+            }
+            KitS2c.Luz(padre, new Vector3(A.CaraAcantiladoX - 4f, y0 + 5.5f, T.ZTablero), LightType.Spot, new Color(1f, 0.85f, 0.55f), 420f, 55f, 105f, new Vector3(1f, -0.3f, 0f));
+            KitS2c.Luz(padre, new Vector3(A.CaraAcantiladoX - 12f, y0 + 4.5f, T.ZTablero), LightType.Point, new Color(1f, 0.9f, 0.7f), 220f, 22f, 0f);
+            informe.AppendLine("Arco de la boca principal: " + n + " tiras emisivas (dos marcos) en x " + F(xs) + " y 1 spot y 1 luz puntual dentro.");
+        }
+
+        private static void PrimerPlanoK18(KitS2c.Obra o, Transform raiz, Vector3 pilar, Vector3 camara)
+        {
+            Transform pp = Hijo(o.Raiz, "PrimerPlanoK18");
+            Contexto ctx = new Contexto
+            {
+                Ocupados = Ocupados(raiz, null),
+                Rampa = T.Resamplear(T.RampaNorte(), 2f),
+                Columnas = T.Columnas(T.Principal()).Concat(T.Columnas(T.RampaNorte())).ToList(),
+                CalleOeste = T.Resamplear(T.CalleOeste(), 4f),
+            };
+            List<GameObject> chatarra = new List<GameObject>();
+            foreach (string v in new[] { "_a", "_b" })
+            {
+                GameObject g = Cargar("Assets/Arte/Zonas/AU/AU03_ChatarraPuente" + v + ".prefab");
+                if (g != null)
+                {
+                    chatarra.Add(g);
+                }
+            }
+            GameObject tambo = CargarCalle("C16_Tambo");
+            GameObject huacal = CargarCalle("C17_Huacales");
+            List<GameObject> basura = new List<GameObject>();
+            foreach (string b in new[] { "BS01a_Basura", "BS01b_Basura", "BS01c_Basura", "BS01d_Basura", "BS01e_Basura", "BT01_BoteBasura" })
+            {
+                GameObject g = CargarCalle(b);
+                if (g != null)
+                {
+                    basura.Add(g);
+                }
+            }
+            List<GameObject> viejos = new List<GameObject>();
+            foreach (string c in new[] { "V01a_CarroViejito", "V05", "V09" })
+            {
+                GameObject g = CargarCarro(c);
+                if (g != null)
+                {
+                    viejos.Add(g);
+                }
+            }
+            (string nombre, List<GameObject> lista, int meta, float alto, bool collider, bool carro)[] plan =
+            {
+                ("AU03F", chatarra, 3, 0f, true, false),
+                ("CarroDeshechoF", viejos, 2, 0f, true, true),
+                ("TamboF", tambo == null ? new List<GameObject>() : new List<GameObject> { tambo }, 7, 1f, true, false),
+                ("HuacalesF", huacal == null ? new List<GameObject>() : new List<GameObject> { huacal }, 4, 1.1f, true, false),
+                ("BasuraF", basura, 9, 0f, false, false),
+            };
+            string resumen = "";
+            foreach ((string nombre, List<GameObject> lista, int meta, float alto, bool collider, bool carro) in plan)
+            {
+                int puestos = 0;
+                for (int intento = 0; intento < meta * 120 && puestos < meta && lista.Count > 0; intento++)
+                {
+                    GameObject prefab = o.Uno(lista);
+                    (Vector3 tam, Vector3 centro) m = Medida(prefab, pp);
+                    float esc = alto > 0f ? Mathf.Clamp(alto / Mathf.Max(0.05f, m.tam.y), 0.3f, 4f) : 1f;
+                    float yaw = o.Rango(0f, 360f);
+                    Vector3 c = pilar + Quaternion.Euler(0f, o.Rango(0f, 360f), 0f) * Vector3.forward * o.Rango(3.6f, 10f);
+                    c.y = 0f;
+                    Vector3 h = Huella(m.tam, yaw, esc);
+                    if (T.Planta(c - camara).magnitude < 4f || !PuntoValido(c, h.y + (carro ? 0.3f : 0f), ctx))
+                    {
+                        continue;
+                    }
+                    Bounds caja = new Bounds(new Vector3(c.x, h.y * 0.5f, c.z), new Vector3(h.x + 0.5f, h.y, h.z + 0.5f));
+                    if (ctx.Ocupados.Any(b => b.Intersects(caja)))
+                    {
+                        continue;
+                    }
+                    GameObject go = PonerSuelo(pp, prefab, c, yaw, esc, collider, nombre + "_" + puestos, carro ? o.Rango(5f, 9f) * (o.Chance(0.5f) ? 1f : -1f) : 0f);
+                    Estatico(go);
+                    ctx.Ocupados.Add(caja);
+                    puestos++;
+                }
+                resumen += nombre + " " + puestos + ", ";
+            }
+            int charcos = 0;
+            for (int intento = 0; intento < 300 && charcos < 5; intento++)
+            {
+                Vector3 c = pilar + Quaternion.Euler(0f, o.Rango(0f, 360f), 0f) * Vector3.forward * o.Rango(3f, 9f);
+                c.y = 0f;
+                float largo = o.Rango(4f, 7f), ancho = o.Rango(2.5f, 4.5f);
+                Bounds caja = new Bounds(new Vector3(c.x, 1f, c.z), new Vector3(largo, 3f, largo));
+                if (ctx.Ocupados.Any(b => b.Intersects(caja)) || !PuntoValido(c, 0.1f, ctx))
+                {
+                    continue;
+                }
+                KitS2c.Charco(o, pp, c, largo, ancho, o.Rango(0f, 180f));
+                charcos++;
+            }
+            informe.AppendLine("Primer plano K18 alrededor del pilar " + pilar.ToString("F1") + " (camara a " + F(T.Planta(camara - pilar).magnitude) + " m): " + resumen + "charcos " + charcos + ".");
+        }
+
+        private static string RutaDe(Transform t)
+        {
+            string r = t.name;
+            for (Transform p = t.parent; p != null; p = p.parent)
+            {
+                r = p.name + "/" + r;
+            }
+            return r;
+        }
+
+        /// <summary>Apaga lo alto (> 60 m) de la Autopista que caeria al centro de A18 (x 0.3-0.85): lo reporta con su ruta. La TorreReflectores no se toca (la mueve MoverTorre).</summary>
+        private static void ApagarAltosA18(Transform raiz, Transform mia)
+        {
+            Transform marca = mia.Find("Vista19b_A18");
+            if (marca == null || marca.Find("Mira") == null)
+            {
+                return;
+            }
+            GameObject go = new GameObject("T1464_CamAltos") { hideFlags = HideFlags.HideAndDontSave };
+            try
+            {
+                Camera cam = go.AddComponent<Camera>();
+                cam.enabled = false;
+                cam.aspect = Aspecto;
+                cam.fieldOfView = CampoA18;
+                cam.nearClipPlane = 0.05f;
+                cam.farClipPlane = 3000f;
+                cam.transform.SetPositionAndRotation(marca.position, Quaternion.LookRotation(marca.Find("Mira").position - marca.position));
+                Transform fondo = raiz.Find("Fondo");
+                HashSet<Transform> apagados = new HashSet<Transform>();
+                foreach (Renderer r in raiz.GetComponentsInChildren<Renderer>(false))
+                {
+                    if (r.transform.IsChildOf(mia) || r.bounds.size.y <= 60f)
+                    {
+                        continue;
+                    }
+                    Vector3 v = cam.WorldToViewportPoint(r.bounds.center);
+                    if (!(v.z > 0f && v.x > 0.3f && v.x < 0.85f && v.y > -0.2f && v.y < 1.2f))
+                    {
+                        continue;
+                    }
+                    Transform unidad = r.transform;
+                    while (unidad.parent != null && unidad.parent != raiz && unidad.parent != fondo)
+                    {
+                        unidad = unidad.parent;
+                    }
+                    if (unidad.name == "TorreReflectores" || apagados.Contains(unidad))
+                    {
+                        informe.AppendLine("A18: renderer alto en el centro (" + RutaDe(r.transform) + ", " + F(r.bounds.size.y) + " m) es de " + unidad.name + "; no se toca.");
+                        continue;
+                    }
+                    unidad.gameObject.SetActive(false);
+                    apagados.Add(unidad);
+                    informe.AppendLine("A18: se apago " + RutaDe(unidad) + " (renderer " + r.name + " de " + F(r.bounds.size.y) + " m cae en x " + F(v.x) + " de la pantalla).");
+                }
+                informe.AppendLine("A18: unidades altas apagadas en el centro: " + apagados.Count + ".");
+            }
+            finally
+            {
+                Object.DestroyImmediate(go);
+            }
+        }
+
+        /// <summary>Ancho real (m) del fuste AU04_Columna de la escena cuyo centro cae a menos de 3.5 m en planta de <paramref name="c"/> (2.8 si no se encuentra).</summary>
+        private static float AnchoReal(Transform[] todos, Vector3 c)
+        {
+            foreach (Transform t in todos)
+            {
+                if (t == null || t.name != "AU04_Columna")
+                {
+                    continue;
+                }
+                Bounds? b = Caja(t.gameObject);
+                if (b.HasValue && T.Planta(b.Value.center - c).magnitude < 3.5f)
+                {
+                    return Mathf.Max(b.Value.size.x, b.Value.size.z);
+                }
+            }
+            return 2.8f;
+        }
+
         // ---------------------------------------------------------------- Marcas de camara
 
         private static void Marca(Transform padre, string clave, Vector3 desde, Vector3 hacia, float campo)
@@ -774,6 +1011,16 @@ namespace MechaCyberpunk.Arte.Editor
             Dictionary<string, (Vector3 desde, Vector3 hacia)> c = LeerCamaras();
             (Vector3 desde, Vector3 hacia) k = c.ContainsKey("K18") ? c["K18"] : (DesdeK18Defecto, HaciaK18Defecto);
             (Vector3 desde, Vector3 hacia) a = c.ContainsKey("A18") ? c["A18"] : (DesdeA18Defecto, HaciaA18Defecto);
+            (Vector3 desde, Vector3 hacia)? construida = CamaraK18Construida();
+            if (construida.HasValue)
+            {
+                k = construida.Value;
+            }
+            // A18 un 20 % mas cerca del centro del tablero (misma altura y misma direccion de mirada).
+            Vector3 foco = new Vector3(-250f, a.desde.y, 250f);
+            Vector3 mover = (foco - a.desde) * 0.2f;
+            mover.y = 0f;
+            a = (a.desde + mover, a.hacia + mover);
             Marca(padre, "K18", k.desde, k.hacia, CampoK18);
             Marca(padre, "A18", a.desde, a.hacia, CampoA18);
             informe.AppendLine("Marcas: Vista19b_K18 desde " + V3(k.desde) + " (" + (c.ContainsKey("K18") ? "Logs/t1464-camara.txt" : "valor por defecto") + "), Vista19b_A18 desde " + V3(a.desde) + " (" + (c.ContainsKey("A18") ? "Logs/t1464-camara.txt" : "valor por defecto") + ").");
@@ -1687,17 +1934,18 @@ namespace MechaCyberpunk.Arte.Editor
                         }
                         List<Vector3> fuste = c.y > 9f ? new List<Vector3> { new Vector3(c.x, 4f, c.z), new Vector3(c.x, 6f, c.z) } : FusteColumna(c);
                         int vistos = fuste.Count(f => !Tapado(desde, f, 1.6f));
-                        Vector3 lado = Vector3.Cross(Vector3.up, (c - desde).normalized) * 1.4f;
+                        float anchoM = AnchoReal(todos, c);
+                        Vector3 lado = Vector3.Cross(Vector3.up, (c - desde).normalized) * anchoM * 0.5f;
                         float ancho = Mathf.Abs(cam.WorldToViewportPoint(c + lado).x - cam.WorldToViewportPoint(c - lado).x);
-                        if (vistos * 4 >= fuste.Count * 3 && ancho >= 0.05f && ancho <= 0.18f)
+                        if (vistos * 4 >= fuste.Count * 3 && ancho >= 0.08f && ancho <= 0.16f)
                         {
-                            mejorCol = "(" + F(vc.x) + ", " + F(vc.y) + ") a " + F(d) + " m, ancho " + F(ancho * 100f) + " % de la pantalla, " + vistos + "/" + fuste.Count + " puntos del fuste vistos";
+                            mejorCol = "(" + F(vc.x) + ", " + F(vc.y) + ") a " + F(d) + " m, ancho " + F(ancho * 100f) + " % de la pantalla (" + F(anchoM) + " m), " + vistos + "/" + fuste.Count + " puntos del fuste vistos";
                         }
                     }
-                    s.AppendLine("K18: columna en primer plano: " + (mejorCol ?? "NINGUNA") + " (pedido x 0.5-0.72, 5-18 % de ancho, a 8-28 m).");
+                    s.AppendLine("K18: columna en primer plano: " + (mejorCol ?? "NINGUNA") + " (pedido x 0.5-0.72, 8-16 % de ancho, a 8-28 m).");
                     if (mejorCol == null)
                     {
-                        Falla("K18: no hay columna visible de 5-18 % de ancho en x 0.5-0.72 a 8-28 m.");
+                        Falla("K18: no hay columna visible de 8-16 % de ancho en x 0.5-0.72 a 8-28 m.");
                     }
                     string bocaOk = null;
                     foreach (Vector3[] grupo in new[] { puntosBoca, new[] { BocaRamalCentro, BocaRamalCentro + new Vector3(0f, 0f, 3f), BocaRamalCentro + new Vector3(0f, 0f, -3f) } })
@@ -1840,6 +2088,23 @@ namespace MechaCyberpunk.Arte.Editor
                     if (curva < 4)
                     {
                         Falla("A18: el ramal curvo casi no se ve (" + curva + " puntos).");
+                    }
+                    foreach (Renderer r in Object.FindObjectsByType<Renderer>(FindObjectsInactive.Exclude, FindObjectsSortMode.None).Where(rr => rr.enabled && rr.bounds.size.y > 60f))
+                    {
+                        Vector3 va = cam.WorldToViewportPoint(r.bounds.center);
+                        if (va.z > 0f && va.x > 0.3f && va.x < 0.85f && va.y > -0.2f && va.y < 1.2f)
+                        {
+                            string ruta = RutaDe(r.transform);
+                            s.AppendLine("A18: renderer alto (" + F(r.bounds.size.y) + " m) en el centro (x " + F(va.x) + "): " + ruta);
+                            if (ruta.Contains("T1356_Autopista"))
+                            {
+                                Falla("A18: algo alto de la Autopista cae al centro: " + ruta);
+                            }
+                            else
+                            {
+                                Aviso("A18: algo alto de OTRA zona cae al centro: " + ruta);
+                            }
+                        }
                     }
                     int colA = T.Columnas(T.Principal()).Where(q => q.x > -320f && q.x < -120f).Count(q => { Vector3 v = cam.WorldToViewportPoint(new Vector3(q.x, 5f, q.z)); return Dentro(v) && !Tapado(desde, new Vector3(q.x, 5f, q.z), 3f); });
                     s.AppendLine("A18: columnas del tablero visibles por rayos: " + colA + ".");

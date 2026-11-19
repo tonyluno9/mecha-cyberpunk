@@ -37,3 +37,7 @@ Faroles, estelas >= 30, vida minima, luces <= 40, ramal abierto, K18 (boca x .65
 - MoverTorre (nuevo, correr antes de BuscarCamara): elige un sitio libre para TorreReflectores segun las camaras K18/A18 y la mueve en el prefab.
 - Columnas de la rampa a ~5 m.
 - PoblarFoto muestrea el clip idle/caminar con SampleAnimation (sin pose T).
+
+## Ronda 5
+- K18 construida: camara fija a 12 m al este y 10 m al sur del pilar (columna de rampa mas cercana a (-236,232)), 6 m de alto; arco emisivo de dos marcos y 2 luces en la boca principal; chatarra, tambos, huacales, basura, carro deshecho y charcos alrededor del pilar.
+- A18 20 % mas cerca; Aplicar apaga lo alto (>60 m) de la Autopista que caiga al centro y Validar lista cualquier renderer alto en el centro con su ruta.
