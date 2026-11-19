@@ -196,7 +196,9 @@ namespace MechaCyberpunk.Arte.Editor
                 Bodegas(raiz.transform, nuevo, o);
                 PostesAvenida(raiz.transform, nuevo, o, ocupados, mios);
                 Charcos(nuevo, o, ocupados, mios, "CharcosCalle", Rect.MinMaxRect(155f, -215f, 165f, -152f), 20, new Vector2(4f, 9f), new Vector2(2f, 4f), false, new List<float> { 155.2f, 156.5f, 164.5f }, false);
+                CharcosLuz(nuevo, o);
                 Props(nuevo, ocupados, mios, cam);
+                PrimerPlanoDerecho(raiz.transform, nuevo, ocupados, mios, cam);
                 Gente(nuevo, "Gente", 7, ocupados, mios, new System.Random(14422), false);
                 Muelle(raiz.transform, nuevo, o, cam);
 
@@ -381,6 +383,190 @@ namespace MechaCyberpunk.Arte.Editor
 
         // ---------------------------------------------------------------- Ronda 5: el cuadro fijo de K15 en la avenida (x = 160, mirando al sur)
 
+        // ---------------------------------------------------------------- Ronda 6
+
+        /// <summary>Puntos (x, 0, z) de las lámparas, focos, neones y postes del cuadro de K15: los charcos con reflejo van debajo y delante de ellos.</summary>
+        private static readonly List<Vector3> puntosLuz = new List<Vector3>();
+
+        /// <summary>
+        /// Material propio de los charcos de T-1442: el mismo shader MechaCyberpunk/Mundo/Charco y las mismas máscaras que los S2c_Charco_0..3 compartidos (que no se editan),
+        /// pero con el reflejo al máximo (_Intensidad 2, _FresnelMin 0.85, _Opacidad 1, _ReflejoBorde 0.5) para que reflejen las lámparas y los neones.
+        /// </summary>
+        private static Material MatCharco(int forma)
+        {
+            return Mat("T1442_Charco_" + forma, () =>
+            {
+                Material m = new Material(Shader.Find("MechaCyberpunk/Mundo/Charco"));
+                m.SetTexture("_Mascara", KitS2c.TexCharco(forma));
+                m.SetFloat("_Intensidad", 2f);
+                m.SetFloat("_FresnelMin", 0.85f);
+                m.SetFloat("_Opacidad", 1f);
+                m.SetFloat("_ReflejoBorde", 0.5f);
+                return m;
+            });
+        }
+
+        private static void CharcosLuz(Transform nuevo, KitS2c.Obra o)
+        {
+            Transform padre = new GameObject("CharcosLuz").transform;
+            padre.SetParent(nuevo, false);
+            Mesh quad = new Mesh { name = Raiz + "_CharcosLuz" };
+            quad.SetVertices(new[] { new Vector3(-0.5f, -0.5f, 0f), new Vector3(0.5f, -0.5f, 0f), new Vector3(-0.5f, 0.5f, 0f), new Vector3(0.5f, 0.5f, 0f) });
+            quad.SetNormals(new[] { Vector3.back, Vector3.back, Vector3.back, Vector3.back });
+            quad.SetUVs(0, new[] { new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0f, 1f), new Vector2(1f, 1f) });
+            quad.SetTriangles(new[] { 0, 2, 1, 2, 3, 1 }, 0);
+            quad.RecalculateBounds();
+            o.Mallas.Add(quad);
+            int puestos = 0;
+            foreach (Vector3 p in puntosLuz)
+            {
+                float hacia = p.x < 160f ? 1f : -1f; // hacia el centro de la calle: el reflejo cae debajo y delante de la luz
+                foreach ((float dx, float largo, float ancho) in new[] { (2.0f, 4.5f, 2.6f), (4.6f, 6.5f, 3.2f) })
+                {
+                    Vector3 c = new Vector3(p.x + hacia * dx, 0f, p.z + o.Rango(-0.6f, 0.6f));
+                    if (c.x < 154.2f || c.x > 165.8f)
+                    {
+                        continue;
+                    }
+                    GameObject q = new GameObject("CharcoLuz");
+                    q.layer = ReflejoCharcos.CapaCharcos;
+                    q.transform.SetParent(padre, false);
+                    q.transform.position = c + Vector3.up * 0.012f;
+                    q.transform.rotation = Quaternion.Euler(90f, o.Rango(-12f, 12f), 0f);
+                    q.transform.localScale = new Vector3(ancho, largo, 1f);
+                    q.AddComponent<MeshFilter>().sharedMesh = quad;
+                    MeshRenderer mr = q.AddComponent<MeshRenderer>();
+                    mr.sharedMaterial = MatCharco(o.Azar.Next(4));
+                    mr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                    mr.receiveShadows = false;
+                    q.AddComponent<CharcoVisible>();
+                    puestos++;
+                }
+            }
+            Nota("CharcosLuz: " + puestos + " charcos con reflejo debajo y delante de " + puntosLuz.Count + " lámparas, focos, neones y postes del cuadro (material T1442_Charco_0..3: shader de charco del proyecto con el reflejo al máximo).");
+        }
+
+        /// <summary>Letrero de neón de bandera grande (1.9 m en su lado mayor), de cara a la avenida (girado 31 grados hacia la cámara, al norte) y solo con emisión (sin luz).</summary>
+        private static void NeonGrande(KitS2c.Obra o, Transform padre, Vector3 pared, Vector3 normal, Color color, float lado)
+        {
+            o.Neones++;
+            string codigo = color == KitS2c.Magenta ? KitS2c.NeonMagenta : KitS2c.NeonTurquesa;
+            KitS2c.Medida m = KitS2c.Medir(codigo);
+            float escala = lado / Mathf.Max(0.01f, Mathf.Max(m.Caja.size.x, m.Caja.size.y));
+            Vector3 hacia = (normal + Vector3.forward * 0.6f).normalized;
+            Quaternion giro = Quaternion.LookRotation(-hacia);
+            Vector3 centro = pared + normal * 0.6f;
+            GameObject raiz = new GameObject("Neon");
+            raiz.transform.SetParent(padre, false);
+            raiz.transform.SetPositionAndRotation(centro, giro);
+            KitS2c.Pieza(raiz.transform, codigo, centro - Vector3.up * (m.Caja.size.y * escala * 0.5f), giro, Vector3.one * escala, false).name = "Letrero";
+        }
+
+        /// <summary>Tarima de madera apoyada contra la fachada (inclinada 70 grados, con la punta alta tocando la pared), con collider.</summary>
+        private static GameObject PonerTarima(Transform padre, float xPared, float z, List<Rect> ocupados, List<Rect> mios)
+        {
+            GameObject prefab = BuscarPrefab("PU06_Pallets");
+            if (prefab == null)
+            {
+                return null;
+            }
+            GameObject go = (GameObject)PrefabUtility.InstantiatePrefab(prefab, padre);
+            go.name = "Tarima_" + padre.childCount;
+            go.transform.SetPositionAndRotation(Vector3.zero, Quaternion.Euler(0f, 0f, -70f));
+            go.transform.localScale = Vector3.one;
+            Bounds b = Limites(go.transform);
+            go.transform.localScale = Vector3.one * (1.6f / Mathf.Max(0.01f, Mathf.Max(b.size.x, b.size.y, b.size.z)));
+            b = Limites(go.transform);
+            go.transform.position += new Vector3(xPared + 0.03f - b.min.x, -b.min.y, z - b.center.z);
+            Rect h = Huella(Limites(go.transform));
+            if (EnCalle(h) || !Libre(h, ocupados, mios))
+            {
+                Object.DestroyImmediate(go);
+                return null;
+            }
+            BugsZonasT1410.AsegurarColliderYBarril(go);
+            mios.Add(h);
+            return go;
+        }
+
+        /// <summary>Dos pilas de pallets una sobre otra (la de arriba apoyada en la de abajo, mismo centro).</summary>
+        private static bool PonerApilado(Transform padre, Vector2 xz, int numero, List<Rect> ocupados, List<Rect> mios)
+        {
+            GameObject baseP = Poner(padre, "PU06_Pallets", 1.2f, xz, 20f * numero, ocupados, mios, true);
+            if (baseP == null)
+            {
+                return false;
+            }
+            baseP.name = "Apil_base_" + numero;
+            GameObject prefab = BuscarPrefab("PU06_Pallets");
+            GameObject top = (GameObject)PrefabUtility.InstantiatePrefab(prefab, padre);
+            top.name = "Apil_top_" + numero;
+            top.transform.SetPositionAndRotation(Vector3.zero, Quaternion.Euler(0f, 20f * numero + 35f, 0f));
+            top.transform.localScale = Vector3.one;
+            Bounds b = Limites(top.transform);
+            top.transform.localScale = Vector3.one * (1.0f / Mathf.Max(0.01f, b.size.y));
+            b = Limites(top.transform);
+            Bounds bb = Limites(baseP.transform);
+            top.transform.position += new Vector3(bb.center.x - b.center.x, bb.max.y - b.min.y, bb.center.z - b.center.z);
+            BugsZonasT1410.AsegurarColliderYBarril(top);
+            return true;
+        }
+
+        /// <summary>
+        /// Primer plano derecho de la referencia: tarima de madera inclinada apoyada contra la bodega más cercana, huacales y tambos junto a ella y pallets apilados,
+        /// a 5-12 m del lente. Va en un grupo propio (PrimerPlano) que Validar revisa como Props.
+        /// </summary>
+        private static void PrimerPlanoDerecho(Transform raiz, Transform nuevo, List<Rect> ocupados, List<Rect> mios, Vector3 cam)
+        {
+            Transform padre = new GameObject("PrimerPlano").transform;
+            padre.SetParent(nuevo, false);
+            Transform grupo = raiz.Find("Bodegas");
+            Transform cercana = grupo == null ? null : grupo.Cast<Transform>()
+                .Where(t => t.gameObject.activeInHierarchy && (t.name.StartsWith("PU03_") || t.name.StartsWith("PU04_")))
+                .Where(t => { Bounds b = Limites(t); return b.max.x > 148f && b.max.x < 158f && b.max.z > -215f && b.min.z < -150f; })
+                .OrderBy(t => Vector2.Distance(new Vector2(Limites(t).max.x, Limites(t).center.z), new Vector2(cam.x, cam.z))).FirstOrDefault();
+            if (cercana == null)
+            {
+                Nota("PrimerPlano: no hay bodega PU03/PU04 cerca del cruce; se omite.");
+                return;
+            }
+            float xw = Limites(cercana).max.x;
+            System.Random azar = new System.Random(14425);
+            float zTarima = float.NaN;
+            foreach (float z in new[] { -155f, -156.5f, -158f, -153.8f, -160f, -161.5f })
+            {
+                if (PonerTarima(padre, xw, z, ocupados, mios) != null)
+                {
+                    zTarima = z;
+                    break;
+                }
+            }
+            int huacales = 0, tambos = 0, apilados = 0;
+            float zBase = float.IsNaN(zTarima) ? -157f : zTarima;
+            foreach (float dz in new[] { 1.5f, -1.5f, 3f, -3f })
+            {
+                if (huacales < 3 && Poner(padre, "C17_Huacales", 1.0f, new Vector2(xw + 1.3f, zBase + dz), (float)azar.NextDouble() * 360f, ocupados, mios, true) != null)
+                {
+                    huacales++;
+                }
+            }
+            foreach (float dz in new[] { 4.2f, -4.2f, 5.5f, -5.5f })
+            {
+                if (tambos < 2 && Poner(padre, "C16_Tambo", 1.0f, new Vector2(xw + 1.2f, zBase + dz), (float)azar.NextDouble() * 360f, ocupados, mios, true) != null)
+                {
+                    tambos++;
+                }
+            }
+            foreach (float z in new[] { -153.2f, -163.5f, -165f, -167f, -169f })
+            {
+                if (apilados < 2 && PonerApilado(padre, new Vector2(xw + 1.6f, z), apilados, ocupados, mios))
+                {
+                    apilados++;
+                }
+            }
+            Nota("PrimerPlano (junto a " + cercana.name + ", pared en x " + xw.ToString("F1") + "): tarima apoyada " + (float.IsNaN(zTarima) ? "NO cupo" : "en z " + zTarima.ToString("F1")) + ", " + huacales + " huacales, " + tambos + " tambos y " + apilados + " pilas de pallets apilados.");
+        }
+
         private static bool FueraDeAsfalto(Rect h)
         {
             Vector2[] puntos = { h.center, new Vector2(h.xMin, h.yMin), new Vector2(h.xMax, h.yMin), new Vector2(h.xMin, h.yMax), new Vector2(h.xMax, h.yMax) };
@@ -476,6 +662,7 @@ namespace MechaCyberpunk.Arte.Editor
                         continue;
                     }
                     puntas.Add(KitS2c.Poste(o, padre, pie, Vector3.left, 0f, true));
+                    puntosLuz.Add(pie);
                     mios.Add(h);
                     break;
                 }
@@ -529,6 +716,7 @@ namespace MechaCyberpunk.Arte.Editor
 
         private static void Bodegas(Transform raiz, Transform nuevo, KitS2c.Obra o)
         {
+            puntosLuz.Clear();
             Transform padre = new GameObject("Bodegas").transform;
             padre.SetParent(nuevo, false);
             Transform grupo = raiz.Find("Bodegas");
@@ -548,8 +736,14 @@ namespace MechaCyberpunk.Arte.Editor
                 KitS2c.Losa(o, padre, "Toldo_" + i, new Vector3(xw + 0.75f, yToldo, zc), Quaternion.Euler(0f, 0f, -11f), new Vector3(1.6f, 0.07f, Mathf.Min(9f, b.size.z * 0.6f)), toldo, 1.5f, false);
                 KitS2c.Losa(o, padre, "Lampara_" + i + "_a", new Vector3(xw + 0.3f, yToldo - 0.3f, zc - 3.3f), Quaternion.identity, new Vector3(0.5f, 0.14f, 0.7f), lampara, 1f, false);
                 KitS2c.Losa(o, padre, "Lampara_" + i + "_b", new Vector3(xw + 0.3f, yToldo - 0.3f, zc + 3.3f), Quaternion.identity, new Vector3(0.5f, 0.14f, 0.7f), lampara, 1f, false);
+                if (enVista)
+                {
+                    puntosLuz.Add(new Vector3(xw, 0f, zc - 3.3f));
+                    puntosLuz.Add(new Vector3(xw, 0f, zc + 3.3f));
+                }
                 if (enVista && focos < 2)
                 {
+                    puntosLuz.Add(new Vector3(xw, 0f, zc + 6.5f));
                     KitS2c.FocoPared(o, padre, new Vector3(xw + 0.1f, yToldo - 0.4f, zc + 6.5f), Quaternion.LookRotation(Vector3.left));
                     Light l = UltimaLuz(padre.GetChild(padre.childCount - 1));
                     if (l != null)
@@ -563,7 +757,11 @@ namespace MechaCyberpunk.Arte.Editor
                 {
                     Color color = (i + k) % 2 == 0 ? KitS2c.Turquesa : KitS2c.Magenta;
                     float zN = k == 0 ? zc + 5.2f : zc - 6.8f;
-                    KitS2c.Neon(o, padre, new Vector3(xw, k == 0 ? 3.2f : 4.4f, zN), Vector3.right, Vector3.back, color, true);
+                    NeonGrande(o, padre, new Vector3(xw, k == 0 ? 3.4f : 3.9f, zN), Vector3.right, color, 1.9f);
+                    if (enVista)
+                    {
+                        puntosLuz.Add(new Vector3(xw, 0f, zN));
+                    }
                     foreach (Light ln in padre.GetChild(padre.childCount - 1).GetComponentsInChildren<Light>(true).ToList())
                     {
                         Object.DestroyImmediate(ln.gameObject); // el letrero queda solo con su emisión (el tope de luces es de 8)
@@ -609,12 +807,7 @@ namespace MechaCyberpunk.Arte.Editor
                     continue;
                 }
                 int forma = o.Azar.Next(4);
-                Material mat = KitS2c.Mat("S2c_Charco_" + forma, () =>
-                {
-                    Material m = new Material(Shader.Find("MechaCyberpunk/Mundo/Charco"));
-                    m.SetTexture("_Mascara", KitS2c.TexCharco(forma));
-                    return m;
-                });
+                Material mat = MatCharco(forma);
                 GameObject q = new GameObject("Charco");
                 q.layer = ReflejoCharcos.CapaCharcos;
                 q.transform.SetParent(padre, false);
@@ -672,7 +865,7 @@ namespace MechaCyberpunk.Arte.Editor
             // (código, alto, cuántos, medio ancho de carril libre): los montacargas pueden acercarse un poco más al centro.
             (string codigo, float alto, int cuantos, float media)[] lista =
             {
-                ("PU05_Montacargas", 2.6f, 4, 3.4f), ("PU06_Pallets", 1.2f, 9, MediaCalle), ("C16_Tambo", 1.0f, 9, MediaCalle), ("C17_Huacales", 1.0f, 7, MediaCalle),
+                ("PU05_Montacargas", 2.6f, 4, MediaCalle), ("PU06_Pallets", 1.2f, 9, MediaCalle), ("C16_Tambo", 1.0f, 9, MediaCalle), ("C17_Huacales", 1.0f, 7, MediaCalle),
             };
             int total = 0;
             List<Vector3> montacargas = new List<Vector3>();
@@ -1585,7 +1778,7 @@ namespace MechaCyberpunk.Arte.Editor
 
                     // Piezas de piso: contenedores y props (con collider) de mi raíz.
                     List<Transform> suelo = new List<Transform>();
-                    foreach (string g in new[] { "Contenedores", "Props", "PilaEsquina", "PatioContenedores", "PatioProps", "PatioBodegas" })
+                    foreach (string g in new[] { "Contenedores", "Props", "PrimerPlano", "PilaEsquina", "PatioContenedores", "PatioProps", "PatioBodegas" })
                     {
                         Transform grupo = mia.Find(g);
                         if (grupo != null)
@@ -1597,11 +1790,11 @@ namespace MechaCyberpunk.Arte.Editor
                     for (int i = 0; i < suelo.Count; i++)
                     {
                         Bounds b = cajas[i];
-                        bool esCont = suelo[i].name.StartsWith("Cont_");
+                        bool esCont = suelo[i].name.StartsWith("Cont_") || suelo[i].name.StartsWith("Apil_");
                         bool apoyado = Mathf.Abs(b.min.y) < 0.05f;
                         if (!apoyado && esCont)
                         {
-                            apoyado = cajas.Where((c, j) => j != i && suelo[j].name.StartsWith("Cont_")).Any(c => Mathf.Abs(c.max.y - b.min.y) < 0.05f && Mathf.Abs(c.center.x - b.center.x) < 0.3f && Mathf.Abs(c.center.z - b.center.z) < 0.3f);
+                            apoyado = cajas.Where((c, j) => j != i && (suelo[j].name.StartsWith("Cont_") || suelo[j].name.StartsWith("Apil_"))).Any(c => Mathf.Abs(c.max.y - b.min.y) < 0.05f && Mathf.Abs(c.center.x - b.center.x) < 0.3f && Mathf.Abs(c.center.z - b.center.z) < 0.3f);
                         }
                         if (!apoyado)
                         {

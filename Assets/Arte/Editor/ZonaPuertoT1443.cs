@@ -43,7 +43,7 @@ namespace MechaCyberpunk.Arte.Editor
 
         /// <summary>Cámara A15 (esquina noreste del muelle, mirando al suroeste: agua y barco arriba a la izquierda, bodegas abajo a la derecha) y su mira.</summary>
         public static readonly Vector3 CamaraA15 = new Vector3(320f, 50f, -150f);
-        public static readonly Vector3 MiraA15 = new Vector3(230f, 0f, -230f);
+        public static readonly Vector3 MiraA15 = new Vector3(240f, 0f, -215f);
         public const float CampoA15 = 60f;
 
         private const float YPatio = 0f;
@@ -606,7 +606,7 @@ namespace MechaCyberpunk.Arte.Editor
         }
         /// <summary>Cámara A15 fija de la ronda 5 (elegida a mano por el orquestador).</summary>
         public static readonly Vector3 CamaraFija = new Vector3(320f, 50f, -150f);
-        public static readonly Vector3 MiraFija = new Vector3(230f, 0f, -230f);
+        public static readonly Vector3 MiraFija = new Vector3(240f, 0f, -215f);
 
         /// <summary>
         /// Ronda 5: cámara fija (CamaraFija a MiraFija, campo 60) guardada en T1443_Patio/CamaraA y CamaraA/Mira. Con su matriz proyecta los pares de manzanas contiguas del patio y se queda con los 2 a 3
@@ -626,34 +626,97 @@ namespace MechaCyberpunk.Arte.Editor
             mira.transform.SetParent(cam.transform, false);
             mira.transform.position = MiraFija;
             Log("CÁMARA A15 FIJA: " + camPos.ToString("F1") + " mirando a " + MiraFija.ToString("F1") + ", campo 60.");
-            List<(Vector3 c, float nota)> sitios = new List<(Vector3, float)>();
-            foreach (Vector3 c in CandidatosSitios(true))
+            // Medida de una bodega (largo 22) sin girar.
+            GameObject prueba = Colocar(Grupo("Bodegas"), "PU03_Bodega", new Vector3(0f, YPatio, 0f), 0f, 22f, 0f, false);
+            if (prueba == null)
             {
-                float u, v, prof;
-                Vector3 centro = new Vector3(c.x, 5f, c.z);
-                if (!Proyectar(centro, out u, out v, out prof) || prof > 220f || u <= 0.55f || v >= 0.45f)
-                {
-                    continue;
-                }
-                sitios.Add((c, Vector2.Distance(new Vector2(u, v), new Vector2(0.75f, 0.25f))));
+                Log("Bodegas: falta PU03_Bodega.");
+                return;
             }
-            Log("Sitios de bodega abajo a la derecha del cuadro: " + sitios.Count + " (u > 0.55, v < 0.45).");
+            Vector3 medida = Medir(prueba).size;
+            Object.DestroyImmediate(prueba);
+            razones.Clear();
+            int fueraPrefab = 0, enRegion = 0;
+            List<(Vector3 c, Bounds caja, float nota)> sitios = new List<(Vector3, Bounds, float)>();
+            // Todo el suelo cerca del puerto, cada 4 m: ¿cae abajo a la derecha del cuadro?
+            for (float x = 40f; x <= 420f; x += 4f)
+            {
+                for (float z = -330f; z <= 40f; z += 4f)
+                {
+                    float u, v, prof;
+                    if (!Proyectar(new Vector3(x, 0f, z), out u, out v, out prof) || prof > 220f || u < 0.55f || u > 0.95f || v < 0.05f || v > 0.45f)
+                    {
+                        continue;
+                    }
+                    enRegion++;
+                    if (x < 118f || x > 314f || z < -236f || z > -50f)
+                    {
+                        fueraPrefab++;
+                        Razon("el piso es de otra zona o agua (fuera del rectángulo del puerto x 118..314, z -236..-50)");
+                        continue;
+                    }
+                    Vector3 haciaCam = camPos - new Vector3(x, 0f, z);
+                    haciaCam.y = 0f;
+                    haciaCam.Normalize();
+                    int mq = 0;
+                    float md = -2f;
+                    for (int q = 0; q < 4; q++)
+                    {
+                        Vector3 puerta = q == 0 ? Vector3.forward : q == 1 ? Vector3.right : q == 2 ? Vector3.back : Vector3.left;
+                        if (Vector3.Dot(puerta, haciaCam) > md)
+                        {
+                            md = Vector3.Dot(puerta, haciaCam);
+                            mq = q;
+                        }
+                    }
+                    Vector3 tam = mq % 2 == 1 ? new Vector3(medida.z, medida.y, medida.x) : medida;
+                    Bounds b = new Bounds(new Vector3(x, tam.y * 0.5f, z), tam);
+                    if (b.min.x < 118f || b.max.x > 314f || b.min.z < -236f || b.max.z > -50f)
+                    {
+                        Razon("la bodega se saldría del patio");
+                        continue;
+                    }
+                    if (CercaK15(b.center))
+                    {
+                        Razon("a menos de 85 m de K15 (de T-1442)");
+                        continue;
+                    }
+                    if (EnCalle(b, 0.3f))
+                    {
+                        Razon("pisa el carril de una calle");
+                        continue;
+                    }
+                    if (!LibreSinContenedores(b, 0.4f))
+                    {
+                        Razon("choca con algo que no es contenedor (poste, montacargas, bodega, grúa...)");
+                        continue;
+                    }
+                    sitios.Add((new Vector3(x, 0f, z), b, Vector2.Distance(new Vector2(u, v), new Vector2(0.75f, 0.25f))));
+                }
+            }
+            Log("Piso de la región abajo a la derecha (u 0.55 a 0.95, v 0.05 a 0.45): " + enRegion + " puntos de 4 m; " + fueraPrefab + " fuera del puerto (otra zona o agua). Sitios válidos: " + sitios.Count + ". Descartes -> " + string.Join("; ", razones.Select(kv => kv.Key + ": " + kv.Value)));
+            razones.Clear();
             sitiosBodega.Clear();
+            List<Bounds> elegidas = new List<Bounds>();
             foreach (var s in sitios.OrderBy(t => t.nota))
             {
                 if (sitiosBodega.Count >= 3)
                 {
                     break;
                 }
-                if (sitiosBodega.All(o => Vector2.Distance(new Vector2(o.x, o.z), new Vector2(s.c.x, s.c.z)) > 26f))
+                Bounds grande = s.caja;
+                grande.Expand(new Vector3(2f, 0f, 2f));
+                if (elegidas.Any(o => o.Intersects(grande)))
                 {
-                    sitiosBodega.Add(s.c);
+                    continue;
                 }
+                elegidas.Add(s.caja);
+                sitiosBodega.Add(s.c);
             }
-            foreach (Vector3 s in sitiosBodega)
+            foreach (Bounds cj in elegidas)
             {
-                Log("Sitio de bodega " + s.ToString("F1") + " (manzana doble apartada).");
-                Apartar(CajaSitio(s));
+                Log("Sitio de bodega " + cj.center.ToString("F1") + " (huella " + cj.size.x.ToString("F1") + " x " + cj.size.z.ToString("F1") + "); se apartan los contenedores que pisa.");
+                Apartar(cj);
             }
         }
 
@@ -1265,7 +1328,7 @@ namespace MechaCyberpunk.Arte.Editor
             p.AjustarTrigger();
         }
 
-        /// <summary>Montacargas, pallets y huacales estacionados en la orilla de las calles internas visibles (a 5 m del eje; el carril de tránsito de 3.6 m a cada lado queda libre).</summary>
+        /// <summary>Montacargas, pallets y huacales estacionados en la orilla de las calles internas visibles (a 7.4 m del eje, fuera del asfalto).</summary>
         private static void Carriles()
         {
             if (!hayCamara)
@@ -1288,7 +1351,7 @@ namespace MechaCyberpunk.Arte.Editor
                     for (float t = 12f; t < largo - 12f; t += 9f)
                     {
                         n++;
-                        Vector3 pie = calle[i - 1] + dir * t + der * (n % 2 == 0 ? 5.0f : -5.0f);
+                        Vector3 pie = calle[i - 1] + dir * t + der * (n % 2 == 0 ? 7.4f : -7.4f);
                         float u, v, prof;
                         if (CercaK15(pie) || !Proyectar(pie, out u, out v, out prof) || u < 0f || u > 1f || v < 0f || v > 1f || prof > 220f)
                         {
@@ -1303,7 +1366,7 @@ namespace MechaCyberpunk.Arte.Editor
                         }
                         Bounds b = Medir(go);
                         float lateral = Mathf.Abs(Vector3.Dot(b.center - calle[i - 1], der));
-                        if (!Libre(b, 0.15f) || lateral - Mathf.Max(b.extents.x, b.extents.z) < 3.8f)
+                        if (!Libre(b, 0.15f) || EnCalle(b, 0.05f))
                         {
                             Object.DestroyImmediate(go);
                             continue;
@@ -1313,7 +1376,7 @@ namespace MechaCyberpunk.Arte.Editor
                     }
                 }
             }
-            Log("Carriles: " + puestos + " montacargas, pallets, huacales y tambos estacionados en la orilla de las calles (a 5 m del eje).");
+            Log("Carriles: " + puestos + " montacargas, pallets, huacales y tambos estacionados fuera del carril (a 7.4 m del eje).");
         }
 
 
