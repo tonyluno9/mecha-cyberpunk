@@ -40,7 +40,7 @@ namespace MechaCyberpunk.Arte.Editor
             foreach (MeshFilter mf in Object.FindObjectsByType<MeshFilter>(FindObjectsInactive.Exclude, FindObjectsSortMode.None))
             {
                 Renderer r = mf.GetComponent<Renderer>();
-                if (mf.sharedMesh != null && r != null && r.enabled && mf.GetComponent<Collider>() == null)
+                if (mf.sharedMesh != null && UltimasFallasT1412.MallaCocinable(mf.sharedMesh) && r != null && r.enabled && mf.GetComponent<Collider>() == null)
                 {
                     MeshCollider mc = mf.gameObject.AddComponent<MeshCollider>();
                     mc.sharedMesh = mf.sharedMesh;

@@ -38,9 +38,9 @@ namespace MechaCyberpunk.Arte.Editor
 
         /// <summary>
         /// Pares que se dejan aunque las cajas se crucen, a propósito: postes y transformadores (su malla es un brazo largo con la caja casi vacía),
-        /// focos pegados bajo un toldo, el aire acondicionado sobre su base del tinaco, la basura regada junto a su bote, el banco de Tino (no se toca) y el callejón S2_Callejon (sus cajas y registros sirven de escalón a los accesos a techos: TechosS2Pruebas).
+        /// focos pegados bajo un toldo, el aire acondicionado sobre su base del tinaco, la basura regada junto a su bote, el banco de Tino (no se toca), las lámparas de sodio y los tinacos pegados a sus bodegas del Puerto (T-1396, look K15; T-1412) y el callejón S2_Callejon (sus cajas y registros sirven de escalón a los accesos a techos: TechosS2Pruebas).
         /// </summary>
-        private static readonly string[] ParejasPermitidas = { "Poste", "Transformador", "FocoPared", "BaseTinaco", "Basura", "TallerTino", "S2_Callejon/" };
+        private static readonly string[] ParejasPermitidas = { "Poste", "Transformador", "FocoPared", "BaseTinaco", "Basura", "TallerTino", "S2_Callejon/", "Bodegas_K15/LamparaSodio_", "Bodegas_K15/Tinaco_" };
 
         /// <summary>Excepciones legítimas (nombre de pieza que se deja aunque salga): vacío si no hay.</summary>
         public static readonly string[] Excepciones = { };
@@ -213,7 +213,7 @@ namespace MechaCyberpunk.Arte.Editor
                 foreach (MeshFilter mf in e.GetComponentsInChildren<MeshFilter>())
                 {
                     Renderer r = mf.GetComponent<Renderer>();
-                    if (mf.sharedMesh == null || r == null || !r.enabled || mf.GetComponent<Collider>() != null)
+                    if (mf.sharedMesh == null || !UltimasFallasT1412.MallaCocinable(mf.sharedMesh) || r == null || !r.enabled || mf.GetComponent<Collider>() != null)
                     {
                         continue;
                     }
