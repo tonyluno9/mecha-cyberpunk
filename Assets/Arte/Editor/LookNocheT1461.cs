@@ -47,7 +47,7 @@ namespace MechaCyberpunk.Arte.Editor
         // Sodio
         private static readonly Color Sodio = new Color(1f, 0.55f, 0.2f);
         private const float IntensidadSodio = 240f;
-        private const float AlcanceSodio = 20f;
+        private const float AlcanceSodio = 25f;
         private const float AnguloSodio = 95f;
         private const float AnguloInteriorSodio = 30f;
         // Neón
@@ -55,6 +55,7 @@ namespace MechaCyberpunk.Arte.Editor
         private const float AlcanceNeon = 9f;
         private const int CupoLucesNeon = 30; // Opus: la escena ya tenía 1330 Light; con T-1463 y T-1464 el tope de 1400 no da para 80
         private const int CupoDerrames = 220;
+        private static readonly Vector3 CamaraK18 = new Vector3(-168f, 5.98f, 226f);
         private const int MaxLucesBajoTablero = 6;
         private const float SeparacionLucesBajoTablero = 35f;
         private const float RadioNucleo = 0.4f;
@@ -813,6 +814,8 @@ namespace MechaCyberpunk.Arte.Editor
             matNucleo.SetColor("_Color", Sodio);
             matNucleo.SetFloat("_Intensidad", IntensidadNucleo);
             matNucleo.SetFloat("_Tamano", RadioNucleo);
+            matNucleo.SetFloat("_Acercar", 0.8f); // delante de la carcasa del farol (la luz está dentro y la tapaba)
+            matNucleo.SetFloat("_CercaCamara", 2f);
             EditorUtility.SetDirty(matNucleo);
             Material matCono =HacerMaterial(CarpetaLook + "/T1461_ConoSodio.mat", "MechaCyberpunk/Mundo/HaloLuz");
             matCono.SetColor("_Color", Sodio);
@@ -870,6 +873,7 @@ namespace MechaCyberpunk.Arte.Editor
                     Mesh mallaHalos = MallaHalos(z);
                     Malla(zt, "HalosSodio", mallaHalos, matHalo);
                     Malla(zt, "NucleosSodio", mallaHalos, matNucleo); // la lámpara misma: punto chico e intenso que florece con el bloom
+                    Malla(zt, "PisoSodio", MallaPisoSodio(z), matDerrame); // charco de luz naranja en la banqueta y el asfalto bajo cada farol
                     MeshRenderer mrC = Malla(zt, "ConosSodio", MallaConos(z), matCono);
                     totalHalos += z.Faroles.Count;
                 }
@@ -1018,6 +1022,30 @@ namespace MechaCyberpunk.Arte.Editor
             return m;
         }
 
+        // Un quad aditivo naranja en el piso bajo cada farol (sin Light).
+        private static Mesh MallaPisoSodio(DatosZona z)
+        {
+            Mesh m = MallaAsset(CarpetaLook + "/Mallas/T1461_PisoSodio_" + z.Corto + ".asset");
+            List<Vector3> v = new List<Vector3>();
+            List<Vector2> uv = new List<Vector2>();
+            List<Color> col = new List<Color>();
+            List<int> t = new List<int>();
+            List<Vector3> calle = z.Muestras.Select(q => q.Punto).ToList();
+            foreach (Vector3 lampara in z.Faroles)
+            {
+                float suelo = Suelo(lampara, calle);
+                Quad(v, uv, col, t, new Vector3(lampara.x, suelo + 0.05f, lampara.z), Vector3.right * 4.5f, Vector3.forward * 4.5f, Sodio);
+            }
+            m.indexFormat = v.Count > 65000 ? IndexFormat.UInt32 : IndexFormat.UInt16;
+            m.SetVertices(v);
+            m.SetUVs(0, uv);
+            m.SetColors(col);
+            m.SetTriangles(t, 0);
+            m.RecalculateBounds();
+            EditorUtility.SetDirty(m);
+            return m;
+        }
+
         // Dos quads aditivos por letrero (piso frente al neón y pared), todos en una malla con el color en el color de vértice.
         private static Mesh MallaDerrames(DatosZona z, List<Neon> neones)
         {
@@ -1149,13 +1177,15 @@ namespace MechaCyberpunk.Arte.Editor
             System.Random azar = new System.Random(14610 + z.Corto.Length);
             List<Vector3> ocupados = new List<Vector3>(z.CharcosViejos);
             int puestos = 0;
-            foreach (Vector3 p in z.BajoTablero)
+            // Primero los más cercanos a la cámara de K18: el tope de charcos se acababa antes de llegar a ella.
+            List<Vector3> porCercania = z.BajoTablero.OrderBy(q => (q - CamaraK18).sqrMagnitude).ToList();
+            foreach (Vector3 p in porCercania)
             {
-                if (puestos >= 40 || azar.NextDouble() < 0.35)
+                if (puestos >= 60 || azar.NextDouble() < 0.1)
                 {
                     continue;
                 }
-                float tamano = Mathf.Lerp(3f, 7f, (float)azar.NextDouble());
+                float tamano = Mathf.Lerp(4f, 9f, (float)azar.NextDouble());
                 if (ocupados.Any(o => (o.x - p.x) * (o.x - p.x) + (o.z - p.z) * (o.z - p.z) < SeparacionCharcos * SeparacionCharcos))
                 {
                     continue;
@@ -1177,7 +1207,7 @@ namespace MechaCyberpunk.Arte.Editor
             }
             int luces = 0;
             List<Vector3> puestas = new List<Vector3>();
-            foreach (Vector3 p in z.BajoTablero)
+            foreach (Vector3 p in porCercania)
             {
                 if (luces >= MaxLucesBajoTablero || puestas.Any(q => (q - p).sqrMagnitude < SeparacionLucesBajoTablero * SeparacionLucesBajoTablero))
                 {
@@ -1327,6 +1357,9 @@ namespace MechaCyberpunk.Arte.Editor
                 lgg.lift.Override(new Vector4(0.94f, 1f, 1.1f, 0.06f));
                 lgg.gamma.Override(new Vector4(1f, 1f, 1f, 0f));
                 lgg.gain.Override(new Vector4(1.05f, 1f, 0.95f, 0f));
+                WhiteBalance wb = Componente<WhiteBalance>(bruma);
+                wb.temperature.Override(10f);
+                wb.tint.Override(0f);
                 ShadowsMidtonesHighlights smh = Componente<ShadowsMidtonesHighlights>(bruma);
                 smh.shadows.Override(new Vector4(0.9f, 1f, 1.1f, 0.05f));
                 smh.midtones.Override(new Vector4(1f, 1f, 1f, 0f));

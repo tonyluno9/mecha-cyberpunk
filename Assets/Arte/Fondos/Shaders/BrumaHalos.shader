@@ -9,6 +9,7 @@ Shader "MechaCyberpunk/Fondos/BrumaHalos"
         _Intensidad ("Intensidad", Range(0, 3)) = 0.45
         _Tamano ("Radio del halo (m)", Float) = 4.5
         _CercaCamara ("Se apaga a menos de (m)", Float) = 3
+        _Acercar ("Acercar a la cámara (m)", Float) = 0
     }
     SubShader
     {
@@ -33,6 +34,7 @@ Shader "MechaCyberpunk/Fondos/BrumaHalos"
                 half _Intensidad;
                 float _Tamano;
                 float _CercaCamara;
+                float _Acercar;
             CBUFFER_END
 
             struct Atributos { float4 pos : POSITION; float2 uv : TEXCOORD0; };
@@ -44,6 +46,7 @@ Shader "MechaCyberpunk/Fondos/BrumaHalos"
                 float3 centro = TransformObjectToWorld(a.pos.xyz);
                 float3 vista = TransformWorldToView(centro);
                 o.cerca = saturate((length(vista) - _CercaCamara) / 6.0);
+                vista.z += _Acercar;
                 vista.xy += a.uv * _Tamano;
                 o.clip = TransformWViewToHClip(vista);
                 o.uv = a.uv;
