@@ -315,6 +315,37 @@ namespace MechaCyberpunk.Arte.Editor
             AssetDatabase.SaveAssets();
         }
 
+
+        /// <summary>Diagnóstico de E16_b: arma el avatar humano con AvatarBuilder y el mapeo de E16_a, y escribe por qué falla.</summary>
+        public static void DiagnosticoE16()
+        {
+            var log = new StringBuilder();
+            var a = AssetImporter.GetAtPath("Assets/Arte/Personajes/E16_RobotPesadoNova/E16_RobotPesadoNova_a.fbx") as ModelImporter;
+            var modeloB = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Arte/Personajes/E16_RobotPesadoNova/E16_RobotPesadoNova_b.fbx");
+            var go = (GameObject)UnityEngine.Object.Instantiate(modeloB);
+            var hd = a.humanDescription;
+            var nombres = new System.Collections.Generic.HashSet<string>();
+            foreach (var t in go.GetComponentsInChildren<Transform>(true)) nombres.Add(t.name);
+            foreach (var h in hd.human) if (!nombres.Contains(h.boneName)) log.AppendLine("FALTA hueso " + h.humanName + " -> " + h.boneName);
+            var esq = new System.Collections.Generic.List<SkeletonBone>();
+            foreach (var t in go.GetComponentsInChildren<Transform>(true)) esq.Add(new SkeletonBone { name = t.name, position = t.localPosition, rotation = t.localRotation, scale = t.localScale });
+            hd.skeleton = esq.ToArray();
+            var av = AvatarBuilder.BuildHumanAvatar(go, hd);
+            log.AppendLine("BuildHumanAvatar: valido=" + av.isValid + " humano=" + av.isHuman);
+            if (av.isValid && av.isHuman)
+            {
+                var imp = AssetImporter.GetAtPath("Assets/Arte/Personajes/E16_RobotPesadoNova/E16_RobotPesadoNova_b.fbx") as ModelImporter;
+                imp.animationType = ModelImporterAnimationType.Human;
+                imp.avatarSetup = ModelImporterAvatarSetup.CreateFromThisModel;
+                var hdSinEsq = hd; hdSinEsq.skeleton = new SkeletonBone[0];
+                imp.humanDescription = hdSinEsq;
+                imp.SaveAndReimport();
+                foreach (var o in AssetDatabase.LoadAllAssetsAtPath(imp.assetPath)) if (o is Avatar x) log.AppendLine("Importado sin esqueleto fijo: valido=" + x.isValid + " humano=" + x.isHuman);
+            }
+            UnityEngine.Object.DestroyImmediate(go);
+            System.IO.File.WriteAllText("Logs/e16-diagnostico.txt", log.ToString());
+        }
+
         private static string GetHierarchyPath(this Transform t) { var s = t.name; while (t.parent != null) { t = t.parent; s = t.name + "/" + s; } return s; }
     }
 }
