@@ -23,3 +23,4 @@ Todo escrito sin abrir Unity (no compilado ni corrido por el implementador): hay
 - Banca de paseo (no hay modelo; la referencia A11 tiene una).
 - Clips de "recargado en el barandal" y "hablando" para los NP (solo hay Idle, Caminar, Recargar de arma).
 - Cables cruzando del poste a las fachadas con más hilos (existen los de T-1393; revisar en la foto).
+- Textura de arena de playa (la playa usa un color liso T1463_Arena).
