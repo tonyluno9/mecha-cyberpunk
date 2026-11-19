@@ -80,5 +80,7 @@ que diga "Qué sigue".
 
 - 05:30 T-1412 aplicado. EditMode completo: 3373/3375; las 2 últimas de esta noche (drones sin textura, bruma en greybox) se corrigieron, y la que queda (ReglasEnsamblados) es de main. Builds finales de Demo y de Juego con Succeeded y 0 errores. FPS en el build final: el peor es Cerro/plaza_arriba con 136 (p1 109). Merge a main.
 
+- 06:10 Ronda 6 (T-1413 muelle K12, T-1414 aéreas) aplicada; EditMode de Mundo 739/739; builds de Demo y Juego con Succeeded; merge a main.
+
 ## Qué sigue
 - Ver docs/pendientes-19nov.md.
