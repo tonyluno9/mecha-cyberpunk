@@ -26,3 +26,9 @@ Dirige Opus en la carpeta principal, rama `integ/look-19nov-A` (sale de origin/m
 - Ver la r0, lanzar T-1461..T-1464.
 - 08:45 Foto base r0 en docs/capturas/_vista19b (y Logs/vista19b-r0): igual que _vista19; además, en K11 el skyline es un panel oscuro con bordes sobre el mar.
   Lanzados los 4 subagentes T-1461..T-1464 en worktrees, ramas tony/T-146x-* desde integ/look-19nov-A.
+- 08:50 Ronda 1 integrada y aplicada en una corrida (todo compiló a la primera). OJO: el subagente de T-1461 pidió correr LookNocheT1392/T1399.Aplicar,
+  que regeneran los charcos DENTRO de T1355_Cerro y T1357_Puerto (de B): se restauraron con git restore y no se vuelven a correr.
+  Luces: 1305 antes -> 1335 (cupo de neón de T-1461 bajado a 30). Escena 56 MB. Commit eccdcad.
+- Fotos r1 (Logs/vista19b-r1): neón en fachadas, gente en el barandal, carros con luces, skyline con torres y haz del faro. Mal: negros aplastados,
+  sodio quemado, halos como discos, sin niebla, paseo de K11 negro sin fila de palmeras, A11/K18/A18 mal encuadradas, isla flotante en A18.
+  Correcciones mandadas a los 4 subagentes. EditMode NieblaPorAltura + PoseQuieta: 10/10.
