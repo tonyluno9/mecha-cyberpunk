@@ -211,7 +211,7 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             }
 
             // 3) Controlador (el umbral definitivo se pone al medir los clips).
-            AnimatorController controlador = ConstructorControladorVisual.Construir(CarpetaDe(nombre) + "/" + nombre + ".controller", clips, out List<ClipVisual> faltan);
+            AnimatorController controlador = ConstructorControladorVisual.Construir(CreadorVisualPersonaje.RutaControlador(nombre), clips, out List<ClipVisual> faltan);
             foreach (ClipVisual f in faltan)
             {
                 Debug.LogWarning("[Personaje] " + nombre + ": falta la animación " + f + ".");
