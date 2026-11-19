@@ -796,7 +796,7 @@ namespace MechaCyberpunk.Arte.Editor
         }
 
         /// <summary>Distancia en planta de p al eje de calle más cercano (a los segmentos, no solo a las muestras).</summary>
-        public static float DistanciaAEjes(Ctx c, Vector3 p)
+        private static float DistanciaAEjes(Ctx c, Vector3 p)
         {
             float mejor = float.MaxValue;
             foreach (List<Vector3> eje in c.Ejes)
