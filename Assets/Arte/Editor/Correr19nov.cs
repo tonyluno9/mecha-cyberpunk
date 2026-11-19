@@ -65,5 +65,22 @@ namespace MechaCyberpunk.Arte.Editor
                 }
             }
         }
+
+        /// <summary>El skyline del Malecón (T-1393) copió el material antes de que T-1392 le pusiera el shader sin niebla: a 495 m la niebla lo pintaba como un panel liso.</summary>
+        public static void ArreglarSkylineMalecon()
+        {
+            var sh = Shader.Find("MechaCyberpunk/Fondos/SkylineSinNiebla");
+            foreach (var ruta in new[] { "Assets/Arte/Mundo/S2c/T1393_Skyline.mat" })
+            {
+                var m = AssetDatabase.LoadAssetAtPath<Material>(ruta);
+                if (m == null || sh == null) { Debug.LogWarning("Correr19nov: falta " + ruta + " o el shader"); continue; }
+                var tex = m.GetTexture("_BaseMap");
+                m.shader = sh;
+                m.SetTexture("_BaseMap", tex);
+                if (m.HasProperty("_BaseColor")) m.SetColor("_BaseColor", new Color(1.1f, 1.1f, 1.1f, 1f));
+                EditorUtility.SetDirty(m);
+            }
+            AssetDatabase.SaveAssets();
+        }
     }
 }
