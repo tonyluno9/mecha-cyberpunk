@@ -325,6 +325,9 @@ namespace MechaCyberpunk.Arte.Editor
         public static void Foto(Vector3 desde, Vector3 hacia, string ruta, float campo = 55f, float hora = HoraFoto)
         {
             CicloDiaNoche ciclo = Object.FindFirstObjectByType<CicloDiaNoche>();
+            // T-1462: como en el juego, la niebla baja con la altura de la cámara y los fondos lejanos se apagan al subir.
+            NieblaPorAltura.Fijar(CalculoNieblaAltura.Factor(desde.y));
+            OcultarPorAltura.AplicarATodos(desde.y);
             if (ciclo != null)
             {
                 ciclo.Aplicar(hora);
@@ -396,6 +399,8 @@ namespace MechaCyberpunk.Arte.Editor
             rt.Release();
             Object.DestroyImmediate(rt);
             Object.DestroyImmediate(go);
+            NieblaPorAltura.Fijar(1f);
+            OcultarPorAltura.AplicarATodos(float.NegativeInfinity);
             if (reflejo != null)
             {
                 reflejo.Soltar();

@@ -55,8 +55,9 @@ namespace MechaCyberpunk.Tests.Mundo
             // 19-nov, a propósito: T-1399 (pedido de Tony) subió la niebla de noche a densidad 0.009 y color (0.34, 0.42, 0.57); T-1392 aclaró el ambiente a (0.46, 0.52, 0.66).
             // Antes: densidad 0.006 (T-920), niebla (0.2, _, 0.32) y ambiente r 0.4 (T-880).
             Assert.AreEqual(0.009f, config.DensidadNiebla(HoraNoche), Tolerancia, "T-1399 (19-nov): niebla de noche más densa y de color (antes 0.006, T-920)");
-            Assert.AreEqual(0.34f, config.ColorNiebla(HoraNoche).r, Tolerancia, "T-1399: niebla azul claro de K01 (antes 0.2)");
-            Assert.AreEqual(0.57f, config.ColorNiebla(HoraNoche).b, Tolerancia, "T-1399 (antes 0.32)");
+            // T-1461 (19-nov, sesión A): niebla azul-gris (0.30, 0.40, 0.50).
+            Assert.AreEqual(0.30f, config.ColorNiebla(HoraNoche).r, Tolerancia, "T-1461: niebla azul-gris (antes 0.34, T-1399)");
+            Assert.AreEqual(0.50f, config.ColorNiebla(HoraNoche).b, Tolerancia, "T-1461 (antes 0.57, T-1399)");
             Assert.AreEqual(0.46f, config.ColorAmbiente(HoraNoche).r, Tolerancia, "T-1392 (19-nov): ambiente de noche más claro (antes 0.4, T-880)");
             Assert.AreEqual(0f, config.DiscoSol(HoraNoche), Tolerancia, "La luna no se dibuja como disco");
         }
