@@ -115,7 +115,7 @@ namespace MechaCyberpunk.Personaje.Habilidades
             if (h == HabilidadProtesis.Laser)
             {
                 acumulado = TicDanio;
-                Sonidos.ReproducirEn("ARM_LASER_AVISO", transform.position);
+                Sonidos.Reproducir(MechaCyberpunk.Personaje.Combate.SonidosArmasT1472.LaserDisparo); // T-1472: láser del jugador, 2D
             }
         }
 
@@ -238,7 +238,11 @@ namespace MechaCyberpunk.Personaje.Habilidades
         private IEnumerator LanzarMisiles()
         {
             BuscarBlancos();
-            Sonidos.ReproducirEn("ARM_ESC_DISPARO", Hombro());
+            if (blancos.Count > 0)
+            {
+                Sonidos.Reproducir(MechaCyberpunk.Personaje.Combate.SonidosArmasT1472.MisilesFijar); // T-1472: fijó blancos
+            }
+            Sonidos.Reproducir("ARM_W02_DISPARO"); // T-1472: 2D, es del jugador
             for (int i = 0; i < cfg.CantidadMisiles; i++)
             {
                 Transform blanco = blancos.Count > 0 ? blancos[i % blancos.Count] : null;
