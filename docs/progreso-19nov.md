@@ -56,5 +56,8 @@ que diga "Qué sigue".
 - T-1397 corrida: los 11 carros rearmados y los drones importados. Dron.prefab de la policía con DR01. No había drones de Nova ni de SKULLS en el código, así que se lanzó T-1398 (drones con ruta aérea para Nova, SKULLS, policía y tráfico aéreo).
 - T-1392 (look, ronda 2) lista: se corre al final, después de las zonas de la ronda 2.
 
+- Ronda 2 aplicada completa: T-1393 Malecón (skyline en 2 arcos a 495 m, 27 neones, 76 cables; solo 1 ML05 cupo porque mide 14.7 m y las casas 5–7 m), T-1394 Cerro (70 enlaces entre azoteas, 45 escaleras de servicio, variedad CC, 26 neones, cámara K13 en la calle base), T-1395 Autopista (cámara K18 en la calle baja, postes C07, túnel iluminado, 25 faroles AU01 con placa de sodio), T-1396 Puerto (PU08 orientado, bodegas con alero, neón y lámparas, balizas en las grúas, barco a la vista), T-1398 (18 drones con ruta: Nova, SKULLS, policía y tráfico aéreo) y T-1392 look (charcos S2c con reflejo, ambiente y niebla más claros, volumen por zona, emisión de NE01, NE01B y NE02 encendida). Hay 1341 luces en la escena (el tope seguro es 1400).
+- Pruebas EditMode de las tareas nuevas: 218/222. Las 4 fallas se corrigieron: 3 eran de E16_b (se quitó) y 1 de carros en U1.
+
 ## Qué sigue
 - Esperar la primera tanda; integrar T-1382 y T-1383 en Unity (importar y aplicar el look); después las zonas (T-1384 a T-1388).
