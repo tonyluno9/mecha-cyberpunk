@@ -38,6 +38,15 @@ solo escriben scripts de editor; Unity corre aquí, en s2, una sola instancia en
 - T-1443 ronda 1 corrida: 142 contenedores con color, carriles pintados, 70 charcos, balizas, ventanas del barco; 0 bodegas, grúas 1 m
   enterradas, charcos de luz cuadrados y cámara mirando al agua. Devuelta para ronda 2 (búsqueda automática de cámara).
 
+- Ronda 1 completa aplicada (commit adb9820 en integ/zonas-19nov-B, Cerro 46 MB, Puerto 7 MB; fotos en docs/capturas/_vista19b/).
+  - Cerro K13: ya hay cables, poste, carro, fachadas con detalle; falta escalera, gente, carros; un panel de "ciudad" sale como pared cerca de la cámara.
+  - Cerro A13: sigue leyéndose como cajas blancas (azoteas claras), calles poco visibles, 0 escaleras de ladera, paneles de ciudad como torres colgando.
+  - Puerto K15: patio nuevo junto al muelle con barriles, montacargas, estibadores con textura y pose; falta encuadre (bodegas, barco, grúa).
+  - Puerto A15: encuadre ya parecido (grúas, carriles pintados, colores), pero pilas ralas de 1 alto, 0 bodegas, grúas 0.94 m enterradas.
+  - Validar: T-1440 19 fallos, T-1441 96 (casi todo enterrado 5–8 cm) y 3700 objetos (tope 3000), T-1442 1, T-1443 3.
+  - Los .fbx.meta que Unity reescribe al importar (ruido de flotantes) se descartan con git restore antes de cada commit.
+- Ronda 2/3 lanzada a los 4 subagentes con las correcciones.
+
 ## Qué sigue
 - Al volver cada subagente: merge de su rama en `integ/zonas-19nov-B` (en s2), correr Aplicar en orden T1440 → T1441 → T1442 → T1443,
   luego Validar y, en otra corrida, Fotos. Revisar las fotos y devolver errores.
