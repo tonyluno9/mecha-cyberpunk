@@ -114,6 +114,12 @@ No hizo falta combinar mallas ni poner oclusión. Lo que más pesa es la cantida
 - **T-1414:** vistas aéreas A13, A15 y A18 con cámara buscada automáticamente, faroles de sodio en las calles oscuras, azoteas con color, cosas de azotea, ventanas encendidas y neones.
 - **Pruebas y builds:** después, EditMode de Mundo 739/739, y los builds de Demo y de Juego otra vez con Succeeded y 0 errores.
 
+## Ronda 7 (06:10 a 06:45)
+- **T-1415 y T-1415b:** ramal elevado en curva, de 2 arcos de radio 60 m, sobre 3 columnas AU04 gruesas, con faroles. Entra a una segunda boca de túnel en el acantilado, cerrada con reja y letreros de OBRA. Validar da 0 fallas. Desde la cámara de K18 de T-1407 el ramal queda fuera de cuadro, y la cámara bajo el tablero (`t-1415/k18.png`) no mejora la toma.
+- **T-1416:** paseo escalonado con barandal en la pierna 2 del zigzag del Cerro, con vista a la ciudad (`t-1416/cerro-k13.png`). La ciudad queda a la izquierda, en espejo de K13.
+- **E16_b:** `AvatarBuilder` sí arma un avatar humano con el mapeo de E16_a (`Correr19nov.DiagnosticoE16`), pero la reimportación a otra escala lo rompe. Sigue pendiente.
+- **Pruebas y builds:** después del barrido de bugs, Mundo y Tráfico pasan; Demo y Juego compilaron otra vez con 0 errores.
+
 ## Pruebas
 - **EditMode completo:**
   - primera corrida: 3336/3364;

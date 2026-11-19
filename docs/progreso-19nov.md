@@ -82,5 +82,7 @@ que diga "Qué sigue".
 
 - 06:10 Ronda 6 (T-1413 muelle K12, T-1414 aéreas) aplicada; EditMode de Mundo 739/739; builds de Demo y Juego con Succeeded; merge a main.
 
+- 06:45 Ronda 7 (T-1415/T-1415b ramal curvo de K18, T-1416 paseo del Cerro con vista) aplicada; barrido de bugs; pruebas de zonas 32/32; builds de Demo y Juego con Succeeded; merge a main.
+
 ## Qué sigue
 - Ver docs/pendientes-19nov.md.
