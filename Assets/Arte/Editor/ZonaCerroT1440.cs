@@ -1138,6 +1138,142 @@ namespace MechaCyberpunk.Arte.Editor
             }
         }
 
+        /// <summary>true si el punto está a menos de 3.5 m (en z) de una escalera CE01 del paseo (z 120, 60, 0) entre sus pies y la pierna 2: ahí no van postes ni carros.</summary>
+        private static bool CercaDeEscaleraCE01(Vector3 p)
+        {
+            foreach (float z in ColocarT1355Cerro.ZEscaleras)
+            {
+                if (Mathf.Abs(p.z - z) < 3.5f && p.x < -340f && p.x > -372f)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private static float HuecoCajas(Bounds a, Bounds b)
+        {
+            float dx = Mathf.Max(0f, Mathf.Abs(a.center.x - b.center.x) - (a.extents.x + b.extents.x));
+            float dz = Mathf.Max(0f, Mathf.Abs(a.center.z - b.center.z) - (a.extents.z + b.extents.z));
+            return new Vector2(dx, dz).magnitude;
+        }
+
+        /// <summary>
+        /// Las azoteas de las 6 cadenas de parkour de RecorridoCerroT1361Pruebas (misma lógica: casas del kit con Cuerpo y AzoteaT1318, hueco menor de 4 m, desnivel hasta 3 m, 5 por cadena,
+        /// arrancando junto a la cima de cada CE01 y a 20, 50 y 80 % de la calle base). La prueba corre por el centro de esas azoteas: ahí no se apila un piso.
+        /// </summary>
+        private static HashSet<Transform> CadenasReservadas(Ctx c)
+        {
+            HashSet<Transform> reservadas = new HashSet<Transform>();
+            Transform casas = c.Zona.transform.Find("Casas");
+            if (casas == null)
+            {
+                return reservadas;
+            }
+            List<Transform> raices = new List<Transform>();
+            List<Bounds> cajas = new List<Bounds>();
+            foreach (Transform casa in casas)
+            {
+                if (!casa.gameObject.activeInHierarchy)
+                {
+                    continue;
+                }
+                Transform cuerpo = casa.Find("Cuerpo");
+                if (cuerpo == null || casa.Find("AzoteaT1318") == null)
+                {
+                    continue;
+                }
+                Collider col = cuerpo.GetComponent<Collider>();
+                if (col == null)
+                {
+                    continue;
+                }
+                raices.Add(casa);
+                cajas.Add(col.bounds);
+            }
+            List<Vector3> puntos = new List<Vector3>();
+            foreach (float z in ColocarT1355Cerro.ZEscaleras)
+            {
+                puntos.Add(new Vector3(-354f, CerroT1355Trazado.AlturaPierna2(z) + 0.2f, z));
+            }
+            foreach (float f in new[] { 0.2f, 0.5f, 0.8f })
+            {
+                puntos.Add(new Vector3(CerroT1355Trazado.XBase, 0f, CerroT1355Trazado.ZBaseSur + (CerroT1355Trazado.ZBaseNorte - CerroT1355Trazado.ZBaseSur) * f));
+            }
+            Func<int, List<int>> vecinas = i =>
+            {
+                List<int> l = new List<int>();
+                for (int j = 0; j < cajas.Count; j++)
+                {
+                    if (j != i && HuecoCajas(cajas[i], cajas[j]) < 4f && Mathf.Abs(cajas[i].max.y - cajas[j].max.y) <= 3f)
+                    {
+                        l.Add(j);
+                    }
+                }
+                return l;
+            };
+            HashSet<int> usadas = new HashSet<int>();
+            foreach (Vector3 punto in puntos)
+            {
+                int inicio = -1;
+                float distancia = float.MaxValue;
+                for (int i = 0; i < cajas.Count; i++)
+                {
+                    if (usadas.Contains(i) || vecinas(i).Count == 0)
+                    {
+                        continue;
+                    }
+                    float d = new Vector2(cajas[i].center.x - punto.x, cajas[i].center.z - punto.z).magnitude;
+                    if (d < distancia)
+                    {
+                        distancia = d;
+                        inicio = i;
+                    }
+                }
+                if (inicio < 0)
+                {
+                    continue;
+                }
+                usadas.Add(inicio);
+                List<int> indices = new List<int> { inicio };
+                Vector3 anterior = Vector3.zero;
+                while (indices.Count < 5)
+                {
+                    int actual = indices[indices.Count - 1];
+                    int mejor = -1;
+                    float puntaje = float.MaxValue;
+                    foreach (int j in vecinas(actual))
+                    {
+                        if (indices.Contains(j))
+                        {
+                            continue;
+                        }
+                        Vector3 dir = cajas[j].center - cajas[actual].center;
+                        dir.y = 0f;
+                        float p = HuecoCajas(cajas[actual], cajas[j]) + (Vector3.Dot(anterior, dir.normalized) < 0f ? 5f : 0f);
+                        if (p < puntaje)
+                        {
+                            puntaje = p;
+                            mejor = j;
+                        }
+                    }
+                    if (mejor < 0)
+                    {
+                        break;
+                    }
+                    anterior = cajas[mejor].center - cajas[actual].center;
+                    anterior.y = 0f;
+                    anterior.Normalize();
+                    indices.Add(mejor);
+                }
+                foreach (int i in indices)
+                {
+                    reservadas.Add(raices[i]);
+                }
+            }
+            return reservadas;
+        }
+
         /// <summary>true si el punto cae en el cuadro de la cámara A13 fija (u, v en 0..1).</summary>
         private static bool EnCuadroA13(Vector3 q, out float u, out float v)
         {
@@ -1435,7 +1571,7 @@ namespace MechaCyberpunk.Arte.Editor
                 Vector3 w = ladera.TransformPoint(v[i]);
                 foreach (PlanEscalera p in planes)
                 {
-                    if (w.x >= XEscaleraArriba + 0.5f && w.x <= XEscaleraAbajo + 1.5f && Mathf.Abs(w.z - p.Z) <= 2.01f)
+                    if (w.x >= XEscaleraArriba + 0.5f && w.x <= XEscaleraAbajo + 0.5f && Mathf.Abs(w.z - p.Z) <= 2.01f)
                     {
                         w.y = AlturaEscalera(p, w.x) - 0.5f;
                         v[i] = ladera.InverseTransformPoint(w);
@@ -1856,8 +1992,10 @@ namespace MechaCyberpunk.Arte.Editor
                 }
             }
             c.TechosCasa = techos;
+            HashSet<Transform> reservadas = CadenasReservadas(c);
+            Log("Azoteas reservadas para las cadenas de parkour de RecorridoCerroT1361Pruebas (sin piso extra): " + reservadas.Count + ".");
             Log("Azoteas viejas cubiertas con concreto oscuro: " + techos.Count + " de " + casas.Count + " casas.");
-            List<Casa> orden = casas.Where(k => TiersDe(k) >= 1f && techos.ContainsKey(k)).OrderBy(k =>
+            List<Casa> orden = casas.Where(k => TiersDe(k) >= 1f && techos.ContainsKey(k) && !reservadas.Contains(k.Raiz)).OrderBy(k =>
             {
                 Vector3 centro = new Vector3(k.Centro, k.Top, (k.Z0 + k.Z1) * 0.5f);
                 return Mathf.Min(Vector3.Distance(centro, A13Hacia), Vector3.Distance(centro, k13));
@@ -2300,6 +2438,19 @@ namespace MechaCyberpunk.Arte.Editor
                 Vector3 izq = new Vector3(-tan.z, 0f, tan.x);
                 lado = -lado;
                 Vector3 xz = new Vector3(eje[i].x, 0f, eje[i].z) + izq * lado * DesdeEje;
+                int ia = Mathf.Max(0, i - 4), ib = Mathf.Min(eje.Count - 1, i + 4);
+                Vector3 t1 = new Vector3(eje[i].x - eje[ia].x, 0f, eje[i].z - eje[ia].z), t2 = new Vector3(eje[ib].x - eje[i].x, 0f, eje[ib].z - eje[i].z);
+                if (t1.sqrMagnitude > 0.01f && t2.sqrMagnitude > 0.01f && Vector3.Angle(t1, t2) > 5f)
+                {
+                    // En las curvas no van postes (el carro se abre hacia afuera): solo el charco de luz sobre el eje.
+                    float yc;
+                    if (Piso(c, eje[i].x, eje[i].z, 200f, true, out yc))
+                    {
+                        CharcoLuz(c, new Vector3(eje[i].x, 0f, eje[i].z), yc, 6f);
+                    }
+                    descartados++;
+                    continue;
+                }
                 float yCalle, yTodo;
                 if (!Piso(c, xz.x, xz.z, 200f, true, out yCalle) || !Piso(c, xz.x, xz.z, 200f, false, out yTodo) || yTodo - yCalle > 0.6f)
                 {
@@ -2317,7 +2468,7 @@ namespace MechaCyberpunk.Arte.Editor
                     continue;
                 }
                 Vector3 pie = new Vector3(xz.x, yTodo, xz.z); // el piso más alto bajo el poste (terreno o calle): asentado sobre lo que toca
-                if (viejos.Any(v => new Vector2(v.x - pie.x, v.z - pie.z).magnitude < DistanciaPosteViejo) || !LibreCaja(c, pie + Vector3.up * 2f, new Vector3(0.35f, 2f, 0.35f)))
+                if (CercaDeEscaleraCE01(pie) || viejos.Any(v => new Vector2(v.x - pie.x, v.z - pie.z).magnitude < DistanciaPosteViejo) || !LibreCaja(c, pie + Vector3.up * 2f, new Vector3(0.35f, 2f, 0.35f)))
                 {
                     descartados++;
                     continue;
@@ -2719,7 +2870,7 @@ namespace MechaCyberpunk.Arte.Editor
                     continue;
                 }
                 Vector3 pos = new Vector3(xz.x, y + 0.03f, xz.z);
-                if (!LibreCaja(c, pos + Vector3.up * 0.9f, new Vector3(1.0f, 0.6f, 2.2f)))
+                if (CercaDeEscaleraCE01(pos) || !LibreCaja(c, pos + Vector3.up * 0.9f, new Vector3(1.0f, 0.6f, 2.2f)))
                 {
                     continue;
                 }
