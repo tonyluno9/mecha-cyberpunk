@@ -72,6 +72,7 @@ namespace MechaCyberpunk.Arte.Editor
         private static readonly Dictionary<string, Bounds> medidas = new Dictionary<string, Bounds>();
         private static readonly Dictionary<string, GameObject> cache = new Dictionary<string, GameObject>();
         private static readonly List<string> faltan = new List<string>();
+        private static readonly Dictionary<string, Vector3> planNpc = new Dictionary<string, Vector3>();
 
         private sealed class Techo
         {
@@ -115,6 +116,7 @@ namespace MechaCyberpunk.Arte.Editor
             cache.Clear();
             faltan.Clear();
             lotes.Clear();
+            planNpc.Clear();
             pegados = 0;
             conservados = 0;
             GameObject zona = PrefabUtility.LoadPrefabContents(RutaPrefab);
@@ -149,6 +151,9 @@ namespace MechaCyberpunk.Arte.Editor
                 Paso("tendederos a la vista de K13", () => TendederosK13(c));
                 Paso("tendederos entre casas", () => Tendederos(c));
                 Paso("lotes", () => Volcar(c));
+                Directory.CreateDirectory(Path.Combine(Directory.GetParent(Application.dataPath).FullName, "Logs"));
+                File.WriteAllLines(Path.Combine(Directory.GetParent(Application.dataPath).FullName, "Logs", "t1441-npcs.txt"),
+                    planNpc.Select(p => p.Key + "|" + p.Value.x.ToString("R", CultureInfo.InvariantCulture) + "|" + p.Value.y.ToString("R", CultureInfo.InvariantCulture) + "|" + p.Value.z.ToString("R", CultureInfo.InvariantCulture)).ToArray());
                 Paso("LOD", () => AgruparLod(c));
                 Estatico(c);
                 KitS2c.Terminar(c.Obra);
@@ -1668,7 +1673,7 @@ namespace MechaCyberpunk.Arte.Editor
             int n = 0, usados = 0;
             foreach (var s in sitios)
             {
-                if (n >= 7)
+                if (n >= 5)
                 {
                     break;
                 }
@@ -1737,6 +1742,28 @@ namespace MechaCyberpunk.Arte.Editor
                             Vector3 adelante = car.transform.rotation * frenteLocal;
                             Vector3 luzPos = car.transform.position + adelante * (largo * 0.5f + 0.5f) + Vector3.up * 0.7f;
                             KitS2c.Luz(car.transform, luzPos, LightType.Spot, new Color(1f, 0.85f, 0.6f), 90f, 16f, 55f, adelante + Vector3.down * 0.12f);
+                        }
+                        // Rendimiento: los carros de Tripo tienen ~90 000 triángulos; se apagan bajo el 5 % de la pantalla.
+                        LODGroup lgCarro = car.GetComponent<LODGroup>();
+                        if (lgCarro == null)
+                        {
+                            Renderer[] rsCarro = car.GetComponentsInChildren<Renderer>().Where(rr => !(rr is ParticleSystemRenderer)).ToArray();
+                            lgCarro = car.AddComponent<LODGroup>();
+                            lgCarro.SetLODs(new[] { new LOD(0.05f, rsCarro) });
+                            lgCarro.RecalculateBounds();
+                        }
+                        else
+                        {
+                            LOD[] niveles = lgCarro.GetLODs();
+                            if (niveles.Length > 0)
+                            {
+                                if (niveles.Length > 1 && niveles[niveles.Length - 2].screenRelativeTransitionHeight <= 0.05f)
+                                {
+                                    niveles[niveles.Length - 2].screenRelativeTransitionHeight = 0.1f;
+                                }
+                                niveles[niveles.Length - 1].screenRelativeTransitionHeight = 0.05f;
+                                lgCarro.SetLODs(niveles);
+                            }
                         }
                         c.Carros++;
                         n++;
@@ -1979,7 +2006,8 @@ namespace MechaCyberpunk.Arte.Editor
                 return false;
             }
             GameObject g = (GameObject)PrefabUtility.InstantiatePrefab(fbx, padre);
-            g.name = "NPC_" + nombre + "_" + padre.childCount;
+            g.name = "NPC_" + nombre + "_" + (c.Contador++);
+            Vector3 escalaNpc = g.transform.localScale;
             g.transform.SetPositionAndRotation(pos, Quaternion.Euler(0f, yaw, 0f));
             RuntimeAnimatorController ctrl = AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>(RutaFbx(nombre).Replace(".fbx", ".controller"));
             Animator an = g.GetComponent<Animator>();
@@ -2009,6 +2037,9 @@ namespace MechaCyberpunk.Arte.Editor
                     if (clip != null && muestrear)
                     {
                         clip.SampleAnimation(g, Mathf.Min(0.3f, clip.length * 0.5f));
+                        // SampleAnimation aplica también la posición y rotación raíz del clip (los dejaba en el origen): se devuelve la colocación.
+                        g.transform.SetPositionAndRotation(pos, Quaternion.Euler(0f, yaw, 0f));
+                        g.transform.localScale = escalaNpc;
                     }
                 }
                 catch (Exception e)
@@ -2046,6 +2077,12 @@ namespace MechaCyberpunk.Arte.Editor
                 sr.updateWhenOffscreen = true;
                 sr.enabled = true;
             }
+            if (new Vector2(g.transform.position.x - pos.x, g.transform.position.z - pos.z).magnitude > 0.5f)
+            {
+                g.transform.position = new Vector3(pos.x, g.transform.position.y, pos.z);
+                Log("AVISO: " + g.name + " se corrió al muestrear; se devolvió a su lugar.");
+            }
+            planNpc[g.name] = pos;
             return true;
         }
 
@@ -2203,6 +2240,32 @@ namespace MechaCyberpunk.Arte.Editor
             Log("Postes nuevos sobre el paseo (el primero con transformador): " + n + ".");
         }
 
+        // ================================================================ Ropa de tamaño real (cuelga de y = 0 hacia abajo, en el plano XY, dos caras)
+
+        private static void Doble(Malla m, Vector3 a, Vector3 b, Vector3 c, Vector3 d)
+        {
+            m.Quad(0, a, b, c, d, Vector3.forward);
+            m.Quad(0, a, b, c, d, Vector3.back);
+        }
+
+        /// <summary>Camisa (0.6 x 0.7 m con mangas), pantalón (0.4 x 0.9 m con dos piernas) y toalla (0.5 x 0.8 m).</summary>
+        private static Mesh[] MallasRopa(Ctx c)
+        {
+            Malla camisa = new Malla(1);
+            Doble(camisa, new Vector3(-0.2f, 0f, 0f), new Vector3(0.2f, 0f, 0f), new Vector3(0.2f, -0.7f, 0f), new Vector3(-0.2f, -0.7f, 0f));
+            Doble(camisa, new Vector3(-0.2f, 0f, 0f), new Vector3(-0.3f, -0.06f, 0f), new Vector3(-0.3f, -0.25f, 0f), new Vector3(-0.2f, -0.2f, 0f));
+            Doble(camisa, new Vector3(0.2f, 0f, 0f), new Vector3(0.3f, -0.06f, 0f), new Vector3(0.3f, -0.25f, 0f), new Vector3(0.2f, -0.2f, 0f));
+            Malla pantalon = new Malla(1);
+            Doble(pantalon, new Vector3(-0.2f, 0f, 0f), new Vector3(0.2f, 0f, 0f), new Vector3(0.2f, -0.2f, 0f), new Vector3(-0.2f, -0.2f, 0f));
+            Doble(pantalon, new Vector3(-0.2f, -0.2f, 0f), new Vector3(-0.01f, -0.2f, 0f), new Vector3(-0.03f, -0.9f, 0f), new Vector3(-0.18f, -0.9f, 0f));
+            Doble(pantalon, new Vector3(0.01f, -0.2f, 0f), new Vector3(0.2f, -0.2f, 0f), new Vector3(0.18f, -0.9f, 0f), new Vector3(0.03f, -0.9f, 0f));
+            Malla toalla = new Malla(1);
+            Doble(toalla, new Vector3(-0.25f, 0f, 0f), new Vector3(0.25f, 0f, 0f), new Vector3(0.25f, -0.8f, 0f), new Vector3(-0.25f, -0.8f, 0f));
+            Mesh[] r = { camisa.Crear("T1441_Camisa"), pantalon.Crear("T1441_Pantalon"), toalla.Crear("T1441_Toalla") };
+            c.Obra.Mallas.AddRange(r);
+            return r;
+        }
+
         // ================================================================ Tendederos a la vista de K13 (casas de la derecha a postes de la izquierda)
 
         private static void TendederosK13(Ctx c)
@@ -2212,11 +2275,7 @@ namespace MechaCyberpunk.Arte.Editor
                 MatLit("RopaRosa", new Color(0.9f, 0.3f, 0.6f), 0.1f), MatLit("RopaAzul", new Color(0.2f, 0.45f, 0.85f), 0.1f), MatLit("RopaAmarilla", new Color(0.95f, 0.8f, 0.2f), 0.1f),
                 MatLit("RopaBlanca", new Color(0.85f, 0.85f, 0.82f), 0.1f), MatLit("RopaVerde", new Color(0.3f, 0.7f, 0.45f), 0.1f), MatLit("RopaNaranja", new Color(0.95f, 0.5f, 0.15f), 0.1f),
             };
-            Malla mp = new Malla(1);
-            mp.Quad(0, new Vector3(-0.2f, 0.28f, 0f), new Vector3(0.2f, 0.28f, 0f), new Vector3(0.2f, -0.28f, 0f), new Vector3(-0.2f, -0.28f, 0f), Vector3.forward);
-            mp.Quad(0, new Vector3(-0.2f, 0.28f, 0f), new Vector3(0.2f, 0.28f, 0f), new Vector3(0.2f, -0.28f, 0f), new Vector3(-0.2f, -0.28f, 0f), Vector3.back);
-            Mesh prenda = mp.Crear("T1441_PrendaK13");
-            c.Obra.Mallas.Add(prenda);
+            Mesh[] prendas = MallasRopa(c);
             List<VariarCerroT1364.CasaT> oeste = c.Casas.Where(h => h.Normal > 0f && Mathf.Abs(h.Frente - (XCentroCalle - 6.5f)) < 3.5f).ToList();
             List<Vector3> postes = c.Postes.Where(q => q.x > XCentroCalle + 2f && q.z > 40f && q.z < 150f).OrderBy(q => Mathf.Abs(q.z - 110f)).ToList();
             Log("Tendederos K13: " + oeste.Count + " casas del oeste y " + postes.Count + " postes del lado del paseo (casas con la fachada hacia el este: " + c.Casas.Count(h => h.Normal > 0f)
@@ -2276,9 +2335,9 @@ namespace MechaCyberpunk.Arte.Editor
                     for (int i = 0; i < n; i++)
                     {
                         float t = (i + 0.7f) / (n + 0.4f);
-                        Vector3 p = CalculoCatenaria.Punto(a, b, flecha, t) + Vector3.down * 0.27f;
+                        Vector3 p = CalculoCatenaria.Punto(a, b, flecha, t);
                         Quaternion giro = Quaternion.Euler(0f, c.Obra.Rango(-12f, 12f), c.Obra.Rango(-6f, 6f));
-                        Pegar(prenda, new[] { ropa[c.Obra.Azar.Next(ropa.Length)] }, Matrix4x4.TRS(p, giro, new Vector3(c.Obra.Rango(1f, 1.5f), c.Obra.Rango(1f, 1.4f), 1f)));
+                        Pegar(prendas[c.Obra.Azar.Next(prendas.Length)], new[] { ropa[c.Obra.Azar.Next(ropa.Length)] }, Matrix4x4.TRS(p, giro, Vector3.one * c.Obra.Rango(0.9f, 1.1f)));
                         prendas++;
                     }
                     usadas.Add(w);
@@ -2299,11 +2358,7 @@ namespace MechaCyberpunk.Arte.Editor
                 MatLit("RopaRosa", new Color(0.9f, 0.3f, 0.6f), 0.1f), MatLit("RopaAzul", new Color(0.2f, 0.45f, 0.85f), 0.1f), MatLit("RopaAmarilla", new Color(0.95f, 0.8f, 0.2f), 0.1f),
                 MatLit("RopaBlanca", new Color(0.85f, 0.85f, 0.82f), 0.1f), MatLit("RopaVerde", new Color(0.3f, 0.7f, 0.45f), 0.1f), MatLit("RopaNaranja", new Color(0.95f, 0.5f, 0.15f), 0.1f),
             };
-            Malla mp = new Malla(1);
-            mp.Quad(0, new Vector3(-0.2f, 0.28f, 0f), new Vector3(0.2f, 0.28f, 0f), new Vector3(0.2f, -0.28f, 0f), new Vector3(-0.2f, -0.28f, 0f), Vector3.forward);
-            mp.Quad(0, new Vector3(-0.2f, 0.28f, 0f), new Vector3(0.2f, 0.28f, 0f), new Vector3(0.2f, -0.28f, 0f), new Vector3(-0.2f, -0.28f, 0f), Vector3.back);
-            Mesh prenda = mp.Crear("T1441_Prenda");
-            c.Obra.Mallas.Add(prenda);
+            Mesh[] prendas = MallasRopa(c);
             List<VariarCerroT1364.CasaT> oeste = c.Casas.Where(h => h.Normal > 0f && Mathf.Abs(h.Frente - (XCentroCalle - 6.5f)) < 3.5f && (h.Z0 + h.Z1) * 0.5f > ZVistaSur && (h.Z0 + h.Z1) * 0.5f < ZVistaNorte).OrderBy(h => Mathf.Abs((h.Z0 + h.Z1) * 0.5f - 110f)).ToList();
             List<VariarCerroT1364.CasaT> este = c.Casas.Where(h => h.Normal < 0f && Mathf.Abs(h.Frente - (XCentroCalle + 6.5f)) < 3.5f).ToList();
             int lineas = 0, prendas = 0;
@@ -2353,9 +2408,9 @@ namespace MechaCyberpunk.Arte.Editor
                 for (int i = 0; i < n; i++)
                 {
                     float t = (i + 0.7f) / (n + 0.4f);
-                    Vector3 p = CalculoCatenaria.Punto(a, b, flecha, t) + Vector3.down * 0.27f;
+                    Vector3 p = CalculoCatenaria.Punto(a, b, flecha, t);
                     Quaternion giro = Quaternion.Euler(0f, c.Obra.Rango(-12f, 12f), c.Obra.Rango(-6f, 6f));
-                    Pegar(prenda, new[] { ropa[c.Obra.Azar.Next(ropa.Length)] }, Matrix4x4.TRS(p, giro, new Vector3(c.Obra.Rango(0.8f, 1.3f), c.Obra.Rango(0.8f, 1.2f), 1f)));
+                    Pegar(prendas[c.Obra.Azar.Next(prendas.Length)], new[] { ropa[c.Obra.Azar.Next(ropa.Length)] }, Matrix4x4.TRS(p, giro, Vector3.one * c.Obra.Rango(0.9f, 1.1f)));
                     prendas++;
                 }
                 lineas++;
@@ -2660,12 +2715,36 @@ namespace MechaCyberpunk.Arte.Editor
                 }
             }
             Transform gente = c.Nuevo.Find("Gente");
-            int personas = 0, enK13 = 0;
+            int personas = 0, enK13 = 0, desplazados = 0;
+            // Lo planeado por Aplicar (Logs/t1441-npcs.txt): cada NPC debe estar a menos de 0.5 m (en planta) de donde se puso.
+            Dictionary<string, Vector3> plan = new Dictionary<string, Vector3>();
+            string rutaPlan = Path.Combine(Directory.GetParent(Application.dataPath).FullName, "Logs", "t1441-npcs.txt");
+            if (File.Exists(rutaPlan))
+            {
+                foreach (string linea in File.ReadAllLines(rutaPlan))
+                {
+                    string[] partes = linea.Split('|');
+                    if (partes.Length == 4)
+                    {
+                        plan[partes[0]] = new Vector3(float.Parse(partes[1], CultureInfo.InvariantCulture), float.Parse(partes[2], CultureInfo.InvariantCulture), float.Parse(partes[3], CultureInfo.InvariantCulture));
+                    }
+                }
+            }
+            else
+            {
+                sb.AppendLine("AVISO: no hay Logs/t1441-npcs.txt; no se revisa la posición planeada de los NPC.");
+                avisos++;
+            }
             foreach (Transform t in c.Nuevo.GetComponentsInChildren<Transform>(true))
             {
                 if (t.name.StartsWith("NPC_"))
                 {
                     personas++;
+                    if (plan.TryGetValue(t.name, out Vector3 planeado) && new Vector2(t.position.x - planeado.x, t.position.z - planeado.z).magnitude > 0.5f)
+                    {
+                        desplazados++;
+                        sb.AppendLine("FALLO: " + t.name + " está en " + t.position.ToString("F2") + " y se planeó en " + planeado.ToString("F2") + ".");
+                    }
                     if (t.GetComponentInChildren<Collider>() != null)
                     {
                         fallos++;
@@ -2689,9 +2768,9 @@ namespace MechaCyberpunk.Arte.Editor
                 sb.AppendLine("AVISO: menos de 3 personas en el cuadro de K13.");
                 avisos++;
             }
-            if (carros < 5)
+            if (carros > 5)
             {
-                sb.AppendLine("FALLO: se pidieron 5 a 7 carros estacionados.");
+                sb.AppendLine("FALLO: máximo 5 carros por rendimiento (hay " + carros + ").");
                 fallos++;
             }
             sb.AppendLine("Calle: carros " + carros + ", gente " + personas + " (8 a 20 pedidos);en carril " + enCarril + ", flotando/enterrados " + flotan + ".");
@@ -2700,7 +2779,7 @@ namespace MechaCyberpunk.Arte.Editor
                 sb.AppendLine("FALLO: la gente debe ser de 8 a 20.");
                 fallos++;
             }
-            fallos += enCarril + flotan;
+            fallos += enCarril + flotan + desplazados;
         }
 
         private static void ValidarColliders(Ctx c, StringBuilder sb, ref int fallos)
