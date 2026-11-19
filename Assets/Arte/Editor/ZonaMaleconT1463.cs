@@ -7,6 +7,7 @@ using System.Text;
 using MechaCyberpunk.Core.Mundo;
 using MechaCyberpunk.Mundo.Ambiente;
 using UnityEditor;
+using UnityEditor.Animations;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -39,6 +40,7 @@ namespace MechaCyberpunk.Arte.Editor
         private const float XFilaDesde = -300f;
         private const float XFilaHasta = 105f;
         private const float RadioCamara = 2.2f;
+        private const float RadioPalmeraCamara = 6f;
         private const int TopeSpots = 36;
         private const int CupoLuces = 40;
 
@@ -297,7 +299,9 @@ namespace MechaCyberpunk.Arte.Editor
                 PonerMarca(mio, "Vista19b_A11", CamaraA11, MiraA11, CampoA11);
                 ApagarFilaVieja(raiz, apagados);
                 PonerFila(obra, raiz, mio);
+                ArreglarFarosExistentes(raiz);
                 PonerFaroA11(obra, mio);
+                PonerArena(raiz);
                 PonerLetreros(raiz, mio);
                 PonerGente(raiz, mio, obra);
                 PonerBasura(raiz, mio);
@@ -386,7 +390,7 @@ namespace MechaCyberpunk.Arte.Editor
                     Marco(pt.x, out Vector3 linea, out _, out Vector3 mar);
                     Vector3 pos = linea + mar * LateralFila;
                     pos.y = ColocarT1354Curva.YBanqueta;
-                    if (Plano(pos, camK) < RadioCamara) { omitidos++; continue; }
+                    if (Plano(pos, camK) < (esPalmera ? RadioPalmeraCamara : RadioCamara)) { omitidos++; continue; }
                     GameObject go = esPalmera
                         ? PonerSimple(palmera, grupo, pos, Quaternion.Euler(0f, (float)obra.Azar.NextDouble() * 360f, 0f), 1.1f + (float)obra.Azar.NextDouble() * 0.3f, ocupado, 1.2f, "AR03_Palmera_" + nP)
                         : PonerSimple(farol, grupo, pos, Quaternion.LookRotation(mar), 1f, ocupado, 1f, "ML01_Farol_" + nF);
@@ -402,14 +406,273 @@ namespace MechaCyberpunk.Arte.Editor
             foreach (var f in faroles.OrderBy(x => Mathf.Min(Plano(x.cabeza, camK), Plano(x.cabeza, camA))))
             {
                 if (spots >= TopeSpots) { break; }
-                KitS2c.Luz(f.go.transform, f.cabeza, LightType.Spot, KitS2c.Sodio, ColocarS2oLuz.IntensidadPoste * 1.6f, ColocarS2oLuz.RangoPoste * 1.25f,
+                KitS2c.Luz(f.go.transform, f.cabeza, LightType.Spot, KitS2c.Sodio, ColocarS2oLuz.IntensidadPoste * 3.2f, ColocarS2oLuz.RangoPoste * 1.25f,
                     ColocarS2oLuz.AnguloPoste, (f.haciaAvenida * 0.25f + Vector3.down).normalized);
                 spots++;
             }
+            PonerCharcosDeLuz(obra, mio, faroles.Select(x => (x.go.transform.position, x.haciaAvenida)).ToList());
             Informe.AppendLine("Fila nueva: " + nP + " palmeras y " + nF + " faroles cada " + PasoFila + " m a " + LateralFila + " m del eje (" + spots + " con spot de sodio sin sombras, el resto solo halo); "
                 + omitidos + " omitidos por choque o por la cámara.");
         }
 
+        // ================================================================ Charcos de luz y arena
+
+        private static Texture2D TexCharcoLuz()
+        {
+            const string ruta = KitS2c.CarpetaTexturas + "/T1463_CharcoLuz.png";
+            Texture2D t = AssetDatabase.LoadAssetAtPath<Texture2D>(ruta);
+            if (t != null) { return t; }
+            Directory.CreateDirectory(KitS2c.CarpetaTexturas);
+            const int n = 64;
+            Texture2D tex = new Texture2D(n, n, TextureFormat.RGBA32, false);
+            for (int y = 0; y < n; y++)
+            {
+                for (int x = 0; x < n; x++)
+                {
+                    float d = Vector2.Distance(new Vector2(x + 0.5f, y + 0.5f), new Vector2(n * 0.5f, n * 0.5f)) / (n * 0.5f);
+                    float v = Mathf.Pow(Mathf.Clamp01(1f - d), 2f);
+                    tex.SetPixel(x, y, new Color(v, v, v, 1f));
+                }
+            }
+            File.WriteAllBytes(ruta, tex.EncodeToPNG());
+            Object.DestroyImmediate(tex);
+            AssetDatabase.ImportAsset(ruta);
+            TextureImporter imp = (TextureImporter)AssetImporter.GetAtPath(ruta);
+            imp.wrapMode = TextureWrapMode.Clamp;
+            imp.mipmapEnabled = false;
+            imp.SaveAndReimport();
+            return AssetDatabase.LoadAssetAtPath<Texture2D>(ruta);
+        }
+
+        private static Material MatCharcoLuz()
+        {
+            return KitS2c.Mat("T1463_CharcoLuz", () =>
+            {
+                Material m = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
+                m.SetTexture("_BaseMap", TexCharcoLuz());
+                m.SetColor("_BaseColor", KitS2c.Sodio * 0.55f);
+                m.SetFloat("_Surface", 1f);
+                m.SetFloat("_Blend", 2f);
+                m.SetFloat("_SrcBlend", 1f);
+                m.SetFloat("_DstBlend", 1f);
+                m.SetFloat("_ZWrite", 0f);
+                m.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");
+                m.SetOverrideTag("RenderType", "Transparent");
+                m.renderQueue = 3000;
+                m.globalIlluminationFlags = MaterialGlobalIlluminationFlags.RealtimeEmissive;
+                return m;
+            });
+        }
+
+        /// <summary>Un plano aditivo con degradado naranja sobre el piso bajo cada farol (corrido hacia la avenida), sin Light: el charco de luz de la referencia.</summary>
+        private static void PonerCharcosDeLuz(KitS2c.Obra obra, Transform mio, List<(Vector3 pie, Vector3 haciaAvenida)> faroles)
+        {
+            Transform grupo = new GameObject("CharcosDeLuz").transform;
+            grupo.SetParent(mio, false);
+            Material mat = MatCharcoLuz();
+            Mesh quad = Resources.GetBuiltinResource<Mesh>("Quad.fbx");
+            int n = 0;
+            foreach ((Vector3 pie, Vector3 haciaAvenida) in faroles)
+            {
+                GameObject q = new GameObject("CharcoLuz_" + n++);
+                q.transform.SetParent(grupo, false);
+                q.transform.position = new Vector3(pie.x, ColocarT1354Curva.YBanqueta + 0.03f, pie.z) + haciaAvenida * 1.6f;
+                q.transform.rotation = Quaternion.Euler(90f, 0f, 0f);
+                q.transform.localScale = new Vector3(9f, 9f, 1f);
+                q.AddComponent<MeshFilter>().sharedMesh = quad;
+                MeshRenderer mr = q.AddComponent<MeshRenderer>();
+                mr.sharedMaterial = mat;
+                mr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                mr.receiveShadows = false;
+            }
+            Informe.AppendLine("Charcos de luz: " + n + " planos aditivos naranjas de 9 m bajo los faroles (sin Light).");
+        }
+
+        /// <summary>La playa de T-1354 pasa de T1354_ArenaClara a T1463_Arena: arena grisácea mojada (0.35, 0.33, 0.30, suavidad 0.35).</summary>
+        private static void PonerArena(Transform raiz)
+        {
+            Material arena = KitS2c.Mat("T1463_Arena", () => KitS2c.Lit(new Color(0.35f, 0.33f, 0.30f), 0.35f));
+            int n = 0;
+            Transform mio = raiz.Find(NombreRaiz);
+            foreach (Transform t in raiz.GetComponentsInChildren<Transform>(true))
+            {
+                if (t.name != "Playa" || t.IsChildOf(mio)) { continue; }
+                foreach (Renderer r in t.GetComponentsInChildren<Renderer>(true))
+                {
+                    r.sharedMaterial = arena;
+                    n++;
+                }
+            }
+            Informe.AppendLine("Arena: " + n + " renderers de la playa con el material T1463_Arena (falta la textura de arena de playa: assets que faltan).");
+        }
+
+        // ================================================================ Poses en el editor
+
+        private static AnimationClip ClipDeEstado(Animator a, string estado)
+        {
+            RuntimeAnimatorController rc = a.runtimeAnimatorController;
+            if (rc == null) { return null; }
+            AnimatorController ctrl = AssetDatabase.LoadAssetAtPath<AnimatorController>(AssetDatabase.GetAssetPath(rc));
+            if (ctrl != null && ctrl.layers.Length > 0)
+            {
+                foreach (ChildAnimatorState cs in ctrl.layers[0].stateMachine.states)
+                {
+                    if (cs.state.name == estado && cs.state.motion is AnimationClip c) { return c; }
+                }
+            }
+            return rc.animationClips.FirstOrDefault(c => c.name.IndexOf(estado, StringComparison.OrdinalIgnoreCase) >= 0);
+        }
+
+        /// <summary>El Animator no corre en el editor: se muestrea el clip del estado a la fase dada para que el personaje no quede en T-pose.</summary>
+        private static bool PoseEnEditor(GameObject go, string estado, float fase)
+        {
+            Animator a = go.GetComponentInChildren<Animator>(true);
+            if (a == null) { return false; }
+            AnimationClip clip = ClipDeEstado(a, estado);
+            if (clip == null) { return false; }
+            clip.SampleAnimation(a.gameObject, Mathf.Repeat(fase, 1f) * clip.length);
+            return true;
+        }
+
+        /// <summary>Muestrea todos los PoseQuieta de la escena abierta (la gente fija del paseo) para la foto.</summary>
+        private static int MuestrearPoses()
+        {
+            int n = 0;
+            foreach (PoseQuieta p in Object.FindObjectsByType<PoseQuieta>(FindObjectsInactive.Exclude, FindObjectsSortMode.None))
+            {
+                if (PoseEnEditor(p.gameObject, p.Estado, p.Fase)) { n++; }
+            }
+            return n;
+        }
+
+        /// <summary>Ancho de los brazos (en el eje x del personaje) entre su alto: una T-pose da cerca de 1 o más; una pose natural queda abajo de 0.75.</summary>
+        private static float AnchoSobreAlto(GameObject go)
+        {
+            Bounds b = new Bounds();
+            bool hay = false;
+            foreach (SkinnedMeshRenderer smr in go.GetComponentsInChildren<SkinnedMeshRenderer>(false))
+            {
+                Mesh m = new Mesh();
+                smr.BakeMesh(m, true);
+                Matrix4x4 aMundo = Matrix4x4.TRS(smr.transform.position, smr.transform.rotation, Vector3.one);
+                foreach (Vector3 v in m.vertices)
+                {
+                    Vector3 p = go.transform.InverseTransformDirection(aMundo.MultiplyPoint3x4(v) - go.transform.position);
+                    if (!hay) { b = new Bounds(p, Vector3.zero); hay = true; }
+                    else { b.Encapsulate(p); }
+                }
+                Object.DestroyImmediate(m);
+            }
+            return hay && b.size.y > 0.1f ? b.size.x / b.size.y : 0f;
+        }
+
+        private static void ValidarPoses()
+        {
+            List<GameObject> visuales = CargarVisuales();
+            Exigir(visuales.Count > 0, "no hay Visual_NPxx para revisar las poses.");
+            foreach (GameObject v in visuales)
+            {
+                GameObject tmp = (GameObject)PrefabUtility.InstantiatePrefab(v);
+                try
+                {
+                    float antes = AnchoSobreAlto(tmp);
+                    bool idle = PoseEnEditor(tmp, "Idle", 0.3f);
+                    float despues = AnchoSobreAlto(tmp);
+                    bool camina = PoseEnEditor(tmp, "Caminar", 0.3f);
+                    float caminando = AnchoSobreAlto(tmp);
+                    Informe.AppendLine("Pose " + v.name + ": ancho/alto sin muestrear " + antes.ToString("F2") + ", Idle " + (idle ? despues.ToString("F2") : "SIN CLIP") + ", Caminar " + (camina ? caminando.ToString("F2") : "SIN CLIP"));
+                    Exigir(idle && camina, v.name + ": no se encontró el clip Idle o Caminar para muestrear.");
+                    Exigir(!idle || despues < 0.75f, v.name + ": con el clip Idle sigue con los brazos abiertos (ancho/alto " + despues.ToString("F2") + ").");
+                    Exigir(!camina || caminando < 0.85f, v.name + ": con el clip Caminar sigue con los brazos abiertos (ancho/alto " + caminando.ToString("F2") + ").");
+                }
+                finally
+                {
+                    Object.DestroyImmediate(tmp);
+                }
+            }
+        }
+        // ================================================================ Faros existentes (K12): sin mancha blanca
+
+        private static Material Suavizar(Material src, float factorEmision, float topeBase)
+        {
+            return KitS2c.Mat("T1463_Suave_" + src.name.Replace(" ", "_").Replace("(Instance)", ""), () =>
+            {
+                Material m = new Material(src);
+                if (m.HasProperty("_EmissionColor")) { m.SetColor("_EmissionColor", m.GetColor("_EmissionColor") * factorEmision); }
+                if (m.HasProperty("_BaseColor"))
+                {
+                    Color c = m.GetColor("_BaseColor");
+                    float mx = Mathf.Max(c.r, Mathf.Max(c.g, c.b));
+                    if (mx > topeBase) { c = new Color(c.r * topeBase / mx, c.g * topeBase / mx, c.b * topeBase / mx, c.a); }
+                    m.SetColor("_BaseColor", c);
+                }
+                m.globalIlluminationFlags = MaterialGlobalIlluminationFlags.RealtimeEmissive;
+                return m;
+            });
+        }
+
+        /// <summary>
+        /// El faro lejano de T-1413 flotaba 5 m sobre el mar y salía como mancha blanca en K12: se baja sobre sus rocas (base 0.3 m dentro de la cima), se achica a escala 0.7,
+        /// se le baja la emisión y el blanco, su haz se acorta y se apaga el halo. También se baja la intensidad de los haces de T-1413 y de T-1404.
+        /// </summary>
+        private static void ArreglarFarosExistentes(Transform raiz)
+        {
+            Transform grupo = raiz.Find(ZonaMaleconT1413.NombreRaiz + "/FaroLejano");
+            if (grupo == null) { Informe.AppendLine("Faro lejano de T-1413: no existe (nada que arreglar)."); }
+            else
+            {
+                Transform faro = grupo.Find("ML04_Faro_Lejano");
+                Transform haz = grupo.Find("Haz");
+                float cima = float.NegativeInfinity;
+                foreach (Transform t in grupo)
+                {
+                    if (!t.name.StartsWith("ML05_Roca", StringComparison.Ordinal)) { continue; }
+                    Bounds rb = ZonaMaleconT1393.CajaDe(t.gameObject);
+                    if (rb.size != Vector3.zero) { cima = Mathf.Max(cima, rb.max.y); }
+                }
+                if (faro != null && !float.IsNegativeInfinity(cima))
+                {
+                    Bounds antes = ZonaMaleconT1393.CajaDe(faro.gameObject);
+                    faro.localScale = Vector3.one * 0.7f;
+                    Bounds b = ZonaMaleconT1393.CajaDe(faro.gameObject);
+                    faro.position += new Vector3(antes.center.x - b.center.x, (cima - 0.3f) - b.min.y, antes.center.z - b.center.z);
+                    b = ZonaMaleconT1393.CajaDe(faro.gameObject);
+                    foreach (Renderer r in faro.GetComponentsInChildren<Renderer>(true))
+                    {
+                        Material[] ms = r.sharedMaterials;
+                        for (int i = 0; i < ms.Length; i++) { if (ms[i] != null) { ms[i] = Suavizar(ms[i], 0.3f, 0.6f); } }
+                        r.sharedMaterials = ms;
+                    }
+                    if (haz != null)
+                    {
+                        haz.position = new Vector3(b.center.x, b.min.y + b.size.y * 0.88f, b.center.z);
+                        haz.localScale = Vector3.one * 0.45f;
+                    }
+                    Informe.AppendLine("Faro lejano de T-1413: base en y " + b.min.y.ToString("F1") + " sobre la cima de las rocas (y " + cima.ToString("F1") + "), alto " + b.size.y.ToString("F1") + " m, emisión x0.3, haz a escala 0.45.");
+                }
+                else
+                {
+                    Informe.AppendLine("Faro lejano de T-1413: faltan el faro o sus rocas; sin cambios.");
+                }
+                Transform luz = grupo.Find("Luz");
+                if (luz != null) { luz.gameObject.SetActive(false); }
+            }
+            int bajados = 0;
+            foreach (string nombre in new[] { "T1413_HazFaroLejano", "T1404_HazFaro" })
+            {
+                foreach (Renderer r in raiz.GetComponentsInChildren<Renderer>(true))
+                {
+                    Material m = r.sharedMaterial;
+                    if (m != null && m.name.StartsWith(nombre, StringComparison.Ordinal) && m.HasProperty("_Intensidad") && m.GetFloat("_Intensidad") > 0.16f)
+                    {
+                        m.SetFloat("_Intensidad", 0.15f);
+                        EditorUtility.SetDirty(m);
+                        bajados++;
+                    }
+                }
+            }
+            Informe.AppendLine("Haces de faro con la intensidad bajada a 0.15: " + bajados + " renderers.");
+        }
         // ================================================================ Faro de A11
 
         private static Mesh MallaCono(float largo, float radioInicio, float radioFin)
@@ -696,6 +959,7 @@ namespace MechaCyberpunk.Arte.Editor
         public static void PoblarFoto(Camera camara)
         {
             QuitarFoto();
+            int muestreados = MuestrearPoses();
             GameObject raiz = new GameObject(NombreFoto);
             Vector3 cam = camara.transform.position;
             Vector3 fwd = camara.transform.forward;
@@ -753,10 +1017,11 @@ namespace MechaCyberpunk.Arte.Editor
                     PoseQuieta pose = go.AddComponent<PoseQuieta>();
                     pose.Definir("Caminar", (float)azar.NextDouble(), true);
                     pose.Aplicar();
+                    PoseEnEditor(go, "Caminar", pose.Fase);
                     nGente++;
                 }
             }
-            Debug.Log("[Arte] T-1463 PoblarFoto: " + nCarros + " carros con luces y " + nGente + " personas caminando (congeladas a media zancada) junto a " + centro.ToString("F0") + ".");
+            Debug.Log("[Arte] T-1463 PoblarFoto: " + muestreados + " personas fijas muestreadas en Idle; " + nCarros + " carros con luces y " + nGente + " personas caminando (congeladas a media zancada) junto a " + centro.ToString("F0") + ".");
         }
 
         public static void QuitarFoto()
@@ -797,6 +1062,8 @@ namespace MechaCyberpunk.Arte.Editor
                     ValidarLuces(mio);
                     ValidarProyecciones(raiz, mio);
                     ValidarJuegoEnPrefab(raiz);
+                    ValidarPoses();
+                    ValidarArena(raiz);
                 }
             }
             finally
@@ -806,6 +1073,15 @@ namespace MechaCyberpunk.Arte.Editor
             Informe.AppendLine(fallos == 0 ? "VALIDAR: sin fallos" : "VALIDAR: " + fallos + " fallos");
             Escribir("t1463-validar");
             if (fallos > 0) { Debug.LogError("[Arte] T-1463 Validar: " + fallos + " fallos (ver Logs/t1463-validar.txt)"); }
+        }
+
+        private static void ValidarArena(Transform raiz)
+        {
+            Transform mio = raiz.Find(NombreRaiz);
+            Renderer[] playa = raiz.GetComponentsInChildren<Transform>(true).Where(t => t.name == "Playa" && !t.IsChildOf(mio)).SelectMany(t => t.GetComponentsInChildren<Renderer>(true)).ToArray();
+            int conArena = playa.Count(r => r.sharedMaterial != null && r.sharedMaterial.name == "T1463_Arena");
+            Informe.AppendLine("Playa: " + playa.Length + " renderers, " + conArena + " con T1463_Arena.");
+            Exigir(playa.Length > 0 && conArena == playa.Length, "la playa no tiene el material T1463_Arena.");
         }
 
         private static void ValidarMarcas(Transform mio)
