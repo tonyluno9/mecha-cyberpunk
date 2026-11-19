@@ -1,4 +1,5 @@
 using System.Linq;
+using MechaCyberpunk.Arte.Editor;
 using MechaCyberpunk.Trafico.Calle;
 using MechaCyberpunk.Trafico.Datos;
 using MechaCyberpunk.Trafico.Persecucion;
@@ -29,7 +30,7 @@ namespace MechaCyberpunk.Tests
         {
             foreach (string nombre in new[] { "Malecon", "Cerro", "Autopista", "Puerto" })
             {
-                Assert.IsTrue(DisenoZonasTrafico.Cajas.Any(c => c.nombre == nombre), nombre);
+                Assert.IsTrue(ColocarT1364ZonasTrafico.Cajas.Any(c => c.Zona == nombre), nombre);
                 Assert.IsTrue(DisenoZonasTrafico.Zonas.Any(z => z.nombre == nombre), nombre);
             }
         }
@@ -37,25 +38,25 @@ namespace MechaCyberpunk.Tests
         [Test]
         public void Diseno_CadaCajaTieneSuZonaYViceversa()
         {
-            foreach (var c in DisenoZonasTrafico.Cajas)
+            foreach (var c in ColocarT1364ZonasTrafico.Cajas)
             {
-                Assert.IsTrue(DisenoZonasTrafico.Zonas.Any(z => z.nombre == c.nombre), "caja sin zona: " + c.nombre);
+                Assert.IsTrue(DisenoZonasTrafico.Zonas.Any(z => z.nombre == c.Zona), "caja sin zona: " + c.Zona);
             }
             foreach (var z in DisenoZonasTrafico.Zonas)
             {
-                Assert.IsTrue(DisenoZonasTrafico.Cajas.Any(c => c.nombre == z.nombre), "zona sin caja: " + z.nombre);
+                Assert.IsTrue(ColocarT1364ZonasTrafico.Cajas.Any(c => c.Zona == z.nombre), "zona sin caja: " + z.nombre);
             }
         }
 
         [Test]
         public void Diseno_LasCajasNoSeEncimen()
         {
-            var cajas = DisenoZonasTrafico.Cajas;
+            var cajas = ColocarT1364ZonasTrafico.Cajas;
             for (int i = 0; i < cajas.Length; i++)
             {
                 for (int j = i + 1; j < cajas.Length; j++)
                 {
-                    Assert.IsFalse(cajas[i].Encima(cajas[j]), cajas[i].nombre + " " + i + " se encima con " + cajas[j].nombre + " " + j);
+                    Assert.IsFalse(cajas[i].Toca(cajas[j]), cajas[i].Objeto + " se encima con " + cajas[j].Objeto);
                 }
             }
         }
@@ -74,7 +75,7 @@ namespace MechaCyberpunk.Tests
             };
             foreach (var p in puntos)
             {
-                Assert.IsTrue(DisenoZonasTrafico.Cajas.Any(c => c.nombre == p.zona && c.Contiene(p.punto)), p.zona + " no cubre " + p.punto);
+                Assert.IsTrue(ColocarT1364ZonasTrafico.Cajas.Any(c => c.Zona == p.zona && c.Contiene(p.punto)), p.zona + " no cubre " + p.punto);
             }
         }
 

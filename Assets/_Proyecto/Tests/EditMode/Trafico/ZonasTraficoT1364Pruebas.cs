@@ -24,10 +24,10 @@ namespace MechaCyberpunk.Tests
         }
 
         [Test]
-        public void ZonaDe_AutopistaElevada_DaAvenida()
+        public void ZonaDe_AutopistaElevada_DaAutopista()
         {
-            Assert.AreEqual("Avenida", ZonaDe(0f, 10f, 250f));
-            Assert.AreEqual("Avenida", ZonaDe(300f, 5f, 100f));
+            Assert.AreEqual("Autopista", ZonaDe(0f, 10f, 250f));
+            Assert.AreEqual("Autopista", ZonaDe(300f, 5f, 100f));
         }
 
         [Test]
@@ -60,7 +60,7 @@ namespace MechaCyberpunk.Tests
         [Test]
         public void Cajas_UsanNombresDeZonaDeLaConfig()
         {
-            string[] validos = { "Deshuesadero", "Malecon", "NeonAlto", "LasLomas", "Avenida", "Puerto" };
+            string[] validos = { "Deshuesadero", "Malecon", "NeonAlto", "LasLomas", "Avenida", "Puerto", "Autopista", "Cerro" };
             foreach (ColocarT1364ZonasTrafico.Caja c in ColocarT1364ZonasTrafico.Cajas)
             {
                 Assert.Contains(c.Zona, validos, c.Objeto);
