@@ -2335,7 +2335,7 @@ namespace MechaCyberpunk.Arte.Editor
                 MatLit("RopaRosa", new Color(0.9f, 0.3f, 0.6f), 0.1f), MatLit("RopaAzul", new Color(0.2f, 0.45f, 0.85f), 0.1f), MatLit("RopaAmarilla", new Color(0.95f, 0.8f, 0.2f), 0.1f),
                 MatLit("RopaBlanca", new Color(0.85f, 0.85f, 0.82f), 0.1f), MatLit("RopaVerde", new Color(0.3f, 0.7f, 0.45f), 0.1f), MatLit("RopaNaranja", new Color(0.95f, 0.5f, 0.15f), 0.1f),
             };
-            Mesh[] prendas = MallasRopa(c);
+            Mesh[] mallasRopa = MallasRopa(c);
             List<VariarCerroT1364.CasaT> oeste = c.Casas.Where(h => h.Normal > 0f && Mathf.Abs(h.Frente - (XCentroCalle - 6.5f)) < 3.5f).ToList();
             List<Vector3> postes = c.Postes.Where(q => q.x > XCentroCalle + 2f && q.z > 40f && q.z < 150f).OrderBy(q => Mathf.Abs(q.z - 110f)).ToList();
             Log("Tendederos K13: " + oeste.Count + " casas del oeste y " + postes.Count + " postes del lado del paseo (casas con la fachada hacia el este: " + c.Casas.Count(h => h.Normal > 0f)
@@ -2397,7 +2397,7 @@ namespace MechaCyberpunk.Arte.Editor
                         float t = (i + 0.7f) / (n + 0.4f);
                         Vector3 p = CalculoCatenaria.Punto(a, b, flecha, t);
                         Quaternion giro = Quaternion.Euler(0f, c.Obra.Rango(-12f, 12f), c.Obra.Rango(-6f, 6f));
-                        Pegar(prendas[c.Obra.Azar.Next(prendas.Length)], new[] { ropa[c.Obra.Azar.Next(ropa.Length)] }, Matrix4x4.TRS(p, giro, Vector3.one * c.Obra.Rango(0.9f, 1.1f)));
+                        Pegar(mallasRopa[c.Obra.Azar.Next(mallasRopa.Length)], new[] { ropa[c.Obra.Azar.Next(ropa.Length)] }, Matrix4x4.TRS(p, giro, Vector3.one * c.Obra.Rango(0.9f, 1.1f)));
                         prendas++;
                     }
                     usadas.Add(w);
@@ -2418,7 +2418,7 @@ namespace MechaCyberpunk.Arte.Editor
                 MatLit("RopaRosa", new Color(0.9f, 0.3f, 0.6f), 0.1f), MatLit("RopaAzul", new Color(0.2f, 0.45f, 0.85f), 0.1f), MatLit("RopaAmarilla", new Color(0.95f, 0.8f, 0.2f), 0.1f),
                 MatLit("RopaBlanca", new Color(0.85f, 0.85f, 0.82f), 0.1f), MatLit("RopaVerde", new Color(0.3f, 0.7f, 0.45f), 0.1f), MatLit("RopaNaranja", new Color(0.95f, 0.5f, 0.15f), 0.1f),
             };
-            Mesh[] prendas = MallasRopa(c);
+            Mesh[] mallasRopa = MallasRopa(c);
             List<VariarCerroT1364.CasaT> oeste = c.Casas.Where(h => h.Normal > 0f && Mathf.Abs(h.Frente - (XCentroCalle - 6.5f)) < 3.5f && (h.Z0 + h.Z1) * 0.5f > ZVistaSur && (h.Z0 + h.Z1) * 0.5f < ZVistaNorte).OrderBy(h => Mathf.Abs((h.Z0 + h.Z1) * 0.5f - 110f)).ToList();
             List<VariarCerroT1364.CasaT> este = c.Casas.Where(h => h.Normal < 0f && Mathf.Abs(h.Frente - (XCentroCalle + 6.5f)) < 3.5f).ToList();
             int lineas = 0, prendas = 0;
@@ -2470,7 +2470,7 @@ namespace MechaCyberpunk.Arte.Editor
                     float t = (i + 0.7f) / (n + 0.4f);
                     Vector3 p = CalculoCatenaria.Punto(a, b, flecha, t);
                     Quaternion giro = Quaternion.Euler(0f, c.Obra.Rango(-12f, 12f), c.Obra.Rango(-6f, 6f));
-                    Pegar(prendas[c.Obra.Azar.Next(prendas.Length)], new[] { ropa[c.Obra.Azar.Next(ropa.Length)] }, Matrix4x4.TRS(p, giro, Vector3.one * c.Obra.Rango(0.9f, 1.1f)));
+                    Pegar(mallasRopa[c.Obra.Azar.Next(mallasRopa.Length)], new[] { ropa[c.Obra.Azar.Next(ropa.Length)] }, Matrix4x4.TRS(p, giro, Vector3.one * c.Obra.Rango(0.9f, 1.1f)));
                     prendas++;
                 }
                 lineas++;

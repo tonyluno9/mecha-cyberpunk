@@ -196,12 +196,16 @@ namespace MechaCyberpunk.Arte.Editor
                 Bodegas(raiz.transform, nuevo, o);
                 PostesAvenida(raiz.transform, nuevo, o, ocupados, mios);
                 Charcos(nuevo, o, ocupados, mios, "CharcosCalle", Rect.MinMaxRect(155f, -215f, 165f, -152f), 20, new Vector2(4f, 9f), new Vector2(2f, 4f), false, new List<float> { 155.2f, 156.5f, 164.5f }, false);
+                // Charcos grandes al centro de la avenida (decals planos): cerca (6-22 m del lente) y mas lejos (22-55 m).
+                Charcos(nuevo, o, ocupados, mios, "CharcosCalleCentro", Rect.MinMaxRect(158f, -172f, 162f, -157f), 4, new Vector2(8f, 12f), new Vector2(4f, 6f), false, null, false);
+                Charcos(nuevo, o, ocupados, mios, "CharcosCalleCentro2", Rect.MinMaxRect(157f, -205f, 163f, -176f), 4, new Vector2(8f, 12f), new Vector2(4f, 6f), false, null, false);
                 CharcosLuz(nuevo, o);
                 Props(nuevo, ocupados, mios, cam);
                 PrimerPlanoDerecho(raiz.transform, nuevo, ocupados, mios, cam);
                 Gente(nuevo, "Gente", 7, ocupados, mios, new System.Random(14422), false);
                 Muelle(raiz.transform, nuevo, o, cam);
 
+                LogCharcos(nuevo, cam, mira);
                 KitS2c.Terminar(o);
                 Transform gente = nuevo.Find("Gente");
                 foreach (Transform t in nuevo.GetComponentsInChildren<Transform>(true))
@@ -447,13 +451,13 @@ namespace MechaCyberpunk.Arte.Editor
         }
 
         /// <summary>Letrero de neón de bandera grande (1.9 m en su lado mayor), de cara a la avenida (girado 31 grados hacia la cámara, al norte) y solo con emisión (sin luz).</summary>
-        private static void NeonGrande(KitS2c.Obra o, Transform padre, Vector3 pared, Vector3 normal, Color color, float lado)
+        private static void NeonGrande(KitS2c.Obra o, Transform padre, Vector3 pared, Vector3 normal, Color color, float lado, float haciaNorte = 0.6f)
         {
             o.Neones++;
             string codigo = color == KitS2c.Magenta ? KitS2c.NeonMagenta : KitS2c.NeonTurquesa;
             KitS2c.Medida m = KitS2c.Medir(codigo);
             float escala = lado / Mathf.Max(0.01f, Mathf.Max(m.Caja.size.x, m.Caja.size.y));
-            Vector3 hacia = (normal + Vector3.forward * 0.6f).normalized;
+            Vector3 hacia = (normal + Vector3.forward * haciaNorte).normalized;
             Quaternion giro = Quaternion.LookRotation(-hacia);
             Vector3 centro = pared + normal * 0.6f;
             GameObject raiz = new GameObject("Neon");
@@ -567,6 +571,41 @@ namespace MechaCyberpunk.Arte.Editor
             Nota("PrimerPlano (junto a " + cercana.name + ", pared en x " + xw.ToString("F1") + "): tarima apoyada " + (float.IsNaN(zTarima) ? "NO cupo" : "en z " + zTarima.ToString("F1")) + ", " + huacales + " huacales, " + tambos + " tambos y " + apilados + " pilas de pallets apilados.");
         }
 
+        /// <summary>Cuenta cuántos charcos quedan dentro del cuadro de la cámara de K15 y a qué distancia (para el log).</summary>
+        private static void LogCharcos(Transform nuevo, Vector3 cam, Vector3 mira)
+        {
+            GameObject go = new GameObject("TmpCamaraLogT1442");
+            Camera c = go.AddComponent<Camera>();
+            c.fieldOfView = 55f;
+            c.aspect = 1376f / 768f;
+            c.transform.SetPositionAndRotation(cam, Quaternion.LookRotation(mira - cam));
+            int total = 0, enCuadro = 0;
+            float dMin = float.MaxValue, dMax = 0f, areaM2 = 0f;
+            foreach (string g in new[] { "CharcosCalle", "CharcosCalleCentro", "CharcosCalleCentro2", "CharcosLuz" })
+            {
+                Transform t = nuevo.Find(g);
+                if (t == null)
+                {
+                    continue;
+                }
+                foreach (Transform q in t)
+                {
+                    total++;
+                    Vector3 v = c.WorldToViewportPoint(q.position);
+                    if (v.z > 0f && v.x > 0f && v.x < 1f && v.y > 0f && v.y < 1f)
+                    {
+                        enCuadro++;
+                        float d = Vector3.Distance(cam, q.position);
+                        dMin = Mathf.Min(dMin, d);
+                        dMax = Mathf.Max(dMax, d);
+                        areaM2 += q.localScale.x * q.localScale.y;
+                    }
+                }
+            }
+            Object.DestroyImmediate(go);
+            Nota("CHARCOS EN EL CUADRO de K15: " + enCuadro + " de " + total + " (centro dentro de la pantalla), a " + (enCuadro > 0 ? dMin.ToString("F1") + " - " + dMax.ToString("F1") : "-") + " m del lente; área total " + areaM2.ToString("F0") + " m2.");
+        }
+
         private static bool FueraDeAsfalto(Rect h)
         {
             Vector2[] puntos = { h.center, new Vector2(h.xMin, h.yMin), new Vector2(h.xMax, h.yMin), new Vector2(h.xMin, h.yMax), new Vector2(h.xMax, h.yMax) };
@@ -653,7 +692,7 @@ namespace MechaCyberpunk.Arte.Editor
             List<Vector3> puntas = new List<Vector3>();
             foreach (float z0 in new[] { -160f, -181f, -201f })
             {
-                foreach (float dz in new[] { 0f, 2f, -2f, 4f, -4f, 6f, -6f })
+                foreach (float dz in new[] { 0f, 1f, -1f, 2f, -2f, 3f, -3f, 4f, -4f, 6f, -6f })
                 {
                     Vector3 pie = new Vector3(165.4f, 0f, z0 + dz);
                     Rect h = Rect.MinMaxRect(pie.x - 0.45f, pie.z - 0.45f, pie.x + 0.45f, pie.z + 0.45f);
@@ -661,7 +700,14 @@ namespace MechaCyberpunk.Arte.Editor
                     {
                         continue;
                     }
-                    puntas.Add(KitS2c.Poste(o, padre, pie, Vector3.left, 0f, true));
+                    Vector3 punta0 = KitS2c.Poste(o, padre, pie, Vector3.left, 0f, true);
+                    if (z0 == -160f)
+                    {
+                        // El poste grande de la referencia (8-12 m a la izquierda, pegado a la pila de contenedores): 25 % mas alto.
+                        padre.GetChild(padre.childCount - 1).localScale = Vector3.one * 1.25f;
+                        punta0 = pie + (punta0 - pie) * 1.25f;
+                    }
+                    puntas.Add(punta0);
                     puntosLuz.Add(pie);
                     mios.Add(h);
                     break;
@@ -768,6 +814,17 @@ namespace MechaCyberpunk.Arte.Editor
                     }
                 }
             }
+            // Segundo neon turquesa rectangular grande a 4 m de alto en la bodega mas cercana a la camara (como el de la referencia), casi pegado a la fachada.
+            Transform cercana = bodegas.Where(t => { Bounds bb = Limites(t); return bb.center.z < -152f; })
+                .OrderBy(t => Vector2.Distance(new Vector2(Limites(t).max.x, Limites(t).center.z), new Vector2(CamaraK15.x, CamaraK15.z))).FirstOrDefault();
+            if (cercana != null)
+            {
+                Bounds bc = Limites(cercana);
+                float zGrande = bc.center.z - 2.5f;
+                NeonGrande(o, padre, new Vector3(bc.max.x, 4.0f, zGrande), Vector3.right, KitS2c.Turquesa, 2.4f, 0.25f);
+                puntosLuz.Add(new Vector3(bc.max.x, 0f, zGrande));
+                Nota("Neon turquesa grande (2.4 m, a 4 m de alto) en " + cercana.name + ", z " + zGrande.ToString("F1") + ".");
+            }
             Nota("Bodegas del lado oeste con detalle: " + bodegas.Count + " (toldo, 2 lámparas emisivas, 1-2 neones emisivos; " + focos + " focos de pared con luz en las del cuadro).");
         }
 
@@ -802,7 +859,7 @@ namespace MechaCyberpunk.Arte.Editor
                 float giro = largoEnX ? 90f + o.Rango(-15f, 15f) : o.Rango(-15f, 15f);
                 float semiX = largoEnX ? largo * 0.5f : anchoC * 0.5f, semiZ = largoEnX ? anchoC * 0.5f : largo * 0.5f;
                 Rect h = Rect.MinMaxRect(p.x - semiX, p.z - semiZ, p.x + semiX, p.z + semiZ);
-                if (grupo != "CharcosCalle" && !Libre(Expandir(h, -0.4f), ocupados, mios))
+                if (!grupo.StartsWith("CharcosCalle") && !Libre(Expandir(h, -0.4f), ocupados, mios))
                 {
                     continue;
                 }
@@ -945,7 +1002,14 @@ namespace MechaCyberpunk.Arte.Editor
                     }
                     GameObject go = (GameObject)PrefabUtility.InstantiatePrefab(fbx, padre);
                     go.name = nombre + "_" + puestos;
-                    go.transform.SetPositionAndRotation(new Vector3(x, 0f, z), Quaternion.Euler(0f, (float)azar.NextDouble() * 360f, 0f));
+                    float yawGente = (float)azar.NextDouble() * 360f;
+                    if (!patio)
+                    {
+                        // De cara a la avenida y a la camara de K15 (nadie de espaldas), con +-25 grados de variacion.
+                        Vector3 haciaCamara = new Vector3(CamaraK15.x - x, 0f, CamaraK15.z - z);
+                        yawGente = Quaternion.LookRotation(haciaCamara).eulerAngles.y + ((float)azar.NextDouble() - 0.5f) * 50f;
+                    }
+                    go.transform.SetPositionAndRotation(new Vector3(x, 0f, z), Quaternion.Euler(0f, yawGente, 0f));
                     foreach (Collider c in go.GetComponentsInChildren<Collider>(true))
                     {
                         Object.DestroyImmediate(c);
