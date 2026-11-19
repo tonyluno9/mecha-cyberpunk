@@ -41,7 +41,13 @@ namespace MechaCyberpunk.Arte.Editor
         public const float SalidaAcceso = 0.8f;
         public const float SalidaMinimaTecho = 0.35f;
         public const float HolguraRampa = 0.02f;
-        public const float ExtensionRampa = 1.15f;
+        public const float ExtensionRampa = 1.35f;
+        public const float DistanciaCarroEscalera = 6f;
+        public const float AlcanceLateralEscalera = 15f;
+        public const float SaltoMaximoRampa = 0.25f;
+        public const float DesnivelSaltable = 2.3f;
+        public const float PasoLibreBorde = 2.5f;
+        public const float AlturaPasoLibre = 1.8f;
 
         private const float RadioCapsula = 0.35f;
         private const float PasoAccesoPeldano = 0.5f;
@@ -499,6 +505,22 @@ namespace MechaCyberpunk.Arte.Editor
                     troncos.Add(col.bounds.center);
                 }
             }
+            // Puntos que deben quedar libres a lo largo de la calle: extremos de cada escalera larga y cada Acceso_*.
+            List<Vector3> libres = new List<Vector3>();
+            foreach (IGrouping<int, Transform> cadena in c.Escaleras.Cast<Transform>().Where(m => m.name == "CE01_EscaleraCerro").GroupBy(m => Mathf.RoundToInt(m.position.z)))
+            {
+                float xMin = cadena.Min(m => m.position.x) - 2f;
+                float xMax = cadena.Max(m => m.position.x) + 2f;
+                libres.Add(new Vector3(xMin, 0f, cadena.Key));
+                libres.Add(new Vector3(xMax, 0f, cadena.Key));
+            }
+            foreach (Transform a in c.Detalles)
+            {
+                if (a.name.StartsWith("Acceso_", StringComparison.Ordinal))
+                {
+                    libres.Add(a.position);
+                }
+            }
             foreach (Transform car in c.Carros)
             {
                 if (!car.name.StartsWith("CarroViejo", StringComparison.Ordinal))
@@ -539,8 +561,21 @@ namespace MechaCyberpunk.Arte.Editor
                             continue;
                         }
                         bool choca = false;
+                        foreach (Vector3 libre in libres)
+                        {
+                            Vector3 rl = libre - centro;
+                            if (Mathf.Abs(Vector3.Dot(rl, t)) < DistanciaCarroEscalera && Mathf.Abs(Vector3.Dot(rl, izq)) < AlcanceLateralEscalera)
+                            {
+                                choca = true;
+                                break;
+                            }
+                        }
                         foreach (Vector3 poste in troncos)
                         {
+                            if (choca)
+                            {
+                                break;
+                            }
                             Vector3 rel = poste - centro;
                             if (Mathf.Abs(Vector3.Dot(rel, t)) < medioLargo + SeparacionPosteCarro && Mathf.Abs(Vector3.Dot(rel, izq)) < medioAncho + SeparacionPosteCarro)
                             {
@@ -677,6 +712,33 @@ namespace MechaCyberpunk.Arte.Editor
                 // Medicion final de los extremos de la cadena.
                 float yTop = MedirRampa(orden[0], orden[0].position.x - largoModulo * 0.5f + 0.1f, z);
                 float yBot = MedirRampa(orden[n - 1], orden[n - 1].position.x + largoModulo * 0.5f - 0.1f, z);
+                // Continuidad: el piso mas alto de las rampas de la cadena cada 0.25 m; ninguna union con salto mayor a SaltoMaximoRampa.
+                float anterior = float.NaN;
+                float peorSalto = 0f;
+                int huecos = 0;
+                for (float xm = xArriba + 0.05f; xm <= xAbajo - 0.05f; xm += 0.25f)
+                {
+                    float ym = float.NaN;
+                    foreach (Transform m in orden)
+                    {
+                        float v = MedirRampa(m, xm, z);
+                        if (!float.IsNaN(v) && (float.IsNaN(ym) || v > ym))
+                        {
+                            ym = v;
+                        }
+                    }
+                    if (float.IsNaN(ym))
+                    {
+                        huecos++;
+                        continue;
+                    }
+                    if (!float.IsNaN(anterior))
+                    {
+                        peorSalto = Mathf.Max(peorSalto, Mathf.Abs(ym - anterior));
+                    }
+                    anterior = ym;
+                }
+                Log("3.   continuidad z=" + F(z) + ": salto maximo " + F(peorSalto) + " m (limite " + F(SaltoMaximoRampa) + "), puntos sin rampa " + huecos);
                 Log("3.   extremos: arriba rampa y=" + F(yTop) + " vs calle " + F(hArriba) + "; abajo rampa y=" + F(yBot) + " vs piso " + F(hAbajo));
             }
             Log("3. Escaleras/CE01_EscaleraCerro_N (36 m, MeshCollider): no es una malla vieja; es el nucleo de concreto de cada escalera (Terreno.Escalera, 90 peldanos),"
@@ -728,8 +790,8 @@ namespace MechaCyberpunk.Arte.Editor
             r.enabled = true;
             r.size = new Vector3(rampaPrefab.size.x, rampaPrefab.size.y, rampaPrefab.size.z * ExtensionRampa);
             float xc = modulo.position.x;
-            float xu = xc - largoModulo * 0.5f + 0.15f;
-            float xd = xc + largoModulo * 0.5f - 0.15f;
+            float xu = xc - largoModulo * 0.5f + 0.3f;
+            float xd = xc + largoModulo * 0.5f - 0.3f;
             float tu = linea(xu);
             float td = linea(xd);
             Transform tr = r.transform;
@@ -1258,7 +1320,7 @@ namespace MechaCyberpunk.Arte.Editor
             int pretiles = 0;
             foreach (Par par in pares)
             {
-                if (par.Hueco >= HuecoPegada || Mathf.Abs(par.A.Y - par.B.Y) >= DesnivelPretil || !par.A.Kit)
+                if (par.Hueco > HuecoVecina || Mathf.Abs(par.A.Y - par.B.Y) > DesnivelSaltable || !par.A.Kit)
                 {
                     continue;
                 }
@@ -1278,44 +1340,115 @@ namespace MechaCyberpunk.Arte.Editor
                     }
                 }
             }
-            Log("6. Pretiles C05 quitados entre azoteas pegadas (hueco < " + F(HuecoPegada) + " m, desnivel < " + F(DesnivelPretil) + " m): " + pretiles);
+            Log("6. Pretiles C05 desactivados en los bordes enfrentados (hueco <= " + F(HuecoVecina) + " m, desnivel <= " + F(DesnivelSaltable) + " m): " + pretiles);
 
-            // Revision con capsulas del paso de una azotea a la otra: lo que siga estorbando de los Detalles se apaga.
+            // Revision con capsulas (radio 0.35, alto 1.8, desde 0.05 sobre la azotea) del paso de 2.5 m a cada lado del borde.
             int estorbos = 0;
+            int movidosPaso = 0;
+            HashSet<Transform> yaMovidas = new HashSet<Transform>();
             foreach (Par par in pares)
             {
-                if (par.B.Y - par.A.Y > 2.3f)
+                if (par.B.Y - par.A.Y > DesnivelSaltable)
                 {
                     continue;
                 }
                 float borde = par.Signo > 0f ? Eje(par.A.B.max, par.Eje) : Eje(par.A.B.min, par.Eje);
                 float centroPerp = (par.PerpMin + par.PerpMax) * 0.5f;
-                for (float s = -0.8f; s <= par.Hueco + 0.01f; s += 0.4f)
+                bool tocoAlgo = false;
+                for (float s = -PasoLibreBorde; s <= par.Hueco + PasoLibreBorde + 0.01f; s += 0.4f)
                 {
                     foreach (float off in new[] { -0.5f, 0f, 0.5f })
                     {
-                        float perp = par.PerpMax - par.PerpMin >= 0.7f + 2f * 0.5f ? centroPerp + off : centroPerp;
+                        float perp = par.PerpMax - par.PerpMin >= 1.7f ? centroPerp + off : centroPerp;
                         float along = borde + par.Signo * s;
-                        Vector3 pos = par.Eje == 0 ? new Vector3(along, par.A.Y, perp) : new Vector3(perp, par.A.Y, along);
-                        Vector3 p0 = pos + Vector3.up * (RadioCapsula + 0.1f);
-                        Vector3 p1 = pos + Vector3.up * (1.45f);
+                        bool ladoB = s > par.Hueco * 0.5f;
+                        float yPie = (ladoB ? par.B.Y : par.A.Y) + 0.05f;
+                        Vector3 pos = par.Eje == 0 ? new Vector3(along, yPie, perp) : new Vector3(perp, yPie, along);
+                        Vector3 p0 = pos + Vector3.up * RadioCapsula;
+                        Vector3 p1 = pos + Vector3.up * (AlturaPasoLibre - RadioCapsula);
                         int nCaps = c.Fisica.OverlapCapsule(p0, p1, RadioCapsula, bufColliders, ~0, QueryTriggerInteraction.Ignore);
                         Collider[] golpes = new Collider[nCaps];
                         Array.Copy(bufColliders, golpes, nCaps);
                         foreach (Collider col in golpes)
                         {
                             Transform tt = col.transform;
-                            if (tt.IsChildOf(c.Detalles) && col.enabled)
+                            if (!col.enabled || tt.IsChildOf(c.Terreno) || tt.IsChildOf(c.Calles) || tt.IsChildOf(c.Escaleras) || tt.IsChildOf(c.Postes) || tt.IsChildOf(c.Carros))
+                            {
+                                continue;
+                            }
+                            if (tt.IsChildOf(c.Detalles))
+                            {
+                                // Lo sólido de Detalles (lavadero) se aparta 1.5 m del paso, una vez; solo la ropa (tendedero) se queda sin collider.
+                                Transform prop = tt;
+                                while (prop.parent != null && prop.parent != c.Detalles)
+                                {
+                                    prop = prop.parent;
+                                }
+                                if (!prop.name.StartsWith("CC04_Tendedero", StringComparison.Ordinal) && yaMovidas.Add(prop))
+                                {
+                                    Techo casaDetalle = Vector3.Distance(prop.position, par.A.B.center) < Vector3.Distance(prop.position, par.B.B.center) ? par.A : par.B;
+                                    float ladoDetalle = Eje(col.bounds.center, par.Eje) < Eje(casaDetalle.B.center, par.Eje) ? 1f : -1f;
+                                    prop.position += (par.Eje == 0 ? new Vector3(ladoDetalle, 0f, 0f) : new Vector3(0f, 0f, ladoDetalle)) * 1.5f;
+                                    movidosPaso++;
+                                    tocoAlgo = true;
+                                    Log("6. " + Ruta(prop, c.Raiz.transform) + " estorba el paso entre azoteas " + par.A.Raiz.name + " -> " + par.B.Raiz.name + ": se aparta 1.5 m.");
+                                    continue;
+                                }
+                                if (!prop.name.StartsWith("CC04_Tendedero", StringComparison.Ordinal))
+                                {
+                                    continue; // ya se apartó: no se le quita el collider a algo sólido
+                                }
+                                col.enabled = false;
+                                estorbos++;
+                                tocoAlgo = true;
+                                Log("6. " + Ruta(tt, c.Raiz.transform) + " estorba el paso entre azoteas " + par.A.Raiz.name + " -> " + par.B.Raiz.name + " en " + V(pos) + ": collider apagado.");
+                                continue;
+                            }
+                            // Parte de una de las dos casas (tinaco, aire, antena, cuarto Extra_, pretil, fachada que sobresale).
+                            Transform parte = tt;
+                            while (parte.parent != null && parte.parent != par.A.Raiz && parte.parent != par.B.Raiz && parte.parent != c.Raiz.transform)
+                            {
+                                parte = parte.parent;
+                            }
+                            if (parte.parent != par.A.Raiz && parte.parent != par.B.Raiz)
+                            {
+                                continue;
+                            }
+                            // Las paredes nunca pierden su collider (la fachada de la casa más alta es donde el jugador se agarra del borde);
+                            // solo se quitan pretiles del borde y cosas de azotea.
+                            if (parte.name == "Cuerpo" || parte.name.StartsWith("AzoteaT", StringComparison.Ordinal) || EsPared(parte.name))
+                            {
+                                continue;
+                            }
+                            bool movible = parte.name == "BaseTinaco" || parte.name.StartsWith("C09", StringComparison.Ordinal) || parte.name.StartsWith("C10", StringComparison.Ordinal)
+                                || parte.name.StartsWith("CY04", StringComparison.Ordinal) || parte.name.StartsWith("Extra_", StringComparison.Ordinal);
+                            if (movible && yaMovidas.Add(parte))
+                            {
+                                // 1 m hacia el centro de su casa, a lo largo del eje del paso.
+                                Techo casa = parte.parent == par.A.Raiz ? par.A : par.B;
+                                float lado = Eje(col.bounds.center, par.Eje) < Eje(casa.B.center, par.Eje) ? 1f : -1f;
+                                parte.position += par.Eje == 0 ? new Vector3(lado, 0f, 0f) : new Vector3(0f, 0f, lado);
+                                movidosPaso++;
+                                tocoAlgo = true;
+                                Log("6. " + Ruta(parte, c.Raiz.transform) + " estorba el paso entre azoteas " + par.A.Raiz.name + " -> " + par.B.Raiz.name + ": se mueve 1 m hacia dentro.");
+                            }
+                            else
                             {
                                 col.enabled = false;
                                 estorbos++;
+                                tocoAlgo = true;
                                 Log("6. " + Ruta(tt, c.Raiz.transform) + " estorba el paso entre azoteas " + par.A.Raiz.name + " -> " + par.B.Raiz.name + " en " + V(pos) + ": collider apagado.");
                             }
                         }
                     }
                 }
+                if (tocoAlgo)
+                {
+                    Physics.SyncTransforms();
+                }
             }
             Physics.SyncTransforms();
+            Log("6. Partes de casas movidas 1 m del paso: " + movidosPaso);
             Log("6. Colliders de Detalles apagados por estorbar el paso: " + estorbos);
         }
 
@@ -1455,6 +1588,14 @@ namespace MechaCyberpunk.Arte.Editor
             {
                 Object.DestroyImmediate(go);
             }
+        }
+
+        /// <summary>Fachadas, pisos, franjas y puertas del kit: paredes que nunca deben perder su collider.</summary>
+        private static bool EsPared(string nombre)
+        {
+            return nombre.StartsWith("C01_", StringComparison.Ordinal) || nombre.StartsWith("C02_", StringComparison.Ordinal) || nombre.StartsWith("C03_", StringComparison.Ordinal)
+                || nombre.StartsWith("C20", StringComparison.Ordinal) || nombre.StartsWith("C23", StringComparison.Ordinal) || nombre == "Puerta" || nombre == "Cimiento"
+                || nombre == "Visual" || nombre.StartsWith("CC01_CasaCerro", StringComparison.Ordinal) || nombre.StartsWith("CC02_CasaCerro", StringComparison.Ordinal);
         }
     }
 }
