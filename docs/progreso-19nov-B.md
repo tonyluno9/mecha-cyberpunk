@@ -61,6 +61,13 @@ solo escriben scripts de editor; Unity corre aquí, en s2, una sola instancia en
 - Bug: los 150 paneles de "ciudad lejana" de T-1440 caían dentro de la ciudad y del Puerto; se quitan en su ronda 4.
 - No cabe otro Unity (12 GB de disco y 2.5 GB de RAM libres; la sesión A tiene los suyos).
 
+- 10:20 Rondas con cámara fija aplicadas (integ 30aabfd). K15 ya se parece (montacargas, estibadores, pallets, cables, neón de bandera);
+  A13 con casas reales, escaleras, 40 neones y ventanas cálidas; K13 con tendederos (ropa demasiado grande); A15 con grúas y pilas
+  pero 0 bodegas. Validar: T1440 1 fallo, T1441 0, T1442 0, T1443 0.
+- Rendimiento (PlayMode RendimientoCerroT1362Pruebas, por clase, docs/fps-19nov-B/): Puerto 157–186 fps; Cerro 45.8 fps en la calle
+  base al sur y 50.2 en la azotea alta (no pasa 50). Culpables: carros Tripo de 90 mil triángulos y casas CC01 de 70 mil. Se pidió LOD y menos carros.
+- Bug de T-1441: SampleAnimation llevaba a los NPC del Cerro a (0, y, 0); por eso no salían en K13.
+
 ## Qué sigue
 - Al volver cada subagente: merge de su rama en `integ/zonas-19nov-B` (en s2), correr Aplicar en orden T1440 → T1441 → T1442 → T1443,
   luego Validar y, en otra corrida, Fotos. Revisar las fotos y devolver errores.
