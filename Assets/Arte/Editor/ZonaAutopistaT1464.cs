@@ -6,6 +6,7 @@ using System.Text;
 using MechaCyberpunk.Core.Mundo;
 using MechaCyberpunk.Personaje.Visual;
 using MechaCyberpunk.Trafico.Calle;
+using MechaCyberpunk.Vehiculos.Efectos;
 using UnityEditor;
 using UnityEngine;
 using A = MechaCyberpunk.Arte.Editor.ColocarT1356Autopista;
@@ -188,6 +189,29 @@ namespace MechaCyberpunk.Arte.Editor
             return go;
         }
 
+        /// <summary>Los tambos cuentan como barril de ciudad (ColocarT1317Ajustes.EsBarrilDeCiudad): con collider y BarrilExplosivo, y sin marca de estatico.</summary>
+        private static void HacerBarril(GameObject go)
+        {
+            if (go.GetComponentInChildren<Collider>(true) == null)
+            {
+                MeshFilter mf = go.GetComponentInChildren<MeshFilter>(true);
+                if (mf != null && mf.sharedMesh != null)
+                {
+                    BoxCollider box = mf.gameObject.AddComponent<BoxCollider>();
+                    box.center = mf.sharedMesh.bounds.center;
+                    box.size = mf.sharedMesh.bounds.size;
+                }
+            }
+            foreach (Collider c in go.GetComponentsInChildren<Collider>(true))
+            {
+                c.enabled = true;
+            }
+            if (go.GetComponent<BarrilExplosivo>() == null && go.GetComponentInParent<BarrilExplosivo>() == null)
+            {
+                go.AddComponent<BarrilExplosivo>();
+            }
+        }
+
         private static Vector3 Huella(Vector3 tam, float yaw, float esc)
         {
             bool gira = Mathf.Abs(Mathf.Sin(yaw * Mathf.Deg2Rad)) > 0.7f;
@@ -329,19 +353,16 @@ namespace MechaCyberpunk.Arte.Editor
                 KitS2c.Luz(go.transform, cabeza, LightType.Spot, KitS2c.Calido, KitS2c.IntensidadPoste * 1.3f, 22f, 100f, asfalto - cabeza);
                 KitS2c.Halo(o, go.transform, cabeza, T.YTablero, KitS2c.Sodio);
                 Estatico(go);
-                // Hueco en la barrera AU02 donde queda el pie del farol (el parapeto invisible sigue cerrando el borde).
+                // Se quita toda barrera AU02 cuyo bounds toque el del farol (el parapeto invisible con collider sigue cerrando el borde).
+                Bounds zona = Caja(go) ?? new Bounds(pie, Vector3.one);
+                zona.Expand(new Vector3(0.3f, 0.2f, 0.3f));
                 foreach (Transform bt in barreras.Where(t => t != null).ToList())
                 {
                     Bounds? bb = Caja(bt.gameObject);
-                    if (bb.HasValue && Mathf.Abs(bb.Value.center.y - 10.4f) < 1.2f)
+                    if (bb.HasValue && bb.Value.Intersects(zona))
                     {
-                        Bounds g = bb.Value;
-                        g.Expand(new Vector3(0.1f, 5f, 0.1f));
-                        if (g.Contains(new Vector3(pie.x, g.center.y, pie.z)))
-                        {
-                            Object.DestroyImmediate(bt.gameObject);
-                            barrerasQuitadas++;
-                        }
+                        Object.DestroyImmediate(bt.gameObject);
+                        barrerasQuitadas++;
                     }
                 }
                 puestos++;
@@ -569,7 +590,14 @@ namespace MechaCyberpunk.Arte.Editor
                     continue;
                 }
                 GameObject go = PonerSuelo(padre, prefab, c, yaw, esc, collider, nombre + "_" + puestos);
-                Estatico(go);
+                if (nombre.StartsWith("Tambo"))
+                {
+                    HacerBarril(go);
+                }
+                else
+                {
+                    Estatico(go);
+                }
                 ctx.Ocupados.Add(caja);
                 puestos++;
             }
@@ -600,7 +628,7 @@ namespace MechaCyberpunk.Arte.Editor
             int nChat = Esparcir(o, Hijo(vida, "Chatarra_AU03"), chatarra, "AU03N", 10, 0f, true, ctx, 1f);
 
             GameObject tambo = CargarCalle("C16_Tambo");
-            int nTambo = Esparcir(o, Hijo(vida, "Tambos"), tambo == null ? new List<GameObject>() : new List<GameObject> { tambo }, "Tambo", 16, 1f, true, ctx, 0.3f);
+            int nTambo = Esparcir(o, Hijo(vida, "Latas"), tambo == null ? new List<GameObject>() : new List<GameObject> { tambo }, "Tambo", 16, 1f, true, ctx, 0.3f);
 
             GameObject huacal = CargarCalle("C17_Huacales");
             int nHuacal = Esparcir(o, Hijo(vida, "Cajas"), huacal == null ? new List<GameObject>() : new List<GameObject> { huacal }, "Huacales", 12, 1.1f, true, ctx, 0.3f);
@@ -860,7 +888,14 @@ namespace MechaCyberpunk.Arte.Editor
                         continue;
                     }
                     GameObject go = PonerSuelo(pp, prefab, c, yaw, esc, collider, nombre + "_" + puestos, carro ? o.Rango(5f, 9f) * (o.Chance(0.5f) ? 1f : -1f) : 0f);
-                    Estatico(go);
+                    if (nombre.StartsWith("Tambo"))
+                    {
+                        HacerBarril(go);
+                    }
+                    else
+                    {
+                        Estatico(go);
+                    }
                     ctx.Ocupados.Add(caja);
                     puestos++;
                 }
@@ -1827,7 +1862,7 @@ namespace MechaCyberpunk.Arte.Editor
             }
 
             // Vida
-            int chat = Hijos(mia, "Vida/Chatarra_AU03"), tambos = Hijos(mia, "Vida/Tambos"), cajas = Hijos(mia, "Vida/Cajas"), basura = Hijos(mia, "Vida/Basura"), charcos = Hijos(mia, "Vida/Charcos");
+            int chat = Hijos(mia, "Vida/Chatarra_AU03"), tambos = Hijos(mia, "Vida/Latas"), cajas = Hijos(mia, "Vida/Cajas"), basura = Hijos(mia, "Vida/Basura"), charcos = Hijos(mia, "Vida/Charcos");
             Transform carrosT = mia.Find("Vida/Carros");
             int deshechos = carrosT == null ? 0 : carrosT.Cast<Transform>().Count(t => t.name.StartsWith("CarroDeshecho_"));
             int parked = carrosT == null ? 0 : carrosT.Cast<Transform>().Count(t => t.name.StartsWith("CarroEstacionadoN_"));
@@ -1849,6 +1884,39 @@ namespace MechaCyberpunk.Arte.Editor
                     }
                 }
             }
+
+            // Barriles de ciudad (T-1317) y faroles contra barreras (T-995)
+            int barrilesMal = 0;
+            foreach (Transform t in mia.GetComponentsInChildren<Transform>(true))
+            {
+                if (ColocarT1317Ajustes.EsBarrilDeCiudad(t) && (t.GetComponentInChildren<Collider>(true) == null || (t.GetComponent<BarrilExplosivo>() == null && t.GetComponentInParent<BarrilExplosivo>() == null)))
+                {
+                    barrilesMal++;
+                    Falla("barril de ciudad sin collider o sin BarrilExplosivo: " + RutaDe(t));
+                }
+            }
+            s.AppendLine("Barriles/tambos de T-1464 sin collider o sin BarrilExplosivo: " + barrilesMal + ".");
+            int encimados = 0;
+            List<Transform> barrerasEsc = todos.Where(t => t != null && t.name.StartsWith("AU02_") && !t.IsChildOf(mia)).ToList();
+            foreach (Transform f in mia.GetComponentsInChildren<Transform>(true).Where(t => t.name.StartsWith("AU01_Farol_")))
+            {
+                Bounds? fb = Caja(f.gameObject);
+                if (!fb.HasValue)
+                {
+                    continue;
+                }
+                foreach (Transform bt in barrerasEsc)
+                {
+                    Bounds? bb = Caja(bt.gameObject);
+                    if (bb.HasValue && bb.Value.Intersects(fb.Value))
+                    {
+                        encimados++;
+                        Falla("farol encimado con barrera: " + f.name + " <-> " + RutaDe(bt));
+                        break;
+                    }
+                }
+            }
+            s.AppendLine("Faroles de T-1464 encimados con barreras AU02: " + encimados + ".");
 
             // Luces
             int luces = mia.GetComponentsInChildren<Light>(true).Length;
