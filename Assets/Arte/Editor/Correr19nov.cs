@@ -215,6 +215,24 @@ namespace MechaCyberpunk.Arte.Editor
             UnityEditor.SceneManagement.EditorSceneManager.SaveScene(escena);
         }
 
+
+        /// <summary>E16_b (T-1408) tiene los mismos 52 huesos que E16_a, pero el mapeo automático de Unity no halla la cabeza: se copia el humanDescription de E16_a.</summary>
+        public static void CopiarAvatarE16()
+        {
+            var a = AssetImporter.GetAtPath("Assets/Arte/Personajes/E16_RobotPesadoNova/E16_RobotPesadoNova_a.fbx") as ModelImporter;
+            var b = AssetImporter.GetAtPath("Assets/Arte/Personajes/E16_RobotPesadoNova/E16_RobotPesadoNova_b.fbx") as ModelImporter;
+            if (a == null || b == null) { Debug.LogWarning("Correr19nov: falta E16 a o b"); return; }
+            b.animationType = ModelImporterAnimationType.Human;
+            b.avatarSetup = ModelImporterAvatarSetup.CreateFromThisModel;
+            var hd = b.humanDescription;
+            hd.human = a.humanDescription.human;
+            b.humanDescription = hd;
+            Debug.Log("Correr19nov: E16_b esqueleto " + (hd.skeleton == null ? 0 : hd.skeleton.Length) + " huesos");
+            b.SaveAndReimport();
+            var avatar = AssetDatabase.LoadAllAssetsAtPath(b.assetPath);
+            foreach (var o in avatar) if (o is Avatar av) Debug.Log("Correr19nov: E16_b avatar valido=" + av.isValid + " humano=" + av.isHuman);
+        }
+
         private static string GetHierarchyPath(this Transform t) { var s = t.name; while (t.parent != null) { t = t.parent; s = t.name + "/" + s; } return s; }
     }
 }

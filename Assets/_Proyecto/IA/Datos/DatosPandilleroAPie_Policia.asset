@@ -29,6 +29,8 @@ MonoBehaviour:
   segundosParaDesaparecer: 45
   duracionParpadeo: 0.12
   anguloBrazoAviso: 130
+  seDefiende: 0
+  segundosDefensa: 20
   esPolicia: 1
   calorAlGolpear: 8
   calorAlMatar: 30
