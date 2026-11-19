@@ -23,3 +23,12 @@ Se actualiza durante la noche. El detalle de cada tarea está en docs/tareas/hec
 - **Calle del Cerro**: no se rehízo el trazado del zigzag para que suba más (sigue en 5 % a 9 %), porque eso regeneraba la zona y borraba los arreglos de T-1360 a T-1377. Para la foto K13 se usa la calle base con la escalera CE01.
 - **Torre de reflectores de K18**: en la referencia sale a la izquierda del túnel; en el juego queda al norte.
 - **Skyline sin reflejo**: el SK01 no se refleja en el agua del Malecón, porque el shader del mar no lo permite de forma simple.
+- **Aéreas (A11, A13, A15, A18)**: se revisaron menos que las de calle. A13 sigue lejos de la referencia: faltan las calles iluminadas que suben y la ciudad brillante abajo.
+- **K13 (Cerro)**: la cámara está en la calle base y no en un callejón que suba con escaleras como en la referencia. Las "cintas negras" eran cables a menos de 4 m del lente; en el juego son normales.
+- **K18 (Autopista)**: no está la columna gruesa al centro ni el tablero en curva arriba a la derecha. El tablero es recto y la torre de reflectores no tiene haces visibles en la foto.
+- **K12 (muelle)**: faltan el puesto de mariscos con lona, los bancos de plástico y las lanchas. El skyline se ve plano.
+- **Paseo del Malecón**: no hay modelo de banca en el proyecto, así que no se pusieron bancas.
+- **Acceso de CC07 en U4**: `DespejarBocasUniones` apagó el acceso (escalera de servicio) de la casa CC07_a_0 de T-1394, porque estaba en la boca de U4. Esa azotea se baja saltando.
+- **Torres de Neón Alto en la vista aérea del Cerro**: con la niebla parecen flotar. Habría que bajar la niebla en altura o ponerles base.
+- **Pruebas**: no se corrió el EditMode completo ni PlayMode, por la memoria. Solo se corrieron las clases nuevas, las de zonas y las de tráfico.
+- **Fotos nocturnas en el editor**: las nubes y las estrellas solo aparecen en las fotos de T-1399 (`CieloCompleto`); `ColocarS2cLook.Foto` no las arma por defecto.

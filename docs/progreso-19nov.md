@@ -68,5 +68,8 @@ que diga "Qué sigue".
 - Pruebas EditMode: clases nuevas y de zonas 160/161; la falla de las bocas de U2, U4 y U7 se arregló con Correr19nov.DespejarBocasUniones, y OrillasT1358 da 4/4. Dos corridas largas en segundo plano las paró Claude Code por falta de memoria; se repitieron en primer plano.
 - 04:10 Siguen los builds (Demo con ConstruirDemoPandillas y luego Juego), el reporte y el merge a main.
 
+- 04:20 Builds: Demo y Juego con Succeeded y 0 errores. Fotos finales tomadas y docs/reporte-19nov.md escrito. Se apagó el panel pintado T513 Tramo_3, que era la aguja oscura sobre el mar en K11.
+- 04:30 Merge --no-ff de integ/ciudad-19nov a main y push.
+
 ## Qué sigue
-- Esperar la primera tanda; integrar T-1382 y T-1383 en Unity (importar y aplicar el look); después las zonas (T-1384 a T-1388).
+- Ver docs/pendientes-19nov.md. Lo más visible: el encuadre de K13 y K18 y la vista aérea A13.
