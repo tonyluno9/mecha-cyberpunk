@@ -49,7 +49,7 @@ namespace MechaCyberpunk.Arte.Editor
         private const float DistanciaCable = 4.5f;
         private const float AnchoPasillo = 1.2f;
         private const float XCentroCalle = CerroT1355Trazado.XPierna2;
-        private const float MitadCarril = 2.25f;
+        private const float MitadCarril = 1.9f;
         private const float ZVistaNorte = 148f;
         private const float ZVistaSur = 24f;
         private const float AltoBanqueta = 0.2f;
@@ -78,6 +78,8 @@ namespace MechaCyberpunk.Arte.Editor
             public VariarCerroT1364.CasaT H;
             public float Nivel;
             public int Existentes;
+            /// <summary>Altura exacta de la superficie en el último hueco encontrado.</summary>
+            public float Y;
             public readonly List<Bounds> Enlaces = new List<Bounds>();
             public readonly List<(Vector2 a, Vector2 b)> Pasillos = new List<(Vector2, Vector2)>();
             public Transform Grupo;
@@ -95,6 +97,7 @@ namespace MechaCyberpunk.Arte.Editor
             public readonly List<Bounds> OcupadoPared = new List<Bounds>();
             public readonly List<Bounds> Enlaces = new List<Bounds>();
             public readonly List<Vector3> Postes = new List<Vector3>();
+            public int Contador;
             public int Carros, Letreros, Fachadas, Azoteas, Cables, Gente, Basura, Charcos;
             public Material Marco, MarcoOxido, Concreto, Gris, Negro, Madera;
             public Material[] Neon;
@@ -111,6 +114,9 @@ namespace MechaCyberpunk.Arte.Editor
             medidas.Clear();
             cache.Clear();
             faltan.Clear();
+            lotes.Clear();
+            pegados = 0;
+            conservados = 0;
             GameObject zona = PrefabUtility.LoadPrefabContents(RutaPrefab);
             try
             {
@@ -137,6 +143,8 @@ namespace MechaCyberpunk.Arte.Editor
                 Paso("basura, bolsas, macetas y charcos", () => Basura(c));
                 Paso("gente", () => PonerGente(c));
                 Paso("cables", () => Cableado(c));
+                Paso("tendederos entre casas", () => Tendederos(c));
+                Paso("lotes", () => Volcar(c));
                 Estatico(c);
                 KitS2c.Terminar(c.Obra);
                 int luces = zona.GetComponentsInChildren<Light>(true).Length;
@@ -484,6 +492,131 @@ namespace MechaCyberpunk.Arte.Editor
             return g;
         }
 
+        // ================================================================ Lotes: mallas combinadas por material y por cuadro de 40 m (sin collider)
+
+        private sealed class LoteDatos
+        {
+            public Material M;
+            public int Cx, Cz;
+            public readonly List<Vector3> V = new List<Vector3>();
+            public readonly List<Vector3> N = new List<Vector3>();
+            public readonly List<Vector2> Uv = new List<Vector2>();
+            public readonly List<int> T = new List<int>();
+        }
+
+        private const float LadoLote = 40f;
+
+        private static readonly Dictionary<string, LoteDatos> lotes = new Dictionary<string, LoteDatos>();
+        private static int pegados, conservados;
+
+        private static LoteDatos Lote(Material m, Vector3 donde)
+        {
+            int cx = Mathf.FloorToInt(donde.x / LadoLote), cz = Mathf.FloorToInt(donde.z / LadoLote);
+            string clave = m.GetInstanceID() + "|" + cx + "|" + cz;
+            if (!lotes.TryGetValue(clave, out LoteDatos l))
+            {
+                l = new LoteDatos { M = m, Cx = cx, Cz = cz };
+                lotes[clave] = l;
+            }
+            return l;
+        }
+
+        /// <summary>Pega una malla generada (leíble) en los lotes con la matriz del mundo; el material de cada submalla viene en mats.</summary>
+        private static void Pegar(Mesh malla, Material[] mats, Matrix4x4 mtx)
+        {
+            Vector3[] v = malla.vertices;
+            Vector3[] n = malla.normals;
+            Vector2[] uv = malla.uv;
+            bool espejo = mtx.determinant < 0f;
+            for (int s = 0; s < malla.subMeshCount; s++)
+            {
+                Material m = mats[Mathf.Min(s, mats.Length - 1)];
+                LoteDatos l = Lote(m, mtx.GetColumn(3));
+                int[] tris = malla.GetTriangles(s);
+                Dictionary<int, int> mapa = new Dictionary<int, int>();
+                foreach (int idx in tris)
+                {
+                    if (!mapa.ContainsKey(idx))
+                    {
+                        mapa[idx] = l.V.Count;
+                        l.V.Add(mtx.MultiplyPoint3x4(v[idx]));
+                        l.N.Add(n.Length > idx ? mtx.MultiplyVector(n[idx]).normalized : Vector3.up);
+                        l.Uv.Add(uv.Length > idx ? uv[idx] : Vector2.zero);
+                    }
+                }
+                for (int i = 0; i + 2 < tris.Length; i += 3)
+                {
+                    if (espejo)
+                    {
+                        l.T.Add(mapa[tris[i]]); l.T.Add(mapa[tris[i + 2]]); l.T.Add(mapa[tris[i + 1]]);
+                    }
+                    else
+                    {
+                        l.T.Add(mapa[tris[i]]); l.T.Add(mapa[tris[i + 1]]); l.T.Add(mapa[tris[i + 2]]);
+                    }
+                }
+            }
+            pegados++;
+        }
+
+        /// <summary>Pega los renderers de una instancia ya colocada (sin collider que importe) en los lotes y la borra. Si alguna malla no es leíble la deja como está y devuelve false.</summary>
+        private static bool PegarInstancia(GameObject g)
+        {
+            List<(MeshFilter mf, MeshRenderer mr)> piezas = new List<(MeshFilter, MeshRenderer)>();
+            foreach (MeshFilter mf in g.GetComponentsInChildren<MeshFilter>(false))
+            {
+                MeshRenderer mr = mf.GetComponent<MeshRenderer>();
+                if (mr == null || !mr.enabled || mf.sharedMesh == null)
+                {
+                    continue;
+                }
+                if (!mf.sharedMesh.isReadable || mr.sharedMaterials.Length == 0)
+                {
+                    conservados++;
+                    return false;
+                }
+                piezas.Add((mf, mr));
+            }
+            if (piezas.Count == 0)
+            {
+                return false;
+            }
+            foreach ((MeshFilter mf, MeshRenderer mr) in piezas)
+            {
+                Pegar(mf.sharedMesh, mr.sharedMaterials, mf.transform.localToWorldMatrix);
+            }
+            Object.DestroyImmediate(g);
+            return true;
+        }
+
+        private static void Volcar(Ctx c)
+        {
+            Transform padre = Hijo(c.Nuevo, "Lotes");
+            int n = 0;
+            foreach (LoteDatos l in lotes.Values)
+            {
+                if (l.V.Count == 0)
+                {
+                    continue;
+                }
+                Mesh m = new Mesh { name = "T1441_Lote_" + l.M.name + "_" + l.Cx + "_" + l.Cz, indexFormat = IndexFormat.UInt32 };
+                m.SetVertices(l.V);
+                m.SetNormals(l.N);
+                m.SetUVs(0, l.Uv);
+                m.SetTriangles(l.T, 0);
+                m.RecalculateBounds();
+                c.Obra.Mallas.Add(m);
+                GameObject g = new GameObject("Lote_" + l.M.name + "_" + l.Cx + "_" + l.Cz);
+                g.transform.SetParent(padre, false);
+                g.AddComponent<MeshFilter>().sharedMesh = m;
+                MeshRenderer mr = g.AddComponent<MeshRenderer>();
+                mr.sharedMaterial = l.M;
+                mr.shadowCastingMode = ShadowCastingMode.Off;
+                n++;
+            }
+            Log("Lotes combinados: " + n + " objetos con " + pegados + " piezas pegadas; piezas de prefab que no se pudieron combinar (malla no leíble): " + conservados + ".");
+        }
+
         // ================================================================ Ayudas de piso, bounds y piezas
 
         private static bool EsPiso(Ctx c, Transform t)
@@ -787,6 +920,20 @@ namespace MechaCyberpunk.Arte.Editor
                 && Mathf.Abs(h.point.y - nivel) < 0.25f && !EsPiso(c, h.collider.transform) && !h.collider.transform.IsChildOf(c.Nuevo);
         }
 
+        /// <summary>Superficie medida de la azotea en (x, z): el punto del rayo (normal hacia arriba, a menos de 25 cm del nivel de la azotea).</summary>
+        private static bool TechoY(Ctx c, float x, float z, float nivel, out float y)
+        {
+            y = 0f;
+            RaycastHit h;
+            if (c.Fisica.Raycast(new Vector3(x, nivel + 1.5f, z), Vector3.down, out h, 3f, ~0, QueryTriggerInteraction.Ignore) && h.normal.y > 0.9f
+                && Mathf.Abs(h.point.y - nivel) < 0.25f && !EsPiso(c, h.collider.transform) && !h.collider.transform.IsChildOf(c.Nuevo))
+            {
+                y = h.point.y;
+                return true;
+            }
+            return false;
+        }
+
         /// <summary>Un centro libre de azotea para algo de medio tamaño (hx, hz) y alto: plano, sin colliders encima, sin encimarse ni cerrar los pasillos de 1.2 m.</summary>
         private static bool BuscarHueco(Ctx c, Techo t, float hx, float hz, float alto, List<Vector2> candidatos, bool conPlano, out Vector2 pos)
         {
@@ -800,7 +947,7 @@ namespace MechaCyberpunk.Arte.Editor
                 {
                     continue;
                 }
-                if (EnPasillo(t, x, z, Mathf.Max(hx, hz)))
+                if (EnPasillo(t, x, z, Mathf.Max(hx, hz) * 1.15f + 0.1f))
                 {
                     continue;
                 }
@@ -818,18 +965,23 @@ namespace MechaCyberpunk.Arte.Editor
                 {
                     continue;
                 }
-                if (conPlano)
+                // Altura exacta: el rayo del centro (la misma que mide Validar); las 4 esquinas deben estar a menos de 4 cm.
+                float y0;
+                if (!TechoY(c, x, z, t.Nivel, out y0))
                 {
-                    bool plano = TechoEn(c, x, z, t.Nivel);
-                    foreach (Vector2 d in new[] { new Vector2(1f, 1f), new Vector2(1f, -1f), new Vector2(-1f, 1f), new Vector2(-1f, -1f) })
-                    {
-                        plano &= TechoEn(c, x + d.x * hx * 0.9f, z + d.y * hz * 0.9f, t.Nivel);
-                    }
-                    if (!plano)
-                    {
-                        continue;
-                    }
+                    continue;
                 }
+                bool plano = true;
+                foreach (Vector2 d in new[] { new Vector2(1f, 1f), new Vector2(1f, -1f), new Vector2(-1f, 1f), new Vector2(-1f, -1f) })
+                {
+                    float ye;
+                    plano &= TechoY(c, x + d.x * hx * 0.95f, z + d.y * hz * 0.95f, t.Nivel, out ye) && Mathf.Abs(ye - y0) < 0.04f;
+                }
+                if (!plano)
+                {
+                    continue;
+                }
+                t.Y = y0;
                 float a = Mathf.Max(0.2f, alto - 0.3f);
                 if (!Libre(c, new Vector3(x, t.Nivel + 0.2f + a * 0.5f, z), new Vector3(Mathf.Max(0.05f, hx - 0.05f), a * 0.5f, Mathf.Max(0.05f, hz - 0.05f))))
                 {
@@ -874,26 +1026,50 @@ namespace MechaCyberpunk.Arte.Editor
 
         // ================================================================ Azoteas
 
+        /// <summary>Base de ladrillo (sub 0) y tanque con dos aros y tapa (sub 1). Origen en el piso, el tanque sube hasta ~2.1 m. Lleva MeshCollider (es un obstáculo real y su collider es su malla).</summary>
+        private static Mesh MallaTinaco()
+        {
+            Malla m = new Malla(2);
+            m.Caja(0, new Vector3(0f, 0.35f, 0f), new Vector3(1.5f, 0.7f, 1.5f));
+            Vector2[] perfil =
+            {
+                new Vector2(0f, 0.7f), new Vector2(0.78f, 0.7f), new Vector2(0.8f, 0.76f), new Vector2(0.8f, 0.95f), new Vector2(0.86f, 0.98f), new Vector2(0.86f, 1.06f), new Vector2(0.8f, 1.09f),
+                new Vector2(0.8f, 1.45f), new Vector2(0.86f, 1.48f), new Vector2(0.86f, 1.56f), new Vector2(0.8f, 1.59f), new Vector2(0.8f, 1.75f), new Vector2(0.7f, 1.9f), new Vector2(0.5f, 2.0f),
+                new Vector2(0.25f, 2.05f), new Vector2(0f, 2.06f),
+            };
+            m.Revolver(1, perfil, 12, Quaternion.identity, Vector3.zero, new Vector3(0f, 1.3f, 0f), false);
+            m.Caja(1, new Vector3(0f, 2.1f, 0f), new Vector3(0.3f, 0.06f, 0.3f));
+            return m.Crear("T1441_Tinaco");
+        }
+
         private static void Azoteas(Ctx c)
         {
             Transform padre = Hijo(c.Nuevo, "Techos");
-            GameObject tinaco = Cargar("C09_Tinaco"), baseTinaco = Cargar("TK01_BaseTinaco"), antena = Cargar("CY04_AntenaAzotea");
+            GameObject antena = Cargar("CY04_AntenaAzotea");
             GameObject tendedero = Cargar("CC04_Tendedero"), lavadero = Cargar("CC05_Lavadero"), huacales = Cargar("C17_Huacales"), tambo = Cargar("C16_Tambo");
             GameObject chatarra = Cargar("IN02_Chatarra"), aire = Cargar("C10_AireAcondicionado");
             Mesh[] parabolicas = { MallaParabolica(0), MallaParabolica(1), MallaParabolica(2) };
             Mesh[] varillas = { MallaVarillas(0), MallaVarillas(1), MallaVarillas(2) };
-            c.Obra.Mallas.AddRange(parabolicas);
-            c.Obra.Mallas.AddRange(varillas);
+            Mesh tinaco = MallaTinaco();
+            c.Obra.Mallas.Add(tinaco);
+            Material ladrillo = MatLit("Ladrillo", new Color(0.5f, 0.26f, 0.19f), 0.1f);
+            // Tinacos: negros (los más), azules, blancos y terracota, de varios tamaños.
+            (Material mat, float peso)[] colores =
+            {
+                (MatLit("TinacoNegro", new Color(0.04f, 0.04f, 0.05f), 0.45f), 40f), (MatLit("TinacoAzul", new Color(0.1f, 0.32f, 0.72f), 0.4f), 22f),
+                (MatLit("TinacoBlanco", new Color(0.86f, 0.87f, 0.9f), 0.35f), 24f), (MatLit("TinacoTerracota", new Color(0.7f, 0.32f, 0.2f), 0.3f), 14f),
+            };
             (string tipo, float peso)[] tipos =
             {
-                ("tinaco", 22f), ("antena", 16f), ("parabolica", 8f), ("tendedero", 12f), ("lavadero", 8f), ("varillas", 12f), ("caja", 8f), ("tambo", 6f), ("chatarra", 6f), ("aire", 8f),
+                ("tinaco", 18f), ("antena", 12f), ("parabolica", 6f), ("tendedero", 16f), ("lavadero", 10f), ("varillas", 10f), ("caja", 6f), ("tambo", 4f), ("chatarra", 4f), ("aire", 6f),
             };
             float suma = tipos.Sum(x => x.peso);
-            int total = 0, conObjetos = 0, id = 0;
+            int total = 0, conObjetos = 0, id = 0, malAsentados = 0;
             Dictionary<string, int> porTipo = new Dictionary<string, int>();
             foreach (Techo t in c.Techos.OrderBy(q => q.H.X0).ThenBy(q => q.H.Z0))
             {
                 id++;
+                t.Grupo = padre;
                 float r = c.Obra.Rango(0f, 1f);
                 int objetivo = r < 0.2f ? 2 : (r < 0.55f ? 3 : (r < 0.8f ? 4 : 5));
                 int falta = objetivo - t.Existentes;
@@ -920,50 +1096,46 @@ namespace MechaCyberpunk.Arte.Editor
                     {
                         continue;
                     }
-                    if (t.Grupo == null)
-                    {
-                        t.Grupo = Hijo(padre, "Azotea_" + id);
-                    }
                     bool ok = false;
                     switch (tipo)
                     {
                         case "tinaco":
-                            ok = PonerTinaco(c, t, tinaco, baseTinaco);
+                            ok = PonerTinaco(c, t, tinaco, ladrillo, colores);
                             conTinaco |= ok;
                             break;
                         case "antena":
-                            ok = PonerPrefab(c, t, antena, Vector3.one * 1.1f, "Antena") != null;
+                            ok = PonerPrefab(c, t, antena, Vector3.one * 1.1f, "Antena", ref malAsentados);
                             break;
                         case "parabolica":
-                            ok = PonerGenerado(c, t, parabolicas[id % 3], new[] { c.Gris, c.Gris }, 0.45f, 1.6f, "Parabolica", false);
+                            ok = PonerGenerado(c, t, parabolicas[id % 3], new[] { c.Gris, c.Gris }, 0.45f, 1.6f);
                             conParabolica |= ok;
                             break;
                         case "tendedero":
-                            ok = PonerPrefab(c, t, tendedero, Vector3.one, "Tendedero") != null;
+                            ok = PonerPrefab(c, t, tendedero, Vector3.one, "Tendedero", ref malAsentados);
                             break;
                         case "lavadero":
-                            ok = PonerPrefab(c, t, lavadero, Vector3.one, "Lavadero") != null;
+                            ok = PonerPrefab(c, t, lavadero, Vector3.one, "Lavadero", ref malAsentados);
                             break;
                         case "varillas":
                             ok = PonerEsquina(c, t, varillas[id % 3], new[] { c.Concreto, c.MarcoOxido });
                             conVarillas |= ok;
                             break;
                         case "caja":
-                            ok = PonerPrefab(c, t, huacales, Vector3.one, "Huacales") != null;
+                            ok = PonerPrefab(c, t, huacales, Vector3.one, "Huacales", ref malAsentados);
                             break;
                         case "tambo":
-                            ok = PonerPrefab(c, t, tambo, Vector3.one, "Tambo") != null;
+                            ok = PonerPrefab(c, t, tambo, Vector3.one, "Tambo", ref malAsentados);
                             break;
                         case "chatarra":
                             if (chatarra != null)
                             {
                                 Bounds m = Medida(chatarra);
                                 float e = Mathf.Min(1f, 1.8f / Mathf.Max(0.1f, Mathf.Max(m.size.x, m.size.z)));
-                                ok = PonerPrefab(c, t, chatarra, Vector3.one * e, "Chatarra") != null;
+                                ok = PonerPrefab(c, t, chatarra, Vector3.one * e, "Chatarra", ref malAsentados);
                             }
                             break;
                         case "aire":
-                            ok = PonerPrefab(c, t, aire, Vector3.one, "Aire") != null;
+                            ok = PonerPrefab(c, t, aire, Vector3.one, "Aire", ref malAsentados);
                             break;
                     }
                     if (ok)
@@ -977,22 +1149,18 @@ namespace MechaCyberpunk.Arte.Editor
                 {
                     conObjetos++;
                 }
-                else if (t.Grupo != null)
-                {
-                    Object.DestroyImmediate(t.Grupo.gameObject);
-                    t.Grupo = null;
-                }
             }
             c.Azoteas = conObjetos;
             Physics.SyncTransforms();
-            Log("Azoteas con objetos nuevos: " + conObjetos + "; objetos: " + total + " (" + string.Join(", ", porTipo.Select(p => p.Key + " " + p.Value)) + ").");
+            Log("Azoteas con objetos nuevos: " + conObjetos + "; objetos: " + total + " (" + string.Join(", ", porTipo.Select(p => p.Key + " " + p.Value)) + "). Mal asentados al colocar (más de 5 cm): " + malAsentados + ".");
         }
 
-        private static GameObject PonerPrefab(Ctx c, Techo t, GameObject prefab, Vector3 escala, string nombre)
+        /// <summary>Pone un prefab en la azotea con su punto más bajo exactamente en la superficie medida (t.Y); los que no necesitan collider se combinan en lotes.</summary>
+        private static bool PonerPrefab(Ctx c, Techo t, GameObject prefab, Vector3 escala, string nombre, ref int malAsentados)
         {
             if (prefab == null)
             {
-                return null;
+                return false;
             }
             Bounds m = Medida(prefab);
             Vector3 tam = new Vector3(m.size.x * escala.x, m.size.y * escala.y, m.size.z * escala.z);
@@ -1002,50 +1170,50 @@ namespace MechaCyberpunk.Arte.Editor
             Vector2 pos;
             if (!BuscarHueco(c, t, hx, hz, tam.y, Candidatos(c, t.H, 14), true, out pos))
             {
-                return null;
+                return false;
             }
-            GameObject g = Instanciar(prefab, t.Grupo, nombre + "_" + t.Grupo.childCount);
+            GameObject g = Instanciar(prefab, t.Grupo, nombre + "_" + (c.Contador++));
             g.transform.SetPositionAndRotation(Vector3.zero, Quaternion.Euler(0f, 90f * giroRand, 0f));
             g.transform.localScale = escala;
             Bounds b = Cubierta(g.transform);
-            g.transform.position += new Vector3(pos.x - b.center.x, t.Nivel - b.min.y, pos.y - b.center.z);
+            g.transform.position += new Vector3(pos.x - b.center.x, t.Y - b.min.y, pos.y - b.center.z);
             Physics.SyncTransforms();
-            c.Ocupado.Add(Cubierta(g.transform));
-            return g;
-        }
-
-        private static bool PonerTinaco(Ctx c, Techo t, GameObject tinaco, GameObject baseTinaco)
-        {
-            if (tinaco == null || baseTinaco == null)
+            Bounds fin = Cubierta(g.transform);
+            if (Mathf.Abs(fin.min.y - t.Y) > 0.05f)
             {
-                return false;
+                malAsentados++;
             }
-            Bounds mb = Medida(baseTinaco);
-            Vector3 escalaBase = new Vector3(1.6f / Mathf.Max(0.1f, mb.size.x), 0.7f / Mathf.Max(0.1f, mb.size.y), 1.6f / Mathf.Max(0.1f, mb.size.z));
-            Vector2 pos;
-            if (!BuscarHueco(c, t, 0.85f, 0.85f, 3.0f, Candidatos(c, t.H, 14), true, out pos))
-            {
-                return false;
-            }
-            GameObject gb = Instanciar(baseTinaco, t.Grupo, "BaseTinaco_" + t.Grupo.childCount);
-            gb.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
-            gb.transform.localScale = escalaBase;
-            Bounds bb = Cubierta(gb.transform);
-            gb.transform.position += new Vector3(pos.x - bb.center.x, t.Nivel - bb.min.y, pos.y - bb.center.z);
-            Physics.SyncTransforms();
-            bb = Cubierta(gb.transform);
-            GameObject gt = Instanciar(tinaco, t.Grupo, "Tinaco_" + t.Grupo.childCount);
-            gt.transform.SetPositionAndRotation(Vector3.zero, Quaternion.Euler(0f, c.Obra.Rango(0f, 360f), 0f));
-            gt.transform.localScale = Vector3.one * 1.25f;
-            Bounds bt = Cubierta(gt.transform);
-            gt.transform.position += new Vector3(bb.center.x - bt.center.x, bb.max.y - bt.min.y, bb.center.z - bt.center.z);
-            Physics.SyncTransforms();
-            c.Ocupado.Add(Cubierta(gt.transform));
-            c.Ocupado.Add(bb);
+            c.Ocupado.Add(fin);
+            PegarInstancia(g);
             return true;
         }
 
-        private static bool PonerGenerado(Ctx c, Techo t, Mesh malla, Material[] mats, float radio, float alto, string nombre, bool collider)
+        private static bool PonerTinaco(Ctx c, Techo t, Mesh malla, Material ladrillo, (Material mat, float peso)[] colores)
+        {
+            float e = c.Obra.Rango(0.8f, 1.2f);
+            Vector2 pos;
+            if (!BuscarHueco(c, t, 0.95f * e, 0.95f * e, 2.2f * e, Candidatos(c, t.H, 14), true, out pos))
+            {
+                return false;
+            }
+            float q = c.Obra.Rango(0f, colores.Sum(x => x.peso));
+            Material color = colores[0].mat;
+            foreach ((Material mat, float peso) in colores)
+            {
+                if (q < peso)
+                {
+                    color = mat;
+                    break;
+                }
+                q -= peso;
+            }
+            GameObject g = Generado(t.Grupo, "Tinaco_" + (c.Contador++), malla, new[] { ladrillo, color }, new Vector3(pos.x, t.Y, pos.y), Quaternion.Euler(0f, c.Obra.Rango(0f, 360f), 0f), Vector3.one * e, true, true);
+            Physics.SyncTransforms();
+            c.Ocupado.Add(Cubierta(g.transform));
+            return true;
+        }
+
+        private static bool PonerGenerado(Ctx c, Techo t, Mesh malla, Material[] mats, float radio, float alto)
         {
             Vector2 pos;
             if (!BuscarHueco(c, t, radio, radio, alto, Candidatos(c, t.H, 14), true, out pos))
@@ -1053,9 +1221,8 @@ namespace MechaCyberpunk.Arte.Editor
                 return false;
             }
             Quaternion giro = Quaternion.Euler(0f, c.Obra.Rango(0f, 360f), 0f);
-            GameObject g = Generado(t.Grupo, nombre + "_" + t.Grupo.childCount, malla, mats, new Vector3(pos.x, t.Nivel, pos.y), giro, Vector3.one, collider);
-            Physics.SyncTransforms();
-            c.Ocupado.Add(Cubierta(g.transform));
+            Pegar(malla, mats, Matrix4x4.TRS(new Vector3(pos.x, t.Y, pos.y), giro, Vector3.one));
+            c.Ocupado.Add(new Bounds(new Vector3(pos.x, t.Y + alto * 0.5f, pos.y), new Vector3(radio * 2f, alto, radio * 2f)));
             return true;
         }
 
@@ -1071,9 +1238,8 @@ namespace MechaCyberpunk.Arte.Editor
             {
                 return false;
             }
-            GameObject g = Generado(t.Grupo, "Varillas_" + t.Grupo.childCount, malla, mats, new Vector3(pos.x, t.Nivel, pos.y), Quaternion.Euler(0f, c.Obra.Rango(0f, 90f), 0f), Vector3.one, false);
-            Physics.SyncTransforms();
-            c.Ocupado.Add(Cubierta(g.transform));
+            Pegar(malla, mats, Matrix4x4.TRS(new Vector3(pos.x, t.Y, pos.y), Quaternion.Euler(0f, c.Obra.Rango(0f, 90f), 0f), Vector3.one));
+            c.Ocupado.Add(new Bounds(new Vector3(pos.x, t.Y + 0.8f, pos.y), new Vector3(0.8f, 1.6f, 0.8f)));
             return true;
         }
 
@@ -1171,15 +1337,8 @@ namespace MechaCyberpunk.Arte.Editor
                     }
                 }
                 Vector3 salida = new Vector3(h.Normal, 0f, 0f);
-                Transform grupo = null;
-                Func<Transform> asegurar = () =>
-                {
-                    if (grupo == null)
-                    {
-                        grupo = Hijo(padre, "Fachada_" + h.Raiz.name);
-                    }
-                    return grupo;
-                };
+                Func<Transform> asegurar = () => padre;
+                int rejasCasa = 0;
                 // Puerta en el mundo (si la planta baja la tiene).
                 bool hayPuerta = false;
                 Vector3 puerta = default;
@@ -1194,7 +1353,7 @@ namespace MechaCyberpunk.Arte.Editor
                 float zc = centro.z;
                 int cuantas = 0;
                 // Lámpara de pared junto a la puerta.
-                if (c.Obra.Chance(0.55f) && cuantas < 4)
+                if (c.Obra.Chance(0.7f) && cuantas < 4)
                 {
                     float lado = c.Obra.Chance(0.5f) ? 1f : -1f;
                     float zl = hayPuerta ? puerta.z + lado * (anchoPuerta * 0.5f + 0.5f) : zc + lado * (h.Z1 - h.Z0) * 0.36f;
@@ -1203,14 +1362,14 @@ namespace MechaCyberpunk.Arte.Editor
                     Vector3 p;
                     if (Pared(c, h, yl, zl, out p) && Libre3D(prohibidos, c.OcupadoPared, p, yl, zl, 0.3f, 0.4f))
                     {
-                        GameObject g = Generado(asegurar(), "Lampara", lampara, new[] { c.Marco, c.Calido }, p, Quaternion.LookRotation(salida), Vector3.one, false);
+                        Pegar(lampara, new[] { c.Marco, c.Calido }, Matrix4x4.TRS(p, Quaternion.LookRotation(salida), Vector3.one));
                         c.OcupadoPared.Add(new Bounds(new Vector3(p.x, yl, zl), new Vector3(0.6f, 0.6f, 0.6f)));
                         lam++;
                         cuantas++;
                     }
                 }
                 // Medidor al otro lado de la puerta.
-                if (medidor != null && hayPuerta && c.Obra.Chance(0.4f) && cuantas < 4)
+                if (medidor != null && hayPuerta && c.Obra.Chance(0.5f) && cuantas < 4)
                 {
                     float lado = c.Obra.Chance(0.5f) ? 1f : -1f;
                     float zm = Mathf.Clamp(puerta.z + lado * (anchoPuerta * 0.5f + 0.6f), h.Z0 + 0.4f, h.Z1 - 0.4f);
@@ -1223,6 +1382,7 @@ namespace MechaCyberpunk.Arte.Editor
                         if (LibreObjeto(prohibidos, c.OcupadoPared, g))
                         {
                             c.OcupadoPared.Add(Cubierta(g.transform));
+                            PegarInstancia(g);
                             med++;
                             cuantas++;
                         }
@@ -1233,7 +1393,7 @@ namespace MechaCyberpunk.Arte.Editor
                     }
                 }
                 // Aire acondicionado en la pared.
-                if (aire != null && c.Obra.Chance(0.45f) && cuantas < 4 && h.Top - h.Base > 3.4f)
+                if (aire != null && c.Obra.Chance(0.6f) && cuantas < 4 && h.Top - h.Base > 3.4f)
                 {
                     float za = c.Obra.Rango(h.Z0 + 0.9f, h.Z1 - 0.9f);
                     float ya = Mathf.Min(h.Base + (h.Top - h.Base > 5.4f ? 3.5f : 2.1f), h.Top - 1.4f);
@@ -1246,6 +1406,7 @@ namespace MechaCyberpunk.Arte.Editor
                         if (LibreObjeto(prohibidos, c.OcupadoPared, g))
                         {
                             c.OcupadoPared.Add(Cubierta(g.transform));
+                            PegarInstancia(g);
                             ac++;
                             cuantas++;
                         }
@@ -1274,6 +1435,7 @@ namespace MechaCyberpunk.Arte.Editor
                     else
                     {
                         c.OcupadoPared.Add(Cubierta(g.transform));
+                        PegarInstancia(g);
                         tol++;
                         cuantas++;
                     }
@@ -1296,6 +1458,7 @@ namespace MechaCyberpunk.Arte.Editor
                         if (b.size.x < 1.6f && b.size.z < 1.6f && Libre(c, mio.center + Vector3.up * 0.05f, mio.extents * 0.9f) && !prohibidos.Any(pb => pb.Intersects(mio)))
                         {
                             c.OcupadoPared.Add(mio);
+                            PegarInstancia(g);
                             mac++;
                             cuantas++;
                         }
@@ -1316,19 +1479,18 @@ namespace MechaCyberpunk.Arte.Editor
                             continue;
                         }
                         puestas.Add(r);
-                        if (r.yMin < 1f || r.height > 2.2f || r.width > 2.4f || !c.Obra.Chance(0.4f))
+                        if (r.yMin < 1f || r.height > 2.2f || r.width > 2.4f || !c.Obra.Chance(0.55f))
                         {
                             continue;
                         }
-                        GameObject gr = Generado(baja, "Reja", reja, new[] { c.MarcoOxido }, baja.TransformPoint(new Vector3(r.center.x, r.center.y, mb.Muro)), baja.rotation, Vector3.one, false);
-                        gr.transform.localScale = new Vector3(r.width * 1.04f, r.height * 1.04f, 1f);
-                        gr.transform.localPosition = new Vector3(r.center.x, r.center.y, mb.Muro);
-                        gr.transform.localRotation = Quaternion.identity;
+                        Matrix4x4 local = Matrix4x4.TRS(new Vector3(r.center.x, r.center.y, mb.Muro), Quaternion.identity, new Vector3(r.width * 1.04f, r.height * 1.04f, 1f));
+                        Pegar(reja, new[] { c.MarcoOxido }, baja.localToWorldMatrix * local);
                         rej++;
+                        rejasCasa++;
                     }
                 }
                 // Letrero de neón chico (1 de cada 3 a 4 casas).
-                if (c.Obra.Chance(0.3f))
+                if (c.Obra.Chance(0.5f))
                 {
                     float lado = c.Obra.Chance(0.5f) ? 1f : -1f;
                     bool bandera = c.Obra.Chance(0.7f);
@@ -1344,7 +1506,7 @@ namespace MechaCyberpunk.Arte.Editor
                         Bounds caja = new Bounds(new Vector3(p.x + h.Normal * (bandera ? 0.4f : 0.05f), yn, zn), new Vector3(bandera ? 0.9f : 0.2f, alto + 0.1f, bandera ? 0.7f : (variante == 0 ? 1.2f : 0.7f)));
                         if (Libre3D(prohibidos, c.OcupadoPared, caja.center, caja.center.y, caja.center.z, caja.extents.z, caja.extents.y, caja.extents.x))
                         {
-                            Generado(asegurar(), "Neon", malla, new[] { c.Marco, mat }, new Vector3(p.x, yn, zn), Quaternion.LookRotation(salida), Vector3.one, false);
+                            Pegar(malla, new[] { c.Marco, mat }, Matrix4x4.TRS(new Vector3(p.x, yn, zn), Quaternion.LookRotation(salida), Vector3.one));
                             c.OcupadoPared.Add(caja);
                             c.Letreros++;
                             neon++;
@@ -1352,13 +1514,9 @@ namespace MechaCyberpunk.Arte.Editor
                         }
                     }
                 }
-                if (grupo != null && grupo.childCount > 0)
+                if (cuantas > 0 || rejasCasa > 0)
                 {
                     casas++;
-                }
-                else if (grupo != null)
-                {
-                    Object.DestroyImmediate(grupo.gameObject);
                 }
             }
             c.Fachadas = casas;
@@ -1408,73 +1566,93 @@ namespace MechaCyberpunk.Arte.Editor
                 Log("FALTAN los visuales de carros en Assets/Arte/Vehiculos/Prefabs; no hay carros.");
                 return;
             }
-            // Pegados a la banqueta (la calle mide 9 m: el carril de tránsito va en el centro, ±2.25 m); el primero lleva los faros encendidos.
-            (float x, float z, bool haciaSur, bool hero)[] sitios =
+            // Pegados a la banqueta (calle de 9 m, banquetas en ±4.5 m): lado -1 = oeste (mira al norte, hacia K13), +1 = este (mira al sur). El primero lleva los faros encendidos.
+            (float lado, float z, bool hero)[] sitios =
             {
-                (XCentroCalle - 3.5f, 136f, false, true), (XCentroCalle - 3.5f, 112f, false, false), (XCentroCalle - 3.6f, 90f, true, false), (XCentroCalle - 3.5f, 58f, false, false),
-                (XCentroCalle + 3.5f, 118f, true, false), (XCentroCalle + 3.5f, 76f, true, false), (XCentroCalle + 3.5f, 42f, false, false),
+                (-1f, 136f, true), (1f, 118f, false), (-1f, 108f, false), (1f, 92f, false), (-1f, 76f, false), (1f, 58f, false), (-1f, 44f, false), (1f, 36f, false),
             };
-            Mesh farosMalla = null;
             int n = 0, usados = 0;
             foreach (var s in sitios)
             {
-                GameObject prefab = prefabs[usados % prefabs.Count];
-                Bounds m = Medida(prefab);
-                if (m.size.z > 6f || m.size.x > 2.8f || m.size.z < 2f)
+                if (n >= 7)
                 {
-                    Log("Carro " + prefab.name + " descartado por tamaño " + m.size.ToString("0.0") + ".");
-                    usados++;
-                    continue;
+                    break;
                 }
-                float yN, yS;
-                float mitad = m.size.z * 0.5f;
-                if (!Suelo(c, s.x, s.z + mitad * 0.7f, YCalle(s.z), out yN) || !Suelo(c, s.x, s.z - mitad * 0.7f, YCalle(s.z), out yS))
+                bool puesto = false;
+                foreach (float dz in new[] { 0f, 3f, -3f, 6f, -6f })
                 {
-                    Log("Carro en z = " + s.z + ": sin piso; no se pone.");
-                    continue;
-                }
-                float yMedio = (yN + yS) * 0.5f;
-                if (!Libre(c, new Vector3(s.x, yMedio + 0.95f, s.z), new Vector3(m.size.x * 0.5f + 0.1f, 0.6f, mitad + 0.25f)))
-                {
-                    Log("Carro en z = " + s.z + ": algo estorba; no se pone.");
-                    continue;
-                }
-                Vector3 dir = new Vector3(0f, (yN - yS) / (mitad * 1.4f), 1f);
-                if (s.haciaSur)
-                {
-                    dir = new Vector3(0f, -dir.y, -1f);
-                }
-                GameObject car = Instanciar(prefab, padre, "Carro_" + prefab.name + "_" + n);
-                car.transform.SetPositionAndRotation(new Vector3(s.x, yMedio, s.z), Quaternion.LookRotation(dir.normalized));
-                Physics.SyncTransforms();
-                Bounds b = Cubierta(car.transform);
-                car.transform.position += Vector3.up * (Mathf.Min(yN, yS) - b.min.y);
-                Physics.SyncTransforms();
-                foreach (Rigidbody rb in car.GetComponentsInChildren<Rigidbody>(true))
-                {
-                    rb.isKinematic = true;
-                }
-                if (s.hero)
-                {
-                    // Faros encendidos y luz de piso turquesa (como el carro de la referencia). Coordenadas locales de la caja del prefab; el frente es +Z.
-                    Malla fm = new Malla(2);
-                    float zf = m.max.z + 0.012f;
-                    float yf = m.min.y + m.size.y * 0.36f;
-                    foreach (float sx in new[] { -1f, 1f })
+                    for (int pi = 0; pi < prefabs.Count && !puesto; pi++)
                     {
-                        float xf = m.center.x + sx * m.size.x * 0.3f;
-                        fm.Quad(0, new Vector3(xf - 0.16f, yf + 0.07f, zf), new Vector3(xf + 0.16f, yf + 0.07f, zf), new Vector3(xf + 0.16f, yf - 0.07f, zf), new Vector3(xf - 0.16f, yf - 0.07f, zf), Vector3.forward);
+                        GameObject prefab = prefabs[(usados + pi) % prefabs.Count];
+                        Bounds m = Medida(prefab);
+                        // El eje largo del modelo puede ser X o Z: el frente se toma como el lado + de ese eje.
+                        bool largoX = m.size.x > m.size.z;
+                        float largo = largoX ? m.size.x : m.size.z, ancho = largoX ? m.size.z : m.size.x;
+                        if (largo < 3f || largo > 5.6f || ancho > 2.4f || m.size.y > 2.4f)
+                        {
+                            continue;
+                        }
+                        float z = s.z + dz;
+                        float x = XCentroCalle + s.lado * (4.5f - ancho * 0.5f - 0.1f);
+                        float yN, yS;
+                        if (!Suelo(c, x, z + largo * 0.35f, YCalle(z), out yN) || !Suelo(c, x, z - largo * 0.35f, YCalle(z), out yS))
+                        {
+                            continue;
+                        }
+                        float yMedio = (yN + yS) * 0.5f;
+                        if (!Libre(c, new Vector3(x, yMedio + 0.95f, z), new Vector3(ancho * 0.5f + 0.1f, 0.6f, largo * 0.5f + 0.25f)))
+                        {
+                            continue;
+                        }
+                        bool haciaSur = s.lado > 0f;
+                        float pendiente = (yN - yS) / (largo * 0.7f);
+                        Vector3 dir = haciaSur ? new Vector3(0f, -pendiente, -1f) : new Vector3(0f, pendiente, 1f);
+                        Quaternion giro = Quaternion.LookRotation(dir.normalized) * (largoX ? Quaternion.Euler(0f, -90f, 0f) : Quaternion.identity);
+                        GameObject car = Instanciar(prefab, padre, "Carro_" + prefab.name + "_" + n);
+                        car.transform.SetPositionAndRotation(new Vector3(x, yMedio, z), giro);
+                        Physics.SyncTransforms();
+                        Bounds b = Cubierta(car.transform);
+                        car.transform.position += Vector3.up * (Mathf.Min(yN, yS) - b.min.y);
+                        Physics.SyncTransforms();
+                        foreach (Rigidbody rb in car.GetComponentsInChildren<Rigidbody>(true))
+                        {
+                            rb.isKinematic = true;
+                        }
+                        if (s.hero)
+                        {
+                            // Faros encendidos y luz de piso turquesa (como el carro de la referencia). Coordenadas locales de la caja del prefab; el frente es el + del eje largo.
+                            Malla fm = new Malla(2);
+                            float yf = m.min.y + m.size.y * 0.36f;
+                            Vector3 frenteLocal = largoX ? Vector3.right : Vector3.forward;
+                            Vector3 ladoLocal = largoX ? Vector3.forward : Vector3.right;
+                            float tope = largoX ? m.max.x : m.max.z;
+                            Vector3 centroLocal = new Vector3(m.center.x, 0f, m.center.z);
+                            foreach (float sl in new[] { -1f, 1f })
+                            {
+                                Vector3 c0 = centroLocal + ladoLocal * (sl * ancho * 0.3f) + frenteLocal * (tope + 0.012f - Vector3.Dot(centroLocal, frenteLocal));
+                                c0.y = yf;
+                                fm.Quad(0, c0 + ladoLocal * 0.16f + Vector3.up * 0.07f, c0 - ladoLocal * 0.16f + Vector3.up * 0.07f, c0 - ladoLocal * 0.16f - Vector3.up * 0.07f, c0 + ladoLocal * 0.16f - Vector3.up * 0.07f, frenteLocal);
+                            }
+                            Vector3 cb = centroLocal + frenteLocal * (tope - 0.15f - Vector3.Dot(centroLocal, frenteLocal));
+                            cb.y = m.min.y + 0.12f;
+                            fm.Caja(1, cb, largoX ? new Vector3(0.04f, 0.03f, ancho * 0.8f) : new Vector3(ancho * 0.8f, 0.03f, 0.04f));
+                            Mesh farosMalla = fm.Crear("T1441_FarosCarro");
+                            c.Obra.Mallas.Add(farosMalla);
+                            Material faros = MatEmi("Faros", new Color(1f, 0.92f, 0.7f), 4.5f);
+                            Generado(car.transform, "Faros", farosMalla, new[] { faros, c.Neon[1] }, car.transform.position, car.transform.rotation, Vector3.one, false);
+                            Vector3 adelante = car.transform.rotation * frenteLocal;
+                            Vector3 luzPos = car.transform.position + adelante * (largo * 0.5f + 0.5f) + Vector3.up * 0.7f;
+                            KitS2c.Luz(car.transform, luzPos, LightType.Spot, new Color(1f, 0.85f, 0.6f), 90f, 16f, 55f, adelante + Vector3.down * 0.12f);
+                        }
+                        c.Carros++;
+                        n++;
+                        puesto = true;
                     }
-                    fm.Caja(1, new Vector3(m.center.x, m.min.y + 0.12f, m.max.z - 0.15f), new Vector3(m.size.x * 0.8f, 0.03f, 0.04f));
-                    farosMalla = fm.Crear("T1441_FarosCarro");
-                    c.Obra.Mallas.Add(farosMalla);
-                    Material faros = MatEmi("Faros", new Color(1f, 0.92f, 0.7f), 4.5f);
-                    Generado(car.transform, "Faros", farosMalla, new[] { faros, c.Neon[1] }, car.transform.position, car.transform.rotation, Vector3.one, false);
-                    Vector3 frente = car.transform.position + car.transform.forward * (mitad + 0.5f) + Vector3.up * 0.7f;
-                    KitS2c.Luz(car.transform, frente, LightType.Spot, new Color(1f, 0.85f, 0.6f), 90f, 16f, 55f, car.transform.forward + Vector3.down * 0.12f);
+                    if (puesto)
+                    {
+                        break;
+                    }
                 }
-                c.Carros++;
-                n++;
                 usados++;
             }
             Log("Carros estacionados: " + n + " (visual sin lógica de manejo, de Assets/Arte/Vehiculos/Prefabs; sus Rigidbody, si los hay, quedan kinemáticos).");
@@ -1490,22 +1668,23 @@ namespace MechaCyberpunk.Arte.Editor
             float xBordeOeste = XCentroCalle - 4.5f - 0.45f;
             List<float> usadasZ = new List<float>();
             int nPrefabs = 0, nBolsas = 0;
-            GameObject[] lista = { basurero, tambo, huacales, macetas, tambo, huacales, basurero, huacales };
-            for (int i = 0; i < 26 && (nPrefabs < lista.Length || nBolsas < 10); i++)
+            GameObject[] lista = { basurero, tambo, huacales, macetas, tambo, huacales, basurero, huacales, macetas, tambo };
+            for (int i = 0; i < 70 && (nPrefabs < lista.Length || nBolsas < 14); i++)
             {
-                float z = c.Obra.Rango(ZVistaSur + 4f, ZVistaNorte - 4f);
-                if (usadasZ.Any(u => Mathf.Abs(u - z) < 3.5f))
+                // La mitad en el cuadro de K13 (z de 62 a 140), sobre la banqueta oeste, la este y el paseo escalonado de T1416.
+                float z = i % 2 == 0 ? c.Obra.Rango(62f, 140f) : c.Obra.Rango(ZVistaSur + 4f, ZVistaNorte - 4f);
+                if (usadasZ.Any(u => Mathf.Abs(u - z) < 2.5f))
                 {
                     continue;
                 }
-                bool oeste = c.Obra.Chance(0.65f);
-                float x = oeste ? xBordeOeste : XCentroCalle + 4.5f + 0.45f;
+                float sorteo = c.Obra.Rango(0f, 1f);
+                float x = sorteo < 0.4f ? xBordeOeste : (sorteo < 0.7f ? XCentroCalle + 4.5f + 0.45f : XCentroCalle + 7f);
                 float y;
                 if (!Suelo(c, x, z, YCalle(z), out y) || Mathf.Abs(y - YCalle(z)) > 0.6f)
                 {
                     continue;
                 }
-                bool prefabToca = nPrefabs < lista.Length && (nBolsas >= 10 || c.Obra.Chance(0.5f));
+                bool prefabToca = nPrefabs < lista.Length && (nBolsas >= 14 || c.Obra.Chance(0.5f));
                 if (prefabToca && lista[nPrefabs] != null)
                 {
                     GameObject p = lista[nPrefabs];
@@ -1524,11 +1703,12 @@ namespace MechaCyberpunk.Arte.Editor
                     Bounds b = Cubierta(g.transform);
                     g.transform.position += new Vector3(x - b.center.x, y - b.min.y, z - b.center.z);
                     Physics.SyncTransforms();
+                    PegarInstancia(g);
                     usadasZ.Add(z);
                     nPrefabs++;
                     c.Basura++;
                 }
-                else if (nBolsas < 10)
+                else if (nBolsas < 14)
                 {
                     int v = c.Obra.Azar.Next(3);
                     float e = c.Obra.Rango(0.9f, 1.4f);
@@ -1536,7 +1716,7 @@ namespace MechaCyberpunk.Arte.Editor
                     {
                         continue;
                     }
-                    Generado(padre, "Bolsa_" + nBolsas, bolsas[v], new[] { c.Bolsas[v] }, new Vector3(x, y, z), Quaternion.Euler(0f, c.Obra.Rango(0f, 360f), 0f), Vector3.one * e, false, true);
+                    Pegar(bolsas[v], new[] { c.Bolsas[v] }, Matrix4x4.TRS(new Vector3(x, y, z), Quaternion.Euler(0f, c.Obra.Rango(0f, 360f), 0f), Vector3.one * e));
                     usadasZ.Add(z - 1f);
                     nBolsas++;
                     c.Basura++;
@@ -1546,16 +1726,18 @@ namespace MechaCyberpunk.Arte.Editor
             // Charcos: en la calle y las banquetas (decal que refleja; no estorban el paso).
             int charcos = 0;
             Transform charcosPadre = Hijo(calle, "Charcos");
-            for (int i = 0; i < 40 && charcos < 12; i++)
+            for (int i = 0; i < 120 && charcos < 22; i++)
             {
-                float z = c.Obra.Rango(ZVistaSur, ZVistaNorte);
-                float x = XCentroCalle + c.Obra.Rango(-4.4f, 4.4f);
+                // 12 en la calle y 10 en las banquetas y el paseo (donde reflejan los neones), la mitad dentro del cuadro de K13.
+                bool acera = charcos >= 12;
+                float z = i % 2 == 0 ? c.Obra.Rango(62f, 140f) : c.Obra.Rango(ZVistaSur, ZVistaNorte);
+                float x = acera ? (c.Obra.Chance(0.4f) ? XCentroCalle - 5.0f : (c.Obra.Chance(0.5f) ? XCentroCalle + 5.0f : XCentroCalle + 7f)) : XCentroCalle + c.Obra.Rango(-4.4f, 4.4f);
                 float y;
-                if (!Suelo(c, x, z, YCalle(z), out y) || Mathf.Abs(y - YCalle(z)) > 0.3f)
+                if (!Suelo(c, x, z, YCalle(z), out y) || Mathf.Abs(y - YCalle(z)) > (acera ? 0.6f : 0.3f))
                 {
                     continue;
                 }
-                float largo = c.Obra.Rango(1.4f, 3.2f), ancho = c.Obra.Rango(1.0f, 2.2f);
+                float largo = acera ? c.Obra.Rango(0.8f, 1.5f) : c.Obra.Rango(1.4f, 3.2f), ancho = acera ? c.Obra.Rango(0.6f, 1.1f) : c.Obra.Rango(1.0f, 2.2f);
                 KitS2c.Charco(c.Obra, charcosPadre, new Vector3(x, y, z), largo, ancho, c.Obra.Rango(0f, 360f));
                 charcos++;
             }
@@ -1578,11 +1760,12 @@ namespace MechaCyberpunk.Arte.Editor
             int total = 0;
             List<Vector3> puestos = new List<Vector3>();
             // Banquetas (oeste y este de la calle, entre las zonas visibles de K13).
-            for (int i = 0; i < 80 && total < 10; i++)
+            for (int i = 0; i < 160 && total < 11; i++)
             {
-                float z = c.Obra.Rango(ZVistaSur, ZVistaNorte - 4f);
-                bool oeste = c.Obra.Chance(0.6f);
-                float x = oeste ? XCentroCalle - 5.2f : XCentroCalle + 5.2f;
+                // Los primeros 5 dentro del cuadro de K13 (z de 66 a 138; la cámara está en z = 152): banqueta oeste (derecha del cuadro), este o paseo.
+                float z = total < 5 ? c.Obra.Rango(66f, 138f) : c.Obra.Rango(ZVistaSur, ZVistaNorte - 4f);
+                bool oeste = c.Obra.Chance(0.5f);
+                float x = oeste ? XCentroCalle - 5.2f : (c.Obra.Chance(0.5f) ? XCentroCalle + 5.2f : XCentroCalle + 7f);
                 float y;
                 if (!Suelo(c, x, z, YCalle(z), out y) || Mathf.Abs(y - YCalle(z)) > 0.6f)
                 {
@@ -1604,7 +1787,7 @@ namespace MechaCyberpunk.Arte.Editor
             int techos = 0;
             foreach (Techo t in c.Techos.Where(q => q.Enlaces.Count > 0).OrderBy(q => c.Obra.Azar.Next()))
             {
-                if (techos >= 5)
+                if (techos >= 3)
                 {
                     break;
                 }
@@ -1617,7 +1800,7 @@ namespace MechaCyberpunk.Arte.Editor
                 {
                     continue;
                 }
-                Vector3 p = new Vector3(pos.x, t.Nivel, pos.y);
+                Vector3 p = new Vector3(pos.x, t.Y, pos.y);
                 if (PonerNpc(c, t.Grupo, disponibles[c.Obra.Azar.Next(disponibles.Count)], p, c.Obra.Rango(0f, 360f)))
                 {
                     c.Ocupado.Add(new Bounds(p + Vector3.up * 0.9f, new Vector3(0.8f, 1.8f, 0.8f)));
@@ -1821,6 +2004,67 @@ namespace MechaCyberpunk.Arte.Editor
             return Mathf.Sqrt(dx * dx + dz * dz);
         }
 
+        // ================================================================ Tendederos con ropa entre casas
+
+        private static void Tendederos(Ctx c)
+        {
+            Material[] ropa =
+            {
+                MatLit("RopaRosa", new Color(0.9f, 0.3f, 0.6f), 0.1f), MatLit("RopaAzul", new Color(0.2f, 0.45f, 0.85f), 0.1f), MatLit("RopaAmarilla", new Color(0.95f, 0.8f, 0.2f), 0.1f),
+                MatLit("RopaBlanca", new Color(0.85f, 0.85f, 0.82f), 0.1f), MatLit("RopaVerde", new Color(0.3f, 0.7f, 0.45f), 0.1f), MatLit("RopaNaranja", new Color(0.95f, 0.5f, 0.15f), 0.1f),
+            };
+            Malla mp = new Malla(1);
+            mp.Quad(0, new Vector3(-0.2f, 0.28f, 0f), new Vector3(0.2f, 0.28f, 0f), new Vector3(0.2f, -0.28f, 0f), new Vector3(-0.2f, -0.28f, 0f), Vector3.forward);
+            mp.Quad(0, new Vector3(-0.2f, 0.28f, 0f), new Vector3(0.2f, 0.28f, 0f), new Vector3(0.2f, -0.28f, 0f), new Vector3(-0.2f, -0.28f, 0f), Vector3.back);
+            Mesh prenda = mp.Crear("T1441_Prenda");
+            c.Obra.Mallas.Add(prenda);
+            List<VariarCerroT1364.CasaT> oeste = c.Casas.Where(h => h.Kit && h.Normal > 0f && Mathf.Abs((h.X1 + h.X0) * 0.5f - (XCentroCalle - 6.5f)) < 3f && (h.Z0 + h.Z1) * 0.5f > ZVistaSur && (h.Z0 + h.Z1) * 0.5f < ZVistaNorte).ToList();
+            List<VariarCerroT1364.CasaT> este = c.Casas.Where(h => h.Kit && h.Normal < 0f && Mathf.Abs((h.X1 + h.X0) * 0.5f - (XCentroCalle + 6.5f)) < 3f).ToList();
+            int lineas = 0, prendas = 0;
+            foreach (VariarCerroT1364.CasaT w in oeste)
+            {
+                if (lineas >= 14)
+                {
+                    break;
+                }
+                VariarCerroT1364.CasaT e = este.OrderBy(h => Mathf.Abs((h.Z0 + h.Z1) * 0.5f - (w.Z0 + w.Z1) * 0.5f)).FirstOrDefault();
+                if (e == null || Mathf.Abs((e.Z0 + e.Z1) * 0.5f - (w.Z0 + w.Z1) * 0.5f) > 4f || !c.Obra.Chance(0.6f))
+                {
+                    continue;
+                }
+                float z = (w.Z0 + w.Z1) * 0.5f;
+                float suelo;
+                if (!Suelo(c, XCentroCalle, z, YCalle(z), out suelo))
+                {
+                    continue;
+                }
+                float y = suelo + c.Obra.Rango(3.6f, 4.6f);
+                if (y > Mathf.Min(w.Top, e.Top) - 0.8f)
+                {
+                    continue;
+                }
+                Vector3 a = new Vector3(w.X1 + 0.06f, y, z + c.Obra.Rango(-1f, 1f));
+                Vector3 b = new Vector3(e.X0 - 0.06f, y + c.Obra.Rango(-0.3f, 0.3f), z + c.Obra.Rango(-1f, 1f));
+                const float flecha = 0.4f;
+                if (!CableOk(c, a, b, flecha, 2))
+                {
+                    continue;
+                }
+                KitS2c.Cable(c.Obra, a, b, flecha, 0.012f);
+                int n = c.Obra.Azar.Next(5, 8);
+                for (int i = 0; i < n; i++)
+                {
+                    float t = (i + 0.7f) / (n + 0.4f);
+                    Vector3 p = CalculoCatenaria.Punto(a, b, flecha, t) + Vector3.down * 0.27f;
+                    Quaternion giro = Quaternion.Euler(0f, c.Obra.Rango(-12f, 12f), c.Obra.Rango(-6f, 6f));
+                    Pegar(prenda, new[] { ropa[c.Obra.Azar.Next(ropa.Length)] }, Matrix4x4.TRS(p, giro, new Vector3(c.Obra.Rango(0.8f, 1.3f), c.Obra.Rango(0.8f, 1.2f), 1f)));
+                    prendas++;
+                }
+                lineas++;
+            }
+            Log("Tendederos con ropa de casa a casa cruzando la calle: " + lineas + " (" + prendas + " prendas).");
+        }
+
         // ================================================================ Estático
 
         private static void Estatico(Ctx c)
@@ -1940,17 +2184,15 @@ namespace MechaCyberpunk.Arte.Editor
             }
             int cosas = 0, flotan = 0, enterradas = 0, encimadas = 0, enPasillo = 0, grupos = 0;
             List<(Transform t, Bounds b)> todas = new List<(Transform, Bounds)>();
-            foreach (Transform grupo in techos)
+            // Lo combinado en lotes (antenas, parabólicas, varillas, tendederos, etc.) se asienta por construcción (t.Y); aquí quedan los objetos reales (tinacos con collider).
+            foreach (Transform t in techos)
             {
-                grupos++;
-                foreach (Transform t in grupo)
+                if (t.GetComponentInChildren<Animator>() != null || t.GetComponentInChildren<Renderer>() == null)
                 {
-                    if (t.GetComponentInChildren<Animator>() != null)
-                    {
-                        continue;
-                    }
-                    todas.Add((t, Cubierta(t)));
+                    continue;
                 }
+                grupos++;
+                todas.Add((t, Cubierta(t)));
             }
             foreach ((Transform t, Bounds b) in todas)
             {
@@ -2087,7 +2329,7 @@ namespace MechaCyberpunk.Arte.Editor
                 }
             }
             Transform gente = c.Nuevo.Find("Gente");
-            int personas = 0;
+            int personas = 0, enK13 = 0;
             foreach (Transform t in c.Nuevo.GetComponentsInChildren<Transform>(true))
             {
                 if (t.name.StartsWith("NPC_"))
@@ -2099,6 +2341,10 @@ namespace MechaCyberpunk.Arte.Editor
                         sb.AppendLine("FALLO: el NPC " + t.name + " tiene collider.");
                     }
                     Vector3 p = t.position;
+                    if (p.z > 60f && p.z < 145f && Mathf.Abs(p.x - XCentroCalle) < 9f)
+                    {
+                        enK13++;
+                    }
                     if (Mathf.Abs(p.x - XCentroCalle) < MitadCarril && p.y < YCalle(p.z) + 1f)
                     {
                         enCarril++;
@@ -2106,7 +2352,18 @@ namespace MechaCyberpunk.Arte.Editor
                     }
                 }
             }
-            sb.AppendLine("Calle: carros " + carros + ", gente " + personas + " (8 a 20 pedidos); en carril " + enCarril + ", flotando/enterrados " + flotan + ".");
+            sb.AppendLine("Gente a la vista de K13 (z de 60 a 145 sobre la calle): " + enK13 + " (pedidas 3 a 5).");
+            if (enK13 < 3)
+            {
+                sb.AppendLine("AVISO: menos de 3 personas en el cuadro de K13.");
+                avisos++;
+            }
+            if (carros < 5)
+            {
+                sb.AppendLine("FALLO: se pidieron 5 a 7 carros estacionados.");
+                fallos++;
+            }
+            sb.AppendLine("Calle: carros " + carros + ", gente " + personas + " (8 a 20 pedidos);en carril " + enCarril + ", flotando/enterrados " + flotan + ".");
             if (personas < 8 || personas > 20)
             {
                 sb.AppendLine("FALLO: la gente debe ser de 8 a 20.");
