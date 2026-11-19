@@ -11,14 +11,14 @@ El paso a paso está en docs/progreso-19nov.md y lo que no quedó, en docs/pendi
 | Zona | Referencia | Foto lado a lado | Cómo quedó |
 | --- | --- | --- | --- |
 | Malecón | K11 | `docs/capturas/t-1404/malecon-k11.png` | Barandal y paseo con faroles de sodio, niebla sobre la bahía, skyline SK01 al otro lado del mar, fachadas con neón, aires y cables. Faltan la fila de palmeras de la referencia y la gente, que depende del tráfico de peatones en juego. |
-| Malecón, muelle | K12 | `docs/capturas/t-1393/malecon-k12.png` | Paseo, faro encendido (T-1404) y skyline. Faltan el puesto de mariscos con lona y las lanchas. |
-| Malecón, aérea | A11 | `docs/capturas/t-1393/malecon-a11.png` | |
+| Malecón, muelle | K12 | `docs/capturas/t-1413/malecon-k12.png` | Ronda 6 (T-1413): puesto de mariscos ML03 con lona, hieleras y huacales; lanchas en el muelle; faro lejano sobre una escollera; skyline y la avenida con neones. |
+| Malecón, aérea | A11 | `docs/capturas/t-1413/malecon-a11.png` | |
 | Colonia del Cerro | K13 | `docs/capturas/t-1406/cerro-k13.png` | Ronda 5 (T-1406): callejón con escalera de concreto empinada y barandal que sube por la ladera (CE01 de z = 0, 27.5°), con casas a los lados, postes, cables y faroles. A diferencia de K13, la ciudad no queda a la derecha: la ladera sube al oeste y la ciudad está al este; se ve en `cerro-k13-bajada.png`. |
-| Colonia del Cerro, aérea | A13 | `docs/capturas/t-1406/cerro-a13.png` | Azoteas con tinacos y antenas, unidas por escaleras y tablones. Lejos de A13: faltan las calles iluminadas que suben y la ciudad brillante abajo. |
+| Colonia del Cerro, aérea | A13 | `docs/capturas/t-1414/cerro-a13-niebla.png` (con la niebla del juego; `cerro-a13.png` con niebla ligera) | Azoteas con tinacos y antenas, unidas por escaleras y tablones. Lejos de A13: faltan las calles iluminadas que suben y la ciudad brillante abajo. |
 | Autopista elevada | K18 | `docs/capturas/t-1407/k18.png` (ronda 5, cámara elegida por búsqueda automática; antes: `t-1404/autopista-k18.png`) | Calle baja con casas, neones y carros estacionados; tablero con barreras AU02 y faroles de sodio, chatarra AU03 a escala bajo el tablero, túnel iluminado. Falta la composición con la columna al centro y la rampa curva. |
-| Autopista, aérea | A18 | `docs/capturas/t-1402/autopista-a18.png` | |
+| Autopista, aérea | A18 | `docs/capturas/t-1414/autopista-a18-niebla.png` | |
 | Puerto | K15 | `docs/capturas/t-1402/puerto-k15.png` | El más parecido: contenedores PU08 con grafiti a la izquierda, bodegas de lámina con alero, neón magenta y turquesa y lámparas de sodio a la derecha, grúas con balizas en la bruma y pluma PU07 en la puerta U8. |
-| Puerto, aérea | A15 | `docs/capturas/t-1402/puerto-a15.png` | |
+| Puerto, aérea | A15 | `docs/capturas/t-1414/puerto-a15-niebla.png` (grúas, contenedores y faroles en la bruma) | |
 | Uniones con los barrios | — | `docs/capturas/t-1388/U*.png` (20 fotos, de la zona al barrio y del barrio a la zona) | Fachadas que cambian de estilo poco a poco, postes con cables, neones, banquetas y carros estacionados. |
 | Drones | — | `docs/capturas/t-1398/*.png` | |
 
@@ -108,6 +108,11 @@ No hizo falta combinar mallas ni poner oclusión. Lo que más pesa es la cantida
 - **T-1411:** actualizó las pruebas que guardaban el look viejo y arregló vehículos y clips.
 - **T-1412:** arregló las últimas fallas (contenedores, postes y halos).
 - **Drones:** les faltaba la textura y ya tienen material con ella.
+
+## Ronda 6 (05:30 a 06:10)
+- **T-1413:** muelle K12 con puestos de mariscos, lanchas y faro lejano; cámara nueva de K12.
+- **T-1414:** vistas aéreas A13, A15 y A18 con cámara buscada automáticamente, faroles de sodio en las calles oscuras, azoteas con color, cosas de azotea, ventanas encendidas y neones.
+- **Pruebas y builds:** después, EditMode de Mundo 739/739, y los builds de Demo y de Juego otra vez con Succeeded y 0 errores.
 
 ## Pruebas
 - **EditMode completo:**
