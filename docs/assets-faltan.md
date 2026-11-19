@@ -122,3 +122,14 @@ No existe aún. `ZonaTrafico_LasLomas` (T-1364) cubre por ahora los corredores n
 | Escalera de mano de ~2.6 m (peldaños y rieles, ancho ~0.6 m) | Visual de `Escalera_Suelo` y `Escalera_Fila` de los bloques de contenedores (hoy solo `PuntoTrepar`, sin modelo) | `L03_EscaleraEmergencia` mide 4.5 x 3.5 x 4.8 m: taparía el pasillo de 3.5 m; los `Peldano`/`Riel` del Cerro son cajas de primitivos |
 | Grafitis para los contenedores y las bodegas (K15/A15) | Look de la referencia | No hay textura ni decal de grafiti |
 | Pluma de la entrada (`PluminaEntrada`) | Entrada U5 | Sigue siendo hueco |
+
+## Sesión A, 19-nov (look de Malecón y Autopista, T-1461 a T-1464)
+
+| Qué | Para qué | Nota |
+| --- | --- | --- |
+| Textura de arena de playa mojada | Playa del Malecón (K11, A11) | Hoy `T1463_Arena` reusa la textura de T1354_Arena con tinte; desde arriba se ve como franja lisa |
+| Clips de NP "recargado en el barandal" y "platicando" | Gente del paseo de K11/K12 | Solo hay Idle, Caminar y Recargar (arma); los del barandal quedan en Idle |
+| Visuales de peatones NP01 a NP06 | Variedad de gente | Solo existen NP07 a NP14 |
+| Tramo de tablero elevado en curva (pieza AU) | K18 y A18: la curva que entra al túnel | AU02 es recto; la curva del ramal T-1415 se armó con tramos rectos |
+| Material o shader aditivo de estela de luz | Estelas del tráfico en el tablero (K18, A18) | Las de T-1464 son cintas opacas con degradado |
+| Columna AU04 más gruesa (5 m) con capitel | Primer plano de K18 | Hoy se escalan las de la rampa |
