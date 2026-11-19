@@ -134,6 +134,7 @@ namespace MechaCyberpunk.Arte.Editor
             public Malla Charcos = new Malla();
             public Malla Techos = new Malla();
             public Dictionary<Casa, float> TechosCasa = new Dictionary<Casa, float>();
+            public readonly List<Mesh> Extra = new List<Mesh>();
             public readonly List<Vector3> PtsAsfalto = new List<Vector3>(), PtsEscalera = new List<Vector3>(), PtsPoste = new List<Vector3>(), PtsCasa = new List<Vector3>(), PtsCiudad = new List<Vector3>();
         }
 
@@ -161,6 +162,7 @@ namespace MechaCyberpunk.Arte.Editor
                 Log("Luces antes: " + lucesAntes + ". Objetos antes: " + objetosAntes + ". Tamaño del prefab antes: " + Megas(RutaPrefab) + " MB.");
                 c.Obra = KitS2c.Empezar(Raiz, Semilla, zona.transform);
                 c.Nuevo = c.Obra.Raiz;
+                AssetDatabase.DeleteAsset(CarpetaMat + "/T1440_Combinados.asset"); // la raíz vieja ya no existe: se empieza de cero
                 c.Marcas = Hijo(c.Nuevo, "Apagados");
                 c.Concreto = AssetDatabase.LoadAssetAtPath<Material>(ZonaCerroT1385.RutaM09) ?? KitS2c.MatBanqueta();
                 c.Tubo = MatPropio("T1440_Tubo", () => KitS2c.Lit(new Color(0.3f, 0.17f, 0.11f), 0.3f, KitS2c.TexMuro()));
@@ -184,6 +186,7 @@ namespace MechaCyberpunk.Arte.Editor
                 Paso("carros", () => Carros(c));
                 Paso("taludes con muros CC08", () => Taludes(c));
                 Paso("neones y ventanas calidas", () => Fachadas(c));
+                Paso("combinar accesos viejos", () => CombinarAccesosViejos(c, "AccesosCombinados"));
                 Paso("cámara A13 (fija)", () => Camara(c));
                 Paso("mallas sueltas", () => MallasSueltas(c));
                 Estatico(c);
@@ -253,6 +256,19 @@ namespace MechaCyberpunk.Arte.Editor
         private static int Restaurar(GameObject zona)
         {
             Transform raiz = zona.transform.Find(Raiz);
+            int reencendidos = 0;
+            foreach (Transform t in zona.GetComponentsInChildren<Transform>(true))
+            {
+                if (!t.gameObject.activeSelf && (t.name == "Riel" || t.name == "Peldano") && t.parent != null && t.parent.name.Contains("Acceso") && (raiz == null || !t.IsChildOf(raiz)))
+                {
+                    t.gameObject.SetActive(true);
+                    reencendidos++;
+                }
+            }
+            if (reencendidos > 0)
+            {
+                Log("Rieles y peldaños de accesos viejos vueltos a encender (los había combinado una corrida anterior): " + reencendidos + ".");
+            }
             Transform marcas = raiz == null ? null : raiz.Find("Apagados");
             if (marcas == null)
             {
@@ -499,6 +515,226 @@ namespace MechaCyberpunk.Arte.Editor
             }
         }
 
+        private sealed class GrupoMalla
+        {
+            public Material Mat;
+            public bool Colision;
+            public readonly Malla M = new Malla();
+        }
+
+        /// <summary>Agrega la malla de un MeshRenderer, en coordenadas de mundo, al grupo de su material (un grupo por material y por si lleva collider).</summary>
+        private static void Acumular(Dictionary<string, GrupoMalla> grupos, MeshRenderer r, bool colision)
+        {
+            MeshFilter mf = r.GetComponent<MeshFilter>();
+            if (mf == null || mf.sharedMesh == null)
+            {
+                return;
+            }
+            Mesh mesh = mf.sharedMesh;
+            Matrix4x4 mat4 = r.transform.localToWorldMatrix;
+            bool invertir = mat4.determinant < 0f;
+            Matrix4x4 normales = mat4.inverse.transpose;
+            Vector3[] v = mesh.vertices;
+            Vector3[] nm = mesh.normals;
+            Vector2[] uv = mesh.uv;
+            Material[] ms = r.sharedMaterials;
+            for (int s = 0; s < mesh.subMeshCount; s++)
+            {
+                Material mt = ms.Length == 0 ? null : ms[Mathf.Min(s, ms.Length - 1)];
+                if (mt == null)
+                {
+                    continue;
+                }
+                string clave = mt.GetInstanceID() + (colision ? "c" : "n");
+                GrupoMalla g;
+                if (!grupos.TryGetValue(clave, out g))
+                {
+                    g = new GrupoMalla { Mat = mt, Colision = colision };
+                    grupos[clave] = g;
+                }
+                int[] tri = mesh.GetTriangles(s);
+                Dictionary<int, int> map = new Dictionary<int, int>();
+                for (int i = 0; i + 2 < tri.Length; i += 3)
+                {
+                    int[] idx = invertir ? new[] { tri[i], tri[i + 2], tri[i + 1] } : new[] { tri[i], tri[i + 1], tri[i + 2] };
+                    foreach (int viejo in idx)
+                    {
+                        int nuevo;
+                        if (!map.TryGetValue(viejo, out nuevo))
+                        {
+                            nuevo = g.M.V.Count;
+                            g.M.V.Add(mat4.MultiplyPoint3x4(v[viejo]));
+                            g.M.N.Add(nm.Length > viejo ? normales.MultiplyVector(nm[viejo]).normalized : Vector3.up);
+                            g.M.Uv.Add(uv.Length > viejo ? uv[viejo] : Vector2.zero);
+                            map[viejo] = nuevo;
+                        }
+                        g.M.T.Add(nuevo);
+                    }
+                }
+            }
+        }
+
+        private static void EmitirGrupos(Ctx c, Transform padre, string nombre, Dictionary<string, GrupoMalla> grupos)
+        {
+            int k = 0;
+            foreach (GrupoMalla g in grupos.Values)
+            {
+                ObjetoMalla(c, padre, nombre + "_" + g.Mat.name + "_" + k, g.M, g.Mat, g.Colision, true, false);
+                k++;
+            }
+        }
+
+        /// <summary>
+        /// Junta en una malla por material las piezas visibles de los hijos de <paramref name="padre"/> que cumplan el filtro (barandales CE03, muros CC08) y borra esos hijos.
+        /// Si la pieza traía collider en su objeto, la malla combinada lleva MeshCollider (igual a lo visible); si no, no lleva.
+        /// </summary>
+        private static void CombinarHijos(Ctx c, Transform padre, string nombre, Func<string, bool> filtro)
+        {
+            List<Transform> raices = padre.Cast<Transform>().Where(t => filtro(t.name)).ToList();
+            Dictionary<string, GrupoMalla> grupos = new Dictionary<string, GrupoMalla>();
+            int antes = 0;
+            foreach (Transform raiz in raices)
+            {
+                foreach (MeshRenderer r in raiz.GetComponentsInChildren<MeshRenderer>(false))
+                {
+                    if (!r.enabled)
+                    {
+                        continue;
+                    }
+                    antes++;
+                    Collider col = r.GetComponent<Collider>();
+                    Acumular(grupos, r, col != null && col.enabled && !col.isTrigger);
+                }
+            }
+            if (grupos.Count == 0)
+            {
+                return;
+            }
+            Transform destino = Hijo(padre, nombre);
+            EmitirGrupos(c, destino, nombre, grupos);
+            foreach (Transform raiz in raices)
+            {
+                Object.DestroyImmediate(raiz.gameObject);
+            }
+            Log(nombre + ": " + antes + " renderers combinados en " + grupos.Count + " mallas (una por material y collider).");
+        }
+
+        /// <summary>
+        /// Los rieles y peldaños de las escaleras de servicio viejas (objetos "Riel" y "Peldano" bajo un "Acceso_...", sin collider) se juntan en una malla por material.
+        /// Los originales se APAGAN (reversible: Restaurar los vuelve a encender por nombre). Los PuntoTrepar no se tocan.
+        /// </summary>
+        private static void CombinarAccesosViejos(Ctx c, string nombre)
+        {
+            List<MeshRenderer> rs = new List<MeshRenderer>();
+            foreach (MeshRenderer r in c.Zona.GetComponentsInChildren<MeshRenderer>(false))
+            {
+                string n = r.gameObject.name;
+                if (!r.enabled || r.transform.IsChildOf(c.Nuevo) || (n != "Riel" && n != "Peldano") || r.transform.parent == null || !r.transform.parent.name.Contains("Acceso") || r.GetComponent<Collider>() != null)
+                {
+                    continue;
+                }
+                rs.Add(r);
+            }
+            if (rs.Count == 0)
+            {
+                Log(nombre + ": no hay rieles ni peldaños viejos por combinar.");
+                return;
+            }
+            Dictionary<string, GrupoMalla> grupos = new Dictionary<string, GrupoMalla>();
+            foreach (MeshRenderer r in rs)
+            {
+                Acumular(grupos, r, false);
+            }
+            EmitirGrupos(c, Hijo(c.Nuevo, nombre), nombre, grupos);
+            foreach (MeshRenderer r in rs)
+            {
+                r.gameObject.SetActive(false);
+            }
+            Log(nombre + ": " + rs.Count + " rieles y peldaños viejos combinados en " + grupos.Count + " mallas (originales apagados, reversible).");
+        }
+
+        /// <summary>
+        /// Pisos del kit FUERA del cuadro de A13: todas sus piezas visibles pasan a una malla por material (sin culling) y cada piso se reduce a un nodo con su collider de cuerpo
+        /// (la misma caja de lo visible). Se corre al final de DespejarDetalles, cuando ya se sabe qué pisos se quedan. Los pisos con modelo CC no se tocan.
+        /// </summary>
+        private static void CombinarPisosKit(Ctx c, Transform pisos)
+        {
+            Dictionary<string, GrupoMalla> grupos = new Dictionary<string, GrupoMalla>();
+            List<(Transform piso, Vector3 pos, Quaternion rot, Vector3 centro, Vector3 tam)> lista = new List<(Transform, Vector3, Quaternion, Vector3, Vector3)>();
+            int renderers = 0;
+            foreach (Transform piso in pisos.Cast<Transform>().Where(t => t.gameObject.activeSelf && t.name.StartsWith("Piso_")).ToList())
+            {
+                Transform cuerpo = piso.Find("Cuerpo");
+                BoxCollider bc = cuerpo == null ? null : cuerpo.GetComponent<BoxCollider>();
+                if (bc == null)
+                {
+                    continue;
+                }
+                float u, v;
+                Bounds cb = CajaPiso(piso);
+                if (EnCuadroA13(cb.center, out u, out v) && u > 0.03f && u < 0.97f && v > 0.05f && v < 0.95f)
+                {
+                    continue;
+                }
+                foreach (MeshRenderer r in piso.GetComponentsInChildren<MeshRenderer>(false))
+                {
+                    if (r.enabled)
+                    {
+                        Acumular(grupos, r, false);
+                        renderers++;
+                    }
+                }
+                lista.Add((piso, cuerpo.position, cuerpo.rotation, bc.center, bc.size));
+            }
+            if (lista.Count == 0)
+            {
+                Log("Pisos del kit fuera del cuadro de A13 por combinar: 0.");
+                return;
+            }
+            EmitirGrupos(c, Hijo(c.Nuevo, "PisosKitCombinados"), "PisosKit", grupos);
+            foreach (var d in lista)
+            {
+                string nombre = d.piso.name;
+                Object.DestroyImmediate(d.piso.gameObject);
+                GameObject nuevo = new GameObject(nombre);
+                nuevo.transform.SetParent(pisos, false);
+                GameObject cuerpo = new GameObject("Cuerpo");
+                cuerpo.transform.SetParent(nuevo.transform, false);
+                cuerpo.transform.SetPositionAndRotation(d.pos, d.rot);
+                BoxCollider caja = cuerpo.AddComponent<BoxCollider>();
+                caja.center = d.centro;
+                caja.size = d.tam;
+            }
+            Physics.SyncTransforms();
+            Log("Pisos del kit combinados: " + lista.Count + " pisos, " + renderers + " renderers -> " + grupos.Count + " mallas; cada piso queda con su collider de cuerpo.");
+        }
+
+        /// <summary>Guarda las mallas creadas fuera de Aplicar (DespejarDetalles) en un asset propio, para que el prefab no las pierda.</summary>
+        private static void GuardarExtra(Ctx c)
+        {
+            if (c.Extra.Count == 0)
+            {
+                return;
+            }
+            if (!AssetDatabase.IsValidFolder(CarpetaMat))
+            {
+                AssetDatabase.CreateFolder("Assets/Arte/Mundo", "Cerro");
+            }
+            string ruta = CarpetaMat + "/T1440_Combinados.asset";
+            int desde = 0;
+            if (AssetDatabase.LoadMainAssetAtPath(ruta) == null)
+            {
+                AssetDatabase.CreateAsset(c.Extra[0], ruta);
+                desde = 1;
+            }
+            for (int i = desde; i < c.Extra.Count; i++)
+            {
+                AssetDatabase.AddObjectToAsset(c.Extra[i], ruta); // se suma al asset: una corrida anterior de DespejarDetalles puede seguir usando sus mallas
+            }
+            AssetDatabase.SaveAssets();
+            Log("Mallas combinadas guardadas en " + ruta + " (" + c.Extra.Count + ").");
+        }
+
         /// <summary>Triángulos de los MeshFilter activos con renderer encendido bajo la raíz.</summary>
         private static long Triangulos(Transform raiz)
         {
@@ -642,7 +878,14 @@ namespace MechaCyberpunk.Arte.Editor
                 return ObjetoCeldas(c, padre, nombre, m, mat, sinSombras);
             }
             Mesh malla = m.Crear("T1440_" + nombre);
-            c.Obra.Mallas.Add(malla);
+            if (c.Obra != null)
+            {
+                c.Obra.Mallas.Add(malla);
+            }
+            else
+            {
+                c.Extra.Add(malla);
+            }
             GameObject go = new GameObject(nombre);
             go.transform.SetParent(padre, false);
             go.AddComponent<MeshFilter>().sharedMesh = malla;
@@ -893,6 +1136,142 @@ namespace MechaCyberpunk.Arte.Editor
                 Log("AVISO: la búsqueda no encontró cámara libre (" + tops.Count + " candidatas); se usa la fija.");
                 Camara(c);
             }
+        }
+
+        /// <summary>true si el punto está a menos de 3.5 m (en z) de una escalera CE01 del paseo (z 120, 60, 0) entre sus pies y la pierna 2: ahí no van postes ni carros.</summary>
+        private static bool CercaDeEscaleraCE01(Vector3 p)
+        {
+            foreach (float z in ColocarT1355Cerro.ZEscaleras)
+            {
+                if (Mathf.Abs(p.z - z) < 3.5f && p.x < -340f && p.x > -372f)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private static float HuecoCajas(Bounds a, Bounds b)
+        {
+            float dx = Mathf.Max(0f, Mathf.Abs(a.center.x - b.center.x) - (a.extents.x + b.extents.x));
+            float dz = Mathf.Max(0f, Mathf.Abs(a.center.z - b.center.z) - (a.extents.z + b.extents.z));
+            return new Vector2(dx, dz).magnitude;
+        }
+
+        /// <summary>
+        /// Las azoteas de las 6 cadenas de parkour de RecorridoCerroT1361Pruebas (misma lógica: casas del kit con Cuerpo y AzoteaT1318, hueco menor de 4 m, desnivel hasta 3 m, 5 por cadena,
+        /// arrancando junto a la cima de cada CE01 y a 20, 50 y 80 % de la calle base). La prueba corre por el centro de esas azoteas: ahí no se apila un piso.
+        /// </summary>
+        private static HashSet<Transform> CadenasReservadas(Ctx c)
+        {
+            HashSet<Transform> reservadas = new HashSet<Transform>();
+            Transform casas = c.Zona.transform.Find("Casas");
+            if (casas == null)
+            {
+                return reservadas;
+            }
+            List<Transform> raices = new List<Transform>();
+            List<Bounds> cajas = new List<Bounds>();
+            foreach (Transform casa in casas)
+            {
+                if (!casa.gameObject.activeInHierarchy)
+                {
+                    continue;
+                }
+                Transform cuerpo = casa.Find("Cuerpo");
+                if (cuerpo == null || casa.Find("AzoteaT1318") == null)
+                {
+                    continue;
+                }
+                Collider col = cuerpo.GetComponent<Collider>();
+                if (col == null)
+                {
+                    continue;
+                }
+                raices.Add(casa);
+                cajas.Add(col.bounds);
+            }
+            List<Vector3> puntos = new List<Vector3>();
+            foreach (float z in ColocarT1355Cerro.ZEscaleras)
+            {
+                puntos.Add(new Vector3(-354f, CerroT1355Trazado.AlturaPierna2(z) + 0.2f, z));
+            }
+            foreach (float f in new[] { 0.2f, 0.5f, 0.8f })
+            {
+                puntos.Add(new Vector3(CerroT1355Trazado.XBase, 0f, CerroT1355Trazado.ZBaseSur + (CerroT1355Trazado.ZBaseNorte - CerroT1355Trazado.ZBaseSur) * f));
+            }
+            Func<int, List<int>> vecinas = i =>
+            {
+                List<int> l = new List<int>();
+                for (int j = 0; j < cajas.Count; j++)
+                {
+                    if (j != i && HuecoCajas(cajas[i], cajas[j]) < 4f && Mathf.Abs(cajas[i].max.y - cajas[j].max.y) <= 3f)
+                    {
+                        l.Add(j);
+                    }
+                }
+                return l;
+            };
+            HashSet<int> usadas = new HashSet<int>();
+            foreach (Vector3 punto in puntos)
+            {
+                int inicio = -1;
+                float distancia = float.MaxValue;
+                for (int i = 0; i < cajas.Count; i++)
+                {
+                    if (usadas.Contains(i) || vecinas(i).Count == 0)
+                    {
+                        continue;
+                    }
+                    float d = new Vector2(cajas[i].center.x - punto.x, cajas[i].center.z - punto.z).magnitude;
+                    if (d < distancia)
+                    {
+                        distancia = d;
+                        inicio = i;
+                    }
+                }
+                if (inicio < 0)
+                {
+                    continue;
+                }
+                usadas.Add(inicio);
+                List<int> indices = new List<int> { inicio };
+                Vector3 anterior = Vector3.zero;
+                while (indices.Count < 5)
+                {
+                    int actual = indices[indices.Count - 1];
+                    int mejor = -1;
+                    float puntaje = float.MaxValue;
+                    foreach (int j in vecinas(actual))
+                    {
+                        if (indices.Contains(j))
+                        {
+                            continue;
+                        }
+                        Vector3 dir = cajas[j].center - cajas[actual].center;
+                        dir.y = 0f;
+                        float p = HuecoCajas(cajas[actual], cajas[j]) + (Vector3.Dot(anterior, dir.normalized) < 0f ? 5f : 0f);
+                        if (p < puntaje)
+                        {
+                            puntaje = p;
+                            mejor = j;
+                        }
+                    }
+                    if (mejor < 0)
+                    {
+                        break;
+                    }
+                    anterior = cajas[mejor].center - cajas[actual].center;
+                    anterior.y = 0f;
+                    anterior.Normalize();
+                    indices.Add(mejor);
+                }
+                foreach (int i in indices)
+                {
+                    reservadas.Add(raices[i]);
+                }
+            }
+            return reservadas;
         }
 
         /// <summary>true si el punto cae en el cuadro de la cámara A13 fija (u, v en 0..1).</summary>
@@ -1165,6 +1544,9 @@ namespace MechaCyberpunk.Arte.Editor
             ObjetoMalla(c, padre, "TubosBarandal", tubos, c.Tubo, false, true);
             Physics.SyncTransforms();
             Log("Escaleras de ladera: " + elegidas.Count + ".");
+            CombinarHijos(c, padre, "BarandalesCombinados", n => n.StartsWith("CE03_Barandal_"));
+            CombinarHijos(c, padre, "MurosCombinados", n => n.StartsWith("Muros_"));
+            Physics.SyncTransforms();
         }
 
         /// <summary>
@@ -1189,7 +1571,7 @@ namespace MechaCyberpunk.Arte.Editor
                 Vector3 w = ladera.TransformPoint(v[i]);
                 foreach (PlanEscalera p in planes)
                 {
-                    if (w.x >= XEscaleraArriba + 0.5f && w.x <= XEscaleraAbajo + 1.5f && Mathf.Abs(w.z - p.Z) <= 2.01f)
+                    if (w.x >= XEscaleraArriba + 0.5f && w.x <= XEscaleraAbajo + 0.5f && Mathf.Abs(w.z - p.Z) <= 2.01f)
                     {
                         w.y = AlturaEscalera(p, w.x) - 0.5f;
                         v[i] = ladera.InverseTransformPoint(w);
@@ -1610,8 +1992,10 @@ namespace MechaCyberpunk.Arte.Editor
                 }
             }
             c.TechosCasa = techos;
+            HashSet<Transform> reservadas = CadenasReservadas(c);
+            Log("Azoteas reservadas para las cadenas de parkour de RecorridoCerroT1361Pruebas (sin piso extra): " + reservadas.Count + ".");
             Log("Azoteas viejas cubiertas con concreto oscuro: " + techos.Count + " de " + casas.Count + " casas.");
-            List<Casa> orden = casas.Where(k => TiersDe(k) >= 1f && techos.ContainsKey(k)).OrderBy(k =>
+            List<Casa> orden = casas.Where(k => TiersDe(k) >= 1f && techos.ContainsKey(k) && !reservadas.Contains(k.Raiz)).OrderBy(k =>
             {
                 Vector3 centro = new Vector3(k.Centro, k.Top, (k.Z0 + k.Z1) * 0.5f);
                 return Mathf.Min(Vector3.Distance(centro, A13Hacia), Vector3.Distance(centro, k13));
@@ -1892,6 +2276,14 @@ namespace MechaCyberpunk.Arte.Editor
                         }
                     }
                     Physics.SyncTransforms();
+                    int rA, rB;
+                    long bA = Batches(zona.transform, out rA);
+                    CombinarAccesosViejos(c, "AccesosCombinados2");
+                    CombinarPisosKit(c, pisos);
+                    GuardarExtra(c);
+                    Physics.SyncTransforms();
+                    long bB = Batches(zona.transform, out rB);
+                    Log("Renderers de la zona: " + rA + " -> " + rB + "; batches estimados " + bA + " -> " + bB + ".");
                     Log("Adornos apagados: " + n + ".");
                     bool ok;
                     PrefabUtility.SaveAsPrefabAsset(zona, RutaPrefab, out ok);
@@ -2046,6 +2438,19 @@ namespace MechaCyberpunk.Arte.Editor
                 Vector3 izq = new Vector3(-tan.z, 0f, tan.x);
                 lado = -lado;
                 Vector3 xz = new Vector3(eje[i].x, 0f, eje[i].z) + izq * lado * DesdeEje;
+                int ia = Mathf.Max(0, i - 4), ib = Mathf.Min(eje.Count - 1, i + 4);
+                Vector3 t1 = new Vector3(eje[i].x - eje[ia].x, 0f, eje[i].z - eje[ia].z), t2 = new Vector3(eje[ib].x - eje[i].x, 0f, eje[ib].z - eje[i].z);
+                if (t1.sqrMagnitude > 0.01f && t2.sqrMagnitude > 0.01f && Vector3.Angle(t1, t2) > 5f)
+                {
+                    // En las curvas no van postes (el carro se abre hacia afuera): solo el charco de luz sobre el eje.
+                    float yc;
+                    if (Piso(c, eje[i].x, eje[i].z, 200f, true, out yc))
+                    {
+                        CharcoLuz(c, new Vector3(eje[i].x, 0f, eje[i].z), yc, 6f);
+                    }
+                    descartados++;
+                    continue;
+                }
                 float yCalle, yTodo;
                 if (!Piso(c, xz.x, xz.z, 200f, true, out yCalle) || !Piso(c, xz.x, xz.z, 200f, false, out yTodo) || yTodo - yCalle > 0.6f)
                 {
@@ -2063,7 +2468,7 @@ namespace MechaCyberpunk.Arte.Editor
                     continue;
                 }
                 Vector3 pie = new Vector3(xz.x, yTodo, xz.z); // el piso más alto bajo el poste (terreno o calle): asentado sobre lo que toca
-                if (viejos.Any(v => new Vector2(v.x - pie.x, v.z - pie.z).magnitude < DistanciaPosteViejo) || !LibreCaja(c, pie + Vector3.up * 2f, new Vector3(0.35f, 2f, 0.35f)))
+                if (CercaDeEscaleraCE01(pie) || viejos.Any(v => new Vector2(v.x - pie.x, v.z - pie.z).magnitude < DistanciaPosteViejo) || !LibreCaja(c, pie + Vector3.up * 2f, new Vector3(0.35f, 2f, 0.35f)))
                 {
                     descartados++;
                     continue;
@@ -2465,7 +2870,7 @@ namespace MechaCyberpunk.Arte.Editor
                     continue;
                 }
                 Vector3 pos = new Vector3(xz.x, y + 0.03f, xz.z);
-                if (!LibreCaja(c, pos + Vector3.up * 0.9f, new Vector3(1.0f, 0.6f, 2.2f)))
+                if (CercaDeEscaleraCE01(pos) || !LibreCaja(c, pos + Vector3.up * 0.9f, new Vector3(1.0f, 0.6f, 2.2f)))
                 {
                     continue;
                 }
@@ -2875,6 +3280,10 @@ namespace MechaCyberpunk.Arte.Editor
                     continue;
                 }
                 Renderer r = col.GetComponent<Renderer>();
+                if ((r == null || !r.enabled) && col.gameObject.name == "Cuerpo" && col.transform.parent != null && col.transform.parent.name.StartsWith("Piso_"))
+                {
+                    continue; // piso del kit combinado: la caja es la de la malla combinada (PisosKitCombinados)
+                }
                 if (r == null || !r.enabled)
                 {
                     malos++;
