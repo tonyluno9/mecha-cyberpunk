@@ -1,0 +1,181 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6943037423706142203
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4376528374984482898}
+  - component: {fileID: 3480732234529583321}
+  - component: {fileID: 6191757167373351945}
+  - component: {fileID: 6959822483099173023}
+  - component: {fileID: 5611990289595417326}
+  - component: {fileID: 2057988535362922781}
+  m_Layer: 0
+  m_Name: GuardiaPesado_E16_RobotPesadoNova_a
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4376528374984482898
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6943037423706142203}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1531769646686832118}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!143 &3480732234529583321
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6943037423706142203}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Height: 1.8
+  m_Radius: 0.3
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 0.9, z: 0}
+--- !u!114 &6191757167373351945
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6943037423706142203}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ebc747e57704f448b662979790a1652, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.APie.PistolaPandillero
+--- !u!114 &6959822483099173023
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6943037423706142203}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ca1f215965b11d4b9d541ab710a430d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.APie.PandilleroAPie
+  datos: {fileID: 11400000, guid: 618207c99a82be446ac1caec801b7a0c, type: 2}
+  siempreAlerta: 0
+  cuerpo: {fileID: 0}
+  brazo: {fileID: 0}
+  piezasBrazo: []
+  pandillaPropia: 0
+--- !u!114 &5611990289595417326
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6943037423706142203}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e990abe9b8bade44883bd43a2a374d3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.APie.EscudoFrontal
+  materialChispa: {fileID: 2100000, guid: 33ddf6dc28eb6a04397648e9185b2a16, type: 2}
+--- !u!114 &2057988535362922781
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6943037423706142203}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a6c5d4e152246042a51e18d6dc61192, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.APie.ConductaGuardiaPesado
+--- !u!1001 &8711749892397522091
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 4376528374984482898}
+    m_Modifications:
+    - target: {fileID: 7901471254645332317, guid: 78d644096829b5d429ea63c3d96e8fd6, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7901471254645332317, guid: 78d644096829b5d429ea63c3d96e8fd6, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7901471254645332317, guid: 78d644096829b5d429ea63c3d96e8fd6, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7901471254645332317, guid: 78d644096829b5d429ea63c3d96e8fd6, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7901471254645332317, guid: 78d644096829b5d429ea63c3d96e8fd6, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7901471254645332317, guid: 78d644096829b5d429ea63c3d96e8fd6, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7901471254645332317, guid: 78d644096829b5d429ea63c3d96e8fd6, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7901471254645332317, guid: 78d644096829b5d429ea63c3d96e8fd6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7901471254645332317, guid: 78d644096829b5d429ea63c3d96e8fd6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7901471254645332317, guid: 78d644096829b5d429ea63c3d96e8fd6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9075936679948580971, guid: 78d644096829b5d429ea63c3d96e8fd6, type: 3}
+      propertyPath: m_Name
+      value: Modelo
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 78d644096829b5d429ea63c3d96e8fd6, type: 3}
+--- !u!4 &1531769646686832118 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7901471254645332317, guid: 78d644096829b5d429ea63c3d96e8fd6, type: 3}
+  m_PrefabInstance: {fileID: 8711749892397522091}
+  m_PrefabAsset: {fileID: 0}

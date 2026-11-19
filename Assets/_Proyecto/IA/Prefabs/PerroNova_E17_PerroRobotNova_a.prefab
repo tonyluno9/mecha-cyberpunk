@@ -1,0 +1,154 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &8487699510449971724
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6292852102091230979}
+  - component: {fileID: 9094841482613498668}
+  - component: {fileID: 2418850158364718977}
+  - component: {fileID: 160800399443011380}
+  m_Layer: 0
+  m_Name: PerroNova_E17_PerroRobotNova_a
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6292852102091230979
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8487699510449971724}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 6891905342779038602}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!143 &9094841482613498668
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8487699510449971724}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Height: 0.9
+  m_Radius: 0.35
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 0.45, z: 0}
+--- !u!114 &2418850158364718977
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8487699510449971724}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ebc747e57704f448b662979790a1652, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.APie.PistolaPandillero
+--- !u!114 &160800399443011380
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8487699510449971724}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ca1f215965b11d4b9d541ab710a430d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.APie.PandilleroAPie
+  datos: {fileID: 11400000, guid: c70a801ba04439f4eb6a31a86a6f3a44, type: 2}
+  siempreAlerta: 0
+  cuerpo: {fileID: 0}
+  brazo: {fileID: 0}
+  piezasBrazo: []
+  pandillaPropia: 0
+--- !u!1001 &280013238360249349
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 6292852102091230979}
+    m_Modifications:
+    - target: {fileID: 6649065578942730127, guid: db7f2ac55040f9243a7900cf848f4dbf, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6649065578942730127, guid: db7f2ac55040f9243a7900cf848f4dbf, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6649065578942730127, guid: db7f2ac55040f9243a7900cf848f4dbf, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6649065578942730127, guid: db7f2ac55040f9243a7900cf848f4dbf, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6649065578942730127, guid: db7f2ac55040f9243a7900cf848f4dbf, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6649065578942730127, guid: db7f2ac55040f9243a7900cf848f4dbf, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6649065578942730127, guid: db7f2ac55040f9243a7900cf848f4dbf, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6649065578942730127, guid: db7f2ac55040f9243a7900cf848f4dbf, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6649065578942730127, guid: db7f2ac55040f9243a7900cf848f4dbf, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6649065578942730127, guid: db7f2ac55040f9243a7900cf848f4dbf, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8133388734837568357, guid: db7f2ac55040f9243a7900cf848f4dbf, type: 3}
+      propertyPath: m_Name
+      value: Modelo
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: db7f2ac55040f9243a7900cf848f4dbf, type: 3}
+--- !u!4 &6891905342779038602 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6649065578942730127, guid: db7f2ac55040f9243a7900cf848f4dbf, type: 3}
+  m_PrefabInstance: {fileID: 280013238360249349}
+  m_PrefabAsset: {fileID: 0}

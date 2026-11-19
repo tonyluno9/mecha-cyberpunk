@@ -15,6 +15,16 @@ MonoBehaviour:
   guardia: {fileID: 5024837999812873335, guid: 126d4f33c29cea44bb8675e94fa2596f, type: 3}
   guardiaPesado: {fileID: 8768010873611308381, guid: a173e861a4b49cf4eb273b3b8fbcc678, type: 3}
   jefeFinal: {fileID: 3140000843143448795, guid: 9afb64f01015b1d418404a089bca983d, type: 3}
+  guardiasExtra:
+  - {fileID: 4760734436653670961, guid: d368387af25a9754fa471061353c68ea, type: 3}
+  - {fileID: 2502038706954213417, guid: d581d6225df95d04eafd9952f88a4c56, type: 3}
+  - {fileID: 49357360277950522, guid: a733b9839dfb7904ab74abadba601d70, type: 3}
+  pesadosExtra:
+  - {fileID: 6943037423706142203, guid: 5556e22a1fc93a94f811118cfc795a47, type: 3}
+  perros:
+  - {fileID: 8487699510449971724, guid: 64a8b9248c6b15449b51199c8ac5c98d, type: 3}
+  perrosConCuatro: 2
+  perrosConCinco: 3
   guardiasConCuatro: 3
   pesadosConCuatro: 1
   guardiasConCinco: 5

@@ -111,7 +111,7 @@ namespace MechaCyberpunk.Trafico.Editor
         }
 
         // Lo mismo que ImportarS2nCarros.CrearTrafico (vive en Arte.Editor, que Trafico.Editor no ve): CarroTrafico_<cod> desde Carro_<cod>.
-        private static string CrearTrafico(string codigo)
+        internal static string CrearTrafico(string codigo)
         {
             string rutaOrigen = CreadorCarrosT511.RutaPrefab(codigo);
             GameObject origen = AssetDatabase.LoadAssetAtPath<GameObject>(rutaOrigen);

@@ -30,13 +30,13 @@ Material:
     m_Ints: []
     m_Floats:
     - _AlturaBrillo: 0.45
-    - _Cobertura: 0.58
+    - _Cobertura: 0.62
     - _Escala: 0.35
     - _Opacidad: 1
     - _Suavidad: 0.25
     m_Colors:
-    - _ColorBrillo: {r: 0.24, g: 0.3, b: 0.42, a: 1}
-    - _ColorNubes: {r: 0.06, g: 0.08, b: 0.14, a: 1}
+    - _ColorBrillo: {r: 0.5, g: 0.5, b: 0.6, a: 1}
+    - _ColorNubes: {r: 0.3, g: 0.35, b: 0.47, a: 1}
     - _Velocidad: {r: 0.004, g: 0.002, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

@@ -1,0 +1,18 @@
+FPS por vista (peor a mejor)
+Cerro/plaza_arriba: 137.1 fps (p1 bajo 103.4), cpu -1.0 ms, gpu -1.0 ms, 10302 renderers, 105391307 tris, 0 luces
+Puerto/muelle: 163.9 fps (p1 bajo 89.2), cpu -1.0 ms, gpu -1.0 ms, 7610 renderers, 92814157 tris, 0 luces
+Barrio/Mercado: 186.9 fps (p1 bajo 126.2), cpu -1.0 ms, gpu -1.0 ms, 2587 renderers, 28484136 tris, 125 luces
+Barrio/Suburbios: 201.5 fps (p1 bajo 149.3), cpu -1.0 ms, gpu -1.0 ms, 2527 renderers, 25668366 tris, 133 luces
+Barrio/NeonAlto: 243.8 fps (p1 bajo 181.7), cpu -1.0 ms, gpu -1.0 ms, 1988 renderers, 14454845 tris, 111 luces
+Malecon/paseo: 259.7 fps (p1 bajo 163.5), cpu -1.0 ms, gpu -1.0 ms, 3297 renderers, 41602040 tris, 0 luces
+Malecon/muelle: 282.3 fps (p1 bajo 185.8), cpu -1.0 ms, gpu -1.0 ms, 2895 renderers, 22511706 tris, 0 luces
+Cerro/calle_base: 350.7 fps (p1 bajo 214.2), cpu -1.0 ms, gpu -1.0 ms, 1522 renderers, 10646836 tris, 0 luces
+Malecon/aerea: 411.0 fps (p1 bajo 243.3), cpu -1.0 ms, gpu -1.0 ms, 830 renderers, 5168566 tris, 0 luces
+Autopista/calle_baja: 438.2 fps (p1 bajo 253.0), cpu -1.0 ms, gpu -1.0 ms, 851 renderers, 4941190 tris, 0 luces
+Autopista/tablero: 441.4 fps (p1 bajo 254.5), cpu -1.0 ms, gpu -1.0 ms, 851 renderers, 4941190 tris, 0 luces
+Autopista/tunel: 526.1 fps (p1 bajo 166.1), cpu -1.0 ms, gpu -1.0 ms, 247 renderers, 1137274 tris, 0 luces
+Puerto/pasillo_contenedores: 549.7 fps (p1 bajo 162.5), cpu -1.0 ms, gpu -1.0 ms, 29 renderers, 128377 tris, 0 luces
+Cerro/zigzag_medio: 558.7 fps (p1 bajo 134.3), cpu -1.0 ms, gpu -1.0 ms, 2 renderers, 96 tris, 0 luces
+Malecon/avenida: 582.6 fps (p1 bajo 134.8), cpu -1.0 ms, gpu -1.0 ms, 2 renderers, 1596 tris, 0 luces
+Puerto/aerea: 583.4 fps (p1 bajo 203.0), cpu -1.0 ms, gpu -1.0 ms, 71 renderers, 329672 tris, 0 luces
+Cerro/aerea: 651.1 fps (p1 bajo 164.8), cpu -1.0 ms, gpu -1.0 ms, 12 renderers, 12540 tris, 0 luces

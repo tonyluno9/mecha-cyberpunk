@@ -41,6 +41,10 @@ namespace MechaCyberpunk.Arte.Editor
         public const float ExposicionNeonAlto = 0.8f;
         /// <summary>Para revisar: guarda la textura del reflejo de los charcos de cada foto en Logs/reflejo-*.png.</summary>
         public static bool GuardarReflejo = true;
+        /// <summary>Far clip de la cámara de las fotos (600 m hasta T-1392; el skyline SK01 está a 900 m, y la cámara del jugador usa 1000).</summary>
+        public static float LejosFoto = 600f;
+        /// <summary>T-1399: con true la foto arma también las nubes y estrellas (CieloTexturizado) y el domo de nubes (CieloNubes) como en el juego; antes salían sin ellos (en el editor no corre Start ni LateUpdate).</summary>
+        public static bool CieloCompleto = false;
         public static readonly Color AmbienteNoche = new Color(0.36f, 0.37f, 0.44f);
         public static readonly Color NubesDomo = new Color(0.06f, 0.08f, 0.14f);
         public static readonly Color BrilloCiudad = new Color(0.24f, 0.3f, 0.42f);
@@ -342,7 +346,7 @@ namespace MechaCyberpunk.Arte.Editor
             datos.renderPostProcessing = true;
             datos.antialiasing = AntialiasingMode.SubpixelMorphologicalAntiAliasing;
             cam.nearClipPlane = 0.05f;
-            cam.farClipPlane = 600f;
+            cam.farClipPlane = LejosFoto;
             cam.fieldOfView = campo;
             cam.transform.position = desde;
             cam.transform.LookAt(hacia);
@@ -351,6 +355,17 @@ namespace MechaCyberpunk.Arte.Editor
             RenderTexture rt = new RenderTexture(ancho, alto, 24, RenderTextureFormat.ARGB32);
             cam.targetTexture = rt;
             cam.aspect = (float)ancho / alto;
+            Mundo.Reloj.CieloTexturizado capasCielo = null;
+            if (CieloCompleto && ciclo != null)
+            {
+                capasCielo = Mundo.Reloj.CieloTexturizado.Crear();
+                Mundo.Datos.ConfigCicloDia cfg = new SerializedObject(ciclo).FindProperty("config").objectReferenceValue as Mundo.Datos.ConfigCicloDia;
+                capasCielo?.Actualizar(cam, cfg != null ? cfg.PesoNoche(hora) : 1f);
+                foreach (CieloNubes domoNubes in Object.FindObjectsByType<CieloNubes>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+                {
+                    domoNubes.Colocar(cam, hora);
+                }
+            }
             ReflejoCharcos reflejo = Object.FindFirstObjectByType<ReflejoCharcos>();
             if (reflejo != null && reflejo.Actualizar(cam))
             {
@@ -368,6 +383,7 @@ namespace MechaCyberpunk.Arte.Editor
                 }
             }
             cam.Render();
+            capasCielo?.Destruir();
             RenderTexture.active = rt;
             Texture2D foto = new Texture2D(ancho, alto, TextureFormat.RGB24, false);
             foto.ReadPixels(new Rect(0, 0, ancho, alto), 0, 0);
