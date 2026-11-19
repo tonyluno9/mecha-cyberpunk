@@ -159,7 +159,7 @@ namespace MechaCyberpunk.Arte.Editor
             Transform autopista = todos.FirstOrDefault(t => t != null && t.parent == null && t.name == "T1356_Autopista");
             if (autopista != null)
             {
-                Renderer[] torres = autopista.GetComponentsInChildren<Renderer>(true).Where(r => RutaDe(r.transform).Contains("/Fondo/Torre")).ToArray();
+                Renderer[] torres = autopista.GetComponentsInChildren<Renderer>(true).Where(r => RutaDe(r.transform).Contains("/Fondo/Torre") && !RutaDe(r.transform).Contains("TorreReflectores")).ToArray(); // Opus: la torre de reflectores sale en A18
                 CrearGrupo(raiz.transform, "TorresFondoAutopista", torres, UmbralFondoT513, log);
             }
             Transform afueras = todos.FirstOrDefault(t => t != null && t.parent == null && t.name == "T530_Afueras");
