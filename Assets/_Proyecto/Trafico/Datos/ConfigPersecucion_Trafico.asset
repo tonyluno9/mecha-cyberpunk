@@ -20,9 +20,78 @@ MonoBehaviour:
   distanciaCaptura: 3
   alturaDron: 7
   distanciaAparicionDron: 90
+  radioOrbitaDron: 4
+  distanciaMinimaEntreDrones: 3
   periodoSirena: 0.4
   nivelDisparoDron: 2
   segundosEntreTirosDron: 1.5
   danioDron: 4
   aciertoDron: 0.7
   avisoDron: 0.3
+  policiasPorPatrulla: 2
+  margenParaBajarPolicias: 1.5
+  radioVista: 70
+  segundosParaPerder: 12
+  enfriamientoSinVista: 6
+  segundosAdelantoCorte: 3
+  velocidadMinimaCorte: 3
+  distanciaMinimaSalida: 60
+  segundosMinimosLlegadaPatrulla: 7
+  segundosLlegadaPatrulla: 12
+  distanciaRetiro: 60
+  segundosMaximosRetiro: 60
+  patrullasDeRonda: 3
+  factorVelocidadRonda: 0.55
+  segundosTrasCriminal: 10
+  radioBusqueda: 90
+  segundosParaEscapar: 45
+  distanciaArresto: 10
+  segundosArresto: 4
+  velocidadArresto: 2
+  distanciaMiraMinima: 4
+  segundosMira: 0.45
+  velocidadCurva90: 10
+  velocidadMinimaCurva: 4
+  fraccionAgarreCurva: 1
+  desaceleracionPlaneada: 5
+  rangoAceleracion: 3
+  rangoFreno: 3
+  errorFrenoFuerte: 4
+  zonaMuertaVelocidad: 0.4
+  rapidezQuieta: 0.5
+  segundosParaAtoro: 2.5
+  segundosReversa: 1.8
+  volanteReversaMinimo: 0.6
+  anguloFrenoMano: 65
+  velocidadFrenoMano: 6
+  radioLlegadaNodo: 4
+  radioLlegadaMiga: 3
+  segundosVolcada: 4
+  ventanaAtasco: 1.5
+  distanciaMinimaAvance: 0.6
+  reversasParaRecolocar: 2
+  segundosParaRecolocar: 10
+  radioLiberada: 6
+  distanciaMinimaRecolocar: 15
+  distanciaMaximaRecolocar: 120
+  velocidadVolante: 6
+  velocidadMinimaAtasco: 2
+  radioVistaDron: 45
+  aceleracionDron: 7
+  frenadoDron: 4
+  velocidadVerticalDron: 4
+  aceleracionVerticalDron: 4
+  giroRumboDron: 120
+  inclinacionMaximaDron: 20
+  inclinacionPorAceleracionDron: 2.5
+  suavizadoInclinacionDron: 6
+  amplitudFloteDron: 0.12
+  frecuenciaFloteDron: 0.5
+  amplitudBalanceoDron: 1.5
+  frecuenciaBalanceoDron: 0.35
+  vidaDron: 40
+  calorAlDerribarDron: 25
+  patrullasExtraCincoEstrellas: 3
+  dronesExtraCincoEstrellas: 3
+  idSonidoRadio: POL_RADIO_AVISO
+  idSonidoDespacho: POL_RADIO_DESPACHO

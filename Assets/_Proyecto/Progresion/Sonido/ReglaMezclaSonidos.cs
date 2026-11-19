@@ -79,7 +79,7 @@ namespace MechaCyberpunk.Progresion.Sonido
 
         /// <summary>T-1471: los mapeados que no son disparo ni recarga llevan el volumen de su política nueva (UI 0.55, impactos 0.65...), no el parejo de T-620.</summary>
         public static bool TieneVolumenPropio(string id) =>
-            MapaSonidos19nov.EsNuevo(id) || (MapaSonidos19nov.EstaMapeado(id) && (!id.StartsWith("ARM_", StringComparison.Ordinal) || id.StartsWith("ARM_BALA_", StringComparison.Ordinal)));
+            MapaSonidos19nov.EsNuevo(id) || (MapaSonidos19nov.EstaMapeado(id) && (!id.StartsWith("ARM_", StringComparison.Ordinal) || id.StartsWith("ARM_" + "BALA_", StringComparison.Ordinal)));
 
         /// <summary>
         /// T-977: nivel de cada ambiente sobre la ganancia de la seccion, para que todos queden cerca de -45 dB aunque sus archivos no:

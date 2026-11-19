@@ -121,7 +121,7 @@ namespace MechaCyberpunk.Tests.Sonido
                 // La tabla de mezcla nombra los IDs pero no los pide.
                 if (n.Contains("/Tests/") || n.Contains("/Editor/") || n.Contains("/Progresion/Sonido/")) continue;
                 string texto = File.ReadAllText(f);
-                if (texto.Contains("\"JUG_PASO_") || texto.Contains("ReglaSuperficiePaso.IdPaso(")) donde.Add(n);
+                if (texto.Contains("\"JUG_PASO_") || texto.Contains("\"PAS_") || texto.Contains("ReglaSuperficiePaso.IdPaso(")) donde.Add(n);
             }
             CollectionAssert.AreEquivalent(new[] { "Assets/_Proyecto/Personaje/Movimiento/ReglaSuperficiePaso.cs", "Assets/_Proyecto/Personaje/Movimiento/ControladorAPie.cs" }, donde);
         }

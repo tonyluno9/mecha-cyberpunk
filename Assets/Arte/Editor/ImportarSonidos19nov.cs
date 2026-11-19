@@ -89,10 +89,10 @@ namespace MechaCyberpunk.Arte.Editor
                 s.compressionFormat = AudioCompressionFormat.Vorbis;
                 s.quality = 0.7f;
             }
+            s.preloadAudioData = !largo && (corto || loop);
             importer.defaultSampleSettings = s;
             importer.forceToMono = Array.IndexOf(CarpetasMono, carpeta) >= 0;
             importer.loadInBackground = largo;
-            importer.preloadAudioData = !largo && (corto || loop);
             importer.ambisonic = false;
         }
 

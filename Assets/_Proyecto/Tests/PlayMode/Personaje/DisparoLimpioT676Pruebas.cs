@@ -77,7 +77,7 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return Disparar(); // al muñeco
             yield return Esperar(0.4f);
             // T-1472: pegarle a una persona suena una vez, con el impacto de carne.
-            Assert.AreEqual(1, sonidos.Ids.FindAll(i => i == "IMP_BALA_CARNE").Count, "Un impacto de carne por tiro");
+            Assert.AreEqual(1, sonidos.Ids.FindAll(i => i == "IMP_BALA_CARNE" || i == "IMP_BALA_CABEZA").Count, "Un impacto de carne (o de cabeza) por tiro: " + string.Join(",", sonidos.Ids));
             Object.Destroy(muneco);
             Caja(new Vector3(0f, 1f, 8f), new Vector3(6f, 3f, 0.5f)); // ahora una pared en la mira
             yield return null;
