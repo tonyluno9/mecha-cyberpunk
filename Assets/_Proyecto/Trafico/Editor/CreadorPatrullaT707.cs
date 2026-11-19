@@ -102,7 +102,7 @@ namespace MechaCyberpunk.Trafico.Editor
         }
 
         // Toda referencia a un componente de la raíz vieja pasa al componente del mismo tipo de la raíz nueva.
-        private static void Reapuntar(Component componente, GameObject viejaRaiz, GameObject nuevaRaiz)
+        internal static void Reapuntar(Component componente, GameObject viejaRaiz, GameObject nuevaRaiz)
         {
             SerializedObject so = new SerializedObject(componente);
             SerializedProperty p = so.GetIterator();
@@ -131,7 +131,7 @@ namespace MechaCyberpunk.Trafico.Editor
             so.ApplyModifiedPropertiesWithoutUndo();
         }
 
-        private static Bounds Limites(GameObject g)
+        internal static Bounds Limites(GameObject g)
         {
             Renderer[] rs = g.GetComponentsInChildren<Renderer>().Where(r => r is MeshRenderer || r is SkinnedMeshRenderer).ToArray();
             Bounds b = rs.Length > 0 ? rs[0].bounds : new Bounds(g.transform.position, Vector3.zero);
