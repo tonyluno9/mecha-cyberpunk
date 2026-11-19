@@ -21,21 +21,23 @@ que diga "Qué sigue".
 ## Tareas
 | Tarea | Qué | Estado |
 | --- | --- | --- |
-| T-1380 | Blender: ruedas de carros, puertas, cofre, cristal; rotores de DR01–DR04, E13, NV01, NV03 | pendiente |
-| T-1381 | Blender: rig humanoide E15, E16, E18, E19, E20 y NP07–NP14; cuadrúpedo E17 | pendiente |
-| T-1382 | Importar nuevos-18nov (variantes _a y _b), texturas T07–T09, SK01 como skyline, W10 de Nova | pendiente |
-| T-1383 | Look: sodio, neones con luz, niebla de color, piso mojado con charcos, quitar el piso de escarcha | pendiente |
-| T-1384 | Malecón como K11, K12 y A11 | pendiente |
-| T-1385 | Cerro como K13 y A13 | pendiente |
-| T-1386 | Autopista como K18 y A18 | pendiente |
-| T-1387 | Puerto como K15 y A15 | pendiente |
-| T-1388 | Uniones con los 4 barrios y detalle (cables, letreros, carros, NPCs, basura) | pendiente |
-| T-1389 | Tráfico, peatones, enemigos y drones nuevos | pendiente |
+| T-1380 | Blender: ruedas de carros, puertas, cofre, cristal; rotores de DR01–DR04, E13, NV01, NV03 | en curso (subagente) |
+| T-1381 | Blender: rig humanoide E15, E16, E18, E19, E20 y NP07–NP14; cuadrúpedo E17 | en curso (subagente) |
+| T-1382 | Importar nuevos-18nov (variantes _a y _b), texturas T07–T09, SK01 como skyline, W10 de Nova | en curso (subagente) |
+| T-1383 | Look: sodio, neones con luz, niebla de color, piso mojado con charcos, quitar el piso de escarcha | en curso (subagente) |
+| T-1384 | Malecón como K11, K12 y A11 | en curso (subagente) |
+| T-1385 | Cerro como K13 y A13 | en curso (subagente) |
+| T-1386 | Autopista como K18 y A18 | en curso (subagente) |
+| T-1387 | Puerto como K15 y A15 | en curso (subagente) |
+| T-1388 | Uniones con los 4 barrios y detalle (cables, letreros, carros, NPCs, basura) | en curso (subagente) |
+| T-1389 | Tráfico, peatones, enemigos y drones nuevos | parte a (carros) en curso; parte b (NPCs, enemigos y drones) espera a T-1380 y T-1381 |
 | T-1390 | Rendimiento: 50 fps o más por zona | pendiente |
 | T-1391 | Builds (Demo y Juego/CyberCity.exe) y reporte-19nov | pendiente |
 
 ## Bitácora
 - 02:20 Plan escrito. Primera tanda: T-1380, T-1381, T-1382 y T-1383, en paralelo.
+- 02:35 integ/ciudad-19nov compila (0 errores). Lanzadas también las zonas T-1384 a T-1387, T-1388 (uniones, prefab nuevo T1388_Uniones) y T-1389a (tráfico por zona y Carro_V11). Brief común de zonas: los subagentes solo entregan scripts (Aplicar, Validar, Fotos); los prefabs los genera Unity en la carpeta principal.
+- Orden para correr en Unity: T-1382.Aplicar → zonas (T-1384..T-1388 Aplicar) → T-1383.Aplicar (look al final) → en otra corrida, Fotos.
 
 ## Qué sigue
 - Esperar la primera tanda; integrar T-1382 y T-1383 en Unity (importar y aplicar el look); después las zonas (T-1384 a T-1388).
