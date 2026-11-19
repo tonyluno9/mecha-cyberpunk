@@ -119,6 +119,7 @@ namespace MechaCyberpunk.Arte.Editor
             faltan.Clear();
             lotes.Clear();
             planNpc.Clear();
+            rechazadosApoyo = 0;
             pegados = 0;
             conservados = 0;
             GameObject zona = PrefabUtility.LoadPrefabContents(RutaPrefab);
@@ -134,6 +135,7 @@ namespace MechaCyberpunk.Arte.Editor
                     Calles = zona.transform.Find("Calles"),
                     Escaleras = zona.transform.Find("Escaleras"),
                 };
+                LimpiarRejasViejas(zona);
                 c.Obra = KitS2c.Empezar(Raiz, Semilla, zona.transform);
                 c.Nuevo = c.Obra.Raiz;
                 Physics.SyncTransforms();
@@ -191,6 +193,48 @@ namespace MechaCyberpunk.Arte.Editor
                 PrefabUtility.UnloadPrefabContents(zona);
             }
             Escribir(RutaInforme, informe);
+        }
+
+        /// <summary>
+        /// Las primeras rondas colgaron las rejas como hijos "Reja" de la planta baja de cada casa (fuera de la raíz T1441_Detalle, así que Aplicar no las borraba y quedaban
+        /// fuera del LODGroup de su casa). Ahora las rejas van combinadas en los lotes: se borran las viejas (mallas T1441_Reja, o con la malla perdida) bajo C01/C02_Fachada.
+        /// </summary>
+        private static void LimpiarRejasViejas(GameObject zona)
+        {
+            int borradas = 0;
+            foreach (Transform t in zona.GetComponentsInChildren<Transform>(true).ToList())
+            {
+                if (t == null || t.name != "Reja" || t.parent == null || !(t.parent.name.StartsWith("C01_Fachada") || t.parent.name.StartsWith("C02_Fachada")))
+                {
+                    continue;
+                }
+                MeshFilter mf = t.GetComponent<MeshFilter>();
+                if (mf != null && mf.sharedMesh != null && mf.sharedMesh.name != "T1441_Reja")
+                {
+                    continue;
+                }
+                Object.DestroyImmediate(t.gameObject);
+                borradas++;
+            }
+            Log("Rejas de rondas anteriores (hijas de las casas) borradas: " + borradas + ".");
+        }
+
+        private static int rechazadosApoyo;
+
+        /// <summary>La misma prueba que Validar: rayo desde el centro, 0.4 m sobre el punto más bajo, hacia abajo; sin hit no se rechaza.</summary>
+        private static bool Apoyado(Ctx c, Transform g, Bounds b)
+        {
+            int n = c.Fisica.Raycast(new Vector3(b.center.x, b.min.y + 0.4f, b.center.z), Vector3.down, bufRayos, 3f, ~0, QueryTriggerInteraction.Ignore);
+            float y = float.MinValue;
+            for (int i = 0; i < n; i++)
+            {
+                if (bufRayos[i].collider.transform.IsChildOf(g) || EsPiso(c, bufRayos[i].collider.transform) || bufRayos[i].normal.y < 0.9f)
+                {
+                    continue;
+                }
+                y = Mathf.Max(y, bufRayos[i].point.y);
+            }
+            return y == float.MinValue || Mathf.Abs(b.min.y - y) <= 0.05f;
         }
 
         private static void Paso(string nombre, Action accion)
@@ -1253,7 +1297,7 @@ namespace MechaCyberpunk.Arte.Editor
             }
             c.Azoteas = conObjetos;
             Physics.SyncTransforms();
-            Log("Azoteas con objetos nuevos: " + conObjetos + "; objetos: " + total + " (" + string.Join(", ", porTipo.Select(p => p.Key + " " + p.Value)) + "). Mal asentados al colocar (más de 5 cm): " + malAsentados + ".");
+            Log("Azoteas con objetos nuevos: " + conObjetos + "; objetos: " + total + " (" + string.Join(", ", porTipo.Select(p => p.Key + " " + p.Value)) + "). Mal asentados al colocar (más de 5 cm): " + malAsentados + "; rechazados por no tener apoyo debajo (misma prueba que Validar): " + rechazadosApoyo + ".");
         }
 
         /// <summary>Pone un prefab en la azotea con su punto más bajo exactamente en la superficie medida (t.Y); los que no necesitan collider se combinan en lotes.</summary>
@@ -1292,6 +1336,13 @@ namespace MechaCyberpunk.Arte.Editor
                 Physics.SyncTransforms();
                 return false;
             }
+            if (!Apoyado(c, g.transform, fin))
+            {
+                rechazadosApoyo++;
+                Object.DestroyImmediate(g);
+                Physics.SyncTransforms();
+                return false;
+            }
             c.Ocupado.Add(fin);
             PegarInstancia(g);
             return true;
@@ -1322,6 +1373,13 @@ namespace MechaCyberpunk.Arte.Editor
             VariarCerroT1364.CasaT hh = t.H;
             if (EnPasillo(t, fin.center.x, fin.center.z, Mathf.Max(fin.extents.x, fin.extents.z) + 0.1f) || fin.min.x < hh.X0 || fin.max.x > hh.X1 || fin.min.z < hh.Z0 || fin.max.z > hh.Z1)
             {
+                Object.DestroyImmediate(g);
+                Physics.SyncTransforms();
+                return false;
+            }
+            if (!Apoyado(c, g.transform, fin))
+            {
+                rechazadosApoyo++;
                 Object.DestroyImmediate(g);
                 Physics.SyncTransforms();
                 return false;
