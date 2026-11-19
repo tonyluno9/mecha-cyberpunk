@@ -36,7 +36,9 @@ namespace MechaCyberpunk.Tests.Mundo
             Assert.AreEqual(140f, ColocarS2oLuz.IntensidadPoste); // T-1331: antes 70
             foreach (Light l in postes)
             {
-                Assert.AreEqual(ColocarS2oLuz.IntensidadPoste, l.intensity, 0.001f, l.transform.parent.name);
+                // T-1392 (19-nov, pedido de Tony): los faroles de las zonas nuevas pasaron a sodio de 400; los de los barrios se quedan en 140.
+                bool deZona = Mathf.Approximately(l.intensity, LookNocheT1392.IntensidadSodio);
+                Assert.IsTrue(deZona || Mathf.Approximately(l.intensity, ColocarS2oLuz.IntensidadPoste), l.transform.parent.name + " intensidad " + l.intensity);
             }
         }
 

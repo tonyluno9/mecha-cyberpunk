@@ -57,8 +57,8 @@ namespace MechaCyberpunk.Arte.Editor
 
         // Faroles de sodio (antes de T-1392: intensidad 170, alcance 16, cono 100/40)
         private static readonly Color Sodio = new Color(1f, 0.55f, 0.2f);
-        private const float IntensidadSodio = 400f;
-        private const float AlcanceSodio = 22f;
+        public const float IntensidadSodio = 400f;
+        public const float AlcanceSodio = 22f;
         private const float AnguloSodio = 110f;
         private const float AnguloInteriorSodio = 45f;
 
@@ -157,7 +157,7 @@ namespace MechaCyberpunk.Arte.Editor
                     }
                 }
                 List<Vector3> calle = PuntosDeCalle(raiz);
-                int sodio = AjustarSodio(raiz);
+                int sodio = AjustarSodio(raiz, nombre == "T1355_Cerro" ? RendimientoCerroT1365.AlcanceMaximoLuz : AlcanceSodio); // el Cerro mantiene el tope de rendimiento de T-1365 (18 m)
                 int charcos = PonerCharcos(raiz, indice, malla);
                 int reforzadas;
                 int nuevas = PonerNeones(raiz, calle, neonesMax, encendidos, out reforzadas);
@@ -195,7 +195,7 @@ namespace MechaCyberpunk.Arte.Editor
             return deFarol && (l.type == LightType.Spot || l.type == LightType.Point) && (naranja || l.range >= 10f);
         }
 
-        private static int AjustarSodio(GameObject raiz)
+        private static int AjustarSodio(GameObject raiz, float alcance)
         {
             int n = 0;
             foreach (Light l in raiz.GetComponentsInChildren<Light>(true))
@@ -205,7 +205,7 @@ namespace MechaCyberpunk.Arte.Editor
                     continue;
                 }
                 l.color = Sodio;
-                l.range = AlcanceSodio;
+                l.range = alcance;
                 l.intensity = IntensidadSodio;
                 if (l.type == LightType.Spot)
                 {
