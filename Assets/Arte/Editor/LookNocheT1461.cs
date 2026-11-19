@@ -46,8 +46,8 @@ namespace MechaCyberpunk.Arte.Editor
 
         // Sodio
         private static readonly Color Sodio = new Color(1f, 0.5f, 0.18f);
-        internal const float IntensidadSodio = 240f;
-        internal const float AlcanceSodio = 27f;
+        public const float IntensidadSodio = 240f;
+        public const float AlcanceSodio = 27f;
         private const float AnguloSodio = 95f;
         private const float AnguloInteriorSodio = 30f;
         // Neón
