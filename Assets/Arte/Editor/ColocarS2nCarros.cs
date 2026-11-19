@@ -91,13 +91,15 @@ namespace MechaCyberpunk.Arte.Editor
 
             GameObject instancia = (GameObject)PrefabUtility.InstantiatePrefab(prefab);
             int cambiados = 0;
+            // T-1411: si el carro se rearmó (T-1397) y su material de carrocería ya no es el de siempre, se tiñe el material que se llame "Carroceria".
+            bool buscaPorNombre = !instancia.GetComponentsInChildren<Renderer>(true).Any(r => r.sharedMaterials.Contains(original));
             foreach (Renderer r in instancia.GetComponentsInChildren<Renderer>(true))
             {
                 Material[] mats = r.sharedMaterials;
                 bool cambia = false;
                 for (int i = 0; i < mats.Length; i++)
                 {
-                    if (mats[i] == original)
+                    if (mats[i] == original || (buscaPorNombre && mats[i] != null && mats[i].name.Contains("Carroceria")))
                     {
                         mats[i] = m;
                         cambia = true;

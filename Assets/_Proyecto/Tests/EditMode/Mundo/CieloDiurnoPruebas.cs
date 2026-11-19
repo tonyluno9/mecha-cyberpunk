@@ -52,10 +52,12 @@ namespace MechaCyberpunk.Tests.Mundo
         public void Noche_ConservaLosValoresDeAntes()
         {
             ConfigCicloDia config = Config();
-            Assert.AreEqual(0.006f, config.DensidadNiebla(HoraNoche), Tolerancia, "T-920 (11-nov): niebla mínima de noche para que se vea el fondo de la ciudad (T-880 la subió a 0.036)");
-            Assert.AreEqual(0.2f, config.ColorNiebla(HoraNoche).r, Tolerancia);
-            Assert.AreEqual(0.32f, config.ColorNiebla(HoraNoche).b, Tolerancia, "T-880: azul grisáceo de K01");
-            Assert.AreEqual(0.4f, config.ColorAmbiente(HoraNoche).r, Tolerancia, "T-880: ambiente de noche de K01 (sin el APV viejo, la ciudad entera lo recibe)");
+            // 19-nov, a propósito: T-1399 (pedido de Tony) subió la niebla de noche a densidad 0.009 y color (0.34, 0.42, 0.57); T-1392 aclaró el ambiente a (0.46, 0.52, 0.66).
+            // Antes: densidad 0.006 (T-920), niebla (0.2, _, 0.32) y ambiente r 0.4 (T-880).
+            Assert.AreEqual(0.009f, config.DensidadNiebla(HoraNoche), Tolerancia, "T-1399 (19-nov): niebla de noche más densa y de color (antes 0.006, T-920)");
+            Assert.AreEqual(0.34f, config.ColorNiebla(HoraNoche).r, Tolerancia, "T-1399: niebla azul claro de K01 (antes 0.2)");
+            Assert.AreEqual(0.57f, config.ColorNiebla(HoraNoche).b, Tolerancia, "T-1399 (antes 0.32)");
+            Assert.AreEqual(0.46f, config.ColorAmbiente(HoraNoche).r, Tolerancia, "T-1392 (19-nov): ambiente de noche más claro (antes 0.4, T-880)");
             Assert.AreEqual(0f, config.DiscoSol(HoraNoche), Tolerancia, "La luna no se dibuja como disco");
         }
 

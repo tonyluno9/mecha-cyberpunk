@@ -16,7 +16,7 @@ namespace MechaCyberpunk.Tests.Mundo
         private const string RutaEscena = "Assets/_Proyecto/Escenas/Ciudad_Prologo.unity";
         private const string RutaCiclo = "Assets/_Proyecto/Mundo/Datos/ConfigCicloDia_Mundo.asset";
         private const float HoraNoche = 23f;
-        private const float AmbienteMaximo = 0.6f;
+        private const float AmbienteMaximo = 0.7f; // T-1392 (19-nov, pedido de Tony): ambiente de noche más claro, máximo 0.66 (antes 0.6)
         private const float BlendMinimo = 8f;
         private const int SombrasMinimas = 8;
         private const int SombrasMaximas = 14;

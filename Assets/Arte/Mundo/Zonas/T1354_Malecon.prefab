@@ -153732,6 +153732,10 @@ PrefabInstance:
       value: C10_AireAcondicionado
       objectReference: {fileID: 0}
     - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 22
       objectReference: {fileID: 0}
@@ -155040,6 +155044,10 @@ PrefabInstance:
       value: AireAcondicionado
       objectReference: {fileID: 0}
     - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 22
       objectReference: {fileID: 0}
@@ -156137,6 +156145,10 @@ PrefabInstance:
       value: C10_AireAcondicionado
       objectReference: {fileID: 0}
     - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 22
       objectReference: {fileID: 0}
@@ -156550,6 +156562,10 @@ PrefabInstance:
     - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_Name
       value: AireAcondicionado
+      objectReference: {fileID: 0}
+    - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -157046,6 +157062,10 @@ PrefabInstance:
     - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_Name
       value: C10_AireAcondicionado
+      objectReference: {fileID: 0}
+    - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -159222,6 +159242,10 @@ PrefabInstance:
       value: PZ01_Banca
       objectReference: {fileID: 0}
     - target: {fileID: 9011958393673910021, guid: 13908bcdf598c5148920044d02649907, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9011958393673910021, guid: 13908bcdf598c5148920044d02649907, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 22
       objectReference: {fileID: 0}
@@ -160074,6 +160098,10 @@ PrefabInstance:
     - target: {fileID: 9011958393673910021, guid: 13908bcdf598c5148920044d02649907, type: 3}
       propertyPath: m_Name
       value: PZ01_Banca
+      objectReference: {fileID: 0}
+    - target: {fileID: 9011958393673910021, guid: 13908bcdf598c5148920044d02649907, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9011958393673910021, guid: 13908bcdf598c5148920044d02649907, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -162584,6 +162612,10 @@ PrefabInstance:
       value: ML01_BarandalMalecon
       objectReference: {fileID: 0}
     - target: {fileID: 8463436677163526303, guid: 933e510bf9b11d545a2f480b2b69a209, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8463436677163526303, guid: 933e510bf9b11d545a2f480b2b69a209, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 22
       objectReference: {fileID: 0}
@@ -163168,6 +163200,10 @@ PrefabInstance:
     - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
       propertyPath: m_Name
       value: ML05_Escollera
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -163792,6 +163828,10 @@ PrefabInstance:
     - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
       propertyPath: m_Name
       value: ML05_Escollera
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -164877,7 +164917,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2061902395214180579, guid: a8b1a244aa130024d80abd36657ff05d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.27770996
+      value: -2.5000005
       objectReference: {fileID: 0}
     - target: {fileID: 2061902395214180579, guid: a8b1a244aa130024d80abd36657ff05d, type: 3}
       propertyPath: m_LocalPosition.z
@@ -165814,6 +165854,10 @@ PrefabInstance:
     - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_Name
       value: AireAcondicionado
+      objectReference: {fileID: 0}
+    - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -168976,7 +169020,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6762231082045972630, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.3
+      value: 1.9060433
       objectReference: {fileID: 0}
     - target: {fileID: 6762231082045972630, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_LocalPosition.z
@@ -169481,6 +169525,10 @@ PrefabInstance:
     - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
       propertyPath: m_Name
       value: ML05_Escollera
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -170861,6 +170909,10 @@ PrefabInstance:
     - target: {fileID: 7810893584455476619, guid: 16dc04c480436834aa9f904fbc4de9f7, type: 3}
       propertyPath: m_Name
       value: Toldo
+      objectReference: {fileID: 0}
+    - target: {fileID: 7810893584455476619, guid: 16dc04c480436834aa9f904fbc4de9f7, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7810893584455476619, guid: 16dc04c480436834aa9f904fbc4de9f7, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -172405,6 +172457,10 @@ PrefabInstance:
     - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_Name
       value: AireAcondicionado
+      objectReference: {fileID: 0}
+    - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -174277,6 +174333,10 @@ PrefabInstance:
       value: AireAcondicionado
       objectReference: {fileID: 0}
     - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 22
       objectReference: {fileID: 0}
@@ -174409,6 +174469,10 @@ PrefabInstance:
     - target: {fileID: 7810893584455476619, guid: 16dc04c480436834aa9f904fbc4de9f7, type: 3}
       propertyPath: m_Name
       value: Toldo
+      objectReference: {fileID: 0}
+    - target: {fileID: 7810893584455476619, guid: 16dc04c480436834aa9f904fbc4de9f7, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7810893584455476619, guid: 16dc04c480436834aa9f904fbc4de9f7, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -178163,6 +178227,10 @@ PrefabInstance:
       value: ML05_Escollera
       objectReference: {fileID: 0}
     - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 22
       objectReference: {fileID: 0}
@@ -179648,6 +179716,10 @@ PrefabInstance:
       value: ML05_Escollera
       objectReference: {fileID: 0}
     - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 22
       objectReference: {fileID: 0}
@@ -180037,6 +180109,10 @@ PrefabInstance:
     - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
       propertyPath: m_Name
       value: ML05_Escollera
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -182826,7 +182902,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2081198436850183565, guid: 7c1ce1a0bb03f53488b5e4f4d68b7597, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.53986835
+      value: -3.2823668
       objectReference: {fileID: 0}
     - target: {fileID: 2081198436850183565, guid: 7c1ce1a0bb03f53488b5e4f4d68b7597, type: 3}
       propertyPath: m_LocalPosition.z
@@ -186079,6 +186155,10 @@ PrefabInstance:
     - target: {fileID: 7810893584455476619, guid: 16dc04c480436834aa9f904fbc4de9f7, type: 3}
       propertyPath: m_Name
       value: Toldo
+      objectReference: {fileID: 0}
+    - target: {fileID: 7810893584455476619, guid: 16dc04c480436834aa9f904fbc4de9f7, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7810893584455476619, guid: 16dc04c480436834aa9f904fbc4de9f7, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -189869,6 +189949,10 @@ PrefabInstance:
       value: AireAcondicionado
       objectReference: {fileID: 0}
     - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 22
       objectReference: {fileID: 0}
@@ -190389,6 +190473,10 @@ PrefabInstance:
     - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_Name
       value: AireAcondicionado
+      objectReference: {fileID: 0}
+    - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -191063,6 +191151,10 @@ PrefabInstance:
       value: ML05_Escollera
       objectReference: {fileID: 0}
     - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 22
       objectReference: {fileID: 0}
@@ -191613,6 +191705,10 @@ PrefabInstance:
     - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
       propertyPath: m_Name
       value: ML05_Escollera
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -193871,6 +193967,10 @@ PrefabInstance:
       value: Letrero
       objectReference: {fileID: 0}
     - target: {fileID: 121583576982588317, guid: 7c1ce1a0bb03f53488b5e4f4d68b7597, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 121583576982588317, guid: 7c1ce1a0bb03f53488b5e4f4d68b7597, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 22
       objectReference: {fileID: 0}
@@ -194019,6 +194119,10 @@ PrefabInstance:
     - target: {fileID: 7810893584455476619, guid: 16dc04c480436834aa9f904fbc4de9f7, type: 3}
       propertyPath: m_Name
       value: Toldo
+      objectReference: {fileID: 0}
+    - target: {fileID: 7810893584455476619, guid: 16dc04c480436834aa9f904fbc4de9f7, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7810893584455476619, guid: 16dc04c480436834aa9f904fbc4de9f7, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -196537,6 +196641,10 @@ PrefabInstance:
       value: C10_AireAcondicionado
       objectReference: {fileID: 0}
     - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 22
       objectReference: {fileID: 0}
@@ -196834,7 +196942,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2061902395214180579, guid: a8b1a244aa130024d80abd36657ff05d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.27770996
+      value: -2.6000001
       objectReference: {fileID: 0}
     - target: {fileID: 2061902395214180579, guid: a8b1a244aa130024d80abd36657ff05d, type: 3}
       propertyPath: m_LocalPosition.z
@@ -197465,6 +197573,10 @@ PrefabInstance:
       value: ML05_Escollera
       objectReference: {fileID: 0}
     - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 22
       objectReference: {fileID: 0}
@@ -197721,6 +197833,10 @@ PrefabInstance:
     - target: {fileID: 1697528916096527914, guid: 5e97c888aa669574f8ffa959fb365460, type: 3}
       propertyPath: m_Name
       value: Carro_1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1697528916096527914, guid: 5e97c888aa669574f8ffa959fb365460, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2158494836185089885, guid: 5e97c888aa669574f8ffa959fb365460, type: 3}
       propertyPath: m_Enabled
@@ -198789,6 +198905,10 @@ PrefabInstance:
       value: C10_AireAcondicionado
       objectReference: {fileID: 0}
     - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 22
       objectReference: {fileID: 0}
@@ -199492,6 +199612,10 @@ PrefabInstance:
     - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
       propertyPath: m_Name
       value: ML05_Escollera
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -201394,6 +201518,10 @@ PrefabInstance:
       value: ML03_MuelleRecto
       objectReference: {fileID: 0}
     - target: {fileID: 3776889813479501672, guid: 2ac89ed996ed4604dbe01e4d5fc6d6a0, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3776889813479501672, guid: 2ac89ed996ed4604dbe01e4d5fc6d6a0, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 22
       objectReference: {fileID: 0}
@@ -201990,6 +202118,10 @@ PrefabInstance:
     - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_Name
       value: C10_AireAcondicionado
+      objectReference: {fileID: 0}
+    - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -202930,7 +203062,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2061902395214180579, guid: a8b1a244aa130024d80abd36657ff05d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.27770996
+      value: -2.5000002
       objectReference: {fileID: 0}
     - target: {fileID: 2061902395214180579, guid: a8b1a244aa130024d80abd36657ff05d, type: 3}
       propertyPath: m_LocalPosition.z
@@ -203912,7 +204044,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2081198436850183565, guid: 7c1ce1a0bb03f53488b5e4f4d68b7597, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.5398681
+      value: -3.5330439
       objectReference: {fileID: 0}
     - target: {fileID: 2081198436850183565, guid: 7c1ce1a0bb03f53488b5e4f4d68b7597, type: 3}
       propertyPath: m_LocalPosition.z
@@ -206958,6 +207090,10 @@ PrefabInstance:
       value: C10_AireAcondicionado
       objectReference: {fileID: 0}
     - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 22
       objectReference: {fileID: 0}
@@ -209749,6 +209885,10 @@ PrefabInstance:
     - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_Name
       value: AireAcondicionado
+      objectReference: {fileID: 0}
+    - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -213054,6 +213194,10 @@ PrefabInstance:
       value: AireAcondicionado
       objectReference: {fileID: 0}
     - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 22
       objectReference: {fileID: 0}
@@ -213126,6 +213270,10 @@ PrefabInstance:
     - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
       propertyPath: m_Name
       value: ML05_Escollera
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -213559,6 +213707,10 @@ PrefabInstance:
     - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
       propertyPath: m_Name
       value: ML05_Escollera
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -216563,6 +216715,10 @@ PrefabInstance:
       value: ML05_Escollera
       objectReference: {fileID: 0}
     - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 22
       objectReference: {fileID: 0}
@@ -217785,6 +217941,10 @@ PrefabInstance:
     - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_Name
       value: C10_AireAcondicionado
+      objectReference: {fileID: 0}
+    - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -221522,6 +221682,10 @@ PrefabInstance:
       value: ML01_Farol_4
       objectReference: {fileID: 0}
     - target: {fileID: 4663228981387919394, guid: 168ce416d50ba8d46adc6a697d9633d0, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4663228981387919394, guid: 168ce416d50ba8d46adc6a697d9633d0, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 22
       objectReference: {fileID: 0}
@@ -221954,7 +222118,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2061902395214180579, guid: a8b1a244aa130024d80abd36657ff05d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.27770996
+      value: -2.5000002
       objectReference: {fileID: 0}
     - target: {fileID: 2061902395214180579, guid: a8b1a244aa130024d80abd36657ff05d, type: 3}
       propertyPath: m_LocalPosition.z
@@ -226731,6 +226895,10 @@ PrefabInstance:
       value: Toldo
       objectReference: {fileID: 0}
     - target: {fileID: 7810893584455476619, guid: 16dc04c480436834aa9f904fbc4de9f7, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7810893584455476619, guid: 16dc04c480436834aa9f904fbc4de9f7, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 22
       objectReference: {fileID: 0}
@@ -229525,6 +229693,10 @@ PrefabInstance:
       value: C10_AireAcondicionado
       objectReference: {fileID: 0}
     - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 22
       objectReference: {fileID: 0}
@@ -230284,6 +230456,10 @@ PrefabInstance:
     - target: {fileID: 3776889813479501672, guid: 2ac89ed996ed4604dbe01e4d5fc6d6a0, type: 3}
       propertyPath: m_Name
       value: ML03_MuelleRecto
+      objectReference: {fileID: 0}
+    - target: {fileID: 3776889813479501672, guid: 2ac89ed996ed4604dbe01e4d5fc6d6a0, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3776889813479501672, guid: 2ac89ed996ed4604dbe01e4d5fc6d6a0, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -233166,6 +233342,10 @@ PrefabInstance:
       value: Letrero
       objectReference: {fileID: 0}
     - target: {fileID: 5709513967358964936, guid: ba4bb196b53bb19458ae33b62270f716, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5709513967358964936, guid: ba4bb196b53bb19458ae33b62270f716, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 22
       objectReference: {fileID: 0}
@@ -233705,6 +233885,10 @@ PrefabInstance:
     - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
       propertyPath: m_Name
       value: ML05_Escollera
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -235762,6 +235946,10 @@ PrefabInstance:
     - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_Name
       value: C10_AireAcondicionado
+      objectReference: {fileID: 0}
+    - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -240346,6 +240534,10 @@ PrefabInstance:
       value: ML05_Escollera
       objectReference: {fileID: 0}
     - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 22
       objectReference: {fileID: 0}
@@ -242481,6 +242673,10 @@ PrefabInstance:
     - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_Name
       value: AireAcondicionado
+      objectReference: {fileID: 0}
+    - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -246719,6 +246915,10 @@ PrefabInstance:
       value: ML05_Escollera
       objectReference: {fileID: 0}
     - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 22
       objectReference: {fileID: 0}
@@ -247504,6 +247704,10 @@ PrefabInstance:
       value: AireAcondicionado
       objectReference: {fileID: 0}
     - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 22
       objectReference: {fileID: 0}
@@ -247750,6 +247954,10 @@ PrefabInstance:
       value: C10_AireAcondicionado
       objectReference: {fileID: 0}
     - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 22
       objectReference: {fileID: 0}
@@ -247822,6 +248030,10 @@ PrefabInstance:
     - target: {fileID: 3776889813479501672, guid: 2ac89ed996ed4604dbe01e4d5fc6d6a0, type: 3}
       propertyPath: m_Name
       value: ML03_MuelleRecto
+      objectReference: {fileID: 0}
+    - target: {fileID: 3776889813479501672, guid: 2ac89ed996ed4604dbe01e4d5fc6d6a0, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3776889813479501672, guid: 2ac89ed996ed4604dbe01e4d5fc6d6a0, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -249913,6 +250125,10 @@ PrefabInstance:
     - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
       propertyPath: m_Name
       value: ML05_Escollera
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -252363,6 +252579,10 @@ PrefabInstance:
       value: ML05_Escollera
       objectReference: {fileID: 0}
     - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 22
       objectReference: {fileID: 0}
@@ -252783,6 +253003,10 @@ PrefabInstance:
       value: ML03_MuelleRecto
       objectReference: {fileID: 0}
     - target: {fileID: 3776889813479501672, guid: 2ac89ed996ed4604dbe01e4d5fc6d6a0, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3776889813479501672, guid: 2ac89ed996ed4604dbe01e4d5fc6d6a0, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 22
       objectReference: {fileID: 0}
@@ -253048,7 +253272,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6762231082045972630, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.3
+      value: 1.6499852
       objectReference: {fileID: 0}
     - target: {fileID: 6762231082045972630, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_LocalPosition.z
@@ -254901,7 +255125,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6762231082045972630, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.3
+      value: 2.4455566
       objectReference: {fileID: 0}
     - target: {fileID: 6762231082045972630, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_LocalPosition.z
@@ -259393,6 +259617,10 @@ PrefabInstance:
       value: C10_AireAcondicionado
       objectReference: {fileID: 0}
     - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 22
       objectReference: {fileID: 0}
@@ -260447,6 +260675,10 @@ PrefabInstance:
     - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
       propertyPath: m_Name
       value: ML05_Escollera
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -261516,6 +261748,10 @@ PrefabInstance:
     - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_Name
       value: AireAcondicionado
+      objectReference: {fileID: 0}
+    - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -262967,7 +263203,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5413609254299694401, guid: ba4bb196b53bb19458ae33b62270f716, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.53986835
+      value: -1.894814
       objectReference: {fileID: 0}
     - target: {fileID: 5413609254299694401, guid: ba4bb196b53bb19458ae33b62270f716, type: 3}
       propertyPath: m_LocalPosition.z
@@ -264604,6 +264840,10 @@ PrefabInstance:
       value: Letrero
       objectReference: {fileID: 0}
     - target: {fileID: 121583576982588317, guid: 7c1ce1a0bb03f53488b5e4f4d68b7597, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 121583576982588317, guid: 7c1ce1a0bb03f53488b5e4f4d68b7597, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 22
       objectReference: {fileID: 0}
@@ -264692,6 +264932,10 @@ PrefabInstance:
     - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
       propertyPath: m_Name
       value: ML05_Escollera
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -264805,7 +265049,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2061902395214180579, guid: a8b1a244aa130024d80abd36657ff05d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.27770996
+      value: -2.6000001
       objectReference: {fileID: 0}
     - target: {fileID: 2061902395214180579, guid: a8b1a244aa130024d80abd36657ff05d, type: 3}
       propertyPath: m_LocalPosition.z
@@ -265024,6 +265268,10 @@ PrefabInstance:
     - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_Name
       value: C10_AireAcondicionado
+      objectReference: {fileID: 0}
+    - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -269719,6 +269967,10 @@ PrefabInstance:
       value: Letrero
       objectReference: {fileID: 0}
     - target: {fileID: 121583576982588317, guid: 7c1ce1a0bb03f53488b5e4f4d68b7597, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 121583576982588317, guid: 7c1ce1a0bb03f53488b5e4f4d68b7597, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 22
       objectReference: {fileID: 0}
@@ -270145,6 +270397,10 @@ PrefabInstance:
       value: ML05_Escollera
       objectReference: {fileID: 0}
     - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 22
       objectReference: {fileID: 0}
@@ -270402,6 +270658,10 @@ PrefabInstance:
     - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
       propertyPath: m_Name
       value: ML05_Escollera
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -274361,6 +274621,10 @@ PrefabInstance:
       value: ML05_Escollera
       objectReference: {fileID: 0}
     - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 22
       objectReference: {fileID: 0}
@@ -274786,6 +275050,10 @@ PrefabInstance:
       value: Toldo
       objectReference: {fileID: 0}
     - target: {fileID: 7810893584455476619, guid: 16dc04c480436834aa9f904fbc4de9f7, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7810893584455476619, guid: 16dc04c480436834aa9f904fbc4de9f7, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 22
       objectReference: {fileID: 0}
@@ -275007,6 +275275,10 @@ PrefabInstance:
     - target: {fileID: 3776889813479501672, guid: 2ac89ed996ed4604dbe01e4d5fc6d6a0, type: 3}
       propertyPath: m_Name
       value: ML03_MuelleRecto
+      objectReference: {fileID: 0}
+    - target: {fileID: 3776889813479501672, guid: 2ac89ed996ed4604dbe01e4d5fc6d6a0, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3776889813479501672, guid: 2ac89ed996ed4604dbe01e4d5fc6d6a0, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -275273,7 +275545,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5413609254299694401, guid: ba4bb196b53bb19458ae33b62270f716, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.53986835
+      value: -1.2701125
       objectReference: {fileID: 0}
     - target: {fileID: 5413609254299694401, guid: ba4bb196b53bb19458ae33b62270f716, type: 3}
       propertyPath: m_LocalPosition.z
@@ -275914,6 +276186,10 @@ PrefabInstance:
     - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_Name
       value: AireAcondicionado
+      objectReference: {fileID: 0}
+    - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -279578,6 +279854,10 @@ PrefabInstance:
       value: ML05_Escollera
       objectReference: {fileID: 0}
     - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 22
       objectReference: {fileID: 0}
@@ -280833,6 +281113,10 @@ PrefabInstance:
     - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
       propertyPath: m_Name
       value: ML05_Escollera
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -282214,6 +282498,10 @@ PrefabInstance:
       value: AR03_Palmera_1
       objectReference: {fileID: 0}
     - target: {fileID: 3728111541994091360, guid: fc4104ebfffbc334896b96d28fcd4e1b, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3728111541994091360, guid: fc4104ebfffbc334896b96d28fcd4e1b, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 22
       objectReference: {fileID: 0}
@@ -283335,6 +283623,10 @@ PrefabInstance:
     - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
       propertyPath: m_Name
       value: ML05_Escollera
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -284761,6 +285053,10 @@ PrefabInstance:
       value: ML05_Escollera
       objectReference: {fileID: 0}
     - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 22
       objectReference: {fileID: 0}
@@ -284931,6 +285227,10 @@ PrefabInstance:
     - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
       propertyPath: m_Name
       value: ML05_Escollera
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -286846,6 +287146,10 @@ PrefabInstance:
       value: ML05_Escollera
       objectReference: {fileID: 0}
     - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 22
       objectReference: {fileID: 0}
@@ -287247,6 +287551,10 @@ PrefabInstance:
     - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_Name
       value: C10_AireAcondicionado
+      objectReference: {fileID: 0}
+    - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -291029,6 +291337,10 @@ PrefabInstance:
       value: AireAcondicionado
       objectReference: {fileID: 0}
     - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 22
       objectReference: {fileID: 0}
@@ -291379,6 +291691,10 @@ PrefabInstance:
       value: C10_AireAcondicionado
       objectReference: {fileID: 0}
     - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 22
       objectReference: {fileID: 0}
@@ -291632,6 +291948,10 @@ PrefabInstance:
     - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
       propertyPath: m_Name
       value: ML05_Escollera
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -291920,7 +292240,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6762231082045972630, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.3
+      value: 0.19999981
       objectReference: {fileID: 0}
     - target: {fileID: 6762231082045972630, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_LocalPosition.z
@@ -296578,6 +296898,10 @@ PrefabInstance:
       value: Toldo
       objectReference: {fileID: 0}
     - target: {fileID: 7810893584455476619, guid: 16dc04c480436834aa9f904fbc4de9f7, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7810893584455476619, guid: 16dc04c480436834aa9f904fbc4de9f7, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 22
       objectReference: {fileID: 0}
@@ -297038,6 +297362,10 @@ PrefabInstance:
     - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_Name
       value: C10_AireAcondicionado
+      objectReference: {fileID: 0}
+    - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -305093,6 +305421,10 @@ PrefabInstance:
       value: ML05_Escollera
       objectReference: {fileID: 0}
     - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 22
       objectReference: {fileID: 0}
@@ -306755,7 +307087,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6762231082045972630, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.3
+      value: 1.4206468
       objectReference: {fileID: 0}
     - target: {fileID: 6762231082045972630, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_LocalPosition.z
@@ -309048,6 +309380,10 @@ PrefabInstance:
       value: C10_AireAcondicionado
       objectReference: {fileID: 0}
     - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 22
       objectReference: {fileID: 0}
@@ -310403,6 +310739,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Carro_5
       objectReference: {fileID: 0}
+    - target: {fileID: 8796588003076424182, guid: e2d8bad27df51be47921a476e9423cb1, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -311137,6 +311477,10 @@ PrefabInstance:
       value: C10_AireAcondicionado
       objectReference: {fileID: 0}
     - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 22
       objectReference: {fileID: 0}
@@ -311590,6 +311934,10 @@ PrefabInstance:
     - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_Name
       value: C10_AireAcondicionado
+      objectReference: {fileID: 0}
+    - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1163323389240093489, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -312948,6 +313296,10 @@ PrefabInstance:
       value: ML05_Escollera
       objectReference: {fileID: 0}
     - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 22
       objectReference: {fileID: 0}
@@ -313433,6 +313785,10 @@ PrefabInstance:
       value: ML01_Farol_3
       objectReference: {fileID: 0}
     - target: {fileID: 4663228981387919394, guid: 168ce416d50ba8d46adc6a697d9633d0, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4663228981387919394, guid: 168ce416d50ba8d46adc6a697d9633d0, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 22
       objectReference: {fileID: 0}
@@ -313494,7 +313850,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6762231082045972630, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.3
+      value: 2.0883088
       objectReference: {fileID: 0}
     - target: {fileID: 6762231082045972630, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_LocalPosition.z
@@ -313832,7 +314188,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6762231082045972630, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.3
+      value: 0.78589725
       objectReference: {fileID: 0}
     - target: {fileID: 6762231082045972630, guid: 372ef6932d3696343bc024e183ca90e8, type: 3}
       propertyPath: m_LocalPosition.z
@@ -315739,6 +316095,10 @@ PrefabInstance:
       value: ML05_Escollera
       objectReference: {fileID: 0}
     - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 22
       objectReference: {fileID: 0}
@@ -316686,6 +317046,10 @@ PrefabInstance:
     - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
       propertyPath: m_Name
       value: ML05_Escollera
+      objectReference: {fileID: 0}
+    - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1043588716489461236, guid: 4a42d7772831c8e4c9e9b54ff1266ba8, type: 3}
       propertyPath: m_StaticEditorFlags

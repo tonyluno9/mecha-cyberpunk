@@ -106,14 +106,21 @@ namespace MechaCyberpunk.Tests.Vehiculos
         [Test]
         public void SinPuertas_NiPiezasNiScriptsFaltantes([ValueSource(nameof(Codigos))] string codigo)
         {
-            SinPuertasNiFaltantes(Carro(codigo), codigo);
+            // T-1380/T-1397 (19-nov, a propósito): V01a, V01b y V05 volvieron a tener puertas y cofre con bisagra (PuertasCarro); antes (T-972) no tenían.
+            GameObject prefab = Carro(codigo);
+            Assert.IsNotNull(prefab.GetComponent<MechaCyberpunk.Vehiculos.Carro.PuertasCarro>(), codigo + ": PuertasCarro en la raíz (T-1397)");
+            Assert.IsTrue(prefab.GetComponentsInChildren<Transform>(true).Any(t => t.name == "Puerta_I"), codigo + ": tiene la puerta izquierda (T-1397)");
+            SinPuertasNiFaltantes(prefab, codigo, true);
         }
 
-        private static void SinPuertasNiFaltantes(GameObject prefab, string nombre)
+        private static void SinPuertasNiFaltantes(GameObject prefab, string nombre, bool conPuertas = false)
         {
             foreach (Transform t in prefab.GetComponentsInChildren<Transform>(true))
             {
-                StringAssert.DoesNotStartWith("Puerta_", t.name, nombre + ": no queda pieza de puerta (" + t.name + ")");
+                if (!conPuertas)
+                {
+                    StringAssert.DoesNotStartWith("Puerta_", t.name, nombre + ": no queda pieza de puerta (" + t.name + ")");
+                }
                 foreach (MonoBehaviour m in t.GetComponents<MonoBehaviour>())
                 {
                     Assert.IsNotNull(m, nombre + ": script faltante en " + t.name);

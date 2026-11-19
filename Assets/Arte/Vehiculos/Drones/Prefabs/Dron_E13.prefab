@@ -47,6 +47,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: MechaCyberpunk.Trafico::MechaCyberpunk.Trafico.Drones.GiroRotores
   velocidad: 1800
   alternarSentido: 1
+  distanciaMaxima: 120
 --- !u!1001 &3906955014304848466
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -95,10 +96,30 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7031808166276622644, guid: 9a697c305676f4143ad697ef4337415e, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: cc95a3034c99e4b4f9a53ed86d94b7b8, type: 2}
+    - target: {fileID: -4020924224465817570, guid: 9a697c305676f4143ad697ef4337415e, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: cc95a3034c99e4b4f9a53ed86d94b7b8, type: 2}
+    - target: {fileID: -2208572294906869865, guid: 9a697c305676f4143ad697ef4337415e, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: cc95a3034c99e4b4f9a53ed86d94b7b8, type: 2}
     - target: {fileID: 919132149155446097, guid: 9a697c305676f4143ad697ef4337415e, type: 3}
       propertyPath: m_Name
       value: E13
       objectReference: {fileID: 0}
+    - target: {fileID: 4821151904015343825, guid: 9a697c305676f4143ad697ef4337415e, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: cc95a3034c99e4b4f9a53ed86d94b7b8, type: 2}
+    - target: {fileID: 8741911205315556045, guid: 9a697c305676f4143ad697ef4337415e, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: cc95a3034c99e4b4f9a53ed86d94b7b8, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

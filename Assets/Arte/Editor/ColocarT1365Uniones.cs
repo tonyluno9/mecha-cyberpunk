@@ -32,7 +32,7 @@ namespace MechaCyberpunk.Arte.Editor
         public const string NombreRaiz = "T1365_Uniones";
 
         /// <summary>Lo que sobresale el piso de respaldo bajo el nivel de calle (m): no se ve donde hay piso y no hay z-fighting.</summary>
-        public const float BajoCalle = 0.05f;
+        public const float BajoCalle = 0.01f; // T-1410: con 0.05 la línea amarilla (y 0.02) quedaba a 0.07 m del piso de respaldo (LineasS2nPruebas pide 0.002 a 0.04)
 
         /// <summary>
         /// Franjas sin piso que dejó apagar los edificios de fondo de T530 (barrido T-1360: "hueco" y "vacio"): x0, z0, x1, z1 en planta.

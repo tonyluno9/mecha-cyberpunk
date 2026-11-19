@@ -59,6 +59,8 @@ namespace MechaCyberpunk.Arte.Editor
             CambiarDronPolicia();
             AssetDatabase.SaveAssets();
             Debug.Log("[Arte] T-1397: drones y naves importados, prefabs en " + CarpetaPrefabs + ", Dron.prefab con " + ModeloDronPolicia + ".");
+            // 19-nov: los FBX no traen materiales (importación en None); se ponen los de textura propia.
+            Correr19nov.MaterialesDrones();
         }
 
         private static void CopiarFbx(string codigo)

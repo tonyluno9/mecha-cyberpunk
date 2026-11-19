@@ -16,6 +16,7 @@ MonoBehaviour:
   radioDelEfecto: 3
   segundosEfecto: 4
   danioEnElBorde: 0.3
+  fraccionLetal: 0.6
   danioAlJugador: 0.5
   empuje: 9
   colorDestello: {r: 1, g: 0.6, b: 0.25, a: 1}
@@ -33,6 +34,9 @@ MonoBehaviour:
   colorRayo: {r: 0.35, g: 0.85, b: 1, a: 1}
   anchoRayo: 0.22
   radioRayo: 0.35
+  paredesQueAtraviesa: 3
+  multiplicadorObjetos: 3
+  factorMataGente: 20
   tamanoCarga: 0.3
   intensidadLuzRayo: 6
   segundosZumbido: 0.35

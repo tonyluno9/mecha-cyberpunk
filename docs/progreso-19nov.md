@@ -71,5 +71,14 @@ que diga "Qué sigue".
 - 04:20 Builds: Demo y Juego con Succeeded y 0 errores. Fotos finales tomadas y docs/reporte-19nov.md escrito. Se apagó el panel pintado T513 Tramo_3, que era la aguja oscura sobre el mar en K11.
 - 04:30 Merge --no-ff de integ/ciudad-19nov a main y push.
 
+- 04:35 El hook del objetivo pidió seguir hasta que quede idéntico. Ronda 5:
+  - T-1406: callejón con escalera que sube por la CE01 de z = 0 en el Cerro, nueva cámara K13 y A13;
+  - T-1407: cámara de K18 elegida por búsqueda automática y torre de reflectores movida;
+  - T-1408: E16_b rehecho en Blender; Unity sigue sin tomarlo como humano, aun con el mapeo de E16_a copiado;
+  - T-1409: peatones por zona, con un contrato nuevo en Core (IZonaDelMundo y ZonasMundo).
+- EditMode completo: 3336/3364 en la primera corrida. T-1410 arregló los bugs del mapa y T-1411 actualizó las pruebas que guardaban el look viejo, más vehículos y clips. Segunda corrida: 3365/3375. Las 10 fallas que quedan están en docs/fallas-editmode-19nov-b.md: 9 se le pasaron a T-1412 y 1 (ReglasEnsamblados, de T-1361) ya estaba en main.
+
+- 05:30 T-1412 aplicado. EditMode completo: 3373/3375; las 2 últimas de esta noche (drones sin textura, bruma en greybox) se corrigieron, y la que queda (ReglasEnsamblados) es de main. Builds finales de Demo y de Juego con Succeeded y 0 errores. FPS en el build final: el peor es Cerro/plaza_arriba con 136 (p1 109). Merge a main.
+
 ## Qué sigue
-- Ver docs/pendientes-19nov.md. Lo más visible: el encuadre de K13 y K18 y la vista aérea A13.
+- Ver docs/pendientes-19nov.md.

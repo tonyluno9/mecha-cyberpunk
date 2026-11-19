@@ -353,6 +353,12 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             foreach (string guid in AssetDatabase.FindAssets("t:Model", new[] { CarpetaAnimaciones }))
             {
                 string ruta = AssetDatabase.GUIDToAssetPath(guid);
+                // T-1411: solo los FBX sueltos de la carpeta. Los de las subcarpetas (Rifle/, Pistola/...) son los clips de PJ01 y compartidos: reconfigurarlos
+                // les cambiaba el nombre del clip (Rifle_Idle pasaba a ApuntarLarga) y rompía las pruebas de PJ01.
+                if (Path.GetDirectoryName(ruta).Replace("\\", "/") != CarpetaAnimaciones)
+                {
+                    continue;
+                }
                 if (!ReglasVisual.TryClipDeArchivo(Path.GetFileName(ruta), out ClipVisual tipo))
                 {
                     Debug.LogWarning("[Personaje] Animación ignorada (nombre no reconocido): " + ruta);

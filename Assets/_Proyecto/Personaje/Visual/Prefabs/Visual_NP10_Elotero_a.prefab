@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4197540358396602879}
   - component: {fileID: 333164822826759342}
+  - component: {fileID: 5500738525133141143}
   m_Layer: 0
   m_Name: Visual_NP10_Elotero_a
   m_TagString: Untagged
@@ -48,14 +49,27 @@ MonoBehaviour:
   animador: {fileID: 3000992614595279888}
   leerDelPadre: 1
   suavizadoVelocidad: 12
-  velocidadClipCaminar: 0.9903965
-  velocidadClipCorrer: 3.6242828
+  velocidadClipCaminar: 1.293
+  velocidadClipCorrer: 3.19
   rapidezMinima: 0.6
-  rapidezMaxima: 2.2
+  rapidezMaxima: 3
   rapidezCapaArriba: 8
   suavizadoDireccion: 14
   segundosTumbarse: 0.35
   alturaTumbado: 0.15
+--- !u!114 &5500738525133141143
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3208828358405521055}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f23fcd447cfcc64489465ee2d969f66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Personaje.Visual::MechaCyberpunk.Personaje.Visual.VariacionNPC
+  semilla: 0
 --- !u!1 &3332539368515148592
 GameObject:
   m_ObjectHideFlags: 0
@@ -177,27 +191,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4232062855498889838, guid: 5e611abbb0e983143abaef2bbbd7c7c9, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.039006744
+      value: -0.039006747
       objectReference: {fileID: 0}
     - target: {fileID: 4232062855498889838, guid: 5e611abbb0e983143abaef2bbbd7c7c9, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.023636712
+      value: -0.023636714
       objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: 5e611abbb0e983143abaef2bbbd7c7c9, type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 9100000, guid: 0b740cf5a58c2b44b9a32927a5105d55, type: 2}
+      objectReference: {fileID: 22100000, guid: 376c1eeada4a54444b163cca75ab4e54, type: 2}
     - target: {fileID: 5866666021909216657, guid: 5e611abbb0e983143abaef2bbbd7c7c9, type: 3}
       propertyPath: m_ApplyRootMotion
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7196277066524714007, guid: 5e611abbb0e983143abaef2bbbd7c7c9, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.014582601
+      value: -0.014582602
       objectReference: {fileID: 0}
     - target: {fileID: 7196277066524714007, guid: 5e611abbb0e983143abaef2bbbd7c7c9, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.024061702
+      value: -0.024061704
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -209,6 +223,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5e611abbb0e983143abaef2bbbd7c7c9, type: 3}
       insertIndex: -1
       addedObject: {fileID: 131856910854789266}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5e611abbb0e983143abaef2bbbd7c7c9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 155278346915031368}
   m_SourcePrefab: {fileID: 100100000, guid: 5e611abbb0e983143abaef2bbbd7c7c9, type: 3}
 --- !u!95 &3000992614595279888 stripped
 Animator:
@@ -245,12 +262,36 @@ MonoBehaviour:
   rapidez: 10
   socketArma: {fileID: 1060290577301511013}
   inclinacionBajada: 60
-  manosPorIK: 1
+  manosPorIK: 0
   clipPuro: 0
   maximoCorreccionCanon: 45
   inclinacionArmaLarga: -5
   maximoCorreccionArmaLarga: 120
   rapidezManoIzquierda: 8
+--- !u!114 &155278346915031368
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8362716777788488912}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d5ed43a73d7ab147b028ff2c699c13a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Personaje.Visual::MechaCyberpunk.Personaje.Visual.IKPiesYMirada
+  pies: 1
+  alturaRayo: 0.6
+  alcanceRayo: 1.1
+  rapidezPies: 10
+  objetivo: {fileID: 0}
+  mirarAlJugador: 1
+  distanciaMirada: 7
+  anguloMirada: 100
+  retardoMirada: 1
+  rapidezMirada: 4
+  pesoCuerpo: 0.2
+  alturaObjetivo: 1.5
 --- !u!4 &9170883785044551274 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 5e611abbb0e983143abaef2bbbd7c7c9, type: 3}

@@ -6,7 +6,7 @@ Se actualiza durante la noche. El detalle de cada tarea está en docs/tareas/hec
 - **ML06_EdificioMalecon**: solo hay .png (_a y _b), sin zip con el modelo. No se importó.
 - **Variantes sin zip** (solo .png): DR03_b, DR04_b, E17_b, E18_b, NP10_b y NP12_b. No hay modelo que importar ni rigear.
 - **E13 (dron de SKULLS)**: no existe un modelo 3D, solo el .png. Es provisional: DR02_b reducido a 1.1 m. Necesita su propio modelo de Tripo.
-- **E16_RobotPesadoNova_b**: el rig quedó regular. Venía con los brazos colgando; se llevó a T-pose y Unity no lo acepta como avatar Humanoid válido. Se quitó de Nova; E16_a sí funciona.
+- **E16_RobotPesadoNova_b**: T-1408 lo rehízo en Blender con el esqueleto de E16_a, pero Unity no lo toma como humano: primero porque no encontraba la cabeza, y con el mapeo de E16_a copiado da un avatar válido pero no humano (`isHuman` = falso). Sigue fuera de Nova; E16_a funciona. Hay que revisarlo a mano en el configurador de avatar de Unity.
 - **E19_PandilleroSkulls_a**: es la misma malla que E20_a (Tripo la duplicó). En el juego se usan E19_b y E19_a_2.
 - **E17, el perro robot**: rig propio de 4 patas con Perro_Idle y Perro_Caminar. Entra en la respuesta de Nova como PandilleroAPie con NavMeshAgent. No se probó en PlayMode si la IA lo mueve bien.
 - **Puertas traseras**: en V02, V03, V04, V06, V09 y V10 solo se abre la delantera.
@@ -15,7 +15,7 @@ Se actualiza durante la noche. El detalle de cada tarea está en docs/tareas/hec
 - **W10**: el arma de Nova solo existía como imagen y zip sin versionar. Se renombró a W10_ArmaNova en imageassets, pero no hay modelo en el juego. El holograma sigue como H09_ArmaNova.
 
 ## Juego
-- **Peatones por zona**: el sistema de peatones sale de un solo prefab y no conoce zonas, así que NP07–NP14 van mezclados en la lista general. Repartirlos por zona (pescador y turista en el Malecón, estibador en el Puerto) necesita un contrato nuevo en Core.
+- **Peatones por zona**: quedó con T-1409, con el contrato `IZonaDelMundo` y `ZonasMundo` en Core.
 - **Zonas de tráfico de los barrios viejos**: las cajas de LasLomas, Avenida, NeonAlto y Deshuesadero son un reparto provisional de T-1364/T-1389a. Las deben confirmar Tony o Alan.
 - **Barrio.prefab (de Alan)**: solo cambió el campo `prefabCamioneta`, para que con 5 estrellas salga la camioneta V11.
 
@@ -32,3 +32,7 @@ Se actualiza durante la noche. El detalle de cada tarea está en docs/tareas/hec
 - **Torres de Neón Alto en la vista aérea del Cerro**: con la niebla parecen flotar. Habría que bajar la niebla en altura o ponerles base.
 - **Pruebas**: no se corrió el EditMode completo ni PlayMode, por la memoria. Solo se corrieron las clases nuevas, las de zonas y las de tráfico.
 - **Fotos nocturnas en el editor**: las nubes y las estrellas solo aparecen en las fotos de T-1399 (`CieloCompleto`); `ColocarS2cLook.Foto` no las arma por defecto.
+- **ReglasEnsamblados**: la prueba PlayMode de Mundo (de Alan) referencia a Personaje desde T-1361 (18-nov). Hay que pasar `RecorridoZonasT1361Pruebas` a un contrato de Core.
+- **K13**: la ciudad no queda a la derecha, porque la ladera sube al oeste y la ciudad está al este. Para tenerla a la derecha habría que hacer un callejón que suba al norte.
+- **Peatones por zona (T-1409)**: no se probaron en PlayMode; solo con pruebas EditMode.
+- **Lámparas y tinacos de las bodegas del Puerto**: la prueba de encimados de T-995 ahora los permite (`ParejasPermitidas`).

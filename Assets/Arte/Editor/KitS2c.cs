@@ -727,7 +727,9 @@ namespace MechaCyberpunk.Arte.Editor
             {
                 r.renderingLayerMask = 1u << ColocarS2.CapaPostes;
             }
-            Light l = Luz(poste.transform, cabeza, LightType.Spot, color ?? Sodio, IntensidadPoste, 20f, 112f, Vector3.down);
+            // T-1412: sodio de zona (400, LookNocheT1392) y el Cerro con su tope de rendimiento de T-1365 (18 m); sin esto cada ronda lo dejaba en 340 y 20 m.
+            float alcancePoste = o.Nombre != null && o.Nombre.Contains("Cerro") ? RendimientoCerroT1365.AlcanceMaximoLuz : 20f;
+            Light l = Luz(poste.transform, cabeza, LightType.Spot, color ?? Sodio, LookNocheT1392.IntensidadSodio, alcancePoste, 112f, Vector3.down);
             UniversalAdditionalLightData datosLuz = l.GetUniversalAdditionalLightData();
             datosLuz.renderingLayers = uint.MaxValue & ~(1u << ColocarS2.CapaPostes);
             Halo(o, poste.transform, cabeza, piso, color ?? Sodio);

@@ -89,6 +89,7 @@ MonoBehaviour:
   cuerpo: {fileID: 0}
   brazo: {fileID: 0}
   piezasBrazo: []
+  pandillaPropia: 0
 --- !u!1001 &6907082295176804342
 PrefabInstance:
   m_ObjectHideFlags: 0
