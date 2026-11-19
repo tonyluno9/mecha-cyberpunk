@@ -314,6 +314,7 @@ namespace MechaCyberpunk.Arte.Editor
                 ArreglarFarosExistentes(raiz);
                 ApagarHacesHaciaK12(raiz, apagados);
                 PonerFaroA11(obra, mio);
+                PonerBancas(raiz, mio);
                 PonerArena(raiz);
                 PonerLetreros(raiz, mio);
                 PonerGente(raiz, mio, obra);
@@ -383,6 +384,7 @@ namespace MechaCyberpunk.Arte.Editor
             Transform grupo = new GameObject("Fila").transform;
             grupo.SetParent(mio, false);
             List<Bounds> ocupado = OcupadoDePie(raiz);
+            List<Bounds> obstaculos = ObstaculosPaseo(raiz);
             List<Vector3> borde = ColocarT1354Curva.BordeMar(-330f, 175f);
             float largo = ColocarT1354Curva.Longitud(borde);
             // Un farol queda 6 m delante de la cámara de K11 (como en la referencia); los demás cada 15 m. Las palmeras van a medio camino entre dos faroles.
@@ -398,18 +400,35 @@ namespace MechaCyberpunk.Arte.Editor
                 {
                     bool esPalmera = tipo == 1;
                     float d = dRef + PasoFila * k + (esPalmera ? PasoFila * 0.5f : 0f);
-                    if (d < 0f || d > largo) { continue; }
-                    Vector3 pt = ColocarT1354Curva.PuntoEn(borde, d, out _);
-                    if (pt.x < XFilaDesde || pt.x > XFilaHasta) { continue; }
-                    Marco(pt.x, out Vector3 linea, out _, out Vector3 mar);
-                    Vector3 pos = linea + mar * LateralFila;
-                    pos.y = ColocarT1354Curva.YBanqueta;
-                    if (Plano(pos, camK) < (esPalmera ? RadioPalmeraCamara : RadioCamara) || Plano(pos, ZonaMaleconT1413.CamaraK12) < RadioPalmeraK12 || EnBocaDeUnion(pos, MargenBoca)) { omitidos++; continue; }
-                    GameObject go = esPalmera
-                        ? PonerSimple(palmera, grupo, pos, Quaternion.Euler(0f, (float)obra.Azar.NextDouble() * 360f, 0f), 1.1f + (float)obra.Azar.NextDouble() * 0.3f, ocupado, 1.2f, "AR03_Palmera_" + nP)
-                        : PonerSimple(farol, grupo, pos, Quaternion.LookRotation(mar), 1f, ocupado, 1f, "ML01_Farol_" + nF);
-                    if (go == null) { omitidos++; continue; }
-                    if (esPalmera) { nP++; continue; }
+                    GameObject go = null;
+                    Vector3 pos = Vector3.zero;
+                    Vector3 mar = Vector3.right;
+                    // Si la pieza toca algo que ya estaba (banca, hielera, puesto...) se corre 1 o 2 m a lo largo del paseo; si ninguna posición sirve, se salta.
+                    foreach (float off in new[] { 0f, 1.2f, -1.2f, 2.2f, -2.2f })
+                    {
+                        if (d + off < 0f || d + off > largo) { continue; }
+                        Vector3 pt = ColocarT1354Curva.PuntoEn(borde, d + off, out _);
+                        if (pt.x < XFilaDesde || pt.x > XFilaHasta) { continue; }
+                        Marco(pt.x, out Vector3 linea, out _, out Vector3 mar2);
+                        Vector3 pos2 = linea + mar2 * LateralFila;
+                        pos2.y = ColocarT1354Curva.YBanqueta;
+                        if (Plano(pos2, camK) < (esPalmera ? RadioPalmeraCamara : RadioCamara) || Plano(pos2, ZonaMaleconT1413.CamaraK12) < RadioPalmeraK12 || EnBocaDeUnion(pos2, MargenBoca)) { continue; }
+                        GameObject g = esPalmera
+                            ? PonerSimple(palmera, grupo, pos2, Quaternion.Euler(0f, (float)obra.Azar.NextDouble() * 360f, 0f), 1.1f + (float)obra.Azar.NextDouble() * 0.3f, ocupado, 1.2f, "AR03_Palmera_" + nP)
+                            : PonerSimple(farol, grupo, pos2, Quaternion.LookRotation(mar2), 1f, ocupado, 1f, "ML01_Farol_" + nF);
+                        if (g == null) { continue; }
+                        if (!Libre(g, obstaculos))
+                        {
+                            Object.DestroyImmediate(g);
+                            ocupado.RemoveAt(ocupado.Count - 1);
+                            continue;
+                        }
+                        go = g;
+                        pos = pos2;
+                        mar = mar2;
+                        break;
+                    }
+                    if (go == null) { omitidos++; continue; }                    if (esPalmera) { nP++; continue; }
                     nF++;
                     Vector3 cabeza = pos + Vector3.up * fb.size.y * 0.92f;
                     KitS2c.Halo(obra, go.transform, cabeza, ColocarT1354Curva.YBanqueta, KitS2c.Sodio);
@@ -620,6 +639,85 @@ namespace MechaCyberpunk.Arte.Editor
                     Object.DestroyImmediate(tmp);
                 }
             }
+        }
+        // ================================================================ Encimados y bancas
+
+        /// <summary>Piezas de pie ya puestas en el paseo (bancas, hieleras, puestos, postes, muelle...), sin losas ni barandal ni piezas largas: lo que RevisarCiudadT995 llama props.</summary>
+        private static List<Bounds> ObstaculosPaseo(Transform raiz)
+        {
+            string[] fuera = { "Baranda", "Balaust", "Losa", "Piso", "Muro", "Franja", "Banqueta" };
+            List<Bounds> lista = new List<Bounds>();
+            foreach (string ruta in new[] { "Paseo", "Postes", "Muelle", "Puestos", ZonaMaleconT1393.Raiz1384, ZonaMaleconT1393.Raiz1384 + "/ML07", ZonaMaleconT1393.Raiz1384 + "/Carros",
+                ZonaMaleconT1393.NombreRaiz + "/Paseo", ZonaMaleconT1400.NombreRaiz + "/Paseo", ZonaMaleconT1400.NombreRaiz + "/Banqueta", ZonaMaleconT1413.NombreRaiz + "/Puestos", ZonaMaleconT1413.NombreRaiz + "/Muelle" })
+            {
+                Transform g = raiz.Find(ruta);
+                if (g == null) { continue; }
+                foreach (Transform t in g)
+                {
+                    if (!t.gameObject.activeInHierarchy || fuera.Any(n => t.name.Contains(n)) || t.GetComponentInChildren<Renderer>() == null) { continue; }
+                    Bounds b = ZonaMaleconT1393.CajaDe(t.gameObject);
+                    if (b.size.x <= 10f && b.size.z <= 10f && b.size.y >= 0.3f) { lista.Add(b); }
+                }
+            }
+            return lista;
+        }
+
+        /// <summary>True si la caja del objeto (reducida 15 % a lo ancho) no toca ningún obstáculo.</summary>
+        private static bool Libre(GameObject go, List<Bounds> obstaculos)
+        {
+            Bounds c = ZonaMaleconT1393.CajaDe(go);
+            c.size = new Vector3(c.size.x * 0.85f, c.size.y, c.size.z * 0.85f);
+            return !obstaculos.Any(o => o.Intersects(c));
+        }
+
+        /// <summary>Bancas PZ01_Banca (el modelo existe) junto al barandal, de cara al mar, en el tramo de K11: 3 a 20, 42 y 66 m delante de la cámara si no tocan nada.</summary>
+        private static void PonerBancas(Transform raiz, Transform mio)
+        {
+            GameObject banca = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Arte/Zonas/PZ/PZ01_Banca.prefab");
+            Transform grupo = new GameObject("Bancas").transform;
+            grupo.SetParent(mio, false);
+            if (banca == null) { Informe.AppendLine("FALTA PZ01_Banca: sin bancas."); return; }
+            List<Bounds> ocupado = OcupadoDePie(raiz);
+            List<Bounds> obstaculos = ObstaculosPaseo(raiz);
+            ocupado.AddRange(mio.Find("Fila").Cast<Transform>().Where(t => t.gameObject.activeInHierarchy).Select(t => ZonaMaleconT1393.CajaDe(t.gameObject)));
+            int n = 0;
+            foreach (float dx in new[] { 20f, 42f, 66f, 90f })
+            {
+                float x = CamaraK11.x - dx;
+                foreach (float off in new[] { 0f, 2f, -2f, 4f })
+                {
+                    Marco(x + off, out Vector3 linea, out _, out Vector3 mar);
+                    Vector3 pos = linea + mar * 14.2f;
+                    pos.y = ColocarT1354Curva.YBanqueta;
+                    if (EnBocaDeUnion(pos, MargenBoca)) { continue; }
+                    GameObject g = PonerSimple(banca, grupo, pos, Quaternion.LookRotation(-mar), 1f, ocupado, 1.2f, "PZ01_Banca_" + n);
+                    if (g == null) { continue; }
+                    if (!Libre(g, obstaculos)) { Object.DestroyImmediate(g); ocupado.RemoveAt(ocupado.Count - 1); continue; }
+                    n++;
+                    break;
+                }
+            }
+            Informe.AppendLine("Bancas PZ01 junto al barandal (de cara al mar): " + n + ".");
+        }
+
+        private static void ValidarEncimados(Transform raiz, Transform mio)
+        {
+            List<Bounds> obstaculos = ObstaculosPaseo(raiz);
+            int encimados = 0;
+            foreach (string g in new[] { "Fila", "Bancas" })
+            {
+                Transform grupo = mio.Find(g);
+                if (grupo == null) { continue; }
+                foreach (Transform t in grupo)
+                {
+                    if (t.GetComponentInChildren<Renderer>() == null || Libre(t.gameObject, obstaculos)) { continue; }
+                    encimados++;
+                    Informe.AppendLine("  encimado: " + g + "/" + t.name + " en " + ZonaMaleconT1393.CajaDe(t.gameObject).center.ToString("F1"));
+                }
+            }
+            int bancas = mio.Find("Bancas") == null ? 0 : mio.Find("Bancas").childCount;
+            Informe.AppendLine("Piezas nuevas (fila, bancas) que tocan una pieza existente del paseo: " + encimados + ". Bancas nuevas: " + bancas + ".");
+            Exigir(encimados == 0, encimados + " piezas nuevas se encima con otras (RevisarCiudadT995).");
         }
         // ================================================================ Haces de frente en K12
 
@@ -1028,7 +1126,7 @@ namespace MechaCyberpunk.Arte.Editor
                 Bounds pm = ZonaMaleconT1393.Medida(p);
                 if (PonerSimple(p, grupo, suelo, Quaternion.Euler(0f, (float)azar.NextDouble() * 360f, 0f), 1f, ocupado, Mathf.Clamp(Mathf.Max(pm.size.x, pm.size.z), 0.4f, 1.5f), p.name + "_" + n) != null) { n++; }
             }
-            Informe.AppendLine("Basura y cajas en el paseo: " + n + " (BS01, huacales, tambos, botes). Bancas: no hay modelo de banca en el proyecto (anotado en assets que faltan).");
+            Informe.AppendLine("Basura y cajas en el paseo: " + n + " (BS01, huacales, tambos, botes). Las bancas PZ01 las pone PonerBancas.");
         }
 
         private static void InformarCosta(Transform raiz)
@@ -1154,6 +1252,7 @@ namespace MechaCyberpunk.Arte.Editor
                     ValidarArena(raiz);
                     ValidarHacesK12(raiz);
                     ValidarBocas(mio);
+                    ValidarEncimados(raiz, mio);
                 }
             }
             finally
@@ -1232,7 +1331,7 @@ namespace MechaCyberpunk.Arte.Editor
             Informe.AppendLine("Espaciado entre faroles consecutivos en cuadro de K11: " + pasos.Count + " pares, mínimo " + (pasos.Count > 0 ? pasos.Min().ToString("F1") : "-")
                 + " m, máximo " + (pasos.Count > 0 ? pasos.Max().ToString("F1") : "-") + " m (pedido " + PasoFila + ").");
             Exigir(pasos.Count >= 3, "menos de 3 pares de faroles consecutivos en cuadro de K11.");
-            Exigir(pasos.Count == 0 || (pasos.Min() >= PasoFila - 1.5f && pasos.Max() <= PasoFila + 2.5f), "espaciado de faroles fuera de " + (PasoFila - 1.5f) + " a " + (PasoFila + 2.5f) + " m.");
+            Exigir(pasos.Count == 0 || (pasos.Min() >= PasoFila - 4.5f && pasos.Max() <= PasoFila + 4.5f), "espaciado de faroles fuera de " + (PasoFila - 4.5f) + " a " + (PasoFila + 4.5f) + " m.");
             // Duplicados viejos.
             int viejos = 0;
             foreach (Transform t in raiz.GetComponentsInChildren<Transform>(false))
