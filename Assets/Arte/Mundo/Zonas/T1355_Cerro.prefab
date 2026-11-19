@@ -552204,7 +552204,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2081198436850183565, guid: 7c1ce1a0bb03f53488b5e4f4d68b7597, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.53986835
+      value: -2.405558
       objectReference: {fileID: 0}
     - target: {fileID: 2081198436850183565, guid: 7c1ce1a0bb03f53488b5e4f4d68b7597, type: 3}
       propertyPath: m_LocalPosition.z
@@ -591258,6 +591258,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: CarroViejo_T1416_1
       objectReference: {fileID: 0}
+    - target: {fileID: 2405114081984466040, guid: ce8016fc06f688340ae10d883a96b927, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7230821679537695864, guid: ce8016fc06f688340ae10d883a96b927, type: 3}
       propertyPath: m_LocalPosition.x
       value: -362.4
@@ -600606,6 +600610,10 @@ PrefabInstance:
     - target: {fileID: 5709513967358964936, guid: ba4bb196b53bb19458ae33b62270f716, type: 3}
       propertyPath: m_Name
       value: Letrero
+      objectReference: {fileID: 0}
+    - target: {fileID: 5709513967358964936, guid: ba4bb196b53bb19458ae33b62270f716, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5709513967358964936, guid: ba4bb196b53bb19458ae33b62270f716, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -696968,6 +696976,10 @@ PrefabInstance:
       value: CC05_Lavadero
       objectReference: {fileID: 0}
     - target: {fileID: 2372248776272525431, guid: 169029046d3061b468bd7771de8f7212, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2372248776272525431, guid: 169029046d3061b468bd7771de8f7212, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 87
       objectReference: {fileID: 0}
@@ -724003,6 +724015,10 @@ PrefabInstance:
     - target: {fileID: 121583576982588317, guid: 7c1ce1a0bb03f53488b5e4f4d68b7597, type: 3}
       propertyPath: m_Name
       value: Letrero
+      objectReference: {fileID: 0}
+    - target: {fileID: 121583576982588317, guid: 7c1ce1a0bb03f53488b5e4f4d68b7597, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 121583576982588317, guid: 7c1ce1a0bb03f53488b5e4f4d68b7597, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -767902,6 +767918,10 @@ PrefabInstance:
     - target: {fileID: 2372248776272525431, guid: 169029046d3061b468bd7771de8f7212, type: 3}
       propertyPath: m_Name
       value: CC05_Lavadero
+      objectReference: {fileID: 0}
+    - target: {fileID: 2372248776272525431, guid: 169029046d3061b468bd7771de8f7212, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2372248776272525431, guid: 169029046d3061b468bd7771de8f7212, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -820260,6 +820280,10 @@ PrefabInstance:
     - target: {fileID: 252313323633742181, guid: f301c656b26850e47a24900c0f5d09be, type: 3}
       propertyPath: m_Name
       value: CC04_Tendedero
+      objectReference: {fileID: 0}
+    - target: {fileID: 252313323633742181, guid: f301c656b26850e47a24900c0f5d09be, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 252313323633742181, guid: f301c656b26850e47a24900c0f5d09be, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -999472,7 +999496,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5291327846827206125, guid: 169029046d3061b468bd7771de8f7212, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 8.722287
+      value: 7.072466
       objectReference: {fileID: 0}
     - target: {fileID: 5291327846827206125, guid: 169029046d3061b468bd7771de8f7212, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1023272,6 +1023296,10 @@ PrefabInstance:
     - target: {fileID: 2405114081984466040, guid: ce8016fc06f688340ae10d883a96b927, type: 3}
       propertyPath: m_Name
       value: CarroViejo_T1416_0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2405114081984466040, guid: ce8016fc06f688340ae10d883a96b927, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7230821679537695864, guid: ce8016fc06f688340ae10d883a96b927, type: 3}
       propertyPath: m_LocalPosition.x
