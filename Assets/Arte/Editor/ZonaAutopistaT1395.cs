@@ -185,7 +185,7 @@ namespace MechaCyberpunk.Arte.Editor
             Bounds? caja = null;
             foreach (Renderer r in go.GetComponentsInChildren<Renderer>(true))
             {
-                if (!r.enabled)
+                if (!r.enabled || r.name.StartsWith("Halo"))
                 {
                     continue;
                 }
@@ -512,15 +512,13 @@ namespace MechaCyberpunk.Arte.Editor
 
         // ---------------------------------------------------------------- Postes de madera y cables
 
-        private static Material Madera() => KitS2c.Mat("T1395_Madera", () => KitS2c.Lit(new Color(0.22f, 0.15f, 0.09f), 0.12f, KitS2c.TexMuro()));
 
         /// <summary>
-        /// Postes de madera (caja alargada con material de textura y su travesaño) en la banqueta de la calle baja (frente a las casas) y de la calle oeste,
+        /// Postes del Cerro (C07_PosteLuz con transformador, KitS2c.Poste) en la banqueta de la calle baja (frente a las casas) y de la calle oeste,
         /// con tres cables entre postes, cables hacia los postes de luz C07 vecinos y acometidas a la pared de las casas.
         /// </summary>
         private static void PostesYCables(KitS2c.Obra o, Transform raiz, Transform padre, List<Transform> casas, List<Ocupado> ocupados)
         {
-            Material madera = Madera();
             List<Vector3> topesC07 = new List<Vector3>();
             Transform c07 = raiz.Find("Bajo/Postes");
             if (c07 != null)
@@ -554,11 +552,8 @@ namespace MechaCyberpunk.Arte.Editor
                         continue;
                     }
                     ocupados.Add(new Ocupado { Caja = caja });
-                    GameObject poste = KitS2c.Losa(o, padre, "PosteMadera_" + fila + "_" + topes.Count, pie + Vector3.up * 3.5f, Quaternion.identity, new Vector3(0.24f, 7f, 0.24f), madera, 1.5f, true);
-                    GameObject brazo = KitS2c.Losa(o, padre, "Travesano_" + fila + "_" + topes.Count, pie + Vector3.up * 6.6f, Quaternion.LookRotation(d), new Vector3(1.8f, 0.12f, 0.12f), madera, 1.5f, false);
-                    GameObjectUtility.SetStaticEditorFlags(poste, StaticEditorFlags.BatchingStatic | StaticEditorFlags.OccludeeStatic);
-                    GameObjectUtility.SetStaticEditorFlags(brazo, StaticEditorFlags.BatchingStatic | StaticEditorFlags.OccludeeStatic);
-                    topes.Add(pie + Vector3.up * 6.75f);
+                    // Modelo C07_PosteLuz con transformador, el mismo que usa el Cerro (KitS2c.Poste): trae su lámpara de sodio, su halo y devuelve la punta.
+                    topes.Add(KitS2c.Poste(o, padre, pie, fila == 0 ? Vector3.forward : Vector3.right, YBanqueta, topes.Count % 2 == 0));
                 }
                 // Tres cables entre postes seguidos (en los extremos del travesaño y al centro).
                 for (int k = 0; k + 1 < topes.Count; k++)
@@ -791,7 +786,7 @@ namespace MechaCyberpunk.Arte.Editor
                     fallos += lucesMias > TopeLuces ? 1 : 0;
                     s.AppendLine("Casas nuevas: " + (mia.Find("CasasNuevas")?.childCount ?? 0) + ", letreros de neón: " + mia.GetComponentsInChildren<Transform>(true).Count(t => t.name == "Neon")
                         + ", aires: " + mia.GetComponentsInChildren<Transform>(true).Count(t => t.name.StartsWith("Aire_")) + ", toldos: " + mia.GetComponentsInChildren<Transform>(true).Count(t => t.name.StartsWith("Toldo_"))
-                        + ", postes de madera: " + (mia.Find("PostesMadera")?.GetComponentsInChildren<Transform>(true).Count(t => t.name.StartsWith("PosteMadera_")) ?? 0)
+                        + ", postes de madera: " + (mia.Find("PostesMadera")?.GetComponentsInChildren<Transform>(true).Count(t => t.name.StartsWith("Poste_")) ?? 0)
                         + ", carros: " + (mia.Find("Estacionados")?.childCount ?? 0) + ", basura: " + (mia.Find("Basura")?.childCount ?? 0));
                     if (!raiz.GetComponentsInChildren<MeshRenderer>(true).Any(r => r.name == "Cables" && r.transform.IsChildOf(mia)))
                     {
