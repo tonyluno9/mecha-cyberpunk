@@ -1971,7 +1971,7 @@ namespace MechaCyberpunk.Arte.Editor
             return "Assets/Arte/Personajes/" + codigo + "/" + nombre + ".fbx";
         }
 
-        private static bool PonerNpc(Ctx c, Transform padre, string nombre, Vector3 pos, float yaw)
+        private static bool PonerNpc(Ctx c, Transform padre, string nombre, Vector3 pos, float yaw, bool muestrear = true)
         {
             GameObject fbx = AssetDatabase.LoadAssetAtPath<GameObject>(RutaFbx(nombre));
             if (fbx == null)
@@ -2006,7 +2006,7 @@ namespace MechaCyberpunk.Arte.Editor
                     {
                         clip = ctrl.animationClips[0];
                     }
-                    if (clip != null)
+                    if (clip != null && muestrear)
                     {
                         clip.SampleAnimation(g, Mathf.Min(0.3f, clip.length * 0.5f));
                     }
@@ -2028,10 +2028,23 @@ namespace MechaCyberpunk.Arte.Editor
                 bajo = Mathf.Min(bajo, t.position.y);
                 alto = Mathf.Max(alto, t.position.y);
             }
-            g.transform.position += Vector3.up * (pos.y + 0.03f - bajo);
-            if (alto - bajo < 0.9f || alto - bajo > 2.4f)
+            float medida = alto - bajo;
+            if (float.IsNaN(medida) || medida < 0.9f || medida > 2.4f)
             {
-                Log("AVISO: " + g.name + " mide " + (alto - bajo).ToString("0.00", CultureInfo.InvariantCulture) + " m entre huesos.");
+                Log("AVISO: " + g.name + " mide " + medida.ToString("0.00", CultureInfo.InvariantCulture) + " m entre huesos" + (muestrear ? "; se rehace sin muestrear la pose." : "."));
+                if (muestrear)
+                {
+                    Object.DestroyImmediate(g);
+                    return PonerNpc(c, padre, nombre, pos, yaw, false);
+                }
+            }
+            g.transform.position += Vector3.up * (pos.y + 0.03f - bajo);
+            // Que se dibuje siempre: la malla con huesos pierde su caja cuando el Animator no corre.
+            g.SetActive(true);
+            foreach (SkinnedMeshRenderer sr in g.GetComponentsInChildren<SkinnedMeshRenderer>(true))
+            {
+                sr.updateWhenOffscreen = true;
+                sr.enabled = true;
             }
             return true;
         }
@@ -2122,8 +2135,8 @@ namespace MechaCyberpunk.Arte.Editor
                 }
             }
             // 3. De fachada a fachada cruzando la calle (arriba, a más de 5 m del piso).
-            List<VariarCerroT1364.CasaT> oeste = c.Casas.Where(h => h.Kit && h.Normal > 0f && Mathf.Abs((h.X1 + h.X0) * 0.5f - (XCentroCalle - 6.5f)) < 3f).OrderBy(h => h.Z0).ToList();
-            List<VariarCerroT1364.CasaT> este = c.Casas.Where(h => h.Kit && h.Normal < 0f && Mathf.Abs((h.X1 + h.X0) * 0.5f - (XCentroCalle + 6.5f)) < 3f).ToList();
+            List<VariarCerroT1364.CasaT> oeste = c.Casas.Where(h => h.Normal > 0f && Mathf.Abs(h.Frente - (XCentroCalle - 6.5f)) < 3.5f).OrderBy(h => h.Z0).ToList();
+            List<VariarCerroT1364.CasaT> este = c.Casas.Where(h => h.Normal < 0f && Mathf.Abs(h.Frente - (XCentroCalle + 6.5f)) < 3.5f).ToList();
             foreach (VariarCerroT1364.CasaT w in oeste)
             {
                 if (cruzados >= 40)
@@ -2204,9 +2217,11 @@ namespace MechaCyberpunk.Arte.Editor
             mp.Quad(0, new Vector3(-0.2f, 0.28f, 0f), new Vector3(0.2f, 0.28f, 0f), new Vector3(0.2f, -0.28f, 0f), new Vector3(-0.2f, -0.28f, 0f), Vector3.back);
             Mesh prenda = mp.Crear("T1441_PrendaK13");
             c.Obra.Mallas.Add(prenda);
-            List<VariarCerroT1364.CasaT> oeste = c.Casas.Where(h => h.Kit && h.Normal > 0f && Mathf.Abs((h.X1 + h.X0) * 0.5f - (XCentroCalle - 6.5f)) < 3f).ToList();
+            List<VariarCerroT1364.CasaT> oeste = c.Casas.Where(h => h.Normal > 0f && Mathf.Abs(h.Frente - (XCentroCalle - 6.5f)) < 3.5f).ToList();
             List<Vector3> postes = c.Postes.Where(q => q.x > XCentroCalle + 2f && q.z > 40f && q.z < 150f).OrderBy(q => Mathf.Abs(q.z - 110f)).ToList();
-            Log("Tendederos K13: " + oeste.Count + " casas del oeste y " + postes.Count + " postes del lado del paseo.");
+            Log("Tendederos K13: " + oeste.Count + " casas del oeste y " + postes.Count + " postes del lado del paseo (casas con la fachada hacia el este: " + c.Casas.Count(h => h.Normal > 0f)
+                + "; planos de fachada entre " + (c.Casas.Count(h => h.Normal > 0f) == 0 ? 0f : c.Casas.Where(h => h.Normal > 0f).Min(h => h.Frente)).ToString("0.0", CultureInfo.InvariantCulture) + " y "
+                + (c.Casas.Count(h => h.Normal > 0f) == 0 ? 0f : c.Casas.Where(h => h.Normal > 0f).Max(h => h.Frente)).ToString("0.0", CultureInfo.InvariantCulture) + ").");
             HashSet<VariarCerroT1364.CasaT> usadas = new HashSet<VariarCerroT1364.CasaT>();
             int lineas = 0, prendas = 0;
             foreach (Vector3 poste in postes)
@@ -2235,7 +2250,14 @@ namespace MechaCyberpunk.Arte.Editor
                         Log("  tendedero K13 en z " + zc.ToString("0", CultureInfo.InvariantCulture) + ": la casa es muy baja (" + (w.Top - suelo).ToString("0.0", CultureInfo.InvariantCulture) + " m sobre la calle).");
                         continue;
                     }
-                    Vector3 a = new Vector3(w.X1 + 0.06f, y, zc + c.Obra.Rango(-0.8f, 0.8f));
+                    float za = zc + c.Obra.Rango(-0.8f, 0.8f);
+                    Vector3 pw;
+                    if (!Pared(c, w, y, za, out pw))
+                    {
+                        pw = new Vector3(w.Frente, y, za);
+                        Log("  tendedero K13 en z " + zc.ToString("0", CultureInfo.InvariantCulture) + ": el rayo horizontal no halló pared; se usa el plano de la fachada x = " + w.Frente.ToString("0.0", CultureInfo.InvariantCulture) + ".");
+                    }
+                    Vector3 a = new Vector3(pw.x + w.Normal * 0.06f, y, za);
                     Vector3 b = new Vector3(poste.x - 0.1f, Mathf.Min(poste.y - 0.6f, y + c.Obra.Rango(-0.3f, 0.4f)), poste.z);
                     const float flecha = 0.45f;
                     Vector3 medio = (a + b) * 0.5f + Vector3.down * 0.3f;
@@ -2282,8 +2304,8 @@ namespace MechaCyberpunk.Arte.Editor
             mp.Quad(0, new Vector3(-0.2f, 0.28f, 0f), new Vector3(0.2f, 0.28f, 0f), new Vector3(0.2f, -0.28f, 0f), new Vector3(-0.2f, -0.28f, 0f), Vector3.back);
             Mesh prenda = mp.Crear("T1441_Prenda");
             c.Obra.Mallas.Add(prenda);
-            List<VariarCerroT1364.CasaT> oeste = c.Casas.Where(h => h.Kit && h.Normal > 0f && Mathf.Abs((h.X1 + h.X0) * 0.5f - (XCentroCalle - 6.5f)) < 3f && (h.Z0 + h.Z1) * 0.5f > ZVistaSur && (h.Z0 + h.Z1) * 0.5f < ZVistaNorte).OrderBy(h => Mathf.Abs((h.Z0 + h.Z1) * 0.5f - 110f)).ToList();
-            List<VariarCerroT1364.CasaT> este = c.Casas.Where(h => h.Kit && h.Normal < 0f && Mathf.Abs((h.X1 + h.X0) * 0.5f - (XCentroCalle + 6.5f)) < 3f).ToList();
+            List<VariarCerroT1364.CasaT> oeste = c.Casas.Where(h => h.Normal > 0f && Mathf.Abs(h.Frente - (XCentroCalle - 6.5f)) < 3.5f && (h.Z0 + h.Z1) * 0.5f > ZVistaSur && (h.Z0 + h.Z1) * 0.5f < ZVistaNorte).OrderBy(h => Mathf.Abs((h.Z0 + h.Z1) * 0.5f - 110f)).ToList();
+            List<VariarCerroT1364.CasaT> este = c.Casas.Where(h => h.Normal < 0f && Mathf.Abs(h.Frente - (XCentroCalle + 6.5f)) < 3.5f).ToList();
             int lineas = 0, prendas = 0;
             foreach (VariarCerroT1364.CasaT w in oeste)
             {
@@ -2604,7 +2626,23 @@ namespace MechaCyberpunk.Arte.Editor
                 Transform basura = calle.Find("Basura");
                 if (basura != null)
                 {
-                    foreach (Transform t in basura)
+                    // Se miden las piezas, no los contenedores Lod_* (agrupan por cuadro de 40 m y su caja abarca todo).
+                    List<Transform> piezasBasura = new List<Transform>();
+                    foreach (Transform g in basura)
+                    {
+                        if (g.name.StartsWith("Lod_"))
+                        {
+                            foreach (Transform u in g)
+                            {
+                                piezasBasura.Add(u);
+                            }
+                        }
+                        else
+                        {
+                            piezasBasura.Add(g);
+                        }
+                    }
+                    foreach (Transform t in piezasBasura)
                     {
                         Bounds b = Cubierta(t);
                         if (Mathf.Abs(b.center.x - XCentroCalle) - b.extents.x < MitadCarril)
@@ -2734,6 +2772,7 @@ namespace MechaCyberpunk.Arte.Editor
                 desde.y += dy;
                 hacia.y += dy;
             }
+            DiagnosticoGente(desde, hacia);
             string juego = "Logs/t1441-cerro-k13-juego.png";
             ColocarS2cLook.Foto(desde, hacia, juego, CampoK13);
             ColocarS2.LadoALado("imageassets/referencias/look/K13_ColoniaCerro.png", juego, CarpetaFotos + "/cerro-k13-t1441.png");
@@ -2768,6 +2807,52 @@ namespace MechaCyberpunk.Arte.Editor
             ColocarS2.LadoALado("imageassets/referencias/look/A13_ColoniaCerro_Aerea.png", juegoA, CarpetaFotos + "/cerro-a13-t1441.png");
             Debug.Log("[ZonaCerroT1441] Fotos: K13 desde " + desde + " hacia " + hacia + "; A13 desde " + desdeA + " hacia " + haciaA + ".");
             UnityEditor.SceneManagement.EditorSceneManager.OpenScene(ColocarS2.RutaEscena, UnityEditor.SceneManagement.OpenSceneMode.Single);
+        }
+
+        /// <summary>Logs/t1441-fotos.txt: para cada NPC de la escena, si está activo, sus renderers (tipo, enabled, bounds, capa) y dónde cae en pantalla con la cámara de la foto K13.</summary>
+        private static void DiagnosticoGente(Vector3 desde, Vector3 hacia)
+        {
+            StringBuilder sb = new StringBuilder("T-1441: diagnóstico de la gente en la foto K13\nCámara: desde " + desde.ToString("F2") + " hacia " + hacia.ToString("F2") + ", campo " + CampoK13 + ", aspecto 1376/768.\n");
+            GameObject go = new GameObject("T1441_CamaraDiagnostico");
+            go.hideFlags = HideFlags.HideAndDontSave;
+            Camera cam = go.AddComponent<Camera>();
+            cam.fieldOfView = CampoK13;
+            cam.aspect = 1376f / 768f;
+            cam.nearClipPlane = 0.05f;
+            cam.farClipPlane = 600f;
+            cam.transform.position = desde;
+            cam.transform.LookAt(hacia);
+            int n = 0, activos = 0, enPantalla = 0;
+            foreach (Transform t in Object.FindObjectsByType<Transform>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+            {
+                if (!t.name.StartsWith("NPC_"))
+                {
+                    continue;
+                }
+                n++;
+                if (t.gameObject.activeInHierarchy)
+                {
+                    activos++;
+                }
+                Vector3 vp = cam.WorldToViewportPoint(t.position + Vector3.up * 0.9f);
+                bool dentro = vp.z > 0f && vp.x > 0f && vp.x < 1f && vp.y > 0f && vp.y < 1f;
+                if (dentro)
+                {
+                    enPantalla++;
+                }
+                sb.AppendLine(t.name + " en " + t.position.ToString("F2") + " activo=" + t.gameObject.activeInHierarchy + " viewport=" + vp.ToString("F2") + (dentro ? " DENTRO" : " fuera") + " distancia=" + vp.z.ToString("F1"));
+                sb.AppendLine("   ruta: " + Ruta(t));
+                foreach (Renderer r in t.GetComponentsInChildren<Renderer>(true))
+                {
+                    SkinnedMeshRenderer sk = r as SkinnedMeshRenderer;
+                    sb.AppendLine("   " + r.GetType().Name + " " + r.name + " enabled=" + r.enabled + " activo=" + r.gameObject.activeInHierarchy + " capa=" + r.gameObject.layer + " bounds centro " + r.bounds.center.ToString("F2") + " tamaño " + r.bounds.size.ToString("F2")
+                        + (sk != null ? " malla=" + (sk.sharedMesh != null ? sk.sharedMesh.name : "NULA") + " updateWhenOffscreen=" + sk.updateWhenOffscreen : "") + " materiales=" + r.sharedMaterials.Length);
+                }
+            }
+            sb.AppendLine("NPCs: " + n + ", activos " + activos + ", dentro del cuadro " + enPantalla + ".");
+            Object.DestroyImmediate(go);
+            Escribir("Logs/t1441-fotos.txt", sb);
+            Debug.Log("[ZonaCerroT1441] NPCs " + n + ", activos " + activos + ", dentro del cuadro " + enPantalla + " (detalle en Logs/t1441-fotos.txt).");
         }
 
         // ================================================================ Ayudas
