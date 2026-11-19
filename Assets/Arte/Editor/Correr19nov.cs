@@ -129,5 +129,33 @@ namespace MechaCyberpunk.Arte.Editor
             System.IO.File.WriteAllText("Logs/t1403-apagados.txt", quedan.ToString());
             Debug.Log("Correr19nov: reencendidos " + n + " renderers de T-1403");
         }
+
+        /// <summary>Apaga, dentro de T1388_Uniones, lo que tenga collider en las bocas U1..U9 entre 1 y 3 m (lo que mide OrillasT1358Pruebas).</summary>
+        public static void DespejarBocasUniones()
+        {
+            const string ruta = "Assets/Arte/Mundo/Zonas/T1388_Uniones.prefab";
+            var raiz = PrefabUtility.LoadPrefabContents(ruta);
+            var log = new StringBuilder();
+            foreach (var col in raiz.GetComponentsInChildren<Collider>())
+            {
+                var b = col.bounds;
+                if (b.max.y < 1f || b.min.y > 3f) continue;
+                foreach (var u in ColocarT1358Orillas.Uniones)
+                {
+                    var r = u.rect;
+                    if (b.max.x > r.x && b.min.x < r.z && b.max.z > r.y && b.min.z < r.w)
+                    {
+                        Transform t = col.transform;
+                        while (t.parent != null && t.parent != raiz.transform && t.parent.parent != raiz.transform) t = t.parent;
+                        log.AppendLine(u.nombre + "	" + t.name + "	" + b.center);
+                        t.gameObject.SetActive(false);
+                        break;
+                    }
+                }
+            }
+            PrefabUtility.SaveAsPrefabAsset(raiz, ruta);
+            PrefabUtility.UnloadPrefabContents(raiz);
+            System.IO.File.WriteAllText("Logs/despejar-bocas.txt", log.ToString());
+        }
     }
 }
