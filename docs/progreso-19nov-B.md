@@ -32,6 +32,12 @@ solo escriben scripts de editor; Unity corre aquí, en s2, una sola instancia en
 - 08:40 Lanzadas T-1440 a T-1443 en paralelo (brief docs/brief-19nov-B.md). Nota a la sesión A en docs/para-sesion-A-19nov.md.
   s2 en main compila con 0 errores (3 min 44 s).
 
+- Integración en `integ/zonas-19nov-B` (en s2). Faltaban K15 y A15 en las referencias de s2: copiadas.
+- T-1442 ronda 1 corrida: compila, 0 fallas en Validar, pero la foto no se parece (avenida de tránsito vacía, barco y grúas a 140 m,
+  NPCs blancos y en pose T, charcos casi invisibles). Devuelta para ronda 2: patio junto al muelle con cámara nueva.
+- T-1443 ronda 1 corrida: 142 contenedores con color, carriles pintados, 70 charcos, balizas, ventanas del barco; 0 bodegas, grúas 1 m
+  enterradas, charcos de luz cuadrados y cámara mirando al agua. Devuelta para ronda 2 (búsqueda automática de cámara).
+
 ## Qué sigue
 - Al volver cada subagente: merge de su rama en `integ/zonas-19nov-B` (en s2), correr Aplicar en orden T1440 → T1441 → T1442 → T1443,
   luego Validar y, en otra corrida, Fotos. Revisar las fotos y devolver errores.
