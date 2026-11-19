@@ -53,7 +53,7 @@ namespace MechaCyberpunk.Arte.Editor
         // Neón
         private const float IntensidadNeon = 16f;
         private const float AlcanceNeon = 11f;
-        private const int CupoLucesNeon = 80;
+        private const int CupoLucesNeon = 30; // Opus: la escena ya tenía 1330 Light; con T-1463 y T-1464 el tope de 1400 no da para 80
         private const int CupoDerrames = 220;
         private const float CeldaNeon = 4f;
         private const float DistanciaLuzNeon = 2.5f;

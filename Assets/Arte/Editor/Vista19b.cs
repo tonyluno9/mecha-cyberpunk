@@ -107,7 +107,16 @@ namespace MechaCyberpunk.Arte.Editor
                         origen = "marca " + RutaDe(marca);
                     }
                     string juego = "Logs/vista19b-" + t.Archivo + "-juego.png";
-                    ColocarS2cLook.Foto(t.Desde, t.Hacia, juego, t.Campo);
+                    string poblados = Poblar(t);
+                    try
+                    {
+                        ColocarS2cLook.Foto(t.Desde, t.Hacia, juego, t.Campo);
+                    }
+                    finally
+                    {
+                        Quitar();
+                    }
+                    origen += poblados;
                     string referencia = Referencias + t.Referencia + ".png";
                     string salida = Carpeta + t.Archivo + ".png";
                     if (File.Exists(referencia))
@@ -135,6 +144,62 @@ namespace MechaCyberpunk.Arte.Editor
             File.WriteAllText("Logs/vista19b.txt", log.ToString());
             Debug.Log("[Arte] " + log);
             EditorSceneManager.OpenScene(ColocarS2.RutaEscena, OpenSceneMode.Single); // sin guardar
+        }
+
+        /// <summary>Tipos de zona con ayudantes de foto: static PoblarFoto(Camera) antes de la foto (carros y peatones donde el juego los pone) y static QuitarFoto() después.</summary>
+        private static IEnumerable<Type> TiposConPoblar()
+        {
+            return typeof(Vista19b).Assembly.GetTypes().Where(x => x.GetMethod("PoblarFoto", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static, null, new[] { typeof(Camera) }, null) != null);
+        }
+
+        private static string Poblar(Toma t)
+        {
+            var go = new GameObject("Vista19b_CamaraPoblar");
+            var cam = go.AddComponent<Camera>();
+            cam.enabled = false;
+            cam.fieldOfView = t.Campo;
+            cam.aspect = 1376f / 768f;
+            cam.farClipPlane = 600f;
+            go.transform.position = t.Desde;
+            go.transform.LookAt(t.Hacia);
+            var nombres = new StringBuilder();
+            try
+            {
+                foreach (Type tipo in TiposConPoblar())
+                {
+                    try
+                    {
+                        tipo.GetMethod("PoblarFoto", new[] { typeof(Camera) }).Invoke(null, new object[] { cam });
+                        nombres.Append(" +" + tipo.Name + ".PoblarFoto");
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.LogException(e.InnerException ?? e);
+                        nombres.Append(" FALLO " + tipo.Name + ".PoblarFoto");
+                    }
+                }
+            }
+            finally
+            {
+                Object.DestroyImmediate(go);
+            }
+            return nombres.ToString();
+        }
+
+        private static void Quitar()
+        {
+            foreach (Type tipo in TiposConPoblar())
+            {
+                var m = tipo.GetMethod("QuitarFoto", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static, null, Type.EmptyTypes, null);
+                try
+                {
+                    m?.Invoke(null, null);
+                }
+                catch (Exception e)
+                {
+                    Debug.LogException(e.InnerException ?? e);
+                }
+            }
         }
 
         private static string Arg(string[] args, string nombre)
