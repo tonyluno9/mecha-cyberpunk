@@ -120,6 +120,7 @@ namespace MechaCyberpunk.Arte.Editor
             public Malla Brillo = new Malla();
             public Malla Charcos = new Malla();
             public Malla Techos = new Malla();
+            public Dictionary<Casa, float> TechosCasa = new Dictionary<Casa, float>();
             public readonly List<Vector3> PtsAsfalto = new List<Vector3>(), PtsEscalera = new List<Vector3>(), PtsPoste = new List<Vector3>(), PtsCasa = new List<Vector3>(), PtsCiudad = new List<Vector3>();
         }
 
@@ -162,6 +163,8 @@ namespace MechaCyberpunk.Arte.Editor
                 Paso("pisos extra", () => Pisos(c));
                 Paso("postes y cables", () => Postes(c));
                 Paso("carros", () => Carros(c));
+                Paso("taludes con muros CC08", () => Taludes(c));
+                Paso("neones y ventanas calidas", () => Fachadas(c));
                 Paso("cámara A13 (fija)", () => Camara(c));
                 Paso("mallas sueltas", () => MallasSueltas(c));
                 Estatico(c);
@@ -732,6 +735,61 @@ namespace MechaCyberpunk.Arte.Editor
             }
         }
 
+        /// <summary>true si el punto cae en el cuadro de la cámara A13 fija (u, v en 0..1).</summary>
+        private static bool EnCuadroA13(Vector3 q, out float u, out float v)
+        {
+            Vector3 f = (A13Hacia - A13Desde).normalized;
+            Vector3 rr = Vector3.Cross(Vector3.up, f);
+            rr.y = 0f;
+            rr.Normalize();
+            Vector3 uu = Vector3.Cross(f, rr);
+            float tanV = Mathf.Tan(CampoA13 * 0.5f * Mathf.Deg2Rad), tanH = tanV * (AnchoFoto / AltoFoto);
+            return Proy(q, A13Desde, f, rr, uu, tanH, tanV, 10f, 450f, out u, out v);
+        }
+
+        private static float Golpe(Ctx c, Transform propio, Vector3 o, float dist)
+        {
+            int n = c.Fisica.Raycast(o, Vector3.down, bufRayos, dist, ~0, QueryTriggerInteraction.Ignore);
+            float mejor = float.MinValue;
+            for (int i = 0; i < n; i++)
+            {
+                if (!bufRayos[i].collider.transform.IsChildOf(propio) && bufRayos[i].point.y > mejor)
+                {
+                    mejor = bufRayos[i].point.y;
+                }
+            }
+            return mejor;
+        }
+
+        /// <summary>
+        /// Apoyo del piso: 5 rayos bajo su base. Primero desde 0.3 m sobre la base; si no tocan nada (el piso puede estar hundido y el rayo nace dentro del collider de abajo), desde 1.5 m.
+        /// Devuelve false si ningún rayo encuentra algo en que apoyar; <paramref name="peor"/> es la mayor diferencia con la base.
+        /// </summary>
+        private static bool MedirApoyo(Ctx c, Transform p, Bounds b, out float peor)
+        {
+            peor = 0f;
+            bool toca = false;
+            foreach ((float fx, float fz) in new[] { (0.5f, 0.5f), (0.2f, 0.2f), (0.8f, 0.2f), (0.2f, 0.8f), (0.8f, 0.8f) })
+            {
+                float x = Mathf.Lerp(b.min.x, b.max.x, fx), z = Mathf.Lerp(b.min.z, b.max.z, fz);
+                float mejor = Golpe(c, p, new Vector3(x, b.min.y + 0.3f, z), 3f);
+                if (mejor == float.MinValue)
+                {
+                    float m2 = Golpe(c, p, new Vector3(x, b.min.y + 1.5f, z), 4.5f);
+                    if (m2 > float.MinValue && m2 <= b.min.y + 1.2f)
+                    {
+                        mejor = m2;
+                    }
+                }
+                if (mejor > float.MinValue)
+                {
+                    toca = true;
+                    peor = Mathf.Max(peor, Mathf.Abs(mejor - b.min.y));
+                }
+            }
+            return toca;
+        }
+
         /// <summary>Proyección de un punto al cuadro de la cámara (u, v en 0..1; v crece hacia arriba); false si no cae dentro o fuera de la profundidad pedida.</summary>
         private static bool Proy(Vector3 q, Vector3 pos, Vector3 f, Vector3 rr, Vector3 uu, float tanH, float tanV, float profMin, float profMax, out float u, out float v)
         {
@@ -899,8 +957,18 @@ namespace MechaCyberpunk.Arte.Editor
                     + p.Mala.ToString("0.00", CultureInfo.InvariantCulture) + " m, hueco " + p.Hueco.ToString("0.0", CultureInfo.InvariantCulture) + " m, casas a apagar " + p.Unidades.Count + (p.Protegido ? ", estorba un poste o escalera vieja" : "") + ".");
             }
             // El terreno se aplana bajo la escalera (AplanarTerreno): ya no importa el entierro; se prefieren los pasillos con menos casas a apagar.
-            List<PlanEscalera> buenas = candidatas.Where(p => !p.Protegido && p.Pasos > 0 && p.Unidades.Count <= 40)
-                .OrderBy(p => p.Unidades.Count - p.Z * 0.3f).ToList();
+            // Primero las que caen en el cuadro de la cámara A13 fija (centro-izquierda), luego las de menos casas a apagar.
+            Func<PlanEscalera, float> clave = p =>
+            {
+                float u, v;
+                bool dentro = EnCuadroA13(new Vector3((XEscaleraArriba + XEscaleraAbajo) * 0.5f, (p.YArriba + p.YAbajo) * 0.5f, p.Z), out u, out v) && u > 0.05f && u < 0.95f && v > 0.08f && v < 0.95f;
+                return (dentro ? 0f : 1000f) + p.Unidades.Count + (dentro ? Mathf.Abs(u - 0.4f) * 25f : 0f);
+            };
+            List<PlanEscalera> buenas = candidatas.Where(p => !p.Protegido && p.Pasos > 0 && p.Unidades.Count <= 40).OrderBy(clave).ToList();
+            foreach (PlanEscalera pb in buenas.Take(4))
+            {
+                Log("Pasillo candidato z = " + pb.Z.ToString("0", CultureInfo.InvariantCulture) + ": " + (clave(pb) < 1000f ? "EN el cuadro de A13" : "fuera del cuadro de A13") + ", casas " + pb.Unidades.Count + ".");
+            }
             List<PlanEscalera> elegidas = new List<PlanEscalera>();
             foreach (PlanEscalera p in buenas)
             {
@@ -1381,6 +1449,7 @@ namespace MechaCyberpunk.Arte.Editor
                     Techo(c, kk.X0 + 0.25f, kk.X1 - 0.25f, kk.Z0 + 0.25f, kk.Z1 - 0.25f, ry);
                 }
             }
+            c.TechosCasa = techos;
             Log("Azoteas viejas cubiertas con concreto oscuro: " + techos.Count + " de " + casas.Count + " casas.");
             List<Casa> orden = casas.Where(k => TiersDe(k) >= 1f && techos.ContainsKey(k)).OrderBy(k =>
             {
@@ -1574,6 +1643,20 @@ namespace MechaCyberpunk.Arte.Editor
                                 continue;
                             }
                             Apagar(c, Unidad(c, r.R.transform, 4.5f, 6f), "adorno dentro de " + piso.name);
+                            n++;
+                        }
+                    }
+                    foreach (Transform piso in pisos.Cast<Transform>().Where(t => t.gameObject.activeSelf && t.name.StartsWith("Piso_")).ToList())
+                    {
+                        float pr;
+                        if (!MedirApoyo(c, piso, CajaPiso(piso), out pr))
+                        {
+                            Transform acc = pisos.Find("Acceso_" + piso.name);
+                            if (acc != null)
+                            {
+                                Apagar(c, acc, "acceso de un piso sin apoyo");
+                            }
+                            Apagar(c, piso, "piso sin nada debajo (la casa de abajo se apagó)");
                             n++;
                         }
                     }
@@ -1897,6 +1980,207 @@ namespace MechaCyberpunk.Arte.Editor
             return p.Pie + Vector3.up * 6.75f;
         }
 
+        // ================================================================ Taludes: muros CC08 con lámpara donde la ladera queda sobre la calle
+
+        private static void Taludes(Ctx c)
+        {
+            GameObject muro = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Arte/Zonas/CC/CC08_MuroContencion_a.prefab");
+            if (muro == null)
+            {
+                Log("FALTA CC08_MuroContencion_a.prefab; sin taludes.");
+                return;
+            }
+            Vector3 mm = Medida(muro);
+            if (mm.x < 0.1f || mm.y < 0.1f || mm.z < 0.1f)
+            {
+                return;
+            }
+            Transform padre = Hijo(c.Nuevo, "Taludes");
+            List<Vector3> eje = CerroT1355Trazado.Zigzag();
+            int n = 0, rechazados = 0;
+            float acum = 0f;
+            for (int i = 1; i + 1 < eje.Count && n < 40; i++)
+            {
+                acum += new Vector2(eje[i].x - eje[i - 1].x, eje[i].z - eje[i - 1].z).magnitude;
+                if (acum < 6f)
+                {
+                    continue;
+                }
+                Vector3 tan = new Vector3(eje[i + 1].x - eje[i - 1].x, 0f, eje[i + 1].z - eje[i - 1].z);
+                if (tan.sqrMagnitude < 0.01f)
+                {
+                    continue;
+                }
+                tan.Normalize();
+                if (Mathf.Abs(tan.z) < 0.97f)
+                {
+                    continue; // tramos rectos norte-sur: el muro corre a lo largo de z
+                }
+                acum = 0f;
+                Vector3 izq = new Vector3(-tan.z, 0f, tan.x);
+                foreach (float lado in new[] { 1f, -1f })
+                {
+                    Vector3 baseXz = new Vector3(eje[i].x, 0f, eje[i].z) + izq * lado * 5.25f;
+                    Vector3 altoXz = new Vector3(eje[i].x, 0f, eje[i].z) + izq * lado * 7.2f;
+                    float yB, yT;
+                    if (!Piso(c, baseXz.x, baseXz.z, 200f, true, out yB) || !Piso(c, altoXz.x, altoXz.z, 200f, false, out yT) || yT - yB < 0.9f)
+                    {
+                        continue;
+                    }
+                    Vector3 haciaCalle = -izq * lado;
+                    Vector3 centro = new Vector3(eje[i].x, yB, eje[i].z) + izq * lado * 6.4f;
+                    float u, v;
+                    if (!EnCuadroA13(centro + Vector3.up * 1.5f, out u, out v))
+                    {
+                        continue;
+                    }
+                    float alto = Mathf.Clamp(yT - yB + 0.5f, 1.2f, 3.2f);
+                    if (!LibreCaja(c, centro + Vector3.up * (alto * 0.5f + 0.3f), new Vector3(0.4f, alto * 0.5f - 0.1f, 2.8f)))
+                    {
+                        rechazados++;
+                        continue;
+                    }
+                    GameObject g = (GameObject)PrefabUtility.InstantiatePrefab(muro, padre);
+                    g.name = "CC08_Talud_" + n;
+                    g.transform.SetPositionAndRotation(Vector3.zero, Quaternion.LookRotation(haciaCalle));
+                    g.transform.localScale = new Vector3(6f / mm.x, alto / mm.y, 1f);
+                    Bounds b = Cubierta(g.transform);
+                    g.transform.position += new Vector3(centro.x - b.center.x, yB - 0.3f - b.min.y, centro.z - b.center.z);
+                    Colisionar(g);
+                    Physics.SyncTransforms();
+                    if (n % 2 == 0)
+                    {
+                        // Lámpara en lo alto del muro: poste oscuro y cabeza emisiva naranja (sin Light).
+                        float yTop = yB - 0.3f + alto;
+                        Vector3 pie = new Vector3(centro.x, yTop, centro.z) + haciaCalle * 0.2f;
+                        c.Escalerillas.Caja(pie - new Vector3(0.04f, 0f, 0.04f), pie + new Vector3(0.04f, 0.7f, 0.04f));
+                        Vector3 cab = pie + Vector3.up * 0.8f;
+                        c.Brillo.Caja(cab - new Vector3(0.2f, 0.1f, 0.2f), cab + new Vector3(0.2f, 0.1f, 0.2f));
+                        CharcoLuz(c, new Vector3(cab.x + haciaCalle.x * 2f, 0f, cab.z), yB, 4.5f);
+                    }
+                    n++;
+                }
+            }
+            Log("Taludes con muro CC08 en el cuadro de A13: " + n + " (" + rechazados + " rechazados por haber algo en el lugar).");
+        }
+
+        // ================================================================ Neones chicos y ventanas con luz cálida en las fachadas que miran a la cámara
+
+        private static void Placa(Malla m, Vector3 centro, Vector3 normal, Vector3 along, float w, float h)
+        {
+            Vector3 a = centro - along * w * 0.5f - Vector3.up * h * 0.5f, b = centro + along * w * 0.5f - Vector3.up * h * 0.5f;
+            Vector3 cc = centro + along * w * 0.5f + Vector3.up * h * 0.5f, d = centro - along * w * 0.5f + Vector3.up * h * 0.5f;
+            m.Quad(a, b, cc, d, normal);
+        }
+
+        private sealed class Cara
+        {
+            public float X0, X1, Z0, Z1, Base, Roof;
+        }
+
+        private static void Fachadas(Ctx c)
+        {
+            Material magenta = MatPropio("T1440_PantallaMagenta", () => Emisivo(new Color(0.05f, 0.01f, 0.04f), new Color(1f, 0.2f, 0.78f) * 3.5f));
+            Material turquesa = MatPropio("T1440_PantallaTurquesa", () => Emisivo(new Color(0.01f, 0.05f, 0.05f), new Color(0.1f, 0.95f, 0.88f) * 3.5f));
+            Material calida = MatPropio("T1440_VentanaCalida", () => Emisivo(new Color(0.06f, 0.04f, 0.02f), new Color(1f, 0.62f, 0.25f) * 3.2f));
+            Malla nm = new Malla(), nt = new Malla(), vc = new Malla();
+            List<Cara> obj = new List<Cara>();
+            foreach (KeyValuePair<Casa, float> par in c.TechosCasa)
+            {
+                obj.Add(new Cara { X0 = par.Key.X0, X1 = par.Key.X1, Z0 = par.Key.Z0, Z1 = par.Key.Z1, Base = par.Value - 5.5f, Roof = par.Value });
+            }
+            Transform pisos = c.Nuevo.Find("Pisos");
+            if (pisos != null)
+            {
+                foreach (Transform p in pisos.Cast<Transform>().Where(t => t.gameObject.activeSelf && t.name.StartsWith("Piso_")))
+                {
+                    Bounds b = CajaPiso(p);
+                    obj.Add(new Cara { X0 = b.min.x, X1 = b.max.x, Z0 = b.min.z, Z1 = b.max.z, Base = b.min.y, Roof = b.min.y + b.size.y * 0.85f });
+                }
+            }
+            Vector3 cam = A13Desde;
+            List<Cara> orden = obj.OrderBy(o => Vector3.Distance(new Vector3((o.X0 + o.X1) * 0.5f, o.Roof, (o.Z0 + o.Z1) * 0.5f), A13Hacia)).ToList();
+            int neones = 0, casasConLuz = 0, enCuadro = 0, ventanas = 0;
+            foreach (Cara o in orden)
+            {
+                float u, v;
+                Vector3 centro = new Vector3((o.X0 + o.X1) * 0.5f, o.Roof - 2f, (o.Z0 + o.Z1) * 0.5f);
+                if (!EnCuadroA13(centro, out u, out v) || u < 0.03f || u > 0.97f || v < 0.05f || v > 0.95f)
+                {
+                    continue;
+                }
+                enCuadro++;
+                // La cara que mira a la cámara y se ve (sin nada en medio): oeste (x0) o norte (z1).
+                Vector3 normal = Vector3.zero, along = Vector3.zero, punto = Vector3.zero;
+                float ancho = 0f;
+                for (int intento = 0; intento < 2 && normal == Vector3.zero; intento++)
+                {
+                    Vector3 n2, a2, p2;
+                    float w2;
+                    if (intento == 0 && cam.x < o.X0 - 1f)
+                    {
+                        n2 = Vector3.left;
+                        a2 = Vector3.forward;
+                        p2 = new Vector3(o.X0, o.Roof - 2f, (o.Z0 + o.Z1) * 0.5f);
+                        w2 = o.Z1 - o.Z0;
+                    }
+                    else if (intento == 1 && cam.z > o.Z1 + 1f)
+                    {
+                        n2 = Vector3.forward;
+                        a2 = Vector3.right;
+                        p2 = new Vector3((o.X0 + o.X1) * 0.5f, o.Roof - 2f, o.Z1);
+                        w2 = o.X1 - o.X0;
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                    Vector3 origen = p2 + n2 * 0.3f;
+                    Vector3 dir = cam - origen;
+                    if (c.Fisica.Raycast(origen, dir.normalized, bufRayos, dir.magnitude, ~0, QueryTriggerInteraction.Ignore) == 0)
+                    {
+                        normal = n2;
+                        along = a2;
+                        punto = p2;
+                        ancho = w2;
+                    }
+                }
+                if (normal == Vector3.zero || ancho < 3f)
+                {
+                    continue;
+                }
+                if (c.Obra.Chance(0.3f))
+                {
+                    int nv = ancho > 5.5f ? 3 : 2;
+                    for (int k = 0; k < nv; k++)
+                    {
+                        float t = (k + 1f) / (nv + 1f) - 0.5f;
+                        Placa(vc, new Vector3(punto.x, o.Roof - 1.7f, punto.z) + along * (t * ancho * 0.85f) + normal * 0.07f, normal, along, 0.9f, 1.1f);
+                        ventanas++;
+                        if (o.Roof - o.Base > 7f && c.Obra.Chance(0.5f))
+                        {
+                            Placa(vc, new Vector3(punto.x, o.Roof - 4.6f, punto.z) + along * (t * ancho * 0.85f) + normal * 0.07f, normal, along, 0.9f, 1.1f);
+                            ventanas++;
+                        }
+                    }
+                    casasConLuz++;
+                }
+                if (neones < 50 && c.Obra.Chance(0.45f))
+                {
+                    bool horizontal = neones % 3 != 2;
+                    Vector3 pn = new Vector3(punto.x, o.Roof - (horizontal ? 3.3f : 3.8f), punto.z) + along * (c.Obra.Rango(-0.3f, 0.3f) * ancho) + normal * 0.09f;
+                    Malla destino = neones % 2 == 0 ? nm : nt;
+                    Placa(destino, pn, normal, along, horizontal ? 1.9f : 0.5f, horizontal ? 0.55f : 1.6f);
+                    neones++;
+                }
+            }
+            Transform padre = Hijo(c.Nuevo, "Fachadas");
+            ObjetoMalla(c, padre, "NeonesMagenta", nm, magenta, false, true);
+            ObjetoMalla(c, padre, "NeonesTurquesa", nt, turquesa, false, true);
+            ObjetoMalla(c, padre, "VentanasCalidas", vc, calida, false, true);
+            Log("Fachadas hacia A13: " + enCuadro + " casas y pisos en el cuadro, " + neones + " neones chicos, " + ventanas + " ventanas cálidas en " + casasConLuz + " de ellos (emisión, sin Light).");
+        }
+
         // ================================================================ Carros viejos sobre las piernas rectas del zigzag
 
         private static void Carros(Ctx c)
@@ -2145,31 +2429,13 @@ namespace MechaCyberpunk.Arte.Editor
                 return;
             }
             int total = 0, flotan = 0, enterrados = 0, encimados = 0, sinAcceso = 0;
-            List<Transform> lista = pisos.Cast<Transform>().Where(t => t.name.StartsWith("Piso_")).ToList();
+            List<Transform> lista = pisos.Cast<Transform>().Where(t => t.gameObject.activeSelf && t.name.StartsWith("Piso_")).ToList();
             foreach (Transform p in lista)
             {
                 total++;
                 Bounds b = CajaPiso(p);
-                bool tocaAbajo = false;
-                float peor = 0f;
-                foreach ((float fx, float fz) in new[] { (0.5f, 0.5f), (0.2f, 0.2f), (0.8f, 0.2f), (0.2f, 0.8f), (0.8f, 0.8f) })
-                {
-                    Vector3 o = new Vector3(Mathf.Lerp(b.min.x, b.max.x, fx), b.min.y + 0.3f, Mathf.Lerp(b.min.z, b.max.z, fz));
-                    int n = c.Fisica.Raycast(o, Vector3.down, bufRayos, 3f, ~0, QueryTriggerInteraction.Ignore);
-                    float mejor = float.MinValue;
-                    for (int i = 0; i < n; i++)
-                    {
-                        if (!bufRayos[i].collider.transform.IsChildOf(p) && bufRayos[i].point.y > mejor)
-                        {
-                            mejor = bufRayos[i].point.y;
-                        }
-                    }
-                    if (mejor > float.MinValue)
-                    {
-                        tocaAbajo = true;
-                        peor = Mathf.Max(peor, Mathf.Abs(mejor - b.min.y));
-                    }
-                }
+                float peor;
+                bool tocaAbajo = MedirApoyo(c, p, b, out peor);
                 if (!tocaAbajo || peor > 0.05f)
                 {
                     if (!tocaAbajo || peor > 0.3f)
@@ -2347,7 +2613,7 @@ namespace MechaCyberpunk.Arte.Editor
                 bool piezaDeKit = false;
                 for (Transform p = col.transform; p != null && p != c.Nuevo; p = p.parent)
                 {
-                    if (p.name.StartsWith("Poste") || p.name.StartsWith("CC08_") || p.name.StartsWith("CE0"))
+                    if (p.name.StartsWith("Poste") || p.name.StartsWith("CC08_") || p.name.StartsWith("CE0") || p.name.StartsWith("CarroViejo_"))
                     {
                         piezaDeKit = true;
                     }
