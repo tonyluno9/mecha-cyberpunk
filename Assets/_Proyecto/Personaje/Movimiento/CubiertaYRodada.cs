@@ -234,7 +234,7 @@ namespace MechaCyberpunk.Personaje.Movimiento
             direccionRodada.Normalize();
             transform.rotation = Quaternion.LookRotation(direccionRodada, Vector3.up);
             PonerAltura(datos.AlturaRodando);
-            Sonidos.ReproducirEn("JUG_SALTO", transform.position);
+            Sonidos.ReproducirEn(ReglaSonidosJugador.Rodada, transform.position);
             return true;
         }
 

@@ -20,6 +20,8 @@ namespace MechaCyberpunk.Personaje.Movimiento
         private readonly ReglaZancada zancada = new ReglaZancada(MetrosPorPasoCaminar, MetrosPorPasoCorrer);
         private IdLugar lugarActual = IdLugar.Calle;
         private bool estabaMoviendo;
+        private readonly LimitadorPasos limitadorPasos = new LimitadorPasos();
+        private float alturaMaximaAire;
 
         /// <summary>Pasos dados (para pruebas) y el ID del último paso que sonó.</summary>
         public int PasosDados => zancada.Pasos;
@@ -133,12 +135,11 @@ namespace MechaCyberpunk.Personaje.Movimiento
             if (Physics.Raycast(transform.position + Vector3.up * 0.2f, Vector3.down, out RaycastHit golpe, AlcanceRayoPiso, ~0, QueryTriggerInteraction.Ignore))
             {
                 montable = golpe.collider.GetComponentInParent<IMontable>() != null;
-                nombre = golpe.collider.sharedMaterial != null ? golpe.collider.sharedMaterial.name : null;
-                if (string.IsNullOrEmpty(nombre))
-                {
-                    Renderer r = golpe.collider.GetComponent<Renderer>();
-                    nombre = r != null && r.sharedMaterial != null ? r.sharedMaterial.name : golpe.collider.name;
-                }
+                // T-1473: se juntan todos los nombres (material físico, material del renderer, collider y objeto raíz) para buscar palabras clave del piso.
+                Renderer r = golpe.collider.GetComponent<Renderer>();
+                nombre = (golpe.collider.sharedMaterial != null ? golpe.collider.sharedMaterial.name : "") + "|"
+                    + (r != null && r.sharedMaterial != null ? r.sharedMaterial.name : "") + "|"
+                    + golpe.collider.name + "|" + golpe.collider.transform.root.name;
             }
             return ReglaSuperficiePaso.IdPaso(lugarActual, nombre, montable);
         }
@@ -278,9 +279,13 @@ namespace MechaCyberpunk.Personaje.Movimiento
             {
                 enPiso = PegarAlPiso();
             }
-            if (enPiso && tiempoAire > SegundosMinimosAire)
+            if (!enPiso)
             {
-                Sonidos.ReproducirEn("JUG_CAER", transform.position);
+                alturaMaximaAire = estabaEnPiso ? transform.position.y : Mathf.Max(alturaMaximaAire, transform.position.y);
+            }
+            if (enPiso && tiempoAire > SegundosMinimosAire && ReglaSonidosJugador.DebeSonarAterrizaje(alturaMaximaAire - transform.position.y))
+            {
+                Sonidos.ReproducirEn(ReglaSonidosJugador.Aterrizaje, transform.position);
             }
             tiempoAire = enPiso ? 0f : tiempoAire + dt;
             bool corriendo = enPiso && velocidad.sqrMagnitude > UmbralPaso * UmbralPaso && quiereCorrer;
@@ -297,7 +302,8 @@ namespace MechaCyberpunk.Personaje.Movimiento
                 zancada.Reiniciar(MetrosPorPasoCaminar * FraccionPrimerPaso);
             }
             estabaMoviendo = moviendo;
-            if (moviendo && zancada.Avanzar(new Vector2(horizontal.x, horizontal.z).magnitude * dt, quiereCorrer, enPiso) > 0)
+            if (moviendo && zancada.Avanzar(new Vector2(horizontal.x, horizontal.z).magnitude * dt, quiereCorrer, enPiso) > 0
+                && limitadorPasos.Permitir(Time.time))
             {
                 UltimoIdPaso = IdPasoDelPiso();
                 Sonidos.ReproducirEn(UltimoIdPaso, transform.position);
