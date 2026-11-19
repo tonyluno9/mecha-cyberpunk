@@ -32,7 +32,8 @@ namespace MechaCyberpunk.Arte.Editor
         /// Raíces de las zonas nuevas y separación mínima (m) entre luces reales que se conservan: spots (postes, faroles, reflectores) y
         /// puntuales (neones, focos). Con todas las luces de los kits la escena pasaba de 1400 Light y el URP ya no podía dibujar (búfer de luces).
         /// </summary>
-        private static readonly string[] RaicesZonas = { "T1354_Malecon", "T1355_Cerro", "T1356_Autopista", "T1357_Puerto" };
+        // 18-nov C: el Cerro (T1355) y el Puerto (T1357) los arregla la sesión B en sus prefabs; estos pasos ya no los tocan.
+        private static readonly string[] RaicesZonas = { "T1354_Malecon", "T1356_Autopista" };
         private const float SeparacionSpot = 10f;
         private const float SeparacionPunto = 20f;
 
@@ -286,6 +287,60 @@ namespace MechaCyberpunk.Arte.Editor
             ColocarS2.Informe.Clear();
             ColocarS2.Informe.Append(sb);
             ColocarS2.Guardar("t1350-prefabs-zonas");
+        }
+
+        /// <summary>
+        /// Fotos sueltas para revisar: -fotos "x,y,z>x,y,z>ruta;x,y,z>x,y,z>ruta" (desde, hacia, archivo). No guarda la escena.
+        /// </summary>
+        public static void FotosLibres()
+        {
+            string[] args = Environment.GetCommandLineArgs();
+            int i = Array.IndexOf(args, "-fotos");
+            if (i < 0 || i + 1 >= args.Length)
+            {
+                Debug.LogError("[Arte] FotosLibres: falta -fotos");
+                return;
+            }
+            ColocarS2.Abrir();
+            foreach (string toma in args[i + 1].Split(';'))
+            {
+                string[] p = toma.Split('>');
+                ColocarS2cLook.Foto(Vec(p[0]), Vec(p[1]), p[2], 65f);
+            }
+        }
+
+        /// <summary>Lista los colliders a menos de -radio m de cada -puntos "x,y,z;x,y,z" en Logs/colliders-puntos.txt (diagnóstico).</summary>
+        public static void ListarColliders()
+        {
+            string[] args = Environment.GetCommandLineArgs();
+            int i = Array.IndexOf(args, "-puntos");
+            int j = Array.IndexOf(args, "-radio");
+            float radio = j >= 0 ? float.Parse(args[j + 1], System.Globalization.CultureInfo.InvariantCulture) : 2f;
+            ColocarS2.Abrir();
+            Physics.SyncTransforms();
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            foreach (string s in args[i + 1].Split(';'))
+            {
+                Vector3 p = Vec(s);
+                sb.AppendLine("== " + p);
+                foreach (Collider c in Physics.OverlapSphere(p, radio, ~0, QueryTriggerInteraction.Ignore))
+                {
+                    string ruta = c.name;
+                    for (Transform t = c.transform.parent; t != null; t = t.parent)
+                    {
+                        ruta = t.name + "/" + ruta;
+                    }
+                    sb.AppendLine("  " + c.GetType().Name + " " + ruta + " bounds " + c.bounds.min.ToString("F1") + ".." + c.bounds.max.ToString("F1"));
+                }
+            }
+            System.IO.File.WriteAllText("Logs/colliders-puntos.txt", sb.ToString());
+        }
+
+        private static Vector3 Vec(string s)
+        {
+            string[] c = s.Split(',');
+            System.Globalization.CultureInfo inv = System.Globalization.CultureInfo.InvariantCulture;
+            return new Vector3(float.Parse(c[0], inv), float.Parse(c[1], inv), float.Parse(c[2], inv));
         }
 
         public static void Correr()

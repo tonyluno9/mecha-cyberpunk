@@ -103,3 +103,22 @@ cambiar `GrupoPeatones` a una lista de prefabs.
 
 ### Plazas
 Los prefabs de plaza (T-1341) no llevan piso: el adoquín (T06) y la colocación en la ciudad los pone la sesión A o Tony.
+
+### Zona pendiente: Las Lomas del M12
+No existe aún. `ZonaTrafico_LasLomas` (T-1364) cubre por ahora los corredores norte x = ±47, z 88..201 de las afueras. Moverla cuando exista la zona.
+
+## 18-nov D: Cerro
+| Qué | Para qué | Hueco |
+| --- | --- | --- |
+| Antena parabólica de azotea | Variedad de azoteas del Cerro (T-1364) | No hay prefab; hoy solo CY04 (antena de TV) |
+| Cubeta, tambos y botes de pintura | Detalle de azotea | No hay prefab; hoy solo macetas C20d |
+| Más cables de fachada a poste (kit de conectores) | Que los cables se vean amarrados | Hoy son tubos de 4 lados sin pieza de amarre |
+| Tendido de ropa más ligero | Rendimiento (CC04/CC05 pesan ~40 mil triángulos) | Versión baja del tendedero y del lavadero |
+
+## 18-nov D: Puerto
+
+| Qué | Para qué | Nota |
+| --- | --- | --- |
+| Escalera de mano de ~2.6 m (peldaños y rieles, ancho ~0.6 m) | Visual de `Escalera_Suelo` y `Escalera_Fila` de los bloques de contenedores (hoy solo `PuntoTrepar`, sin modelo) | `L03_EscaleraEmergencia` mide 4.5 x 3.5 x 4.8 m: taparía el pasillo de 3.5 m; los `Peldano`/`Riel` del Cerro son cajas de primitivos |
+| Grafitis para los contenedores y las bodegas (K15/A15) | Look de la referencia | No hay textura ni decal de grafiti |
+| Pluma de la entrada (`PluminaEntrada`) | Entrada U5 | Sigue siendo hueco |

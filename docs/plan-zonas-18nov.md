@@ -30,7 +30,7 @@ x = este, z = norte, y = arriba. 1 unidad = 1 m. Calles de 14 m con banquetas de
 - U5 Malecón → Puerto, puerta oeste con caseta: (160, 0, -215).
 - U6 Autopista → túnel: boca en (-330, 10, 250); salida del túnel en la ladera del cerro (-360, 10, 185), mirando al sur.
   El cerro debe tener calle en (-360, 10, 175) que siga el zigzag.
-- U7 Rampa norte: calle cruzada norte (-107, 0, 201) → (-120, 0, 215) → sube hacia el este por z = 232 hasta y = 10 y se une a la autopista cerca de (30, 10, 250).
+- U7 Rampa norte (T-1362, reubicada): calle cruzada norte (-107, 0, 201) → (-120, 0, 215), de ahí curva y sube hacia el OESTE por z = 232 hasta y = 10 y se une a la autopista en (-300, 10, 250). Antes subía al este y se unía en (30, 10, 250). La calle baja (z = 215, x -212 a -120) llega al enlace y se une por la calle oeste (x = -242) con la cruzada oeste de T530.
 - U8 Rampa este: autopista (240, 10, 250) → curva → (300, 10, 190) → baja por x = 300 hasta (300, 0, 60) → (300, 0, 0) → (300, 0, -45) puerta norte del Puerto.
 - U9 Conector este: (300, 0, 0) → (249, 0, 0) (calle cruzada este).
 Pendiente máxima de calles y rampas: 9 %. Radio mínimo de curva: 40 m (Malecón 60 m, para manejar rápido).
