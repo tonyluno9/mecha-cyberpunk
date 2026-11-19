@@ -14,9 +14,17 @@ namespace MechaCyberpunk.Trafico.Drones
         [SerializeField, Min(0f), Tooltip("Velocidad de giro de cada rotor en °/s.")] private float velocidad = 1800f;
         [SerializeField, Tooltip("Si es true, los rotores de índice impar giran al revés (pares contrarrotantes).")] private bool alternarSentido = true;
 
+        [SerializeField, Min(0f), Tooltip("T-1398: más allá de esta distancia (m) a la cámara los rotores no giran. 0 = sin corte.")] private float distanciaMaxima = 120f;
+
+        private const float SegundosEntreControles = 0.5f;
+
         private Transform[] rotores;
+        private Camera camara;
+        private float proximoControl;
+        private bool enAlcance = true;
 
         public float Velocidad => velocidad;
+        public float DistanciaMaxima => distanciaMaxima;
         public int CantidadRotores => rotores != null ? rotores.Length : 0;
 
         private void Awake()
@@ -40,7 +48,19 @@ namespace MechaCyberpunk.Trafico.Drones
 
         private void Update()
         {
-            Girar(Time.deltaTime);
+            if (distanciaMaxima > 0f && Time.time >= proximoControl)
+            {
+                proximoControl = Time.time + SegundosEntreControles;
+                if (camara == null)
+                {
+                    camara = Camera.main;
+                }
+                enAlcance = camara == null || CalculoGiroRotores.DentroDeAlcance((camara.transform.position - transform.position).sqrMagnitude, distanciaMaxima);
+            }
+            if (enAlcance)
+            {
+                Girar(Time.deltaTime);
+            }
         }
 
         /// <summary>Gira todos los rotores lo que toca en <paramref name="dt"/> segundos.</summary>

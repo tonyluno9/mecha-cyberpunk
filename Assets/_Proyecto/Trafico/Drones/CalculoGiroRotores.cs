@@ -12,5 +12,11 @@ namespace MechaCyberpunk.Trafico.Drones
             float signo = alternar && indice % 2 != 0 ? -1f : 1f;
             return velocidad * dt * signo;
         }
+
+        /// <summary>T-1398: true si el dron está lo bastante cerca para girar los rotores. Con <paramref name="distanciaMaxima"/> en 0 o menos no hay corte.</summary>
+        public static bool DentroDeAlcance(float distanciaCuadrada, float distanciaMaxima)
+        {
+            return distanciaMaxima <= 0f || distanciaCuadrada <= distanciaMaxima * distanciaMaxima;
+        }
     }
 }
