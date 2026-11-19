@@ -78,6 +78,25 @@ namespace MechaCyberpunk.Arte.Editor
                     }
                 }
             }
+            // T-1410: los contenedores de los bloques también son obstáculos: ya no se apagan para hacerle sitio a lo nuevo (rompía las filas y las pilas de T-1366).
+            Transform cont = raiz.Find("Contenedores");
+            if (cont != null)
+            {
+                foreach (Transform bloque in cont)
+                {
+                    if (!bloque.name.StartsWith("Bloque_"))
+                    {
+                        continue;
+                    }
+                    foreach (Transform c in bloque)
+                    {
+                        if (c.gameObject.activeInHierarchy && (c.name.StartsWith("PT01_Contenedor") || c.name.StartsWith("T1396_Grafiti_")))
+                        {
+                            r.Add(Huella(Limites(c)));
+                        }
+                    }
+                }
+            }
             return r;
         }
 
@@ -193,34 +212,13 @@ namespace MechaCyberpunk.Arte.Editor
             }
         }
 
-        /// <summary>Apaga (y renombra, para poder restaurarlos) los contenedores viejos de los bloques cuya huella toque el rectángulo. Devuelve cuántos apagó.</summary>
+        /// <summary>
+        /// T-1410: ya no apaga contenedores (apagarlos rompía las filas de 4 y las pilas apoyadas de T-1366). Lo nuevo se corre a un hueco libre o se omite.
+        /// Se deja para no tocar las llamadas; no hace nada.
+        /// </summary>
         private static int Despejar(Transform raiz, Rect zona)
         {
-            Transform cont = raiz.Find("Contenedores");
-            int n = 0;
-            if (cont == null)
-            {
-                return 0;
-            }
-            foreach (Transform bloque in cont.Cast<Transform>().Where(t => t.name.StartsWith("Bloque_")))
-            {
-                int antes = n;
-                foreach (Transform c in bloque.Cast<Transform>().Where(t => t.gameObject.activeSelf && (t.name.StartsWith("PT01_Contenedor") || t.name.StartsWith("T1396_Grafiti_"))).ToList())
-                {
-                    if (Huella(Limites(c)).Overlaps(Expandir(zona, -0.05f)))
-                    {
-                        c.name = PrefijoViejo + c.name;
-                        c.gameObject.SetActive(false);
-                        n++;
-                    }
-                }
-                if (n > antes)
-                {
-                    RecalcularColliders(bloque);
-                }
-            }
-            apagados += n;
-            return n;
+            return 0;
         }
 
         // ---------------------------------------------------------------- 1. Pilas PU08 giradas
@@ -257,6 +255,12 @@ namespace MechaCyberpunk.Arte.Editor
                 }
             }
             return 90f;
+        }
+
+        private static bool ChocaConAlgo(Rect h, List<Rect> ocupados, List<Rect> mios)
+        {
+            Rect dentro = Expandir(h, -0.05f);
+            return ocupados.Any(r => r.Overlaps(dentro)) || mios.Any(r => r.Overlaps(dentro));
         }
 
         private static void PonerPilas(Transform raiz, Transform nuevo, List<Rect> ocupados, List<Rect> mios)
@@ -302,22 +306,35 @@ namespace MechaCyberpunk.Arte.Editor
                         g.transform.position += new Vector3(XCaraOeste - b.min.x, yBase - b.min.y, zc - b.center.z);
                         Bounds fin = Limites(g.transform);
                         Rect h = Huella(fin);
-                        if (n == 0 && ocupados.Any(r => r.Overlaps(Expandir(h, -0.05f))))
-                        {
-                            Object.DestroyImmediate(g);
-                            omitidos++;
-                            Nota("Pila z " + zc.ToString("F1") + ": hay una bodega u otra cosa en la huella; se omite ese contenedor y su altura.");
-                            break;
-                        }
                         if (n == 0)
                         {
-                            Despejar(raiz, h);
-                        }
-                        yBase = fin.max.y;
-                        if (n == 0)
-                        {
+                            // T-1410: si choca con un contenedor, una bodega o una pila, se corre a lo largo del pasillo (+3, -3, +6, -6 ... hasta 12 m); si no hay hueco, se omite.
+                            float acumulado = 0f;
+                            int paso = 0;
+                            while (ChocaConAlgo(h, ocupados, mios) && paso < 8)
+                            {
+                                paso++;
+                                float dz = (paso % 2 == 1 ? 1f : -1f) * 3f * ((paso + 1) / 2);
+                                g.transform.position += new Vector3(0f, 0f, dz - acumulado);
+                                acumulado = dz;
+                                fin = Limites(g.transform);
+                                h = Huella(fin);
+                            }
+                            if (ChocaConAlgo(h, ocupados, mios))
+                            {
+                                Object.DestroyImmediate(g);
+                                omitidos++;
+                                Nota("Pila z " + zc.ToString("F1") + ": no hay hueco libre a 12 m a la redonda (contenedores, bodegas u otra pila); se omite ese contenedor y su altura.");
+                                break;
+                            }
+                            if (paso > 0)
+                            {
+                                zc += acumulado;
+                                Nota("Pila z " + (zc - acumulado).ToString("F1") + ": corrida " + acumulado.ToString("F0") + " m a z " + zc.ToString("F1") + " para no tapar contenedores.");
+                            }
                             mios.Add(h);
                         }
+                        yBase = fin.max.y;
                         puestos++;
                     }
                 }
@@ -329,7 +346,7 @@ namespace MechaCyberpunk.Arte.Editor
                 lg.SetLODs(new[] { new LOD(0.01f, rend) });
                 lg.RecalculateBounds();
             }
-            Nota("Pilas PU08 giradas 90 grados (cara larga con grafiti al oeste, hacia el pasillo): " + puestos + " contenedores en " + Pilas.Length + " pilas con la cara oeste en x " + XCaraOeste.ToString("F1") + " (fuera del arroyo, que llega a x 166); contenedores viejos apagados para dejarles sitio: " + apagados + "; " + omitidos + " omitidos. Los colliders de PU08 quedan encendidos.");
+            Nota("Pilas PU08 giradas 90 grados (cara larga con grafiti al oeste, hacia el pasillo): " + puestos + " contenedores en " + Pilas.Length + " pilas con la cara oeste en x " + XCaraOeste.ToString("F1") + " (fuera del arroyo, que llega a x 166); contenedores viejos apagados: 0 (T-1410: ya no se apaga ninguno); " + omitidos + " omitidos. Los colliders de PU08 quedan encendidos.");
         }
 
         // ---------------------------------------------------------------- 2. Postes y cables
@@ -439,14 +456,11 @@ namespace MechaCyberpunk.Arte.Editor
                     continue;
                 }
                 Despejar(raiz, h);
-                foreach (Collider c in go.GetComponentsInChildren<Collider>(true))
-                {
-                    c.enabled = false;
-                }
+                BugsZonasT1410.AsegurarColliderYBarril(go); // T-1410: tarimas, tambos, huacales y montacargas con su collider (T-1366); los tambos con BarrilExplosivo (T-1317)
                 mios.Add(h);
                 puestos++;
             }
-            Nota("Detalles de piso: " + puestos + "/" + lista.Length + " (tarimas, tambos, huacales y 2 montacargas, sin collider, en los huecos entre pilas, fuera del arroyo (x >= 166.5)).");
+            Nota("Detalles de piso: " + puestos + "/" + lista.Length + " (tarimas, tambos, huacales y 2 montacargas, con collider, en los huecos entre pilas, fuera del arroyo (x >= 166.5)).");
         }
 
         // ---------------------------------------------------------------- Validar

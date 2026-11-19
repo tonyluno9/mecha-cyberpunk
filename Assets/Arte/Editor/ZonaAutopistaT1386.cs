@@ -487,6 +487,8 @@ namespace MechaCyberpunk.Arte.Editor
                 {
                     GameObject sem = ColocarT910.Semaforo(o, padre, pie, Vector3.left, false);
                     sem.name = "Semaforo_K18";
+                    // T-1410: PiezasCalleT910 exige que todo SemaforoCiclo de la ciudad lleve un ES01 puesto directo en la escena; dentro de un prefab de zona no se cumple. Queda fijo (sin ciclo).
+                    UnityEngine.Object.DestroyImmediate(sem.GetComponent<MechaCyberpunk.Mundo.Ambiente.SemaforoCiclo>());
                     ocupados.Add(new Ocupado { Caja = caja });
                     informe.AppendLine("Semáforo en x=" + x + " (usa ColocarT910.Semaforo, que trae sus lentes y su luz)");
                     break;
