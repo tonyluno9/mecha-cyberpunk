@@ -91,7 +91,7 @@ namespace MechaCyberpunk.Arte.Editor
         private static readonly List<Bounds> contBounds = new List<Bounds>();
         private static Vector3 camPos, camF, camR, camU;
         private static bool hayCamara;
-        private const string SufijoApartado = "_T1443Apartado", SufijoColision = "_T1443Colision";
+        private const string SufijoApartado = "_T1443Apartado", SufijoColision = "_T1443Colision", PrefijoOculto = "_T1443Apartado_", PrefijoBloque = "ApartadoT1443_";
         private const float TanV = 0.5774f, Aspecto = 1376f / 768f;
 
         // ================================================================ Aplicar
@@ -554,7 +554,7 @@ namespace MechaCyberpunk.Arte.Editor
                     {
                         bc.enabled = false;
                     }
-                    bloque.name += SufijoColision;
+                    bloque.name = PrefijoBloque + bloque.name;
                 }
                 t.name += SufijoApartado;
                 t.gameObject.SetActive(false);
@@ -571,7 +571,31 @@ namespace MechaCyberpunk.Arte.Editor
             int n = 0;
             foreach (Transform t in zona.GetComponentsInChildren<Transform>(true).ToList())
             {
-                if (t.name.EndsWith(SufijoApartado))
+                if (t == null)
+                {
+                    continue;
+                }
+                if (t.name.StartsWith("Escalera_Fila") && t.name.EndsWith("_T1443"))
+                {
+                    Object.DestroyImmediate(t.gameObject); // escalera nueva de una corrida anterior (vive bajo el Bloque_N de T-1357)
+                    n++;
+                }
+                else if (t.name.StartsWith(PrefijoOculto))
+                {
+                    t.name = t.name.Substring(PrefijoOculto.Length);
+                    t.gameObject.SetActive(true);
+                    n++;
+                }
+                else if (t.name.StartsWith(PrefijoBloque))
+                {
+                    t.name = t.name.Substring(PrefijoBloque.Length);
+                    foreach (BoxCollider bc in t.GetComponents<BoxCollider>())
+                    {
+                        bc.enabled = true;
+                    }
+                    n++;
+                }
+                else if (t.name.EndsWith(SufijoApartado))
                 {
                     t.name = t.name.Substring(0, t.name.Length - SufijoApartado.Length);
                     t.gameObject.SetActive(true);
@@ -1384,7 +1408,7 @@ namespace MechaCyberpunk.Arte.Editor
                     {
                         if (t.name.StartsWith("Escalera_Fila") && t.gameObject.activeSelf)
                         {
-                            t.name += SufijoApartado;
+                            t.name = PrefijoOculto + t.name;
                             t.gameObject.SetActive(false);
                             ocultas++;
                         }
@@ -1435,7 +1459,7 @@ namespace MechaCyberpunk.Arte.Editor
                 {
                     if (meta[f + 1] > meta[f])
                     {
-                        EscaleraNueva(pila.transform, "Escalera_Fila" + f + "_T1443", new Vector3(bl.Centro.x - LargoCont * 0.5f, meta[f] * AltoCont, bl.ZFila(f) + ColocarT1357Puerto.PasoFila * 0.5f - 0.1f), AltoCont);
+                        EscaleraNueva(bloqueGo != null ? bloqueGo : pila.transform, "Escalera_Fila" + f + "_T1443", new Vector3(bl.Centro.x - LargoCont * 0.5f, meta[f] * AltoCont, bl.ZFila(f) + ColocarT1357Puerto.PasoFila * 0.5f - 0.1f), AltoCont);
                         escaleras++;
                     }
                 }
