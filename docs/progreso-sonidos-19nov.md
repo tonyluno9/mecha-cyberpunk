@@ -10,18 +10,25 @@ Merge --no-ff a main y push (autorizado por Tony). "3d sonidos" no va a git (.gi
 ## Tareas
 | Tarea | Qué | Estado |
 | --- | --- | --- |
-| T-1470 | Copiar y recortar WAV a Assets/Arte/Audio/<cat>/, importador, .gitignore | en curso |
-| T-1471 | Catálogo: carpetas nuevas, IDs viejos -> archivos nuevos, encendidos, política de mezcla | en curso |
-| T-1472 | Armas (disparo, recarga, sacar), impactos por material, explosiones | en curso |
-| T-1473 | Pasos por piso, jugador (aterrizar, rodar, trepar, golpes) | en curso |
-| T-1474 | UI, HUD, tienda, interacción, consumibles | en curso |
-| T-1475 | Vehículos (motor con pitch, acelerón, frenos, choques, puertas, alarma, motos, camiones) | en curso |
-| T-1476 | Policía (sirenas, radio, aviso de Nova) | en curso |
+| T-1470 | Copiar y recortar WAV a Assets/Arte/Audio/<cat>/, importador, .gitignore | hecha, integrada |
+| T-1471 | Catálogo: carpetas nuevas, IDs viejos -> archivos nuevos, encendidos, política de mezcla | hecha, integrada |
+| T-1472 | Armas (disparo, recarga, sacar), impactos por material, explosiones | hecha, integrada |
+| T-1473 | Pasos por piso, jugador (aterrizar, rodar, trepar, golpes) | hecha, integrada |
+| T-1474 | UI, HUD, tienda, interacción, consumibles | hecha, integrada |
+| T-1475 | Vehículos (motor con pitch, acelerón, frenos, choques, puertas, alarma, motos, camiones) | hecha, integrada |
+| T-1476 | Policía (sirenas, radio, aviso de Nova) | hecha, integrada |
 | Final | Integrar, compilar, pruebas por clase, builds Demo y Juego, reporte | pendiente |
 
 ## Bitácora
 - Paso 0: no había Unity abierto; s2 pasada a main (d119ebf, ya con la sesión A) y lockfile borrado. Rama integ/sonidos-19nov.
   Se quitaron los 4 worktrees viejos de T-1440..T-1443 (sus ramas siguen). integ/zonas-19nov-B (zonas, sesión B) sigue sin merge, pendiente de su verificación.
 
+- Las 7 ramas integradas en integ/sonidos-19nov. Compila (arreglo: preloadAudioData va en SampleSettings). Corridos ImportarSonidos19nov.Aplicar,
+  CreadorCatalogoSonidos.Crear (230 IDs), AplicarSonidosPoliciaT1476.Aplicar y AplicarSonidoNovaT1476.Aplicar. Commit 82ee51e.
+- Pruebas: EditMode de 27 clases de sonido 235/235 (tras 2 arreglos: prefijo "ARM_BALA_" partido y prueba de pasos con PAS_);
+  PlayMode Tests.Sonido 19/19; PasosT596, DisparoLimpioT676 (acepta impacto de cabeza), ExplosionCarro, ChispeoPlasmaT1309 13/13.
+  RecorridoRonda2Pruebas.MercadoTianguisEscopeta falla "El ambiente arranca apagado" (0.8 en vez de 0): código no tocado por estas tareas, falla vieja (piso de ambiente de T-977).
+
 ## Qué sigue
-1. Esperar a los 7 subagentes; integrar rama por rama en integ/sonidos-19nov; correr el importador de T-1470 y CreadorCatalogoSonidos.Crear.
+1. Build Builds/Demo (ConstruirDemo.Construir) y Builds/Juego (ConstruirDemo.ConstruirJuego), una a la vez.
+2. docs/reporte-sonidos-19nov.md, docs/sonidos-faltan.md, merge --no-ff a main y push.
