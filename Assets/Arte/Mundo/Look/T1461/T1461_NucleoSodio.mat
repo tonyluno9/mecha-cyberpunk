@@ -27,9 +27,9 @@ Material:
     m_Floats:
     - _Acercar: 0.8
     - _CercaCamara: 2
-    - _Intensidad: 5
-    - _Tamano: 0.4
+    - _Intensidad: 8
+    - _Tamano: 1
     m_Colors:
-    - _Color: {r: 1, g: 0.55, b: 0.2, a: 1}
+    - _Color: {r: 1, g: 0.5, b: 0.18, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
