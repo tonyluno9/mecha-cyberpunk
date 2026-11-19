@@ -63,5 +63,10 @@ que diga "Qué sigue".
 - El primer build de Juego falló por disco lleno ("Failed to write file"). Se quitaron 32 worktrees viejos del 17 y 18 de noviembre, todos limpios y ya integrados (sus ramas quedan): ahora hay 27 GB libres.
 - 03:45 Corrida 9: se aplica la ronda 3 y el look (T-1392 y luego T-1399).
 
+- Ronda 3 (T-1399 a T-1402) y ronda 4 (T-1403 a T-1405) aplicadas. El Malecón tiene niebla, skyline, 9 ML05 y faro; el Cerro, variedad, azoteas unidas y una cámara K13 sin cables pegados (las "cintas negras" eran cables a menos de 4 m del lente); la Autopista tiene la calle baja con el tablero y chatarra a escala, y el Puerto grafiti PU08, bodegas con neón y grúas con balizas. T-1403 había apagado 250 azoteas y 50 rieles por error: se reencendieron (Correr19nov.ReencenderT1403).
+- FPS en el build de Juego: el peor es Cerro/plaza_arriba con 137 fps (el 1 % más lento, 103). Todas las vistas pasan de 50 (docs/fps-19nov/).
+- Pruebas EditMode: clases nuevas y de zonas 160/161; la falla de las bocas de U2, U4 y U7 se arregló con Correr19nov.DespejarBocasUniones, y OrillasT1358 da 4/4. Dos corridas largas en segundo plano las paró Claude Code por falta de memoria; se repitieron en primer plano.
+- 04:10 Siguen los builds (Demo con ConstruirDemoPandillas y luego Juego), el reporte y el merge a main.
+
 ## Qué sigue
 - Esperar la primera tanda; integrar T-1382 y T-1383 en Unity (importar y aplicar el look); después las zonas (T-1384 a T-1388).
