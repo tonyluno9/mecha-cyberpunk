@@ -1,0 +1,159 @@
+== 01_UI
+  HUD_LOGRO.wav: copiado | 4.36 s, 96000 Hz, 5423 KB
+  HUD_NOTIFICACION.wav: copiado | 1.61 s, 96000 Hz, 1014 KB
+  HUD_VIDA_BAJA.wav: copiado | 3.16 s, 44100 Hz, 817 KB
+  TIE_COMPRAR.wav: CONVERTIDO a PCM16 96000 Hz (scipy avisa: Reached EOF prematurely; finished at 367) | 0.37 s, 139 KB
+  TIE_DESEQUIPAR.wav: copiado | 1.37 s, 96000 Hz, 934 KB
+  TIE_EQUIPAR.wav: CONVERTIDO a PCM16 96000 Hz (formato 0xfffe (extensible/otro)) | 1.63 s, 612 KB
+  UI_ATRAS.wav: copiado | 0.85 s, 44100 Hz, 147 KB
+  UI_ERROR.wav: copiado | 0.25 s, 44100 Hz, 65 KB
+  UI_LOGO_INTRO.wav: copiado | 3.50 s, 44100 Hz, 696 KB
+  UI_MENU_ABRIR.wav: copiado | 4.00 s, 44100 Hz, 689 KB
+  UI_MENU_CERRAR.wav: copiado | 1.50 s, 44100 Hz, 351 KB
+  UI_MOVER.wav: copiado | 0.38 s, 44100 Hz, 157 KB
+  UI_PESTANA.wav: copiado | 0.50 s, 44100 Hz, 86 KB
+  UI_SELECCIONAR.wav: copiado | 2.29 s, 44100 Hz, 395 KB
+== 02_Armas
+  ARM_COLA_CALLE.wav: copiado | 4.40 s, 44100 Hz, 1136 KB
+  ARM_GRANADA_REBOTE.wav: CONVERTIDO a PCM16 96000 Hz (formato 0xfffe (extensible/otro)) | 1.19 s, 444 KB
+  ARM_GRANADA_SEGURO.wav: copiado | 0.37 s, 96000 Hz, 206 KB
+  ARM_NOVA_CARGA_DISPARO.wav: copiado | 1.02 s, 96000 Hz, 576 KB
+  ARM_NOVA_DISPARO_01.wav: copiado | 1.21 s, 96000 Hz, 679 KB
+  ARM_W01_DISPARO_01.wav: CONVERTIDO a PCM16 96000 Hz (scipy avisa: Reached EOF prematurely; finished at 110) | 1.61 s, 603 KB
+  ARM_W02_BOMBA.wav: copiado | 0.71 s, 96000 Hz, 414 KB
+  ARM_W02_DISPARO_01.wav: copiado | 1.88 s, 96000 Hz, 1200 KB
+  ARM_W03_DISPARO_01.wav: copiado | 0.80 s, 96000 Hz, 448 KB
+  ARM_W03_RECARGA_CARGADOR.wav: copiado | 0.38 s, 96000 Hz, 214 KB
+  ARM_W04_CERROJO.wav: copiado | 0.63 s, 96000 Hz, 354 KB
+  ARM_W04_DISPARO_01.wav: copiado | 1.50 s, 96000 Hz, 843 KB
+  ARM_W06_DISPARO_01.wav: copiado | 1.46 s, 96000 Hz, 833 KB
+  ARM_W06_SACAR.wav: copiado | 0.33 s, 96000 Hz, 198 KB
+  ARM_W07_CARGA.wav: CONVERTIDO a PCM16 96000 Hz (formato 0xfffe (extensible/otro)) | 3.40 s, 1273 KB
+  ARM_W07_DISPARO_01.wav: copiado | 1.42 s, 96000 Hz, 799 KB
+  ARM_W07_RAYO.wav: copiado | 3.64 s, 96000 Hz, 2046 KB
+  IMP_LASER_DISPARO.wav: copiado | 0.40 s, 96000 Hz, 227 KB
+  IMP_MISILES_FIJAR.wav: copiado | 1.00 s, 44100 Hz, 172 KB
+== 03_Impactos
+  IMP_BALA_CABEZA_01.wav: copiado | 0.99 s, 96000 Hz, 568 KB
+  IMP_BALA_CARNE_01.wav: CONVERTIDO a PCM16 48000 Hz (scipy avisa: Reached EOF prematurely; finished at 670) | 0.23 s, 42 KB
+  IMP_BALA_CONCRETO_01.wav: copiado | 0.58 s, 96000 Hz, 339 KB
+  IMP_BALA_CRISTAL_01.wav: copiado | 0.66 s, 96000 Hz, 384 KB
+  IMP_BALA_METAL_01.wav: copiado | 1.50 s, 96000 Hz, 858 KB
+  IMP_BALA_ROBOT_01.wav: copiado | 1.03 s, 96000 Hz, 591 KB
+  IMP_BALA_ZUMBIDO_01.wav: copiado | 0.22 s, 96000 Hz, 134 KB
+== 04_Explosiones
+  EXP_GRANADA_01.wav: copiado | 1.55 s, 96000 Hz, 872 KB
+  EXP_ONDA.wav: copiado | 4.54 s, 96000 Hz, 2567 KB
+  FUE_LOOP_CHICO.wav: copiado | 11.25 s, 48000 Hz, 3164 KB
+== 05_Pasos
+  PAS_CONCRETO_01.wav: copiado | 0.83 s, 96000 Hz, 607 KB
+  PAS_GRAVA_SECUENCIA: 8.89 s, 8 picos candidatos en s: 0.07, 0.94, 2.09, 4.21, 4.92, 5.55, 6.21, 7.58
+    -> PAS_GRAVA_01: 0.40 s, 150 KB, ganancia x1.00 | pisada en 0.07 s (corte 0.03 a 0.42 s, relacion pico/ruido 85.2)
+    -> PAS_GRAVA_02: 0.40 s, 149 KB, ganancia x1.00 | pisada en 0.94 s (corte 0.89 a 1.29 s, relacion pico/ruido 24.8)
+    -> PAS_GRAVA_03: 0.40 s, 150 KB, ganancia x1.00 | pisada en 2.09 s (corte 2.04 a 2.44 s, relacion pico/ruido 73.4)
+    -> PAS_GRAVA_04: 0.40 s, 149 KB, ganancia x1.00 | pisada en 4.21 s (corte 4.16 a 4.55 s, relacion pico/ruido 36.4)
+    -> PAS_GRAVA_05: 0.40 s, 150 KB, ganancia x1.00 | pisada en 4.92 s (corte 4.87 a 5.27 s, relacion pico/ruido 31.4)
+    -> PAS_GRAVA_06: 0.40 s, 149 KB, ganancia x1.00 | pisada en 5.55 s (corte 5.51 a 5.90 s, relacion pico/ruido 21.6)
+    -> PAS_GRAVA_07: 0.40 s, 149 KB, ganancia x1.00 | pisada en 6.21 s (corte 6.16 a 6.55 s, relacion pico/ruido 80.7)
+    -> PAS_GRAVA_08: 0.40 s, 150 KB, ganancia x1.00 | pisada en 7.58 s (corte 7.54 a 7.93 s, relacion pico/ruido 37.0)
+  PAS_MADERA_01.wav: copiado | 0.37 s, 96000 Hz, 347 KB
+  PAS_MADERA_02.wav: CONVERTIDO a PCM16 96000 Hz (scipy avisa: Reached EOF prematurely; finished at 408) | 0.39 s, 147 KB
+  PAS_METAL_01.wav: copiado | 0.61 s, 96000 Hz, 429 KB
+  PAS_MOJADO_01.wav: CONVERTIDO a PCM16 48000 Hz (scipy avisa: Reached EOF prematurely; finished at 113) | 0.74 s, 139 KB
+  PAS_TIERRA_SECUENCIA: 7.88 s, 15 picos candidatos en s: 0.13, 0.72, 1.21, 1.52, 2.04, 2.59, 3.29, 3.75, 4.12, 4.66, 5.15, 5.67, 6.36, 6.68, 7.17
+    -> PAS_TIERRA_01: 0.40 s, 150 KB, ganancia x1.00 | pisada en 0.13 s (corte 0.08 a 0.48 s, relacion pico/ruido 62.9)
+    -> PAS_TIERRA_02: 0.40 s, 150 KB, ganancia x1.00 | pisada en 2.04 s (corte 1.99 a 2.39 s, relacion pico/ruido 167.0)
+    -> PAS_TIERRA_03: 0.40 s, 150 KB, ganancia x1.00 | pisada en 2.59 s (corte 2.54 a 2.94 s, relacion pico/ruido 62.8)
+    -> PAS_TIERRA_04: 0.40 s, 150 KB, ganancia x1.00 | pisada en 4.12 s (corte 4.06 a 4.46 s, relacion pico/ruido 99.8)
+    -> PAS_TIERRA_05: 0.40 s, 150 KB, ganancia x1.00 | pisada en 4.66 s (corte 4.61 a 5.00 s, relacion pico/ruido 39.3)
+    -> PAS_TIERRA_06: 0.40 s, 149 KB, ganancia x1.00 | pisada en 5.15 s (corte 5.10 a 5.50 s, relacion pico/ruido 34.2)
+    -> PAS_TIERRA_07: 0.40 s, 150 KB, ganancia x1.00 | pisada en 6.68 s (corte 6.63 a 7.03 s, relacion pico/ruido 119.6)
+    -> PAS_TIERRA_08: 0.40 s, 150 KB, ganancia x1.00 | pisada en 7.17 s (corte 7.13 a 7.53 s, relacion pico/ruido 97.6)
+== 06_Jugador
+  JUG_ATERRIZAJE.wav: copiado | 0.50 s, 96000 Hz, 445 KB
+  JUG_RODADA.wav: copiado | 1.09 s, 44100 Hz, 282 KB
+  JUG_TREPAR.wav: copiado | 1.26 s, 44100 Hz, 327 KB
+  MEL_GOLPE_01.wav: copiado | 0.73 s, 44100 Hz, 190 KB
+  MEL_GOLPE_02.wav: copiado | 0.72 s, 44100 Hz, 187 KB
+  MEL_GOLPE_AIRE.wav: CONVERTIDO a PCM16 96000 Hz (scipy avisa: Reached EOF prematurely; finished at 374) | 0.32 s, 118 KB
+  MEL_GOLPE_CARNE.wav: copiado | 0.36 s, 96000 Hz, 215 KB
+== 07_Interaccion
+  INT_HACKEO_EXITO.wav: copiado | 0.54 s, 96000 Hz, 414 KB
+  INT_HACKEO_FALLO.wav: copiado | 0.20 s, 44100 Hz, 52 KB
+  INT_INTERRUPTOR_LUZ.wav: copiado | 1.23 s, 96000 Hz, 702 KB
+  INT_MALETIN_CERRAR.wav: copiado | 0.99 s, 96000 Hz, 570 KB
+  INT_PUERTA_CRISTAL.wav: copiado | 3.99 s, 96000 Hz, 2261 KB
+  INT_PUERTA_MADERA.wav: copiado | 1.02 s, 44100 Hz, 275 KB
+  INT_PUERTA_METAL.wav: copiado | 0.96 s, 44100 Hz, 261 KB
+  INT_PUERTA_REJA.wav: copiado | 5.22 s, 44100 Hz, 1349 KB
+  INT_RECOGER_OBJETO.wav: copiado | 0.47 s, 44100 Hz, 195 KB
+  INT_TECLEO_HACKEO.wav: copiado | 5.13 s, 44100 Hz, 976 KB
+== 08_Consumibles
+  CON_BEBER.wav: copiado | 3.24 s, 96000 Hz, 1834 KB
+  CON_CURACION.wav: copiado | 3.00 s, 96000 Hz, 1817 KB
+  CON_LATA_ABRIR.wav: copiado | 6.46 s, 96000 Hz, 3652 KB
+  CON_PAPITAS_COMER.wav: copiado | 1.07 s, 96000 Hz, 741 KB
+  CON_VENDA.wav: CONVERTIDO a PCM16 96000 Hz (scipy avisa: Reached EOF prematurely; finished at 109) | 1.81 s, 678 KB
+== 09_Vehiculos
+  MOTO_ARRANQUE_01: 77.6 s, ralenti desde 0.60 s, caida 75.20 s, nivel -14.9 dB
+    -> MOTO_RALENTI_01: 5.00 s, 1875 KB, ganancia x1.02 | ralenti: 67.70 s a 72.70 s (loop 5.00 s, crossfade 120 ms) | loop: bloque final/inicial -14.4 dB, salto 0.0005 (diff media 0.0017)
+    -> MOTO_ARRANQUE_01: 1.00 s, 374 KB, ganancia x1.02 | arranque: 0.00 s a 1.00 s
+    -> MOTO_APAGAR_01: 1.75 s, 656 KB, ganancia x1.02 | apagado: 75.05 s a 76.80 s (cola de silencio recortada)
+  MOTO_ARRANQUE_02: 70.1 s, ralenti desde 0.55 s, caida 69.40 s, nivel -15.3 dB
+    -> MOTO_RALENTI_02: 5.00 s, 1874 KB, ganancia x1.05 | ralenti: 51.40 s a 56.40 s (loop 5.00 s, crossfade 120 ms) | loop: bloque final/inicial -0.0 dB, salto 0.0009 (diff media 0.0014)
+    -> MOTO_ARRANQUE_02: 1.00 s, 374 KB, ganancia x1.05 | arranque: 0.00 s a 1.00 s
+    -> MOTO_APAGAR_02: 0.80 s, 300 KB, ganancia x1.05 | apagado: 69.25 s a 70.05 s (cola de silencio recortada)
+  MOTO_ARRANQUE_RALENTI_APAGAR: 63.7 s, ralenti desde 0.00 s, caida 62.20 s, nivel -20.0 dB
+    -> MOTO_RALENTI_03: 5.00 s, 1875 KB, ganancia x1.00 | ralenti: 3.90 s a 8.90 s (loop 5.00 s, crossfade 120 ms) | loop: bloque final/inicial 3.2 dB, salto 0.0065 (diff media 0.0057)
+    -> MOTO_ARRANQUE_03: 1.00 s, 375 KB, ganancia x1.00 | arranque: 0.00 s a 1.00 s
+    -> MOTO_APAGAR_03: 1.60 s, 600 KB, ganancia x1.00 | apagado: 62.05 s a 63.65 s (cola de silencio recortada)
+  VEH_ACELERON_01.wav: copiado | 3.11 s, 96000 Hz, 1766 KB
+  VEH_ACELERON_02.wav: copiado | 3.35 s, 96000 Hz, 1901 KB
+  VEH_ALARMA: 50.3 s original, nivel -23.9 dB
+    -> VEH_ALARMA: 8.75 s, 1640 KB, ganancia x1.11 | loop de 8.75 s tomado de 13.70 s (periodo detectado 0.35 s, crossfade 120 ms) | loop: bloque final/inicial -0.9 dB, salto 0.0247 (diff media 0.0114)
+  VEH_CHOQUE_01.wav: copiado | 1.47 s, 48000 Hz, 587 KB
+  VEH_CHOQUE_02.wav: copiado | 1.65 s, 48000 Hz, 638 KB
+  VEH_CHOQUE_FUERTE_01.wav: copiado | 2.12 s, 48000 Hz, 770 KB
+  VEH_CHOQUE_FUERTE_02.wav: copiado | 3.39 s, 48000 Hz, 1127 KB
+  VEH_CLAXON_CAMION.wav: copiado | 3.01 s, 44100 Hz, 400 KB
+  VEH_CLAXON_NORMAL_01.wav: copiado | 1.59 s, 96000 Hz, 910 KB
+  VEH_CLAXON_NORMAL_02.wav: copiado | 0.60 s, 96000 Hz, 348 KB
+  VEH_CRISTAL_ROMPER.wav: copiado | 1.16 s, 96000 Hz, 778 KB
+  VEH_ELECTRICO_ACELERAR_01.wav: copiado | 10.58 s, 44100 Hz, 2733 KB
+  VEH_ELECTRICO_ACELERAR_02.wav: copiado | 6.86 s, 44100 Hz, 1774 KB
+  VEH_ELECTRICO_ARRANQUE.wav: CONVERTIDO a PCM16 48000 Hz (scipy avisa: Reached EOF prematurely; finished at 778) | 2.56 s, 480 KB
+  VEH_ELECTRICO_MOVER.wav: copiado | 3.22 s, 44100 Hz, 668 KB
+  VEH_ELECTRICO_PASAR.wav: copiado | 3.26 s, 96000 Hz, 1847 KB
+  VEH_FRENO_FUERTE.wav: copiado | 1.38 s, 96000 Hz, 789 KB
+  VEH_LLANTAS_GRAVA: 47.4 s original, nivel -28.2 dB
+    -> VEH_LLANTAS_GRAVA: 9.00 s, 1550 KB, ganancia x1.54 | loop de 9.00 s tomado de 20.00 s (periodo detectado 0.24 s, crossfade 120 ms) | loop: bloque final/inicial -0.9 dB, salto 0.0038 (diff media 0.0023)
+  VEH_NORMAL_ARRANQUE_RALENTI_APAGAR_01: 22.3 s, ralenti desde 3.00 s, caida 12.85 s, nivel -24.4 dB
+    -> VEH_NORMAL_RALENTI_01: 5.00 s, 1876 KB, ganancia x1.00 | ralenti: 3.50 s a 8.50 s (loop 5.00 s, crossfade 120 ms) | loop: bloque final/inicial -0.2 dB, salto 0.0012 (diff media 0.0009)
+    -> VEH_NORMAL_ARRANQUE_01: 3.00 s, 1125 KB, ganancia x1.00 | arranque: 0.00 s a 3.00 s
+    -> VEH_NORMAL_APAGAR_01: 8.45 s, 3168 KB, ganancia x1.00 | apagado: 12.70 s a 21.15 s (cola de silencio recortada)
+  VEH_NORMAL_ARRANQUE_RALENTI_APAGAR_02: 59.1 s, ralenti desde 2.45 s, caida 57.50 s, nivel -28.1 dB
+    -> VEH_NORMAL_RALENTI_02: 5.00 s, 1875 KB, ganancia x1.00 | ralenti: 6.10 s a 11.10 s (loop 5.00 s, crossfade 120 ms) | loop: bloque final/inicial -9.6 dB, salto 0.0020 (diff media 0.0009)
+    -> VEH_NORMAL_ARRANQUE_02: 2.45 s, 918 KB, ganancia x1.00 | arranque: 0.00 s a 2.45 s
+    -> VEH_NORMAL_APAGAR_02: 1.70 s, 637 KB, ganancia x1.00 | apagado: 57.35 s a 59.05 s (cola de silencio recortada)
+  VEH_NORMAL_ARRANQUE_RALENTI_APAGAR_03: 71.0 s, ralenti desde 1.20 s, caida 70.25 s, nivel -23.4 dB
+    -> VEH_NORMAL_RALENTI_03: 5.00 s, 1874 KB, ganancia x1.00 | ralenti: 46.10 s a 51.10 s (loop 5.00 s, crossfade 120 ms) | loop: bloque final/inicial -9.5 dB, salto 0.0004 (diff media 0.0010)
+    -> VEH_NORMAL_ARRANQUE_03: 1.20 s, 449 KB, ganancia x1.00 | arranque: 0.00 s a 1.20 s
+    -> VEH_NORMAL_APAGAR_03: 0.75 s, 281 KB, ganancia x1.00 | apagado: 70.10 s a 70.85 s (cola de silencio recortada)
+  VEH_PESADO_ARRANQUE.wav: copiado | 2.79 s, 96000 Hz, 1583 KB
+  VEH_PESADO_RALENTI: 72.7 s, ralenti desde 1.00 s, caida 69.35 s, nivel -25.2 dB
+    -> VEH_PESADO_RALENTI_01: 5.00 s, 1874 KB, ganancia x1.03 | ralenti: 62.70 s a 67.70 s (loop 5.00 s, crossfade 120 ms) | loop: bloque final/inicial -0.6 dB, salto 0.0024 (diff media 0.0023)
+    -> VEH_PESADO_APAGAR_01: 3.51 s, 1315 KB, ganancia x1.03 | apagado: 69.20 s a 72.71 s (cola de silencio recortada)
+  VEH_PUENTE.wav: copiado | 2.19 s, 44100 Hz, 565 KB
+  VEH_PUERTA_ABRIR.wav: copiado | 0.90 s, 96000 Hz, 517 KB
+  VEH_PUERTA_CERRAR.wav: copiado | 0.55 s, 96000 Hz, 325 KB
+  VEH_TOPE.wav: copiado | 2.09 s, 48000 Hz, 761 KB
+== 10_Policia
+  POL_NOVA_AVISO.wav: copiado | 2.13 s, 44100 Hz, 550 KB
+  POL_RADIO_AVISO_01.wav: copiado | 4.10 s, 48000 Hz, 751 KB
+  POL_RADIO_AVISO_02.wav: copiado | 5.92 s, 48000 Hz, 1006 KB
+  POL_RADIO_AVISO_03.wav: copiado | 6.84 s, 48000 Hz, 1136 KB
+  POL_RADIO_AVISO_04.wav: copiado | 12.32 s, 48000 Hz, 1906 KB
+  POL_RADIO_DESPACHO_01.wav: copiado | 3.98 s, 48000 Hz, 735 KB
+  POL_RADIO_DESPACHO_02.wav: copiado | 6.46 s, 48000 Hz, 1084 KB
+  POL_SIRENA_CORTA.wav: copiado | 1.83 s, 96000 Hz, 1045 KB
+  POL_SIRENA_LOOP.wav: copiado | 11.05 s, 44100 Hz, 1439 KB
