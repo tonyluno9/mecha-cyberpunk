@@ -88,7 +88,7 @@ namespace MechaCyberpunk.Arte.Editor
         public const float UmbralFondoT513 = 25f;
         public const float UmbralBrumaAltura = 14f;
         public const float UmbralSkyline = 100f;
-        public const float UmbralCiudadRespaldo = 25f;
+        public const float UmbralSueloLejano = 25f;
         private const float AlturaFotoAerea = 25f;
 
         /// <summary>
@@ -156,7 +156,7 @@ namespace MechaCyberpunk.Arte.Editor
             }
 
             // Piso de ciudad lejana: bajo todo, solo se ve con la cámara por encima de 25 m (a nivel de calle no existe).
-            CrearCiudadRespaldo(raiz.transform, log);
+            CrearSueloLejano(raiz.transform, log);
 
             // Niebla por altura.
             CicloDiaNoche ciclo = Object.FindFirstObjectByType<CicloDiaNoche>();
@@ -182,94 +182,210 @@ namespace MechaCyberpunk.Arte.Editor
             Debug.Log("[Arte] " + log);
         }
 
-        /// <summary>
-        /// Para las aéreas: los 30 renderers visibles (sin oclusión) que más espacio ocupan en el tercio de arriba de la pantalla (lo que queda sobre el horizonte), con su ruta,
-        /// malla, material y distancia. Ayuda a nombrar las cajas o bloques que se ven en el cielo.
-        /// </summary>
-        private static void ListarArriba(StringBuilder log, Cam c)
-        {
-            OcultarPorAltura.AplicarATodos(c.Desde.y);
-            var go = new GameObject("T1462_CamArriba") { hideFlags = HideFlags.HideAndDontSave };
-            Camera cam = go.AddComponent<Camera>();
-            cam.aspect = AspectoFoto;
-            cam.fieldOfView = c.Campo;
-            cam.farClipPlane = LejosDiag;
-            cam.transform.position = c.Desde;
-            cam.transform.LookAt(c.Hacia);
-            Plane[] planos = GeometryUtility.CalculateFrustumPlanes(cam);
-            var lista = new List<(Renderer r, float area, float dist)>();
-            foreach (Renderer r in Object.FindObjectsByType<Renderer>(FindObjectsInactive.Exclude, FindObjectsSortMode.None))
-            {
-                if (r == null || !r.enabled || !(r is MeshRenderer || r is SkinnedMeshRenderer) || !GeometryUtility.TestPlanesAABB(planos, r.bounds))
-                {
-                    continue;
-                }
-                Bounds b = r.bounds;
-                Vector3 v = cam.WorldToViewportPoint(b.center);
-                if (v.z <= 0f || v.y < 0.62f)
-                {
-                    continue;
-                }
-                float area = PorcentajePantalla(cam, b);
-                if (area >= 0.3f)
-                {
-                    lista.Add((r, area, Vector3.Distance(c.Desde, b.center)));
-                }
-            }
-            log.AppendLine();
-            log.AppendLine("== ARRIBA en " + c.Nombre + " (centro del renderer en el tercio superior, % de bounds)");
-            foreach ((Renderer r, float area, float dist) in lista.OrderByDescending(x => x.area).Take(30))
-            {
-                MeshFilter mf = r.GetComponent<MeshFilter>();
-                string mats = string.Join("+", r.sharedMaterials.Where(m => m != null).Select(m => m.name + "{" + (m.shader != null ? m.shader.name : "?") + "}"));
-                log.AppendLine("  " + area.ToString("0.0", CultureInfo.InvariantCulture) + "% a " + dist.ToString("0") + " m | " + RutaDe(r.transform) + " | malla " + (mf != null && mf.sharedMesh != null ? mf.sharedMesh.name : "?") + " | " + mats + " | tamaño " + V(r.bounds.size) + " centro " + V(r.bounds.center));
-            }
-            Object.DestroyImmediate(go);
-        }
-
-        public const string RutaMaterialRespaldo = "Assets/Arte/Mundo/Look/T1462_CiudadRespaldo.mat";
-        public const string RutaVentanasLejanas = "Assets/Arte/Mundo/Zonas/T1363_VentanasLejanas.png";
-        private const float YCiudadRespaldo = -8f;
-        private const float LadoCiudadRespaldo = 4000f;
-        private const float MetrosPorMosaico = 96f;
-        private static readonly Vector3 CentroCiudadRespaldo = new Vector3(-60f, YCiudadRespaldo, -100f);
+        public const string RutaMaterialRespaldoViejo = "Assets/Arte/Mundo/Look/T1462_CiudadRespaldo.mat";
+        public const string RutaMaterialSuelo = "Assets/Arte/Mundo/Look/T1462_SueloLejano.mat";
+        private const float YSueloLejano = -8f;
+        private const float LadoSueloLejano = 4000f;
+        private static readonly Vector3 CentroSueloLejano = new Vector3(-60f, YSueloLejano, -100f);
 
         /// <summary>
-        /// Lo que queda fuera del mapa visto desde arriba era el azul liso del fondo. Un plano enorme con la textura de ventanas lejanas (T1363: pared oscura con ventanas
-        /// cálidas, frías y magenta) bajo todo (y -8: bajo el mar y el piso de respaldo) lo hace leer como ciudad continua a oscuras con luces. Plano con material, sin collider ni sombras.
+        /// Lo que queda fuera del mapa visto desde arriba: un plano enorme azul-gris muy oscuro y mate (URP Lit sin reflejos ni brillo) bajo todo (y -8: bajo el mar, FondoMar y los pisos de respaldo).
+        /// La niebla lineal de NieblaPorAltura lo funde con el horizonte. Solo existe con la cámara sobre 25 m. Sin collider ni sombras.
         /// </summary>
-        private static void CrearCiudadRespaldo(Transform padre, StringBuilder log)
+        private static void CrearSueloLejano(Transform padre, StringBuilder log)
         {
-            Texture2D tex = AssetDatabase.LoadAssetAtPath<Texture2D>(RutaVentanasLejanas);
-            Shader sh = Shader.Find("Universal Render Pipeline/Unlit");
-            if (tex == null || sh == null)
+            AssetDatabase.DeleteAsset(RutaMaterialRespaldoViejo); // la rejilla de ventanas de la ronda 2 se quita
+            Shader sh = Shader.Find("Universal Render Pipeline/Lit");
+            if (sh == null)
             {
-                log.AppendLine("FALTA la textura " + RutaVentanasLejanas + " o el shader URP Unlit: sin CiudadRespaldo");
+                log.AppendLine("FALTA el shader URP Lit: sin SueloLejano");
                 return;
             }
-            Material mat = AssetDatabase.LoadAssetAtPath<Material>(RutaMaterialRespaldo);
+            Material mat = AssetDatabase.LoadAssetAtPath<Material>(RutaMaterialSuelo);
             if (mat == null)
             {
                 mat = new Material(sh);
-                AssetDatabase.CreateAsset(mat, RutaMaterialRespaldo);
+                AssetDatabase.CreateAsset(mat, RutaMaterialSuelo);
             }
             mat.shader = sh;
-            mat.SetTexture("_BaseMap", tex);
-            mat.SetColor("_BaseColor", new Color(1.1f, 1.1f, 1.1f, 1f));
-            mat.SetTextureScale("_BaseMap", Vector2.one * (LadoCiudadRespaldo / MetrosPorMosaico));
+            mat.SetColor("_BaseColor", new Color(0.03f, 0.04f, 0.065f, 1f));
+            mat.SetFloat("_Metallic", 0f);
+            mat.SetFloat("_Smoothness", 0f);
+            mat.SetFloat("_SpecularHighlights", 0f);
+            mat.SetFloat("_EnvironmentReflections", 0f);
+            mat.EnableKeyword("_SPECULARHIGHLIGHTS_OFF");
+            mat.EnableKeyword("_ENVIRONMENTREFLECTIONS_OFF");
             EditorUtility.SetDirty(mat);
             GameObject plano = GameObject.CreatePrimitive(PrimitiveType.Quad);
-            plano.name = "CiudadRespaldo";
+            plano.name = "SueloLejano";
             Object.DestroyImmediate(plano.GetComponent<Collider>());
             plano.transform.SetParent(padre, false);
-            plano.transform.SetPositionAndRotation(CentroCiudadRespaldo, Quaternion.Euler(90f, 0f, 0f));
-            plano.transform.localScale = new Vector3(LadoCiudadRespaldo, LadoCiudadRespaldo, 1f);
+            plano.transform.SetPositionAndRotation(CentroSueloLejano, Quaternion.Euler(90f, 0f, 0f));
+            plano.transform.localScale = new Vector3(LadoSueloLejano, LadoSueloLejano, 1f);
             var r = plano.GetComponent<MeshRenderer>();
             r.sharedMaterial = mat;
             r.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             r.receiveShadows = false;
-            CrearGrupo(padre, "CiudadRespaldo_Arriba", new Renderer[] { r }, UmbralCiudadRespaldo, log, true);
-            log.AppendLine("CiudadRespaldo: plano de " + LadoCiudadRespaldo.ToString("0") + " m a y " + YCiudadRespaldo.ToString("0") + ", mosaico de " + MetrosPorMosaico.ToString("0") + " m, visible sobre " + UmbralCiudadRespaldo.ToString("0") + " m");
+            CrearGrupo(padre, "SueloLejano_Arriba", new Renderer[] { r }, UmbralSueloLejano, log, true);
+            log.AppendLine("SueloLejano: plano de " + LadoSueloLejano.ToString("0") + " m a y " + YSueloLejano.ToString("0") + ", visible sobre " + UmbralSueloLejano.ToString("0") + " m");
+        }
+
+        // ------------------------------------------------------------------ qué se ve en un punto de la pantalla
+
+        private static readonly (string nombre, Rect region)[] RegionesArriba =
+        {
+            ("arriba-izq", new Rect(0f, 0.55f, 0.34f, 0.45f)),
+            ("arriba-centro", new Rect(0.33f, 0.55f, 0.34f, 0.45f)),
+            ("arriba-der", new Rect(0.66f, 0.55f, 0.34f, 0.45f)),
+        };
+
+        /// <summary>
+        /// Mide qué renderer ve la cámara en cada región: pinta cada renderer con un id de color (Unlit sin niebla ni posproceso, leído con color exacto), renderiza y cuenta píxeles por id.
+        /// Una pasada solo con los opacos y otra solo con los transparentes (halos, haces, bruma), que no escriben profundidad en el juego y por eso se miden aparte.
+        /// Escribe en el log los 8 con más píxeles por región (ruta, malla, material, tamaño, centro). Quita los property blocks de esa corrida: la escena se reabre sin guardar al final.
+        /// </summary>
+        private static void Identificar(StringBuilder log, string titulo, Vector3 desde, Vector3 hacia, float campo, params (string nombre, Rect region)[] regiones)
+        {
+            Shader sh = Shader.Find("Universal Render Pipeline/Unlit");
+            if (sh == null)
+            {
+                log.AppendLine("Identificar " + titulo + ": no encontré el shader URP Unlit");
+                return;
+            }
+            const int ancho = 1376, alto = 768;
+            foreach (bool transparentes in new[] { false, true })
+            {
+                var idMat = new Material(sh) { hideFlags = HideFlags.HideAndDontSave };
+                idMat.SetFloat("_Cull", 0f);
+                var go = new GameObject("T1462_CamId") { hideFlags = HideFlags.HideAndDontSave };
+                Camera cam = go.AddComponent<Camera>();
+                UnityEngine.Rendering.Universal.UniversalAdditionalCameraData datos = go.AddComponent<UnityEngine.Rendering.Universal.UniversalAdditionalCameraData>();
+                datos.renderPostProcessing = false;
+                datos.antialiasing = UnityEngine.Rendering.Universal.AntialiasingMode.None;
+                cam.clearFlags = CameraClearFlags.SolidColor;
+                cam.backgroundColor = Color.black;
+                cam.allowHDR = false;
+                cam.allowMSAA = false;
+                cam.nearClipPlane = 0.3f;
+                cam.farClipPlane = LejosDiag;
+                cam.fieldOfView = campo;
+                cam.aspect = (float)ancho / alto;
+                cam.transform.position = desde;
+                cam.transform.LookAt(hacia);
+                Plane[] planos = GeometryUtility.CalculateFrustumPlanes(cam);
+                var apagados = new List<Renderer>();
+                var viejos = new Dictionary<Renderer, Material[]>();
+                var porId = new List<Renderer> { null };
+                bool fogAntes = RenderSettings.fog;
+                RenderSettings.fog = false;
+                RenderTexture rt = new RenderTexture(ancho, alto, 24, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Linear);
+                Texture2D tex = new Texture2D(ancho, alto, TextureFormat.RGB24, false, true);
+                try
+                {
+                    foreach (Renderer r in Object.FindObjectsByType<Renderer>(FindObjectsInactive.Exclude, FindObjectsSortMode.None))
+                    {
+                        if (r == null || !r.enabled)
+                        {
+                            continue;
+                        }
+                        bool malla = r is MeshRenderer || r is SkinnedMeshRenderer;
+                        if (!malla)
+                        {
+                            r.enabled = false;
+                            apagados.Add(r);
+                            continue;
+                        }
+                        if (!GeometryUtility.TestPlanesAABB(planos, r.bounds))
+                        {
+                            continue;
+                        }
+                        bool esTransparente = r.sharedMaterials.Any(m => m != null && m.renderQueue > 2500);
+                        if (esTransparente != transparentes)
+                        {
+                            r.enabled = false;
+                            apagados.Add(r);
+                            continue;
+                        }
+                        porId.Add(r);
+                        int id = porId.Count - 1;
+                        viejos[r] = r.sharedMaterials;
+                        var mats = new Material[Mathf.Max(1, r.sharedMaterials.Length)];
+                        for (int k = 0; k < mats.Length; k++)
+                        {
+                            mats[k] = idMat;
+                        }
+                        r.sharedMaterials = mats;
+                        var bloque = new MaterialPropertyBlock();
+                        bloque.SetVector("_BaseColor", new Vector4((id & 255) / 255f, ((id >> 8) & 255) / 255f, ((id >> 16) & 255) / 255f, 1f));
+                        r.SetPropertyBlock(bloque);
+                    }
+                    cam.targetTexture = rt;
+                    cam.Render();
+                    RenderTexture.active = rt;
+                    tex.ReadPixels(new Rect(0, 0, ancho, alto), 0, 0);
+                    tex.Apply();
+                    RenderTexture.active = null;
+                    Color32[] px = tex.GetPixels32();
+                    foreach ((string nombre, Rect reg) in regiones)
+                    {
+                        int x0 = Mathf.RoundToInt(reg.xMin * ancho), x1 = Mathf.RoundToInt(reg.xMax * ancho);
+                        int y0 = Mathf.RoundToInt(reg.yMin * alto), y1 = Mathf.RoundToInt(reg.yMax * alto);
+                        var cuenta = new Dictionary<int, int>();
+                        int total = 0;
+                        for (int y = y0; y < y1 && y < alto; y++)
+                        {
+                            for (int x = x0; x < x1 && x < ancho; x++)
+                            {
+                                Color32 c = px[y * ancho + x];
+                                int id = c.r | (c.g << 8) | (c.b << 16);
+                                cuenta[id] = cuenta.TryGetValue(id, out int n) ? n + 1 : 1;
+                                total++;
+                            }
+                        }
+                        log.AppendLine("  [" + titulo + " " + (transparentes ? "transparentes" : "opacos") + "] " + nombre + " (" + total + " px)");
+                        foreach (KeyValuePair<int, int> kv in cuenta.OrderByDescending(p => p.Value).Take(8))
+                        {
+                            float pct = 100f * kv.Value / Mathf.Max(1, total);
+                            if (kv.Key == 0 || kv.Key >= porId.Count || porId[kv.Key] == null)
+                            {
+                                log.AppendLine("      " + pct.ToString("0.0", CultureInfo.InvariantCulture) + "% (nada de esta pasada: fondo o cielo)");
+                                continue;
+                            }
+                            Renderer rr = porId[kv.Key];
+                            MeshFilter mf = rr.GetComponent<MeshFilter>();
+                            string ms = string.Join("+", viejos[rr].Where(m => m != null).Select(m => m.name + "{" + (m.shader != null ? m.shader.name : "?") + "}"));
+                            Bounds b = rr.bounds;
+                            log.AppendLine("      " + pct.ToString("0.0", CultureInfo.InvariantCulture) + "% " + RutaDe(rr.transform) + " | malla " + (mf != null && mf.sharedMesh != null ? mf.sharedMesh.name : "?")
+                                + " | " + ms + " | tamaño " + V(b.size) + " centro " + V(b.center) + " base y " + b.min.y.ToString("0.0", CultureInfo.InvariantCulture));
+                        }
+                    }
+                }
+                finally
+                {
+                    cam.targetTexture = null;
+                    foreach (KeyValuePair<Renderer, Material[]> kv in viejos)
+                    {
+                        if (kv.Key != null)
+                        {
+                            kv.Key.sharedMaterials = kv.Value;
+                            kv.Key.SetPropertyBlock(null);
+                        }
+                    }
+                    foreach (Renderer r in apagados)
+                    {
+                        if (r != null)
+                        {
+                            r.enabled = true;
+                        }
+                    }
+                    RenderSettings.fog = fogAntes;
+                    rt.Release();
+                    Object.DestroyImmediate(rt);
+                    Object.DestroyImmediate(tex);
+                    Object.DestroyImmediate(idMat);
+                    Object.DestroyImmediate(go);
+                }
+            }
         }
 
         private static void CrearGrupo(Transform padre, string nombre, Renderer[] renderers, float umbral, StringBuilder log, bool soloArriba = false)
@@ -334,7 +450,7 @@ namespace MechaCyberpunk.Arte.Editor
             }
 
             Dictionary<Renderer, Datos> res = Analizar(log, out List<Cam> camaras, out Dictionary<string, List<Datos>> porCam, true);
-            string[] permitidos = { "Halos", "HazTorre", "Haz", "FaroLejano", "Cables", "Cable", "Bruma_", "DerramesNeon", "Estelas", "T1464_Autopista", "PisoRespaldo", "Skyline", "CiudadRespaldo" };
+            string[] permitidos = { "Halos", "HazTorre", "Haz", "FaroLejano", "Cables", "Cable", "Bruma_", "DerramesNeon", "Estelas", "T1464_Autopista", "PisoRespaldo", "Skyline", "SueloLejano", "/Fondo/Torre_", "TorreReflectores", "FondoMar", "Asfalto", "Arroyo" };
             var camY = camaras.ToDictionary(c => c.Nombre, c => c.Desde.y);
             int sospechososC = 0;
             foreach (KeyValuePair<string, List<Datos>> kv in porCam)
@@ -375,14 +491,26 @@ namespace MechaCyberpunk.Arte.Editor
                 }
                 Object.DestroyImmediate(go);
             }
+            // Qué se ve de verdad (por píxel) arriba de cada aérea y en las dos zonas raras de K12.
+            log.AppendLine();
+            log.AppendLine("== QUÉ SE VE (id por píxel)");
             foreach (Cam c in camaras.Where(x => x.Nombre.StartsWith("A1", StringComparison.Ordinal)))
             {
-                ListarArriba(log, c);
+                OcultarPorAltura.AplicarATodos(c.Desde.y);
+                Identificar(log, c.Nombre, c.Desde, c.Hacia, c.Campo, RegionesArriba);
+                OcultarPorAltura.AplicarATodos(float.NegativeInfinity);
             }
+            var k12 = new List<Cam>();
+            AgregarVista(k12, Object.FindObjectsByType<Transform>(FindObjectsInactive.Exclude, FindObjectsSortMode.None), "K12", "Malecon",
+                ZonaMaleconT1413.CamaraK12, ZonaMaleconT1413.MiraK12, ZonaMaleconT1413.CampoK12, null);
+            OcultarPorAltura.AplicarATodos(k12[0].Desde.y);
+            Identificar(log, k12[0].Nombre, k12[0].Desde, k12[0].Hacia, k12[0].Campo,
+                ("K12-forma-blanca-sobre-el-mar", new Rect(0.15f, 0.35f, 0.35f, 0.3f)), ("K12-cruz-blanca-cielo", new Rect(0.4f, 0.75f, 0.2f, 0.25f)));
             OcultarPorAltura.AplicarATodos(float.NegativeInfinity);
             log.AppendLine("sospechosos C/D no permitidos: " + sospechososC + "; sospechosos totales (incluye A/B legítimos): " + res.Count);
             log.AppendLine(fallas == 0 ? "RESULTADO: OK" : "RESULTADO: " + fallas + " FALLAS");
             File.WriteAllText(RutaValidar, log.ToString());
+            UnityEditor.SceneManagement.EditorSceneManager.OpenScene(ColocarS2.RutaEscena, UnityEditor.SceneManagement.OpenSceneMode.Single); // sin guardar: Identificar toca property blocks
             if (fallas > 0)
             {
                 Debug.LogError("[Arte] T-1462 Validar: " + fallas + " fallas. Ver " + RutaValidar + "\n" + log);

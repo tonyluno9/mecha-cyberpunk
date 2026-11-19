@@ -107,7 +107,7 @@ namespace MechaCyberpunk.Mundo.Reloj
             RenderSettings.fog = true;
             RenderSettings.fogMode = FogMode.ExponentialSquared;
             RenderSettings.fogColor = config.ColorNiebla(hora);
-            RenderSettings.fogDensity = config.DensidadNiebla(hora) * NieblaPorAltura.FactorActual; // T-1462: más clara desde arriba
+            NieblaPorAltura.AplicarNiebla(config.DensidadNiebla(hora)); // T-1462: igual a nivel de calle; desde arriba lineal y lejos
 
             AplicarCielo(hora);
             if (camara == null)
