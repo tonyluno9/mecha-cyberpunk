@@ -38,8 +38,8 @@ namespace MechaCyberpunk.Arte.Editor
         /// Cámara de K15 (ronda 2): ojos a 1.7 m en el patio sobre el muelle oeste (x 117..183, z -222.4..-237), FUERA de las calles de tránsito, mirando al oeste.
         /// A la izquierda las pilas de contenedores escalonadas (z -237..-234.6) con el barco PU02 y la grúa nueva detrás (50-60 m); a la derecha la hilera de bodegas (3 m).
         /// </summary>
-        public static readonly Vector3 CamaraK15 = new Vector3(130f, 1.7f, -206f);
-        public static readonly Vector3 MiraK15 = new Vector3(160f, 16f, -270f);
+        public static readonly Vector3 CamaraK15 = new Vector3(160f, 1.7f, -150f);
+        public static readonly Vector3 MiraK15 = new Vector3(150f, 12f, -260f);
         private const float PatioZSur = -237.0f, PatioZNorte = -205.0f, PatioXAtras = 118.0f, PatioXPilas = 150.3f;
 
         private static void Nota(string t)
@@ -100,14 +100,14 @@ namespace MechaCyberpunk.Arte.Editor
             return r;
         }
 
-        private static bool EnCalle(Rect h)
+        private static bool EnCalle(Rect h, float media = MediaCalle)
         {
             Vector2[] puntos = { h.center, new Vector2(h.xMin, h.yMin), new Vector2(h.xMax, h.yMin), new Vector2(h.xMin, h.yMax), new Vector2(h.xMax, h.yMax) };
             foreach (Vector3[] calle in ColocarT1357Puerto.Calles())
             {
                 foreach (Vector2 p in puntos)
                 {
-                    if (ColocarT1357Puerto.DistanciaACalle(new Vector3(p.x, 0f, p.y), calle) < MediaCalle)
+                    if (ColocarT1357Puerto.DistanciaACalle(new Vector3(p.x, 0f, p.y), calle) < media)
                     {
                         return true;
                     }
@@ -175,7 +175,6 @@ namespace MechaCyberpunk.Arte.Editor
                     Object.DestroyImmediate(viejo.gameObject);
                 }
                 RestaurarApartados(raiz.transform);
-                ApartarEstorbos(raiz.transform, Rect.MinMaxRect(116.5f, PatioZSur - 0.5f, 153.9f, PatioZNorte + 1.5f));
                 int lucesAntes = raiz.GetComponentsInChildren<Light>(true).Length;
                 Transform nuevo = new GameObject(Raiz).transform;
                 nuevo.SetParent(raiz.transform, false);
@@ -184,28 +183,21 @@ namespace MechaCyberpunk.Arte.Editor
                 List<Rect> mios = new List<Rect>();
                 Nota("Huellas ya ocupadas en el prefab (T1357..T1443): " + ocupados.Count);
 
-                // Avenida (ronda 1): se deja, sin luces (las 8 luces son del patio).
-                Escaleras(nuevo, ocupados, mios, "Contenedores", XPared, -86f, -195f, 3, new[] { new[] { 1, 2, 3 }, new[] { 1, 2 } }, -300f);
-                Bodegas(raiz.transform, nuevo, o);
-                Charcos(nuevo, o, ocupados, mios, "Charcos", Rect.MinMaxRect(154.6f, -205f, 165.4f, -88f), 8, new Vector2(1.8f, 4.8f), new Vector2(1.2f, 3f), false, null);
-                Props(nuevo, ocupados, mios);
-                Gente(nuevo, "Gente", 2, ocupados, mios, new System.Random(14422), false);
-                // Patio de K15 (ronda 2).
-                List<float> zLuces = new List<float>();
-                PatioBodegas(nuevo, o, ocupados, mios, zLuces);
-                Escaleras(nuevo, ocupados, mios, "PatioContenedores", PatioXPilas, PatioZNorte - 1f, PatioZSur + 12f, 2, new[] { new[] { 1, 2 }, new[] { 1 } }, PatioZSur);
-                GruaNueva(raiz.transform, nuevo);
-                BuscarCamara(raiz.transform, nuevo, ocupados, out Vector3 cam, out Vector3 mira);
+                // Ronda 5: el cuadro fijo de K15 en la avenida (cruce x 160, z -150, mirando al sur). Se quitan el patio oeste y la busqueda de camara.
+                Vector3 cam = CamaraK15, mira = MiraK15;
                 Transform marca = new GameObject("CamaraK15_T1442").transform;
                 marca.SetParent(nuevo, false);
                 marca.position = cam;
                 Transform marcaMira = new GameObject("Mira").transform;
                 marcaMira.SetParent(marca, true);
                 marcaMira.position = mira;
-                PatioPostes(nuevo, o, ocupados, mios, cam, mira);
-                Charcos(nuevo, o, ocupados, mios, "CharcosPatio", Rect.MinMaxRect(126f, -235.5f, 148.5f, -207f), 22, new Vector2(5f, 11f), new Vector2(2.5f, 4.5f), false, zLuces, true);
-                PatioProps(nuevo, ocupados, mios, cam, mira);
-                Gente(nuevo, "GentePatio", 7, ocupados, mios, new System.Random(14423), true);
+                Escaleras(nuevo, ocupados, mios, "Contenedores", XPared, -86f, -195f, 3, new[] { new[] { 1, 2, 3 }, new[] { 1, 2 } }, -300f);
+                PilaEsquina(nuevo, ocupados, mios);
+                Bodegas(raiz.transform, nuevo, o);
+                PostesAvenida(raiz.transform, nuevo, o, ocupados, mios);
+                Charcos(nuevo, o, ocupados, mios, "CharcosCalle", Rect.MinMaxRect(155f, -215f, 165f, -152f), 20, new Vector2(4f, 9f), new Vector2(2f, 4f), false, new List<float> { 155.2f, 156.5f, 164.5f }, false);
+                Props(nuevo, ocupados, mios, cam);
+                Gente(nuevo, "Gente", 7, ocupados, mios, new System.Random(14422), false);
                 Muelle(raiz.transform, nuevo, o, cam);
 
                 KitS2c.Terminar(o);
@@ -387,6 +379,154 @@ namespace MechaCyberpunk.Arte.Editor
 
         // ---------------------------------------------------------------- 2. Bodegas: toldos, lámparas, neones
 
+        // ---------------------------------------------------------------- Ronda 5: el cuadro fijo de K15 en la avenida (x = 160, mirando al sur)
+
+        private static bool FueraDeAsfalto(Rect h)
+        {
+            Vector2[] puntos = { h.center, new Vector2(h.xMin, h.yMin), new Vector2(h.xMax, h.yMin), new Vector2(h.xMin, h.yMax), new Vector2(h.xMax, h.yMax) };
+            foreach (Vector3[] calle in ColocarT1357Puerto.Calles())
+            {
+                foreach (Vector2 p in puntos)
+                {
+                    if (ColocarT1357Puerto.DistanciaACalle(new Vector3(p.x, 0f, p.y), calle) < ColocarT1357Puerto.AnchoCalle * 0.5f + 0.05f)
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Pila escalonada (1-2-3 de alto) en la esquina sureste del cruce de la cámara: contenedores PU08 con grafiti y PT01 de colores con el eje largo en x, la cara con grafiti al norte
+        /// (hacia la cámara), pegada al borde sur de la calle z = -150 (fuera de sus 12 m de asfalto). Escalera al suelo por el norte y una escalera por escalón.
+        /// </summary>
+        private static void PilaEsquina(Transform nuevo, List<Rect> ocupados, List<Rect> mios)
+        {
+            Transform padre = new GameObject("PilaEsquina").transform;
+            padre.SetParent(nuevo, false);
+            string[] codigos = { "PU08_ContenedorGraffiti_a", "PU08_ContenedorGraffiti_b", "PT01_Contenedor40_Naranja", "PU08_ContenedorGraffiti_a", "PT01_Contenedor40_Azul", "PU08_ContenedorGraffiti_b" };
+            List<GameObject> prefabs = codigos.Select(BuscarPrefab).Where(p => p != null).ToList();
+            if (prefabs.Count == 0)
+            {
+                Nota("PilaEsquina: faltan los prefabs de contenedor.");
+                return;
+            }
+            float largo = ColocarT1357Puerto.LargoCont, alto = ColocarT1357Puerto.AltoCont, ancho = ColocarT1357Puerto.AnchoCont;
+            int[][] patrones = { new[] { 1, 2, 3 }, new[] { 1, 2 }, new[] { 1 } };
+            foreach (float zN in new[] { -156.3f, -156.6f, -157.0f })
+            {
+                foreach (float x0 in new[] { 166.5f, 167.2f, 168f })
+                {
+                    foreach (int[] alturas in patrones)
+                    {
+                        List<Rect> rects = new List<Rect>();
+                        for (int i = 0; i < alturas.Length; i++)
+                        {
+                            float xa = x0 + i * (largo + 0.04f);
+                            rects.Add(Rect.MinMaxRect(xa, zN - ancho, xa + largo, zN));
+                        }
+                        Rect escalera = Rect.MinMaxRect(x0, zN, x0 + largo, zN + 0.95f);
+                        if (rects.Any(r => !Libre(r, ocupados, mios) || !FueraDeAsfalto(r)) || !Libre(escalera, ocupados, mios))
+                        {
+                            continue;
+                        }
+                        float zc = zN - ancho * 0.5f;
+                        int color = 0, total = 0;
+                        for (int i = 0; i < alturas.Length; i++)
+                        {
+                            float yBase = 0f;
+                            for (int n = 0; n < alturas[i]; n++)
+                            {
+                                GameObject g = PonerContX(padre, prefabs[color % prefabs.Count], "Cont_e_" + i + "_" + n, rects[i].center.x, zc, yBase);
+                                color++;
+                                total++;
+                                yBase = Limites(g.transform).max.y;
+                            }
+                            mios.Add(rects[i]);
+                        }
+                        mios.Add(escalera);
+                        Escalera(padre, "Escalera_Suelo_e", new Vector3(x0 + largo * 0.5f, 0f, zN + 0.3f), alto, Vector3.back);
+                        for (int i = 0; i + 1 < alturas.Length; i++)
+                        {
+                            Escalera(padre, "Escalera_Fila_e_" + i, new Vector3(rects[i].xMax - 0.25f, alturas[i] * alto, zc), alto, Vector3.right);
+                        }
+                        Nota("PilaEsquina: alturas " + string.Join("-", alturas) + " desde x " + x0 + ", z norte " + zN + " (" + total + " contenedores, grafiti al norte; escaleras al suelo y por escalón).");
+                        return;
+                    }
+                }
+            }
+            Nota("PilaEsquina: no hay hueco en la esquina sureste del cruce (z -156..-159 junto a los bloques); se omite.");
+        }
+
+        /// <summary>Postes de madera con lámpara de sodio en el borde este (a la izquierda de la cámara) entre los que ya hay, con racimos de cables a los vecinos y a las bodegas de enfrente.</summary>
+        private static void PostesAvenida(Transform raiz, Transform nuevo, KitS2c.Obra o, List<Rect> ocupados, List<Rect> mios)
+        {
+            Transform padre = new GameObject("PostesAvenida").transform;
+            padre.SetParent(nuevo, false);
+            List<Vector3> puntas = new List<Vector3>();
+            foreach (float z0 in new[] { -160f, -181f, -201f })
+            {
+                foreach (float dz in new[] { 0f, 2f, -2f, 4f, -4f, 6f, -6f })
+                {
+                    Vector3 pie = new Vector3(165.4f, 0f, z0 + dz);
+                    Rect h = Rect.MinMaxRect(pie.x - 0.45f, pie.z - 0.45f, pie.x + 0.45f, pie.z + 0.45f);
+                    if (!Libre(h, ocupados, mios))
+                    {
+                        continue;
+                    }
+                    puntas.Add(KitS2c.Poste(o, padre, pie, Vector3.left, 0f, true));
+                    mios.Add(h);
+                    break;
+                }
+            }
+            List<Vector3> existentes = new List<Vector3>();
+            Transform postes = raiz.Find("Postes");
+            if (postes != null)
+            {
+                existentes = postes.Cast<Transform>().Where(t => t.name.StartsWith("Poste_") && t.gameObject.activeInHierarchy).Select(t => t.position + Vector3.up * 6.75f).ToList();
+            }
+            Transform grupoBodegas = raiz.Find("Bodegas");
+            List<Transform> bodegas = grupoBodegas == null ? new List<Transform>()
+                : grupoBodegas.Cast<Transform>().Where(t => t.gameObject.activeInHierarchy && (t.name.StartsWith("PU03_") || t.name.StartsWith("PU04_"))).ToList();
+            int cables = 0;
+            for (int k = 0; k < puntas.Count; k++)
+            {
+                if (k + 1 < puntas.Count)
+                {
+                    foreach (float dy in new[] { 0f, -0.5f, -1f, 0.4f, 0.8f })
+                    {
+                        KitS2c.Cable(o, puntas[k] + Vector3.up * dy, puntas[k + 1] + Vector3.up * dy, 1.0f);
+                        cables++;
+                    }
+                }
+                Vector3 punta = puntas[k];
+                foreach (Vector3 q in existentes.Where(p => new Vector2(p.x - punta.x, p.z - punta.z).magnitude < 26f && new Vector2(p.x - punta.x, p.z - punta.z).magnitude > 1f).Take(2))
+                {
+                    foreach (float dy in new[] { 0f, -0.6f, 0.5f })
+                    {
+                        KitS2c.Cable(o, punta + Vector3.up * dy, q + Vector3.up * dy, 1.1f);
+                        cables++;
+                    }
+                }
+                foreach (Transform b in bodegas)
+                {
+                    Bounds c = Limites(b);
+                    if (c.center.x < 158f && punta.z > c.min.z + 1f && punta.z < c.max.z - 1f && c.max.y > 4.5f)
+                    {
+                        float yFin = Mathf.Min(6.2f, c.max.y - 0.6f);
+                        foreach (float dz in new[] { -0.5f, 0f, 0.6f })
+                        {
+                            KitS2c.Cable(o, punta + Vector3.forward * dz, new Vector3(c.max.x + 0.08f, yFin, punta.z + dz), 1.1f);
+                            cables++;
+                        }
+                        break;
+                    }
+                }
+            }
+            Nota("PostesAvenida: " + puntas.Count + " postes en x 165.4 (borde este) con " + cables + " cables (entre ellos, a los postes que ya había y a las bodegas de enfrente).");
+        }
+
         private static void Bodegas(Transform raiz, Transform nuevo, KitS2c.Obra o)
         {
             Transform padre = new GameObject("Bodegas").transform;
@@ -398,24 +538,39 @@ namespace MechaCyberpunk.Arte.Editor
                     .OrderByDescending(t => Limites(t).center.z).Take(6).ToList();
             Material toldo = Mat("T1442_Toldo", () => KitS2c.Lit(new Color(0.78f, 0.4f, 0.14f), 0.25f, KitS2c.TexMuro()));
             Material lampara = Emisivo("T1442_LamparaNaranja", Naranja, 4f);
-            int luces = 0;
+            int focos = 0;
             for (int i = 0; i < bodegas.Count; i++)
             {
                 Bounds b = Limites(bodegas[i]);
                 float xw = b.max.x, zc = b.center.z;
-                float ancho = Mathf.Min(7f, b.size.z * 0.5f);
-                GameObject t = KitS2c.Losa(o, padre, "Toldo_" + i, new Vector3(xw + 0.75f, 4.0f, zc), Quaternion.Euler(0f, 0f, -11f), new Vector3(1.6f, 0.07f, ancho), toldo, 1.5f, false);
-                t.name = "Toldo_" + i;
-                KitS2c.Losa(o, padre, "Lampara_" + i, new Vector3(xw + 0.3f, 3.75f, zc - 3.3f), Quaternion.identity, new Vector3(0.5f, 0.14f, 0.7f), lampara, 1f, false);
-                Color neon = i % 2 == 0 ? KitS2c.Turquesa : KitS2c.Magenta;
-                KitS2c.Neon(o, padre, new Vector3(xw, 3.2f, zc + (i % 2 == 0 ? 5.2f : -5.2f)), Vector3.right, Vector3.back, neon, true);
-                Transform neonObj = padre.GetChild(padre.childCount - 1);
-                foreach (Light l in neonObj.GetComponentsInChildren<Light>(true).ToList())
+                bool enVista = zc < -140f && zc > -215f; // las que caen en el cuadro de K15 (cámara en z = -150 mirando al sur)
+                float yToldo = Mathf.Clamp(b.size.y * 0.62f, 3.7f, 4.4f);
+                KitS2c.Losa(o, padre, "Toldo_" + i, new Vector3(xw + 0.75f, yToldo, zc), Quaternion.Euler(0f, 0f, -11f), new Vector3(1.6f, 0.07f, Mathf.Min(9f, b.size.z * 0.6f)), toldo, 1.5f, false);
+                KitS2c.Losa(o, padre, "Lampara_" + i + "_a", new Vector3(xw + 0.3f, yToldo - 0.3f, zc - 3.3f), Quaternion.identity, new Vector3(0.5f, 0.14f, 0.7f), lampara, 1f, false);
+                KitS2c.Losa(o, padre, "Lampara_" + i + "_b", new Vector3(xw + 0.3f, yToldo - 0.3f, zc + 3.3f), Quaternion.identity, new Vector3(0.5f, 0.14f, 0.7f), lampara, 1f, false);
+                if (enVista && focos < 2)
                 {
-                    Object.DestroyImmediate(l.gameObject); // el letrero queda solo con su emisión (el tope de luces es de 8)
+                    KitS2c.FocoPared(o, padre, new Vector3(xw + 0.1f, yToldo - 0.4f, zc + 6.5f), Quaternion.LookRotation(Vector3.left));
+                    Light l = UltimaLuz(padre.GetChild(padre.childCount - 1));
+                    if (l != null)
+                    {
+                        l.color = Naranja;
+                    }
+                    focos++;
+                }
+                int neones = enVista ? 2 : 1;
+                for (int k = 0; k < neones; k++)
+                {
+                    Color color = (i + k) % 2 == 0 ? KitS2c.Turquesa : KitS2c.Magenta;
+                    float zN = k == 0 ? zc + 5.2f : zc - 6.8f;
+                    KitS2c.Neon(o, padre, new Vector3(xw, k == 0 ? 3.2f : 4.4f, zN), Vector3.right, Vector3.back, color, true);
+                    foreach (Light ln in padre.GetChild(padre.childCount - 1).GetComponentsInChildren<Light>(true).ToList())
+                    {
+                        Object.DestroyImmediate(ln.gameObject); // el letrero queda solo con su emisión (el tope de luces es de 8)
+                    }
                 }
             }
-            Nota("Bodegas del lado oeste con detalle: " + bodegas.Count + " (toldo de lámina, lámpara emisiva, neón emisivo; sin luces reales).");
+            Nota("Bodegas del lado oeste con detalle: " + bodegas.Count + " (toldo, 2 lámparas emisivas, 1-2 neones emisivos; " + focos + " focos de pared con luz en las del cuadro).");
         }
 
         // ---------------------------------------------------------------- 3. Charcos con reflejo
@@ -449,7 +604,7 @@ namespace MechaCyberpunk.Arte.Editor
                 float giro = largoEnX ? 90f + o.Rango(-15f, 15f) : o.Rango(-15f, 15f);
                 float semiX = largoEnX ? largo * 0.5f : anchoC * 0.5f, semiZ = largoEnX ? anchoC * 0.5f : largo * 0.5f;
                 Rect h = Rect.MinMaxRect(p.x - semiX, p.z - semiZ, p.x + semiX, p.z + semiZ);
-                if (grupo != "CharcosPatio" && !Libre(Expandir(h, -0.4f), ocupados, mios))
+                if (grupo != "CharcosCalle" && !Libre(Expandir(h, -0.4f), ocupados, mios))
                 {
                     continue;
                 }
@@ -479,7 +634,7 @@ namespace MechaCyberpunk.Arte.Editor
 
         // ---------------------------------------------------------------- 4. Props y gente
 
-        private static GameObject Poner(Transform padre, string codigo, float alto, Vector2 xz, float giro, List<Rect> ocupados, List<Rect> mios, bool collider)
+        private static GameObject Poner(Transform padre, string codigo, float alto, Vector2 xz, float giro, List<Rect> ocupados, List<Rect> mios, bool collider, float mediaCalle = MediaCalle)
         {
             GameObject prefab = BuscarPrefab(codigo);
             if (prefab == null)
@@ -496,7 +651,7 @@ namespace MechaCyberpunk.Arte.Editor
             b = Limites(go.transform);
             go.transform.position += new Vector3(xz.x - b.center.x, -b.min.y, xz.y - b.center.z);
             Rect h = Huella(Limites(go.transform));
-            if (EnCalle(h) || !Libre(h, ocupados, mios))
+            if (EnCalle(h, mediaCalle) || !Libre(h, ocupados, mios))
             {
                 Object.DestroyImmediate(go);
                 return null;
@@ -509,26 +664,31 @@ namespace MechaCyberpunk.Arte.Editor
             return go;
         }
 
-        private static void Props(Transform nuevo, List<Rect> ocupados, List<Rect> mios)
+        private static void Props(Transform nuevo, List<Rect> ocupados, List<Rect> mios, Vector3 cam)
         {
             Transform padre = new GameObject("Props").transform;
             padre.SetParent(nuevo, false);
             System.Random azar = new System.Random(14421);
-            (string codigo, float alto, int cuantos)[] lista =
+            // (código, alto, cuántos, medio ancho de carril libre): los montacargas pueden acercarse un poco más al centro.
+            (string codigo, float alto, int cuantos, float media)[] lista =
             {
-                ("PU05_Montacargas", 2.6f, 3), ("PU06_Pallets", 1.2f, 5), ("C16_Tambo", 1.0f, 6), ("C17_Huacales", 1.0f, 4),
+                ("PU05_Montacargas", 2.6f, 4, 3.4f), ("PU06_Pallets", 1.2f, 9, MediaCalle), ("C16_Tambo", 1.0f, 9, MediaCalle), ("C17_Huacales", 1.0f, 7, MediaCalle),
             };
             int total = 0;
             List<Vector3> montacargas = new List<Vector3>();
-            foreach ((string codigo, float alto, int cuantos) in lista)
+            foreach ((string codigo, float alto, int cuantos, float media) in lista)
             {
                 int puestos = 0;
-                for (int intento = 0; intento < 60 && puestos < cuantos; intento++)
+                for (int intento = 0; intento < 120 && puestos < cuantos; intento++)
                 {
-                    bool oeste = azar.Next(2) == 0;
-                    float x = oeste ? 155.6f + (float)azar.NextDouble() * 0.9f : 164.4f + (float)azar.NextDouble() * 0.9f;
-                    float z = -88f - (float)azar.NextDouble() * 115f;
-                    GameObject g = Poner(padre, codigo, alto, new Vector2(x, z), (float)azar.NextDouble() * 360f, ocupados, mios, true);
+                    bool oeste = azar.NextDouble() < 0.65; // primer plano derecho, como la referencia
+                    float x = oeste ? 154.4f + (float)azar.NextDouble() * 1.8f : 164.0f + (float)azar.NextDouble() * 1.8f;
+                    float z = -153f - Mathf.Pow((float)azar.NextDouble(), 1.5f) * 62f; // entre 4 y 70 m de la cámara, más cerca que lejos
+                    if (Vector2.Distance(new Vector2(x, z), new Vector2(cam.x, cam.z)) < 4f)
+                    {
+                        continue;
+                    }
+                    GameObject g = Poner(padre, codigo, alto, new Vector2(x, z), (float)azar.NextDouble() * 360f, ocupados, mios, true, media);
                     if (g != null)
                     {
                         puestos++;
@@ -540,7 +700,12 @@ namespace MechaCyberpunk.Arte.Editor
                     }
                 }
             }
-            Nota("Props de piso (montacargas, pallets, tambos, huacales) al borde de la calle (fuera de los 8.4 m centrales): " + total + "");
+            // Reflector de sodio sobre los dos montacargas más cercanos a la cámara.
+            foreach (Vector3 m in montacargas.OrderByDescending(v => v.z).Take(2))
+            {
+                KitS2c.Luz(padre, m + new Vector3(0f, 6.5f, 0f), LightType.Spot, Naranja, 420f, 18f, 100f, Vector3.down);
+            }
+            Nota("Props de piso en el cuadro de K15 (montacargas " + montacargas.Count + ", más pallets, tambos y huacales): " + total + " en total, en las orillas de la avenida entre z -153 y -215.");
         }
 
         private static void Gente(Transform nuevo, string grupo, int cuantos, List<Rect> ocupados, List<Rect> mios, System.Random azar, bool patio)
@@ -578,7 +743,7 @@ namespace MechaCyberpunk.Arte.Editor
                     {
                         bool oeste = azar.Next(2) == 0;
                         x = oeste ? 154.7f + (float)azar.NextDouble() * 1.2f : 164.2f + (float)azar.NextDouble() * 1.4f;
-                        z = -88f - (float)azar.NextDouble() * 110f;
+                        z = -154f - (float)azar.NextDouble() * 56f;
                     }
                     Rect h = Rect.MinMaxRect(x - 0.4f, z - 0.4f, x + 0.4f, z + 0.4f);
                     if ((!patio && EnCalle(h)) || !Libre(h, ocupados, mios))
@@ -1328,9 +1493,9 @@ namespace MechaCyberpunk.Arte.Editor
                 float h = b.size.y;
                 float maxProy = vs.Where(v => v.y > b.min.y + 0.5f * h).Max(v => Vector3.Dot(v - b.center, haciaCam));
                 List<Vector3> casco = vs.Where(v => v.y > b.min.y + 0.55f * h && v.y < b.min.y + 0.8f * h && Vector3.Dot(v - b.center, haciaCam) > maxProy - 2.5f).ToList();
-                foreach (Vector3 v in Muestra(casco, 4f, 30))
+                foreach (Vector3 v in Muestra(casco, 3f, 60))
                 {
-                    KitS2c.Losa(o, padre, "VentanaBarco", v + haciaCam * 0.06f, Quaternion.LookRotation(haciaCam), new Vector3(1.8f, 0.6f, 0.1f), ventana, 1f, false);
+                    KitS2c.Losa(o, padre, "VentanaBarco", v + haciaCam * 0.06f, Quaternion.LookRotation(haciaCam), new Vector3(2.4f, 0.9f, 0.12f), ventana, 1f, false);
                     ventanas++;
                 }
                 foreach (Vector3 v in Muestra(vs.Where(p => p.y > b.max.y - 1.5f).OrderByDescending(p => p.y), 6f, 4))
@@ -1357,15 +1522,21 @@ namespace MechaCyberpunk.Arte.Editor
                 gruas++;
                 Bounds b = Limites(g);
                 List<Vector3> vs = Vertices(g);
-                foreach (Vector3 v in Muestra(vs.Where(p => p.y > b.max.y - 1.5f), 8f, 4))
+                foreach (Vector3 v in Muestra(vs.Where(p => p.y > b.max.y - 1.5f), 4f, 10))
                 {
-                    KitS2c.Losa(o, padre, "BalizaGrua", v + Vector3.up * 0.7f, Quaternion.identity, new Vector3(1.3f, 1.3f, 1.3f), roja, 1f, false);
+                    KitS2c.Losa(o, padre, "BalizaGrua", v + Vector3.up * 1.0f, Quaternion.identity, new Vector3(2.4f, 2.4f, 2.4f), roja, 1f, false);
                     balizasGruas++;
                 }
-                float yMedia = b.min.y + b.size.y * 0.6f;
-                foreach (Vector3 v in Muestra(vs.Where(p => Mathf.Abs(p.y - yMedia) < 1.2f), 10f, 3))
+                float yAlta = b.min.y + b.size.y * 0.8f;
+                foreach (Vector3 v in Muestra(vs.Where(p => Mathf.Abs(p.y - yAlta) < 1.2f), 6f, 8))
                 {
-                    KitS2c.Losa(o, padre, "BalizaGruaMedia", v + Vector3.up * 0.5f, Quaternion.identity, new Vector3(0.9f, 0.9f, 0.9f), turquesa, 1f, false);
+                    KitS2c.Losa(o, padre, "BalizaGruaAlta", v + Vector3.up * 0.9f, Quaternion.identity, new Vector3(2.0f, 2.0f, 2.0f), roja, 1f, false);
+                    balizasGruas++;
+                }
+                float yMedia = b.min.y + b.size.y * 0.55f;
+                foreach (Vector3 v in Muestra(vs.Where(p => Mathf.Abs(p.y - yMedia) < 1.2f), 5f, 8))
+                {
+                    KitS2c.Losa(o, padre, "BalizaGruaMedia", v + Vector3.up * 0.8f, Quaternion.identity, new Vector3(1.7f, 1.7f, 1.7f), turquesa, 1f, false);
                     balizasGruas++;
                 }
             }
@@ -1414,7 +1585,7 @@ namespace MechaCyberpunk.Arte.Editor
 
                     // Piezas de piso: contenedores y props (con collider) de mi raíz.
                     List<Transform> suelo = new List<Transform>();
-                    foreach (string g in new[] { "Contenedores", "Props", "PatioContenedores", "PatioProps", "PatioBodegas" })
+                    foreach (string g in new[] { "Contenedores", "Props", "PilaEsquina", "PatioContenedores", "PatioProps", "PatioBodegas" })
                     {
                         Transform grupo = mia.Find(g);
                         if (grupo != null)
