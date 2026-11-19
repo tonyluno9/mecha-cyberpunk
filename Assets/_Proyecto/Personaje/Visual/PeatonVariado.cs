@@ -1,3 +1,4 @@
+using MechaCyberpunk.Core.Mundo;
 using UnityEngine;
 
 namespace MechaCyberpunk.Personaje.Visual
@@ -17,6 +18,17 @@ namespace MechaCyberpunk.Personaje.Visual
         [SerializeField] private GameObject[] variantes = new GameObject[0];
         [Tooltip("Probabilidad (0 a 1) de salir como una de las variantes cuando no sale robot.")]
         [Range(0f, 1f)] [SerializeField] private float probabilidadVariante;
+
+        [Header("T-1409: por zona")]
+        [Tooltip("Pesos de visuales por zona (Malecon, Puerto, Cerro...). Vacío = lista general de arriba en toda la ciudad.")]
+        [SerializeField] private ConfigPeatonesZona configZona;
+
+        public ConfigPeatonesZona ConfigZona => configZona;
+
+        public void ConfigurarZona(ConfigPeatonesZona config)
+        {
+            configZona = config;
+        }
 
         /// <summary>El visual nuevo que se eligió (null si salió persona o robot).</summary>
         public GameObject VarianteElegida { get; private set; }
@@ -44,9 +56,44 @@ namespace MechaCyberpunk.Personaje.Visual
         private void Awake()
         {
             Elegir(Random.value < probabilidadRobot);
-            if (!EsRobot)
+            // T-1409: con config por zona, el visual se elige en Start (el grupo coloca al peatón después de crearlo, y antes no se sabe su zona).
+            if (!EsRobot && configZona == null)
             {
                 ElegirVariante(Random.value, Random.value);
+            }
+        }
+
+        private void Start()
+        {
+            if (!EsRobot && configZona != null)
+            {
+                ElegirPorZona(ZonasMundo.NombreEn(transform.position), Random.value, Random.value, Random.value);
+            }
+        }
+
+        /// <summary>
+        /// T-1409: elige el visual según la zona. Si la zona no está en la config (o no hay zona), queda como siempre (lista general).
+        /// </summary>
+        public void ElegirPorZona(string zona, float tiradaZona, float tirada, float cual)
+        {
+            if (VarianteElegida != null)
+            {
+                return;
+            }
+            bool hayZona = false;
+            GameObject visual = null;
+            if (configZona != null)
+            {
+                visual = configZona.Elegir(zona, tiradaZona, out hayZona);
+            }
+            if (!hayZona)
+            {
+                ElegirVariante(tirada, cual);
+                return;
+            }
+            if (visual != null)
+            {
+                CrearVariante(visual);
             }
         }
 
@@ -65,7 +112,12 @@ namespace MechaCyberpunk.Personaje.Visual
             {
                 return;
             }
-            VarianteElegida = Instantiate(variantes[indice], transform);
+            CrearVariante(variantes[indice]);
+        }
+
+        private void CrearVariante(GameObject visual)
+        {
+            VarianteElegida = Instantiate(visual, transform);
             VarianteElegida.name = "VisualVariante";
             if (persona != null) { persona.SetActive(false); }
             Animator a = VarianteElegida.GetComponentInChildren<Animator>(true);
