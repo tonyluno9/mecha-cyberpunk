@@ -13,6 +13,27 @@ namespace MechaCyberpunk.Trafico.Persecucion
     {
         public const float SegundosEntreRadios = 15f;
         private static float proxima;
+        private static float proximoDespacho;
+
+        /// <summary>T-1476: la central manda unidades (sube el nivel de búsqueda). Con su propio enfriamiento. Devuelve true si lo pidió.</summary>
+        public static bool SonarDespacho(Vector3 posicion, ConfigPersecucion config)
+        {
+            string id = config != null ? config.IdSonidoDespacho : null;
+            if (!DebeSonar(id, Time.time, proximoDespacho))
+            {
+                return false;
+            }
+            proximoDespacho = Time.time + SegundosEntreRadios;
+            Sonidos.ReproducirEn(id, posicion);
+            return true;
+        }
+
+        /// <summary>Para las pruebas: vuelve a permitir la radio y el despacho.</summary>
+        public static void ReiniciarEnfriamientos()
+        {
+            proxima = 0f;
+            proximoDespacho = 0f;
+        }
 
         /// <summary>Regla pura: suena si hay ID y ya pasó el enfriamiento.</summary>
         public static bool DebeSonar(string id, float ahora, float proximaPermitida) => !string.IsNullOrEmpty(id) && ahora >= proximaPermitida;
@@ -31,6 +52,6 @@ namespace MechaCyberpunk.Trafico.Persecucion
         }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-        private static void Reiniciar() => proxima = 0f;
+        private static void Reiniciar() => ReiniciarEnfriamientos();
     }
 }

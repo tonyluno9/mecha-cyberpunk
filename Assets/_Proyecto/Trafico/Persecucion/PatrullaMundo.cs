@@ -480,7 +480,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
             }
             if (conSirena && bucleSirena == Sonidos.SinBucle)
             {
-                bucleSirena = Sonidos.ReproducirBucle("CAL_PATRULLA_SIRENA", transform);
+                bucleSirena = SonidosPolicia.IniciarSirena(transform); // T-1476
             }
         }
 
@@ -507,7 +507,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
             ultimaVista = posicionJugador?.Invoke() ?? posicion;
             if (bucleSirena == Sonidos.SinBucle)
             {
-                bucleSirena = Sonidos.ReproducirBucle("CAL_PATRULLA_SIRENA", transform);
+                bucleSirena = SonidosPolicia.IniciarSirena(transform); // T-1476
             }
         }
 
@@ -525,7 +525,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
             Vector3 referencia = posicionJugador?.Invoke() ?? ultimaVista;
             nodoRetiro = calles.MasLejano(referencia, calles.MasCercano(transform.position)); // T-986: el más lejano al que de verdad puede llegar
             nodoMeta = -1;
-            Sonidos.DetenerBucle(bucleSirena);
+            SonidosPolicia.DetenerSirena(bucleSirena);
             bucleSirena = Sonidos.SinBucle;
             PonerLuces(false, false);
         }
@@ -628,7 +628,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
             ActivasLista.Remove(this);
             Registro<Testigos.ITestigoPolicia>.Quitar(this);
             carro?.SoltarIA();
-            Sonidos.DetenerBucle(bucleSirena);
+            SonidosPolicia.DetenerSirena(bucleSirena);
             bucleSirena = Sonidos.SinBucle;
         }
 
