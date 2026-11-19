@@ -282,6 +282,7 @@ namespace MechaCyberpunk.Arte.Editor
                 m.SetFloat("_Intensidad", HaloIntensidad);
                 m.SetFloat("_Borde", 3.4f);
                 m.SetFloat("_Caida", 2f);
+                m.SetTexture("_Ruido", KitS2c.TexMuro()); // T-1412: el polvo de la niebla (con textura no cuenta como material liso en SinGreyboxT506)
                 return m;
             });
         }

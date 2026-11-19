@@ -1264,7 +1264,7 @@ namespace MechaCyberpunk.Arte.Editor
             }
             foreach (MeshFilter mf in g.GetComponentsInChildren<MeshFilter>(true))
             {
-                if (mf.sharedMesh != null && mf.GetComponent<Renderer>() != null)
+                if (mf.sharedMesh != null && UltimasFallasT1412.MallaCocinable(mf.sharedMesh) && mf.GetComponent<Renderer>() != null)
                 {
                     mf.gameObject.AddComponent<MeshCollider>().sharedMesh = mf.sharedMesh;
                 }

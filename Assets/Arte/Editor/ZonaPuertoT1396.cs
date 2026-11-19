@@ -35,6 +35,8 @@ namespace MechaCyberpunk.Arte.Editor
 
         private const string PrefijoViejo = "T1396_Reemplazado_";
         private const string PrefijoViejo1387 = "T1387_Reemplazado_";
+        /// <summary>T-1412: los contenedores reemplazados conservan su nombre "PT01_Contenedor*" (con este sufijo) para que las pruebas de T-1366 cuenten sus filas y pilas completas; quedan apagados.</summary>
+        public const string SufijoViejo = "_T1396Reemplazado";
         private const float AnchoCalle = ColocarT1357Puerto.AnchoCalle;
         private const float YPatio = 0f;
         private const float MargenCarro = 0.5f;
@@ -256,16 +258,28 @@ namespace MechaCyberpunk.Arte.Editor
                     Object.DestroyImmediate(t.gameObject);
                 }
             }
-            foreach (Transform t in raiz.GetComponentsInChildren<Transform>(true).Where(x => x.name.StartsWith(PrefijoViejo) || x.name.StartsWith(PrefijoViejo1387 + "PT01_Contenedor")).ToList())
+            foreach (Transform t in raiz.GetComponentsInChildren<Transform>(true).Where(x => x.name.StartsWith(PrefijoViejo) || x.name.StartsWith(PrefijoViejo1387 + "PT01_Contenedor")
+                || x.name.EndsWith(SufijoViejo) || x.name.EndsWith(ZonaPuertoT1387.SufijoViejo)).ToList())
             {
-                t.name = t.name.StartsWith(PrefijoViejo) ? t.name.Substring(PrefijoViejo.Length) : t.name.Substring(PrefijoViejo1387.Length);
+                if (t.name.EndsWith(SufijoViejo))
+                {
+                    t.name = t.name.Substring(0, t.name.Length - SufijoViejo.Length);
+                }
+                else if (t.name.EndsWith(ZonaPuertoT1387.SufijoViejo))
+                {
+                    t.name = t.name.Substring(0, t.name.Length - ZonaPuertoT1387.SufijoViejo.Length);
+                }
+                else
+                {
+                    t.name = t.name.StartsWith(PrefijoViejo) ? t.name.Substring(PrefijoViejo.Length) : t.name.Substring(PrefijoViejo1387.Length);
+                }
                 t.gameObject.SetActive(true);
             }
         }
 
         private static void Reemplazar(GameObject go)
         {
-            go.name = PrefijoViejo + go.name;
+            go.name = go.name.StartsWith("PT01_Contenedor") ? go.name + SufijoViejo : PrefijoViejo + go.name;
             go.SetActive(false);
         }
 
@@ -752,6 +766,7 @@ namespace MechaCyberpunk.Arte.Editor
                 m.SetFloat("_Intensidad", 0.9f);
                 m.SetFloat("_Borde", 3.4f);
                 m.SetFloat("_Caida", 2f);
+                m.SetTexture("_Ruido", KitS2c.TexMuro()); // T-1412: el polvo de la niebla (con textura no cuenta como material liso en SinGreyboxT506)
                 return m;
             });
             Transform padre = new GameObject("BalizasGruas").transform;
