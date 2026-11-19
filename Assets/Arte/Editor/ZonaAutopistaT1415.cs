@@ -640,7 +640,7 @@ namespace MechaCyberpunk.Arte.Editor
                     Object.DestroyImmediate(h.gameObject);
                     barrerasQuitadas++;
                 }
-                else if (esFarol && c.z > 252f && c.z < 264f && c.y > 6f && c.x > pl.XBG - 2.5f && c.x < pl.X0 + 2.5f)
+                else if (esFarol && c.z > 252f && c.z < 264f && c.y > 6f && c.x > pl.XBG - 5f && c.x < pl.X0 + 2.5f)
                 {
                     informe.AppendLine("Farol del principal quitado (cae sobre la salida): " + h.name + " en " + c.ToString("F1"));
                     Object.DestroyImmediate(h.gameObject);
@@ -1253,7 +1253,8 @@ namespace MechaCyberpunk.Arte.Editor
             s.AppendLine("Reja: rayos que la cruzan sin tocar collider: " + pasan + " (0 esperado; el ramal queda cerrado a los carros).");
             fallos += pasan > 0 ? 1 : 0;
             Transform cierre = mia.Find("Cierre/Reja");
-            int piezasReja = cierre == null ? 0 : cierre.GetComponentsInChildren<MeshRenderer>(true).Count(r => r.name.StartsWith("DS01_RejaPuas") || r.gameObject.name.StartsWith("DS01"));
+            // Las piezas DS01 son prefabs con la malla en hijos de otro nombre: se cuentan los renderers visibles que cuelgan de un "DS01_RejaPuas_n".
+            int piezasReja = cierre == null ? 0 : cierre.GetComponentsInChildren<MeshRenderer>(true).Count(r => r.enabled && r.GetComponentsInParent<Transform>(true).Any(a => a != cierre && a.name.StartsWith("DS01_RejaPuas_")));
             int letreros = mia.GetComponentsInChildren<Transform>(true).Count(t => t.name.StartsWith("Letrero_OBRA_"));
             s.AppendLine("Piezas de reja visibles: " + piezasReja + "; letreros de OBRA: " + letreros + " (2).");
             if (piezasReja == 0 || letreros != 2)
@@ -1275,7 +1276,8 @@ namespace MechaCyberpunk.Arte.Editor
                         continue;
                     }
                     Vector3 p = q + der * (lado * (MedioTablero - 0.35f)) + Vector3.up * 0.5f;
-                    if (!Physics.OverlapSphere(p, 0.25f, ~0, QueryTriggerInteraction.Ignore).Any(c => c.name.StartsWith("Parapeto")))
+                    // Esfera de 0.6 m: el parapeto mide 0.7 m de grueso y una esfera chica queda DENTRO de su volumen sin tocar ninguna cara (un MeshCollider no convexo no la detecta).
+                    if (!Physics.OverlapSphere(p, 0.6f, ~0, QueryTriggerInteraction.Ignore).Any(c => c.name.StartsWith("Parapeto")))
                     {
                         if (huecosRamal++ < 8)
                         {
@@ -1290,7 +1292,7 @@ namespace MechaCyberpunk.Arte.Editor
             for (float x = -290f; x <= 235f; x += 1f)
             {
                 Vector3 p = new Vector3(x, 10.5f, T.ZTablero + MedioTablero - 0.35f);
-                bool hay = Physics.OverlapSphere(p, 0.2f, ~0, QueryTriggerInteraction.Ignore).Any(c => c.name.StartsWith("Parapeto"));
+                bool hay = Physics.OverlapSphere(p, 0.6f, ~0, QueryTriggerInteraction.Ignore).Any(c => c.name.StartsWith("ParapetoNorte_") || c.name.StartsWith("Parapeto_Izq_"));
                 bool enSalida = x > pl.XBG + 1.5f && x < pl.X0 - 1.5f;
                 if (enSalida && hay)
                 {
@@ -1321,7 +1323,8 @@ namespace MechaCyberpunk.Arte.Editor
             int sinMalla = 0;
             foreach (Collider c in mia.GetComponentsInChildren<Collider>(true))
             {
-                if (c.name.StartsWith("Parapeto") || c.name.StartsWith("ParapetoNorte_") || c.name == "Reja")
+                // Los colliders apagados (piezas de Poner sin collider: faroles, reja, barreras) no cuentan.
+                if (!c.enabled || c.name.StartsWith("Parapeto") || c.name.StartsWith("ParapetoNorte_") || c.name == "Reja")
                 {
                     continue;
                 }
@@ -1388,19 +1391,25 @@ namespace MechaCyberpunk.Arte.Editor
 
             // 7) Segunda boca: el tubo y la roca encima, y el cierre (no es callejón: nadie llega, hay reja antes)
             int tuboMal = 0;
+            float yTechoAbajo = YBocaRamal + A.AltoTunel;
+            float yTechoArriba = YBocaRamal + A.AltoTunel + 1.2f;
             for (float x = XBocaRamal - 3f; x >= XBocaRamal - LargoTubo + 2f; x -= 3f)
             {
-                Vector3 desde = new Vector3(x, YBocaRamal + 1f, ZBocaRamal);
-                if (!Physics.Raycast(desde, Vector3.up, out RaycastHit techo, 30f, ~0, QueryTriggerInteraction.Ignore) || techo.collider.name != "Techo" || Mathf.Abs(techo.point.y - (YBocaRamal + A.AltoTunel + 1.2f)) > 0.3f)
+                // Hacia arriba desde dentro del tubo se toca la cara de abajo del techo (y = piso + AltoTunel), no la de arriba.
+                if (!Physics.Raycast(new Vector3(x, YBocaRamal + 1f, ZBocaRamal), Vector3.up, out RaycastHit techo, 30f, ~0, QueryTriggerInteraction.Ignore) || techo.collider.name != "Techo" || Mathf.Abs(techo.point.y - yTechoAbajo) > 0.3f)
                 {
                     tuboMal++;
-                    s.AppendLine("FALLO: sobre el tubo en x = " + F(x) + " no hay techo a la altura esperada.");
+                    s.AppendLine("FALLO: sobre el tubo en x = " + F(x) + " no hay techo a la altura esperada (" + F(yTechoAbajo) + ").");
                     continue;
                 }
-                if (!Physics.Raycast(new Vector3(x, YBocaRamal + A.AltoTunel + 1.5f, ZBocaRamal), Vector3.up, out RaycastHit roca, 40f, ~0, QueryTriggerInteraction.Ignore))
+                // Hacia abajo desde arriba: la primera superficie es la roca y más abajo la cara de arriba del techo.
+                RaycastHit[] bajan = Physics.RaycastAll(new Vector3(x, 80f, ZBocaRamal), Vector3.down, 80f, ~0, QueryTriggerInteraction.Ignore).OrderBy(h => h.distance).ToArray();
+                bool rocaEncima = bajan.Length > 0 && bajan[0].collider.name == "Penasco" && bajan[0].point.y >= yTechoArriba + 0.5f;
+                bool techoDebajo = bajan.Any(h => h.collider.name == "Techo" && Mathf.Abs(h.point.y - yTechoArriba) <= 0.3f);
+                if (!rocaEncima || !techoDebajo)
                 {
                     tuboMal++;
-                    s.AppendLine("FALLO: sobre el techo del tubo en x = " + F(x) + " no hay roca (el túnel quedaría descubierto).");
+                    s.AppendLine("FALLO: sobre el techo del tubo en x = " + F(x) + (rocaEncima ? " no se ve la cara de arriba del techo." : " no hay roca (el túnel quedaría descubierto)."));
                 }
             }
             fallos += tuboMal;
@@ -1494,6 +1503,11 @@ namespace MechaCyberpunk.Arte.Editor
                     int sobreRampa = 0;
                     foreach (Bounds v in viejas)
                     {
+                        // Las columnas del propio tablero principal (en su eje z = 250, de menos de 4 m de ancho) lo sostienen: no estorban.
+                        if (Mathf.Abs(v.center.z - T.ZTablero) < 0.6f && v.size.x < 4f && v.size.z < 4f && v.max.y < YSalida)
+                        {
+                            continue;
+                        }
                         for (int i = 0; i < pl.Dens.Count; i += 2)
                         {
                             Vector3 q = pl.Dens[i];
@@ -1581,6 +1595,38 @@ namespace MechaCyberpunk.Arte.Editor
         }
 
         /// <summary>
+        /// Como Ocluido, pero ignora los parapetos invisibles (los cubren las barreras) y, a menos de <paramref name="cerca"/> m del objetivo, los colliders propios (peñasco, marco y tubo de la boca):
+        /// esos no tapan la boca, la forman. Lo demás (el tablero principal, casas, la losa del ramal) sí tapa.
+        /// </summary>
+        private static bool OcluidoVista(Vector3 desde, Vector3 objetivo, float tolerancia, Transform mia, float cerca)
+        {
+            Vector3 d = objetivo - desde;
+            float largo = d.magnitude;
+            if (largo < 0.01f)
+            {
+                return false;
+            }
+            foreach (RaycastHit h in Physics.RaycastAll(desde, d / largo, largo, ~0, QueryTriggerInteraction.Ignore).OrderBy(x => x.distance))
+            {
+                if (h.collider.name.StartsWith("Parapeto"))
+                {
+                    continue;
+                }
+                float aObjetivo = Vector3.Distance(h.point, objetivo);
+                if (aObjetivo <= tolerancia)
+                {
+                    return false;
+                }
+                if (mia != null && h.collider.transform.IsChildOf(mia) && aObjetivo <= cerca)
+                {
+                    continue;
+                }
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
         /// Rejilla de cámaras sobre piso caminable (x -300 a -170, z 205 a 275, alturas 2, 4 y 6 m, campo 70, aspecto 1376/768). Puntúa: la segunda boca arriba a la derecha (3), una columna gruesa
         /// en primer plano a la derecha, a 5 a 22 m (3), la curva del ramal a la vista (2) y la rampa norte a la izquierda (1). Escribe Logs/t1415-camara.txt (mejor y 5 siguientes).
         /// </summary>
@@ -1591,15 +1637,19 @@ namespace MechaCyberpunk.Arte.Editor
             Physics.SyncTransforms();
             Barrera au02 = CargarBarrera(null);
             Plano pl = Calcular(PasoReal(au02));
-            StringBuilder s = new StringBuilder("T-1415 BuscarCamara: rejilla x -300..-170 cada 5 m, z 205..275 cada 4 m, alturas 2, 4 y 6 m, campo 70, aspecto 1376/768\n");
-            Vector3 boca = new Vector3(XBocaRamal + 1.5f, YBocaRamal + 3f, ZBocaRamal);
-            List<Vector3> columnas = pl.Columnas.Select(c => new Vector3(c.x, 5f, c.z)).ToList();
+            StringBuilder s = new StringBuilder("T-1415 BuscarCamara: a nivel de la calle baja: rejilla x -300..-170 cada 5 m, z 205..235 cada 3 m, alturas 2 a 6 m sobre el piso, campo 70, aspecto 1376/768\n");
+            Transform mia = Object.FindObjectsByType<Transform>(FindObjectsInactive.Include, FindObjectsSortMode.None).FirstOrDefault(t => t.name == NombreRaiz);
+            // Centro real de la boca (media altura del tubo) y tres puntos más (a los lados y arriba): con ver uno basta (la boca puede verse parcial).
+            Vector3 boca = new Vector3(XBocaRamal + 1.5f, YBocaRamal + A.AltoTunel * 0.5f, ZBocaRamal);
+            Vector3[] puntosBoca = { boca, boca + new Vector3(0f, 0f, 4f), boca + new Vector3(0f, 0f, -4f), boca + new Vector3(0f, 2f, 0f) };
+            // Columnas del ramal: se apunta a su cabezal (el tablero principal, que es un muro, las tapa casi siempre) y las del principal, de abajo.
+            List<Vector3> columnas = pl.Columnas.Select(c => new Vector3(c.x, c.y - A.GruesoTablero - 1.2f, c.z)).ToList();
             columnas.AddRange(T.Columnas(T.Principal()).Where(c => c.x > -300f && c.x < -150f).Select(c => new Vector3(c.x, 5f, c.z)));
             List<Vector3> curva = new List<Vector3>();
             for (float m = 20f; m <= pl.Largo - 2f; m += 8f)
             {
                 T.PuntoEn(pl.Ramal, m, out Vector3 pt, out _);
-                curva.Add(pt + Vector3.up * 0.4f);
+                curva.Add(pt + Vector3.up * 1.2f);
             }
             List<Vector3> rampa = T.Resamplear(T.RampaNorte(), 5f).Where(p => p.y >= 3f && p.y <= 7f).Select(p => new Vector3(p.x, p.y + 0.3f, p.z)).ToList();
             s.AppendLine("Columnas candidatas: " + columnas.Count + " (ramal " + pl.Columnas.Count + "); puntos de la curva: " + curva.Count + "; rampa: " + rampa.Count + "; boca: " + boca.ToString("F1"));
@@ -1616,14 +1666,14 @@ namespace MechaCyberpunk.Arte.Editor
                 cam.farClipPlane = 2000f;
                 for (float x = -300f; x <= -170f + 0.01f; x += 5f)
                 {
-                    for (float z = 205f; z <= 275f + 0.01f; z += 4f)
+                    for (float z = 205f; z <= 235f + 0.01f; z += 3f)
                     {
                         if (!Piso(x, z, out float suelo))
                         {
                             sinPiso++;
                             continue;
                         }
-                        foreach (float altura in new[] { 2f, 4f, 6f })
+                        foreach (float altura in new[] { 2f, 3f, 4f, 5f, 6f })
                         {
                             Vector3 pos = new Vector3(x, suelo + altura, z);
                             if (Physics.OverlapSphere(pos, 1f, ~0, QueryTriggerInteraction.Ignore).Any(c => !EsSueloBajo(c)))
@@ -1631,17 +1681,14 @@ namespace MechaCyberpunk.Arte.Editor
                                 chocaCerca++;
                                 continue;
                             }
-                            if (Ocluido(pos, boca, 3f))
+                            if (puntosBoca.All(pb => OcluidoVista(pos, pb, 1.5f, mia, 8f)))
                             {
                                 bocaTapada++;
                                 continue;
                             }
-                            List<Vector3> columnasLibres = columnas.Where(c => { float d = new Vector2(c.x - pos.x, c.z - pos.z).magnitude; return d >= 5f && d <= 22f && !Ocluido(pos, c, 3f); }).ToList();
-                            if (columnasLibres.Count == 0)
-                            {
-                                continue;
-                            }
-                            List<Vector3> curvaLibre = curva.Where(p => !Ocluido(pos, p, 3f)).ToList();
+                            // La columna es opcional (el tablero principal la tapa casi siempre desde la calle baja); si se ve, puntúa.
+                            List<Vector3> columnasLibres = columnas.Where(c => { float d = new Vector2(c.x - pos.x, c.z - pos.z).magnitude; return d >= 5f && d <= 70f && !OcluidoVista(pos, c, 3f, mia, 0f); }).ToList();
+                            List<Vector3> curvaLibre = curva.Where(p => !OcluidoVista(pos, p, 3f, mia, 0f)).ToList();
                             List<Vector3> rampaLibre = rampa.Where(p => !Ocluido(pos, p, 3f)).ToList();
                             probadas++;
                             Vector3 haciaBoca = boca - pos;
@@ -1699,7 +1746,7 @@ namespace MechaCyberpunk.Arte.Editor
                                             vr = v;
                                         }
                                     }
-                                    float total = 3f * tBoca + 3f * tCol + 2f * tCurva + 1f * tRampa;
+                                    float total = 3f * tBoca + 3f * tCol + 2f * tCurva + 1f * tRampa - (visibles == 0 ? 2f : 0f);
                                     if (mejor == null || total > mejor.Puntaje)
                                     {
                                         mejor = new Candidato
