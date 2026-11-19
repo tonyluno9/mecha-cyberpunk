@@ -344,7 +344,7 @@ namespace MechaCyberpunk.Trafico.Calle
                 cuerpo.linearVelocity = Vector3.zero;
                 cuerpo.angularVelocity = Vector3.zero;
             }
-            Sonidos.ReproducirEn("VEH_CLAXON_TRAFICO", transform.position);
+            Sonidos.ReproducirEn(IdClaxon(), transform.position); // T-1475: camión o normal
             SacarConductorRobado();
             enabled = false;
         }
@@ -512,7 +512,7 @@ namespace MechaCyberpunk.Trafico.Calle
                 if (Time.time >= proximoClaxon)
                 {
                     proximoClaxon = Time.time + UnityEngine.Random.Range(SegundosMinimosEntreClaxon, SegundosMaximosEntreClaxon);
-                    Sonidos.ReproducirEn("VEH_CLAXON_TRAFICO", transform.position);
+                    Sonidos.ReproducirEn(IdClaxon(), transform.position); // T-1475: camión o normal
                 }
             }
             if (jugador.HasValue && velocidad >= VelocidadMinimaPasaCerca && Time.time >= proximoPasaCerca
@@ -521,6 +521,13 @@ namespace MechaCyberpunk.Trafico.Calle
                 proximoPasaCerca = Time.time + SegundosEntrePasaCerca;
                 Sonidos.ReproducirEn("VEH_PASA_CERCA", transform.position);
             }
+        }
+
+        // T-1475: VEH_CLAXON_CAMION para los pesados, VEH_CLAXON_NORMAL para el resto.
+        private string IdClaxon()
+        {
+            MechaCyberpunk.Vehiculos.Carro.CarroViejo viejo = GetComponent<MechaCyberpunk.Vehiculos.Carro.CarroViejo>();
+            return viejo != null ? viejo.IdClaxon : MechaCyberpunk.Vehiculos.GrupoSonidoVehiculo.ClaxonNormal;
         }
 
         // T-588: atorado mucho rato (detrás de algo fijo, un carro parado o un cruce sin salida): vuelve a salir en otra calle, de preferencia fuera de la vista.
