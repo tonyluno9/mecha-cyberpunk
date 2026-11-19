@@ -16121,6 +16121,45 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1045410267430687352, guid: cbd762c40921b2c4084ea3638f12eee5, type: 3}
   m_PrefabInstance: {fileID: 25866823}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &25893815
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 25893816}
+  m_Layer: 0
+  m_Name: T1462_Aereas
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &25893816
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 25893815}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1386277447}
+  - {fileID: 1889968109}
+  - {fileID: 1954855206}
+  - {fileID: 435199049}
+  - {fileID: 2082195442}
+  - {fileID: 622077512}
+  - {fileID: 1533468655}
+  - {fileID: 190696049}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &25984051
 GameObject:
   m_ObjectHideFlags: 0
@@ -128323,6 +128362,56 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
+--- !u!1 &190696048
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 190696049}
+  - component: {fileID: 190696050}
+  m_Layer: 0
+  m_Name: SueloLejano_Arriba
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &190696049
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 190696048}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 25893816}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &190696050
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 190696048}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d93d7838328b28945b9b4143628cd6f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.OcultarPorAltura
+  renderers:
+  - {fileID: 1533468653}
+  umbral: 25
+  histeresis: 3
+  alturaPiso: 0
+  soloArriba: 1
 --- !u!114 &190726240
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -193834,56 +193923,6 @@ MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 3098237225951528160, guid: 7eaa3506ca53538428cdf0ed1a4db54a, type: 3}
   m_PrefabInstance: {fileID: 242904364}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &243085028
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 243085029}
-  - component: {fileID: 243085030}
-  m_Layer: 0
-  m_Name: SkylineSK01_Este
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &243085029
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 243085028}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1700745278}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &243085030
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 243085028}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d93d7838328b28945b9b4143628cd6f9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.OcultarPorAltura
-  renderers:
-  - {fileID: 1498378489738265409}
-  umbral: 25
-  histeresis: 3
-  alturaPiso: 0
-  soloArriba: 0
 --- !u!1001 &243138646
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -205133,60 +205172,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 262934329}
   m_Mesh: {fileID: -3173339215336007439, guid: 40f37ed6ed18d5a4e97841eb1a8ae738, type: 2}
---- !u!1 &263013858
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 263013859}
-  - component: {fileID: 263013860}
-  m_Layer: 0
-  m_Name: BrumaAltura
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &263013859
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 263013858}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1700745278}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &263013860
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 263013858}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d93d7838328b28945b9b4143628cd6f9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.OcultarPorAltura
-  renderers:
-  - {fileID: 1272838050}
-  - {fileID: 1330874760}
-  - {fileID: 510020499}
-  - {fileID: 875497530}
-  - {fileID: 1240818301}
-  umbral: 14
-  histeresis: 3
-  alturaPiso: 0
-  soloArriba: 0
 --- !u!1 &263141451
 GameObject:
   m_ObjectHideFlags: 0
@@ -318721,6 +318706,56 @@ MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 2801925128222918610, guid: 9dada94213a974b48b6938e3f7160a89, type: 3}
   m_PrefabInstance: {fileID: 435008678}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &435199048
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 435199049}
+  - component: {fileID: 435199050}
+  m_Layer: 0
+  m_Name: SkylineSK01
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &435199049
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 435199048}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 25893816}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &435199050
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 435199048}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d93d7838328b28945b9b4143628cd6f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.OcultarPorAltura
+  renderers:
+  - {fileID: 1498378489738265410}
+  umbral: 100
+  histeresis: 3
+  alturaPiso: 0
+  soloArriba: 0
 --- !u!1001 &435305645
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -326832,59 +326867,6 @@ SkinnedMeshRenderer:
     m_Center: {x: 0.08160986, y: -0.029320523, z: 0.03548342}
     m_Extent: {x: 0.5618263, y: 0.4790699, z: 0.74207366}
   m_DirtyAABB: 0
---- !u!1 &449332118
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 449332119}
-  - component: {fileID: 449332120}
-  m_Layer: 0
-  m_Name: Fondo_T513
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &449332119
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 449332118}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1700745278}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &449332120
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 449332118}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d93d7838328b28945b9b4143628cd6f9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.OcultarPorAltura
-  renderers:
-  - {fileID: 383978028}
-  - {fileID: 1124338481}
-  - {fileID: 377196327}
-  - {fileID: 1690886059}
-  umbral: 25
-  histeresis: 3
-  alturaPiso: 0
-  soloArriba: 0
 --- !u!1 &449362796
 GameObject:
   m_ObjectHideFlags: 0
@@ -370405,96 +370387,6 @@ Light:
   m_LightUnit: 1
   m_LuxAtDistance: 1
   m_EnableSpotReflector: 1
---- !u!1 &508686637
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 508686640}
-  - component: {fileID: 508686639}
-  - component: {fileID: 508686638}
-  m_Layer: 0
-  m_Name: SueloLejano
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!23 &508686638
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 508686637}
-  m_Enabled: 1
-  m_CastShadows: 0
-  m_ReceiveShadows: 0
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
-  m_ForceMeshLod: -1
-  m_MeshLodSelectionBias: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: 85f101548729ac34aa89b59105776540, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 1
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_MaskInteraction: 0
-  m_AdditionalVertexStreams: {fileID: 0}
---- !u!33 &508686639
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 508686637}
-  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
---- !u!4 &508686640
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 508686637}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -60, y: -8, z: -100}
-  m_LocalScale: {x: 4000, y: 4000, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1700745278}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &508774558
 GameObject:
   m_ObjectHideFlags: 0
@@ -380772,56 +380664,6 @@ Transform:
   - {fileID: 1722921167}
   m_Father: {fileID: 433930472}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &523529398
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 523529399}
-  - component: {fileID: 523529400}
-  m_Layer: 0
-  m_Name: SkylineSK01
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &523529399
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 523529398}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1700745278}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &523529400
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 523529398}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d93d7838328b28945b9b4143628cd6f9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.OcultarPorAltura
-  renderers:
-  - {fileID: 1498378489738265410}
-  umbral: 100
-  histeresis: 3
-  alturaPiso: 0
-  soloArriba: 0
 --- !u!1001 &523727461
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -451624,6 +451466,157 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 622072504}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &622077511
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 622077512}
+  - component: {fileID: 622077513}
+  m_Layer: 0
+  m_Name: EdificiosAfueras
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &622077512
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 622077511}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 25893816}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &622077513
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 622077511}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d93d7838328b28945b9b4143628cd6f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.OcultarPorAltura
+  renderers:
+  - {fileID: 978707104}
+  - {fileID: 273568855}
+  - {fileID: 2025888700}
+  - {fileID: 1718277257}
+  - {fileID: 1675682747}
+  - {fileID: 282010332}
+  - {fileID: 421820738}
+  - {fileID: 1388127279}
+  - {fileID: 1675412737}
+  - {fileID: 1218837485}
+  - {fileID: 544920951}
+  - {fileID: 1763608781}
+  - {fileID: 912493881}
+  - {fileID: 1956234535}
+  - {fileID: 1664707494}
+  - {fileID: 1433942721}
+  - {fileID: 547977960}
+  - {fileID: 159986424}
+  - {fileID: 2016831783}
+  - {fileID: 1036924993}
+  - {fileID: 2009533940}
+  - {fileID: 1217026479}
+  - {fileID: 1139842300}
+  - {fileID: 1143174095}
+  - {fileID: 1495614971}
+  - {fileID: 186808083}
+  - {fileID: 2100546947}
+  - {fileID: 290978276}
+  - {fileID: 1210015287}
+  - {fileID: 916014742}
+  - {fileID: 648640138}
+  - {fileID: 1307674221}
+  - {fileID: 547538860}
+  - {fileID: 568571215}
+  - {fileID: 1234307394}
+  - {fileID: 242809108}
+  - {fileID: 1718563462}
+  - {fileID: 133515310}
+  - {fileID: 480386791}
+  - {fileID: 1595509430}
+  - {fileID: 1894336788}
+  - {fileID: 1331430592}
+  - {fileID: 1992452201}
+  - {fileID: 2063924432}
+  - {fileID: 215613099}
+  - {fileID: 1971555857}
+  - {fileID: 69149575}
+  - {fileID: 1599576276}
+  - {fileID: 1874725800}
+  - {fileID: 1458408911}
+  - {fileID: 958980174}
+  - {fileID: 814147834}
+  - {fileID: 291698115}
+  - {fileID: 1933406340}
+  - {fileID: 1403463819}
+  - {fileID: 550406451}
+  - {fileID: 1138923620}
+  - {fileID: 2140565758}
+  - {fileID: 1232457228}
+  - {fileID: 1203038352}
+  - {fileID: 382947620}
+  - {fileID: 1301601410}
+  - {fileID: 1775957075}
+  - {fileID: 248128645}
+  - {fileID: 1458684715}
+  - {fileID: 1295548030}
+  - {fileID: 2013553949}
+  - {fileID: 2113737569}
+  - {fileID: 810871543}
+  - {fileID: 773406170}
+  - {fileID: 166914058}
+  - {fileID: 1827900568}
+  - {fileID: 898847054}
+  - {fileID: 806612405}
+  - {fileID: 1854663190}
+  - {fileID: 115713031}
+  - {fileID: 231364048}
+  - {fileID: 1181740354}
+  - {fileID: 602572249}
+  - {fileID: 487381283}
+  - {fileID: 513673872}
+  - {fileID: 1007778720}
+  - {fileID: 581471404}
+  - {fileID: 1249598259}
+  - {fileID: 285139936}
+  - {fileID: 1003109034}
+  - {fileID: 675602976}
+  - {fileID: 1208550793}
+  - {fileID: 679115131}
+  - {fileID: 1197210695}
+  - {fileID: 1951817351}
+  - {fileID: 511219365}
+  - {fileID: 314781315}
+  - {fileID: 913648626}
+  - {fileID: 313205906}
+  - {fileID: 1576524068}
+  - {fileID: 1893215591}
+  - {fileID: 1678613021}
+  - {fileID: 1714324710}
+  - {fileID: 118743980}
+  - {fileID: 60887867}
+  - {fileID: 1906009755}
+  umbral: 25
+  histeresis: 3
+  alturaPiso: 0
+  soloArriba: 0
 --- !u!1001 &622192364
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -865863,293 +865856,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4642333096024366272, guid: 57b0c83b85bb4a2469b2717e9ff9ad48, type: 3}
   m_PrefabInstance: {fileID: 1263037269}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1263261542
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1263261543}
-  - component: {fileID: 1263261544}
-  m_Layer: 0
-  m_Name: TorresFondoAutopista
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1263261543
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1263261542}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1700745278}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1263261544
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1263261542}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d93d7838328b28945b9b4143628cd6f9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.OcultarPorAltura
-  renderers:
-  - {fileID: 4248311342167329981}
-  - {fileID: 4248311342167329980}
-  - {fileID: 4248311342167329979}
-  - {fileID: 4248311342167329978}
-  - {fileID: 4248311342167329977}
-  - {fileID: 4248311342167329976}
-  - {fileID: 4248311342167329975}
-  - {fileID: 4248311342167329974}
-  - {fileID: 4248311342167329973}
-  - {fileID: 4248311342167329972}
-  - {fileID: 4248311342167329971}
-  - {fileID: 4248311342167329970}
-  - {fileID: 4248311342167329969}
-  - {fileID: 4248311342167329968}
-  - {fileID: 4248311342167329967}
-  - {fileID: 4248311342167329966}
-  - {fileID: 4248311342167329965}
-  - {fileID: 4248311342167329964}
-  - {fileID: 4248311342167329963}
-  - {fileID: 4248311342167329962}
-  - {fileID: 4248311342167329961}
-  - {fileID: 4248311342167329960}
-  - {fileID: 4248311342167329959}
-  - {fileID: 4248311342167329958}
-  - {fileID: 4248311342167329957}
-  - {fileID: 4248311342167329956}
-  - {fileID: 4248311342167329955}
-  - {fileID: 4248311342167329954}
-  - {fileID: 4248311342167329953}
-  - {fileID: 4248311342167329952}
-  - {fileID: 4248311342167329951}
-  - {fileID: 4248311342167329950}
-  - {fileID: 4248311342167329949}
-  - {fileID: 4248311342167329948}
-  - {fileID: 4248311342167329947}
-  - {fileID: 4248311342167329946}
-  - {fileID: 4248311342167329945}
-  - {fileID: 4248311342167329944}
-  - {fileID: 4248311342167329943}
-  - {fileID: 4248311342167329942}
-  - {fileID: 4248311342167329941}
-  - {fileID: 4248311342167329940}
-  - {fileID: 4248311342167329939}
-  - {fileID: 4248311342167329938}
-  - {fileID: 4248311342167329937}
-  - {fileID: 4248311342167329936}
-  - {fileID: 4248311342167329935}
-  - {fileID: 4248311342167329934}
-  - {fileID: 4248311342167329933}
-  - {fileID: 4248311342167329932}
-  - {fileID: 4248311342167329931}
-  - {fileID: 4248311342167329930}
-  - {fileID: 4248311342167329929}
-  - {fileID: 4248311342167329928}
-  - {fileID: 4248311342167329927}
-  - {fileID: 4248311342167329926}
-  - {fileID: 4248311342167329925}
-  - {fileID: 4248311342167329924}
-  - {fileID: 4248311342167329923}
-  - {fileID: 4248311342167329922}
-  - {fileID: 4248311342167329921}
-  - {fileID: 4248311342167329920}
-  - {fileID: 4248311342167329919}
-  - {fileID: 4248311342167329918}
-  - {fileID: 4248311342167329917}
-  - {fileID: 4248311342167329916}
-  - {fileID: 4248311342167329915}
-  - {fileID: 4248311342167329914}
-  - {fileID: 4248311342167329913}
-  - {fileID: 4248311342167329912}
-  - {fileID: 4248311342167329911}
-  - {fileID: 4248311342167329910}
-  - {fileID: 4248311342167329909}
-  - {fileID: 4248311342167329908}
-  - {fileID: 4248311342167329907}
-  - {fileID: 4248311342167329906}
-  - {fileID: 4248311342167329905}
-  - {fileID: 4248311342167329904}
-  - {fileID: 4248311342167329903}
-  - {fileID: 4248311342167329902}
-  - {fileID: 4248311342167329901}
-  - {fileID: 4248311342167329900}
-  - {fileID: 4248311342167329899}
-  - {fileID: 4248311342167329898}
-  - {fileID: 4248311342167329897}
-  - {fileID: 4248311342167329896}
-  - {fileID: 4248311342167329895}
-  - {fileID: 4248311342167329894}
-  - {fileID: 4248311342167329893}
-  - {fileID: 4248311342167329892}
-  - {fileID: 4248311342167329891}
-  - {fileID: 4248311342167329890}
-  - {fileID: 4248311342167329889}
-  - {fileID: 4248311342167329888}
-  - {fileID: 4248311342167329887}
-  - {fileID: 4248311342167329886}
-  - {fileID: 4248311342167329885}
-  - {fileID: 4248311342167329884}
-  - {fileID: 4248311342167329883}
-  - {fileID: 4248311342167329882}
-  - {fileID: 4248311342167329881}
-  - {fileID: 4248311342167329880}
-  - {fileID: 4248311342167329879}
-  - {fileID: 4248311342167329878}
-  - {fileID: 4248311342167329877}
-  - {fileID: 4248311342167329876}
-  - {fileID: 4248311342167329875}
-  - {fileID: 4248311342167329874}
-  - {fileID: 4248311342167329873}
-  - {fileID: 4248311342167329872}
-  - {fileID: 4248311342167329871}
-  - {fileID: 4248311342167329870}
-  - {fileID: 4248311342167329869}
-  - {fileID: 4248311342167329868}
-  - {fileID: 4248311342167329867}
-  - {fileID: 4248311342167329866}
-  - {fileID: 4248311342167329865}
-  - {fileID: 4248311342167329864}
-  - {fileID: 4248311342167329863}
-  - {fileID: 4248311342167329862}
-  - {fileID: 4248311342167329861}
-  - {fileID: 4248311342167329860}
-  - {fileID: 4248311342167329859}
-  - {fileID: 4248311342167329858}
-  - {fileID: 4248311342167329857}
-  - {fileID: 4248311342167329856}
-  - {fileID: 4248311342167329855}
-  - {fileID: 4248311342167329854}
-  - {fileID: 4248311342167329853}
-  - {fileID: 4248311342167329852}
-  - {fileID: 4248311342167329851}
-  - {fileID: 4248311342167329850}
-  - {fileID: 4248311342167329849}
-  - {fileID: 4248311342167329848}
-  - {fileID: 4248311342167329847}
-  - {fileID: 4248311342167329846}
-  - {fileID: 4248311342167329845}
-  - {fileID: 4248311342167329844}
-  - {fileID: 4248311342167329843}
-  - {fileID: 4248311342167329842}
-  - {fileID: 4248311342167329841}
-  - {fileID: 4248311342167329840}
-  - {fileID: 4248311342167329839}
-  - {fileID: 4248311342167329838}
-  - {fileID: 4248311342167329837}
-  - {fileID: 4248311342167329836}
-  - {fileID: 4248311342167329835}
-  - {fileID: 4248311342167329834}
-  - {fileID: 4248311342167329833}
-  - {fileID: 4248311342167329832}
-  - {fileID: 4248311342167329831}
-  - {fileID: 4248311342167329830}
-  - {fileID: 4248311342167329829}
-  - {fileID: 4248311342167329828}
-  - {fileID: 4248311342167329827}
-  - {fileID: 4248311342167329826}
-  - {fileID: 4248311342167329825}
-  - {fileID: 4248311342167329824}
-  - {fileID: 4248311342167329823}
-  - {fileID: 4248311342167329822}
-  - {fileID: 4248311342167329821}
-  - {fileID: 4248311342167329820}
-  - {fileID: 4248311342167329819}
-  - {fileID: 4248311342167329818}
-  - {fileID: 4248311342167329817}
-  - {fileID: 4248311342167329816}
-  - {fileID: 4248311342167329815}
-  - {fileID: 4248311342167329814}
-  - {fileID: 4248311342167329813}
-  - {fileID: 4248311342167329812}
-  - {fileID: 4248311342167329811}
-  - {fileID: 4248311342167329810}
-  - {fileID: 4248311342167329809}
-  - {fileID: 4248311342167329808}
-  - {fileID: 4248311342167329807}
-  - {fileID: 4248311342167329806}
-  - {fileID: 4248311342167329805}
-  - {fileID: 4248311342167329804}
-  - {fileID: 4248311342167329803}
-  - {fileID: 4248311342167329802}
-  - {fileID: 4248311342167329801}
-  - {fileID: 4248311342167329800}
-  - {fileID: 4248311342167329799}
-  - {fileID: 4248311342167329798}
-  - {fileID: 4248311342167329797}
-  - {fileID: 4248311342167329796}
-  - {fileID: 4248311342167329795}
-  - {fileID: 4248311342167329794}
-  - {fileID: 4248311342167329793}
-  - {fileID: 4248311342167329792}
-  - {fileID: 4248311342167329791}
-  - {fileID: 4248311342167329790}
-  - {fileID: 4248311342167329789}
-  - {fileID: 4248311342167329788}
-  - {fileID: 4248311342167329787}
-  - {fileID: 4248311342167329786}
-  - {fileID: 4248311342167329785}
-  - {fileID: 4248311342167329784}
-  - {fileID: 4248311342167329783}
-  - {fileID: 4248311342167329782}
-  - {fileID: 4248311342167329781}
-  - {fileID: 4248311342167329780}
-  - {fileID: 4248311342167329779}
-  - {fileID: 4248311342167329778}
-  - {fileID: 4248311342167329777}
-  - {fileID: 4248311342167329776}
-  - {fileID: 4248311342167329775}
-  - {fileID: 4248311342167329774}
-  - {fileID: 4248311342167329773}
-  - {fileID: 4248311342167329772}
-  - {fileID: 4248311342167329771}
-  - {fileID: 4248311342167329770}
-  - {fileID: 4248311342167329769}
-  - {fileID: 4248311342167329768}
-  - {fileID: 4248311342167329767}
-  - {fileID: 4248311342167329766}
-  - {fileID: 4248311342167329765}
-  - {fileID: 4248311342167329764}
-  - {fileID: 4248311342167329763}
-  - {fileID: 4248311342167329762}
-  - {fileID: 4248311342167329761}
-  - {fileID: 4248311342167329760}
-  - {fileID: 4248311342167329759}
-  - {fileID: 4248311342167329758}
-  - {fileID: 4248311342167329757}
-  - {fileID: 4248311342167329756}
-  - {fileID: 4248311342167329755}
-  - {fileID: 4248311342167329754}
-  - {fileID: 4248311342167329753}
-  - {fileID: 4248311342167329752}
-  - {fileID: 4248311342167329751}
-  - {fileID: 4248311342167329750}
-  - {fileID: 4248311342167329749}
-  - {fileID: 4248311342167329748}
-  - {fileID: 4248311342167329747}
-  - {fileID: 4248311342167329746}
-  - {fileID: 4248311342167329745}
-  - {fileID: 4248311342167329744}
-  umbral: 25
-  histeresis: 3
-  alturaPiso: 0
-  soloArriba: 0
 --- !u!1 &1263270068
 GameObject:
   m_ObjectHideFlags: 0
@@ -943673,6 +943379,59 @@ MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 6585303758695177812, guid: d4c262dcdd6d4a84591eb33c18ed55b5, type: 3}
   m_PrefabInstance: {fileID: 1386188215}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1386277446
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1386277447}
+  - component: {fileID: 1386277448}
+  m_Layer: 0
+  m_Name: Fondo_T513
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1386277447
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1386277446}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 25893816}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1386277448
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1386277446}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d93d7838328b28945b9b4143628cd6f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.OcultarPorAltura
+  renderers:
+  - {fileID: 383978028}
+  - {fileID: 1124338481}
+  - {fileID: 377196327}
+  - {fileID: 1690886059}
+  umbral: 25
+  histeresis: 3
+  alturaPiso: 0
+  soloArriba: 0
 --- !u!1 &1386300285
 GameObject:
   m_ObjectHideFlags: 0
@@ -957156,157 +956915,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1409549492}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &1409989474
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1409989475}
-  - component: {fileID: 1409989476}
-  m_Layer: 0
-  m_Name: EdificiosAfueras
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1409989475
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1409989474}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1700745278}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1409989476
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1409989474}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d93d7838328b28945b9b4143628cd6f9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.OcultarPorAltura
-  renderers:
-  - {fileID: 978707104}
-  - {fileID: 273568855}
-  - {fileID: 2025888700}
-  - {fileID: 1718277257}
-  - {fileID: 1675682747}
-  - {fileID: 282010332}
-  - {fileID: 421820738}
-  - {fileID: 1388127279}
-  - {fileID: 1675412737}
-  - {fileID: 1218837485}
-  - {fileID: 544920951}
-  - {fileID: 1763608781}
-  - {fileID: 912493881}
-  - {fileID: 1956234535}
-  - {fileID: 1664707494}
-  - {fileID: 1433942721}
-  - {fileID: 547977960}
-  - {fileID: 159986424}
-  - {fileID: 2016831783}
-  - {fileID: 1036924993}
-  - {fileID: 2009533940}
-  - {fileID: 1217026479}
-  - {fileID: 1139842300}
-  - {fileID: 1143174095}
-  - {fileID: 1495614971}
-  - {fileID: 186808083}
-  - {fileID: 2100546947}
-  - {fileID: 290978276}
-  - {fileID: 1210015287}
-  - {fileID: 916014742}
-  - {fileID: 648640138}
-  - {fileID: 1307674221}
-  - {fileID: 547538860}
-  - {fileID: 568571215}
-  - {fileID: 1234307394}
-  - {fileID: 242809108}
-  - {fileID: 1718563462}
-  - {fileID: 133515310}
-  - {fileID: 480386791}
-  - {fileID: 1595509430}
-  - {fileID: 1894336788}
-  - {fileID: 1331430592}
-  - {fileID: 1992452201}
-  - {fileID: 2063924432}
-  - {fileID: 215613099}
-  - {fileID: 1971555857}
-  - {fileID: 69149575}
-  - {fileID: 1599576276}
-  - {fileID: 1874725800}
-  - {fileID: 1458408911}
-  - {fileID: 958980174}
-  - {fileID: 814147834}
-  - {fileID: 291698115}
-  - {fileID: 1933406340}
-  - {fileID: 1403463819}
-  - {fileID: 550406451}
-  - {fileID: 1138923620}
-  - {fileID: 2140565758}
-  - {fileID: 1232457228}
-  - {fileID: 1203038352}
-  - {fileID: 382947620}
-  - {fileID: 1301601410}
-  - {fileID: 1775957075}
-  - {fileID: 248128645}
-  - {fileID: 1458684715}
-  - {fileID: 1295548030}
-  - {fileID: 2013553949}
-  - {fileID: 2113737569}
-  - {fileID: 810871543}
-  - {fileID: 773406170}
-  - {fileID: 166914058}
-  - {fileID: 1827900568}
-  - {fileID: 898847054}
-  - {fileID: 806612405}
-  - {fileID: 1854663190}
-  - {fileID: 115713031}
-  - {fileID: 231364048}
-  - {fileID: 1181740354}
-  - {fileID: 602572249}
-  - {fileID: 487381283}
-  - {fileID: 513673872}
-  - {fileID: 1007778720}
-  - {fileID: 581471404}
-  - {fileID: 1249598259}
-  - {fileID: 285139936}
-  - {fileID: 1003109034}
-  - {fileID: 675602976}
-  - {fileID: 1208550793}
-  - {fileID: 679115131}
-  - {fileID: 1197210695}
-  - {fileID: 1951817351}
-  - {fileID: 511219365}
-  - {fileID: 314781315}
-  - {fileID: 913648626}
-  - {fileID: 313205906}
-  - {fileID: 1576524068}
-  - {fileID: 1893215591}
-  - {fileID: 1678613021}
-  - {fileID: 1714324710}
-  - {fileID: 118743980}
-  - {fileID: 60887867}
-  - {fileID: 1906009755}
-  umbral: 25
-  histeresis: 3
-  alturaPiso: 0
-  soloArriba: 0
 --- !u!1 &1410010167
 GameObject:
   m_ObjectHideFlags: 0
@@ -1037040,6 +1036648,96 @@ Transform:
   - {fileID: 468847832}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1533468652
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1533468655}
+  - component: {fileID: 1533468654}
+  - component: {fileID: 1533468653}
+  m_Layer: 0
+  m_Name: SueloLejano
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!23 &1533468653
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1533468652}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 85f101548729ac34aa89b59105776540, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 1
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &1533468654
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1533468652}
+  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &1533468655
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1533468652}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: -60, y: -8, z: -100}
+  m_LocalScale: {x: 4000, y: 4000, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 25893816}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1533524459
 GameObject:
   m_ObjectHideFlags: 0
@@ -1098433,56 +1098131,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1625565304}
   m_Mesh: {fileID: 7714115459844637558, guid: 96e55d408f520a345ab3cc8712980c03, type: 2}
---- !u!1 &1625721264
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1625721265}
-  - component: {fileID: 1625721266}
-  m_Layer: 0
-  m_Name: SueloLejano_Arriba
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1625721265
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1625721264}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1700745278}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1625721266
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1625721264}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d93d7838328b28945b9b4143628cd6f9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.OcultarPorAltura
-  renderers:
-  - {fileID: 508686638}
-  umbral: 25
-  histeresis: 3
-  alturaPiso: 0
-  soloArriba: 1
 --- !u!1001 &1625764720
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1146029,7 +1145677,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1690886058
 Transform:
   m_ObjectHideFlags: 0
@@ -1152440,45 +1152088,6 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
---- !u!1 &1700745277
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1700745278}
-  m_Layer: 0
-  m_Name: T1462_Aereas
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1700745278
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1700745277}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 449332119}
-  - {fileID: 263013859}
-  - {fileID: 243085029}
-  - {fileID: 523529399}
-  - {fileID: 1263261543}
-  - {fileID: 1409989475}
-  - {fileID: 508686640}
-  - {fileID: 1625721265}
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1700998484
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1269007,6 +1268616,60 @@ MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 3414211673815702099, guid: c53355af382f49c48b0d7abb8283589c, type: 3}
   m_PrefabInstance: {fileID: 1889568044}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1889968108
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1889968109}
+  - component: {fileID: 1889968110}
+  m_Layer: 0
+  m_Name: BrumaAltura
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1889968109
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1889968108}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 25893816}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1889968110
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1889968108}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d93d7838328b28945b9b4143628cd6f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.OcultarPorAltura
+  renderers:
+  - {fileID: 1272838050}
+  - {fileID: 1330874760}
+  - {fileID: 510020499}
+  - {fileID: 875497530}
+  - {fileID: 1240818301}
+  umbral: 14
+  histeresis: 3
+  alturaPiso: 0
+  soloArriba: 0
 --- !u!1001 &1890139787
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1309429,6 +1309092,56 @@ MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 6585303758695177812, guid: d4c262dcdd6d4a84591eb33c18ed55b5, type: 3}
   m_PrefabInstance: {fileID: 1954659946}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1954855205
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1954855206}
+  - component: {fileID: 1954855207}
+  m_Layer: 0
+  m_Name: SkylineSK01_Este
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1954855206
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1954855205}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 25893816}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1954855207
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1954855205}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d93d7838328b28945b9b4143628cd6f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.OcultarPorAltura
+  renderers:
+  - {fileID: 1498378489738265409}
+  umbral: 25
+  histeresis: 3
+  alturaPiso: 0
+  soloArriba: 0
 --- !u!1 &1954870651
 GameObject:
   m_ObjectHideFlags: 0
@@ -1399891,6 +1399604,293 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2082154625}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &2082195441
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2082195442}
+  - component: {fileID: 2082195443}
+  m_Layer: 0
+  m_Name: TorresFondoAutopista
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2082195442
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2082195441}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 25893816}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2082195443
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2082195441}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d93d7838328b28945b9b4143628cd6f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Mundo::MechaCyberpunk.Mundo.Reloj.OcultarPorAltura
+  renderers:
+  - {fileID: 4248311342167329981}
+  - {fileID: 4248311342167329980}
+  - {fileID: 4248311342167329979}
+  - {fileID: 4248311342167329978}
+  - {fileID: 4248311342167329977}
+  - {fileID: 4248311342167329976}
+  - {fileID: 4248311342167329975}
+  - {fileID: 4248311342167329974}
+  - {fileID: 4248311342167329973}
+  - {fileID: 4248311342167329972}
+  - {fileID: 4248311342167329971}
+  - {fileID: 4248311342167329970}
+  - {fileID: 4248311342167329969}
+  - {fileID: 4248311342167329968}
+  - {fileID: 4248311342167329967}
+  - {fileID: 4248311342167329966}
+  - {fileID: 4248311342167329965}
+  - {fileID: 4248311342167329964}
+  - {fileID: 4248311342167329963}
+  - {fileID: 4248311342167329962}
+  - {fileID: 4248311342167329961}
+  - {fileID: 4248311342167329960}
+  - {fileID: 4248311342167329959}
+  - {fileID: 4248311342167329958}
+  - {fileID: 4248311342167329957}
+  - {fileID: 4248311342167329956}
+  - {fileID: 4248311342167329955}
+  - {fileID: 4248311342167329954}
+  - {fileID: 4248311342167329953}
+  - {fileID: 4248311342167329952}
+  - {fileID: 4248311342167329951}
+  - {fileID: 4248311342167329950}
+  - {fileID: 4248311342167329949}
+  - {fileID: 4248311342167329948}
+  - {fileID: 4248311342167329947}
+  - {fileID: 4248311342167329946}
+  - {fileID: 4248311342167329945}
+  - {fileID: 4248311342167329944}
+  - {fileID: 4248311342167329943}
+  - {fileID: 4248311342167329942}
+  - {fileID: 4248311342167329941}
+  - {fileID: 4248311342167329940}
+  - {fileID: 4248311342167329939}
+  - {fileID: 4248311342167329938}
+  - {fileID: 4248311342167329937}
+  - {fileID: 4248311342167329936}
+  - {fileID: 4248311342167329935}
+  - {fileID: 4248311342167329934}
+  - {fileID: 4248311342167329933}
+  - {fileID: 4248311342167329932}
+  - {fileID: 4248311342167329931}
+  - {fileID: 4248311342167329930}
+  - {fileID: 4248311342167329929}
+  - {fileID: 4248311342167329928}
+  - {fileID: 4248311342167329927}
+  - {fileID: 4248311342167329926}
+  - {fileID: 4248311342167329925}
+  - {fileID: 4248311342167329924}
+  - {fileID: 4248311342167329923}
+  - {fileID: 4248311342167329922}
+  - {fileID: 4248311342167329921}
+  - {fileID: 4248311342167329920}
+  - {fileID: 4248311342167329919}
+  - {fileID: 4248311342167329918}
+  - {fileID: 4248311342167329917}
+  - {fileID: 4248311342167329916}
+  - {fileID: 4248311342167329915}
+  - {fileID: 4248311342167329914}
+  - {fileID: 4248311342167329913}
+  - {fileID: 4248311342167329912}
+  - {fileID: 4248311342167329911}
+  - {fileID: 4248311342167329910}
+  - {fileID: 4248311342167329909}
+  - {fileID: 4248311342167329908}
+  - {fileID: 4248311342167329907}
+  - {fileID: 4248311342167329906}
+  - {fileID: 4248311342167329905}
+  - {fileID: 4248311342167329904}
+  - {fileID: 4248311342167329903}
+  - {fileID: 4248311342167329902}
+  - {fileID: 4248311342167329901}
+  - {fileID: 4248311342167329900}
+  - {fileID: 4248311342167329899}
+  - {fileID: 4248311342167329898}
+  - {fileID: 4248311342167329897}
+  - {fileID: 4248311342167329896}
+  - {fileID: 4248311342167329895}
+  - {fileID: 4248311342167329894}
+  - {fileID: 4248311342167329893}
+  - {fileID: 4248311342167329892}
+  - {fileID: 4248311342167329891}
+  - {fileID: 4248311342167329890}
+  - {fileID: 4248311342167329889}
+  - {fileID: 4248311342167329888}
+  - {fileID: 4248311342167329887}
+  - {fileID: 4248311342167329886}
+  - {fileID: 4248311342167329885}
+  - {fileID: 4248311342167329884}
+  - {fileID: 4248311342167329883}
+  - {fileID: 4248311342167329882}
+  - {fileID: 4248311342167329881}
+  - {fileID: 4248311342167329880}
+  - {fileID: 4248311342167329879}
+  - {fileID: 4248311342167329878}
+  - {fileID: 4248311342167329877}
+  - {fileID: 4248311342167329876}
+  - {fileID: 4248311342167329875}
+  - {fileID: 4248311342167329874}
+  - {fileID: 4248311342167329873}
+  - {fileID: 4248311342167329872}
+  - {fileID: 4248311342167329871}
+  - {fileID: 4248311342167329870}
+  - {fileID: 4248311342167329869}
+  - {fileID: 4248311342167329868}
+  - {fileID: 4248311342167329867}
+  - {fileID: 4248311342167329866}
+  - {fileID: 4248311342167329865}
+  - {fileID: 4248311342167329864}
+  - {fileID: 4248311342167329863}
+  - {fileID: 4248311342167329862}
+  - {fileID: 4248311342167329861}
+  - {fileID: 4248311342167329860}
+  - {fileID: 4248311342167329859}
+  - {fileID: 4248311342167329858}
+  - {fileID: 4248311342167329857}
+  - {fileID: 4248311342167329856}
+  - {fileID: 4248311342167329855}
+  - {fileID: 4248311342167329854}
+  - {fileID: 4248311342167329853}
+  - {fileID: 4248311342167329852}
+  - {fileID: 4248311342167329851}
+  - {fileID: 4248311342167329850}
+  - {fileID: 4248311342167329849}
+  - {fileID: 4248311342167329848}
+  - {fileID: 4248311342167329847}
+  - {fileID: 4248311342167329846}
+  - {fileID: 4248311342167329845}
+  - {fileID: 4248311342167329844}
+  - {fileID: 4248311342167329843}
+  - {fileID: 4248311342167329842}
+  - {fileID: 4248311342167329841}
+  - {fileID: 4248311342167329840}
+  - {fileID: 4248311342167329839}
+  - {fileID: 4248311342167329838}
+  - {fileID: 4248311342167329837}
+  - {fileID: 4248311342167329836}
+  - {fileID: 4248311342167329835}
+  - {fileID: 4248311342167329834}
+  - {fileID: 4248311342167329833}
+  - {fileID: 4248311342167329832}
+  - {fileID: 4248311342167329831}
+  - {fileID: 4248311342167329830}
+  - {fileID: 4248311342167329829}
+  - {fileID: 4248311342167329828}
+  - {fileID: 4248311342167329827}
+  - {fileID: 4248311342167329826}
+  - {fileID: 4248311342167329825}
+  - {fileID: 4248311342167329824}
+  - {fileID: 4248311342167329823}
+  - {fileID: 4248311342167329822}
+  - {fileID: 4248311342167329821}
+  - {fileID: 4248311342167329820}
+  - {fileID: 4248311342167329819}
+  - {fileID: 4248311342167329818}
+  - {fileID: 4248311342167329817}
+  - {fileID: 4248311342167329816}
+  - {fileID: 4248311342167329815}
+  - {fileID: 4248311342167329814}
+  - {fileID: 4248311342167329813}
+  - {fileID: 4248311342167329812}
+  - {fileID: 4248311342167329811}
+  - {fileID: 4248311342167329810}
+  - {fileID: 4248311342167329809}
+  - {fileID: 4248311342167329808}
+  - {fileID: 4248311342167329807}
+  - {fileID: 4248311342167329806}
+  - {fileID: 4248311342167329805}
+  - {fileID: 4248311342167329804}
+  - {fileID: 4248311342167329803}
+  - {fileID: 4248311342167329802}
+  - {fileID: 4248311342167329801}
+  - {fileID: 4248311342167329800}
+  - {fileID: 4248311342167329799}
+  - {fileID: 4248311342167329798}
+  - {fileID: 4248311342167329797}
+  - {fileID: 4248311342167329796}
+  - {fileID: 4248311342167329795}
+  - {fileID: 4248311342167329794}
+  - {fileID: 4248311342167329793}
+  - {fileID: 4248311342167329792}
+  - {fileID: 4248311342167329791}
+  - {fileID: 4248311342167329790}
+  - {fileID: 4248311342167329789}
+  - {fileID: 4248311342167329788}
+  - {fileID: 4248311342167329787}
+  - {fileID: 4248311342167329786}
+  - {fileID: 4248311342167329785}
+  - {fileID: 4248311342167329784}
+  - {fileID: 4248311342167329783}
+  - {fileID: 4248311342167329782}
+  - {fileID: 4248311342167329781}
+  - {fileID: 4248311342167329780}
+  - {fileID: 4248311342167329779}
+  - {fileID: 4248311342167329778}
+  - {fileID: 4248311342167329777}
+  - {fileID: 4248311342167329776}
+  - {fileID: 4248311342167329775}
+  - {fileID: 4248311342167329774}
+  - {fileID: 4248311342167329773}
+  - {fileID: 4248311342167329772}
+  - {fileID: 4248311342167329771}
+  - {fileID: 4248311342167329770}
+  - {fileID: 4248311342167329769}
+  - {fileID: 4248311342167329768}
+  - {fileID: 4248311342167329767}
+  - {fileID: 4248311342167329766}
+  - {fileID: 4248311342167329765}
+  - {fileID: 4248311342167329764}
+  - {fileID: 4248311342167329763}
+  - {fileID: 4248311342167329762}
+  - {fileID: 4248311342167329761}
+  - {fileID: 4248311342167329760}
+  - {fileID: 4248311342167329759}
+  - {fileID: 4248311342167329758}
+  - {fileID: 4248311342167329757}
+  - {fileID: 4248311342167329756}
+  - {fileID: 4248311342167329755}
+  - {fileID: 4248311342167329754}
+  - {fileID: 4248311342167329753}
+  - {fileID: 4248311342167329752}
+  - {fileID: 4248311342167329751}
+  - {fileID: 4248311342167329750}
+  - {fileID: 4248311342167329749}
+  - {fileID: 4248311342167329748}
+  - {fileID: 4248311342167329747}
+  - {fileID: 4248311342167329746}
+  - {fileID: 4248311342167329745}
+  - {fileID: 4248311342167329744}
+  umbral: 25
+  histeresis: 3
+  alturaPiso: 0
+  soloArriba: 0
 --- !u!1001 &2082401546
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1456442,6 +1456442,6 @@ SceneRoots:
   - {fileID: 71779155}
   - {fileID: 2133184711}
   - {fileID: 1057123585}
-  - {fileID: 1700745278}
   - {fileID: 5818775108231536576}
   - {fileID: 1029532446}
+  - {fileID: 25893816}
