@@ -60,7 +60,7 @@ namespace MechaCyberpunk.Tests.Mundo
             foreach (Light l in postes)
             {
                 // T-1392 (19-nov): los faroles de sodio de las zonas nuevas llegan a 22 m; los de los barrios, 16 m (T-1331).
-                Assert.LessOrEqual(l.range, LookNocheT1392.AlcanceSodio, ColocarS2.Ruta(l.transform) + ": alcance corto (T-1331: 16 m; sodio de zona T-1392: 22 m)");
+                Assert.LessOrEqual(l.range, Mathf.Max(LookNocheT1392.AlcanceSodio, LookNocheT1461.AlcanceSodio) + 0.001f, ColocarS2.Ruta(l.transform) + ": alcance corto (T-1331: 16 m; sodio de zona T-1461: 27 m)");
             }
         }
 
