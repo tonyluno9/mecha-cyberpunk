@@ -1,7 +1,6 @@
 using System.Linq;
 using MechaCyberpunk.Arte.Editor;
 using MechaCyberpunk.Trafico.Drones;
-using MechaCyberpunk.Trafico.Editor;
 using MechaCyberpunk.Vehiculos.Carro;
 using NUnit.Framework;
 using UnityEditor;
@@ -62,7 +61,7 @@ namespace MechaCyberpunk.Tests.Trafico
         [Test]
         public void DronPolicia_ConservaDronMundoYTieneDR01ConRotores()
         {
-            GameObject dron = AssetDatabase.LoadAssetAtPath<GameObject>(CreadorPersecucion.RutaPrefabDron);
+            GameObject dron = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Proyecto/Trafico/Prefabs/Dron.prefab");
             Assert.IsNotNull(dron.GetComponent<MechaCyberpunk.Trafico.Persecucion.DronMundo>(), "perdió DronMundo");
             Transform visual = dron.transform.Find(DronesT1397.NombreVisualNuevo);
             Assert.IsNotNull(visual, "falta " + DronesT1397.NombreVisualNuevo);
