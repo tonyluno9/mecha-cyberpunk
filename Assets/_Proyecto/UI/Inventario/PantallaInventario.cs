@@ -34,6 +34,9 @@ namespace MechaCyberpunk.UI.Inventario
         public const string SonidoMover = "UI_MOVER";
         public const string SonidoAbrir = "UI_MAPA_ABRIR";
         public const string SonidoCerrar = "UI_MAPA_CERRAR";
+        public const string SonidoPestana = "UI_PESTANA";
+        public const string SonidoEquipar = "TIE_EQUIPAR";
+        public const string SonidoDesequipar = "TIE_DESEQUIPAR";
 
         private const float AnchoCategorias = 520f;
         private const float AnchoDetalle = 520f;
@@ -335,7 +338,7 @@ namespace MechaCyberpunk.UI.Inventario
                 return;
             }
             categoria = nueva;
-            Sonidos.Reproducir(SonidoMover);
+            Sonidos.Reproducir(SonidoPestana); // T-1474
             Reconstruir();
         }
 
@@ -509,9 +512,10 @@ namespace MechaCyberpunk.UI.Inventario
                     return false;
                 }
             }
-            EquipoRueda.Poner(entrada.Id, !entrada.Equipada);
+            bool quedaEquipada = !entrada.Equipada;
+            EquipoRueda.Poner(entrada.Id, quedaEquipada);
             mensajeEquipo = null;
-            Sonidos.Reproducir(SonidoMover);
+            Sonidos.Reproducir(quedaEquipada ? SonidoEquipar : SonidoDesequipar); // T-1474
             Reconstruir();
             return true;
         }

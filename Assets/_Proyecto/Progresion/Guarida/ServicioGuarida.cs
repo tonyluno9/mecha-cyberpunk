@@ -71,7 +71,7 @@ namespace MechaCyberpunk.Progresion
             }
             if (!cartera.IntentarPagar(precio, MotivoDinero.Compra))
             {
-                Sonidos.Reproducir("ECO_SIN_DINERO");
+                Sonidos.Reproducir("UI_ERROR"); // T-1474
                 return false;
             }
             niveles[id] = Nivel(id) + 1;
