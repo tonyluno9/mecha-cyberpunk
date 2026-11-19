@@ -681,7 +681,7 @@ namespace MechaCyberpunk.Arte.Editor
         }
 
         /// <summary>
-        /// Las columnas de la rampa norte (tablero a 3 m o mas) miden 2.6 m: desde 10-25 m casi no se notan. Se engrosan a 3.9 m (como las del ramal de T-1415) para que la de primer plano de K18 llene 8-15 % del ancho.
+        /// Las columnas de la rampa norte (tablero a 3 m o mas) miden 2.6 m: desde 10-25 m casi no se notan. Se engrosan a 5 m (las gigantes de K18) para que la de primer plano de K18 llene 8-15 % del ancho.
         /// Idempotente: las que ya miden 3.3 m o mas no se tocan. Se re-centran para que el eje no se mueva.
         /// </summary>
         private static void EngrosarColumnasRampa(Transform raiz)
@@ -710,12 +710,12 @@ namespace MechaCyberpunk.Arte.Editor
                     continue;
                 }
                 float ancho = Mathf.Max(b.Value.size.x, b.Value.size.z);
-                if (ancho >= 3.3f)
+                if (ancho >= 4.7f)
                 {
                     ya++;
                     continue;
                 }
-                float f = Mathf.Clamp(3.9f / Mathf.Max(0.5f, ancho), 1f, 2f);
+                float f = Mathf.Clamp(5f / Mathf.Max(0.5f, ancho), 1f, 2.3f);
                 t.localScale = new Vector3(t.localScale.x * f, t.localScale.y, t.localScale.z * f);
                 Bounds? n = Caja(t.gameObject);
                 if (n.HasValue)
@@ -724,7 +724,7 @@ namespace MechaCyberpunk.Arte.Editor
                 }
                 hechas++;
             }
-            informe.AppendLine("Columnas de la rampa norte engrosadas a ~3.9 m: " + hechas + " (ya gruesas: " + ya + ", candidatas con tablero >= 3 m: " + cols.Count + ").");
+            informe.AppendLine("Columnas de la rampa norte engrosadas a ~5 m: " + hechas + " (ya gruesas: " + ya + ", candidatas con tablero >= 3 m: " + cols.Count + ").");
         }
 
         // ---------------------------------------------------------------- Marcas de camara
@@ -802,6 +802,135 @@ namespace MechaCyberpunk.Arte.Editor
             Directory.CreateDirectory("Logs");
             File.WriteAllText("Logs/t1464-marcas.txt", informe.ToString());
             Debug.Log("[Arte] T-1464 marcas:\n" + informe);
+        }
+
+        // ---------------------------------------------------------------- Mover la torre de reflectores
+
+        /// <summary>
+        /// Busca un sitio libre (sin colliders, con piso) para la torre de reflectores donde en K18 salga lejos arriba a la izquierda (x 0.08-0.38) y en A18 no caiga al centro (x 0.35-0.8),
+        /// usando las camaras de Logs/t1464-camara.txt (o las de las marcas por defecto) y la escena. Mueve TorreReflectores del prefab (con sus haces, que son hijos) y escribe Logs/t1464-torre.txt.
+        /// Correr ANTES de BuscarCamara (cambia la puntuacion de la torre).
+        /// </summary>
+        [MenuItem("Mecha Cyberpunk/T-1464/Autopista (mover torre de reflectores)")]
+        public static void MoverTorre()
+        {
+            StringBuilder s = new StringBuilder("T-1464 MoverTorre\n");
+            ColocarS2.Abrir();
+            Physics.SyncTransforms();
+            Transform torreEsc = Object.FindObjectsByType<Transform>(FindObjectsInactive.Include, FindObjectsSortMode.None).FirstOrDefault(t => t.name == "TorreReflectores");
+            if (torreEsc == null)
+            {
+                Debug.LogError("[Arte] T-1464 MoverTorre: no existe TorreReflectores en la escena.");
+                return;
+            }
+            Vector3 actual = torreEsc.position;
+            Dictionary<string, (Vector3 desde, Vector3 hacia)> c = LeerCamaras();
+            (Vector3 desde, Vector3 hacia) k = c.ContainsKey("K18") ? c["K18"] : (DesdeK18Defecto, HaciaK18Defecto);
+            (Vector3 desde, Vector3 hacia) a = c.ContainsKey("A18") ? c["A18"] : (DesdeA18Defecto, HaciaA18Defecto);
+            GameObject go = new GameObject("T1464_CamTorre") { hideFlags = HideFlags.HideAndDontSave };
+            Vector3? mejor = null;
+            float mejorPuntaje = 0.01f;
+            int libres = 0;
+            try
+            {
+                Camera camK = go.AddComponent<Camera>();
+                camK.enabled = false;
+                camK.aspect = Aspecto;
+                camK.fieldOfView = CampoK18;
+                camK.transform.SetPositionAndRotation(k.desde, Quaternion.LookRotation(k.hacia - k.desde));
+                GameObject go2 = new GameObject("T1464_CamTorre2") { hideFlags = HideFlags.HideAndDontSave };
+                Camera camA = go2.AddComponent<Camera>();
+                camA.enabled = false;
+                camA.aspect = Aspecto;
+                camA.fieldOfView = CampoA18;
+                camA.transform.SetPositionAndRotation(a.desde, Quaternion.LookRotation(a.hacia - a.desde));
+                try
+                {
+                    for (float x = -420f; x <= -100f + 0.01f; x += 10f)
+                    {
+                        for (float z = 40f; z <= 210f + 0.01f; z += 10f)
+                        {
+                            Vector3 sitio = new Vector3(x, actual.y, z);
+                            if (!Piso(x, z, out _))
+                            {
+                                continue;
+                            }
+                            Collider[] cs = Physics.OverlapBox(new Vector3(x, 40f, z), new Vector3(9f, 40f, 9f), Quaternion.identity, ~0, QueryTriggerInteraction.Ignore);
+                            if (cs.Any(col => !EsSueloBajo(col) && !col.transform.IsChildOf(torreEsc)))
+                            {
+                                continue;
+                            }
+                            libres++;
+                            Vector3 punta = sitio + Vector3.up * 65f;
+                            if (Vector3.Distance(sitio, k.desde) < 70f || Vector3.Distance(sitio, a.desde) < 90f)
+                            {
+                                continue;
+                            }
+                            Vector3 vk = camK.WorldToViewportPoint(punta);
+                            float sk = 0f;
+                            if (vk.z > 0f && !Tapado(k.desde, punta, 8f))
+                            {
+                                sk = Puntua(vk.x, 0.08f, 0.38f, 0.2f) * Puntua(vk.y, 0.6f, 0.95f, 0.25f);
+                            }
+                            Vector3 va = camA.WorldToViewportPoint(punta);
+                            float sa = va.z > 0f && va.x > 0.35f && va.x < 0.8f ? -2f : (va.z > 0f && va.x <= 0.35f ? 1f : 0.3f);
+                            float total = 3f * sk + 2f * sa - 0.005f * Vector3.Distance(sitio, actual);
+                            if (total > mejorPuntaje)
+                            {
+                                mejorPuntaje = total;
+                                mejor = sitio;
+                            }
+                        }
+                    }
+                }
+                finally
+                {
+                    Object.DestroyImmediate(go2);
+                }
+            }
+            finally
+            {
+                Object.DestroyImmediate(go);
+            }
+            s.AppendLine("Torre actual en " + V3(actual) + "; sitios libres con piso: " + libres + ".");
+            if (!mejor.HasValue)
+            {
+                s.AppendLine("Sin sitio mejor: la torre no se mueve.");
+                Debug.LogError("[Arte] T-1464 MoverTorre: no hay un sitio libre que mejore K18 y A18; la torre se queda.");
+            }
+            else
+            {
+                GameObject contenido = PrefabUtility.LoadPrefabContents(RutaPrefab);
+                try
+                {
+                    Transform torre = contenido.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "TorreReflectores");
+                    if (torre == null)
+                    {
+                        s.AppendLine("ERROR: TorreReflectores no esta en el prefab T1356_Autopista.");
+                        Debug.LogError("[Arte] T-1464 MoverTorre: la torre no esta en el prefab.");
+                    }
+                    else
+                    {
+                        Vector3 antes = torre.position;
+                        torre.position = new Vector3(mejor.Value.x, antes.y, mejor.Value.z);
+                        int hazFuera = contenido.GetComponentsInChildren<Transform>(true).Count(t => t.name.StartsWith("Haz") && !t.IsChildOf(torre));
+                        s.AppendLine("TORRE movida de " + V3(antes) + " a " + V3(torre.position) + " (puntaje " + F(mejorPuntaje) + "); haces que no son hijos de la torre: " + hazFuera + ".");
+                        if (hazFuera > 0)
+                        {
+                            Debug.LogError("[Arte] T-1464 MoverTorre: " + hazFuera + " haces no son hijos de la torre y no se movieron.");
+                        }
+                        PrefabUtility.SaveAsPrefabAsset(contenido, RutaPrefab);
+                    }
+                }
+                finally
+                {
+                    PrefabUtility.UnloadPrefabContents(contenido);
+                }
+            }
+            Directory.CreateDirectory("Logs");
+            File.WriteAllText("Logs/t1464-torre.txt", s.ToString());
+            Debug.Log("[Arte] " + s);
+            UnityEditor.SceneManagement.EditorSceneManager.OpenScene(ColocarS2.RutaEscena, UnityEditor.SceneManagement.OpenSceneMode.Single);
         }
 
         // ---------------------------------------------------------------- Busqueda de camaras (en la escena con el prefab aplicado)
@@ -1351,17 +1480,26 @@ namespace MechaCyberpunk.Arte.Editor
                     foreach (Animator an in pe.GetComponentsInChildren<Animator>(true))
                     {
                         an.cullingMode = AnimatorCullingMode.AlwaysAnimate;
-                        if (an.runtimeAnimatorController != null)
+                        // En el editor el Animator no corre: se muestrea el clip (caminar o idle) para que no salgan en pose T.
+                        AnimationClip[] clips = an.runtimeAnimatorController != null ? an.runtimeAnimatorController.animationClips : new AnimationClip[0];
+                        string[] claves = camina ? new[] { "walk", "camin", "idle" } : new[] { "idle", "reposo", "walk" };
+                        AnimationClip clip = null;
+                        foreach (string clave in claves)
                         {
-                            foreach (AnimatorControllerParameter par in an.parameters)
+                            clip = clips.FirstOrDefault(cl => cl != null && cl.name.ToLowerInvariant().Contains(clave));
+                            if (clip != null)
                             {
-                                if (par.type == AnimatorControllerParameterType.Float && par.name.ToLowerInvariant().Contains("vel"))
-                                {
-                                    an.SetFloat(par.name, camina ? 1.4f : 0f);
-                                }
+                                break;
                             }
-                            an.Play(0, 0, (float)azar.NextDouble());
-                            an.Update(0f);
+                        }
+                        clip = clip ?? clips.FirstOrDefault(cl => cl != null);
+                        if (clip != null)
+                        {
+                            clip.SampleAnimation(an.gameObject, (float)azar.NextDouble() * Mathf.Max(0.1f, clip.length));
+                        }
+                        else
+                        {
+                            informe.AppendLine("Peaton " + pe.name + ": sin clips en su controlador (queda en la pose del prefab).");
                         }
                     }
                     usados.Add(p);

@@ -32,3 +32,8 @@ Faroles, estelas >= 30, vida minima, luces <= 40, ramal abierto, K18 (boca x .65
 - BuscarCamara K18 busca en dos zonas: calle baja (sur) y hueco al norte del ramal (mirando al suroeste), 4-6 m de alto; columnas de rampa, del ramal y del principal; las dos bocas (principal y del ramal) a la derecha de la columna; casas Casa_* a la izquierda.
 - A18: mas cerca (x -160..40, z 290..400), exige columnas visibles por rayo y penaliza la torre en x 0.35-0.8.
 - Validar: rampa, torre, casas y PoblarFoto pasan a AVISO; columna, boca (cualquiera) y A18 siguen siendo FALLO.
+
+## Ronda 4
+- MoverTorre (nuevo, correr antes de BuscarCamara): elige un sitio libre para TorreReflectores segun las camaras K18/A18 y la mueve en el prefab.
+- Columnas de la rampa a ~5 m.
+- PoblarFoto muestrea el clip idle/caminar con SampleAnimation (sin pose T).
