@@ -46,13 +46,13 @@ namespace MechaCyberpunk.Arte.Editor
 
         // Sodio
         private static readonly Color Sodio = new Color(1f, 0.55f, 0.2f);
-        private const float IntensidadSodio = 900f;
-        private const float AlcanceSodio = 28f;
+        private const float IntensidadSodio = 160f;
+        private const float AlcanceSodio = 20f;
         private const float AnguloSodio = 120f;
         private const float AnguloInteriorSodio = 50f;
         // Neón
-        private const float IntensidadNeon = 16f;
-        private const float AlcanceNeon = 11f;
+        private const float IntensidadNeon = 10f;
+        private const float AlcanceNeon = 9f;
         private const int CupoLucesNeon = 30; // Opus: la escena ya tenía 1330 Light; con T-1463 y T-1464 el tope de 1400 no da para 80
         private const int CupoDerrames = 220;
         private const float CeldaNeon = 4f;
@@ -65,8 +65,8 @@ namespace MechaCyberpunk.Arte.Editor
         private const float DerrameParedAlto = 4.5f;
         private const float FuerzaDerramePared = 0.7f;
         // Halos y conos
-        private const float RadioHalo = 6.5f;
-        private const float IntensidadHalo = 1.6f;
+        private const float RadioHalo = 1.3f;
+        private const float IntensidadHalo = 0.7f;
         private const float BajoElFarol = 0.3f;
         private const int LadosCono = 20;
         private const float FactorRadioCono = 0.55f;
@@ -74,11 +74,11 @@ namespace MechaCyberpunk.Arte.Editor
         private const float BrilloAsfalto = 0.78f;
         private const float BrilloBanqueta = 0.5f;
         // Charcos
-        private const float CharcoMin = 5.5f;
-        private const float CharcoMax = 11f;
-        private const int CharcosMaxPorZona = 40;
-        private const int CharcosMinPorZona = 12;
-        private const float SeparacionCharcos = 5.5f;
+        private const float CharcoMin = 2.2f;
+        private const float CharcoMax = 6f;
+        private const int CharcosMaxPorZona = 70;
+        private const int CharcosMinPorZona = 30;
+        private const float SeparacionCharcos = 3.2f;
         private const float MargenBanqueta = 1.2f;
         private const float PisoMinimoCharco = -0.3f;
         private const float PisoMaximoCharco = 0.55f;
@@ -92,8 +92,8 @@ namespace MechaCyberpunk.Arte.Editor
         private const int ResolucionSonda = 128;
         private const float MegasMaximosSondas = 40f;
         // Niebla y posproceso (a nivel de calle)
-        private static readonly Color NieblaNoche = new Color(0.24f, 0.38f, 0.5f);
-        private const float DensidadNoche = 0.0065f;
+        private static readonly Color NieblaNoche = new Color(0.30f, 0.40f, 0.50f);
+        private const float DensidadNoche = 0.009f;
         private const int TopeLuces = 1400;
 
         private static readonly StringBuilder Informe = new StringBuilder();
@@ -187,6 +187,9 @@ namespace MechaCyberpunk.Arte.Editor
 
             // 3) El halo de T-1399 se reemplaza por el de este prefab
             QuitarHalosViejos();
+
+            // 3b) El piso que de verdad pisa la cámara: el material que golpea un rayo en la calle y la banqueta
+            PisoReal(instancias);
 
             // 4) El prefab T1461_Look
             List<DatosZona> datos = Recolectar(instancias);
@@ -335,6 +338,164 @@ namespace MechaCyberpunk.Arte.Editor
             }
             Informe.AppendLine("Faroles de sodio: " + sodio + " (intensidad " + IntensidadSodio + ", alcance " + topeAlcance + ", cono " + AnguloSodio + "/" + AnguloInteriorSodio + "); luces de neón reforzadas: " + neones
                 + " (" + IntensidadNeon + ", alcance " + Mathf.Min(AlcanceNeon, topeAlcance) + "); materiales de piso con más brillo: " + suelos);
+        }
+
+        // Lanza rayos hacia abajo sobre la línea de cada calle (asfalto) y a sus lados (banqueta) y arregla el material que de verdad golpean,
+        // sea cual sea su nombre: smoothness, algo de metálico en el asfalto (para que dé reflejo de las sondas) y reflexiones activadas.
+        // Los materiales S2c_* o importados se copian como T1461_*; el renderer se cambia con overrides de la instancia en la escena.
+        private static void PisoReal(Dictionary<string, Transform> instancias)
+        {
+            Physics.SyncTransforms();
+            Informe.AppendLine();
+            Informe.AppendLine("== Piso real (material bajo los rayos en la calle y la banqueta)");
+            LogUrp();
+            HashSet<Renderer> hechos = new HashSet<Renderer>();
+            foreach (string zona in Zonas)
+            {
+                if (!instancias.TryGetValue(zona, out Transform inst))
+                {
+                    continue;
+                }
+                int asfalto = 0, banqueta = 0;
+                Dictionary<string, int> vistos = new Dictionary<string, int>();
+                foreach (CalleZona cz in inst.GetComponentsInChildren<CalleZona>(true))
+                {
+                    List<Vector3> p = cz.Puntos();
+                    float acum = 0f, sig = 0f;
+                    for (int i = 0; i + 1 < p.Count; i++)
+                    {
+                        float seg = Vector3.Distance(p[i], p[i + 1]);
+                        if (seg < 0.001f)
+                        {
+                            continue;
+                        }
+                        Vector3 tang = (p[i + 1] - p[i]) / seg;
+                        Vector3 lado = Vector3.Cross(Vector3.up, tang).normalized;
+                        while (sig <= acum + seg)
+                        {
+                            Vector3 c = p[i] + tang * (sig - acum);
+                            asfalto += TocarPiso(c, true, hechos, vistos);
+                            if (cz.Banquetas)
+                            {
+                                banqueta += TocarPiso(c + lado * (cz.Ancho * 0.5f + 1.2f), false, hechos, vistos);
+                                banqueta += TocarPiso(c - lado * (cz.Ancho * 0.5f + 1.2f), false, hechos, vistos);
+                            }
+                            sig += 6f;
+                        }
+                        acum += seg;
+                    }
+                }
+                Informe.AppendLine(zona + ": renderers de asfalto arreglados " + asfalto + ", de banqueta " + banqueta);
+                foreach (KeyValuePair<string, int> kv in vistos.OrderByDescending(k => k.Value))
+                {
+                    Informe.AppendLine("    bajo el rayo: " + kv.Key + " x" + kv.Value);
+                }
+            }
+        }
+
+        private static int TocarPiso(Vector3 punto, bool esAsfalto, HashSet<Renderer> hechos, Dictionary<string, int> vistos)
+        {
+            if (!Physics.Raycast(punto + Vector3.up * 3f, Vector3.down, out RaycastHit golpe, 12f, ~(1 << ReflejoCharcos.CapaCharcos), QueryTriggerInteraction.Ignore))
+            {
+                return 0;
+            }
+            Renderer r = golpe.collider.GetComponent<Renderer>() ?? golpe.collider.GetComponentInParent<Renderer>() ?? golpe.collider.GetComponentInChildren<Renderer>();
+            if (r == null || r is ParticleSystemRenderer)
+            {
+                return 0;
+            }
+            Material[] ms = r.sharedMaterials;
+            foreach (Material m in ms)
+            {
+                if (m != null)
+                {
+                    string k = (esAsfalto ? "[asfalto] " : "[banqueta] ") + m.name + " (" + m.shader.name + ", smoothness " + (m.HasProperty("_Smoothness") ? m.GetFloat("_Smoothness").ToString("F2") : "n/a") + ")";
+                    vistos[k] = vistos.TryGetValue(k, out int n) ? n + 1 : 1;
+                }
+            }
+            if (!hechos.Add(r))
+            {
+                return 0;
+            }
+            bool cambio = false;
+            for (int i = 0; i < ms.Length; i++)
+            {
+                Material m = ms[i];
+                if (m == null || !m.HasProperty("_Smoothness"))
+                {
+                    continue;
+                }
+                string n = m.name.ToLowerInvariant();
+                if (n.Contains("charco") || n.Contains("marca") || n.Contains("linea") || n.Contains("cebra") || n.Contains("agua") || n.Contains("mar") && !n.Contains("marmol"))
+                {
+                    continue;
+                }
+                float brillo = esAsfalto ? BrilloAsfalto : BrilloBanqueta;
+                float metal = esAsfalto ? 0.3f : 0.1f;
+                bool falta = m.GetFloat("_Smoothness") < brillo - 0.001f || (m.HasProperty("_Metallic") && m.GetFloat("_Metallic") < metal - 0.001f);
+                if (!falta)
+                {
+                    continue;
+                }
+                string ruta = AssetDatabase.GetAssetPath(m);
+                Material destino = m;
+                if (!ruta.EndsWith(".mat") || m.name.StartsWith("S2c_"))
+                {
+                    destino = CopiaPropia(m, brillo);
+                    ms[i] = destino;
+                    cambio = true;
+                }
+                else
+                {
+                    CambiosMateriales.Add(m.name + "|" + ruta + "|" + m.GetFloat("_Smoothness").ToString("F2") + "|" + brillo.ToString("F2"));
+                }
+                destino.SetFloat("_Smoothness", Mathf.Max(destino.GetFloat("_Smoothness"), brillo));
+                if (destino.HasProperty("_Metallic"))
+                {
+                    destino.SetFloat("_Metallic", Mathf.Max(destino.GetFloat("_Metallic"), metal));
+                }
+                if (destino.HasProperty("_EnvironmentReflections"))
+                {
+                    destino.SetFloat("_EnvironmentReflections", 1f);
+                    destino.DisableKeyword("_ENVIRONMENTREFLECTIONS_OFF");
+                }
+                if (destino.HasProperty("_SpecularHighlights"))
+                {
+                    destino.SetFloat("_SpecularHighlights", 1f);
+                    destino.DisableKeyword("_SPECULARHIGHLIGHTS_OFF");
+                }
+                EditorUtility.SetDirty(destino);
+            }
+            if (cambio)
+            {
+                r.sharedMaterials = ms;
+            }
+            if (r.reflectionProbeUsage == ReflectionProbeUsage.Off)
+            {
+                r.reflectionProbeUsage = ReflectionProbeUsage.BlendProbes;
+                cambio = true;
+            }
+            if (cambio)
+            {
+                PrefabUtility.RecordPrefabInstancePropertyModifications(r);
+            }
+            return 1;
+        }
+
+        private static void LogUrp()
+        {
+            RenderPipelineAsset rp = GraphicsSettings.currentRenderPipeline;
+            if (rp == null)
+            {
+                Informe.AppendLine("URP: sin asset activo.");
+                return;
+            }
+            SerializedObject so = new SerializedObject(rp);
+            foreach (string nombre in new[] { "m_ReflectionProbeBlending", "m_ReflectionProbeBoxProjection", "m_SupportsHDR" })
+            {
+                SerializedProperty sp = so.FindProperty(nombre);
+                Informe.AppendLine("URP " + rp.name + " " + nombre + " = " + (sp != null ? sp.boolValue.ToString() : "(no existe)"));
+            }
         }
 
         // Asfalto y banquetas por el nombre del material. null: no es piso.
@@ -591,7 +752,7 @@ namespace MechaCyberpunk.Arte.Editor
             matHalo.SetFloat("_Tamano", RadioHalo);
             Material matCono = HacerMaterial(CarpetaLook + "/T1461_ConoSodio.mat", "MechaCyberpunk/Mundo/HaloLuz");
             matCono.SetColor("_Color", Sodio);
-            matCono.SetFloat("_Intensidad", 0.3f);
+            matCono.SetFloat("_Intensidad", 0.12f);
             matCono.SetFloat("_Borde", 3.4f);
             matCono.SetFloat("_Caida", 2f);
             matCono.SetFloat("_Suave", 0.8f);
@@ -849,10 +1010,11 @@ namespace MechaCyberpunk.Arte.Editor
             System.Random azar = new System.Random(1461 + z.Corto.Length * 7 + z.Corto[0]);
             List<Vector3> anclas = new List<Vector3>(z.Faroles);
             anclas.AddRange(z.Neones.Where(n => conLuz.Contains(n) || n.YaTieneLuz).Select(n => n.Centro));
+            anclas.AddRange(anclas.ToList()); // dos charcos por ancla
             List<Vector3> ocupados = new List<Vector3>(z.CharcosViejos);
             int puestos = 0;
             int intentos = 0;
-            while (puestos < CharcosMaxPorZona && intentos < anclas.Count + 200)
+            while (puestos < CharcosMaxPorZona && intentos < anclas.Count + 800)
             {
                 intentos++;
                 Vector3 ancla;
@@ -876,7 +1038,7 @@ namespace MechaCyberpunk.Arte.Editor
                     continue;
                 }
                 float tamano = Mathf.Lerp(CharcoMin, CharcoMax, (float)azar.NextDouble());
-                tamano = Mathf.Min(tamano, Mathf.Max(3f, m.Ancho - 2f * MargenBanqueta));
+                tamano = Mathf.Min(tamano, Mathf.Max(2f, m.Ancho - 2f * MargenBanqueta));
                 float lateralMax = Mathf.Max(0f, m.Ancho * 0.5f - MargenBanqueta - tamano * 0.5f);
                 Vector3 plano = new Vector3(m.Tangente.x, 0f, m.Tangente.z);
                 if (plano.sqrMagnitude < 0.0001f)
@@ -1016,13 +1178,13 @@ namespace MechaCyberpunk.Arte.Editor
             if (zonas != null)
             {
                 ColorAdjustments ca = Componente<ColorAdjustments>(zonas);
-                ca.postExposure.Override(0.6f);
-                ca.contrast.Override(24f);
-                ca.saturation.Override(14f);
+                ca.postExposure.Override(0.9f);
+                ca.contrast.Override(9f);
+                ca.saturation.Override(0f);
                 Bloom bloom = Componente<Bloom>(zonas);
-                bloom.threshold.Override(0.9f);
-                bloom.intensity.Override(2.4f);
-                bloom.scatter.Override(0.72f);
+                bloom.threshold.Override(1.2f);
+                bloom.intensity.Override(0.9f);
+                bloom.scatter.Override(0.6f);
                 bloom.tint.Override(new Color(1f, 0.93f, 0.85f));
                 EditorUtility.SetDirty(zonas);
                 Informe.AppendLine(RutaPerfilZonas + ": exposición +0.6, contraste 24, saturación 14, bloom umbral 0.9 intensidad 2.4 difusión 0.72 con tinte cálido");
@@ -1036,17 +1198,17 @@ namespace MechaCyberpunk.Arte.Editor
             {
                 // Este perfil (prioridad 12) ganaba sobre el de T-1392 con contraste 3 y los lift levantados: la causa del azul plano.
                 ColorAdjustments ca = Componente<ColorAdjustments>(bruma);
-                ca.postExposure.Override(0.6f);
-                ca.contrast.Override(28f);
-                ca.saturation.Override(14f);
+                ca.postExposure.Override(0.9f);
+                ca.contrast.Override(10f);
+                ca.saturation.Override(0f);
                 LiftGammaGain lgg = Componente<LiftGammaGain>(bruma);
-                lgg.lift.Override(new Vector4(0.95f, 1f, 1.04f, -0.05f));
+                lgg.lift.Override(new Vector4(0.94f, 1f, 1.1f, 0.06f));
                 lgg.gamma.Override(new Vector4(1f, 1f, 1f, 0f));
                 lgg.gain.Override(new Vector4(1.05f, 1f, 0.95f, 0f));
                 ShadowsMidtonesHighlights smh = Componente<ShadowsMidtonesHighlights>(bruma);
-                smh.shadows.Override(new Vector4(0.86f, 1f, 1.08f, -0.04f));
+                smh.shadows.Override(new Vector4(0.9f, 1f, 1.1f, 0.05f));
                 smh.midtones.Override(new Vector4(1f, 1f, 1f, 0f));
-                smh.highlights.Override(new Vector4(1.1f, 1f, 0.88f, 0.04f));
+                smh.highlights.Override(new Vector4(1.06f, 1f, 0.92f, 0f));
                 EditorUtility.SetDirty(bruma);
                 Informe.AppendLine(RutaPerfilBruma + ": contraste 28 (era 3), lift petróleo con negro más profundo, gain y altas luces cálidas, sombras hacia petróleo");
             }
