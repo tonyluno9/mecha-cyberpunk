@@ -923,6 +923,11 @@ namespace MechaCyberpunk.Arte.Editor
                 {
                     quitar = Volumen(a) <= Volumen(b) ? a : b;
                 }
+                // K15: las lámparas, neones y tinacos de las bodegas del Puerto (T-1396) son parte del look; no se quitan.
+                if (quitar != null && (quitar.name.StartsWith("LamparaSodio_PU0") || quitar.name.StartsWith("Tinaco_PU0") || quitar.name.StartsWith("Neon_PU0")))
+                {
+                    continue;
+                }
                 if (Registrar(quitar, "apagar", Vector3.zero, e.Tipo + " " + e.Medida.ToString("F2") + (e.Detalle != null ? " {" + e.Detalle + "}" : "")))
                 {
                     n++;
