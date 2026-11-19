@@ -31,7 +31,7 @@ namespace MechaCyberpunk.Arte.Editor
         private const string RutaPalmera = "Assets/Arte/Zonas/AR/AR03_Palmera.prefab";
         private const string RutaFarol = "Assets/Arte/Zonas/ML/ML01_Farol.prefab";
 
-        private static readonly Vector3 CamaraK11 = new Vector3(40f, 1.95f, -235.6f);
+        internal static readonly Vector3 CamaraK11 = new Vector3(40f, 1.95f, -235.6f);
         private const float RadioSinPalmera = 6.5f;
 
         // Skyline: el arco SK01 mide 900 m de radio y 180 m de alto, 120 grados, con el centro en el origen del prefab.
@@ -57,7 +57,7 @@ namespace MechaCyberpunk.Arte.Editor
         private static readonly StringBuilder Informe = new StringBuilder();
         private static readonly Dictionary<string, Bounds> medidas = new Dictionary<string, Bounds>();
 
-        private static Vector3 CamaraK12 => new Vector3(104f, 2.3f, ColocarT1354Curva.ZCentro(104f) - 10f);
+        internal static Vector3 CamaraK12 => new Vector3(104f, 2.3f, ColocarT1354Curva.ZCentro(104f) - 10f);
         private static Vector3 MiraK12 => new Vector3(20f, 2.2f, ColocarT1354Curva.ZCentro(20f) - 3f);
 
         // ================================================================ Aplicar
@@ -301,7 +301,7 @@ namespace MechaCyberpunk.Arte.Editor
 
         // ================================================================ Fachadas: neones, aires y toldos
 
-        private static float DistanciaACamaras(Vector3 p)
+        internal static float DistanciaACamaras(Vector3 p)
         {
             Vector2 q = new Vector2(p.x, p.z);
             float d = Vector2.Distance(q, new Vector2(CamaraK11.x, CamaraK11.z));
@@ -387,7 +387,7 @@ namespace MechaCyberpunk.Arte.Editor
         }
 
         /// <summary>Instancia un prefab del kit con su cara de atrás (+Z local) contra el muro en <paramref name="punto"/> y la cara al frente mirando a <paramref name="normal"/>.</summary>
-        private static GameObject PonerAnclado(GameObject prefab, Transform padre, Vector3 punto, Vector3 normal, float escala, string nombre, bool desdeArriba)
+        internal static GameObject PonerAnclado(GameObject prefab, Transform padre, Vector3 punto, Vector3 normal, float escala, string nombre, bool desdeArriba)
         {
             Bounds mb = Medida(prefab);
             if (mb.size.x < 0.05f)
@@ -409,7 +409,7 @@ namespace MechaCyberpunk.Arte.Editor
         }
 
         /// <summary>Material emisivo (RealtimeEmissive) en los renderers del letrero: copia del material del kit con la emisión del color del neón.</summary>
-        private static void Brillar(Transform neon, Color color)
+        internal static void Brillar(Transform neon, Color color)
         {
             string clave = color == KitS2c.Magenta ? "Magenta" : color == KitS2c.Turquesa ? "Turquesa" : "Ambar";
             foreach (Renderer r in neon.GetComponentsInChildren<Renderer>(true))
@@ -510,7 +510,7 @@ namespace MechaCyberpunk.Arte.Editor
             Informe.AppendLine("Paseo extra: " + nP + " palmeras, " + nF + " faroles (" + luces + " con spot de sodio sin sombras, el resto solo halo); fuera de " + RadioSinPalmera + " m de K11 y K12.");
         }
 
-        private static List<Bounds> Ocupado(Transform raiz)
+        internal static List<Bounds> Ocupado(Transform raiz)
         {
             List<Bounds> lista = new List<Bounds>();
             foreach (string grupo in new[] { "Paseo", "Postes", "Muelle", Raiz1384 })
@@ -531,7 +531,7 @@ namespace MechaCyberpunk.Arte.Editor
             return lista;
         }
 
-        private static GameObject Colocar(GameObject prefab, Transform padre, Vector3 suelo, Quaternion giro, float escala, List<Bounds> ocupado, string nombre)
+        internal static GameObject Colocar(GameObject prefab, Transform padre, Vector3 suelo, Quaternion giro, float escala, List<Bounds> ocupado, string nombre)
         {
             Bounds mb = Medida(prefab);
             Vector3 ancla = new Vector3(mb.center.x, mb.min.y, mb.center.z) * escala;
@@ -760,7 +760,7 @@ namespace MechaCyberpunk.Arte.Editor
             Escribir("t1393-validar");
         }
 
-        private static IEnumerable<Vector3> Esquinas(Bounds b)
+        internal static IEnumerable<Vector3> Esquinas(Bounds b)
         {
             for (int i = 0; i < 8; i++)
             {
@@ -794,7 +794,7 @@ namespace MechaCyberpunk.Arte.Editor
 
         // ================================================================ Ayudas
 
-        private static Bounds CajaDe(GameObject go)
+        internal static Bounds CajaDe(GameObject go)
         {
             Bounds b = new Bounds();
             bool hay = false;
@@ -807,7 +807,7 @@ namespace MechaCyberpunk.Arte.Editor
         }
 
         /// <summary>Como CajaDe pero cuenta también los renderers de objetos apagados (la casa que ML05 reemplazó).</summary>
-        private static Bounds CajaTodo(GameObject go)
+        internal static Bounds CajaTodo(GameObject go)
         {
             Bounds b = new Bounds();
             bool hay = false;
@@ -819,7 +819,7 @@ namespace MechaCyberpunk.Arte.Editor
             return hay ? b : new Bounds(go.transform.position, Vector3.zero);
         }
 
-        private static Bounds Medida(GameObject prefab)
+        internal static Bounds Medida(GameObject prefab)
         {
             if (prefab == null)
             {
