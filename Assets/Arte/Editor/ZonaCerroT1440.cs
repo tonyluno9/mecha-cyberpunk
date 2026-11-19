@@ -186,11 +186,19 @@ namespace MechaCyberpunk.Arte.Editor
                 Paso("carros", () => Carros(c));
                 Paso("taludes con muros CC08", () => Taludes(c));
                 Paso("neones y ventanas calidas", () => Fachadas(c));
-                Paso("combinar accesos viejos", () => CombinarAccesosViejos(c, "AccesosCombinados"));
+                // Ronda 11: CombinarAccesosViejos / CombinarHijos / CombinarPisosKit quedan SIN LLAMAR (sus mallas pesaban >100 MB como asset de texto).
+                // Restaurar (al empezar Aplicar) vuelve a encender los Riel y Peldano que apagaba.
                 Paso("cámara A13 (fija)", () => Camara(c));
                 Paso("mallas sueltas", () => MallasSueltas(c));
                 Estatico(c);
+                LogMallas(c);
                 KitS2c.Terminar(c.Obra);
+                string rutaMallas = KitS2c.CarpetaMallas + "/" + Raiz + ".asset";
+                Log("Asset de mallas " + rutaMallas + ": " + Megas(rutaMallas) + " MB en disco (tope 20 MB; GitHub rechaza más de 100 MB).");
+                if (File.Exists(Path.Combine(Directory.GetParent(Application.dataPath).FullName, rutaMallas)) && new FileInfo(Path.Combine(Directory.GetParent(Application.dataPath).FullName, rutaMallas)).Length > 20L * 1024 * 1024)
+                {
+                    Log("AVISO: el asset de mallas pasa de 20 MB.");
+                }
                 int luces = zona.GetComponentsInChildren<Light>(true).Length;
                 int nuevas = c.Nuevo.GetComponentsInChildren<Light>(true).Length;
                 int objetos = c.Nuevo.GetComponentsInChildren<Transform>(true).Length;
@@ -223,6 +231,37 @@ namespace MechaCyberpunk.Arte.Editor
                 PrefabUtility.UnloadPrefabContents(zona);
             }
             Escribir(RutaInforme, informe);
+        }
+
+        /// <summary>Tamaño estimado en memoria de cada malla que se va a guardar (vértices x atributos + índices); anota las 8 más grandes y el total.</summary>
+        private static void LogMallas(Ctx c)
+        {
+            List<(string nombre, long bytes, int vertices, int triangulos)> l = new List<(string, long, int, int)>();
+            foreach (Mesh m in c.Obra.Mallas)
+            {
+                if (m == null)
+                {
+                    continue;
+                }
+                long bytes = 0;
+                for (int s = 0; s < m.vertexBufferCount; s++)
+                {
+                    bytes += (long)m.vertexCount * m.GetVertexBufferStride(s);
+                }
+                long indices = 0;
+                for (int s = 0; s < m.subMeshCount; s++)
+                {
+                    indices += m.GetIndexCount(s);
+                }
+                bytes += indices * (m.indexFormat == UnityEngine.Rendering.IndexFormat.UInt32 ? 4 : 2);
+                l.Add((m.name, bytes, m.vertexCount, (int)(indices / 3)));
+            }
+            long total = l.Sum(x => x.bytes);
+            Log("Mallas a guardar: " + l.Count + ", ~" + (total / 1048576f).ToString("0.0", CultureInfo.InvariantCulture) + " MB en memoria (como texto en disco pesan ~3-4 veces más).");
+            foreach (var x in l.OrderByDescending(q => q.bytes).Take(8))
+            {
+                Log("  " + x.nombre + ": " + (x.bytes / 1024f).ToString("0", CultureInfo.InvariantCulture) + " KB, " + x.vertices + " vértices, " + x.triangulos + " triángulos.");
+            }
         }
 
         private static void Paso(string nombre, Action accion)
@@ -1544,8 +1583,6 @@ namespace MechaCyberpunk.Arte.Editor
             ObjetoMalla(c, padre, "TubosBarandal", tubos, c.Tubo, false, true);
             Physics.SyncTransforms();
             Log("Escaleras de ladera: " + elegidas.Count + ".");
-            CombinarHijos(c, padre, "BarandalesCombinados", n => n.StartsWith("CE03_Barandal_"));
-            CombinarHijos(c, padre, "MurosCombinados", n => n.StartsWith("Muros_"));
             Physics.SyncTransforms();
         }
 
@@ -2250,6 +2287,49 @@ namespace MechaCyberpunk.Arte.Editor
                             }
                         }
                     }
+                    // Colliders ajenos dentro del cuerpo de un piso (lo que revisa Validar; el collider puede ser más grande que lo visible): se apaga el adorno, o el piso si no se puede.
+                    foreach (Transform piso in pisos.Cast<Transform>().Where(t => t.gameObject.activeSelf && t.name.StartsWith("Piso_")).ToList())
+                    {
+                        Bounds bp = CajaPiso(piso);
+                        int hay = c.Fisica.OverlapBox(bp.center, bp.extents - new Vector3(0.08f, 0.08f, 0.08f), bufCol, Quaternion.identity, ~0, QueryTriggerInteraction.Ignore);
+                        List<Transform> aQuitar = new List<Transform>();
+                        bool sinSalida = false;
+                        for (int i = 0; i < hay; i++)
+                        {
+                            Transform tc = bufCol[i].transform;
+                            if (tc.IsChildOf(piso) || bufCol[i].isTrigger || EsPiso(c, tc) || tc.IsChildOf(c.Nuevo) || c.Apagadas.Contains(tc))
+                            {
+                                continue;
+                            }
+                            if (bufCol[i].bounds.min.y <= bp.min.y - 0.05f)
+                            {
+                                continue; // la azotea de abajo
+                            }
+                            if (EsProtegido(c, tc) || bufCol[i].bounds.size.x > 5f || bufCol[i].bounds.size.z > 5f)
+                            {
+                                sinSalida = true;
+                                break;
+                            }
+                            aQuitar.Add(Unidad(c, tc, 4.5f, 6f));
+                        }
+                        if (sinSalida)
+                        {
+                            Transform acc0 = pisos.Find("Acceso_" + piso.name);
+                            if (acc0 != null)
+                            {
+                                Apagar(c, acc0, "acceso de un piso con algo que no se puede quitar");
+                            }
+                            Apagar(c, piso, "piso con un collider ajeno que no se puede quitar");
+                            n++;
+                            continue;
+                        }
+                        foreach (Transform q in aQuitar)
+                        {
+                            Apagar(c, q, "collider de adorno dentro de " + piso.name);
+                            n++;
+                        }
+                    }
+                    Physics.SyncTransforms();
                     // Pisos sin apoyo (la casa de abajo se apagó, o el apoyo quedó a más de 0.3 m): se apagan, en pasadas porque un segundo piso puede apoyar en el primero.
                     for (int pasada = 0; pasada < 3; pasada++)
                     {
@@ -2278,9 +2358,11 @@ namespace MechaCyberpunk.Arte.Editor
                     Physics.SyncTransforms();
                     int rA, rB;
                     long bA = Batches(zona.transform, out rA);
-                    CombinarAccesosViejos(c, "AccesosCombinados2");
-                    CombinarPisosKit(c, pisos);
-                    GuardarExtra(c);
+                    // Ronda 11: sin combinar (CombinarAccesosViejos / CombinarPisosKit / GuardarExtra ya no se llaman); T1440_Combinados.asset ya no se crea.
+                    if (c.Nuevo.Find("PisosKitCombinados") == null && c.Nuevo.Find("AccesosCombinados2") == null)
+                    {
+                        AssetDatabase.DeleteAsset(CarpetaMat + "/T1440_Combinados.asset");
+                    }
                     Physics.SyncTransforms();
                     long bB = Batches(zona.transform, out rB);
                     Log("Renderers de la zona: " + rA + " -> " + rB + "; batches estimados " + bA + " -> " + bB + ".");
