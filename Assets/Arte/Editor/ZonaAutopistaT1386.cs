@@ -13,7 +13,7 @@ namespace MechaCyberpunk.Arte.Editor
     /// T-1386: deja la Autopista elevada como K18 y A18. Edita el prefab Assets/Arte/Mundo/Zonas/T1356_Autopista.prefab (no la escena) y pone todo lo
     /// nuevo bajo el hijo raíz "T1386_Autopista", que Aplicar borra y rehace (se puede correr dos veces). NO corras ColocarT1356Autopista.Aplicar:
     /// rehace la zona y borra los arreglos de T-1360 a T-1377.
-    /// Qué hace: barreras AU02 en los bordes del tablero y la rampa (en lugar del guardarraíl AU05, que se apaga; el collider del parapeto sigue cerrando
+    /// Qué hace: barreras AU02 en los bordes del tablero y la rampa (en lugar del parapeto liso, que pierde el renderer; su collider sigue cerrando
     /// el borde); chatarra AU03 bajo el puente; casas de 2 y 3 pisos con letreros, cables, semáforo y carros en la calle baja de K18; torre con reflectores
     /// al fondo; roca del cerro más clara. Métodos: Aplicar, Validar y Fotos (las fotos, en una corrida de Unity aparte).
     /// </summary>
@@ -35,8 +35,6 @@ namespace MechaCyberpunk.Arte.Editor
         private const float MedioTablero = 7.2f;
         private const float AltoBarrera = 0.9f;
         private const float AnchoMaxBarrera = 0.7f;
-        private const float ZCalleBaja = 216f;
-        private const float ZFilaSur = 210f;
         private const int MaxObjetosNuevos = 3000;
         private const float PisoFoto = 3.2f;
 
@@ -254,7 +252,7 @@ namespace MechaCyberpunk.Arte.Editor
         // ---------------------------------------------------------------- Barreras AU02
 
         /// <summary>
-        /// Barreras de concreto AU02 pegadas al borde exterior del tablero (principal y rampa norte), en los mismos sitios del guardarraíl AU05, que se
+        /// Barreras de concreto AU02 pegadas al borde exterior del tablero (principal y rampa norte), en los mismos tramos del parapeto liso, que se
         /// apaga (solo tenía visuales, sin collider). El parapeto invisible con collider sigue cerrando el borde, así que no hay muros invisibles nuevos
         /// ni borde abierto.
         /// </summary>
@@ -293,9 +291,9 @@ namespace MechaCyberpunk.Arte.Editor
                     foreach (float lado in new[] { -1f, 1f })
                     {
                         Vector3 afuera = der * lado;
-                        if (EnOtroTablero(pt + afuera * (MedioTablero - 0.35f), pt.y, otraDensa))
+                        if (pt.y < 1f || EnOtroTablero(pt + afuera * (MedioTablero - 0.35f), pt.y, otraDensa))
                         {
-                            continue;
+                            continue; // misma regla que el parapeto: a ras del piso es la entrada de la calle
                         }
                         Quaternion giro = largoX ? Quaternion.LookRotation(Vector3.Cross(tg, Vector3.up)) : Quaternion.LookRotation(tg);
                         Vector3 escala = largoX ? new Vector3(esc * escLargo, esc, esc) : new Vector3(esc, esc, esc * escLargo);
@@ -308,11 +306,34 @@ namespace MechaCyberpunk.Arte.Editor
                 }
             }
             informe.AppendLine("AU02: " + puestas + " barreras puestas");
-            if (Encuentra(raiz, "Guardarrail", out Transform guardarrail))
+            // El parapeto liso (Parapeto_* con collider y su _Tapa visual) deja de verse: su collider sigue cerrando el borde y las AU02 lo cubren.
+            int ocultos = 0;
+            int tapas = 0;
+            foreach (string tramo in new[] { "Tablero/Principal", "Tablero/RampaNorte" })
             {
-                guardarrail.gameObject.SetActive(false);
-                informe.AppendLine("Se apagó T1356_Autopista/Guardarrail (AU05 solo visual, sin collider): lo reemplazan las AU02.");
+                if (!Encuentra(raiz, tramo, out Transform tr))
+                {
+                    continue;
+                }
+                foreach (Transform hijo in tr.Cast<Transform>().ToList())
+                {
+                    if (hijo.name.StartsWith("Parapeto_") && hijo.name.EndsWith("_Tapa"))
+                    {
+                        Object.DestroyImmediate(hijo.gameObject);
+                        tapas++;
+                    }
+                    else if (hijo.name.StartsWith("Parapeto_"))
+                    {
+                        MeshRenderer mr = hijo.GetComponent<MeshRenderer>();
+                        if (mr != null)
+                        {
+                            mr.enabled = false;
+                            ocultos++;
+                        }
+                    }
+                }
             }
+            informe.AppendLine("Parapeto liso: " + ocultos + " tramos sin renderer (collider intacto) y " + tapas + " tapas borradas, por nombre en Tablero/Principal y Tablero/RampaNorte.");
         }
 
         // ---------------------------------------------------------------- Chatarra AU03
@@ -370,8 +391,9 @@ namespace MechaCyberpunk.Arte.Editor
         // ---------------------------------------------------------------- Calle baja de K18
 
         /// <summary>
-        /// Cambia las casas de la fila sur de la calle z = 216 (x -290 a -190, las que se ven a la izquierda en K18) por casas de 2 y 3 pisos con letreros.
-        /// Quita por nombre las Casa_N de T1356_Autopista/Bajo/Casitas cuyo frente está en z = 210 en ese rango y pone el frente nuevo exacto sobre su huella.
+        /// Cambia por casas de 2 y 3 pisos con letreros las hileras que se ven a la izquierda en K18: la sur de la calle baja (z = 205, x -195 a -135) y la
+        /// oeste de la calle oeste (x = -252, z 120 a 170). Quita por nombre las Casa_N de Bajo/Casitas cuyo frente cae en esas líneas y pone el frente
+        /// nuevo exacto sobre su huella (las huellas siguen a 8 m o más del tablero, como pide T.SeparacionCasasTablero).
         /// </summary>
         private static void CasasDeK18(KitS2c.Obra o, Transform raiz, Transform padre)
         {
@@ -379,35 +401,8 @@ namespace MechaCyberpunk.Arte.Editor
             {
                 return;
             }
-            List<Transform> viejas = new List<Transform>();
-            foreach (Transform c in casitas)
-            {
-                if (c.name.StartsWith("Casa_") && Mathf.Abs(c.position.z - ZFilaSur) < 0.5f && c.position.x > -290f && c.position.x < -190f)
-                {
-                    viejas.Add(c);
-                }
-            }
-            if (viejas.Count == 0)
-            {
-                informe.AppendLine("Casas: no hay Casa_N en z=210, x -290 a -190; no se cambia la fila.");
-                return;
-            }
-            float xa = float.MaxValue;
-            float xb = float.MinValue;
-            foreach (Transform c in viejas)
-            {
-                Bounds? caja = CajaDe(c.gameObject);
-                if (caja.HasValue)
-                {
-                    xa = Mathf.Min(xa, caja.Value.min.x);
-                    xb = Mathf.Max(xb, caja.Value.max.x);
-                }
-            }
-            informe.AppendLine("Casas: se quitan " + viejas.Count + " casas viejas de Bajo/Casitas (" + string.Join(", ", viejas.Select(v => v.name)) + "), huella x " + xa.ToString("0.0") + " a " + xb.ToString("0.0"));
-            foreach (Transform c in viejas)
-            {
-                Object.DestroyImmediate(c.gameObject);
-            }
+            (float x0, float x1, float z0, float z1) sur = T.HuellasCasas[0];
+            (float x0, float x1, float z0, float z1) oeste = T.HuellasCasas[3];
             System.Func<int, KitS2c.Estilo> estilo = i =>
             {
                 KitS2c.Estilo e = KitS2c.EstiloAlAzar(o);
@@ -417,57 +412,91 @@ namespace MechaCyberpunk.Arte.Editor
                 e.Tinaco = true;
                 return e;
             };
-            KitS2c.Frente(o, padre, new Vector3(xa, 0f, ZFilaSur), new Vector3(xb, 0f, ZFilaSur), Vector3.forward, 6f, estilo);
+            // Fila sur de la calle baja: frente en z = sur.z1, de cara al norte, a lo largo de x.
+            Fila(o, casitas, padre, estilo, c => Mathf.Abs(c.position.z - sur.z1) < 0.5f && c.position.x > sur.x0 - 1f && c.position.x < sur.x1 + 1f,
+                true, sur.z1, Vector3.forward, sur.z1 - sur.z0, "calle baja sur");
+            // Fila oeste de la calle oeste: frente en x = oeste.x1, de cara al este, a lo largo de z (solo el tramo cercano a K18).
+            Fila(o, casitas, padre, estilo, c => Mathf.Abs(c.position.x - oeste.x1) < 0.5f && c.position.z > 120f && c.position.z < oeste.z1 + 1f,
+                false, oeste.x1, Vector3.right, oeste.x1 - oeste.x0, "calle oeste");
             informe.AppendLine("Casas nuevas: " + o.Casas + " de 2 y 3 pisos con letreros");
+        }
+
+        private static void Fila(KitS2c.Obra o, Transform casitas, Transform padre, System.Func<int, KitS2c.Estilo> estilo, System.Func<Transform, bool> elige,
+            bool aLoX, float linea, Vector3 normal, float fondo, string nombre)
+        {
+            List<Transform> viejas = casitas.Cast<Transform>().Where(c => c.name.StartsWith("Casa_") && elige(c)).ToList();
+            if (viejas.Count == 0)
+            {
+                informe.AppendLine("Casas " + nombre + ": no hay Casa_N en la línea esperada; no se cambia.");
+                return;
+            }
+            float ini = float.MaxValue;
+            float fin = float.MinValue;
+            foreach (Transform c in viejas)
+            {
+                Bounds? caja = CajaDe(c.gameObject);
+                if (caja.HasValue)
+                {
+                    ini = Mathf.Min(ini, aLoX ? caja.Value.min.x : caja.Value.min.z);
+                    fin = Mathf.Max(fin, aLoX ? caja.Value.max.x : caja.Value.max.z);
+                }
+            }
+            informe.AppendLine("Casas " + nombre + ": se quitan " + viejas.Count + " (" + string.Join(", ", viejas.Select(v => v.name)) + "), tramo " + ini.ToString("0.0") + " a " + fin.ToString("0.0"));
+            foreach (Transform c in viejas)
+            {
+                Object.DestroyImmediate(c.gameObject);
+            }
+            Vector3 a = aLoX ? new Vector3(ini, 0f, linea) : new Vector3(linea, 0f, ini);
+            Vector3 b = aLoX ? new Vector3(fin, 0f, linea) : new Vector3(linea, 0f, fin);
+            KitS2c.Frente(o, padre, a, b, normal, fondo, estilo);
         }
 
         private static void CalleBajaK18(KitS2c.Obra o, Transform raiz, Transform padre, List<Ocupado> ocupados)
         {
-            // Cables entre los postes de la fila sur y a la fila norte (cuelgan sobre la calle, a 6 m, sin collider).
+            (float x0, float x1, float z0, float z1) sur = T.HuellasCasas[0];
+            // Cables entre los postes de la banqueta sur de la calle baja y con tiro a la pared de las casas (sin collider).
             if (Encuentra(raiz, "Bajo/Postes", out Transform postes))
             {
                 List<Vector3> puntas = new List<Vector3>();
-                foreach (Transform p in postes)
+                foreach (Transform pt in postes)
                 {
-                    if (p.name.StartsWith("Poste_") && Mathf.Abs(p.position.z - 211f) < 0.6f && p.position.x > -296f && p.position.x < -130f)
+                    if (pt.name.StartsWith("Poste_") && pt.position.z > sur.z1 && pt.position.z < sur.z1 + 4f && pt.position.x > sur.x0 - 10f && pt.position.x < sur.x1 + 10f)
                     {
-                        puntas.Add(p.position + Vector3.up * 6.75f);
+                        puntas.Add(pt.position + Vector3.up * 6.75f);
                     }
                 }
-                puntas = puntas.OrderBy(p => p.x).ToList();
+                puntas = puntas.OrderBy(v => v.x).ToList();
                 for (int i = 0; i < puntas.Count; i++)
                 {
                     if (i + 1 < puntas.Count)
                     {
                         KitS2c.Cable(o, puntas[i] - Vector3.up * 0.7f, puntas[i + 1] - Vector3.up * 0.7f, 0.7f);
                     }
-                    if (i % 2 == 0)
-                    {
-                        KitS2c.Cable(o, puntas[i] - Vector3.up * 0.3f, new Vector3(puntas[i].x + 3f, 6.2f, 222.05f), 1.3f);
-                    }
+                    KitS2c.Cable(o, puntas[i] - Vector3.up * 0.3f, new Vector3(puntas[i].x + 3f, 6.2f, sur.z1 + 0.05f), 1.2f);
                 }
-                informe.AppendLine("Cables: " + puntas.Count + " postes unidos y con tiro a la fila norte");
+                informe.AppendLine("Cables: " + puntas.Count + " postes unidos y con tiro a las casas");
             }
 
-            // Semáforo en la banqueta sur (esquina del cruce hacia el este), de cara a la cámara de K18.
+            // Semáforo en la banqueta sur, de cara al oeste (a la cámara de K18).
             int quitados = 0;
-            for (float x = -205f; x > -250f; x -= 4f)
+            for (float x = -205f; x < -150f; x += 4f)
             {
-                Bounds caja = new Bounds(new Vector3(x, 2f, 211.8f), new Vector3(1.2f, 4f, 1.2f));
+                Vector3 pie = new Vector3(x, 0f, sur.z1 + 1.6f);
+                Bounds caja = new Bounds(pie + Vector3.up * 2f, new Vector3(1.2f, 4f, 1.2f));
                 if (LibreOQuitar(caja, ocupados, false, ref quitados))
                 {
-                    GameObject s = ColocarT910.Semaforo(o, padre, new Vector3(x, 0f, 211.8f), Vector3.right, false);
-                    s.name = "Semaforo_K18";
+                    GameObject sem = ColocarT910.Semaforo(o, padre, pie, Vector3.left, false);
+                    sem.name = "Semaforo_K18";
                     ocupados.Add(new Ocupado { Caja = caja });
-                    informe.AppendLine("Semáforo en x=" + x + " (usa el ayudante ColocarT910.Semaforo, que trae sus lentes y su luz)");
+                    informe.AppendLine("Semáforo en x=" + x + " (usa ColocarT910.Semaforo, que trae sus lentes y su luz)");
                     break;
                 }
             }
 
-            // Carros estacionados en la orilla sur de la calle (z 212.5 a 214.3), a lo largo de x.
+            // Carros estacionados en la orilla sur del asfalto de la calle baja (z 208 a 210.5), a lo largo de x.
             string[] carros = { "Assets/Arte/Vehiculos/Prefabs/V01a_CarroViejito.prefab", "Assets/Arte/Vehiculos/Prefabs/V01b_CarroPro.prefab" };
             int puestos = 0;
-            for (float x = -280f; x < -195f && puestos < 6; x += o.Rango(12f, 20f))
+            for (float x = -206f; x < -135f && puestos < 5; x += o.Rango(12f, 18f))
             {
                 GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(carros[puestos % carros.Length]);
                 if (prefab == null)
@@ -479,15 +508,15 @@ namespace MechaCyberpunk.Arte.Editor
                 Quaternion giro = Quaternion.Euler(0f, o.Chance(0.5f) ? 90f : -90f, 0f);
                 float largo = Mathf.Max(tam.x, tam.z);
                 float ancho = Mathf.Min(tam.x, tam.z);
-                float z = 212.4f + ancho * 0.5f + 0.2f;
+                float z = T.ZCalleBaja - 7f + 0.4f + ancho * 0.5f;
                 Bounds caja = new Bounds(new Vector3(x, tam.y * 0.5f, z), new Vector3(largo + 0.4f, tam.y, ancho + 0.4f));
                 if (!LibreOQuitar(caja, ocupados, false, ref quitados))
                 {
                     continue;
                 }
                 Vector3 pos = new Vector3(x, 0.02f, z) - giro * new Vector3(centro.x, centro.y - tam.y * 0.5f, centro.z);
-                GameObject c = Poner(padre, prefab, pos, giro, Vector3.one, true);
-                c.name = "CarroEstacionado_" + puestos;
+                GameObject car = Poner(padre, prefab, pos, giro, Vector3.one, true);
+                car.name = "CarroEstacionado_" + puestos;
                 ocupados.Add(new Ocupado { Caja = caja });
                 puestos++;
             }
@@ -688,9 +717,11 @@ namespace MechaCyberpunk.Arte.Editor
                     s.AppendLine("FALLO: falta Tablero/Principal");
                     fallos++;
                 }
-                if (raiz.Find("Guardarrail") != null && mia != null && mia.Find("Barreras_AU02")?.childCount > 0 && raiz.Find("Guardarrail").gameObject.activeSelf)
+                if (mia != null && mia.Find("Barreras_AU02")?.childCount > 0)
                 {
-                    s.AppendLine("AVISO: AU02 y AU05 están los dos encendidos en los bordes (se encimarían).");
+                    int visibles = raiz.GetComponentsInChildren<MeshRenderer>(false).Count(r => r.enabled && r.name.StartsWith("Parapeto_") && !r.transform.IsChildOf(mia));
+                    s.AppendLine("Parapetos lisos aún visibles junto a las AU02 (debe ser 0): " + visibles);
+                    fallos += visibles > 0 ? 1 : 0;
                 }
                 int huecos = raiz.GetComponentsInChildren<Transform>(true).Count(t => t.name.StartsWith("Hueco_"));
                 s.AppendLine("Huecos (piezas que faltaban): " + huecos);
@@ -725,10 +756,9 @@ namespace MechaCyberpunk.Arte.Editor
         // ---------------------------------------------------------------- Fotos
 
         /// <summary>
-        /// K18: desde la calle baja (3.2 m), un poco al este de una columna de la autopista y mirando al oeste-noroeste: el tablero cruza arriba a la
-        /// derecha, la columna gruesa al frente, las casas de 3 pisos a la izquierda, la boca del túnel iluminada en el cerro al fondo y la torre.
-        /// La rampa norte sube hacia el este (x > -107), así que no cabe en este encuadre: es el único elemento de K18 que el trazado no permite aquí.
-        /// A18: aérea desde el sur-este de la boca. No guarda nada. Salida en docs/capturas/t-1386/.
+        /// K18: a 3 m entre la calle baja y el tablero (la cámara de T-1362, 0.8 m más alta), mirando al oeste: casas de 3 pisos a la izquierda, la rampa norte
+        /// al centro, la columna y el tablero a la derecha, la boca del túnel en el cerro y la torre al fondo. A18: aérea al este-sureste del túnel.
+        /// No guarda nada. Salida en docs/capturas/t-1386/.
         /// </summary>
         [MenuItem("Mecha Cyberpunk/T-1386/Autopista (fotos)")]
         public static void Fotos()
@@ -736,18 +766,13 @@ namespace MechaCyberpunk.Arte.Editor
             ColocarS2.Abrir();
             Directory.CreateDirectory("docs/capturas/t-1386");
             Directory.CreateDirectory("Logs");
-            List<Vector3> columnas = T.Columnas(T.Principal());
-            Vector3 col = columnas.Where(c => c.x < -200f && c.x > -300f).OrderBy(c => Mathf.Abs(c.x + 240f)).FirstOrDefault();
-            if (col == Vector3.zero)
-            {
-                col = new Vector3(-240f, 10f, 250f);
-            }
-            Vector3 camaraK18 = new Vector3(col.x + 22f, PisoFoto, ZCalleBaja);
-            Vector3 mira = new Vector3(-330f, 8f, 250f);
-            ColocarS2cLook.Foto(camaraK18, mira, "Logs/t1386-autopista-k18-juego.png", 65f);
+            // Entre la calle baja y el tablero, mirando al oeste: la rampa norte (ahora sube al oeste por z = 232) al centro, la columna y el tablero a la derecha.
+            Vector3 camaraK18 = new Vector3(-228f, PisoFoto, 226f);
+            Vector3 mira = new Vector3(-330f, 11f, 248f);
+            ColocarS2cLook.Foto(camaraK18, mira, "Logs/t1386-autopista-k18-juego.png", 72f);
             ColocarS2.LadoALado("imageassets/referencias/look/K18_AutopistaElevada.png", "Logs/t1386-autopista-k18-juego.png", "docs/capturas/t-1386/autopista-k18.png");
-            Vector3 camaraA18 = new Vector3(-230f, 48f, 195f);
-            ColocarS2cLook.Foto(camaraA18, new Vector3(-325f, 14f, 248f), "Logs/t1386-autopista-a18-juego.png", 60f);
+            Vector3 camaraA18 = new Vector3(-120f, 45f, 185f);
+            ColocarS2cLook.Foto(camaraA18, new Vector3(-260f, 8f, 240f),"Logs/t1386-autopista-a18-juego.png", 60f);
             ColocarS2.LadoALado("imageassets/referencias/look/A18_Autopista_Aerea.png", "Logs/t1386-autopista-a18-juego.png", "docs/capturas/t-1386/autopista-a18.png");
         }
     }
