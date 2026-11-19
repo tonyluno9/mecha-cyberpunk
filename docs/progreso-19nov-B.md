@@ -68,6 +68,17 @@ solo escriben scripts de editor; Unity corre aquí, en s2, una sola instancia en
   base al sur y 50.2 en la azotea alta (no pasa 50). Culpables: carros Tripo de 90 mil triángulos y casas CC01 de 70 mil. Se pidió LOD y menos carros.
 - Bug de T-1441: SampleAnimation llevaba a los NPC del Cerro a (0, y, 0); por eso no salían en K13.
 
+- Rondas 8–10: 102/102 EditMode de zonas (ronda 8); se compararon los recorridos PlayMode con main (regresiones: Carro_Zigzag_Parte1
+  en el Cerro y Parkour_TreparSueloYFila_YBajar en el Puerto, atacadas en T-1440 r10 y T-1443 r9); combinados accesos, pisos, barandales y
+  tinacos (renderers de la zona 8755 → 7163). Validar: T1440 1 fallo menor, resto 0.
+- 10:57 La verificación final (en segundo plano) la detuvo Claude Code por falta de memoria a mitad de la cadena del Puerto
+  (se guardó T1443.Aplicar r9; T1442 queda con su ronda 7 aplicada). No se relanzó. Reporte: docs/reporte-19nov-B.md.
+
 ## Qué sigue
-- Al volver cada subagente: merge de su rama en `integ/zonas-19nov-B` (en s2), correr Aplicar en orden T1440 → T1441 → T1442 → T1443,
-  luego Validar y, en otra corrida, Fotos. Revisar las fotos y devolver errores.
+1. Con memoria libre y en PRIMER plano, en s2 (rama integ/zonas-19nov-B), una corrida por línea:
+   - Correr19nov.Correr -pasos ZonaPuertoT1443.Aplicar,ZonaPuertoT1442.Aplicar,ZonaPuertoT1443.Validar,ZonaPuertoT1442.Validar
+   - EditMode por clase: CerroT1355, PuertoT1357, ArreglosCerroT1363, ArreglosPuertoT1366, VariarCerroT1364, RendimientoCerroT1365, BarridoMapaT1360, PiezasZonasT1353
+   - PlayMode por clase: MechaCyberpunk.Tests.Personaje.RecorridoPuertoT1361Pruebas y luego RecorridoCerroT1361Pruebas (comparar con main: Cerro 6, Puerto 4 fallas)
+   - PlayMode MechaCyberpunk.Tests.Mundo.RendimientoCerroT1362Pruebas -sufijo 19nov-B-final
+   - Correr19nov.Correr -pasos ZonaCerroT1440.Fotos,ZonaCerroT1441.Fotos,ZonaPuertoT1443.Fotos,ZonaPuertoT1442.Fotos
+2. Si no hay regresiones contra main: git restore de los .fbx.meta, commit, merge --no-ff de integ/zonas-19nov-B a main y push.

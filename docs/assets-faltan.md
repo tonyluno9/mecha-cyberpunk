@@ -122,3 +122,14 @@ No existe aún. `ZonaTrafico_LasLomas` (T-1364) cubre por ahora los corredores n
 | Escalera de mano de ~2.6 m (peldaños y rieles, ancho ~0.6 m) | Visual de `Escalera_Suelo` y `Escalera_Fila` de los bloques de contenedores (hoy solo `PuntoTrepar`, sin modelo) | `L03_EscaleraEmergencia` mide 4.5 x 3.5 x 4.8 m: taparía el pasillo de 3.5 m; los `Peldano`/`Riel` del Cerro son cajas de primitivos |
 | Grafitis para los contenedores y las bodegas (K15/A15) | Look de la referencia | No hay textura ni decal de grafiti |
 | Pluma de la entrada (`PluminaEntrada`) | Entrada U5 | Sigue siendo hueco |
+
+## 19-nov, sesión B: Cerro y Puerto (T-1440 a T-1443)
+
+| Qué | Para qué | Hoy |
+| --- | --- | --- |
+| Versiones con LOD (o de menos de 20 000 triángulos) de CC01, CC02, CC06 y CC07 (hoy de 48 000 a 70 000 triángulos, sin LOD) | Pisos extra con casas reales en toda la ladera sin bajar de 50 fps | Casas reales solo en 32 pisos del cuadro de A13; el resto son casas del kit |
+| LOD de los carros de Tripo (tripo_node_c81d487f, 90 295 triángulos cada uno) | Carros estacionados en el Cerro | Máximo 5 + 6 carros, con culling al 5 % |
+| Animación de NPC sentado y de cargar o trabajar | Vecinos en banquetas y estibadores | Todos parados en su pose de reposo |
+| Tarima plana de madera (PU06 es una pila de pallets) | Primer plano de K15 | PU06 inclinada contra la bodega |
+| Tráiler o camión de contenedores | Carriles del patio en A15 | Montacargas y pallets en la orilla |
+| Read/Write en los fbx de props de azotea (antenas, lavaderos, tendederos, chatarra) | Combinarlos en una malla | Sueltos con LOD; se quitan fuera de los cuadros de K13 y A13 |
