@@ -45,9 +45,9 @@ namespace MechaCyberpunk.Arte.Editor
         private static readonly string[] PrefabsIntocables = { "T1355_Cerro", "T1357_Puerto" };
 
         // Sodio
-        private static readonly Color Sodio = new Color(1f, 0.55f, 0.2f);
+        private static readonly Color Sodio = new Color(1f, 0.5f, 0.18f);
         private const float IntensidadSodio = 240f;
-        private const float AlcanceSodio = 25f;
+        private const float AlcanceSodio = 27f;
         private const float AnguloSodio = 95f;
         private const float AnguloInteriorSodio = 30f;
         // Neón
@@ -58,8 +58,8 @@ namespace MechaCyberpunk.Arte.Editor
         private static readonly Vector3 CamaraK18 = new Vector3(-168f, 5.98f, 226f);
         private const int MaxLucesBajoTablero = 6;
         private const float SeparacionLucesBajoTablero = 35f;
-        private const float RadioNucleo = 0.4f;
-        private const float IntensidadNucleo = 5f;
+        private const float RadioNucleo = 1.0f;
+        private const float IntensidadNucleo = 8f;
         private const float CeldaNeon = 4f;
         private const float DistanciaLuzNeon = 2.5f;
         private const float TamanoMaximoNeon = 20f;
@@ -1034,7 +1034,7 @@ namespace MechaCyberpunk.Arte.Editor
             foreach (Vector3 lampara in z.Faroles)
             {
                 float suelo = Suelo(lampara, calle);
-                Quad(v, uv, col, t, new Vector3(lampara.x, suelo + 0.05f, lampara.z), Vector3.right * 4.5f, Vector3.forward * 4.5f, Sodio);
+                Quad(v, uv, col, t, new Vector3(lampara.x, suelo + 0.05f, lampara.z), Vector3.right * 4.5f, Vector3.forward * 4.5f, Sodio * 2.5f);
             }
             m.indexFormat = v.Count > 65000 ? IndexFormat.UInt32 : IndexFormat.UInt16;
             m.SetVertices(v);
@@ -1652,6 +1652,7 @@ namespace MechaCyberpunk.Arte.Editor
             }
 
             log.AppendLine();
+            DiagnosticoK11(log);
             log.AppendLine(fallas.Count == 0 ? "RESULTADO: TODO BIEN" : "RESULTADO: " + fallas.Count + " FALLAS");
             foreach (string f in fallas)
             {
@@ -1660,6 +1661,82 @@ namespace MechaCyberpunk.Arte.Editor
             }
             File.WriteAllText(LogValidar, log.ToString());
             Debug.Log("[Arte] " + log);
+        }
+
+        // Cuántos núcleos y charcos de luz de sodio caen en el cono de la cámara K11 de Vista19b, y a qué altura sobre el piso (rayo hacia abajo) están.
+        private static void DiagnosticoK11(StringBuilder log)
+        {
+            log.AppendLine();
+            log.AppendLine("== Diagnóstico K11 (desde (-150.7, 1.9, -232.6) hacia (-230.7, 0.2, -232.6), campo 60)");
+            GameObject goCam = new GameObject("DiagnosticoK11");
+            try
+            {
+                Camera cam = goCam.AddComponent<Camera>();
+                cam.fieldOfView = 60f;
+                cam.aspect = 1376f / 768f;
+                cam.nearClipPlane = 0.05f;
+                cam.farClipPlane = 1500f;
+                goCam.transform.position = new Vector3(-150.7f, 1.9f, -232.6f);
+                goCam.transform.LookAt(new Vector3(-230.7f, 0.2f, -232.6f));
+                Plane[] planos = GeometryUtility.CalculateFrustumPlanes(cam);
+                GameObject raiz = GameObject.Find(RaizLook);
+                if (raiz == null)
+                {
+                    log.AppendLine("sin " + RaizLook);
+                    return;
+                }
+                Physics.SyncTransforms();
+                foreach (string nombre in new[] { "NucleosSodio", "PisoSodio", "HalosSodio", "DerramesNeon" })
+                {
+                    int total = 0, enCono = 0, sinPiso = 0;
+                    float minDist = float.MaxValue, maxDist = 0f, minAlto = float.MaxValue, maxAlto = float.MinValue, sumaAlto = 0f;
+                    string material = "-";
+                    foreach (MeshRenderer r in raiz.GetComponentsInChildren<MeshRenderer>(true))
+                    {
+                        if (r.name != nombre)
+                        {
+                            continue;
+                        }
+                        material = r.sharedMaterial != null ? r.sharedMaterial.name + " (" + r.sharedMaterial.shader.name + ", cola " + r.sharedMaterial.renderQueue + ")" : "SIN MATERIAL";
+                        Mesh m = r.GetComponent<MeshFilter>().sharedMesh;
+                        Vector3[] v = m.vertices;
+                        int paso = nombre == "DerramesNeon" ? 8 : 4; // vértices por elemento
+                        for (int i = 0; i + 3 < v.Length; i += paso)
+                        {
+                            Vector3 c = (v[i] + v[i + 1] + v[i + 2] + v[i + 3]) * 0.25f;
+                            total++;
+                            if (!GeometryUtility.TestPlanesAABB(planos, new Bounds(c, Vector3.one * 0.5f)))
+                            {
+                                continue;
+                            }
+                            enCono++;
+                            float d = Vector3.Distance(c, goCam.transform.position);
+                            minDist = Mathf.Min(minDist, d);
+                            maxDist = Mathf.Max(maxDist, d);
+                            if (Physics.Raycast(c + Vector3.up * 0.5f, Vector3.down, out RaycastHit g, 80f, ~(1 << ReflejoCharcos.CapaCharcos), QueryTriggerInteraction.Ignore))
+                            {
+                                float alto = c.y - g.point.y;
+                                minAlto = Mathf.Min(minAlto, alto);
+                                maxAlto = Mathf.Max(maxAlto, alto);
+                                sumaAlto += alto;
+                            }
+                            else
+                            {
+                                sinPiso++;
+                            }
+                        }
+                    }
+                    int conPiso = enCono - sinPiso;
+                    log.AppendLine(nombre + ": total " + total + ", en el cono " + enCono + ", distancia " + (enCono > 0 ? minDist.ToString("F0") + "-" + maxDist.ToString("F0") + " m" : "-")
+                        + ", altura sobre el piso " + (conPiso > 0 ? minAlto.ToString("F2") + " a " + maxAlto.ToString("F2") + " (media " + (sumaAlto / conPiso).ToString("F2") + ")" : "sin piso bajo ellos")
+                        + ", sin piso por raycast " + sinPiso + "; material " + material);
+                }
+                log.AppendLine("_T501Noche global ahora: " + Shader.GetGlobalFloat("_T501Noche").ToString("F2") + " (en el editor lo pone ColocarS2nCielo.SeguirNoche al fotografiar; si aquí sale 0 la foto igual lo pone)");
+            }
+            finally
+            {
+                Object.DestroyImmediate(goCam);
+            }
         }
 
         // ================================================================ Utilidades
