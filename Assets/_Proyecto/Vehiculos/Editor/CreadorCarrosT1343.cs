@@ -78,7 +78,7 @@ namespace MechaCyberpunk.Vehiculos.Editor
 
         // ------------------------------------------------------------------ carros
 
-        private static void ArmarCarroPrefab(string codigo, StringBuilder informe)
+        public static void ArmarCarroPrefab(string codigo, StringBuilder informe)
         {
             if (!ExistePrefab(codigo))
             {
