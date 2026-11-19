@@ -38,7 +38,7 @@ namespace MechaCyberpunk.Arte.Editor
         private const string MatConcreto = "Assets/Arte/Materiales/Calle18nov/M_T09_ConcretoManchado.mat";
         private const string MatMojado = "Assets/Arte/Materiales/Calle18nov/M_T07_AsfaltoMojado.mat";
 
-        private static readonly string[] Carros =
+        private static readonly string[] ModelosCarro =
         {
             "Carro_V01a", "Carro_V02", "Carro_V03", "Carro_V04", "Carro_V05", "Carro_V06", "Carro_V07", "Carro_V08", "Carro_V12", "Carro_V13",
         };
@@ -648,7 +648,7 @@ namespace MechaCyberpunk.Arte.Editor
                     continue;
                 }
                 Quaternion rot = Quaternion.LookRotation(o.Chance(0.5f) ? d : -d);
-                GameObject car = Colocar(padre, o.Uno(Carros), pos, rot, 1f, t, "carro", true, false, true);
+                GameObject car = Colocar(padre, o.Uno(ModelosCarro), pos, rot, 1f, t, "carro", true, false, true);
                 if (car != null)
                 {
                     foreach (Rigidbody rb in car.GetComponentsInChildren<Rigidbody>(true))
