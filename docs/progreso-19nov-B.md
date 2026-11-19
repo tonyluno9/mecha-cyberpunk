@@ -15,10 +15,10 @@ solo escriben scripts de editor; Unity corre aquí, en s2, una sola instancia en
 ## Tareas
 | Tarea | Qué | Estado |
 | --- | --- | --- |
-| T-1440 | Cerro A13: ladera en terrazas (alturas, muros CC08, escaleras largas iluminadas, calle en zigzag con postes y luz naranja, ciudad brillante abajo) | pendiente |
-| T-1441 | Cerro K13: detalle de calle y azoteas (casas variadas, tinacos, antenas, tendederos, lavaderos, aires, varillas, cables, neones chicos, carros, NPCs, basura) | pendiente |
-| T-1442 | Puerto K15: calle de bodegas (charcos, contenedores con grafiti, montacargas, pallets, barriles, caseta con pluma, estibadores, neón, barco iluminado) | pendiente |
-| T-1443 | Puerto A15: patio desde arriba (pilas de contenedores de colores, carriles marcados, postes de luz, grúas con balizas, barco atracado, bodegas) | pendiente |
+| T-1440 | Cerro A13: ladera en terrazas (alturas, muros CC08, escaleras largas iluminadas, calle en zigzag con postes y luz naranja, ciudad brillante abajo) | en curso (subagente) |
+| T-1441 | Cerro K13: detalle de calle y azoteas (casas variadas, tinacos, antenas, tendederos, lavaderos, aires, varillas, cables, neones chicos, carros, NPCs, basura) | en curso (subagente) |
+| T-1442 | Puerto K15: calle de bodegas (charcos, contenedores con grafiti, montacargas, pallets, barriles, caseta con pluma, estibadores, neón, barco iluminado) | en curso (subagente) |
+| T-1443 | Puerto A15: patio desde arriba (pilas de contenedores de colores, carriles marcados, postes de luz, grúas con balizas, barco atracado, bodegas) | en curso (subagente) |
 | T-1444 | Bugs, parkour en azoteas y contenedores, rendimiento (50 fps) y fotos finales | pendiente |
 
 ## Bitácora
@@ -29,5 +29,9 @@ solo escriben scripts de editor; Unity corre aquí, en s2, una sola instancia en
   la niebla tapa la ciudad; el Puerto desde la calle está vacío (sin charcos, pallets, montacargas, barco ni grúas visibles)
   y desde arriba son filas iguales de contenedores azules con postes.
 
+- 08:40 Lanzadas T-1440 a T-1443 en paralelo (brief docs/brief-19nov-B.md). Nota a la sesión A en docs/para-sesion-A-19nov.md.
+  s2 en main compila con 0 errores (3 min 44 s).
+
 ## Qué sigue
-- Lanzar T-1440 a T-1443 en paralelo.
+- Al volver cada subagente: merge de su rama en `integ/zonas-19nov-B` (en s2), correr Aplicar en orden T1440 → T1441 → T1442 → T1443,
+  luego Validar y, en otra corrida, Fotos. Revisar las fotos y devolver errores.
