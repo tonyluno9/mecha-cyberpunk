@@ -79,5 +79,110 @@ dos casos en que hubo que cuidarlo). Progreso detallado en `docs/progreso-20nov.
 8. Consumibles con E y C; prótesis con doble clic.
 9. Ciudad: parque K09, salidas de las afueras, armería, charcos; carros estacionados y patrullas (puertas, llantas).
 
-## Builds
-(abajo)
+
+---
+
+# Segunda vuelta 20-nov: nuevos-19nov y lo que faltó
+
+Todo está en `main` (merge --no-ff de `integ/20nov-B`, subido). Tareas T-1510 a T-1516, cada una en su rama `tony/T-xxx`, hechas por
+subagentes Sonnet e integradas, compiladas y probadas por clase en `.sesiones/s2`. Progreso en `docs/progreso-20nov.md`.
+
+## Modelos nuevos (nuevos-19nov)
+
+| Pedido | Qué quedó |
+| --- | --- |
+| PA01 y PA02 patrullas | Partidas con Blender en carrocería, 4 llantas (pivote en el eje, giran), puertas delanteras (bisagra, abren) y cristales. `Patrulla.prefab` = PA01 (4.80 m) y `PatrullaCamioneta.prefab` = PA02 (5.00 m), mismo GUID, con sirena y luces. Fotos en `docs/capturas/_20nov/T1510_*`. |
+| V22 | Se eligió la **_a**: sus ruedas venían sueltas, la puerta tiene costura y los cristales son planos. La _b tenía las ruedas fusionadas y el casco pegado al piso. Reemplaza al arruinado en su mismo prefab. |
+| Rines de policía V05, V06, V11 | Ya los tenían (T-1507); comprobado con pruebas. PA01/PA02 traen el rin en su textura. |
+| CB01-CB04 cobertura | 7 prefabs (CB04 solo _a: la _b es PNG). **53 coberturas** en la ciudad alrededor de los grupos de SKULLS, SNAKES y Nova, las escoltas y el recinto del jefe. SKULLS y guardias de Nova prefieren un CB cercano: van al lado contrario al jugador, se agachan, se asoman a disparar y vuelven. |
+| SIN_NOMBRE_01-15 | Identificados comparando renders con los PNG (tabla en `docs/identificacion-nuevos-19nov.md`, renders en `docs/capturas/_20nov/identificar/`). Copiados con su nombre en la misma carpeta (los SIN_NOMBRE siguen ahí). Confianza media en SIN_09 (ED04_b), SIN_03 (MU01_b), SIN_05 (MU02_a) y SIN_14 (MU03_a): **revisa esos 4**. |
+| ED01-ED12 | 13 modelos importados. **39 edificios de primitivas** de las afueras cambiados por ED según su barrio. **17 de ellos se apagaron** porque su cubo estaba encimado a otro edificio (dos salidas ponían edificio en el mismo lugar), y ese hueco ya lo llena el otro. Quedan 4 cubos de las afueras sin un modelo que les quede. |
+| MU01-MU03 muro | Mismo trazo, alto (6 m) y salidas del muro que te gustó; solo cambia cómo se ve: **48 tramos MU01, 16 torres MU02** (esquinas y a los lados de cada salida) y **6 puertas MU03** en las salidas, que siguen pasables. El muro viejo queda con los renderers apagados y sus colliders intactos. Fotos en `docs/capturas/_20nov/muro_*.png`. |
+| Lo de 17nov, 18nov y modelos3d | Ya entró en la primera vuelta (arriba). Siguen sin modelo con rig **NP01-NP06** (zip de Tripo sin esqueleto) y sin modelo 3D **TR01/TR02** (solo PNG). |
+
+## Blender: lo que había quedado importado sin usar
+
+- **Daño en 4 direcciones**: ahora también izquierda y derecha (golpe a más de 53° hacia un costado).
+- **Manejar moto**: usa `PJ01_Manejar_Moto` (el clip nuevo de 19N).
+- **Escalones**: dos rayos detectan escalones de 0.1 a 0.4 m y, caminando, se usan `PJ01_Escaleras_Subir/Bajar` (hasta 3.2 m/s; trotando o en sprint se queda la locomoción normal, para que no patine). La escalera de mano sigue igual.
+- **Cobertura del jugador**: con V pegado a una pared ahora juega Cobertura_Quieto en bucle; al apuntar se asoma y al soltar regresa.
+- **Velocidades del Animator**: revisadas contra la tabla (1.6 / 4.5 / 7.25 / 4 / 2). Ya coincidían; quedan cubiertas por pruebas.
+- **NPCs**: 1 de cada 8 peatones platica en pareja o trío a lo largo de la banqueta; al oír tiros, 40 % se agacha cubriéndose y luego huye o sigue; 4 civiles sentados en las bancas PZ01 del parque.
+- **Perro E17**: usa su modelo de escala real con sus clips de Blender (caminar, correr, ladrar, morder, muerte), 1.2 m de alto, con la misma conducta (patrulla, detecta, corre y muerde). El modelo viejo quedó sin usar.
+
+## Pruebas que estaban en rojo en la primera vuelta
+
+- **Maletín de 57 cm**: la prueba medía la caja del mundo con el maletín girado; el modelo sí mide 45 cm. Prueba corregida, en verde.
+- **Dron al borde del muro**: el fallo era real. El dron podía quedar rozando el muro y desde ahí lo cruzaba. Ahora revisa también el punto de llegada y sube a borde + 2.3 m antes de entrar. En verde.
+- **SNAKES al inicio**: son las riñas y escoltas que la ciudad tiene siempre prendidas (las pruebas de T-1107/T-1108 las exigen) y no se quitaron. La historia ya no suma SNAKES antes de "Libre". HistoriaDemo en verde.
+- **Patrulla hundida 12 cm**: la prueba medía la llanta con la caja inflada al girar. Medida como cilindro, ningún carro queda bajo el piso. En verde.
+- **Cama y espejo**: sin cuarto, "Dormir" y "Mirarte al espejo" son dos interacciones junto a la puerta de la casa, sin cama visible.
+- **ReglasEnsamblados**: una prueba de Mundo referenciaba Personaje y se movió a las pruebas de Personaje. En verde.
+
+## playtest-19nov, punto por punto (las dos vueltas)
+
+| Punto | Cómo quedó |
+| --- | --- |
+| Menú sin niebla | Hecho (primera vuelta). La música del menú queda pendiente tuya. |
+| Sin cuarto | Hecho; cama y espejo en la puerta. |
+| Casi sin temblor de cámara | Hecho (~18 %). |
+| Combo de 2 golpes | Hecho. |
+| Más vida contra golpes | Hecho (los puños hacen 0.45 del daño contra pandilleros y rivales). |
+| Daño de lejos de todas las armas | Hecho (francotirador 300 m, fusil 150, subfusil 70 con caída, escopeta corta). |
+| Trazos de bala | Hecho: finos y brillantes. |
+| Mira de granada | Hecho: círculo donde cae. **Los sonidos de la granada no se pulieron.** |
+| Cañón de plasma: pulir su animación | **No**: no estaba en la lista de esta noche y el cañón está en "Le gustó"; no se tocó. |
+| Sonido de la rueda de armas | Hecho (se reusa un "whoosh"; falta un sonido grave propio). |
+| Indicador de daño de drones | Hecho, con marcador "DRON" o flecha en el borde. |
+| Aviso de vida baja antes | Hecho, al 40 %. |
+| Curarse en persecución | Hecho (Z/X en el carro). |
+| Bloquear el movimiento al bajar de la moto | Hecho, también en las demás animaciones que deben bloquear. |
+| Cómo te ves sentado en carros y motos | Carro con PJ01_Manejar_Carro; moto con el clip nuevo. Revisa a ojo la altura de la cadera en la moto. |
+| Nova y robots: detectan, buscan, disparan y se cubren | Hecho; ahora también se cubren detrás de los CB. Gigantes a escala real (E16 3.5 m). |
+| Perro robot que ataca | Hecho; ahora con su modelo y sus clips de Blender. |
+| Drones que no atraviesan muros | Hecho, con margen. |
+| Naves de Nova en acción | Hecho (bajan agentes con 4-5 estrellas). |
+| Tope de SKULLS | Hecho (5 por grupo, 8 en 40 m). |
+| Civiles que reaccionan y mueren | Hecho; además platican, se agachan y se sientan. |
+| Meseras y hacker | Hecho. |
+| Prótesis con clic y doble clic | Hecho. |
+| Consumibles en 2 ranuras (E y C) | Hecho. |
+| Nada flotando ni hundido | Parcial: 50 objetos asentados y ningún carro hundido. Siguen 205 casos "a revisar" (fachadas de kit a 20 cm) en `Logs/t1501-diagnostico.txt`; no se movieron a ciegas. |
+| Calles sin textura | Revisadas en el barrido de la primera vuelta. |
+| Edificios hechos con primitivos | 52 cambiados en la primera vuelta y 39 más con ED (17 apagados por estar encimados). Quedan 4 en las afueras, más pisos y techos de interiores que no son fachada. |
+| Armería | Hecho (calle, gabinetes volteados, texturas). Revisa a ojo. |
+| Charcos | Hecho: agua nueva con ondas. |
+| Parque | Hecho (K09), ahora con gente sentada. |
+| Casino: TR01/TR02 | **No**: no hay modelo 3D, solo PNG. |
+| Muro de la ciudad | Hecho, con MU01-MU03. |
+| Patrullas con puertas y llantas | Hecho, con PA01/PA02. |
+| Superdeportivo | V22 nuevo (variante _a). |
+| Voces, música épica, sonido de dron, pantalla gris | Pendientes tuyos (en el playtest están como "más adelante"). |
+
+## Qué no quedó y por qué
+
+- **NP01-NP06, TR01, TR02**: no hay modelo con rig, o no hay modelo.
+- **13 variantes ED/MU sin zip** (solo PNG): ED01_b, ED02_b, ED03_a, ED04_a, ED05_b, ED06_b, ED07_b, ED09_a, ED10_b, ED11_b, ED12_b, MU02_b y MU03_b. Anotadas en `docs/assets-faltan.md`.
+- **CB04_b**: solo PNG.
+- **Cofre de PA01/PA02**: solo se cortaron las puertas delanteras.
+- **Caminar apuntando de PJ01**: el clip existe, pero al apuntar las piernas siguen saliendo del árbol de caminar (necesita su propio árbol).
+- **Riñas de SNAKES prendidas al empezar**: se dejaron porque otras pruebas las exigen. Si molestan al inicio se pueden apagar hasta el tutorial, cambiando esas pruebas.
+- **Foto "muro_este"**: la cámara quedó dentro de un edificio. En la foto de la esquina se ve un plano azul junto a la torre: revisa ese punto.
+
+## Qué probar
+
+1. Patrullas (2 o más estrellas): PA01 sedán y PA02 camioneta, puertas que se abren, llantas que giran, cristal. El V22 nuevo.
+2. Pelea con SKULLS o Nova cerca de barreras y costales: se cubren detrás, se asoman y disparan.
+3. Las afueras: edificios ED en vez de cubos; el muro con sus torres y puertas en las 6 salidas, y que puedas salir por donde salías antes.
+4. Con V pégate a una pared, apunta y suelta. Recibe tiros de lado. Sube y baja escalones caminando. Maneja la moto.
+5. Peatones que platican, que se agachan con tus tiros, y los sentados en las bancas del parque K09.
+6. El perro robot: que camine y muerda con sus animaciones nuevas.
+7. Partida nueva: Dormir y Espejo junto a la puerta de la casa.
+
+## Builds (segunda vuelta)
+
+Construidos uno por uno en `.sesiones/s2` (mismo árbol que `main`) y copiados con robocopy a la carpeta principal:
+- `Builds/Demo/CyberCity.exe` (`ConstruirDemoPandillas`): Build Finished, Result: Success, 2845 MB.
+- `Builds/Juego/CyberCity.exe` (`ConstruirJuego`): Build Finished, Result: Success, 2845 MB.
+
+Unity quedó cerrado (sin lockfile).
