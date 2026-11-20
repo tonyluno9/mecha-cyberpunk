@@ -27,11 +27,9 @@ namespace MechaCyberpunk.Trafico.Editor
         public static readonly (string nombre, string[] carros, float mezcla)[] Zonas =
         {
             ("Deshuesadero", new[] { "V20", "V21" }, 0.7f),
-            ("Malecon", new[] { "V22", "V23", "V24" }, 0.5f),
             ("NeonAlto", new[] { "V22", "V23", "V24", "V12" }, 0.5f),
             ("LasLomas", new[] { "V15", "V13" }, 0.7f),
             ("Avenida", new[] { "V16", "V17", "V18", "V13", "V14" }, 0.4f),
-            ("Puerto", new[] { "V17", "V18", "V16" }, 0.8f),
         };
 
         public static string RutaZona(string nombre) => CarpetaZonas + "ZonaTrafico_" + nombre + ".prefab";

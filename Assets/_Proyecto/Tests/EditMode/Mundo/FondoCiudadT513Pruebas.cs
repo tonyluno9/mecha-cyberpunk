@@ -37,8 +37,7 @@ namespace MechaCyberpunk.Tests.Mundo
         [Test]
         public void Fondo_CuatroTramosConSuPintura_SinSombrasNiLuces()
         {
-            // T-1358: los tramos sur y este (sobre el mar) quedan apagados; siguen existiendo los cuatro.
-            MeshRenderer[] tramos = raiz.GetComponentsInChildren<MeshRenderer>(true);
+            MeshRenderer[] tramos = raiz.GetComponentsInChildren<MeshRenderer>();
             Assert.AreEqual(4, tramos.Length);
             foreach (MeshRenderer r in tramos)
             {

@@ -166,6 +166,7 @@ namespace MechaCyberpunk.Tests
         }
 
         [Test]
+        [Ignore("T-1482: zonas nuevas quitadas del mapa (revertir mapa 19-nov)")]
         public void Diseno_CubreMalecon_Puerto_Cerro_Autopista_ConLosPersonajesPedidos()
         {
             string[] zonas = PeatonesZonaT1409.Diseno.Select(d => d.zona).ToArray();
@@ -191,6 +192,7 @@ namespace MechaCyberpunk.Tests
         }
 
         [Test]
+        [Ignore("T-1482: zonas nuevas quitadas del mapa (revertir mapa 19-nov)")]
         public void ConfigBase_SiExiste_CubreLas4ZonasNuevas_YPeatonLaTiene()
         {
             ConfigPeatonesZona config = AssetDatabase.LoadAssetAtPath<ConfigPeatonesZona>(PeatonesZonaT1409.RutaConfig);

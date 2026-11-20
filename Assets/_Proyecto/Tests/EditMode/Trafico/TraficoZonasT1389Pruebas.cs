@@ -26,6 +26,7 @@ namespace MechaCyberpunk.Tests
         }
 
         [Test]
+        [Ignore("T-1482: zonas nuevas quitadas del mapa (revertir mapa 19-nov)")]
         public void Diseno_LasCuatroZonasNuevasTienenCajaYCarros()
         {
             foreach (string nombre in new[] { "Malecon", "Cerro", "Autopista", "Puerto" })
@@ -38,8 +39,13 @@ namespace MechaCyberpunk.Tests
         [Test]
         public void Diseno_CadaCajaTieneSuZonaYViceversa()
         {
+            string[] quitadas = { "Malecon", "Puerto", "Autopista", "Cerro" }; // T-1482: sus cajas siguen en la tabla de Arte pero ya no hay zona
             foreach (var c in ColocarT1364ZonasTrafico.Cajas)
             {
+                if (quitadas.Contains(c.Zona))
+                {
+                    continue;
+                }
                 Assert.IsTrue(DisenoZonasTrafico.Zonas.Any(z => z.nombre == c.Zona), "caja sin zona: " + c.Zona);
             }
             foreach (var z in DisenoZonasTrafico.Zonas)
@@ -62,6 +68,7 @@ namespace MechaCyberpunk.Tests
         }
 
         [Test]
+        [Ignore("T-1482: zonas nuevas quitadas del mapa (revertir mapa 19-nov)")]
         public void Diseno_CadaZonaCubreSuAreaDelPlan()
         {
             // Puntos de docs/plan-zonas-18nov.md: calles de zona, puertas y rampas.
@@ -80,6 +87,7 @@ namespace MechaCyberpunk.Tests
         }
 
         [Test]
+        [Ignore("T-1482: zonas nuevas quitadas del mapa (revertir mapa 19-nov)")]
         public void Diseno_ElCerroNoLlevaCamionesNiTrailer()
         {
             var cerro = DisenoZonasTrafico.Zonas.First(z => z.nombre == "Cerro");
@@ -90,6 +98,7 @@ namespace MechaCyberpunk.Tests
         }
 
         [Test]
+        [Ignore("T-1482: zonas nuevas quitadas del mapa (revertir mapa 19-nov)")]
         public void Diseno_PuertoTieneTrailer_YMaleconSuperdeportivosYMotos()
         {
             CollectionAssert.Contains(DisenoZonasTrafico.Zonas.First(z => z.nombre == "Puerto").carros, "V18");
@@ -97,6 +106,18 @@ namespace MechaCyberpunk.Tests
             foreach (string c in new[] { "V22", "V23", "V24", "MT01", "MT02" })
             {
                 CollectionAssert.Contains(malecon, c);
+            }
+        }
+
+        [Test]
+        public void T1482_SoloQuedanLas4ZonasDeLosBarrios_YLasMotosSalenEnLosExtras()
+        {
+            CollectionAssert.AreEquivalent(new[] { "Deshuesadero", "NeonAlto", "LasLomas", "Avenida" }, DisenoZonasTrafico.NombresDeZonas());
+            CollectionAssert.Contains(DisenoZonasTrafico.Extras, "MT01");
+            CollectionAssert.Contains(DisenoZonasTrafico.Extras, "MT02");
+            foreach (string codigo in DisenoZonasTrafico.CarrosNuevos)
+            {
+                Assert.IsTrue(DisenoZonasTrafico.Zonas.Any(z => z.carros.Contains(codigo)) || DisenoZonasTrafico.Extras.Contains(codigo), codigo);
             }
         }
 
