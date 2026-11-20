@@ -48,7 +48,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.AreEqual(3, Disparos(catalogo.Buscar(ArmaAPie.Pistola, 0)), "Pistola: 0 de 60 en 3 tiros");
             Assert.AreEqual(1, Disparos(catalogo.Buscar(ArmaAPie.Escopeta, 0)), "Escopeta: 0 en 1 disparo a quemarropa");
             Assert.AreEqual(4, Disparos(catalogo.Buscar(ArmaAPie.Fusil, 0)), "Fusil: 0 en 4 balas");
-            Assert.AreEqual(1, Disparos(catalogo.Buscar(ArmaAPie.Sniper, 0)), "Sniper: 0 en 1 bala");
+            Assert.AreEqual(2, Disparos(catalogo.Buscar(ArmaAPie.Sniper, 0)), "Sniper: 0 en 2 balas al cuerpo (T-1527: ya no mata de un tiro al cuerpo)");
         }
 
         /// <summary>T-416: 5 armas por 4 niveles (base y tres mejoras) que mejoran en algo, 19 ofertas de armas en El Mercado, el sniper al extremo.</summary>

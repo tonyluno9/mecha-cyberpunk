@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using UnityEditor;
@@ -155,7 +156,10 @@ namespace MechaCyberpunk.Personaje.Editor
             // demasiado grande para las balas. Si su forma debe ser cápsula y no es ya una sola cápsula delgada, se cambia.
             if (!grande && ElegirForma(prop.name, render.size) == Forma.Capsula)
             {
-                bool yaDelgada = colliders.Count == 1 && colliders[0] is CapsuleCollider capsula && capsula.radius <= RadioMaximoTronco + 0.01f;
+                // Ya está bien si tiene un tronco de cápsula delgada y, a lo más, cajas chicas de base (diseño de T-1340).
+                bool tronco = colliders.Any(x => x is CapsuleCollider capsula && capsula.radius <= RadioMaximoTronco + 0.01f);
+                bool cajasChicas = colliders.All(x => !(x is BoxCollider) || Mathf.Max(x.bounds.size.x, x.bounds.size.z) <= 1.5f);
+                bool yaDelgada = tronco && cajasChicas;
                 grande = !yaDelgada;
             }
             Debug.Log("[T-1527] " + ruta + " / " + prop.name + ": render " + render.size.ToString("F2") + " collider " + collider.size.ToString("F2") + (grande ? " GRANDE" : " ok"));
@@ -187,10 +191,9 @@ namespace MechaCyberpunk.Personaje.Editor
                 cap.radius = radio;
                 cap.height = Mathf.Max(alto, radio * 2f);
                 // El poste o tronco suele estar en el pivote del prop; el centro de los bounds se corre hacia el brazo o la copa.
-                bool pivoteDentro = render.min.x <= 0f && render.max.x >= 0f && render.min.z <= 0f && render.max.z >= 0f;
-                cap.center = pivoteDentro
-                    ? new Vector3(0f, render.min.y + cap.height * 0.5f, 0f)
-                    : new Vector3(render.center.x, render.min.y + cap.height * 0.5f, render.center.z);
+                // Se usa el centro de los vértices del primer metro de la malla (la base del poste o del tronco).
+                Vector2 basePie = CentroDeLaBase(prop, render.min.y, new Vector2(render.center.x, render.center.z));
+                cap.center = new Vector3(basePie.x, render.min.y + cap.height * 0.5f, basePie.y);
             }
             else
             {
@@ -201,6 +204,30 @@ namespace MechaCyberpunk.Personaje.Editor
             c.ajustados++;
             c.cambio = true;
             Debug.Log("[T-1527] " + prop.name + ": collider reemplazado por " + forma + ".");
+        }
+
+        // Centro (x, z) en el espacio local del prop de los vértices que quedan a menos de 1 m del piso del modelo.
+        private static Vector2 CentroDeLaBase(Transform prop, float pisoLocal, Vector2 respaldo)
+        {
+            Vector2 suma = Vector2.zero;
+            int n = 0;
+            foreach (MeshFilter mf in prop.GetComponentsInChildren<MeshFilter>())
+            {
+                if (mf.sharedMesh == null)
+                {
+                    continue;
+                }
+                foreach (Vector3 v in mf.sharedMesh.vertices)
+                {
+                    Vector3 local = prop.InverseTransformPoint(mf.transform.TransformPoint(v));
+                    if (local.y <= pisoLocal + 1f)
+                    {
+                        suma += new Vector2(local.x, local.z);
+                        n++;
+                    }
+                }
+            }
+            return n > 0 ? suma / n : respaldo;
         }
 
         /// <summary>Árboles: cápsula del tronco. Objetos altos y delgados con nombre de poste, farol, semáforo, lámpara o bolardo: cápsula. El resto: caja.</summary>

@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7160837455490074208}
-  - component: {fileID: 6752078825745645211}
+  - component: {fileID: 6260989973381792095}
   m_Layer: 0
   m_Name: Transformador_Poste
   m_TagString: Untagged
@@ -33,8 +33,8 @@ Transform:
   - {fileID: 626630005690181886}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!136 &6752078825745645211
-CapsuleCollider:
+--- !u!65 &6260989973381792095
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -51,11 +51,9 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.2
-  m_Height: 7.3040504
-  m_Direction: 1
-  m_Center: {x: 0, y: 3.6520252, z: 0}
+  serializedVersion: 3
+  m_Size: {x: 7.501971, y: 7.3040504, z: 2.4333549}
+  m_Center: {x: -0.12207961, y: 3.6520252, z: 0.22574416}
 --- !u!1001 &1096773667469053717
 PrefabInstance:
   m_ObjectHideFlags: 0

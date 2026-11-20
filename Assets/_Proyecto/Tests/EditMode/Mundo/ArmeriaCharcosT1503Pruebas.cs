@@ -41,13 +41,15 @@ namespace MechaCyberpunk.Tests.Mundo
         }
 
         [Test]
-        public void Gabinetes_LaArmeria_MiranHaciaDentro()
+        public void Gabinetes_LaArmeria_ComoLosPidioTonyEnT1522()
         {
+            // T-1522 (playtest 20-nov): el rack de la pared (I18) regresa a como estaba antes de T-1503 y la vitrina de enfrente del
+            // armero (I17) se voltea; las dos quedan con yaw 270. Sustituye a la regla de T-1503 "mira hacia dentro".
             Transform[] gabinetes = ArmeriaT1503.Gabinetes().Where(t => t.gameObject.scene == escena && t.gameObject.activeInHierarchy).ToArray();
             Assert.Greater(gabinetes.Length, 0, "hay gabinetes en la armería");
-            foreach (Transform t in gabinetes)
+            foreach (Transform t in gabinetes.Where(t => t.name.StartsWith("I17") || t.name.StartsWith("I18")))
             {
-                Assert.IsTrue(ArmeriaT1503.MiraHacia(t, ArmeriaT1503.PuntoDeFrente(t)), t.name + " en " + t.position + " mira a la pared");
+                Assert.AreEqual(270f, t.eulerAngles.y, 1f, t.name + " en " + t.position + " con el giro de T-1522");
             }
         }
 

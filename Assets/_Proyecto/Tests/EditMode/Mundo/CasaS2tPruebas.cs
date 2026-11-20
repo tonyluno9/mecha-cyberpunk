@@ -27,6 +27,7 @@ namespace MechaCyberpunk.Tests.Mundo
         }
 
         [Test]
+        [Ignore("T-1520: el cuarto se quitó de la ciudad (playtest 20-nov)")]
         public void PisoDelCuarto_NoSeEncimaConLaBanqueta()
         {
             float banqueta = Buscar("Barrio/Manzana_4/Banqueta").GetComponent<Renderer>().bounds.max.y;
@@ -38,6 +39,7 @@ namespace MechaCyberpunk.Tests.Mundo
         }
 
         [Test]
+        [Ignore("T-1520: el cuarto se quitó de la ciudad (playtest 20-nov)")]
         public void Medidor_DeTamanoReal()
         {
             Assert.AreEqual(ColocarS2tCasa.AltoMedidor, ArteT250.Limites(Buscar(ColocarS2tCasa.RutaMedidor).gameObject).size.y, 0.03f);
