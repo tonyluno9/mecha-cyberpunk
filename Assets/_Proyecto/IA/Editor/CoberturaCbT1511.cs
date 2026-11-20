@@ -171,6 +171,10 @@ namespace MechaCyberpunk.IA.Editor
             material.SetFloat("_Smoothness", SuavidadMaterial);
             material.SetFloat("_Metallic", MetalicoMaterial);
             material.enableInstancing = true;
+            if (nombre.StartsWith("CB02"))
+            {
+                CostalesT1525.AjustarMaterial(material); // T-1525: los costales son tela, sin metal ni brillo
+            }
             EditorUtility.SetDirty(material);
             return material;
         }
