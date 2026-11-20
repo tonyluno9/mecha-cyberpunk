@@ -17,6 +17,24 @@ namespace MechaCyberpunk.Personaje
         [Tooltip("Chispas o gotas por impacto (por perdigón en la escopeta).")]
         [Min(0)] public int particulas = 6;
 
+        [Header("T-1486: peso del disparo")]
+        [Tooltip("Cuánto retrocede el arma hacia atrás en cada tiro (m).")]
+        [Min(0f)] public float retrocesoArma = 0.08f;
+        [Tooltip("Cuánto tarda el arma en ir atrás y volver (s).")]
+        [Min(0.02f)] public float duracionRetrocesoArma = 0.12f;
+        [Tooltip("Cuánto tarda la patada de cámara en volver a cero (s). 0 = usar la general.")]
+        [Min(0f)] public float recuperacion;
+        [Tooltip("Fuerza del temblor de cámara por impulso (ver TemblorCamara). 0 = sin temblor.")]
+        [Min(0f)] public float impulso = 0.25f;
+        [Tooltip("Casquillos expulsados por tiro (0 = el arma no los suelta).")]
+        [Min(0)] public int casquillos = 1;
+        [Tooltip("Dispersión (°) que se suma a cada tiro seguido.")]
+        [Min(0f)] public float floracion;
+        [Tooltip("Tope de la dispersión acumulada (°).")]
+        [Min(0f)] public float topeFloracion;
+        [Tooltip("Cuánta dispersión acumulada se recupera por segundo (°/s).")]
+        [Min(0f)] public float recuperacionFloracion = 8f;
+
         public AjusteSensacion() { }
 
         public AjusteSensacion(float patada, float desvio, float destello, int particulas)
@@ -26,21 +44,29 @@ namespace MechaCyberpunk.Personaje
             this.destello = destello;
             this.particulas = particulas;
         }
+
+        /// <summary>T-1486: con todo el peso del disparo.</summary>
+        public AjusteSensacion(float patada, float desvio, float destello, int particulas, float retrocesoArma, float duracionRetrocesoArma,
+            float recuperacion, float impulso, int casquillos, float floracion, float topeFloracion, float recuperacionFloracion)
+            : this(patada, desvio, destello, particulas)
+        {
+            this.retrocesoArma = retrocesoArma;
+            this.duracionRetrocesoArma = duracionRetrocesoArma;
+            this.recuperacion = recuperacion;
+            this.impulso = impulso;
+            this.casquillos = casquillos;
+            this.floracion = floracion;
+            this.topeFloracion = topeFloracion;
+            this.recuperacionFloracion = recuperacionFloracion;
+        }
     }
 
     /// <summary>Parámetros de la sensación de golpe y disparo (T-420). El asset va en Resources/DatosSensacion; sin él se usan estos valores.</summary>
     [CreateAssetMenu(menuName = "Mecha Cyberpunk/Datos de sensación de disparo", fileName = "DatosSensacion")]
     public class DatosSensacion : ScriptableObject
     {
-        [Tooltip("En orden: Puños, Pistola, Escopeta, Fusil, Sniper.")]
-        [SerializeField] private AjusteSensacion[] armas =
-        {
-            new AjusteSensacion(0.9f, 0.5f, 0f, 0),
-            new AjusteSensacion(1.0f, 0.25f, 0.14f, 6),
-            new AjusteSensacion(3.2f, 0.5f, 0.26f, 4),
-            new AjusteSensacion(0.6f, 0.35f, 0.16f, 5),
-            new AjusteSensacion(4.5f, 0.3f, 0.22f, 10),
-        };
+        [Tooltip("En orden del enum ArmaAPie: Puños, Pistola, Escopeta, Fusil, Sniper, Subfusil, Revólver, Lanzagranadas, Granada, Rifle de plasma.")]
+        [SerializeField] private AjusteSensacion[] armas = AjustesPorArma();
 
         [Tooltip("Cuánto tarda la patada en volver a cero (s).")]
         [Min(0.02f)] [SerializeField] private float duracionPatada = 0.18f;
@@ -67,6 +93,27 @@ namespace MechaCyberpunk.Personaje
         public float DuracionHitmarkerMuerte => duracionHitmarkerMuerte;
         public Material MaterialEfecto => materialEfecto;
         public Texture2D TexturaDestello => texturaDestello;
+
+        /// <summary>
+        /// T-1486: el peso de cada arma (patada, retroceso visual, temblor, casquillos, floración). Es el valor de fábrica y lo que escribe el método
+        /// de editor AjustarSensacionT1486. Índice = valor de <see cref="ArmaAPie"/>.
+        /// </summary>
+        public static AjusteSensacion[] AjustesPorArma()
+        {
+            return new[]
+            {
+                new AjusteSensacion(0.9f, 0.5f, 0f, 0, 0f, 0.12f, 0f, 0f, 0, 0f, 0f, 8f),            // Puños
+                new AjusteSensacion(1.0f, 0.25f, 0.26f, 6, 0.07f, 0.12f, 0f, 0.25f, 1, 0.3f, 1.5f, 6f), // Pistola
+                new AjusteSensacion(3.2f, 0.5f, 0.5f, 4, 0.16f, 0.26f, 0.3f, 0.6f, 1, 0f, 0f, 8f),   // Escopeta
+                new AjusteSensacion(0.6f, 0.35f, 0.3f, 5, 0.045f, 0.07f, 0.1f, 0.3f, 1, 0.15f, 2.5f, 5f), // Fusil
+                new AjusteSensacion(4.5f, 0.3f, 0.4f, 10, 0.2f, 0.4f, 0.45f, 0.6f, 1, 0f, 0f, 8f),   // Sniper
+                new AjusteSensacion(0.5f, 0.3f, 0.22f, 4, 0.035f, 0.06f, 0.09f, 0.22f, 1, 0.12f, 2f, 5f), // Subfusil
+                new AjusteSensacion(2.6f, 0.4f, 0.4f, 8, 0.14f, 0.2f, 0.28f, 0.5f, 0, 0f, 0f, 8f),   // Revólver (los casquillos salen al recargar)
+                new AjusteSensacion(3.0f, 0.3f, 0.3f, 0, 0.15f, 0.3f, 0.3f, 0.6f, 0, 0f, 0f, 8f),    // Lanzagranadas
+                new AjusteSensacion(0f, 0f, 0f, 0, 0f, 0.12f, 0f, 0f, 0, 0f, 0f, 8f),               // Granada
+                new AjusteSensacion(0.7f, 0.2f, 0.3f, 5, 0.05f, 0.1f, 0.12f, 0.3f, 0, 0f, 0f, 8f),  // Rifle de plasma
+            };
+        }
 
         public AjusteSensacion Ajuste(ArmaAPie arma)
         {

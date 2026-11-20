@@ -1,3 +1,4 @@
+using MechaCyberpunk.Core;
 using MechaCyberpunk.Personaje.Combate;
 using MechaCyberpunk.UI.Kit;
 using UnityEngine;
@@ -16,6 +17,10 @@ namespace MechaCyberpunk.UI.Hud
         private const float Grosor = 3f;
         private const float Separacion = 8f;
         private const float EscalaMuerte = 1.6f;
+        // T-1486: al matar, además de las diagonales aparece una cruz recta en rojo (otra forma, no solo otro tamaño).
+        private const int RayasDiagonales = 4;
+        private const int RayasTotales = 8;
+        private static readonly Color ColorMuerte = new Color(1f, 0.2f, 0.15f, 1f);
 
         private SensacionDisparo sensacion;
         private Canvas canvas;
@@ -37,7 +42,7 @@ namespace MechaCyberpunk.UI.Hud
             raiz = (RectTransform)centro.transform;
             raiz.anchorMin = raiz.anchorMax = raiz.pivot = new Vector2(0.5f, 0.5f);
             raiz.anchoredPosition = Vector2.zero;
-            rayas = new Image[4];
+            rayas = new Image[RayasTotales];
             for (int i = 0; i < rayas.Length; i++)
             {
                 Image raya = KitUI.CrearImagen(raiz, "Raya" + i, Color.white);
@@ -45,7 +50,7 @@ namespace MechaCyberpunk.UI.Hud
                 RectTransform r = raya.rectTransform;
                 r.anchorMin = r.anchorMax = r.pivot = new Vector2(0.5f, 0.5f);
                 r.sizeDelta = new Vector2(Largo, Grosor);
-                float angulo = 45f + 90f * i;
+                float angulo = (i < RayasDiagonales ? 45f : 0f) + 90f * (i % RayasDiagonales);
                 Vector2 dir = new Vector2(Mathf.Cos(angulo * Mathf.Deg2Rad), Mathf.Sin(angulo * Mathf.Deg2Rad));
                 r.anchoredPosition = dir * (Separacion + Largo * 0.5f);
                 r.localRotation = Quaternion.Euler(0f, 0f, angulo);
@@ -99,11 +104,13 @@ namespace MechaCyberpunk.UI.Hud
             mato = murio;
             duracion = murio ? sensacion.Datos.DuracionHitmarkerMuerte : sensacion.Datos.DuracionHitmarker;
             fin = Time.time + duracion;
-            Color color = murio ? KitUI.Estilo.Naranja : Color.white;
-            foreach (Image raya in rayas)
+            Color color = murio ? ColorMuerte : Color.white;
+            for (int i = 0; i < rayas.Length; i++)
             {
-                raya.color = color;
+                rayas[i].color = color;
+                rayas[i].enabled = murio || i < RayasDiagonales;
             }
+            Sonidos.Reproducir(SonidosMarcaImpacto.Id(murio)); // T-1486: sonido distinto al pegar y al matar
             raiz.localScale = Vector3.one * (murio ? EscalaMuerte : 1f);
             canvas.enabled = true;
         }
