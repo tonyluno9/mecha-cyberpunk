@@ -17,6 +17,18 @@ namespace MechaCyberpunk.Personaje.Visual
         Frente = 0,
         Espalda = 1,
         Fuerte = 2,
+        /// <summary>T-1515: el golpe pega por el lado izquierdo del jugador (PJ01_Dano_Izquierda).</summary>
+        Izquierda = 3,
+        /// <summary>T-1515: el golpe pega por el lado derecho del jugador (PJ01_Dano_Derecha).</summary>
+        Derecha = 4,
+    }
+
+    /// <summary>T-1515: valor del parámetro Escalones.</summary>
+    public enum EscalonesVisual
+    {
+        Ninguno = 0,
+        Subiendo = 1,
+        Bajando = 2,
     }
 
     /// <summary>Gestos de una sola vez de la capa base (parámetro GestoTipo): carro, interacción y burla/presumir de enemigos (T-622 a T-624).</summary>
@@ -55,6 +67,10 @@ namespace MechaCyberpunk.Personaje.Visual
         public const string CoberturaTipo = "CoberturaTipo";
         public const string DisparoCobertura = "DisparoCobertura";
         public const string Frenar = "Frenar";
+        /// <summary>T-1515: 0 = nada, 1 = subiendo escalones, 2 = bajando escalones (<see cref="EscalonesVisual"/>). Lo pone VisualPersonaje del jugador desde DetectorEscalones.</summary>
+        public const string Escalones = "Escalones";
+        /// <summary>T-1515: rapidez (x) de los estados EscalonesSubir y EscalonesBajar según la velocidad real (pies sin patinar).</summary>
+        public const string RapidezEscalones = "RapidezEscalones";
         /// <summary>T-1505: trigger del aterrizaje fuerte (PJ01_Aterrizaje_Fuerte); lo dispara VisualPersonaje del jugador al tocar el piso tras una caída de <see cref="VelocidadAterrizajeFuerte"/>.</summary>
         public const string AterrizajeFuerte = "AterrizajeFuerte";
         /// <summary>T-985: puños en guardia (estado PunosGuardia de la capa de arriba, PJ01_Punos_Guardia). Lo pone VisualPersonaje unos segundos después de cada golpe de puños, solo en quien tiene <c>GuardiaTrasGolpe</c> (el jugador).</summary>
@@ -190,15 +206,15 @@ namespace MechaCyberpunk.Personaje.Visual
         public static readonly string[] EstadosBase =
         {
             "Idle", "Caminar", "Correr", "GirarDer", "GirarIzq", "Frenar", "SaltoInicio", "SaltoAire", "SaltoAterrizaje", "Caida",
-            "AgachadoCaminar", "AgachadoQuieto", "Agacharse", "Pararse", "Rodar", "CoberturaEntrar", "CoberturaMantener", "CoberturaDisparo1", "CoberturaDisparo2", "GirarApuntarDer", "GirarApuntarIzq",
+            "AgachadoCaminar", "AgachadoQuieto", "Agacharse", "Pararse", "Rodar", "CoberturaEntrar", "CoberturaMantener", "CoberturaAsomarse", "CoberturaRegresar", "CoberturaDisparo1", "CoberturaDisparo2", "GirarApuntarDer", "GirarApuntarIzq",
             "CoberturaRifleEntrar", "CoberturaRifleIdle", "CoberturaRifleDisparo",
             "MuerteAdelante", "MuerteAtras", "MuerteDesmayo", "LevantarseBocaArriba", "LevantarseBocaAbajo",
             "CarroEntrar", "CarroManejar", "CarroSalir", "AbrirPuerta", "Boton", "Recoger", "Telefono", "VerTelefono", "Burla", "Presumir",
-            "MotoSubir", "MotoManejar", "MotoBajar", "AterrizajeFuerte",
+            "MotoSubir", "MotoManejar", "MotoBajar", "AterrizajeFuerte", "EscalonesSubir", "EscalonesBajar",
         };
 
         /// <summary>Estados de la capa aditiva de daño (T-735).</summary>
-        public static readonly string[] EstadosDano = { "Vacio", "DanoFrente", "DanoEspalda", "DanoFuerte" };
+        public static readonly string[] EstadosDano = { "Vacio", "DanoFrente", "DanoEspalda", "DanoFuerte", "DanoIzquierda", "DanoDerecha" };
 
         /// <summary>Estados de la capa de arriba (torso).</summary>
         public static readonly string[] EstadosArriba =
@@ -208,9 +224,9 @@ namespace MechaCyberpunk.Personaje.Visual
             "LargaIdle", "LargaApuntar", "LargaDisparo", "LargaRecargar", "Pitar",
         };
 
-        public static readonly string[] ParametrosFloat = { ReglasVisual.Velocidad, VelX, VelZ, VelY, Giro, PoseCobertura, RapidezGolpe, ApuntarX, ApuntarZ, ConImplante };
+        public static readonly string[] ParametrosFloat = { ReglasVisual.Velocidad, VelX, VelZ, VelY, Giro, PoseCobertura, RapidezGolpe, RapidezEscalones, ApuntarX, ApuntarZ, ConImplante };
         public static readonly string[] ParametrosBool = { ReglasVisual.EnSuelo, ReglasVisual.Apuntando, ReglasVisual.Caer, ReglasVisual.Cubierto, Agachado, Manejando, ViendoTelefono, EnGuardia, ArmaLargaEquipada };
-        public static readonly string[] ParametrosInt = { ReglasVisual.TipoArma, DanoTipo, MuerteTipo, GolpeTipo, CoberturaTipo, GestoTipo };
+        public static readonly string[] ParametrosInt = { ReglasVisual.TipoArma, DanoTipo, MuerteTipo, GolpeTipo, CoberturaTipo, GestoTipo, Escalones };
         public static readonly string[] ParametrosTrigger =
         {
             ReglasVisual.Disparar, ReglasVisual.Recargar, ReglasVisual.Golpe, ReglasVisual.Herido, DisparoCobertura, Frenar, Gesto, Rodar, AterrizajeFuerte,
@@ -240,6 +256,17 @@ namespace MechaCyberpunk.Personaje.Visual
             }
             return Mathf.Lerp(clipBajo, clipAlto, Mathf.InverseLerp(umbralBajo, umbralAlto, velocidad));
         }
+
+        /// <summary>T-1515: velocidad (m/s) hacia adelante a la que avanzan PJ01_Escaleras_Subir (0.47) y PJ01_Escaleras_Bajar (0.49), de la tabla de Blender.</summary>
+        public const float VelocidadClipEscalones = 0.48f;
+        /// <summary>T-1515: rapidez (x) mínima y máxima de los clips de escalones: arriba de la velocidad máxima se pasa al trote normal (el IK de pies cuida el desnivel).</summary>
+        public const float RapidezMinimaEscalones = 1f, RapidezMaximaEscalones = 2.6f;
+        /// <summary>T-1515: velocidad (m/s) hasta la que se usan los clips de escalones (andar tranquilo); arriba de ella se queda el trote normal, que el IK de pies ya adapta al desnivel.</summary>
+        public const float VelocidadMaximaEscalones = 3.2f;
+
+        /// <summary>T-1515: rapidez (x) de los clips de escalones para la velocidad real (m/s).</summary>
+        public static float RapidezEscalonesPara(float velocidadReal) =>
+            EscalaVelocidad(velocidadReal, VelocidadClipEscalones, RapidezMinimaEscalones, RapidezMaximaEscalones);
 
         /// <summary>T-1505: velocidad vertical de llegada (m/s hacia abajo) desde la que el jugador hace el aterrizaje fuerte: ~2.5 m con gravedad 16; arriba de ~4 m rueda (CaidaJugador).</summary>
         public const float VelocidadAterrizajeFuerte = 9f;
@@ -372,6 +399,47 @@ namespace MechaCyberpunk.Personaje.Visual
                 return DanoVisual.Fuerte;
             }
             return GolpeDeEspalda(direccionGolpe, frente) ? DanoVisual.Espalda : DanoVisual.Frente;
+        }
+
+        /// <summary>T-1515: coseno mínimo (contra el costado del jugador) para que un golpe cuente como de lado: de 53° a 90° de cada costado, el resto es de frente o de espalda.</summary>
+        public const float CosenoGolpeLateral = 0.6f;
+
+        /// <summary>
+        /// T-1515: de qué costado pega el golpe: -1 izquierda, 1 derecha, 0 si viene de frente, de espalda o sin dirección. La dirección es la del golpe (del atacante al personaje):
+        /// una bala que va hacia la derecha del jugador le pega por su izquierda.
+        /// </summary>
+        public static int LadoDelGolpe(Vector3 direccionGolpe, Vector3 frente)
+        {
+            Vector3 d = new Vector3(direccionGolpe.x, 0f, direccionGolpe.z);
+            Vector3 f = new Vector3(frente.x, 0f, frente.z);
+            if (d.sqrMagnitude < 1e-6f || f.sqrMagnitude < 1e-6f)
+            {
+                return 0;
+            }
+            float haciaDerecha = Vector3.Dot(d.normalized, Vector3.Cross(Vector3.up, f.normalized));
+            if (Mathf.Abs(haciaDerecha) < CosenoGolpeLateral)
+            {
+                return 0;
+            }
+            return haciaDerecha > 0f ? -1 : 1;
+        }
+
+        /// <summary>T-1515: igual que <see cref="ElegirDano(Vector3, Vector3, bool)"/> pero con <paramref name="lateral"/> los golpes por un costado salen como Izquierda o Derecha.</summary>
+        public static DanoVisual ElegirDano(Vector3 direccionGolpe, Vector3 frente, bool fuerte, bool lateral)
+        {
+            if (fuerte)
+            {
+                return DanoVisual.Fuerte;
+            }
+            if (lateral)
+            {
+                int lado = LadoDelGolpe(direccionGolpe, frente);
+                if (lado != 0)
+                {
+                    return lado < 0 ? DanoVisual.Izquierda : DanoVisual.Derecha;
+                }
+            }
+            return ElegirDano(direccionGolpe, frente, false);
         }
 
         /// <summary>Muertes válidas según de dónde viene el golpe: de frente cae de espaldas o se desmaya; de espalda cae de frente o se desmaya.</summary>
