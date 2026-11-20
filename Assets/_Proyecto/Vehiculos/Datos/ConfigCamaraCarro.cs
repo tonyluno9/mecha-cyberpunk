@@ -65,7 +65,7 @@ namespace MechaCyberpunk.Vehiculos
         [Tooltip("Fuerza máxima del impulso de temblor (1 es un golpe normal de Cinemachine).")]
         [Min(0f)] [SerializeField] private float fuerzaTemblorMaxima = 1.5f;
         [Tooltip("Cuánto se aplica del temblor a la cámara (0 lo apaga).")]
-        [Range(0f, 3f)] [SerializeField] private float gananciaTemblor = 1f;
+        [Range(0f, 3f)] [SerializeField] private float gananciaTemblor = 0.5f;
 
         public float FovExtraVelocidad => fovExtraVelocidad;
         public float KmhFov => kmhFov;
