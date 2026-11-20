@@ -1,0 +1,68 @@
+{
+ "version": 1,
+ "resolution": "1k",
+ "variantes_por_defecto": 1,
+ "carpeta_salida": "imageassets/modelos-nuevos/nuevos-17nov",
+ "trabajos": [
+  {
+   "id": "V20",
+   "archivo": "V20_Tuneado",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/nuevos-17nov/V20_Tuneado.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K16_Deshuesadero.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image ONLY for the art style and the look of its tuned street-race cars (illustrated, thin outlines, soft hand-painted gradients, Mexican cyberpunk); do not copy the scene. ORIGINAL car design of our own: it must NOT resemble any real car model or brand. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single car alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos, no brand badges, no license plate text. The four wheels are big and clearly separated from the body by visible dark gaps and deep wheel arches, so they can be cut off as separate pieces. Doors, hood and trunk have clearly marked panel cut lines. Windows are dark tinted solid glass. View: 3/4 view from the front left, slightly from above. Subject: a heavily tuned compact 1990s-style Japanese-inspired coupe of our own design: a wide body kit with flared fenders, a big rear wing, thin multi-spoke rims, very low suspension, a glowing turquoise neon underglow, glossy black paint with an abstract magenta vinyl graphic (shapes only, no text).",
+   "tripo": {
+    "modo": "HD",
+    "caras": 18000,
+    "textura": "2K"
+   },
+   "medida": "4.3 m"
+  },
+  {
+   "id": "V21",
+   "archivo": "V21_Tuneado",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/nuevos-17nov/V21_Tuneado.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K16_Deshuesadero.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image ONLY for the art style and the look of its tuned street-race cars (illustrated, thin outlines, soft hand-painted gradients, Mexican cyberpunk); do not copy the scene. ORIGINAL car design of our own: it must NOT resemble any real car model or brand. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single car alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos, no brand badges, no license plate text. The four wheels are big and clearly separated from the body by visible dark gaps and deep wheel arches, so they can be cut off as separate pieces. Doors, hood and trunk have clearly marked panel cut lines. Windows are dark tinted solid glass. View: 3/4 view from the front left, slightly from above. Subject: a tuned hatchback of our own design: riveted fender flares, a hood scoop air intake, a side exit exhaust pipe under the door, a glowing magenta neon underglow, white paint with orange and turquoise racing stripes.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 18000,
+    "textura": "2K"
+   },
+   "medida": "4.0 m"
+  },
+  {
+   "id": "V22",
+   "archivo": "V22_Superdeportivo",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/nuevos-17nov/V22_Superdeportivo.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K16_Deshuesadero.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image ONLY for the art style and the look of its tuned street-race cars (illustrated, thin outlines, soft hand-painted gradients, Mexican cyberpunk); do not copy the scene. ORIGINAL car design of our own: it must NOT resemble any real car model or brand. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single car alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos, no brand badges, no license plate text. The four wheels are big and clearly separated from the body by visible dark gaps and deep wheel arches, so they can be cut off as separate pieces. Doors, hood and trunk have clearly marked panel cut lines. Windows are dark tinted solid glass. View: 3/4 view from the front left, slightly from above. Subject: a mid-engine supercar, extremely low and wedge-shaped, scissor doors closed, side air intakes behind the doors, glowing turquoise light strips along its edges, matte black paint with chrome details.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 18000,
+    "textura": "2K"
+   },
+   "medida": "4.6 m"
+  }
+ ]
+}

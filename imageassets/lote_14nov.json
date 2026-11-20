@@ -1,0 +1,347 @@
+{
+ "version": 1,
+ "resolution": "1k",
+ "variantes_por_defecto": 1,
+ "carpeta_salida": "imageassets",
+ "trabajos": [
+  {
+   "id": "M30",
+   "archivo": "M30_RuedaArmas",
+   "fase": 1,
+   "salida": "imageassets/referencias/menus/M30_RuedaArmas.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/H10_HUD.png",
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png",
+    "imageassets/ui/hologramas/H01_Pistola.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is our game's HUD and the SECOND is our game's city look: match their style EXACTLY: thin lines, corners cut on a diagonal, turquoise with a yellow accent for the selected element, thin clean sans-serif text, no heavy panels. Original design of our own, nothing copied from other games. Full 16:9 game screenshot over the night street of the second image. All text in Spanish, spelled EXACTLY as written, no other words. The third image is our pistol hologram style for the weapon icons. Screen: the weapon wheel is open: the street behind is darkened and slightly blurred (slow motion), and in the center of the screen a radial wheel of 8 slots arranged in a circle, drawn in thin turquoise lines with cut corners: \"PISTOLA\", \"ESCOPETA\", \"FUSIL\", \"FRANCOTIRADOR\", \"PUÑOS\", \"BEBIDA\", \"PAPITAS\", \"VENDA\", each slot with a small cyan hologram icon of its weapon or item and its name in tiny thin text. The selected slot \"FUSIL\" is highlighted in yellow. In the center of the wheel: the selected name \"FUSIL\" and its ammo \"30 / 120\". The normal HUD is hidden."
+  },
+  {
+   "id": "M31",
+   "archivo": "M31_HabilidadesProtesis",
+   "fase": 1,
+   "salida": "imageassets/referencias/menus/M31_HabilidadesProtesis.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/H10_HUD.png",
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png",
+    "imageassets/ui/menus/H33_Implantes_Nivel2_v2.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Keep the FIRST attached image EXACTLY the same: the same street, character, camera and the same HUD in every corner. The second image is our city look and the third image shows our implant icons. Add ONLY one new element in the bottom center of the screen, in the same thin HUD style: a bar of 3 square ability slots side by side with cut corners, each with its key and name above it in Spanish, spelled exactly: \"[1] PIERNAS\", \"[2] BRAZOS\", \"[3] CABEZA\"; each slot shows the small icon of its implant (leg exoskeleton, arm exoskeleton, visor) and a thin energy/recharge bar below it: PIERNAS full and ACTIVE, glowing yellow; BRAZOS half recharged in turquoise; CABEZA full in turquoise. No other new text."
+  },
+  {
+   "id": "M32",
+   "archivo": "M32_TiendaArmas",
+   "fase": 1,
+   "salida": "imageassets/referencias/menus/M32_TiendaArmas.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/H10_HUD.png",
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png",
+    "imageassets/ui/hologramas/H04_Francotirador.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is our game's HUD and the SECOND is our game's city look: match their style EXACTLY: thin lines, corners cut on a diagonal, turquoise with a yellow accent for the selected element, thin clean sans-serif text, no heavy panels. Original design of our own, nothing copied from other games. Full 16:9 game screenshot over the night street of the second image. All text in Spanish, spelled EXACTLY as written, no other words. The third image is the weapon hologram to show big. Screen: the gun shop of El Mercado. The street is darkened behind a large translucent interface. Left side: a vertical list of weapons with thin separators, each row with a name and a price: \"PISTOLA  $ 800\", \"ESCOPETA  $ 2,400\", \"FUSIL  $ 4,800\", \"FRANCOTIRADOR  $ 7,500\" (selected, highlighted in yellow), \"SUBFUSIL  $ 3,600\", \"REVÓLVER  $ 2,900\". Right side: the selected weapon shown BIG as a glowing cyan hologram from the side, its name \"FRANCOTIRADOR\" above, and four stats as thin bars with numbers: \"DAÑO 90\", \"CADENCIA 20\", \"CARGADOR 5\", \"ALCANCE 95\". Bottom right: a button with a cut corner \"COMPRAR\" in yellow, and above the list the money \"$ 12,450\"."
+  },
+  {
+   "id": "W05",
+   "archivo": "W05_Subfusil",
+   "fase": 2,
+   "salida": "imageassets/armas/W05_Subfusil.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/armas/W01_Pistola.png",
+    "imageassets/armas/W03_Fusil.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached weapons as the exact reference for the art style, materials, colors, wear and level of detail: the new weapon must look like it belongs to the same set. Do not copy their shapes. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures. Mexican cyberpunk megacity street weapon, worn and patched: dark gunmetal and charcoal metal, sand-beige worn polymer parts, burnt orange accents, red cloth tape, small glowing teal and amber lights, scratches and rust spots. The whole weapon fully visible, no hands, no person, no text, no letters, no numbers, no logos. Single object, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow. Nothing thin or dangling. View: 3/4 view from the side, slightly from the front, showing the full length. Subject: a compact burst-fire submachine gun: a short boxy body, a long straight magazine sticking down, a folding stock folded to the side, a short barrel with a vented shroud, a small teal burst-mode light, red tape on the front grip.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "0.55 m (culata plegada)"
+  },
+  {
+   "id": "W06",
+   "archivo": "W06_Revolver",
+   "fase": 2,
+   "salida": "imageassets/armas/W06_Revolver.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/armas/W01_Pistola.png",
+    "imageassets/armas/W03_Fusil.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached weapons as the exact reference for the art style, materials, colors, wear and level of detail: the new weapon must look like it belongs to the same set. Do not copy their shapes. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures. Mexican cyberpunk megacity street weapon, worn and patched: dark gunmetal and charcoal metal, sand-beige worn polymer parts, burnt orange accents, red cloth tape, small glowing teal and amber lights, scratches and rust spots. The whole weapon fully visible, no hands, no person, no text, no letters, no numbers, no logos. Single object, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow. Nothing thin or dangling. View: 3/4 view from the side, slightly from the front, showing the full length. Subject: a heavy large-caliber revolver: a long thick barrel with a top rib, a big cylinder with a glowing turquoise ring of light around it, a chunky hammer, a sand-beige grip wrapped in red tape.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 10000,
+    "textura": "2K"
+   },
+   "medida": "0.38 m"
+  },
+  {
+   "id": "W07",
+   "archivo": "W07_RiflePlasma",
+   "fase": 2,
+   "salida": "imageassets/armas/W07_RiflePlasma.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/armas/W01_Pistola.png",
+    "imageassets/armas/W03_Fusil.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached weapons as the exact reference for the art style, materials, colors, wear and level of detail: the new weapon must look like it belongs to the same set. Do not copy their shapes. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures. Mexican cyberpunk megacity street weapon, worn and patched: dark gunmetal and charcoal metal, sand-beige worn polymer parts, burnt orange accents, red cloth tape, small glowing teal and amber lights, scratches and rust spots. The whole weapon fully visible, no hands, no person, no text, no letters, no numbers, no logos. Single object, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow. Nothing thin or dangling. View: 3/4 view from the side, slightly from the front, showing the full length. Subject: an energy plasma rifle: a long body with three thick copper-and-gunmetal coils wrapped around the barrel glowing turquoise between them, a boxy energy cell inserted in the side glowing bright turquoise, heat vents, a sand-beige stock, small amber warning lights.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "1.0 m"
+  },
+  {
+   "id": "W08",
+   "archivo": "W08_Lanzagranadas",
+   "fase": 2,
+   "salida": "imageassets/armas/W08_Lanzagranadas.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/armas/W01_Pistola.png",
+    "imageassets/armas/W03_Fusil.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached weapons as the exact reference for the art style, materials, colors, wear and level of detail: the new weapon must look like it belongs to the same set. Do not copy their shapes. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, flat colors with soft hand-painted gradients, no photorealistic textures. Mexican cyberpunk megacity street weapon, worn and patched: dark gunmetal and charcoal metal, sand-beige worn polymer parts, burnt orange accents, red cloth tape, small glowing teal and amber lights, scratches and rust spots. The whole weapon fully visible, no hands, no person, no text, no letters, no numbers, no logos. Single object, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow. Nothing thin or dangling. View: 3/4 view from the side, slightly from the front, showing the full length. Subject: a sturdy revolving-drum grenade launcher: a big round rotating drum with six thick chambers, a wide short barrel, a heavy frame, a top carry handle, a folding stock, orange hazard stripes, a small amber ready light.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "0.8 m"
+  },
+  {
+   "id": "IMP04",
+   "archivo": "IMP04_BrazoLaser",
+   "fase": 3,
+   "salida": "imageassets/modelos-nuevos/IMP04_BrazoLaser.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/modelos-nuevos/IMP02_ExoBrazos.png",
+    "imageassets/armas/W01_Pistola.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, materials and colors of our cyber parts and weapons. Stylized low-poly 3D game asset, chunky simplified shapes, large clean bevels, soft hand-painted gradients. Single object, complete, centered, isolated on a plain flat pure white background, soft even lighting, no cast shadow, no person, no text, no logos. Show the same piece twice side by side with space between them: on the left from the front, on the right in a 3/4 view. Subject: a cybernetic RIGHT forearm prosthetic, from elbow to hand, in gunmetal and chrome with orange accents: its top armor plates are split open like petals and a short thick laser cannon with a glowing turquoise lens slides out over the back of the hand; the hand itself is a robotic hand with chunky fingers. Hollow socket at the elbow end where it attaches.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "0.45 m (codo a mano)"
+  },
+  {
+   "id": "IMP05",
+   "archivo": "IMP05_HombreraMisiles",
+   "fase": 3,
+   "salida": "imageassets/modelos-nuevos/IMP05_HombreraMisiles.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/modelos-nuevos/IMP02_ExoBrazos.png",
+    "imageassets/armas/W01_Pistola.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, materials and colors of our cyber parts and weapons. Stylized low-poly 3D game asset, chunky simplified shapes, large clean bevels, soft hand-painted gradients. Single object, complete, centered, isolated on a plain flat pure white background, soft even lighting, no cast shadow, no person, no text, no logos. Show the same piece twice side by side with space between them: on the left from the front, on the right in a 3/4 view. Subject: a shoulder pad armor piece with a compact missile launcher that rises above the shoulder: a curved gunmetal shoulder plate with straps shaped as solid bands, a small hinged arm, and on top a boxy launcher pod with 4 mini missile tubes in a 2 by 2 grid, the missile tips orange, a small red targeting light.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 10000,
+    "textura": "2K"
+   },
+   "medida": "0.4 m de ancho · lanzador 0.3 m"
+  },
+  {
+   "id": "E10",
+   "archivo": "E10_PandilleroSnakes",
+   "fase": 4,
+   "salida": "imageassets/modelos-nuevos/E10_PandilleroSnakes.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/modelos-nuevos/PJ01_Protagonista_v2.png",
+    "imageassets/personajes/SkullHombre_frente.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached characters for the art style of our game (rendering, proportions, level of detail) and the T-pose framing; draw a NEW original character. Rig-friendly: everything fitted close to the body, nothing hanging loose, no capes, no long loose coats tails flapping, no dangling chains. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: a gang member of the SNAKES, the rival gang of the Skulls: an adult man, a fitted cropped jacket with a scale pattern in dark green and black, snake tattoos winding down both forearms, a cloth mask over the lower face in black with a green fang pattern, fitted black cargo pants, black boots, acid green accents.",
+   "tripo": {
+    "modo": "Quads",
+    "caras": 20000,
+    "textura": "2K",
+    "rig": "Humanoid (luego Mixamo)"
+   },
+   "medida": "1.78 m"
+  },
+  {
+   "id": "E11",
+   "archivo": "E11_JefeSnakes",
+   "fase": 4,
+   "salida": "imageassets/modelos-nuevos/E11_JefeSnakes.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/modelos-nuevos/PJ01_Protagonista_v2.png",
+    "imageassets/personajes/SkullHombre_frente.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached characters for the art style of our game (rendering, proportions, level of detail) and the T-pose framing; draw a NEW original character. Rig-friendly: everything fitted close to the body, nothing hanging loose, no capes, no long loose coats tails flapping, no dangling chains. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: the boss of the SNAKES gang, a mini boss: a big, broad, tall man, a long dark green coat fitted closed at the waist and ending at the knees (no loose tails), a scale-pattern vest under it, a shaved head with a snake tattoo on the scalp, a heavy cybernetic LEFT arm in black and gunmetal with a long blade folded along the forearm and acid green lights, black boots.",
+   "tripo": {
+    "modo": "Quads",
+    "caras": 20000,
+    "textura": "2K",
+    "rig": "Humanoid (luego Mixamo)"
+   },
+   "medida": "2.0 m · corpulento"
+  },
+  {
+   "id": "E12",
+   "archivo": "E12_GuardiaPesadoNova",
+   "fase": 4,
+   "salida": "imageassets/modelos-nuevos/E12_GuardiaPesadoNova.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/modelos-nuevos/PJ01_Protagonista_v2.png",
+    "imageassets/personajes/GuardiaNova_frente.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached characters for the art style of our game (rendering, proportions, level of detail) and the T-pose framing; draw a NEW original character. Rig-friendly: everything fitted close to the body, nothing hanging loose, no capes, no long loose coats tails flapping, no dangling chains. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: a heavy Nova corporation guard in full white and blue armor: bulky chest plate, shoulder pads, armored arms and legs, a closed helmet with a dark visor and a thin turquoise light line, a large riot shield strapped flat to the LEFT forearm (kept close along the arm), clean and corporate, blue light accents.",
+   "tripo": {
+    "modo": "Quads",
+    "caras": 20000,
+    "textura": "2K",
+    "rig": "Humanoid (luego Mixamo)"
+   },
+   "medida": "2.0 m (con armadura)"
+  },
+  {
+   "id": "E13",
+   "archivo": "E13_DronAsalto",
+   "fase": 4,
+   "salida": "imageassets/modelos-nuevos/E13_DronAsalto.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/modelos-nuevos/DR01_Dron.png",
+    "imageassets/carros/V05_PatrullaSedan.png"
+   ],
+   "aspect_ratio": "4:3",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached drone ONLY for the art style and level of detail; this is a bigger, more dangerous version in Nova corporation colors (white and blue). Stylized low-poly 3D game asset, chunky simplified shapes, soft hand-painted gradients. Single object, complete, centered, isolated on a plain flat pure white background, soft even lighting, no cast shadow, no text, no logos. Subject: a Nova assault drone: an armored white and blue central body, four thick arms each ending in a round rotor guard with a chunky rotor inside, the four rotor units clearly separated from the body by visible gaps so they can be cut as separate pieces, a heavy rotary machine gun hanging under the body, a glowing red eye light at the front. View: 3/4 view from the front, slightly from above.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "1.4 m de ancho"
+  },
+  {
+   "id": "E14",
+   "archivo": "E14_JefeFinalNova",
+   "fase": 4,
+   "salida": "imageassets/modelos-nuevos/E14_JefeFinalNova.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/modelos-nuevos/PJ01_Protagonista_v2.png",
+    "imageassets/personajes/GuardiaNova_frente.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached characters for the art style of our game (rendering, proportions, level of detail) and the T-pose framing; draw a NEW original character. Rig-friendly: everything fitted close to the body, nothing hanging loose, no capes, no long loose coats tails flapping, no dangling chains. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: the FINAL BOSS: the head of security of the Nova corporation inside a heavy powered exosuit about 3 meters tall: massive white and blue armored frame with gunmetal joints, a small protected cockpit-helmet on top where his stern face is visible behind a clear visor, broad shoulders, both forearms ending in big arm cannons with glowing blue barrels instead of hands, a round glowing blue energy shield emitter in the center of the chest, thick armored legs. Imposing and heroic proportions for a giant.",
+   "tripo": {
+    "modo": "Quads",
+    "caras": 25000,
+    "textura": "2K",
+    "rig": "Humanoid (luego Mixamo)"
+   },
+   "medida": "3.0 m"
+  },
+  {
+   "id": "H05",
+   "archivo": "H05_Subfusil",
+   "fase": 5,
+   "salida": "imageassets/ui/hologramas/H05_Subfusil.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/armas/W05_Subfusil.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Turn the weapon in the attached image into a holographic projection for a video game user interface. Keep EXACTLY the same weapon shape, silhouette, parts and proportions, but shown perfectly from the side (pure side profile, orthographic, muzzle pointing to the right), centered and filling about 80% of the width. Translucent cyan-turquoise glowing body, bright glowing outlines on every part, faint inner wireframe lines, thin horizontal scan lines, a slight digital glitch on one or two slices, soft cyan glow. PURE BLACK (#000000) background everywhere, no text, no hands."
+  },
+  {
+   "id": "H06",
+   "archivo": "H06_Revolver",
+   "fase": 5,
+   "salida": "imageassets/ui/hologramas/H06_Revolver.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/armas/W06_Revolver.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Turn the weapon in the attached image into a holographic projection for a video game user interface. Keep EXACTLY the same weapon shape, silhouette, parts and proportions, but shown perfectly from the side (pure side profile, orthographic, muzzle pointing to the right), centered and filling about 80% of the width. Translucent cyan-turquoise glowing body, bright glowing outlines on every part, faint inner wireframe lines, thin horizontal scan lines, a slight digital glitch on one or two slices, soft cyan glow. PURE BLACK (#000000) background everywhere, no text, no hands."
+  },
+  {
+   "id": "H07",
+   "archivo": "H07_RiflePlasma",
+   "fase": 5,
+   "salida": "imageassets/ui/hologramas/H07_RiflePlasma.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/armas/W07_RiflePlasma.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Turn the weapon in the attached image into a holographic projection for a video game user interface. Keep EXACTLY the same weapon shape, silhouette, parts and proportions, but shown perfectly from the side (pure side profile, orthographic, muzzle pointing to the right), centered and filling about 80% of the width. Translucent cyan-turquoise glowing body, bright glowing outlines on every part, faint inner wireframe lines, thin horizontal scan lines, a slight digital glitch on one or two slices, soft cyan glow. PURE BLACK (#000000) background everywhere, no text, no hands."
+  },
+  {
+   "id": "H08",
+   "archivo": "H08_Lanzagranadas",
+   "fase": 5,
+   "salida": "imageassets/ui/hologramas/H08_Lanzagranadas.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/armas/W08_Lanzagranadas.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Turn the weapon in the attached image into a holographic projection for a video game user interface. Keep EXACTLY the same weapon shape, silhouette, parts and proportions, but shown perfectly from the side (pure side profile, orthographic, muzzle pointing to the right), centered and filling about 80% of the width. Translucent cyan-turquoise glowing body, bright glowing outlines on every part, faint inner wireframe lines, thin horizontal scan lines, a slight digital glitch on one or two slices, soft cyan glow. PURE BLACK (#000000) background everywhere, no text, no hands."
+  }
+ ]
+}

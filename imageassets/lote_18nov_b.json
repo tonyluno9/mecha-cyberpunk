@@ -1,0 +1,187 @@
+{
+ "version": 1,
+ "resolution": "1k",
+ "variantes_por_defecto": 1,
+ "carpeta_salida": "imageassets",
+ "trabajos": [
+  {
+   "id": "A11",
+   "archivo": "A11_Malecon_Aerea",
+   "fase": 1,
+   "salida": "imageassets/referencias/look/A11_Malecon_Aerea.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K11_Malecon.png",
+    "imageassets/referencias/look/K12_Malecon_Muelle.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is our game's look for this zone: match its illustrated art style EXACTLY (thin outlines, painted rendering, blue night with soft fog, orange sodium lights, turquoise and magenta neon, wet reflective ground). Draw an AERIAL ISOMETRIC view at 45 degrees from about 60 meters high, showing clearly and completely how the zone is laid out: streets, sidewalks, buildings and objects, as a layout guide to build it in a game. 16:9. NO HUD, NO text, NO letters, NO logos, NO people. Original design, nothing copied from real places. Zone: (the second image shows the pier end of the same malecón) a 200 meter stretch of coastal malecón in a gentle curve: a four-lane avenue, a wide sidewalk on the sea side with palm trees and street lamps evenly spaced about every 15 meters, a continuous balustrade, staircases down to the beach about every 60 meters, a sandy beach, a breakwater of large rocks; on the other side of the avenue a row of three-story buildings with shops on the ground floor. At the far end an L-shaped wooden pier with small fishing boats, the seafood stand at the start of the pier, and the lighthouse on rocks."
+  },
+  {
+   "id": "A13",
+   "archivo": "A13_ColoniaCerro_Aerea",
+   "fase": 1,
+   "salida": "imageassets/referencias/look/A13_ColoniaCerro_Aerea.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K13_ColoniaCerro.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is our game's look for this zone: match its illustrated art style EXACTLY (thin outlines, painted rendering, blue night with soft fog, orange sodium lights, turquoise and magenta neon, wet reflective ground). Draw an AERIAL ISOMETRIC view at 45 degrees from about 60 meters high, showing clearly and completely how the zone is laid out: streets, sidewalks, buildings and objects, as a layout guide to build it in a game. 16:9. NO HUD, NO text, NO letters, NO logos, NO people. Original design, nothing copied from real places. Zone: a hillside with colorful houses stacked in terraces, one street climbing the hill in zigzag switchbacks for cars, long straight pedestrian staircases cutting straight up between the terraces, flat rooftops almost touching each other so one can jump between them, water tanks and laundry lines on the roofs, and the city lights below at the bottom of the hill."
+  },
+  {
+   "id": "A15",
+   "archivo": "A15_Puerto_Aerea",
+   "fase": 1,
+   "salida": "imageassets/referencias/look/A15_Puerto_Aerea.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K15_Puerto.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is our game's look for this zone: match its illustrated art style EXACTLY (thin outlines, painted rendering, blue night with soft fog, orange sodium lights, turquoise and magenta neon, wet reflective ground). Draw an AERIAL ISOMETRIC view at 45 degrees from about 60 meters high, showing clearly and completely how the zone is laid out: streets, sidewalks, buildings and objects, as a layout guide to build it in a game. 16:9. NO HUD, NO text, NO letters, NO logos, NO people. Original design, nothing copied from real places. Zone: a container yard with long rows of stacked colorful containers separated by straight aisles, two gantry cranes standing on rails along the dock edge, a cargo ship moored at the dock, a row of warehouses with rolled shutters, a few forklifts, and an entrance road with a guard booth and barrier."
+  },
+  {
+   "id": "A18",
+   "archivo": "A18_Autopista_Aerea",
+   "fase": 1,
+   "salida": "imageassets/referencias/look/A18_Autopista_Aerea.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K18_AutopistaElevada.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is our game's look for this zone: match its illustrated art style EXACTLY (thin outlines, painted rendering, blue night with soft fog, orange sodium lights, turquoise and magenta neon, wet reflective ground). Draw an AERIAL ISOMETRIC view at 45 degrees from about 60 meters high, showing clearly and completely how the zone is laid out: streets, sidewalks, buildings and objects, as a layout guide to build it in a game. 16:9. NO HUD, NO text, NO letters, NO logos, NO people. Original design, nothing copied from real places. Zone: an elevated highway on tall concrete columns passing over a poor neighborhood of low houses and streets, an on-ramp climbing up from one of the neighborhood streets, the highway making a 90 degree curve and then entering a tunnel cut into a hill."
+  },
+  {
+   "id": "A16",
+   "archivo": "A16_Deshuesadero_Aerea",
+   "fase": 1,
+   "salida": "imageassets/referencias/look/A16_Deshuesadero_Aerea.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K16_Deshuesadero.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is our game's look for this zone: match its illustrated art style EXACTLY (thin outlines, painted rendering, blue night with soft fog, orange sodium lights, turquoise and magenta neon, wet reflective ground). Draw an AERIAL ISOMETRIC view at 45 degrees from about 60 meters high, showing clearly and completely how the zone is laid out: streets, sidewalks, buildings and objects, as a layout guide to build it in a game. 16:9. NO HUD, NO text, NO letters, NO logos, NO people. Original design, nothing copied from real places. Zone: an industrial zone with several large metal warehouses, a fenced junkyard full of piles of scrapped cars, and a straight drag-race strip about 300 meters long with a painted start line and improvised bleachers made of scaffolding and stacked tires along both sides."
+  },
+  {
+   "id": "A14",
+   "archivo": "A14_Centro_Aerea",
+   "fase": 1,
+   "salida": "imageassets/referencias/look/A14_Centro_Aerea.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K14_CentroHistorico.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is our game's look for this zone: match its illustrated art style EXACTLY (thin outlines, painted rendering, blue night with soft fog, orange sodium lights, turquoise and magenta neon, wet reflective ground). Draw an AERIAL ISOMETRIC view at 45 degrees from about 60 meters high, showing clearly and completely how the zone is laid out: streets, sidewalks, buildings and objects, as a layout guide to build it in a game. 16:9. NO HUD, NO text, NO letters, NO logos, NO people. Original design, nothing copied from real places. Zone: a square main plaza with a small round kiosk in the center, trees and benches, an INVENTED colonial cathedral of pink carved stone on one side (one tall bell tower on one side, a tiled dome, a facade with a big arch; NOT the Mexico City cathedral and not any real church), colonial arcades (portales) with stone arches along the other three sides, cobblestone streets around the plaza, neon signs on top of the old buildings."
+  },
+  {
+   "id": "A17",
+   "archivo": "A17_Lomas_Aerea",
+   "fase": 1,
+   "salida": "imageassets/referencias/look/A17_Lomas_Aerea.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K17_LasLomas.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is our game's look for this zone: match its illustrated art style EXACTLY (thin outlines, painted rendering, blue night with soft fog, orange sodium lights, turquoise and magenta neon, wet reflective ground). Draw an AERIAL ISOMETRIC view at 45 degrees from about 60 meters high, showing clearly and completely how the zone is laid out: streets, sidewalks, buildings and objects, as a layout guide to build it in a game. 16:9. NO HUD, NO text, NO letters, NO logos, NO people. Original design, nothing copied from real places. Zone: a private gated street: a guard booth with a barrier arm at the entrance, and on both sides of the street modern luxury houses, each with a front garden lit with cold light, a garage, and a tall perimeter wall, clean sidewalks with trimmed trees."
+  },
+  {
+   "id": "V14",
+   "archivo": "V14_CompactoViejo",
+   "fase": 2,
+   "salida": "imageassets/modelos-nuevos/nuevos-17nov/V14_CompactoViejo.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K13_ColoniaCerro.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image ONLY for the art style and colors of our game (illustrated, thin outlines, soft hand-painted gradients). ORIGINAL design of our own: it must NOT resemble any real car model, brand or real building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. View: 3/4 view from the front left, slightly from above. Subject: The four wheels are big and clearly separated from the body by visible dark gaps and deep wheel arches, so they can be cut off as separate pieces. Doors, hood and trunk have clearly marked panel cut lines. Windows are dark tinted solid glass. an old small two-door compact car of our own design: short and BOXY with flat panels and square corners (NOT round, not beetle-like), a short flat hood, square headlights, a short upright rear, faded yellow paint with rust patches and a dented door.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 18000,
+    "textura": "2K"
+   },
+   "medida": "3.5 m"
+  },
+  {
+   "id": "CH01",
+   "archivo": "CH01_Catedral",
+   "fase": 2,
+   "salida": "imageassets/modelos-nuevos/nuevos-17nov/CH01_Catedral.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K14_CentroHistorico.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image ONLY for the art style and colors of our game (illustrated, thin outlines, soft hand-painted gradients). ORIGINAL design of our own: it must NOT resemble any real car model, brand or real building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. View: 3/4 view from the front left, slightly from above. Subject: an INVENTED colonial cathedral of pink carved stone (cantera rosa), NOT the Mexico City cathedral and not any real church: an asymmetric facade with ONE single tall bell tower on the left side, a large dome covered in colorful glazed tiles (azulejo) behind, and the main facade dominated by one big arch over the entrance with carved stone details.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 15000,
+    "textura": "2K"
+   },
+   "medida": "35 × 55 × 40 m (torre)"
+  },
+  {
+   "id": "V23",
+   "archivo": "V23_Superdeportivo",
+   "fase": 2,
+   "salida": "imageassets/modelos-nuevos/nuevos-17nov/V23_Superdeportivo.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K16_Deshuesadero.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image ONLY for the art style and colors of our game (illustrated, thin outlines, soft hand-painted gradients). ORIGINAL design of our own: it must NOT resemble any real car model, brand or real building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. View: 3/4 view from the front left, slightly from above. Subject: The four wheels are big and clearly separated from the body by visible dark gaps and deep wheel arches, so they can be cut off as separate pieces. Doors, hood and trunk have clearly marked panel cut lines. Windows are dark tinted solid glass. a futuristic hypercar with a bubble-shaped glass canopy cockpit, a long sleek low body, wheels half covered by smooth fender skirts but still clearly separated from the body by visible gaps, taillights as one single continuous red line across the rear, pearl magenta paint.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 18000,
+    "textura": "2K"
+   },
+   "medida": "4.8 m"
+  },
+  {
+   "id": "V24",
+   "archivo": "V24_Superdeportivo",
+   "fase": 2,
+   "salida": "imageassets/modelos-nuevos/nuevos-17nov/V24_Superdeportivo.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K16_Deshuesadero.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image ONLY for the art style and colors of our game (illustrated, thin outlines, soft hand-painted gradients). ORIGINAL design of our own: it must NOT resemble any real car model, brand or real building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. View: 3/4 view from the front left, slightly from above. Subject: The four wheels are big and clearly separated from the body by visible dark gaps and deep wheel arches, so they can be cut off as separate pieces. Doors, hood and trunk have clearly marked panel cut lines. Windows are dark tinted solid glass. a cyberpunk grand tourer with a very long hood, a two-seat cabin set far back, sharp angular lines, glowing yellow neon light strips, silver paint with exposed carbon fiber panels on the hood, roof and side skirts.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 18000,
+    "textura": "2K"
+   },
+   "medida": "4.9 m"
+  }
+ ]
+}

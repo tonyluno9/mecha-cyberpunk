@@ -1,0 +1,507 @@
+{
+ "AL10": {
+  "at": "3",
+  "n": 52,
+  "falta": [],
+  "clips": [],
+  "armstretch": "0.05",
+  "legstretch": "0.05",
+  "feetSpacing": "0"
+ },
+ "AL11": {
+  "at": "3",
+  "n": 52,
+  "falta": [],
+  "clips": [],
+  "armstretch": "0.05",
+  "legstretch": "0.05",
+  "feetSpacing": "0"
+ },
+ "Doctor": {
+  "at": "3",
+  "n": 47,
+  "falta": [
+   "Neck"
+  ],
+  "clips": [],
+  "armstretch": "0.05",
+  "legstretch": "0.05",
+  "feetSpacing": "0"
+ },
+ "E10_PandilleroSnakes": {
+  "at": "3",
+  "n": 52,
+  "falta": [],
+  "clips": [],
+  "armstretch": "0.05",
+  "legstretch": "0.05",
+  "feetSpacing": "0"
+ },
+ "E11_JefeSnakes": {
+  "at": "3",
+  "n": 52,
+  "falta": [],
+  "clips": [],
+  "armstretch": "0.05",
+  "legstretch": "0.05",
+  "feetSpacing": "0"
+ },
+ "E12_GuardiaPesadoNova": {
+  "at": "3",
+  "n": 52,
+  "falta": [],
+  "clips": [],
+  "armstretch": "0.05",
+  "legstretch": "0.05",
+  "feetSpacing": "0"
+ },
+ "E14_JefeFinalNova": {
+  "at": "3",
+  "n": 50,
+  "falta": [],
+  "clips": [],
+  "armstretch": "0.05",
+  "legstretch": "0.05",
+  "feetSpacing": "0"
+ },
+ "E15_CentinelaNova_a": {
+  "at": "3",
+  "n": 52,
+  "falta": [],
+  "clips": [],
+  "armstretch": "0.05",
+  "legstretch": "0.05",
+  "feetSpacing": "0"
+ },
+ "E15_CentinelaNova_b": {
+  "at": "3",
+  "n": 49,
+  "falta": [],
+  "clips": [],
+  "armstretch": "0.05",
+  "legstretch": "0.05",
+  "feetSpacing": "0"
+ },
+ "E16_RobotPesadoNova_a": {
+  "at": "3",
+  "n": 52,
+  "falta": [],
+  "clips": [],
+  "armstretch": "0.05",
+  "legstretch": "0.05",
+  "feetSpacing": "0"
+ },
+ "E16_RobotPesadoNova_b": {
+  "at": "3",
+  "n": 52,
+  "falta": [],
+  "clips": [],
+  "armstretch": "0.05",
+  "legstretch": "0.05",
+  "feetSpacing": "0"
+ },
+ "E17_PerroRobotNova_a": {
+  "at": "2",
+  "n": 0,
+  "falta": [
+   "Hips",
+   "Spine",
+   "Chest",
+   "Neck",
+   "Head",
+   "LeftUpperArm",
+   "LeftLowerArm",
+   "LeftHand",
+   "RightUpperArm",
+   "RightLowerArm",
+   "RightHand",
+   "LeftUpperLeg",
+   "LeftLowerLeg",
+   "LeftFoot",
+   "RightUpperLeg",
+   "RightLowerLeg",
+   "RightFoot",
+   "LeftToes",
+   "RightToes",
+   "LeftShoulder",
+   "RightShoulder"
+  ],
+  "clips": [
+   "Perro_Caminar",
+   "Perro_Idle"
+  ],
+  "armstretch": "0.05",
+  "legstretch": "0.05",
+  "feetSpacing": "0"
+ },
+ "E17_PerroRobotNova_esc": {
+  "at": "2",
+  "n": 0,
+  "falta": [
+   "Hips",
+   "Spine",
+   "Chest",
+   "Neck",
+   "Head",
+   "LeftUpperArm",
+   "LeftLowerArm",
+   "LeftHand",
+   "RightUpperArm",
+   "RightLowerArm",
+   "RightHand",
+   "LeftUpperLeg",
+   "LeftLowerLeg",
+   "LeftFoot",
+   "RightUpperLeg",
+   "RightLowerLeg",
+   "RightFoot",
+   "LeftToes",
+   "RightToes",
+   "LeftShoulder",
+   "RightShoulder"
+  ],
+  "clips": [],
+  "armstretch": "0.05",
+  "legstretch": "0.05",
+  "feetSpacing": "0"
+ },
+ "E18_EliteNova_a": {
+  "at": "3",
+  "n": 48,
+  "falta": [],
+  "clips": [],
+  "armstretch": "0.05",
+  "legstretch": "0.05",
+  "feetSpacing": "0"
+ },
+ "E19_PandilleroSkulls_a_2": {
+  "at": "3",
+  "n": 52,
+  "falta": [],
+  "clips": [],
+  "armstretch": "0.05",
+  "legstretch": "0.05",
+  "feetSpacing": "0"
+ },
+ "E19_PandilleroSkulls_b": {
+  "at": "3",
+  "n": 52,
+  "falta": [],
+  "clips": [],
+  "armstretch": "0.05",
+  "legstretch": "0.05",
+  "feetSpacing": "0"
+ },
+ "E20_MatonSkulls_a": {
+  "at": "3",
+  "n": 52,
+  "falta": [],
+  "clips": [],
+  "armstretch": "0.05",
+  "legstretch": "0.05",
+  "feetSpacing": "0"
+ },
+ "E20_MatonSkulls_b": {
+  "at": "3",
+  "n": 52,
+  "falta": [],
+  "clips": [],
+  "armstretch": "0.05",
+  "legstretch": "0.05",
+  "feetSpacing": "0"
+ },
+ "GuardiaNova": {
+  "at": "3",
+  "n": 51,
+  "falta": [
+   "Neck"
+  ],
+  "clips": [],
+  "armstretch": "0.05",
+  "legstretch": "0.05",
+  "feetSpacing": "0"
+ },
+ "Hacker": {
+  "at": "3",
+  "n": 51,
+  "falta": [
+   "Neck"
+  ],
+  "clips": [],
+  "armstretch": "0.05",
+  "legstretch": "0.05",
+  "feetSpacing": "0"
+ },
+ "Inventor": {
+  "at": "3",
+  "n": 51,
+  "falta": [
+   "Neck"
+  ],
+  "clips": [],
+  "armstretch": "0.05",
+  "legstretch": "0.05",
+  "feetSpacing": "0"
+ },
+ "Mecanico": {
+  "at": "3",
+  "n": 51,
+  "falta": [
+   "Neck"
+  ],
+  "clips": [],
+  "armstretch": "0.05",
+  "legstretch": "0.05",
+  "feetSpacing": "0"
+ },
+ "MeseraRobot": {
+  "at": "3",
+  "n": 52,
+  "falta": [],
+  "clips": [],
+  "armstretch": "0.05",
+  "legstretch": "0.05",
+  "feetSpacing": "0"
+ },
+ "NP07_Pescador_a": {
+  "at": "3",
+  "n": 52,
+  "falta": [],
+  "clips": [],
+  "armstretch": "0.05",
+  "legstretch": "0.05",
+  "feetSpacing": "0"
+ },
+ "NP07_Pescador_b": {
+  "at": "3",
+  "n": 52,
+  "falta": [],
+  "clips": [],
+  "armstretch": "0.05",
+  "legstretch": "0.05",
+  "feetSpacing": "0"
+ },
+ "NP08_Turista_a": {
+  "at": "3",
+  "n": 52,
+  "falta": [],
+  "clips": [],
+  "armstretch": "0.05",
+  "legstretch": "0.05",
+  "feetSpacing": "0"
+ },
+ "NP08_Turista_b": {
+  "at": "3",
+  "n": 52,
+  "falta": [],
+  "clips": [],
+  "armstretch": "0.05",
+  "legstretch": "0.05",
+  "feetSpacing": "0"
+ },
+ "NP09_Corredor_a": {
+  "at": "3",
+  "n": 52,
+  "falta": [],
+  "clips": [],
+  "armstretch": "0.05",
+  "legstretch": "0.05",
+  "feetSpacing": "0"
+ },
+ "NP09_Corredor_b": {
+  "at": "3",
+  "n": 52,
+  "falta": [],
+  "clips": [],
+  "armstretch": "0.05",
+  "legstretch": "0.05",
+  "feetSpacing": "0"
+ },
+ "NP10_Elotero_a": {
+  "at": "3",
+  "n": 52,
+  "falta": [],
+  "clips": [],
+  "armstretch": "0.05",
+  "legstretch": "0.05",
+  "feetSpacing": "0"
+ },
+ "NP11_Estibador_a": {
+  "at": "3",
+  "n": 52,
+  "falta": [],
+  "clips": [],
+  "armstretch": "0.05",
+  "legstretch": "0.05",
+  "feetSpacing": "0"
+ },
+ "NP11_Estibador_b": {
+  "at": "3",
+  "n": 52,
+  "falta": [],
+  "clips": [],
+  "armstretch": "0.05",
+  "legstretch": "0.05",
+  "feetSpacing": "0"
+ },
+ "NP12_Abuela_a": {
+  "at": "3",
+  "n": 52,
+  "falta": [],
+  "clips": [],
+  "armstretch": "0.05",
+  "legstretch": "0.05",
+  "feetSpacing": "0"
+ },
+ "NP13_Repartidor_a": {
+  "at": "3",
+  "n": 52,
+  "falta": [],
+  "clips": [],
+  "armstretch": "0.05",
+  "legstretch": "0.05",
+  "feetSpacing": "0"
+ },
+ "NP13_Repartidor_b": {
+  "at": "3",
+  "n": 52,
+  "falta": [],
+  "clips": [],
+  "armstretch": "0.05",
+  "legstretch": "0.05",
+  "feetSpacing": "0"
+ },
+ "NP14_Oficinista_a": {
+  "at": "3",
+  "n": 52,
+  "falta": [],
+  "clips": [],
+  "armstretch": "0.05",
+  "legstretch": "0.05",
+  "feetSpacing": "0"
+ },
+ "NP14_Oficinista_b": {
+  "at": "3",
+  "n": 52,
+  "falta": [],
+  "clips": [],
+  "armstretch": "0.05",
+  "legstretch": "0.05",
+  "feetSpacing": "0"
+ },
+ "PJ01": {
+  "at": "3",
+  "n": 51,
+  "falta": [
+   "Neck"
+  ],
+  "clips": [],
+  "armstretch": "0.05",
+  "legstretch": "0.05",
+  "feetSpacing": "0"
+ },
+ "PJ01_Implantes": {
+  "at": "3",
+  "n": 51,
+  "falta": [
+   "Neck"
+  ],
+  "clips": [],
+  "armstretch": "0.05",
+  "legstretch": "0.05",
+  "feetSpacing": "0"
+ },
+ "PJ01_Implantes_Ataque": {
+  "at": "3",
+  "n": 53,
+  "falta": [],
+  "clips": [],
+  "armstretch": "0.05",
+  "legstretch": "0.05",
+  "feetSpacing": "0"
+ },
+ "Policia": {
+  "at": "3",
+  "n": 51,
+  "falta": [
+   "Neck"
+  ],
+  "clips": [],
+  "armstretch": "0.05",
+  "legstretch": "0.05",
+  "feetSpacing": "0"
+ },
+ "RobotHombre": {
+  "at": "3",
+  "n": 51,
+  "falta": [
+   "Neck"
+  ],
+  "clips": [],
+  "armstretch": "0.05",
+  "legstretch": "0.05",
+  "feetSpacing": "0"
+ },
+ "SkullHombre": {
+  "at": "3",
+  "n": 51,
+  "falta": [
+   "Neck"
+  ],
+  "clips": [],
+  "armstretch": "0.05",
+  "legstretch": "0.05",
+  "feetSpacing": "0"
+ },
+ "man": {
+  "at": "3",
+  "n": 51,
+  "falta": [
+   "Neck"
+  ],
+  "clips": [
+   "Enojo",
+   "AcuerdoCompleto",
+   "Idle",
+   "Correr",
+   "Caminar"
+  ],
+  "armstretch": "0.05",
+  "legstretch": "0.05",
+  "feetSpacing": "0"
+ },
+ "woman": {
+  "at": "3",
+  "n": 51,
+  "falta": [
+   "Neck"
+  ],
+  "clips": [
+   "Enojo",
+   "Caminar",
+   "Correr",
+   "Cubrirse",
+   "AcuerdoCompleto",
+   "Idle"
+  ],
+  "armstretch": "0.05",
+  "legstretch": "0.05",
+  "feetSpacing": "0"
+ },
+ "woman2": {
+  "at": "3",
+  "n": 51,
+  "falta": [
+   "Neck"
+  ],
+  "clips": [
+   "Correr",
+   "Caminar",
+   "AcuerdoCompleto",
+   "Idle"
+  ],
+  "armstretch": "0.05",
+  "legstretch": "0.05",
+  "feetSpacing": "0"
+ }
+}

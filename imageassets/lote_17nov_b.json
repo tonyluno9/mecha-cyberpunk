@@ -1,0 +1,141 @@
+{
+ "version": 1,
+ "resolution": "1k",
+ "variantes_por_defecto": 1,
+ "carpeta_salida": "imageassets/referencias/look",
+ "trabajos": [
+  {
+   "id": "K11",
+   "archivo": "K11_Malecon",
+   "fase": 1,
+   "salida": "imageassets/referencias/look/K11_Malecon.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY, as if it were another screenshot of the same game: thin outlines, painted rendering, blue night with soft fog, orange sodium street lights, turquoise and magenta neon, wet ground with reflections, thick cables strung between utility poles. A Mexican cyberpunk megacity. Third-person view at street level, the camera about 2 meters high, as it would look in the game. NO HUD, NO interface, NO player character, no rain, no readable text, no logos: signs and screens show only abstract shapes and colors. Original design, nothing copied from other games. 16:9. Scene: a long four-lane coastal avenue (malecón) with a wide open curve, a low concrete balustrade along the sea side, a row of tall palm trees and old street lamps with orange light, the sea at night on one side with the city skyline and its neon reflected on the dark water, a dark beach below the balustrade, a sleek sports car driving along the avenue with light trails, people walking on the wide promenade."
+  },
+  {
+   "id": "K12",
+   "archivo": "K12_Malecon_Muelle",
+   "fase": 2,
+   "salida": "imageassets/referencias/look/K12_Malecon_Muelle.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png",
+    "imageassets/referencias/look/K11_Malecon.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY, as if it were another screenshot of the same game: thin outlines, painted rendering, blue night with soft fog, orange sodium street lights, turquoise and magenta neon, wet ground with reflections, thick cables strung between utility poles. A Mexican cyberpunk megacity. Third-person view at street level, the camera about 2 meters high, as it would look in the game. NO HUD, NO interface, NO player character, no rain, no readable text, no logos: signs and screens show only abstract shapes and colors. Original design, nothing copied from other games. 16:9. Scene: the far end of the same coastal avenue: a wooden fishermen's pier going out into the dark sea, small painted fishing boats (lanchas) tied to it, a small seafood stand at the start of the pier with a tarp roof and a single hanging bulb, stools and coolers, nets and crates, and a lighthouse in the distance sweeping its beam over the water. The second image is the malecón: keep it consistent if it exists."
+  },
+  {
+   "id": "K13",
+   "archivo": "K13_ColoniaCerro",
+   "fase": 1,
+   "salida": "imageassets/referencias/look/K13_ColoniaCerro.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png",
+    "imageassets/referencias/look/K08_CalleSuburbios_Cuadra.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY, as if it were another screenshot of the same game: thin outlines, painted rendering, blue night with soft fog, orange sodium street lights, turquoise and magenta neon, wet ground with reflections, thick cables strung between utility poles. A Mexican cyberpunk megacity. Third-person view at street level, the camera about 2 meters high, as it would look in the game. NO HUD, NO interface, NO player character, no rain, no readable text, no logos: signs and screens show only abstract shapes and colors. Original design, nothing copied from other games. 16:9. Scene: a hillside neighborhood: colorful small concrete houses stacked in steps one above the other up a steep hill, long concrete staircases with simple railings climbing between them, steep narrow alleys, rooftops with water tanks, antennas and laundry lines with clothes as simple shapes, utility poles with tangled cables, and below and far away the whole city lit up with neon colors."
+  },
+  {
+   "id": "K14",
+   "archivo": "K14_CentroHistorico",
+   "fase": 1,
+   "salida": "imageassets/referencias/look/K14_CentroHistorico.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png",
+    "imageassets/referencias/look/K09_Plaza_Barrio.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY, as if it were another screenshot of the same game: thin outlines, painted rendering, blue night with soft fog, orange sodium street lights, turquoise and magenta neon, wet ground with reflections, thick cables strung between utility poles. A Mexican cyberpunk megacity. Third-person view at street level, the camera about 2 meters high, as it would look in the game. NO HUD, NO interface, NO player character, no rain, no readable text, no logos: signs and screens show only abstract shapes and colors. Original design, nothing copied from other games. 16:9. Scene: the main square of the historic downtown: a big colonial cathedral of pinkish-grey carved stone (cantera) with two bell towers, colonial buildings around the square with stone arches at ground level and wrought-iron balconies above, modern neon signs and big glowing screens mounted on top of the old buildings, food stalls with tarp roofs and warm bulbs in the square, people walking."
+  },
+  {
+   "id": "K15",
+   "archivo": "K15_Puerto",
+   "fase": 1,
+   "salida": "imageassets/referencias/look/K15_Puerto.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY, as if it were another screenshot of the same game: thin outlines, painted rendering, blue night with soft fog, orange sodium street lights, turquoise and magenta neon, wet ground with reflections, thick cables strung between utility poles. A Mexican cyberpunk megacity. Third-person view at street level, the camera about 2 meters high, as it would look in the game. NO HUD, NO interface, NO player character, no rain, no readable text, no logos: signs and screens show only abstract shapes and colors. Original design, nothing copied from other games. 16:9. Scene: a cargo port at night: tall stacks of colorful shipping containers (rust red, blue, green, orange) forming corridors, enormous gantry cranes with red and white lights over the water, large warehouses with rolled shutters and bright floodlights, a big cargo ship docked with its lights on, puddles on the concrete reflecting everything, a few forklifts."
+  },
+  {
+   "id": "K16",
+   "archivo": "K16_Deshuesadero",
+   "fase": 1,
+   "salida": "imageassets/referencias/look/K16_Deshuesadero.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY, as if it were another screenshot of the same game: thin outlines, painted rendering, blue night with soft fog, orange sodium street lights, turquoise and magenta neon, wet ground with reflections, thick cables strung between utility poles. A Mexican cyberpunk megacity. Third-person view at street level, the camera about 2 meters high, as it would look in the game. NO HUD, NO interface, NO player character, no rain, no readable text, no logos: signs and screens show only abstract shapes and colors. Original design, nothing copied from other games. 16:9. Scene: an industrial zone: large corrugated metal warehouses, a junkyard with high piles of scrapped and crushed cars behind a chain-link fence with lights, and in front a long straight street used for illegal street races: a crowd standing on both sides, two tuned cars with neon underglow and big spoilers lined up at a painted start line, someone in the middle about to give the start signal with a raised arm."
+  },
+  {
+   "id": "K17",
+   "archivo": "K17_LasLomas",
+   "fase": 1,
+   "salida": "imageassets/referencias/look/K17_LasLomas.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png",
+    "imageassets/referencias/look/K06_CalleNova.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY, as if it were another screenshot of the same game: thin outlines, painted rendering, blue night with soft fog, orange sodium street lights, turquoise and magenta neon, wet ground with reflections, thick cables strung between utility poles. A Mexican cyberpunk megacity. Third-person view at street level, the camera about 2 meters high, as it would look in the game. NO HUD, NO interface, NO player character, no rain, no readable text, no logos: signs and screens show only abstract shapes and colors. Original design, nothing copied from other games. 16:9. Scene: a wealthy residential street: modern minimalist houses of white concrete, wood and glass behind tall clean walls, a guard booth with a barrier arm at the entrance of the street, manicured gardens lit with cold white light, security cameras on the walls, clean sidewalks, trimmed trees, a few luxury cars parked, everything quiet and spotless, cold light instead of orange sodium."
+  },
+  {
+   "id": "K18",
+   "archivo": "K18_AutopistaElevada",
+   "fase": 1,
+   "salida": "imageassets/referencias/look/K18_AutopistaElevada.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png",
+    "imageassets/referencias/look/K06_CalleNova.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY, as if it were another screenshot of the same game: thin outlines, painted rendering, blue night with soft fog, orange sodium street lights, turquoise and magenta neon, wet ground with reflections, thick cables strung between utility poles. A Mexican cyberpunk megacity. Third-person view at street level, the camera about 2 meters high, as it would look in the game. NO HUD, NO interface, NO player character, no rain, no readable text, no logos: signs and screens show only abstract shapes and colors. Original design, nothing copied from other games. 16:9. Scene: an elevated highway: a concrete on-ramp climbing up from a poor neighborhood street with houses and shops below, the highway on tall concrete pillars curving away and entering a lit tunnel cut into a hill, lines of car headlights and taillights, big highway lamps, and the white towers of the Nova corporation glowing in the background."
+  },
+  {
+   "id": "M12",
+   "archivo": "M12_MapaExpandido",
+   "fase": 2,
+   "salida": "imageassets/referencias/look/M12_MapaExpandido.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png",
+    "imageassets/referencias/look/M11_MapaCiudad.png",
+    "imageassets/referencias/look/M10_MapaCiudad.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the FIRST attached image for the art style and color mood of our game, and the SECOND and THIRD images (our previous city maps) for the illustrated top-down map style: draw the expanded city map in the same style. Full-screen city map seen from directly above, like the pause-menu map of an open-world game, at night colors. No district borders as boxes: one continuous city of short blocks, the zones told apart by the color of their lights and their building types, blending at the edges. Layout: in the CENTER the four current districts: NOVA top-left (cold blue, office towers and the big tower), NEÓN ALTO top-right (magenta, casino and tall buildings), SUBURBIOS bottom-left (warm orange, low houses), EL MERCADO bottom-right (yellow, market streets). To the WEST: COLONIA DEL CERRO (small houses stacked on a hill with stairs). To the EAST, from top to bottom: CENTRO HISTÓRICO (a big square with a cathedral), ZONA INDUSTRIAL (warehouses and a junkyard), PUERTO (containers, cranes and docks on the water). To the NORTH: the elevated highway crossing the whole map, and behind it LAS LOMAS (large houses with gardens, green). To the SOUTH: the whole MALECÓN, a long curved coastal avenue along the sea, with a lighthouse on a point. The ONLY text on the map is each zone name, written once in thin capital letters, spelled exactly: \"NOVA\", \"NEÓN ALTO\", \"SUBURBIOS\", \"EL MERCADO\", \"COLONIA DEL CERRO\", \"CENTRO HISTÓRICO\", \"ZONA INDUSTRIAL\", \"PUERTO\", \"LAS LOMAS\", \"MALECÓN\". No icons with labels, no legend, no compass text."
+  }
+ ]
+}

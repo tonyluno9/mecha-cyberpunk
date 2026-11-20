@@ -1,0 +1,847 @@
+{
+ "version": 1,
+ "resolution": "1k",
+ "variantes_por_defecto": 1,
+ "carpeta_salida": "imageassets",
+ "trabajos": [
+  {
+   "id": "V12",
+   "archivo": "V12_Deportivo",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/nuevos-17nov/V12_Deportivo.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K11_Malecon.png",
+    "imageassets/V01a_CarroViejito.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: The four wheels (or the two wheels of a motorcycle) are big, chunky and clearly separated from the body by visible dark gaps and deep wheel arches, so they can be cut off as separate pieces. Doors, hood and trunk have clearly marked panel cut lines. Windows are dark tinted solid glass. a low and wide two-door sports car of our own design, glossy black with a thin glowing turquoise neon line along the sides, sharp angular body, big rear spoiler.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 18000,
+    "textura": "2K"
+   },
+   "medida": "4.5 m"
+  },
+  {
+   "id": "V13",
+   "archivo": "V13_Sedan",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/nuevos-17nov/V13_Sedan.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K11_Malecon.png",
+    "imageassets/V01a_CarroViejito.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: The four wheels (or the two wheels of a motorcycle) are big, chunky and clearly separated from the body by visible dark gaps and deep wheel arches, so they can be cut off as separate pieces. Doors, hood and trunk have clearly marked panel cut lines. Windows are dark tinted solid glass. a family four-door sedan, silver grey paint, a few dents and scratches, plain everyday design.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 18000,
+    "textura": "2K"
+   },
+   "medida": "4.6 m"
+  },
+  {
+   "id": "V14",
+   "archivo": "V14_CompactoViejo",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/nuevos-17nov/V14_CompactoViejo.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K11_Malecon.png",
+    "imageassets/V01a_CarroViejito.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: The four wheels (or the two wheels of a motorcycle) are big, chunky and clearly separated from the body by visible dark gaps and deep wheel arches, so they can be cut off as separate pieces. Doors, hood and trunk have clearly marked panel cut lines. Windows are dark tinted solid glass. an old small compact car with round bubbly shapes, faded yellow paint with rust patches, round headlights, a dented fender.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 18000,
+    "textura": "2K"
+   },
+   "medida": "3.8 m"
+  },
+  {
+   "id": "V15",
+   "archivo": "V15_Lujo",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/nuevos-17nov/V15_Lujo.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K11_Malecon.png",
+    "imageassets/V01a_CarroViejito.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: The four wheels (or the two wheels of a motorcycle) are big, chunky and clearly separated from the body by visible dark gaps and deep wheel arches, so they can be cut off as separate pieces. Doors, hood and trunk have clearly marked panel cut lines. Windows are dark tinted solid glass. a long luxury sedan, pearl white, very clean and polished, thin cold white LED headlights and light strips.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 18000,
+    "textura": "2K"
+   },
+   "medida": "5.2 m"
+  },
+  {
+   "id": "V16",
+   "archivo": "V16_Microbus",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/nuevos-17nov/V16_Microbus.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K11_Malecon.png",
+    "imageassets/V01a_CarroViejito.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: The four wheels (or the two wheels of a motorcycle) are big, chunky and clearly separated from the body by visible dark gaps and deep wheel arches, so they can be cut off as separate pieces. Doors, hood and trunk have clearly marked panel cut lines. Windows are dark tinted solid glass. a Mexican city passenger minibus (microbús): boxy tall body painted green and white, worn and dented, a row of side windows, a folding passenger door on the side, a small roof destination box with no text.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 18000,
+    "textura": "2K"
+   },
+   "medida": "7.5 m"
+  },
+  {
+   "id": "V17",
+   "archivo": "V17_Camion",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/nuevos-17nov/V17_Camion.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K11_Malecon.png",
+    "imageassets/V01a_CarroViejito.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: The four wheels (or the two wheels of a motorcycle) are big, chunky and clearly separated from the body by visible dark gaps and deep wheel arches, so they can be cut off as separate pieces. Doors, hood and trunk have clearly marked panel cut lines. Windows are dark tinted solid glass. a medium cargo truck with a closed box body, red cab and grey box, worn, a roll-up door at the back.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 18000,
+    "textura": "2K"
+   },
+   "medida": "7.5 m"
+  },
+  {
+   "id": "V18",
+   "archivo": "V18_Trailer",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/nuevos-17nov/V18_Trailer.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K11_Malecon.png",
+    "imageassets/V01a_CarroViejito.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: The four wheels (or the two wheels of a motorcycle) are big, chunky and clearly separated from the body by visible dark gaps and deep wheel arches, so they can be cut off as separate pieces. Doors, hood and trunk have clearly marked panel cut lines. Windows are dark tinted solid glass. a tractor truck with a blue cab hauling a flatbed trailer carrying one shipping container, worn, chrome exhaust stacks.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 18000,
+    "textura": "2K"
+   },
+   "medida": "16 m (tracto + plataforma)"
+  },
+  {
+   "id": "V19",
+   "archivo": "V19_Ambulancia",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/nuevos-17nov/V19_Ambulancia.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K11_Malecon.png",
+    "imageassets/V01a_CarroViejito.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: The four wheels (or the two wheels of a motorcycle) are big, chunky and clearly separated from the body by visible dark gaps and deep wheel arches, so they can be cut off as separate pieces. Doors, hood and trunk have clearly marked panel cut lines. Windows are dark tinted solid glass. an ambulance van, white with turquoise stripes, a red and blue light bar on the roof, a plain medical cross shape on the side (no text).",
+   "tripo": {
+    "modo": "HD",
+    "caras": 18000,
+    "textura": "2K"
+   },
+   "medida": "6 m"
+  },
+  {
+   "id": "MT01M",
+   "archivo": "MT01_MotoDeportiva",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/nuevos-17nov/MT01_MotoDeportiva.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K11_Malecon.png",
+    "imageassets/carros/V07_MotoReparto.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: The four wheels (or the two wheels of a motorcycle) are big, chunky and clearly separated from the body by visible dark gaps and deep wheel arches, so they can be cut off as separate pieces. Doors, hood and trunk have clearly marked panel cut lines. Windows are dark tinted solid glass. a faired sport motorcycle of our own design, magenta and black fairing, aggressive shape, small windscreen. View: 3/4 side view from the left.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "2.1 m"
+  },
+  {
+   "id": "MT02",
+   "archivo": "MT02_MotoChopper",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/nuevos-17nov/MT02_MotoChopper.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K11_Malecon.png",
+    "imageassets/carros/V07_MotoReparto.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: The four wheels (or the two wheels of a motorcycle) are big, chunky and clearly separated from the body by visible dark gaps and deep wheel arches, so they can be cut off as separate pieces. Doors, hood and trunk have clearly marked panel cut lines. Windows are dark tinted solid glass. a chopper motorcycle with a long front fork, tall ape-hanger handlebars, chrome and black, low seat, big rear tire. View: 3/4 side view from the left.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "2.5 m"
+  },
+  {
+   "id": "ML01",
+   "archivo": "ML01_Farol",
+   "fase": 2,
+   "salida": "imageassets/modelos-nuevos/nuevos-17nov/ML01_Farol.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K11_Malecon.png",
+    "imageassets/referencias/look/K12_Malecon_Muelle.png"
+   ],
+   "aspect_ratio": "9:16",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a tall coastal promenade lamp post of dark iron with simple curls at the base, an ornate lantern on top glowing warm orange.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 8000,
+    "textura": "2K"
+   },
+   "medida": "4.5 m"
+  },
+  {
+   "id": "ML02",
+   "archivo": "ML02_Lancha",
+   "fase": 2,
+   "salida": "imageassets/modelos-nuevos/nuevos-17nov/ML02_Lancha.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K11_Malecon.png",
+    "imageassets/referencias/look/K12_Malecon_Muelle.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a small wooden fishing boat (lancha) painted in bright colors (turquoise hull with an orange stripe), worn paint, a small outboard motor, coiled thick rope and a net inside.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 10000,
+    "textura": "2K"
+   },
+   "medida": "6 m"
+  },
+  {
+   "id": "ML03",
+   "archivo": "ML03_PuestoMariscos",
+   "fase": 2,
+   "salida": "imageassets/modelos-nuevos/nuevos-17nov/ML03_PuestoMariscos.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K11_Malecon.png",
+    "imageassets/referencias/look/K12_Malecon_Muelle.png"
+   ],
+   "aspect_ratio": "4:3",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a seafood street stand: a metal frame with a striped tarp roof, a front counter with a glass case of seafood as simple shapes, a big cooler, a single hanging bulb glowing warm, three plastic stools in front, close together so it reads as one object.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "2.5 × 1.5 × 2.4 m"
+  },
+  {
+   "id": "ML04",
+   "archivo": "ML04_Faro",
+   "fase": 2,
+   "salida": "imageassets/modelos-nuevos/nuevos-17nov/ML04_Faro.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K11_Malecon.png",
+    "imageassets/referencias/look/K12_Malecon_Muelle.png"
+   ],
+   "aspect_ratio": "9:16",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a lighthouse of white and red painted concrete in horizontal bands, a small balcony with a thick railing near the top, a glass lantern room with a bright light, on a small rocky base.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 10000,
+    "textura": "2K"
+   },
+   "medida": "18 m"
+  },
+  {
+   "id": "CC01",
+   "archivo": "CC01_CasaCerro",
+   "fase": 3,
+   "salida": "imageassets/modelos-nuevos/nuevos-17nov/CC01_CasaCerro.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K13_ColoniaCerro.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a two-story concrete block house painted pink and faded, small windows with bars, a water tank on the flat roof, an exterior concrete staircase on one side going up to the second floor, cables to the roof.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "6 × 6 × 6.5 m"
+  },
+  {
+   "id": "CC02",
+   "archivo": "CC02_CasaCerro",
+   "fase": 3,
+   "salida": "imageassets/modelos-nuevos/nuevos-17nov/CC02_CasaCerro.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K13_ColoniaCerro.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a one-story concrete house painted turquoise and faded, a flat roof with steel rebar sticking up from the columns (unfinished second floor), a metal door and a small barred window.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 10000,
+    "textura": "2K"
+   },
+   "medida": "6 × 6 × 3.5 m"
+  },
+  {
+   "id": "CC03",
+   "archivo": "CC03_CasaCerro",
+   "fase": 3,
+   "salida": "imageassets/modelos-nuevos/nuevos-17nov/CC03_CasaCerro.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K13_ColoniaCerro.png"
+   ],
+   "aspect_ratio": "9:16",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a narrow three-story house painted yellow, a wrought-iron balcony on the second floor, small windows, a water tank on the roof.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "4 × 7 × 9 m"
+  },
+  {
+   "id": "CC04",
+   "archivo": "CC04_Tendedero",
+   "fase": 3,
+   "salida": "imageassets/modelos-nuevos/nuevos-17nov/CC04_Tendedero.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K13_ColoniaCerro.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a rooftop clothesline: two metal posts with three thick lines between them and clothes hanging as simple chunky shapes (shirts, pants, a towel).",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 8000,
+    "textura": "2K"
+   },
+   "medida": "3 m"
+  },
+  {
+   "id": "CC05",
+   "archivo": "CC05_Lavadero",
+   "fase": 3,
+   "salida": "imageassets/modelos-nuevos/nuevos-17nov/CC05_Lavadero.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K13_ColoniaCerro.png"
+   ],
+   "aspect_ratio": "4:3",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a concrete laundry sink (lavadero) with a ribbed washboard surface, a water tap, and a plastic bucket beside it touching it.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 8000,
+    "textura": "2K"
+   },
+   "medida": "1.2 × 0.6 × 0.9 m"
+  },
+  {
+   "id": "PU01G",
+   "archivo": "PU01_Grua",
+   "fase": 4,
+   "salida": "imageassets/modelos-nuevos/nuevos-17nov/PU01_Grua.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K15_Puerto.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a container gantry crane: a giant red steel frame on four legs with a long horizontal boom, an operator cab, red and white warning lights, thick structural beams (no thin cables).",
+   "tripo": {
+    "modo": "HD",
+    "caras": 15000,
+    "textura": "2K"
+   },
+   "medida": "45 m alto · boom 60 m"
+  },
+  {
+   "id": "PU02B",
+   "archivo": "PU02_Barco",
+   "fase": 4,
+   "salida": "imageassets/modelos-nuevos/nuevos-17nov/PU02_Barco.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K15_Puerto.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a cargo ship loaded with stacks of colorful containers on the deck, a white bridge tower at the back with lights, dark hull with a red bottom.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 15000,
+    "textura": "2K"
+   },
+   "medida": "120 m (fondo)"
+  },
+  {
+   "id": "PU03B",
+   "archivo": "PU03_Bodega",
+   "fase": 4,
+   "salida": "imageassets/modelos-nuevos/nuevos-17nov/PU03_Bodega.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K15_Puerto.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a large warehouse of rusty corrugated metal sheet with a pitched roof, a big rolled-down metal shutter door, floodlights on the facade.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "20 × 30 × 9 m"
+  },
+  {
+   "id": "PU04B",
+   "archivo": "PU04_Bodega",
+   "fase": 4,
+   "salida": "imageassets/modelos-nuevos/nuevos-17nov/PU04_Bodega.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K15_Puerto.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a concrete warehouse with a flat roof and a raised loading dock with a ramp, two loading doors, bumpers and floodlights.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "20 × 30 × 8 m"
+  },
+  {
+   "id": "PU05",
+   "archivo": "PU05_Montacargas",
+   "fase": 4,
+   "salida": "imageassets/modelos-nuevos/nuevos-17nov/PU05_Montacargas.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K15_Puerto.png"
+   ],
+   "aspect_ratio": "4:3",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a yellow forklift with a protective cage, two forks lowered, black tires, worn paint.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 10000,
+    "textura": "2K"
+   },
+   "medida": "3 × 1.2 × 2.2 m"
+  },
+  {
+   "id": "PU06",
+   "archivo": "PU06_Pallets",
+   "fase": 4,
+   "salida": "imageassets/modelos-nuevos/nuevos-17nov/PU06_Pallets.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K15_Puerto.png"
+   ],
+   "aspect_ratio": "4:3",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a stack of wooden pallets with a few cardboard boxes and a wrapped crate on top.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 8000,
+    "textura": "2K"
+   },
+   "medida": "1.2 × 1 × 1.5 m"
+  },
+  {
+   "id": "AU01",
+   "archivo": "AU01_Luminaria",
+   "fase": 5,
+   "salida": "imageassets/modelos-nuevos/nuevos-17nov/AU01_Luminaria.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K18_AutopistaElevada.png"
+   ],
+   "aspect_ratio": "9:16",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a highway street light: a tall grey steel pole with two arms reaching to both sides, each ending in a long flat lamp head glowing cold white.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 8000,
+    "textura": "2K"
+   },
+   "medida": "12 m"
+  },
+  {
+   "id": "IN01",
+   "archivo": "IN01_Nave",
+   "fase": 6,
+   "salida": "imageassets/modelos-nuevos/nuevos-17nov/IN01_Nave.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K16_Deshuesadero.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: an industrial warehouse building of corrugated metal sheet with a gable (two-slope) roof, a big sliding door, small high windows, rust streaks.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "25 × 40 × 10 m"
+  },
+  {
+   "id": "IN02",
+   "archivo": "IN02_Chatarra",
+   "fase": 6,
+   "salida": "imageassets/modelos-nuevos/nuevos-17nov/IN02_Chatarra.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K16_Deshuesadero.png"
+   ],
+   "aspect_ratio": "4:3",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a pile of crushed scrapped cars stacked on top of each other, flattened and rusty, faded paint colors.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "5 × 3 × 3 m"
+  },
+  {
+   "id": "IN03",
+   "archivo": "IN03_Tanques",
+   "fase": 6,
+   "salida": "imageassets/modelos-nuevos/nuevos-17nov/IN03_Tanques.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K16_Deshuesadero.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a group of three industrial storage tanks (cylinders) connected by thick pipes, with thick ladders and a catwalk with a solid railing, warning stripes.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "10 × 10 × 12 m"
+  },
+  {
+   "id": "CH01",
+   "archivo": "CH01_Catedral",
+   "fase": 7,
+   "salida": "imageassets/modelos-nuevos/nuevos-17nov/CH01_Catedral.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K14_CentroHistorico.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: an INVENTED colonial cathedral of pinkish-grey carved stone (not a copy of any real cathedral): a front facade with a large arched doorway, carved stone details, two bell towers with domes, a central dome behind. View: 3/4 view from the front.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 15000,
+    "textura": "2K"
+   },
+   "medida": "40 × 60 × 35 m"
+  },
+  {
+   "id": "CH02",
+   "archivo": "CH02_EdificioColonial",
+   "fase": 7,
+   "salida": "imageassets/modelos-nuevos/nuevos-17nov/CH02_EdificioColonial.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K14_CentroHistorico.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a two-story colonial building: stone arches at ground level forming a covered arcade, wrought-iron balconies on the upper floor, painted plaster walls in a faded color, a flat roof with a stone cornice.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "15 × 10 × 8 m"
+  },
+  {
+   "id": "CH03",
+   "archivo": "CH03_EdificioColonial",
+   "fase": 7,
+   "salida": "imageassets/modelos-nuevos/nuevos-17nov/CH03_EdificioColonial.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K14_CentroHistorico.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a three-story colonial building painted ochre, arches at ground level, wrought-iron balconies, and a big glowing neon screen frame mounted on the roof showing abstract shapes.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "15 × 10 × 12 m"
+  },
+  {
+   "id": "CH04",
+   "archivo": "CH04_FarolColonial",
+   "fase": 7,
+   "salida": "imageassets/modelos-nuevos/nuevos-17nov/CH04_FarolColonial.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K14_CentroHistorico.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: two colonial street lanterns shown side by side: on the left a wall-mounted wrought-iron lantern with a bracket, on the right the same lantern on a tall iron post; warm light.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 8000,
+    "textura": "2K"
+   },
+   "medida": "poste 3.5 m · de pared 0.8 m"
+  },
+  {
+   "id": "LO01",
+   "archivo": "LO01_CasaModerna",
+   "fase": 8,
+   "salida": "imageassets/modelos-nuevos/nuevos-17nov/LO01_CasaModerna.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K17_LasLomas.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a modern two-story luxury house: white concrete volumes with warm wood panels, large glass windows lit with cold white light, a flat roof.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "15 × 12 × 7 m"
+  },
+  {
+   "id": "LO02",
+   "archivo": "LO02_CasaModerna",
+   "fase": 8,
+   "salida": "imageassets/modelos-nuevos/nuevos-17nov/LO02_CasaModerna.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K17_LasLomas.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a modern two-story house of exposed concrete with tall floor-to-ceiling windows and a cantilevered upper floor.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "15 × 12 × 7 m"
+  },
+  {
+   "id": "LO03",
+   "archivo": "LO03_CasaModerna",
+   "fase": 8,
+   "salida": "imageassets/modelos-nuevos/nuevos-17nov/LO03_CasaModerna.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K17_LasLomas.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a modern two-story house with an integrated garage with a wide door, a terrace with a glass railing on the upper floor, white and grey.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "16 × 12 × 7 m"
+  },
+  {
+   "id": "LO04",
+   "archivo": "LO04_Caseta",
+   "fase": 8,
+   "salida": "imageassets/modelos-nuevos/nuevos-17nov/LO04_Caseta.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K17_LasLomas.png"
+   ],
+   "aspect_ratio": "4:3",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a small modern security guard booth with glass windows and a flat roof, and a long barrier arm (pluma) with red and white stripes beside it, attached.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 8000,
+    "textura": "2K"
+   },
+   "medida": "2.5 × 2.5 × 2.8 m · pluma 4 m"
+  },
+  {
+   "id": "LO05",
+   "archivo": "LO05_Camara",
+   "fase": 8,
+   "salida": "imageassets/modelos-nuevos/nuevos-17nov/LO05_Camara.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K17_LasLomas.png"
+   ],
+   "aspect_ratio": "3:4",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a security camera on a pole: a thick grey pole with an arm holding a boxy camera with a small red light.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 6000,
+    "textura": "2K"
+   },
+   "medida": "4 m"
+  },
+  {
+   "id": "LO06",
+   "archivo": "LO06_Arbusto",
+   "fase": 8,
+   "salida": "imageassets/modelos-nuevos/nuevos-17nov/LO06_Arbusto.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K17_LasLomas.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a neatly trimmed round bush in a modern square concrete planter.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 6000,
+    "textura": "2K"
+   },
+   "medida": "1 m"
+  },
+  {
+   "id": "T04",
+   "archivo": "T04_Arena",
+   "fase": 9,
+   "salida": "imageassets/calle/T04_Arena.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K11_Malecon.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image ONLY for the art style and colors. A seamless tileable texture seen straight from above (orthographic, flat, no perspective), filling the entire square image edge to edge, even flat lighting with no shadows, no objects, no text. The left and right edges and the top and bottom edges must continue seamlessly. Stylized hand-painted game texture, no photorealistic noise. Subject: wet beach sand, slightly darker damp areas, small shells and pebbles scattered.",
+   "uso": "Textura (no va a Tripo)"
+  },
+  {
+   "id": "T05",
+   "archivo": "T05_ConcretoCerro",
+   "fase": 9,
+   "salida": "imageassets/calle/T05_ConcretoCerro.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K13_ColoniaCerro.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image ONLY for the art style and colors. A seamless tileable texture seen straight from above (orthographic, flat, no perspective), filling the entire square image edge to edge, even flat lighting with no shadows, no objects, no text. The left and right edges and the top and bottom edges must continue seamlessly. Stylized hand-painted game texture, no photorealistic noise. Subject: rough grooved concrete of a steep street with anti-slip lines, cracks and dirt.",
+   "uso": "Textura (no va a Tripo)"
+  },
+  {
+   "id": "T06",
+   "archivo": "T06_Adoquin",
+   "fase": 9,
+   "salida": "imageassets/calle/T06_Adoquin.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K14_CentroHistorico.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image ONLY for the art style and colors. A seamless tileable texture seen straight from above (orthographic, flat, no perspective), filling the entire square image edge to edge, even flat lighting with no shadows, no objects, no text. The left and right edges and the top and bottom edges must continue seamlessly. Stylized hand-painted game texture, no photorealistic noise. Subject: worn stone pavers (cantera cobblestones) in a regular pattern, rounded edges, dirt in the joints.",
+   "uso": "Textura (no va a Tripo)"
+  }
+ ]
+}

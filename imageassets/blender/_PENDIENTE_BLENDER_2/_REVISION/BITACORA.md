@@ -562,3 +562,200 @@ Fuentes: nuevos-18nov\*.zip (DR02_a/b, DR03_a, DR04_a, NV03_a/b), modelos3d\DR01
 - **Rig nuevo (`t1408_rig.py`, `t1408_malla.py`)**: (1) malla de E16_b del zip, a 2.45 m; los brazos se giran a T-pose de forma RÍGIDA (una sola rotación sobre el hombro, mezclada por los pesos de la cadena del brazo: 61 grados el izquierdo y 54 el derecho), así el minigun y el escudo no se estiran. (2) Esqueleto = copia del E16_a YA EXPORTADO (el que Unity acepta), movido por tramos a la malla: z por puntos de referencia (suelo, entrepierna, hombro, tope), brazo por hombro/codo/muñeca/punta de mano (simétricos), dedos sobre el centro real de la mano, piernas verticales y simétricas, columna en x=0. (3) Pesos: los de Tripo de E16_b (mismos nombres de hueso), 4 huesos como máximo y normalizados; 0 vértices sin peso. (4) Armature y malla con escala 1 y sin rotación. Exportado a `personajes\E16_RobotPesadoNova_b.fbx` (reemplaza el anterior; 52 huesos).
 - **Validación (`t1408_validar.py`, corre al armar y reimportando el FBX)**: 0 fallos. Revisa huesos obligatorios de Humanoid, padres, raíz única, 52 huesos, escala y rotación 1/0, longitud cero, cabezas duplicadas, brazos horizontales (0.0 grados), piernas verticales (<8), dedo del pie hacia -Y, simetría, columna ascendente, huesos dentro de la malla y pesos. 1 aviso: los primeros huesos de dedo quedan a 0.1 a 0.2 m de la cola de la mano (la mano de la malla cuelga unos 8 cm bajo la línea del antebrazo). Prueba de movimiento: pose de prueba (brazos abajo, paso largo) y 3 cuadros (6, 14, 24) de Loco_Caminar.fbx retargeteado: brazos bajan con el minigun y el escudo enteros, piernas bien. Renders: `_REVISION\T1408_E16_b_*.png` (14). La "sentadilla" de la prueba corta las piernas del cuadro (límite de la cámara del script, no del rig).
 - Pendiente: confirmar en Unity que el avatar Humanoid de E16_b ya es válido (Configure Avatar sin avisos en rojo); no se abrió Unity en esta tarea.
+
+# PEDIDO 19-NOV NOCHE
+
+## 19-nov — A) PJ01 locomocion (archivo de trabajo pj01_clips\PJ01_19nov_trabajo.blend, generador _herramientas\cc_gait.py)
+Hechos a mano por codigo (no hay mocap de sprint/lado/escaleras): IK de pies con talon->planta->punta, cadera con bote/balanceo/giro,
+torso en contrarrotacion, cabeza estable, brazos con retraso (superposicion) de antebrazo y mano. 30 fps, misma exportacion que los PJ01_*.fbx
+(armadura PJ01 78 huesos, root motion en Hip). Velocidades medidas en Blender con PJ01 a 1.77 m de alto. Ultimo fotograma = primero (loop perfecto).
+Pisadas = fotograma en que el talon/planta toca el piso (para el evento de sonido de paso).
+
+| Clip (FBX) | Frames | Dur. | m/s | Loop | Pie izq. | Pie der. |
+|---|---|---|---|---|---|---|
+| PJ01_Caminar | 1-31 | 1.00 s | 1.60 | si | 1 (y 31) | 16 |
+| PJ01_Trote | 1-21 | 0.67 s | 4.50 | si | 1 (y 21) | 11 |
+| PJ01_Sprint | 1-19 | 0.60 s | 7.25 | si | 1 (y 19) | 10 |
+| PJ01_Trote_Izquierda | 1-21 | 0.67 s | 4.00 (hacia +X/izq.) | si | 1 (y 21) | 11 |
+| PJ01_Trote_Derecha | 1-21 | 0.67 s | 4.00 (hacia der.) | si | 1 (y 21) | 11 |
+| PJ01_Trote_Atras | 1-21 | 0.67 s | 4.00 (hacia atras) | si | 1 (y 21) | 11 |
+
+- Caminar: talon que pega, despegue de punta, brazos sueltos, zancada 1.6 m.
+- Trote: fase de vuelo corta, brazos a 80 grados, puno flojo.
+- Sprint: cuerpo inclinado 22 grados, apoyo en la bola del pie, rodilla alta, talon al gluteo, brazos fuertes (+-52 grados), zancada 4.35 m (contra 3.0 del trote).
+- Trote de lado / atras: cadera abierta hacia donde corre y pecho/cabeza al frente (para correr apuntando). Atras: apoyo en la punta.
+
+
+### Escaleras y salto (19-nov)
+| Clip (FBX) | Frames | Dur. | Avance | Loop | Pisadas |
+|---|---|---|---|---|---|
+| PJ01_Escaleras_Subir | 1-37 | 1.20 s | 0.47 m/s adelante + 0.30 m/s arriba (2 escalones por ciclo: 0.56 m y 0.36 m) | si | izq. 1 (y 37), der. 19 |
+| PJ01_Escaleras_Bajar | 1-35 | 1.13 s | 0.49 m/s adelante - 0.32 m/s abajo (2 escalones por ciclo) | si | izq. 1 (y 35), der. 18 |
+| PJ01_Salto_Despegue | 1-16 | 0.50 s | en el sitio | no | despega en 13 (punta del pie deja el piso) |
+| PJ01_Salto_Aire | 1-17 | 0.53 s | en el sitio | si | - (piernas pedaleando, brazos en molino para equilibrio) |
+| PJ01_Salto_Aterrizaje | 1-23 | 0.73 s | en el sitio | no | toca el piso en 3 |
+| PJ01_Aterrizaje_Fuerte | 1-45 | 1.47 s | en el sitio | no | toca el piso en 3 (sentadilla profunda, mano al frente, se levanta) |
+- Escaleras: escalon de 18 cm x 28 cm de huella; el pie se apoya completo en cada escalon (subir: entra plano; bajar: entra de punta y baja el talon). Probado sobre una escalera de esas medidas en Blender.
+- Salto: la altura real del salto la pone el juego; dentro del clip la cadera sube 0.16 m en Despegue/Aire y vuelve a 0 en Aterrizaje.
+  Despegue con anticipacion (se agacha y lleva los brazos atras) e impulso con los brazos arriba; Aterrizaje con flexion de rodillas y brazos que se asientan con retraso.
+
+
+### Resto del bloque A (19-nov)
+| Clip (FBX) | Frames | Dur. | m/s | Loop | Pisadas / notas |
+|---|---|---|---|---|---|
+| PJ01_CaminarApuntando_Adelante | 1-27 | 0.87 s | 2.00 | si | izq. 1 (y 27), der. 14 |
+| PJ01_CaminarApuntando_Atras | 1-27 | 0.87 s | 2.00 | si | izq. 1 (y 27), der. 14 |
+| PJ01_CaminarApuntando_Izquierda | 1-23 | 0.73 s | 2.00 | si | izq. 1 (y 23), der. 12 |
+| PJ01_CaminarApuntando_Derecha | 1-23 | 0.73 s | 2.00 | si | izq. 1 (y 23), der. 12 |
+| PJ01_Manejar_Carro | 1-121 | 4.0 s | 0 | si | manos en el volante (10 y 2), correcciones de volante, voltea al espejo en 41-79 |
+| PJ01_Manejar_Moto | 1-91 | 3.0 s | 0 | si | inclinado al frente, manos en el manubrio, pies en estribos, vaiven |
+| PJ01_Cobertura_Quieto | 1-91 | 3.0 s | 0 | si | agachado con la pistola abajo, respira y vigila |
+| PJ01_Cobertura_Asomarse | 1-15 | 0.47 s | 0 | no | se levanta y queda apuntando (fotograma 15 = pose de disparo) |
+| PJ01_Cobertura_Regresar | 1-17 | 0.53 s | 0 | no | de apuntar a agachado |
+| PJ01_Golpe1_Directo | 1-23 | 0.73 s | 0 | no | IMPACTO en 7 (mano derecha extendida; cadera y pie de atras empujan) |
+| PJ01_Golpe2_Gancho | 1-25 | 0.80 s | 0 | no | IMPACTO en 8 (gancho de izquierda con codo arriba) |
+| PJ01_Dano_Frente / _Espalda / _Izquierda / _Derecha | 1-19 | 0.6 s | - | no | el golpe pega en 3; da un paso para recuperarse (se desplaza ~0.12 m) |
+| PJ01_Muerte_Frente | 1-46 | 1.5 s | - | no | rodillas al piso en 10, pecho al piso en 24, queda boca abajo |
+| PJ01_Muerte_Espaldas | 1-46 | 1.5 s | - | no | sentón en 18, espalda al piso en 23, queda boca arriba |
+- Caminar apuntando: piernas del generador + torso/brazos/cabeza de la pose Pistola_Apuntar (arma estable, a la altura de los ojos). Para rifle se puede usar la misma capa de piernas.
+- Manejar: mismas referencias que los clips viejos (cadera del carro a 0.43 m, de la moto a 0.98 m del origen), asi que se acomodan igual en el asiento.
+
+**LISTO PARA UNITY (bloque A):** todos los PJ01_*.fbx de esta seccion en imageassets\blender\pj01_clips\ (Humanoid, 30 fps). Capturas 19N_A_*.png.
+
+
+## 19-nov — C) Robots y enemigos de Nova (archivos: personajes\nova_19nov.blend, clips en imageassets\blender\nova_clips\)
+Modelos a escala real (copias nuevas, los originales no se tocan): personajes\escala_real\E15_CentinelaNova.fbx (2.6 m), E16_RobotPesadoNova.fbx (3.5 m),
+E18_EliteNova.fbx (2.2 m), E17_PerroRobotNova.fbx (1.2 m de largo). Escala aplicada a malla y esqueleto (sin deformar).
+E15/E16/E18 traen esqueleto Mixamo (52 huesos) -> en Unity como **Humanoid**; sus clips se hicieron sobre la armadura PJ01 y Unity los reparte por Humanoid.
+Las velocidades medidas son en PJ01 (1.77 m); en Unity el root motion Humanoid se escala solo con la altura de cadera (E15 ~x1.45, E16 ~x1.95, E18 ~x1.2).
+
+### E15 Centinela (Humanoid)
+| Clip (nova_clips) | Frames | m/s en PJ01 | Loop | Notas |
+|---|---|---|---|---|
+| E15_Caminar | 1-37 | 1.10 | si | paso pesado con golpe en cada pisada (cuerpo y cabeza rebotan); pisadas 1 y 19 |
+| E15_Correr | 1-23 | 3.60 | si | trote pesado con rifle; pisadas 1 y 12 |
+| E15_Disparar | 1-31 | 0 | si | rafaga de 3 tiros: retroceso en 2, 12, 22 (para el fogonazo) |
+| E15_Cubrirse | 1-91 | 0 | si | agachado vigilando |
+| E15_Impacto | 1-17 | - | no | sacudida mecanica con temblor del torso/cabeza |
+| E15_Muerte | 1-61 | - | no | espasmos 1-22 (poner chispas ahi), se apaga (cabeza cae en 25-31), de rodillas en 44, queda inclinado sin energia |
+Arma: W09_ArmaNova (W10 en Unity) se pega en la mano derecha (RightHand) como la pistola de PJ01; la pose es la de Rifle_Apuntar (dos manos).
+
+### E17 Perro robot (rig propio, Generic, raiz = hueso "Raiz")
+| Clip | Frames | m/s | Loop | Notas |
+|---|---|---|---|---|
+| E17_Caminar | 1-27 | 0.90 | si | paso lateral (TI, DI, TD, DD) |
+| E17_Correr | 1-13 | 5.00 | si | galope con flexion de columna |
+| E17_SaltoAtaque | 1-35 | avanza 1.8 m | no | se agacha 1-10, salta 12-22, aterriza 23 |
+| E17_Morder | 1-27 | - | no | embiste 8 y sacude la cabeza 10-16 (dano en 9) |
+| E17_Ladrar | 1-25 | 0 | si | ladridos en 6 y 13 |
+| E17_Muerte | 1-56 | - | no | espasmos, se le doblan las patas y cae de lado en 31 |
+Exportados como solo armadura (Generic) con el mismo nombre de esqueleto que E17_PerroRobotNova.fbx. Se borraron sus clips viejos Perro_Caminar/Perro_Idle en el .blend (no cuadraban con la nueva escala).
+
+
+### E16 Robot pesado (Humanoid)
+| Clip | Frames | m/s en PJ01 | Loop | Notas |
+|---|---|---|---|---|
+| E16_Caminar | 1-45 | 0.80 | si | pasos lentos y anchos con golpe al pisar (retumbe): pisadas 1 y 23 -> ahi va la sacudida de camara/sonido |
+| E16_Girar_Derecha / _Izquierda | 1-37 | 0 | no | gira 90 grados en 2 pasos (pisadas 15 y 27) |
+| E16_Disparar_Canon | 1-37 | 0 | no | apunta con el brazo derecho (canon) 1-14, DISPARO en 16 con retroceso fuerte |
+| E16_Golpe_Escudo | 1-29 | avanza 0.2 m | no | carga 1-7, IMPACTO en 10-12 con el brazo izquierdo (escudo) |
+| E16_Impacto | 1-19 | - | no | se tambalea hacia atras |
+| E16_Muerte | 1-71 | - | no | cae de rodillas (pega en 24), se queda unos fotogramas, cae al frente en 55 |
+
+
+### E18 Elite y Guardia de Nova (Humanoid)
+| Clip | Frames | Loop | Notas |
+|---|---|---|---|
+| E18_Caida_Aire | 1-25 | si | cayendo recto, brazos atras abiertos, flameo leve (el juego lo baja del cielo) |
+| E18_Caida_Aterrizaje | 1-31 | no | toca el piso en 3, IMPACTO en 5 (sacudida/polvo/grieta): rodilla derecha al piso, puno derecho en el suelo, brazo izq. abierto |
+| E18_Caida_Levantarse | 1-41 | no | se levanta despacio y amenazante, termina parado neutro |
+| E18_Jetpack_Volar | 1-61 | si | flotando con piernas colgando, vaiven (poner llama del jetpack) |
+| E18_Disparar / E18_Muerte | copias de E15_Disparar / E15_Muerte | | |
+| Guardia_Caida_Aire / _Aterrizaje / _Levantarse | = E18 | | la misma caida epica para GuardiaNova y E12 |
+| Guardia_Caminar / Guardia_Disparar | = E15_Caminar / E15_Disparar (con W09) | | |
+| Guardia_Muerte | = PJ01_Muerte_Frente | no | cae de frente |
+GuardiaNova y E12 no tienen rig propio en blender\personajes; en Unity como Humanoid usan estos clips.
+
+**LISTO PARA UNITY (bloque C, humanoides y perro):** imageassets\blender\nova_clips\*.fbx + modelos en personajes\escala_real\. Capturas 19N_C_*.png.
+
+
+### Drones y naves (revision)
+DR01, DR02_a, DR02_b, DR03_a, DR04_a, E13, NV01, NV03_a, NV03_b (imageassets\blender\drones\): todas las helices/rotores ya vienen como objetos aparte
+(Rotor_1..Rotor_n, hijos de la raiz), con el pivote en el eje del rotor (centro del cubo: el promedio de vertices queda a 2-8 % del diametro del centro, lo normal en
+helices de 2-3 aspas) y el eje de giro = Z local (Y en Unity). No hubo que separar nada. E13 usa la misma malla que DR02_b.
+
+
+## 19-nov — D) Revision completa de vehiculos  (carros\revision_19nov.blend, script _herramientas\cc_vaudit.py; capturas 19N_D_<codigo>.png = 4 vistas: 3/4 frente, 3/4 atras, lado, y 3/4 con cofre y puertas abiertos)
+Antes de esto, la tarea T-1380 (otra sesion, 19-nov) ya habia puesto cofre/puertas a V02-V10, puertas a V01A/V01B/V05 y recortado de nuevo las puertas de V22/V23; esta revision parte de esos FBX.
+Cambios de esta revision (mismo nombre en carros\):
+- **ESCALA REAL** en los viejos: V01A, V01B, V02-V06, V09, V10, V11 x4.5 (~4.4 m), V07 x2.05 y V08 x2.0 (motos de 2 m), C19 x1.8 (2.1 m). Escala uniforme sobre malla y posiciones (sin deformar), pivotes de ruedas/puertas/cofre conservados.
+  **En Unity: quitar el x4.5 (o el escalado que tengan) de los prefabs de estos vehiculos; ahora vienen en metros.**
+- Patrullas V05 y V06 y camioneta V11: llantas con **rin de policia** nuevas (rin de acero negro, taza cromada y 5 birlos; mismo radio, ancho y pivote que antes). Materiales Llanta_Hule, Rin_AceroNegro, Rin_Cromo.
+- V03: dos ruedas no tocaban el piso (3.7 cm): bajadas. V06: ruedas 9 mm arriba: bajadas. C19: pivote recentrado. V10: objeto de cristal vacio borrado.
+- V22: el cristal de la ronda anterior habia agarrado pedazos de los costados (manchas palidas). Se regresaron todas las caras a la carroceria y el cristal se volvio a cortar por geometria (solo el parabrisas real); las ventanas laterales quedan pintadas oscuras. Captura _rev_v22 -> 19N_D_V22.png. Si Tony quiere otro superdeportivo, conviene pasar uno nuevo por Tripo.
+- Caras invertidas: medidas como % de aristas con vecinos de orden opuesto (0 = ninguna). Bordes abiertos: todos tienen (son los huecos de las ventanas y cortes, tapados por cristal/interior); no hay huecos visibles en las capturas.
+- Proporciones: los modelos Tripo son anchos y altos (2.2-2.5 m de ancho; los altos de 2 m+ cuentan torreta/portaequipaje). Es el estilo del modelo, no se deformaron.
+
+| Vehiculo | Largo x ancho x alto (m) | Ruedas (pivote, al piso) | Cofre | Puertas | Cristal (objetos / en puerta) | Interior | Motor | Frente +Z | Pivote piso-centro | Caras invertidas | Se ve | Notas |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| V01A | 4.41 x 2.46 x 2.04 | 4 (ok, ok) | si | 2 | 4 / 0 | trae el suyo | si | si | ok | 0 | regular | carroza: huecos de ventana abiertos (vidrio solo en los cerrados), puertas sin ventana (estilo buggy), trae su interior |
+| V01B | 4.41 x 2.30 x 1.60 | 4 (ok, ok) | si | 2 | 3 / 0 | trae el suyo | si | si | ok | 0 | regular | igual que V01A; sin medallon abierto |
+| V02 | 4.33 x 2.32 x 2.26 | 4 (ok, ok) | si | 2 | 5 / 2 | si | si | si | ok | 0.11 % | bien |  |
+| V03 | 4.50 x 2.53 x 2.10 | 4 (ok, ok) | si | 2 | 5 / 2 | si | si | si | ok | 0.16 % | bien | 2 ruedas flotaban 3.7 cm: bajadas al piso |
+| V04 | 4.50 x 2.30 x 2.50 | 4 (ok, ok) | si | 2 | 5 / 2 | si | si | si | ok | 0.23 % | bien |  |
+| V05 | 4.43 x 2.20 x 2.11 | 4 (ok, ok) | si | 2 | 4 / 0 | trae el suyo | si | si | ok | 0 | bien | PATRULLA: rin de policia nuevo; puertas (T-1380) lisas sin ventana |
+| V06 | 4.50 x 2.54 x 2.30 | 4 (ok, ok) | si | 2 | 5 / 2 | si | si | si | ok | 0.42 % | bien | PATRULLA 2: rin de policia nuevo |
+| V07 | 2.00 x 0.87 x 1.35 | 2 (ok, NO) | n/a | n/a | n/a | n/a | n/a | si | ok | 0 | bien | moto |
+| V08 | 2.00 x 0.88 x 1.30 | 2 (ok, ok) | n/a | n/a | n/a | n/a | n/a | si | ok | 0 | bien | moto de policia |
+| V09 | 4.41 x 2.17 x 1.98 | 4 (ok, ok) | si | 2 | 5 / 2 | si | si | si | ok | 0 | bien |  |
+| V10 | 4.41 x 2.18 x 1.86 | 4 (ok, ok) | si | 2 | 4 / 2 | si | si | si | ok | 0 | regular | se borro un Cristal_Laterales vacio; bordes de cristal dentados |
+| V11 | 4.40 x 2.16 x 2.32 | 4 (ok, ok) | si | 2 | 5 / 2 | si | si | si | ok | 0 | bien | camioneta de policia: rin de policia nuevo |
+| V12 | 4.40 x 2.28 x 1.53 | 4 (ok, ok) | si | 2 | 5 / 2 | si | si | si | ok | 0 | bien | ventanas con borde algo dentado |
+| V13 | 4.70 x 2.44 x 1.81 | 4 (ok, ok) | si | 2 | 5 / 2 | si | si | si | ok | 0 | bien |  |
+| V14 | 3.80 x 2.31 x 1.96 | 4 (ok, ok) | si | 2 | 5 / 2 | si | si | si | ok | 0 | bien |  |
+| V15 | 5.10 x 2.21 x 1.45 | 4 (ok, ok) | si | 2 | 5 / 2 | si | si | si | ok | 0 | bien |  |
+| V16 | 7.00 x 3.54 x 4.05 | 4 (ok, ok) | si | 2 | 5 / 2 | si | si | si | ok | 0 | regular | cofre chico (morro corto), filo de puerta irregular |
+| V17 | 8.00 x 4.02 x 4.45 | 4 (ok, ok) | si | 2 | 5 / 2 | si | si | si | ok | 0 | regular | la puerta incluye un trozo de salpicadera |
+| V18 | 16.00 x 4.37 x 5.99 | 8 (ok, ok) | si | 2 | 5 / 2 | si | si | si | ok | 0 | regular | trailer 4 ejes; la puerta incluye un trozo de salpicadera |
+| V19 | 6.00 x 3.22 x 3.66 | 4 (ok, ok) | si | 2 | 5 / 2 | si | si | si | ok | 0 | bien |  |
+| V20 | 4.50 x 2.33 x 1.60 | 4 (ok, ok) | si | 2 | 5 / 2 | si | si | si | ok | 0 | bien | ventanas con borde algo dentado |
+| V21 | 4.20 x 2.55 x 1.95 | 4 (ok, ok) | si | 2 | 5 / 2 | si | si | si | ok | 0 | bien |  |
+| V22 | 4.60 x 2.37 x 1.22 | 4 (ok, ok) | si | 2 | 1 / 0 | si | si | si | ok | 0 | arreglado, revisar | REHECHO el cristal (antes manchas palidas en los costados): parabrisas limpio; ventanas laterales quedan pintadas oscuras |
+| V23 | 4.60 x 2.12 x 1.24 | 4 (ok, ok) | si | 2 | 5 / 2 | si | si | si | ok | 0 | regular | bordes de cristal dentados (V23 motor central: con el cofre delantero abierto se ven las llantas) |
+| V24 | 4.70 x 2.25 x 1.45 | 4 (ok, ok) | si | 2 | 5 / 2 | si | si | si | ok | 0 | bien | ventanas con borde algo dentado |
+| MT01 | 2.05 x 0.81 x 1.20 | 2 (ok, ok) | n/a | n/a | n/a | n/a | n/a | si | ok | 0 | bien | moto deportiva, sin cristal (parabrisas pintado) |
+| MT02 | 2.40 x 1.01 x 1.21 | 2 (ok, ok) | n/a | n/a | n/a | n/a | n/a | si | ok | 0 | bien | chopper |
+| C19 | 2.11 x 0.73 x 1.13 | 2 (ok, ok) | n/a | n/a | n/a | n/a | n/a | si | ok | 0 | bien | moto (pivote recentrado 9.8 cm) |
+
+**LISTO PARA UNITY (bloque D):** carros\*.fbx re-exportados (ver arriba cuales cambiaron). Pendiente: PA01 y PA02 (Tony aun no las pasa por Tripo).
+
+
+## 19-nov — B) Animaciones de NPCs  (clips en imageassets\blender\npc_clips\, hechos en pj01_clips\PJ01_19nov_trabajo.blend)
+Los NPC (NP01-NP14), la mesera robot R01 (65 huesos mixamorig) y el hacker usan esqueleto Mixamo -> **Humanoid** en Unity; estos clips (hechos en la armadura PJ01) se reparten por Humanoid. 30 fps.
+| Clip | Frames | m/s | Loop | Pisadas / notas |
+|---|---|---|---|---|
+| NPC_Caminar_Hombre | 1-33 | 1.40 | si | izq. 1 (y 33), der. 17 |
+| NPC_Caminar_Mujer | 1-31 | 1.30 | si | izq. 1 (y 31), der. 16; pasos en linea, mas vaiven de cadera, brazos pegados |
+| NPC_Caminar_Mayor_Baston | 1-41 | 0.60 | si | izq. 1 (y 41), der. 21; encorvado, pasos cortos, baston en la mano der. (apoya junto con el pie izq.) |
+| NPC_Caminar_Celular | 1-33 | 1.20 | si | izq. 1, der. 17; celular en la mano izq. frente al pecho, cabeza abajo |
+| NPC_Platicar_1 | 1-121 | 0 | si | gestos con las dos manos |
+| NPC_Platicar_2 | 1-121 | 0 | si | mano en la cadera, la otra explica/senala |
+| NPC_Esperar | 1-181 | 0 | si | cambia el peso, voltea, ve el reloj en 71-111 |
+| NPC_Sentado_Banca | 1-121 | 0 | si | asiento a 0.46 m, manos en los muslos, voltea |
+| NPC_Asustarse | 1-21 | - | no | brinco atras con manos a la cara en 3-12, voltea para huir (enlazar con Huir) |
+| NPC_Huir_Corriendo | 1-21 | 5.00 | si | pisadas 1 y 11; brazos desordenados, voltea la cabeza hacia atras |
+| NPC_Agachado_CubriendoCabeza | 1-41 | 0 | si | en cuclillas con las manos en la cabeza, temblando |
+| NPC_Balazo_Frente / _Espalda | 1-25 | - | no | impacto en 2; de frente se lleva la mano al pecho |
+| NPC_Muerte_Frente / _Espaldas | 1-46 | - | no | = PJ01_Muerte_Frente / _Espaldas |
+| NPC_Mesera_Charola | 1-33 | 1.20 | si | pisadas 1 y 17; charola con las dos manos al frente a 1.3 m, sin brazos sueltos. CAMINA HACIA EL FRENTE (+Z Unity): si en Unity sigue "al reves", es la rotacion del prefab/modelo, no del clip |
+| NPC_Hacker_Tecleando | 1-61 | 0 | si | sentado (asiento 0.46 m, teclado a 0.73 m de alto y 0.33 m al frente de la cadera), dedos tecleando |
+
+**LISTO PARA UNITY (bloque B):** npc_clips\*.fbx. Capturas 19N_B_*.png.
+
+## 19-nov — RESUMEN DEL PEDIDO
+- A) PJ01: 28 clips nuevos en pj01_clips\ (caminar, trote, sprint, trote de lado/atras, caminar apuntando x4, escaleras x2, salto x3 + aterrizaje fuerte, manejar carro/moto, cobertura x3, golpe 1/2, dano x4, muerte x2).
+- C) Nova: nova_clips\ (E15 x6, E16 x7, E17 x6, E18 x6, Guardia x6) + modelos a escala real en personajes\escala_real\. Drones/naves revisados (ya estaban bien).
+- D) Vehiculos: tabla arriba; viejos a escala real, rin de policia en V05/V06/V11, V22 con cristal rehecho.
+- B) NPCs: npc_clips\ (17 clips).
+- Los clips son hechos por codigo (generador de caminado con IK y animacion por poses con retraso de brazos/cabeza). Revisar en juego: velocidades del Animator deben coincidir con las de las tablas para que los pies no patinen.
+

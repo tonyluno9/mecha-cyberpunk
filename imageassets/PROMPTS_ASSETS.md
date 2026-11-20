@@ -2974,3 +2974,1047 @@ Use the attached image ONLY for the art style and colors. Stylized game asset wi
 ```
 Use the attached image ONLY for the art style and colors. Stylized game asset with chunky simplified shapes, soft hand-painted gradients. A single large neon sign for a building facade, seen straight from the front with a very slight angle, complete, centered, isolated on a plain flat pure white background, no wall, soft even lighting, no shadow, no people. Thick neon tubes on a dark metal backing frame with mounting brackets. The text must be spelled EXACTLY as written, letter by letter, and no other text. Subject: an advertising sign for the casino: the word "VIVACOIN" in big gold neon letters with a magenta neon outline, a neon gold coin on the left and a magenta arrow pointing right.
 ```
+
+
+# Parte 26 — Pedido 17-nov: policía/Nova, plaza, NPCs, texturas, caída Nova, rueda EXO e íconos de tecla
+
+Lote: `lote_17nov.json` · script: `generar_17nov.ps1`.
+
+## V11P — V11_CamionetaPolicia (fase 1)
+- **Salida:** `imageassets/modelos-nuevos/V11_CamionetaPolicia.png` · 16:9 · **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `V06_PatrullaCamioneta.png`
+- **Medida:** 6 × 2.5 × 2.8 m · **Tripo:** HD · 18000 · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients); do not copy their scenes. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, ropes and bars are thick and chunky. The second image is our police pickup: use its police colors. Subject: an armored SWAT police truck: a big boxy armored vehicle with a tall armored body, small armored windows with dark glass, navy blue paint with turquoise stripes along the sides (no text, no badges), a chunky red and blue light bar on the roof, a heavy push bumper, side steps, a rear door, big off-road tires. The four wheels are clearly separated from the body by visible dark gaps and deep wheel arches, so they can be cut off as separate pieces. View: 3/4 view from the front left, slightly from above.
+```
+
+## NV01T — NV01_NaveTransporte (fase 1)
+- **Salida:** `imageassets/modelos-nuevos/NV01_NaveTransporte.png` · 16:9 · **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `K06_CalleNova.png`, `E13_DronAsalto.png`
+- **Medida:** 12 m de largo · 7 m con rotores · **Tripo:** HD · 18000 · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients); do not copy their scenes. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, ropes and bars are thick and chunky. The second and third images show the Nova corporation look (white and blue, cold lights): use it. Subject: a futuristic troop transport aircraft like a helicopter without exposed blades: a sleek white and blue armored fuselage with a cockpit of dark glass in front, two large ducted rotors (round fans inside thick rings) on short wings on each side, a big side door slid fully OPEN showing the dark cabin with two thick rope-drop bars above the opening and two thick coiled ropes hanging just a little, landing skids, blue running lights and a red light under the nose. View: 3/4 view from the front left, slightly from above.
+```
+
+## W09 — W10_ArmaNova (fase 1)
+- **Salida:** `imageassets/armas/W10_ArmaNova.png` · 16:9 · **Adjuntar:** `W07_RiflePlasma.png`, `W03_Fusil.png`
+- **Medida:** 0.95 m · **Tripo:** HD · 12000 · 2K
+
+```
+Use the attached weapons ONLY for the art style, proportions and level of detail of our weapon set; this weapon is NOT worn: it is clean and corporate. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients. Single object, the whole weapon fully visible, no hands, no person, no text, no logos, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow. Subject: the special energy rifle of the Nova corporation guards: a sleek glossy white body with smooth rounded panels, light grey and gunmetal details, a long barrel with a cold blue glowing emitter line along it, a glowing blue energy cell in the side, a compact sight, a clean stock. View: 3/4 view from the side, slightly from the front, showing the full length.
+```
+
+## H09 — H09_ArmaNova (fase 2)
+- **Salida:** `imageassets/ui/hologramas/H09_ArmaNova.png` · 16:9 · **Adjuntar:** `W10_ArmaNova.png`
+
+```
+Turn the weapon in the attached image into a holographic projection for a video game user interface. Keep EXACTLY the same weapon shape, silhouette, parts and proportions, but shown perfectly from the side (pure side profile, orthographic, muzzle pointing to the right), centered and filling about 80% of the width. Translucent cyan-turquoise glowing body, bright glowing outlines on every part, faint inner wireframe lines, thin horizontal scan lines, a slight digital glitch on one or two slices, soft cyan glow. PURE BLACK (#000000) background everywhere, no text, no hands.
+```
+
+## AR01 — AR01_Arbol (fase 3)
+- **Salida:** `imageassets/modelos-nuevos/AR01_Arbol.png` · 3:4 · **Adjuntar:** `K09_Plaza_Barrio.png`, `K01_Barrio_HUDnuevo.png`
+- **Medida:** 4.5 m de alto · jardinera 1 × 1 m · **Tripo:** Smart Mesh P2 · 8000 · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients); do not copy their scenes. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, ropes and bars are thick and chunky. Subject: a city sidewalk tree: a slim straight trunk, a medium round crown of leaves made of chunky simplified clumps, planted in a square low concrete planter box with a bit of soil, slightly dusty. View: 3/4 view from the front left, slightly from above.
+```
+
+## AR02 — AR02_Arbol (fase 3)
+- **Salida:** `imageassets/modelos-nuevos/AR02_Arbol.png` · 1:1 · **Adjuntar:** `K09_Plaza_Barrio.png`, `K01_Barrio_HUDnuevo.png`
+- **Medida:** 8 m de alto · copa de 9 m · **Tripo:** Smart Mesh P2 · 10000 · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients); do not copy their scenes. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, ropes and bars are thick and chunky. Subject: a big plaza tree like an Indian laurel: a thick short trunk with roots showing at the base, a very wide dense rounded crown of leaves made of large chunky clumps, a small round curb ring around the base. View: 3/4 view from the front left, slightly from above.
+```
+
+## AR03 — AR03_Palmera (fase 3)
+- **Salida:** `imageassets/modelos-nuevos/AR03_Palmera.png` · 9:16 · **Adjuntar:** `K09_Plaza_Barrio.png`, `K01_Barrio_HUDnuevo.png`
+- **Medida:** 12 m de alto · **Tripo:** Smart Mesh P2 · 8000 · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients); do not copy their scenes. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, ropes and bars are thick and chunky. Subject: a tall avenue palm tree: a very tall slightly curved trunk with ring textures, a crown of thick chunky palm fronds at the top, a small round soil patch at the base. View: 3/4 view from the front, whole palm visible.
+```
+
+## PZ01 — PZ01_Banca (fase 3)
+- **Salida:** `imageassets/modelos-nuevos/PZ01_Banca.png` · 16:9 · **Adjuntar:** `K09_Plaza_Barrio.png`, `K01_Barrio_HUDnuevo.png`
+- **Medida:** 1.8 × 0.6 × 0.85 m · **Tripo:** Smart Mesh P2 · 8000 · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients); do not copy their scenes. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, ropes and bars are thick and chunky. Subject: a plaza bench: thick wrought iron side frames with simple curls, wooden slats for the seat and backrest with chipped green paint, worn and weathered. View: 3/4 view from the front left, slightly from above.
+```
+
+## PZ02 — PZ02_Kiosco (fase 3)
+- **Salida:** `imageassets/modelos-nuevos/PZ02_Kiosco.png` · 1:1 · **Adjuntar:** `K09_Plaza_Barrio.png`, `K01_Barrio_HUDnuevo.png`
+- **Medida:** 6 m de diámetro · 5 m de alto · **Tripo:** Smart Mesh P2 · 12000 · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients); do not copy their scenes. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, ropes and bars are thick and chunky. Subject: a small neighborhood plaza kiosk (bandstand): an octagonal raised concrete platform with three steps, thick metal posts with a simple railing, a pointed octagonal roof of painted corrugated metal sheet, a string of warm bulbs around the roof edge, a light hanging in the center, worn paint. View: 3/4 view from the front left, slightly from above.
+```
+
+## PZ03 — PZ03_Jardinera (fase 3)
+- **Salida:** `imageassets/modelos-nuevos/PZ03_Jardinera.png` · 16:9 · **Adjuntar:** `K09_Plaza_Barrio.png`, `K01_Barrio_HUDnuevo.png`
+- **Medida:** 2 × 1 × 0.5 m · **Tripo:** Smart Mesh P2 · 8000 · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients); do not copy their scenes. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, ropes and bars are thick and chunky. Subject: a rectangular concrete planter for a plaza with chipped edges and stains, filled with soil and a few round chunky green bushes. View: 3/4 view from the front left, slightly from above.
+```
+
+## NP01 — NP01_Senora (fase 4)
+- **Salida:** `imageassets/modelos-nuevos/NP01_Senora.png` · 1:1 · **Adjuntar:** `PJ01_Protagonista_v2.png`, `BaseMujer_frente.png`
+- **Medida:** 1.58 m · **Tripo:** Quads · 20000 · 2K · Humanoid (luego Mixamo)
+
+```
+Use the attached characters for the art style of our game (rendering, proportions, level of detail) and the T-pose framing; draw a NEW original character, a regular citizen of a Mexican cyberpunk neighborhood. Rig-friendly: everything fitted close to the body, nothing hanging loose, no loose straps, no cables. Hands EMPTY. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: a middle-aged woman, short wavy dark hair, a fitted floral blouse, a knee-length skirt, flat shoes, and a woven market shopping bag worn on her shoulder held close to the body by a short strap (hands stay empty).
+```
+
+## NP02 — NP02_Trabajador (fase 4)
+- **Salida:** `imageassets/modelos-nuevos/NP02_Trabajador.png` · 1:1 · **Adjuntar:** `PJ01_Protagonista_v2.png`, `BaseMujer_frente.png`
+- **Medida:** 1.72 m · **Tripo:** Quads · 20000 · 2K · Humanoid (luego Mixamo)
+
+```
+Use the attached characters for the art style of our game (rendering, proportions, level of detail) and the T-pose framing; draw a NEW original character, a regular citizen of a Mexican cyberpunk neighborhood. Rig-friendly: everything fitted close to the body, nothing hanging loose, no loose straps, no cables. Hands EMPTY. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: a construction worker man, a hard hat, a reflective vest in orange with silver stripes over a grey t-shirt, work pants, work boots, gloves tucked in a pocket.
+```
+
+## NP03 — NP03_Joven (fase 4)
+- **Salida:** `imageassets/modelos-nuevos/NP03_Joven.png` · 1:1 · **Adjuntar:** `PJ01_Protagonista_v2.png`, `BaseMujer_frente.png`
+- **Medida:** 1.70 m · **Tripo:** Quads · 20000 · 2K · Humanoid (luego Mixamo)
+
+```
+Use the attached characters for the art style of our game (rendering, proportions, level of detail) and the T-pose framing; draw a NEW original character, a regular citizen of a Mexican cyberpunk neighborhood. Rig-friendly: everything fitted close to the body, nothing hanging loose, no loose straps, no cables. Hands EMPTY. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: a young man around 18, a fitted hoodie with the hood down, over-ear headphones resting around his neck, slim joggers, sneakers, a small turquoise LED on the headphones.
+```
+
+## NP04 — NP04_Senor (fase 4)
+- **Salida:** `imageassets/modelos-nuevos/NP04_Senor.png` · 1:1 · **Adjuntar:** `PJ01_Protagonista_v2.png`, `BaseMujer_frente.png`
+- **Medida:** 1.68 m · **Tripo:** Quads · 20000 · 2K · Humanoid (luego Mixamo)
+
+```
+Use the attached characters for the art style of our game (rendering, proportions, level of detail) and the T-pose framing; draw a NEW original character, a regular citizen of a Mexican cyberpunk neighborhood. Rig-friendly: everything fitted close to the body, nothing hanging loose, no loose straps, no cables. Hands EMPTY. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: an older man around 60, grey moustache, a worn brown suit jacket closed with one button, a plain shirt without a tie, worn trousers, old dress shoes, a flat cap.
+```
+
+## NP05 — NP05_Vendedor (fase 4)
+- **Salida:** `imageassets/modelos-nuevos/NP05_Vendedor.png` · 1:1 · **Adjuntar:** `PJ01_Protagonista_v2.png`, `BaseMujer_frente.png`
+- **Medida:** 1.70 m · **Tripo:** Quads · 20000 · 2K · Humanoid (luego Mixamo)
+
+```
+Use the attached characters for the art style of our game (rendering, proportions, level of detail) and the T-pose framing; draw a NEW original character, a regular citizen of a Mexican cyberpunk neighborhood. Rig-friendly: everything fitted close to the body, nothing hanging loose, no loose straps, no cables. Hands EMPTY. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: a street food vendor man around 40, a plain white t-shirt, a fitted striped apron tied close to the body, a cap worn backwards, jeans, sneakers.
+```
+
+## NP06 — NP06_ChicaPunk (fase 4)
+- **Salida:** `imageassets/modelos-nuevos/NP06_ChicaPunk.png` · 1:1 · **Adjuntar:** `PJ01_Protagonista_v2.png`, `BaseMujer_frente.png`
+- **Medida:** 1.63 m · **Tripo:** Quads · 20000 · 2K · Humanoid (luego Mixamo)
+
+```
+Use the attached characters for the art style of our game (rendering, proportions, level of detail) and the T-pose framing; draw a NEW original character, a regular citizen of a Mexican cyberpunk neighborhood. Rig-friendly: everything fitted close to the body, nothing hanging loose, no loose straps, no cables. Hands EMPTY. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: a punk young woman around 20, short spiky hair dyed magenta on one side, a fitted short leather jacket with small metal studs, a band-style t-shirt with an abstract print (no text), ripped fitted jeans, combat boots, a small nose ring.
+```
+
+## T02 — T02_Techo (fase 5)
+- **Salida:** `imageassets/calle/T02_Techo.png` · 1:1 · **Adjuntar:** `K01_Barrio_HUDnuevo.png`
+
+```
+Use the attached image ONLY for the art style and colors. A seamless tileable texture seen straight from above (orthographic, flat, no perspective), filling the entire square image edge to edge, even flat lighting with no shadows, no objects, no text. The left and right edges and the top and bottom edges must continue seamlessly. Stylized hand-painted game texture, no photorealistic noise. Subject: a flat concrete rooftop covered with worn red waterproofing paint, large faded and peeled patches showing grey concrete, dark water stains, a few cracks and dirt.
+```
+
+## T03 — T03_Asfalto (fase 5)
+- **Salida:** `imageassets/calle/T03_Asfalto.png` · 1:1 · **Adjuntar:** `K01_Barrio_HUDnuevo.png`
+
+```
+Use the attached image ONLY for the art style and colors. A seamless tileable texture seen straight from above (orthographic, flat, no perspective), filling the entire square image edge to edge, even flat lighting with no shadows, no objects, no text. The left and right edges and the top and bottom edges must continue seamlessly. Stylized hand-painted game texture, no photorealistic noise. Subject: old dark grey asphalt with darker rectangular patches of repairs, a network of thin cracks, a few dark oil stains and small loose gravel. No painted lines.
+```
+
+## F02 — F02_CaidaNova (fase 6)
+- **Salida:** `imageassets/vfx/F02_CaidaNova.png` · 1:1 · **Adjuntar:** `K01_Barrio_HUDnuevo.png`
+
+```
+Use the attached image ONLY for the color mood. A landing impact effect sprite for a video game: a bright vertical column of blue-white light coming down from the top to the center, and at its base a flat glowing shockwave ring spreading on the ground seen in perspective from slightly above, small sparks and a soft blue glow. Stylized and clean. PURE BLACK (#000000) background everywhere, flat, no ground texture, no text.
+```
+
+## H43 — H43_RuedaEXO (fase 7)
+- **Salida:** `imageassets/ui/menus/H43_RuedaEXO.png` · 16:9 · **Adjuntar:** `H10_HUD.png`, `K01_Barrio_HUDnuevo.png`, `M30_RuedaArmas.png`, `H42_IconosProtesisAtaque.png`
+
+```
+The FIRST attached image is our HUD and the SECOND our city look: match their style EXACTLY (thin turquoise lines, cut corners, yellow accent for the selected element, thin text). The THIRD image is our approved weapon wheel: make this one consistent with it. The FOURTH shows our attack implant icons. Original design, all text in Spanish spelled EXACTLY as written. Screen: the EXO ability wheel is open over the darkened, slightly blurred night street: a radial wheel in the center with 4 slots, each with a thin turquoise line icon and its name: "PIERNAS" (leg exoskeleton), "ESCUDO" (energy shield), "LÁSER" (forearm laser cannon), "MISILES" (shoulder missile launcher). "LÁSER" is selected and highlighted in yellow, and the center of the wheel shows "LÁSER" and a thin energy bar. Normal HUD hidden.
+```
+
+## H44 — H44_IconosTecla (fase 7)
+- **Salida:** `imageassets/ui/menus/H44_IconosTecla.png` · 16:9 · **Adjuntar:** `H10_HUD.png`, `H41_IconosProtesis.png`
+
+```
+The attached images are our HUD and icon sheet: match their thin turquoise line style EXACTLY. An icon sheet on a PURE BLACK (#000000) flat background with 4 key prompt icons in a row, evenly spaced, each drawn with a single thin turquoise line and a subtle glow: 1) a square keyboard key with the letter "E", 2) a square keyboard key with the letter "F", 3) a long wide keyboard key with the word "ESPACIO", 4) a computer mouse outline with its LEFT button highlighted in yellow. No other text.
+```
+
+
+# Parte 27 — Pedido 17-nov noche: zonas nuevas K11–K18 y mapa expandido M12
+
+Lote: `lote_17nov_b.json` · script: `generar_17nov_b.ps1` (fase 1: K11, K13–K18; fase 2: K12 y M12).
+
+## K11 — K11_Malecon (fase 1)
+- **Adjuntar:** `K01_Barrio_HUDnuevo.png`
+
+```
+The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY, as if it were another screenshot of the same game: thin outlines, painted rendering, blue night with soft fog, orange sodium street lights, turquoise and magenta neon, wet ground with reflections, thick cables strung between utility poles. A Mexican cyberpunk megacity. Third-person view at street level, the camera about 2 meters high, as it would look in the game. NO HUD, NO interface, NO player character, no rain, no readable text, no logos: signs and screens show only abstract shapes and colors. Original design, nothing copied from other games. 16:9. Scene: a long four-lane coastal avenue (malecón) with a wide open curve, a low concrete balustrade along the sea side, a row of tall palm trees and old street lamps with orange light, the sea at night on one side with the city skyline and its neon reflected on the dark water, a dark beach below the balustrade, a sleek sports car driving along the avenue with light trails, people walking on the wide promenade.
+```
+
+## K12 — K12_Malecon_Muelle (fase 2)
+- **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `K11_Malecon.png`
+
+```
+The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY, as if it were another screenshot of the same game: thin outlines, painted rendering, blue night with soft fog, orange sodium street lights, turquoise and magenta neon, wet ground with reflections, thick cables strung between utility poles. A Mexican cyberpunk megacity. Third-person view at street level, the camera about 2 meters high, as it would look in the game. NO HUD, NO interface, NO player character, no rain, no readable text, no logos: signs and screens show only abstract shapes and colors. Original design, nothing copied from other games. 16:9. Scene: the far end of the same coastal avenue: a wooden fishermen's pier going out into the dark sea, small painted fishing boats (lanchas) tied to it, a small seafood stand at the start of the pier with a tarp roof and a single hanging bulb, stools and coolers, nets and crates, and a lighthouse in the distance sweeping its beam over the water. The second image is the malecón: keep it consistent if it exists.
+```
+
+## K13 — K13_ColoniaCerro (fase 1)
+- **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `K08_CalleSuburbios_Cuadra.png`
+
+```
+The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY, as if it were another screenshot of the same game: thin outlines, painted rendering, blue night with soft fog, orange sodium street lights, turquoise and magenta neon, wet ground with reflections, thick cables strung between utility poles. A Mexican cyberpunk megacity. Third-person view at street level, the camera about 2 meters high, as it would look in the game. NO HUD, NO interface, NO player character, no rain, no readable text, no logos: signs and screens show only abstract shapes and colors. Original design, nothing copied from other games. 16:9. Scene: a hillside neighborhood: colorful small concrete houses stacked in steps one above the other up a steep hill, long concrete staircases with simple railings climbing between them, steep narrow alleys, rooftops with water tanks, antennas and laundry lines with clothes as simple shapes, utility poles with tangled cables, and below and far away the whole city lit up with neon colors.
+```
+
+## K14 — K14_CentroHistorico (fase 1)
+- **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `K09_Plaza_Barrio.png`
+
+```
+The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY, as if it were another screenshot of the same game: thin outlines, painted rendering, blue night with soft fog, orange sodium street lights, turquoise and magenta neon, wet ground with reflections, thick cables strung between utility poles. A Mexican cyberpunk megacity. Third-person view at street level, the camera about 2 meters high, as it would look in the game. NO HUD, NO interface, NO player character, no rain, no readable text, no logos: signs and screens show only abstract shapes and colors. Original design, nothing copied from other games. 16:9. Scene: the main square of the historic downtown: a big colonial cathedral of pinkish-grey carved stone (cantera) with two bell towers, colonial buildings around the square with stone arches at ground level and wrought-iron balconies above, modern neon signs and big glowing screens mounted on top of the old buildings, food stalls with tarp roofs and warm bulbs in the square, people walking.
+```
+
+## K15 — K15_Puerto (fase 1)
+- **Adjuntar:** `K01_Barrio_HUDnuevo.png`
+
+```
+The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY, as if it were another screenshot of the same game: thin outlines, painted rendering, blue night with soft fog, orange sodium street lights, turquoise and magenta neon, wet ground with reflections, thick cables strung between utility poles. A Mexican cyberpunk megacity. Third-person view at street level, the camera about 2 meters high, as it would look in the game. NO HUD, NO interface, NO player character, no rain, no readable text, no logos: signs and screens show only abstract shapes and colors. Original design, nothing copied from other games. 16:9. Scene: a cargo port at night: tall stacks of colorful shipping containers (rust red, blue, green, orange) forming corridors, enormous gantry cranes with red and white lights over the water, large warehouses with rolled shutters and bright floodlights, a big cargo ship docked with its lights on, puddles on the concrete reflecting everything, a few forklifts.
+```
+
+## K16 — K16_Deshuesadero (fase 1)
+- **Adjuntar:** `K01_Barrio_HUDnuevo.png`
+
+```
+The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY, as if it were another screenshot of the same game: thin outlines, painted rendering, blue night with soft fog, orange sodium street lights, turquoise and magenta neon, wet ground with reflections, thick cables strung between utility poles. A Mexican cyberpunk megacity. Third-person view at street level, the camera about 2 meters high, as it would look in the game. NO HUD, NO interface, NO player character, no rain, no readable text, no logos: signs and screens show only abstract shapes and colors. Original design, nothing copied from other games. 16:9. Scene: an industrial zone: large corrugated metal warehouses, a junkyard with high piles of scrapped and crushed cars behind a chain-link fence with lights, and in front a long straight street used for illegal street races: a crowd standing on both sides, two tuned cars with neon underglow and big spoilers lined up at a painted start line, someone in the middle about to give the start signal with a raised arm.
+```
+
+## K17 — K17_LasLomas (fase 1)
+- **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `K06_CalleNova.png`
+
+```
+The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY, as if it were another screenshot of the same game: thin outlines, painted rendering, blue night with soft fog, orange sodium street lights, turquoise and magenta neon, wet ground with reflections, thick cables strung between utility poles. A Mexican cyberpunk megacity. Third-person view at street level, the camera about 2 meters high, as it would look in the game. NO HUD, NO interface, NO player character, no rain, no readable text, no logos: signs and screens show only abstract shapes and colors. Original design, nothing copied from other games. 16:9. Scene: a wealthy residential street: modern minimalist houses of white concrete, wood and glass behind tall clean walls, a guard booth with a barrier arm at the entrance of the street, manicured gardens lit with cold white light, security cameras on the walls, clean sidewalks, trimmed trees, a few luxury cars parked, everything quiet and spotless, cold light instead of orange sodium.
+```
+
+## K18 — K18_AutopistaElevada (fase 1)
+- **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `K06_CalleNova.png`
+
+```
+The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY, as if it were another screenshot of the same game: thin outlines, painted rendering, blue night with soft fog, orange sodium street lights, turquoise and magenta neon, wet ground with reflections, thick cables strung between utility poles. A Mexican cyberpunk megacity. Third-person view at street level, the camera about 2 meters high, as it would look in the game. NO HUD, NO interface, NO player character, no rain, no readable text, no logos: signs and screens show only abstract shapes and colors. Original design, nothing copied from other games. 16:9. Scene: an elevated highway: a concrete on-ramp climbing up from a poor neighborhood street with houses and shops below, the highway on tall concrete pillars curving away and entering a lit tunnel cut into a hill, lines of car headlights and taillights, big highway lamps, and the white towers of the Nova corporation glowing in the background.
+```
+
+## M12 — M12_MapaExpandido (fase 2)
+- **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `M11_MapaCiudad.png`, `M10_MapaCiudad.png`
+
+```
+Use the FIRST attached image for the art style and color mood of our game, and the SECOND and THIRD images (our previous city maps) for the illustrated top-down map style: draw the expanded city map in the same style. Full-screen city map seen from directly above, like the pause-menu map of an open-world game, at night colors. No district borders as boxes: one continuous city of short blocks, the zones told apart by the color of their lights and their building types, blending at the edges. Layout: in the CENTER the four current districts: NOVA top-left (cold blue, office towers and the big tower), NEÓN ALTO top-right (magenta, casino and tall buildings), SUBURBIOS bottom-left (warm orange, low houses), EL MERCADO bottom-right (yellow, market streets). To the WEST: COLONIA DEL CERRO (small houses stacked on a hill with stairs). To the EAST, from top to bottom: CENTRO HISTÓRICO (a big square with a cathedral), ZONA INDUSTRIAL (warehouses and a junkyard), PUERTO (containers, cranes and docks on the water). To the NORTH: the elevated highway crossing the whole map, and behind it LAS LOMAS (large houses with gardens, green). To the SOUTH: the whole MALECÓN, a long curved coastal avenue along the sea, with a lighthouse on a point. The ONLY text on the map is each zone name, written once in thin capital letters, spelled exactly: "NOVA", "NEÓN ALTO", "SUBURBIOS", "EL MERCADO", "COLONIA DEL CERRO", "CENTRO HISTÓRICO", "ZONA INDUSTRIAL", "PUERTO", "LAS LOMAS", "MALECÓN". No icons with labels, no legend, no compass text.
+```
+
+
+# Parte 28 — Pedido grande 17-nov noche: vehículos y assets de la expansión del mapa
+
+Lote: `lote_17nov_c.json` · script: `generar_17nov_c.ps1`.
+
+## V12 — V12_Deportivo (fase 1)
+- **Adjuntar:** `K11_Malecon.png`, `V01a_CarroViejito.png` · **Medida:** 4.5 m · **Tripo:** HD · 18000 · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: The four wheels (or the two wheels of a motorcycle) are big, chunky and clearly separated from the body by visible dark gaps and deep wheel arches, so they can be cut off as separate pieces. Doors, hood and trunk have clearly marked panel cut lines. Windows are dark tinted solid glass. a low and wide two-door sports car of our own design, glossy black with a thin glowing turquoise neon line along the sides, sharp angular body, big rear spoiler.
+```
+
+## V13 — V13_Sedan (fase 1)
+- **Adjuntar:** `K11_Malecon.png`, `V01a_CarroViejito.png` · **Medida:** 4.6 m · **Tripo:** HD · 18000 · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: The four wheels (or the two wheels of a motorcycle) are big, chunky and clearly separated from the body by visible dark gaps and deep wheel arches, so they can be cut off as separate pieces. Doors, hood and trunk have clearly marked panel cut lines. Windows are dark tinted solid glass. a family four-door sedan, silver grey paint, a few dents and scratches, plain everyday design.
+```
+
+## V14 — V14_CompactoViejo (fase 1)
+- **Adjuntar:** `K11_Malecon.png`, `V01a_CarroViejito.png` · **Medida:** 3.8 m · **Tripo:** HD · 18000 · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: The four wheels (or the two wheels of a motorcycle) are big, chunky and clearly separated from the body by visible dark gaps and deep wheel arches, so they can be cut off as separate pieces. Doors, hood and trunk have clearly marked panel cut lines. Windows are dark tinted solid glass. an old small compact car with round bubbly shapes, faded yellow paint with rust patches, round headlights, a dented fender.
+```
+
+## V15 — V15_Lujo (fase 1)
+- **Adjuntar:** `K11_Malecon.png`, `V01a_CarroViejito.png` · **Medida:** 5.2 m · **Tripo:** HD · 18000 · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: The four wheels (or the two wheels of a motorcycle) are big, chunky and clearly separated from the body by visible dark gaps and deep wheel arches, so they can be cut off as separate pieces. Doors, hood and trunk have clearly marked panel cut lines. Windows are dark tinted solid glass. a long luxury sedan, pearl white, very clean and polished, thin cold white LED headlights and light strips.
+```
+
+## V16 — V16_Microbus (fase 1)
+- **Adjuntar:** `K11_Malecon.png`, `V01a_CarroViejito.png` · **Medida:** 7.5 m · **Tripo:** HD · 18000 · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: The four wheels (or the two wheels of a motorcycle) are big, chunky and clearly separated from the body by visible dark gaps and deep wheel arches, so they can be cut off as separate pieces. Doors, hood and trunk have clearly marked panel cut lines. Windows are dark tinted solid glass. a Mexican city passenger minibus (microbús): boxy tall body painted green and white, worn and dented, a row of side windows, a folding passenger door on the side, a small roof destination box with no text.
+```
+
+## V17 — V17_Camion (fase 1)
+- **Adjuntar:** `K11_Malecon.png`, `V01a_CarroViejito.png` · **Medida:** 7.5 m · **Tripo:** HD · 18000 · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: The four wheels (or the two wheels of a motorcycle) are big, chunky and clearly separated from the body by visible dark gaps and deep wheel arches, so they can be cut off as separate pieces. Doors, hood and trunk have clearly marked panel cut lines. Windows are dark tinted solid glass. a medium cargo truck with a closed box body, red cab and grey box, worn, a roll-up door at the back.
+```
+
+## V18 — V18_Trailer (fase 1)
+- **Adjuntar:** `K11_Malecon.png`, `V01a_CarroViejito.png` · **Medida:** 16 m (tracto + plataforma) · **Tripo:** HD · 18000 · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: The four wheels (or the two wheels of a motorcycle) are big, chunky and clearly separated from the body by visible dark gaps and deep wheel arches, so they can be cut off as separate pieces. Doors, hood and trunk have clearly marked panel cut lines. Windows are dark tinted solid glass. a tractor truck with a blue cab hauling a flatbed trailer carrying one shipping container, worn, chrome exhaust stacks.
+```
+
+## V19 — V19_Ambulancia (fase 1)
+- **Adjuntar:** `K11_Malecon.png`, `V01a_CarroViejito.png` · **Medida:** 6 m · **Tripo:** HD · 18000 · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: The four wheels (or the two wheels of a motorcycle) are big, chunky and clearly separated from the body by visible dark gaps and deep wheel arches, so they can be cut off as separate pieces. Doors, hood and trunk have clearly marked panel cut lines. Windows are dark tinted solid glass. an ambulance van, white with turquoise stripes, a red and blue light bar on the roof, a plain medical cross shape on the side (no text).
+```
+
+## MT01M — MT01_MotoDeportiva (fase 1)
+- **Adjuntar:** `K11_Malecon.png`, `V07_MotoReparto.png` · **Medida:** 2.1 m · **Tripo:** HD · 12000 · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: The four wheels (or the two wheels of a motorcycle) are big, chunky and clearly separated from the body by visible dark gaps and deep wheel arches, so they can be cut off as separate pieces. Doors, hood and trunk have clearly marked panel cut lines. Windows are dark tinted solid glass. a faired sport motorcycle of our own design, magenta and black fairing, aggressive shape, small windscreen. View: 3/4 side view from the left.
+```
+
+## MT02 — MT02_MotoChopper (fase 1)
+- **Adjuntar:** `K11_Malecon.png`, `V07_MotoReparto.png` · **Medida:** 2.5 m · **Tripo:** HD · 12000 · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: The four wheels (or the two wheels of a motorcycle) are big, chunky and clearly separated from the body by visible dark gaps and deep wheel arches, so they can be cut off as separate pieces. Doors, hood and trunk have clearly marked panel cut lines. Windows are dark tinted solid glass. a chopper motorcycle with a long front fork, tall ape-hanger handlebars, chrome and black, low seat, big rear tire. View: 3/4 side view from the left.
+```
+
+## ML01 — ML01_Farol (fase 2)
+- **Adjuntar:** `K11_Malecon.png`, `K12_Malecon_Muelle.png` · **Medida:** 4.5 m · **Tripo:** Smart Mesh P2 · 8000 · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a tall coastal promenade lamp post of dark iron with simple curls at the base, an ornate lantern on top glowing warm orange.
+```
+
+## ML02 — ML02_Lancha (fase 2)
+- **Adjuntar:** `K11_Malecon.png`, `K12_Malecon_Muelle.png` · **Medida:** 6 m · **Tripo:** Smart Mesh P2 · 10000 · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a small wooden fishing boat (lancha) painted in bright colors (turquoise hull with an orange stripe), worn paint, a small outboard motor, coiled thick rope and a net inside.
+```
+
+## ML03 — ML03_PuestoMariscos (fase 2)
+- **Adjuntar:** `K11_Malecon.png`, `K12_Malecon_Muelle.png` · **Medida:** 2.5 × 1.5 × 2.4 m · **Tripo:** Smart Mesh P2 · 12000 · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a seafood street stand: a metal frame with a striped tarp roof, a front counter with a glass case of seafood as simple shapes, a big cooler, a single hanging bulb glowing warm, three plastic stools in front, close together so it reads as one object.
+```
+
+## ML04 — ML04_Faro (fase 2)
+- **Adjuntar:** `K11_Malecon.png`, `K12_Malecon_Muelle.png` · **Medida:** 18 m · **Tripo:** Smart Mesh P2 · 10000 · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a lighthouse of white and red painted concrete in horizontal bands, a small balcony with a thick railing near the top, a glass lantern room with a bright light, on a small rocky base.
+```
+
+## CC01 — CC01_CasaCerro (fase 3)
+- **Adjuntar:** `K13_ColoniaCerro.png` · **Medida:** 6 × 6 × 6.5 m · **Tripo:** Smart Mesh P2 · 12000 · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a two-story concrete block house painted pink and faded, small windows with bars, a water tank on the flat roof, an exterior concrete staircase on one side going up to the second floor, cables to the roof.
+```
+
+## CC02 — CC02_CasaCerro (fase 3)
+- **Adjuntar:** `K13_ColoniaCerro.png` · **Medida:** 6 × 6 × 3.5 m · **Tripo:** Smart Mesh P2 · 10000 · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a one-story concrete house painted turquoise and faded, a flat roof with steel rebar sticking up from the columns (unfinished second floor), a metal door and a small barred window.
+```
+
+## CC03 — CC03_CasaCerro (fase 3)
+- **Adjuntar:** `K13_ColoniaCerro.png` · **Medida:** 4 × 7 × 9 m · **Tripo:** Smart Mesh P2 · 12000 · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a narrow three-story house painted yellow, a wrought-iron balcony on the second floor, small windows, a water tank on the roof.
+```
+
+## CC04 — CC04_Tendedero (fase 3)
+- **Adjuntar:** `K13_ColoniaCerro.png` · **Medida:** 3 m · **Tripo:** Smart Mesh P2 · 8000 · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a rooftop clothesline: two metal posts with three thick lines between them and clothes hanging as simple chunky shapes (shirts, pants, a towel).
+```
+
+## CC05 — CC05_Lavadero (fase 3)
+- **Adjuntar:** `K13_ColoniaCerro.png` · **Medida:** 1.2 × 0.6 × 0.9 m · **Tripo:** Smart Mesh P2 · 8000 · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a concrete laundry sink (lavadero) with a ribbed washboard surface, a water tap, and a plastic bucket beside it touching it.
+```
+
+## PU01G — PU01_Grua (fase 4)
+- **Adjuntar:** `K15_Puerto.png` · **Medida:** 45 m alto · boom 60 m · **Tripo:** HD · 15000 · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a container gantry crane: a giant red steel frame on four legs with a long horizontal boom, an operator cab, red and white warning lights, thick structural beams (no thin cables).
+```
+
+## PU02B — PU02_Barco (fase 4)
+- **Adjuntar:** `K15_Puerto.png` · **Medida:** 120 m (fondo) · **Tripo:** Smart Mesh P2 · 15000 · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a cargo ship loaded with stacks of colorful containers on the deck, a white bridge tower at the back with lights, dark hull with a red bottom.
+```
+
+## PU03B — PU03_Bodega (fase 4)
+- **Adjuntar:** `K15_Puerto.png` · **Medida:** 20 × 30 × 9 m · **Tripo:** Smart Mesh P2 · 12000 · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a large warehouse of rusty corrugated metal sheet with a pitched roof, a big rolled-down metal shutter door, floodlights on the facade.
+```
+
+## PU04B — PU04_Bodega (fase 4)
+- **Adjuntar:** `K15_Puerto.png` · **Medida:** 20 × 30 × 8 m · **Tripo:** Smart Mesh P2 · 12000 · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a concrete warehouse with a flat roof and a raised loading dock with a ramp, two loading doors, bumpers and floodlights.
+```
+
+## PU05 — PU05_Montacargas (fase 4)
+- **Adjuntar:** `K15_Puerto.png` · **Medida:** 3 × 1.2 × 2.2 m · **Tripo:** HD · 10000 · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a yellow forklift with a protective cage, two forks lowered, black tires, worn paint.
+```
+
+## PU06 — PU06_Pallets (fase 4)
+- **Adjuntar:** `K15_Puerto.png` · **Medida:** 1.2 × 1 × 1.5 m · **Tripo:** Smart Mesh P2 · 8000 · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a stack of wooden pallets with a few cardboard boxes and a wrapped crate on top.
+```
+
+## AU01 — AU01_Luminaria (fase 5)
+- **Adjuntar:** `K18_AutopistaElevada.png` · **Medida:** 12 m · **Tripo:** Smart Mesh P2 · 8000 · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a highway street light: a tall grey steel pole with two arms reaching to both sides, each ending in a long flat lamp head glowing cold white.
+```
+
+## IN01 — IN01_Nave (fase 6)
+- **Adjuntar:** `K16_Deshuesadero.png` · **Medida:** 25 × 40 × 10 m · **Tripo:** Smart Mesh P2 · 12000 · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: an industrial warehouse building of corrugated metal sheet with a gable (two-slope) roof, a big sliding door, small high windows, rust streaks.
+```
+
+## IN02 — IN02_Chatarra (fase 6)
+- **Adjuntar:** `K16_Deshuesadero.png` · **Medida:** 5 × 3 × 3 m · **Tripo:** Smart Mesh P2 · 12000 · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a pile of crushed scrapped cars stacked on top of each other, flattened and rusty, faded paint colors.
+```
+
+## IN03 — IN03_Tanques (fase 6)
+- **Adjuntar:** `K16_Deshuesadero.png` · **Medida:** 10 × 10 × 12 m · **Tripo:** HD · 12000 · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a group of three industrial storage tanks (cylinders) connected by thick pipes, with thick ladders and a catwalk with a solid railing, warning stripes.
+```
+
+## CH01 — CH01_Catedral (fase 7)
+- **Adjuntar:** `K14_CentroHistorico.png` · **Medida:** 40 × 60 × 35 m · **Tripo:** Smart Mesh P2 · 15000 · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: an INVENTED colonial cathedral of pinkish-grey carved stone (not a copy of any real cathedral): a front facade with a large arched doorway, carved stone details, two bell towers with domes, a central dome behind. View: 3/4 view from the front.
+```
+
+## CH02 — CH02_EdificioColonial (fase 7)
+- **Adjuntar:** `K14_CentroHistorico.png` · **Medida:** 15 × 10 × 8 m · **Tripo:** Smart Mesh P2 · 12000 · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a two-story colonial building: stone arches at ground level forming a covered arcade, wrought-iron balconies on the upper floor, painted plaster walls in a faded color, a flat roof with a stone cornice.
+```
+
+## CH03 — CH03_EdificioColonial (fase 7)
+- **Adjuntar:** `K14_CentroHistorico.png` · **Medida:** 15 × 10 × 12 m · **Tripo:** Smart Mesh P2 · 12000 · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a three-story colonial building painted ochre, arches at ground level, wrought-iron balconies, and a big glowing neon screen frame mounted on the roof showing abstract shapes.
+```
+
+## CH04 — CH04_FarolColonial (fase 7)
+- **Adjuntar:** `K14_CentroHistorico.png` · **Medida:** poste 3.5 m · de pared 0.8 m · **Tripo:** Smart Mesh P2 · 8000 · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: two colonial street lanterns shown side by side: on the left a wall-mounted wrought-iron lantern with a bracket, on the right the same lantern on a tall iron post; warm light.
+```
+
+## LO01 — LO01_CasaModerna (fase 8)
+- **Adjuntar:** `K17_LasLomas.png` · **Medida:** 15 × 12 × 7 m · **Tripo:** Smart Mesh P2 · 12000 · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a modern two-story luxury house: white concrete volumes with warm wood panels, large glass windows lit with cold white light, a flat roof.
+```
+
+## LO02 — LO02_CasaModerna (fase 8)
+- **Adjuntar:** `K17_LasLomas.png` · **Medida:** 15 × 12 × 7 m · **Tripo:** Smart Mesh P2 · 12000 · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a modern two-story house of exposed concrete with tall floor-to-ceiling windows and a cantilevered upper floor.
+```
+
+## LO03 — LO03_CasaModerna (fase 8)
+- **Adjuntar:** `K17_LasLomas.png` · **Medida:** 16 × 12 × 7 m · **Tripo:** Smart Mesh P2 · 12000 · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a modern two-story house with an integrated garage with a wide door, a terrace with a glass railing on the upper floor, white and grey.
+```
+
+## LO04 — LO04_Caseta (fase 8)
+- **Adjuntar:** `K17_LasLomas.png` · **Medida:** 2.5 × 2.5 × 2.8 m · pluma 4 m · **Tripo:** Smart Mesh P2 · 8000 · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a small modern security guard booth with glass windows and a flat roof, and a long barrier arm (pluma) with red and white stripes beside it, attached.
+```
+
+## LO05 — LO05_Camara (fase 8)
+- **Adjuntar:** `K17_LasLomas.png` · **Medida:** 4 m · **Tripo:** Smart Mesh P2 · 6000 · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a security camera on a pole: a thick grey pole with an arm holding a boxy camera with a small red light.
+```
+
+## LO06 — LO06_Arbusto (fase 8)
+- **Adjuntar:** `K17_LasLomas.png` · **Medida:** 1 m · **Tripo:** Smart Mesh P2 · 6000 · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents); do not copy their scenes. Original design: do not copy any real car, brand or building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails, ropes and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a neatly trimmed round bush in a modern square concrete planter.
+```
+
+## T04 — T04_Arena (fase 9)
+- **Adjuntar:** `K11_Malecon.png`
+
+```
+Use the attached image ONLY for the art style and colors. A seamless tileable texture seen straight from above (orthographic, flat, no perspective), filling the entire square image edge to edge, even flat lighting with no shadows, no objects, no text. The left and right edges and the top and bottom edges must continue seamlessly. Stylized hand-painted game texture, no photorealistic noise. Subject: wet beach sand, slightly darker damp areas, small shells and pebbles scattered.
+```
+
+## T05 — T05_ConcretoCerro (fase 9)
+- **Adjuntar:** `K13_ColoniaCerro.png`
+
+```
+Use the attached image ONLY for the art style and colors. A seamless tileable texture seen straight from above (orthographic, flat, no perspective), filling the entire square image edge to edge, even flat lighting with no shadows, no objects, no text. The left and right edges and the top and bottom edges must continue seamlessly. Stylized hand-painted game texture, no photorealistic noise. Subject: rough grooved concrete of a steep street with anti-slip lines, cracks and dirt.
+```
+
+## T06 — T06_Adoquin (fase 9)
+- **Adjuntar:** `K14_CentroHistorico.png`
+
+```
+Use the attached image ONLY for the art style and colors. A seamless tileable texture seen straight from above (orthographic, flat, no perspective), filling the entire square image edge to edge, even flat lighting with no shadows, no objects, no text. The left and right edges and the top and bottom edges must continue seamlessly. Stylized hand-painted game texture, no photorealistic noise. Subject: worn stone pavers (cantera cobblestones) in a regular pattern, rounded edges, dirt in the joints.
+```
+
+
+# Parte 29 — Pedido extra 18-nov: carros de carreras (V20–V23)
+
+Lote: `lote_18nov.json` · script: `generar_18nov.ps1` (fase 1: V20–V22; fase 2: V23, prompt por confirmar).
+
+## V20 — V20_Tuneado (fase 1)
+- **Medida:** 4.3 m · **Tripo:** HD · 18,000 caras · 2K · **Adjuntar:** `K16_Deshuesadero.png`
+
+```
+Use the attached image ONLY for the art style and the look of its tuned street-race cars (illustrated, thin outlines, soft hand-painted gradients, Mexican cyberpunk); do not copy the scene. ORIGINAL car design of our own: it must NOT resemble any real car model or brand. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single car alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos, no brand badges, no license plate text. The four wheels are big and clearly separated from the body by visible dark gaps and deep wheel arches, so they can be cut off as separate pieces. Doors, hood and trunk have clearly marked panel cut lines. Windows are dark tinted solid glass. View: 3/4 view from the front left, slightly from above. Subject: a heavily tuned compact 1990s-style Japanese-inspired coupe of our own design: a wide body kit with flared fenders, a big rear wing, thin multi-spoke rims, very low suspension, a glowing turquoise neon underglow, glossy black paint with an abstract magenta vinyl graphic (shapes only, no text).
+```
+
+## V21 — V21_Tuneado (fase 1)
+- **Medida:** 4.0 m · **Tripo:** HD · 18,000 caras · 2K · **Adjuntar:** `K16_Deshuesadero.png`
+
+```
+Use the attached image ONLY for the art style and the look of its tuned street-race cars (illustrated, thin outlines, soft hand-painted gradients, Mexican cyberpunk); do not copy the scene. ORIGINAL car design of our own: it must NOT resemble any real car model or brand. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single car alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos, no brand badges, no license plate text. The four wheels are big and clearly separated from the body by visible dark gaps and deep wheel arches, so they can be cut off as separate pieces. Doors, hood and trunk have clearly marked panel cut lines. Windows are dark tinted solid glass. View: 3/4 view from the front left, slightly from above. Subject: a tuned hatchback of our own design: riveted fender flares, a hood scoop air intake, a side exit exhaust pipe under the door, a glowing magenta neon underglow, white paint with orange and turquoise racing stripes.
+```
+
+## V22 — V22_Superdeportivo (fase 1)
+- **Medida:** 4.6 m · **Tripo:** HD · 18,000 caras · 2K · **Adjuntar:** `K16_Deshuesadero.png`
+
+```
+Use the attached image ONLY for the art style and the look of its tuned street-race cars (illustrated, thin outlines, soft hand-painted gradients, Mexican cyberpunk); do not copy the scene. ORIGINAL car design of our own: it must NOT resemble any real car model or brand. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single car alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos, no brand badges, no license plate text. The four wheels are big and clearly separated from the body by visible dark gaps and deep wheel arches, so they can be cut off as separate pieces. Doors, hood and trunk have clearly marked panel cut lines. Windows are dark tinted solid glass. View: 3/4 view from the front left, slightly from above. Subject: a mid-engine supercar, extremely low and wedge-shaped, scissor doors closed, side air intakes behind the doors, glowing turquoise light strips along its edges, matte black paint with chrome details.
+```
+
+## V23 — V23_Superdeportivo (fase 2)
+- **Medida:** 4.8 m · **Tripo:** HD · 18,000 caras · 2K · **Adjuntar:** `K16_Deshuesadero.png`
+
+```
+Use the attached image ONLY for the art style and the look of its tuned street-race cars (illustrated, thin outlines, soft hand-painted gradients, Mexican cyberpunk); do not copy the scene. ORIGINAL car design of our own: it must NOT resemble any real car model or brand. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single car alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos, no brand badges, no license plate text. The four wheels are big and clearly separated from the body by visible dark gaps and deep wheel arches, so they can be cut off as separate pieces. Doors, hood and trunk have clearly marked panel cut lines. Windows are dark tinted solid glass. View: 3/4 view from the front left, slightly from above. Subject: a futuristic hypercar with a bubble-shaped glass canopy cockpit, a long sleek low body, wheels partly covered by smooth fender skirts but still clearly separated from the body by visible gaps, pearl white paint with glowing magenta light lines, a small rear fin.
+```
+
+
+# Parte 30 — Pedido 18-nov: vistas aéreas A11–A18 y modelos V14 (v2), CH01 (v2), V23, V24
+
+Lote: `lote_18nov_b.json` · script: `generar_18nov_b.ps1`. Las versiones anteriores de V14 y CH01 quedaron como `_v1`.
+
+## A11 — A11_Malecon_Aerea (fase 1)
+- **Adjuntar:** `K11_Malecon.png`, `K12_Malecon_Muelle.png`
+
+```
+The FIRST attached image is our game's look for this zone: match its illustrated art style EXACTLY (thin outlines, painted rendering, blue night with soft fog, orange sodium lights, turquoise and magenta neon, wet reflective ground). Draw an AERIAL ISOMETRIC view at 45 degrees from about 60 meters high, showing clearly and completely how the zone is laid out: streets, sidewalks, buildings and objects, as a layout guide to build it in a game. 16:9. NO HUD, NO text, NO letters, NO logos, NO people. Original design, nothing copied from real places. Zone: (the second image shows the pier end of the same malecón) a 200 meter stretch of coastal malecón in a gentle curve: a four-lane avenue, a wide sidewalk on the sea side with palm trees and street lamps evenly spaced about every 15 meters, a continuous balustrade, staircases down to the beach about every 60 meters, a sandy beach, a breakwater of large rocks; on the other side of the avenue a row of three-story buildings with shops on the ground floor. At the far end an L-shaped wooden pier with small fishing boats, the seafood stand at the start of the pier, and the lighthouse on rocks.
+```
+
+## A13 — A13_ColoniaCerro_Aerea (fase 1)
+- **Adjuntar:** `K13_ColoniaCerro.png`
+
+```
+The FIRST attached image is our game's look for this zone: match its illustrated art style EXACTLY (thin outlines, painted rendering, blue night with soft fog, orange sodium lights, turquoise and magenta neon, wet reflective ground). Draw an AERIAL ISOMETRIC view at 45 degrees from about 60 meters high, showing clearly and completely how the zone is laid out: streets, sidewalks, buildings and objects, as a layout guide to build it in a game. 16:9. NO HUD, NO text, NO letters, NO logos, NO people. Original design, nothing copied from real places. Zone: a hillside with colorful houses stacked in terraces, one street climbing the hill in zigzag switchbacks for cars, long straight pedestrian staircases cutting straight up between the terraces, flat rooftops almost touching each other so one can jump between them, water tanks and laundry lines on the roofs, and the city lights below at the bottom of the hill.
+```
+
+## A15 — A15_Puerto_Aerea (fase 1)
+- **Adjuntar:** `K15_Puerto.png`
+
+```
+The FIRST attached image is our game's look for this zone: match its illustrated art style EXACTLY (thin outlines, painted rendering, blue night with soft fog, orange sodium lights, turquoise and magenta neon, wet reflective ground). Draw an AERIAL ISOMETRIC view at 45 degrees from about 60 meters high, showing clearly and completely how the zone is laid out: streets, sidewalks, buildings and objects, as a layout guide to build it in a game. 16:9. NO HUD, NO text, NO letters, NO logos, NO people. Original design, nothing copied from real places. Zone: a container yard with long rows of stacked colorful containers separated by straight aisles, two gantry cranes standing on rails along the dock edge, a cargo ship moored at the dock, a row of warehouses with rolled shutters, a few forklifts, and an entrance road with a guard booth and barrier.
+```
+
+## A18 — A18_Autopista_Aerea (fase 1)
+- **Adjuntar:** `K18_AutopistaElevada.png`
+
+```
+The FIRST attached image is our game's look for this zone: match its illustrated art style EXACTLY (thin outlines, painted rendering, blue night with soft fog, orange sodium lights, turquoise and magenta neon, wet reflective ground). Draw an AERIAL ISOMETRIC view at 45 degrees from about 60 meters high, showing clearly and completely how the zone is laid out: streets, sidewalks, buildings and objects, as a layout guide to build it in a game. 16:9. NO HUD, NO text, NO letters, NO logos, NO people. Original design, nothing copied from real places. Zone: an elevated highway on tall concrete columns passing over a poor neighborhood of low houses and streets, an on-ramp climbing up from one of the neighborhood streets, the highway making a 90 degree curve and then entering a tunnel cut into a hill.
+```
+
+## A16 — A16_Deshuesadero_Aerea (fase 1)
+- **Adjuntar:** `K16_Deshuesadero.png`
+
+```
+The FIRST attached image is our game's look for this zone: match its illustrated art style EXACTLY (thin outlines, painted rendering, blue night with soft fog, orange sodium lights, turquoise and magenta neon, wet reflective ground). Draw an AERIAL ISOMETRIC view at 45 degrees from about 60 meters high, showing clearly and completely how the zone is laid out: streets, sidewalks, buildings and objects, as a layout guide to build it in a game. 16:9. NO HUD, NO text, NO letters, NO logos, NO people. Original design, nothing copied from real places. Zone: an industrial zone with several large metal warehouses, a fenced junkyard full of piles of scrapped cars, and a straight drag-race strip about 300 meters long with a painted start line and improvised bleachers made of scaffolding and stacked tires along both sides.
+```
+
+## A14 — A14_Centro_Aerea (fase 1)
+- **Adjuntar:** `K14_CentroHistorico.png`
+
+```
+The FIRST attached image is our game's look for this zone: match its illustrated art style EXACTLY (thin outlines, painted rendering, blue night with soft fog, orange sodium lights, turquoise and magenta neon, wet reflective ground). Draw an AERIAL ISOMETRIC view at 45 degrees from about 60 meters high, showing clearly and completely how the zone is laid out: streets, sidewalks, buildings and objects, as a layout guide to build it in a game. 16:9. NO HUD, NO text, NO letters, NO logos, NO people. Original design, nothing copied from real places. Zone: a square main plaza with a small round kiosk in the center, trees and benches, an INVENTED colonial cathedral of pink carved stone on one side (one tall bell tower on one side, a tiled dome, a facade with a big arch; NOT the Mexico City cathedral and not any real church), colonial arcades (portales) with stone arches along the other three sides, cobblestone streets around the plaza, neon signs on top of the old buildings.
+```
+
+## A17 — A17_Lomas_Aerea (fase 1)
+- **Adjuntar:** `K17_LasLomas.png`
+
+```
+The FIRST attached image is our game's look for this zone: match its illustrated art style EXACTLY (thin outlines, painted rendering, blue night with soft fog, orange sodium lights, turquoise and magenta neon, wet reflective ground). Draw an AERIAL ISOMETRIC view at 45 degrees from about 60 meters high, showing clearly and completely how the zone is laid out: streets, sidewalks, buildings and objects, as a layout guide to build it in a game. 16:9. NO HUD, NO text, NO letters, NO logos, NO people. Original design, nothing copied from real places. Zone: a private gated street: a guard booth with a barrier arm at the entrance, and on both sides of the street modern luxury houses, each with a front garden lit with cold light, a garage, and a tall perimeter wall, clean sidewalks with trimmed trees.
+```
+
+## V14 — V14_CompactoViejo (fase 2)
+- **Adjuntar:** `K13_ColoniaCerro.png` · **Medida:** 3.5 m · **Tripo:** HD · 18,000 caras · 2K
+
+```
+Use the attached image ONLY for the art style and colors of our game (illustrated, thin outlines, soft hand-painted gradients). ORIGINAL design of our own: it must NOT resemble any real car model, brand or real building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. View: 3/4 view from the front left, slightly from above. Subject: The four wheels are big and clearly separated from the body by visible dark gaps and deep wheel arches, so they can be cut off as separate pieces. Doors, hood and trunk have clearly marked panel cut lines. Windows are dark tinted solid glass. an old small two-door compact car of our own design: short and BOXY with flat panels and square corners (NOT round, not beetle-like), a short flat hood, square headlights, a short upright rear, faded yellow paint with rust patches and a dented door.
+```
+
+## CH01 — CH01_Catedral (fase 2)
+- **Adjuntar:** `K14_CentroHistorico.png` · **Medida:** 35 × 55 × 40 m (torre) · **Tripo:** Smart Mesh P2 · 15,000 caras · 2K
+
+```
+Use the attached image ONLY for the art style and colors of our game (illustrated, thin outlines, soft hand-painted gradients). ORIGINAL design of our own: it must NOT resemble any real car model, brand or real building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. View: 3/4 view from the front left, slightly from above. Subject: an INVENTED colonial cathedral of pink carved stone (cantera rosa), NOT the Mexico City cathedral and not any real church: an asymmetric facade with ONE single tall bell tower on the left side, a large dome covered in colorful glazed tiles (azulejo) behind, and the main facade dominated by one big arch over the entrance with carved stone details.
+```
+
+## V23 — V23_Superdeportivo (fase 2)
+- **Adjuntar:** `K16_Deshuesadero.png` · **Medida:** 4.8 m · **Tripo:** HD · 18,000 caras · 2K
+
+```
+Use the attached image ONLY for the art style and colors of our game (illustrated, thin outlines, soft hand-painted gradients). ORIGINAL design of our own: it must NOT resemble any real car model, brand or real building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. View: 3/4 view from the front left, slightly from above. Subject: The four wheels are big and clearly separated from the body by visible dark gaps and deep wheel arches, so they can be cut off as separate pieces. Doors, hood and trunk have clearly marked panel cut lines. Windows are dark tinted solid glass. a futuristic hypercar with a bubble-shaped glass canopy cockpit, a long sleek low body, wheels half covered by smooth fender skirts but still clearly separated from the body by visible gaps, taillights as one single continuous red line across the rear, pearl magenta paint.
+```
+
+## V24 — V24_Superdeportivo (fase 2)
+- **Adjuntar:** `K16_Deshuesadero.png` · **Medida:** 4.9 m · **Tripo:** HD · 18,000 caras · 2K
+
+```
+Use the attached image ONLY for the art style and colors of our game (illustrated, thin outlines, soft hand-painted gradients). ORIGINAL design of our own: it must NOT resemble any real car model, brand or real building. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. View: 3/4 view from the front left, slightly from above. Subject: The four wheels are big and clearly separated from the body by visible dark gaps and deep wheel arches, so they can be cut off as separate pieces. Doors, hood and trunk have clearly marked panel cut lines. Windows are dark tinted solid glass. a cyberpunk grand tourer with a very long hood, a two-seat cabin set far back, sharp angular lines, glowing yellow neon light strips, silver paint with exposed carbon fiber panels on the hood, roof and side skirts.
+```
+
+
+# Parte 31 — Pedido 18-nov mediodía: detalle de zonas, texturas, NPCs, enemigos y drones (2 variantes _a/_b)
+
+Lote: `lote_18nov_c.json` · script: `generar_18nov_c.ps1`. La variante _b usa el mismo prompt más una instrucción de diseño distinto.
+
+## ML05 — ML05_EdificioMalecon (fase 1)
+- **Adjuntar:** `K11_Malecon.png`, `K12_Malecon_Muelle.png` · **Medida:** 12 × 10 × 10 m · **Tripo:** Smart Mesh P2 · 12,000 caras · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity; Nova is clean white with cold blue light); do not copy their scenes. Original design, nothing copied from real places, brands or other games. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a three-story seafront building: ground floor shops with rolled metal shutters and colorful awnings, balconies with simple railings on the upper floors, air conditioning units, a small neon sign with an abstract shape (no letters), faded paint and salt stains.
+```
+
+## ML06 — ML06_EdificioMalecon (fase 1)
+- **Adjuntar:** `K11_Malecon.png`, `K12_Malecon_Muelle.png` · **Medida:** 14 × 12 × 17 m · **Tripo:** Smart Mesh P2 · 12,000 caras · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity; Nova is clean white with cold blue light); do not copy their scenes. Original design, nothing copied from real places, brands or other games. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: an old five-story seafront hotel: rows of windows, some lit with warm light, small balconies, a tall vertical neon sign on the corner made of abstract glowing shapes (no letters), faded pastel paint, salt stains.
+```
+
+## ML07 — ML07_Hielera (fase 1)
+- **Adjuntar:** `K11_Malecon.png`, `K12_Malecon_Muelle.png` · **Medida:** 0.7 × 0.5 × 0.5 m · **Tripo:** Smart Mesh P2 · 6,000 caras · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity; Nova is clean white with cold blue light); do not copy their scenes. Original design, nothing copied from real places, brands or other games. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a plastic beach cooler with a hinged lid next to a short stack of colorful plastic stools (red, blue, yellow), touching each other as one group.
+```
+
+## SK01 — SK01_Skyline (fase 1)
+- **Adjuntar:** `K11_Malecon.png`, `K06_CalleNova.png`
+
+```
+Use the attached images ONLY for the art style and colors. A distant city skyline at night seen straight from the front as a flat backdrop: towers and buildings of different heights as dark silhouettes with many small lit windows, glowing neon signs in turquoise and magenta as abstract shapes, the white Nova tower taller than the rest with a light on top, filling the image width edge to edge, the bottom edge of the skyline flat. Everything else is PURE BLACK (#000000): the sky and the background are pure black, no gradient, no stars, no water, no text.
+```
+
+## PU07 — PU07_PlumaCaseta (fase 1)
+- **Adjuntar:** `K15_Puerto.png` · **Medida:** 2.5 × 2.5 × 3 m · pluma 5 m · **Tripo:** Smart Mesh P2 · 8,000 caras · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity; Nova is clean white with cold blue light); do not copy their scenes. Original design, nothing copied from real places, brands or other games. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: the entrance booth of a cargo port: a small boxy guard booth with windows and a flat roof, a floodlight, and attached to it a long barrier arm with red and white stripes in the lowered position.
+```
+
+## PU08 — PU08_ContenedorGraffiti (fase 1)
+- **Adjuntar:** `K15_Puerto.png` · **Medida:** 12.2 × 2.4 × 2.6 m · **Tripo:** Smart Mesh P2 · 8,000 caras · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity; Nova is clean white with cold blue light); do not copy their scenes. Original design, nothing copied from real places, brands or other games. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a 40-foot shipping container with corrugated walls, rust patches and dents, the doors closed with thick locking bars, covered on its long side with colorful graffiti made of abstract shapes and characters (no readable letters).
+```
+
+## CC06 — CC06_CasaCerro (fase 1)
+- **Adjuntar:** `K13_ColoniaCerro.png` · **Medida:** 6 × 6 × 6.5 m · **Tripo:** Smart Mesh P2 · 12,000 caras · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity; Nova is clean white with cold blue light); do not copy their scenes. Original design, nothing copied from real places, brands or other games. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a two-story house half under construction: unpainted grey concrete blocks, steel rebar sticking up from the columns on the roof, an unfinished second floor partly covered with a blue tarp, a simple metal door.
+```
+
+## CC07 — CC07_CasaCerro (fase 1)
+- **Adjuntar:** `K13_ColoniaCerro.png` · **Medida:** 4 × 7 × 9.5 m · **Tripo:** Smart Mesh P2 · 12,000 caras · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity; Nova is clean white with cold blue light); do not copy their scenes. Original design, nothing copied from real places, brands or other games. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a narrow three-story house painted green and faded, small barred windows, a roof terrace with a metal railing and a clothesline with clothes as chunky shapes, a water tank.
+```
+
+## CC08 — CC08_MuroContencion (fase 1)
+- **Adjuntar:** `K13_ColoniaCerro.png` · **Medida:** 8 m de ancho × 4 m de alto · **Tripo:** Smart Mesh P2 · 10,000 caras · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity; Nova is clean white with cold blue light); do not copy their scenes. Original design, nothing copied from real places, brands or other games. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a hillside retaining wall section made of stacked stones and concrete with drainage holes, and a concrete staircase with a simple metal railing attached along its face climbing to the top.
+```
+
+## AU02 — AU02_BarreraConcreto (fase 1)
+- **Adjuntar:** `K18_AutopistaElevada.png` · **Medida:** 3 × 0.6 × 0.8 m · **Tripo:** Smart Mesh P2 · 6,000 caras · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity; Nova is clean white with cold blue light); do not copy their scenes. Original design, nothing copied from real places, brands or other games. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a highway concrete barrier segment (New Jersey profile) with reflective yellow and white stripes, chipped edges and dirt.
+```
+
+## AU03 — AU03_ChatarraPuente (fase 1)
+- **Adjuntar:** `K18_AutopistaElevada.png` · **Medida:** 8 × 5 × 2 m · **Tripo:** Smart Mesh P2 · 12,000 caras · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity; Nova is clean white with cold blue light); do not copy their scenes. Original design, nothing copied from real places, brands or other games. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a pile of junk that gathers under a highway bridge: two wrecked old cars without wheels, tires, black trash bags, a broken shopping cart, cardboard and planks, all grouped together as one object.
+```
+
+## T07 — T07_AsfaltoMojado (fase 2)
+- **Adjuntar:** `K01_Barrio_HUDnuevo.png`
+
+```
+Use the attached image ONLY for the art style and colors. A seamless tileable texture seen straight from above (orthographic, flat, no perspective), filling the entire square image edge to edge, even flat lighting, no objects, no text. The left and right edges and the top and bottom edges must continue seamlessly. Stylized hand-painted game texture, no photorealistic noise. Subject: dark wet asphalt with irregular puddles that reflect orange and magenta light as soft color patches, small cracks.
+```
+
+## T08 — T08_LaminaOxidada (fase 2)
+- **Adjuntar:** `K16_Deshuesadero.png`
+
+```
+Use the attached image ONLY for the art style and colors. A seamless tileable texture seen straight from above (orthographic, flat, no perspective), filling the entire square image edge to edge, even flat lighting, no objects, no text. The left and right edges and the top and bottom edges must continue seamlessly. Stylized hand-painted game texture, no photorealistic noise. Subject: corrugated metal sheet seen straight on, vertical ridges, heavy rust and peeling paint in faded blue and white.
+```
+
+## T09 — T09_ConcretoManchado (fase 2)
+- **Adjuntar:** `K01_Barrio_HUDnuevo.png`
+
+```
+Use the attached image ONLY for the art style and colors. A seamless tileable texture seen straight from above (orthographic, flat, no perspective), filling the entire square image edge to edge, even flat lighting, no objects, no text. The left and right edges and the top and bottom edges must continue seamlessly. Stylized hand-painted game texture, no photorealistic noise. Subject: sidewalk concrete slabs with joint lines, dark stains, cracks and flattened chewing gum spots.
+```
+
+## NP07 — NP07_Pescador (fase 3)
+- **Adjuntar:** `PJ01_Protagonista_v2.png`, `BaseMujer_frente.png` · **Medida:** 1.70 m · **Tripo:** Quads · 20,000 caras · 2K
+
+```
+Use the attached characters for the art style of our game (rendering, proportions, level of detail) and the T-pose framing; draw a NEW original character of a Mexican cyberpunk megacity. Rig-friendly: everything fitted close to the body, nothing hanging loose, no loose straps or cables. Hands EMPTY. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: a fisherman around 50, a cap, a worn shirt with rolled sleeves, waterproof bib pants, tall rubber boots.
+```
+
+## NP08 — NP08_Turista (fase 3)
+- **Adjuntar:** `PJ01_Protagonista_v2.png`, `BaseMujer_frente.png` · **Medida:** 1.75 m · **Tripo:** Quads · 20,000 caras · 2K
+
+```
+Use the attached characters for the art style of our game (rendering, proportions, level of detail) and the T-pose framing; draw a NEW original character of a Mexican cyberpunk megacity. Rig-friendly: everything fitted close to the body, nothing hanging loose, no loose straps or cables. Hands EMPTY. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: a tourist man, a bright flowery short-sleeve shirt, shorts, sandals, sunglasses on his head, a small camera hanging close on his chest with a short strap.
+```
+
+## NP09 — NP09_Corredor (fase 3)
+- **Adjuntar:** `PJ01_Protagonista_v2.png`, `BaseMujer_frente.png` · **Medida:** 1.65 m · **Tripo:** Quads · 20,000 caras · 2K
+
+```
+Use the attached characters for the art style of our game (rendering, proportions, level of detail) and the T-pose framing; draw a NEW original character of a Mexican cyberpunk megacity. Rig-friendly: everything fitted close to the body, nothing hanging loose, no loose straps or cables. Hands EMPTY. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: a young woman runner, fitted sportswear with thin glowing turquoise light strips, a headband, running shoes.
+```
+
+## NP10 — NP10_Elotero (fase 3)
+- **Adjuntar:** `PJ01_Protagonista_v2.png`, `BaseMujer_frente.png` · **Medida:** 1.68 m · **Tripo:** Quads · 20,000 caras · 2K
+
+```
+Use the attached characters for the art style of our game (rendering, proportions, level of detail) and the T-pose framing; draw a NEW original character of a Mexican cyberpunk megacity. Rig-friendly: everything fitted close to the body, nothing hanging loose, no loose straps or cables. Hands EMPTY. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: a street corn vendor man (elotero), a fitted apron, a cap, a plain t-shirt, jeans, sneakers.
+```
+
+## NP11 — NP11_Estibador (fase 3)
+- **Adjuntar:** `PJ01_Protagonista_v2.png`, `BaseMujer_frente.png` · **Medida:** 1.78 m · **Tripo:** Quads · 20,000 caras · 2K
+
+```
+Use the attached characters for the art style of our game (rendering, proportions, level of detail) and the T-pose framing; draw a NEW original character of a Mexican cyberpunk megacity. Rig-friendly: everything fitted close to the body, nothing hanging loose, no loose straps or cables. Hands EMPTY. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: a dock worker, an orange reflective vest, a hard hat, work gloves, work pants, boots.
+```
+
+## NP12 — NP12_Abuela (fase 3)
+- **Adjuntar:** `PJ01_Protagonista_v2.png`, `BaseMujer_frente.png` · **Medida:** 1.52 m · **Tripo:** Quads · 20,000 caras · 2K
+
+```
+Use the attached characters for the art style of our game (rendering, proportions, level of detail) and the T-pose framing; draw a NEW original character of a Mexican cyberpunk megacity. Rig-friendly: everything fitted close to the body, nothing hanging loose, no loose straps or cables. Hands EMPTY. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: an elderly grandmother, a rebozo shawl wrapped tightly around her shoulders and tucked in, a long skirt, flat shoes, grey hair in a bun; her walking cane is strapped flat along her right forearm so the hands stay empty.
+```
+
+## NP13 — NP13_Repartidor (fase 3)
+- **Adjuntar:** `PJ01_Protagonista_v2.png`, `BaseMujer_frente.png` · **Medida:** 1.72 m · **Tripo:** Quads · 20,000 caras · 2K
+
+```
+Use the attached characters for the art style of our game (rendering, proportions, level of detail) and the T-pose framing; draw a NEW original character of a Mexican cyberpunk megacity. Rig-friendly: everything fitted close to the body, nothing hanging loose, no loose straps or cables. Hands EMPTY. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: a delivery rider, a jacket, an insulated delivery box worn as a backpack tight on his back, a cap, pants, sneakers.
+```
+
+## NP14 — NP14_Oficinista (fase 3)
+- **Adjuntar:** `PJ01_Protagonista_v2.png`, `BaseMujer_frente.png` · **Medida:** 1.74 m · **Tripo:** Quads · 20,000 caras · 2K
+
+```
+Use the attached characters for the art style of our game (rendering, proportions, level of detail) and the T-pose framing; draw a NEW original character of a Mexican cyberpunk megacity. Rig-friendly: everything fitted close to the body, nothing hanging loose, no loose straps or cables. Hands EMPTY. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: an office worker, a fitted suit with a thin tie, slim augmented reality glasses with a faint turquoise glow, dress shoes.
+```
+
+## E15 — E15_CentinelaNova (fase 4)
+- **Adjuntar:** `E12_GuardiaPesadoNova.png`, `K06_CalleNova.png` · **Medida:** 1.90 m · **Tripo:** Quads · 20,000 caras · 2K
+
+```
+Use the attached images for the art style of our game and the framing; draw a NEW original design. Nothing copied from other games. Rig-friendly: everything fitted close to the body, nothing hanging loose. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: a humanoid security robot of the Nova corporation: slim clean white armored body with blue stripes, a smooth head with a single horizontal glowing blue visor line, gunmetal joints.
+```
+
+## E16 — E16_RobotPesadoNova (fase 4)
+- **Adjuntar:** `E12_GuardiaPesadoNova.png`, `K06_CalleNova.png` · **Medida:** 3.0 m · **Tripo:** Quads · 25,000 caras · 2K
+
+```
+Use the attached images for the art style of our game and the framing; draw a NEW original design. Nothing copied from other games. Rig-friendly: everything fitted close to the body, nothing hanging loose. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: a big heavy bipedal Nova robot about 3 meters tall: massive white and blue armored torso, short thick legs, a large riot shield built into the left forearm, a heavy cannon built into the right forearm, a small sensor head with a blue light.
+```
+
+## E17 — E17_PerroRobotNova (fase 4)
+- **Adjuntar:** `E12_GuardiaPesadoNova.png`, `K06_CalleNova.png` · **Medida:** 1.2 m de largo · **Tripo:** HD · 12,000 caras · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity; Nova is clean white with cold blue light); do not copy their scenes. Original design, nothing copied from real places, brands or other games. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a four-legged Nova patrol robot dog: white and blue armored body, four jointed legs standing, a head with a bright searchlight, a small compact turret mounted on its back, a blue light strip.
+```
+
+## E18 — E18_EliteNova (fase 4)
+- **Adjuntar:** `E12_GuardiaPesadoNova.png`, `K06_CalleNova.png` · **Medida:** 1.90 m · **Tripo:** Quads · 20,000 caras · 2K
+
+```
+Use the attached images for the art style of our game and the framing; draw a NEW original design. Nothing copied from other games. Rig-friendly: everything fitted close to the body, nothing hanging loose. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: an elite Nova soldier in full white and blue armor, a closed helmet with a blue visor, armored arms and legs, and a compact jetpack fitted flat on the back with two short thrusters.
+```
+
+## E19 — E19_PandilleroSkulls (fase 4)
+- **Adjuntar:** `SkullHombre_frente.png`, `JefeSkulls_frente.png` · **Medida:** 1.78 m · **Tripo:** Quads · 20,000 caras · 2K
+
+```
+Use the attached images for the art style of our game and the framing; draw a NEW original design. Nothing copied from other games. Rig-friendly: everything fitted close to the body, nothing hanging loose. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: a SKULLS gang member: a fitted black leather jacket zipped, a skull mask (a magenta holographic skull face), fitted dark pants, boots, magenta details.
+```
+
+## E20 — E20_MatonSkulls (fase 4)
+- **Adjuntar:** `SkullHombre_frente.png`, `JefeSkulls_frente.png` · **Medida:** 2.05 m · **Tripo:** Quads · 20,000 caras · 2K
+
+```
+Use the attached images for the art style of our game and the framing; draw a NEW original design. Nothing copied from other games. Rig-friendly: everything fitted close to the body, nothing hanging loose. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: a huge thug of the SKULLS gang: very broad and tall, a sleeveless fitted shirt, a rusty heavy robotic right arm, a skull tattoo on the chest, a bandana over the lower face with a skull print, cargo pants, boots.
+```
+
+## DR02 — DR02_DronPesado (fase 5)
+- **Adjuntar:** `E13_DronAsalto.png`, `DR01_Dron.png` · **Medida:** 1.8 m de ancho · **Tripo:** HD · 12,000 caras · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity; Nova is clean white with cold blue light); do not copy their scenes. Original design, nothing copied from real places, brands or other games. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. Subject: The rotors or propellers are clearly separated from the body by visible gaps so they can be cut off as separate pieces. View: 3/4 view from the front, slightly from above. a large heavy assault drone of Nova: an armored white and blue body, four big rotors in round guards on thick arms, two machine guns mounted under the body, a red eye light.
+```
+
+## DR03 — DR03_DronCarga (fase 5)
+- **Adjuntar:** `E13_DronAsalto.png`, `DR01_Dron.png` · **Medida:** 3 m de ancho · **Tripo:** HD · 15,000 caras · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity; Nova is clean white with cold blue light); do not copy their scenes. Original design, nothing copied from real places, brands or other games. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. Subject: The rotors or propellers are clearly separated from the body by visible gaps so they can be cut off as separate pieces. View: 3/4 view from the front, slightly from above. a large cargo drone of Nova: a long white body with six rotors, carrying under it a closed armored drop capsule hanging from two thick short clamps.
+```
+
+## DR04 — DR04_DronExplorador (fase 5)
+- **Adjuntar:** `E13_DronAsalto.png`, `DR01_Dron.png` · **Medida:** 0.4 m · **Tripo:** HD · 6,000 caras · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity; Nova is clean white with cold blue light); do not copy their scenes. Original design, nothing copied from real places, brands or other games. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. Subject: The rotors or propellers are clearly separated from the body by visible gaps so they can be cut off as separate pieces. View: 3/4 view from the front, slightly from above. a small fast scout drone for swarms: a compact rounded body with a single ducted propeller on top, a small camera eye glowing blue, two tiny fins.
+```
+
+## NV03 — NV03_NaveNova (fase 5)
+- **Adjuntar:** `NV01_NaveTransporte.png`, `K06_CalleNova.png` · **Medida:** 10 m de largo · **Tripo:** HD · 18,000 caras · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity; Nova is clean white with cold blue light); do not copy their scenes. Original design, nothing copied from real places, brands or other games. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. Subject: The rotors or propellers are clearly separated from the body by visible gaps so they can be cut off as separate pieces. View: 3/4 view from the front, slightly from above. a Nova combat aircraft: a sleek clean white armored body with NO visible cockpit (smooth armored nose), two ducted rotors on short wings, weapon pods under the wings, cold blue running lights.
+```
+
+
+# Parte 32 — Pedido 19-nov noche: vehículos, edificios, muro, cobertura y charcos (2 variantes _a/_b)
+
+Lote: `lote_19nov.json` · script: `generar_19nov.ps1`.
+
+## PA01 — PA01_Patrulla (fase 1)
+- **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `V05_PatrullaSedan.png` · **Medida:** 4.7 m · **Tripo:** HD · 18,000 caras · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents; the Nova corporation is clean white with cold blue light); do not copy their scenes. Original design: nothing copied from real places, brands or cars. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: The four wheels are big and clearly separated from the body by visible dark gaps and deep wheel arches, so they can be cut off as separate pieces. Doors, hood and trunk have clearly marked panel cut lines. Windows are dark tinted solid glass. a city police patrol sedan of our own design: navy blue body with reflective turquoise stripes along the sides (no text, no badges), a light bar on the roof with red and blue blocks, a reinforced push bumper at the front, plain steel wheels.
+```
+
+## PA02 — PA02_PatrullaSUV (fase 1)
+- **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `V06_PatrullaCamioneta.png` · **Medida:** 5.0 m · **Tripo:** HD · 18,000 caras · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents; the Nova corporation is clean white with cold blue light); do not copy their scenes. Original design: nothing copied from real places, brands or cars. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: The four wheels are big and clearly separated from the body by visible dark gaps and deep wheel arches, so they can be cut off as separate pieces. Doors, hood and trunk have clearly marked panel cut lines. Windows are dark tinted solid glass. a police patrol SUV of our own design: tall boxy navy blue body with the same reflective turquoise stripes (no text, no badges), a larger roof light bar with red and blue blocks, a reinforced push bumper, steel wheels.
+```
+
+## V22 — V22_Superdeportivo (fase 1)
+- **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `K16_Deshuesadero.png` · **Medida:** 4.6 m · **Tripo:** HD · 18,000 caras · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents; the Nova corporation is clean white with cold blue light); do not copy their scenes. Original design: nothing copied from real places, brands or cars. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: The four wheels are big and clearly separated from the body by visible dark gaps and deep wheel arches, so they can be cut off as separate pieces. Doors, hood and trunk have clearly marked panel cut lines. Windows are dark tinted solid glass. a mid-engine supercar of our own design, very low and wedge-shaped, with a SIMPLE CLEAN body made of few large smooth panels (no loose small parts, no separate wings or fins sticking out), matte black paint with thin glowing turquoise light strips along its edges.
+```
+
+## ED01 — ED01_CasaSuburbios (fase 2)
+- **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `K05_EsquinaBarrio.png` · **Medida:** 7 × 8 × 6.5 m · **Tripo:** Smart Mesh P2 · 12,000 caras · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents; the Nova corporation is clean white with cold blue light); do not copy their scenes. Original design: nothing copied from real places, brands or cars. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: A complete building: the full front facade, the roof and one side wall clearly visible so the 3D model can be closed; flat roof unless stated. a two-story Suburbios house with a flat roof, faded terracotta paint: a rolled-down metal shutter on the ground floor, a window with security bars, a water tank on a red brick base on the roof, an electricity meter and a caged wall lamp glowing orange.
+```
+
+## ED02 — ED02_TienditaEsquina (fase 2)
+- **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `K05_EsquinaBarrio.png` · **Medida:** 8 × 8 × 6.5 m · **Tripo:** Smart Mesh P2 · 12,000 caras · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents; the Nova corporation is clean white with cold blue light); do not copy their scenes. Original design: nothing copied from real places, brands or cars. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: A complete building: the full front facade, the roof and one side wall clearly visible so the 3D model can be closed; flat roof unless stated. a two-story corner shop building with a flat roof, faded turquoise and cream paint, cut corner entrance: a corrugated metal awning over the shop, a glowing soda refrigerator outside the door, a small neon sign with an abstract shape (no letters).
+```
+
+## ED03 — ED03_EdificioDeptos (fase 2)
+- **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `K05_EsquinaBarrio.png` · **Medida:** 10 × 10 × 10 m · **Tripo:** Smart Mesh P2 · 12,000 caras · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents; the Nova corporation is clean white with cold blue light); do not copy their scenes. Original design: nothing copied from real places, brands or cars. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: A complete building: the full front facade, the roof and one side wall clearly visible so the 3D model can be closed; flat roof unless stated. a three-story apartment building with a flat roof, faded sea-green paint: balconies with laundry as chunky shapes, air conditioning units, an exterior concrete staircase with a solid railing on the side.
+```
+
+## ED04 — ED04_LocalesMercado (fase 2)
+- **Adjuntar:** `K02_Tianguis.png`, `K10_CalleMercado.png` · **Medida:** 15 × 8 × 7 m · **Tripo:** Smart Mesh P2 · 12,000 caras · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents; the Nova corporation is clean white with cold blue light); do not copy their scenes. Original design: nothing copied from real places, brands or cars. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: A complete building: the full front facade, the roof and one side wall clearly visible so the 3D model can be closed; flat roof unless stated. a two-story market building with a row of three shops on the ground floor, each with a metal shutter half open and a colorful tarp awning (pink, yellow, turquoise), and windows on the second floor.
+```
+
+## ED05 — ED05_EdificioMercado (fase 2)
+- **Adjuntar:** `K02_Tianguis.png`, `K10_CalleMercado.png` · **Medida:** 10 × 10 × 13 m · **Tripo:** Smart Mesh P2 · 12,000 caras · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents; the Nova corporation is clean white with cold blue light); do not copy their scenes. Original design: nothing copied from real places, brands or cars. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: A complete building: the full front facade, the roof and one side wall clearly visible so the 3D model can be closed; flat roof unless stated. a four-story commercial building with hand-painted advertisements on its walls made of abstract shapes and pictures (no letters), thick bundled cables and antennas on the roof, shops on the ground floor.
+```
+
+## ED06 — ED06_EdificioNeon (fase 2)
+- **Adjuntar:** `K03_NeonAlto.png` · **Medida:** 12 × 10 × 17 m · **Tripo:** Smart Mesh P2 · 12,000 caras · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents; the Nova corporation is clean white with cold blue light); do not copy their scenes. Original design: nothing copied from real places, brands or cars. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: A complete building: the full front facade, the roof and one side wall clearly visible so the 3D model can be closed; flat roof unless stated. a five-story building of the Neon Alto district: glowing screens with abstract images on the facade, tall vertical neon signs in magenta and turquoise made of abstract shapes (no letters), balconies with warm light.
+```
+
+## ED07 — ED07_HotelNeon (fase 2)
+- **Adjuntar:** `K03_NeonAlto.png` · **Medida:** 8 × 12 × 20 m · **Tripo:** Smart Mesh P2 · 12,000 caras · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents; the Nova corporation is clean white with cold blue light); do not copy their scenes. Original design: nothing copied from real places, brands or cars. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: A complete building: the full front facade, the roof and one side wall clearly visible so the 3D model can be closed; flat roof unless stated. a narrow six-story hotel: an illuminated marquee canopy over the entrance with rows of bulbs, a tall vertical neon sign along the corner made of abstract shapes (no letters), rows of small windows.
+```
+
+## ED08 — ED08_OficinaNova (fase 2)
+- **Adjuntar:** `K06_CalleNova.png` · **Medida:** 15 × 15 × 21 m · **Tripo:** Smart Mesh P2 · 12,000 caras · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents; the Nova corporation is clean white with cold blue light); do not copy their scenes. Original design: nothing copied from real places, brands or cars. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: A complete building: the full front facade, the roof and one side wall clearly visible so the 3D model can be closed; flat roof unless stated. a six-story corporate office building of Nova: dark glass curtain walls framed by clean white panels with thin cold blue light stripes, very clean.
+```
+
+## ED09 — ED09_PlantaBajaNova (fase 2)
+- **Adjuntar:** `K06_CalleNova.png` · **Medida:** 15 × 15 × 6 m · **Tripo:** Smart Mesh P2 · 12,000 caras · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents; the Nova corporation is clean white with cold blue light); do not copy their scenes. Original design: nothing copied from real places, brands or cars. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: A complete building: the full front facade, the roof and one side wall clearly visible so the 3D model can be closed; flat roof unless stated. the ground floor base of a Nova tower: a tall glass lobby with doors, thick white columns, a flat canopy with cold white downlights, the top of the piece flat so a tower can be stacked on it.
+```
+
+## ED10 — ED10_Bodega (fase 2)
+- **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `K16_Deshuesadero.png` · **Medida:** 15 × 20 × 7 m · **Tripo:** Smart Mesh P2 · 10,000 caras · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents; the Nova corporation is clean white with cold blue light); do not copy their scenes. Original design: nothing copied from real places, brands or cars. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: A complete building: the full front facade, the roof and one side wall clearly visible so the 3D model can be closed; flat roof unless stated. a warehouse of rusty corrugated metal sheet with a low pitched roof, a big rolled-down metal shutter door and a small side door, a floodlight.
+```
+
+## ED11 — ED11_EdificioAbandonado (fase 2)
+- **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `K05_EsquinaBarrio.png` · **Medida:** 10 × 10 × 10 m · **Tripo:** Smart Mesh P2 · 12,000 caras · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents; the Nova corporation is clean white with cold blue light); do not copy their scenes. Original design: nothing copied from real places, brands or cars. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: A complete building: the full front facade, the roof and one side wall clearly visible so the 3D model can be closed; flat roof unless stated. an abandoned three-story building: windows boarded up with planks and metal sheets, cracked walls, stains, colorful abstract graffiti shapes (no readable letters), a broken door.
+```
+
+## ED12 — ED12_Estacionamiento (fase 2)
+- **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `K06_CalleNova.png` · **Medida:** 30 × 20 × 9 m · **Tripo:** Smart Mesh P2 · 12,000 caras · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents; the Nova corporation is clean white with cold blue light); do not copy their scenes. Original design: nothing copied from real places, brands or cars. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: A complete building: the full front facade, the roof and one side wall clearly visible so the 3D model can be closed; flat roof unless stated. a three-level open concrete parking garage: thick columns and horizontal slabs with low parapet walls, a ramp visible on one side, a few lights; no cars.
+```
+
+## MU01 — MU01_MuroPerimetral (fase 3)
+- **Adjuntar:** `K06_CalleNova.png`, `K16_Deshuesadero.png` · **Medida:** 8 m alto × 10 m de tramo · **Tripo:** Smart Mesh P2 · 10,000 caras · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents; the Nova corporation is clean white with cold blue light); do not copy their scenes. Original design: nothing copied from real places, brands or cars. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a modular section of a tall city perimeter wall, 8 meters high: concrete panels reinforced with metal beams, thick pipes running along it, amber warning lights, yellow and black hazard stripes at the base, and razor wire coils on top drawn as thick chunky coils. The left and right ends are flat and clean so sections connect side by side. View: 3/4 view from the front.
+```
+
+## MU02 — MU02_TorreControl (fase 3)
+- **Adjuntar:** `K06_CalleNova.png`, `K16_Deshuesadero.png` · **Medida:** 14 m de alto · **Tripo:** Smart Mesh P2 · 12,000 caras · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents; the Nova corporation is clean white with cold blue light); do not copy their scenes. Original design: nothing copied from real places, brands or cars. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a watchtower for the perimeter wall: a tall concrete and steel tower with a small enclosed cabin on top with dark windows, a big searchlight and a security camera mounted on the cabin, a ladder cage on one side, warning lights.
+```
+
+## MU03 — MU03_PuertaMuro (fase 3)
+- **Adjuntar:** `K06_CalleNova.png`, `K16_Deshuesadero.png` · **Medida:** 12 m ancho × 9 m alto · **Tripo:** Smart Mesh P2 · 12,000 caras · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents; the Nova corporation is clean white with cold blue light); do not copy their scenes. Original design: nothing copied from real places, brands or cars. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a huge closed gate of the perimeter wall: two massive reinforced steel doors between two thick concrete pillars, hazard stripes, warning lights, and warning signs with simple symbols only (an exclamation triangle, a hand), no text.
+```
+
+## CB01 — CB01_BarreraConcreto (fase 4)
+- **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `K05_EsquinaBarrio.png` · **Medida:** 2.5 × 0.6 × 1 m · **Tripo:** Smart Mesh P2 · 6,000 caras · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents; the Nova corporation is clean white with cold blue light); do not copy their scenes. Original design: nothing copied from real places, brands or cars. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a low worn concrete barrier block about 1 meter high, chipped edges, stains and a few faded painted stripes.
+```
+
+## CB02 — CB02_Costales (fase 4)
+- **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `K05_EsquinaBarrio.png` · **Medida:** 2 × 0.7 × 1 m · **Tripo:** Smart Mesh P2 · 8,000 caras · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents; the Nova corporation is clean white with cold blue light); do not copy their scenes. Original design: nothing copied from real places, brands or cars. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a low wall of stacked sandbags, chunky and slightly worn, about 1 meter high.
+```
+
+## CB03 — CB03_CajasMetal (fase 4)
+- **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `K05_EsquinaBarrio.png` · **Medida:** 1.6 × 0.8 × 1 m · **Tripo:** Smart Mesh P2 · 8,000 caras · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents; the Nova corporation is clean white with cold blue light); do not copy their scenes. Original design: nothing copied from real places, brands or cars. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a stack of industrial metal crates about 1 meter high, dented, with stripes and rivets.
+```
+
+## CB04 — CB04_BarricadaPolicia (fase 4)
+- **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `V05_PatrullaSedan.png` · **Medida:** 2.5 × 0.6 × 1.1 m · **Tripo:** Smart Mesh P2 · 6,000 caras · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents; the Nova corporation is clean white with cold blue light); do not copy their scenes. Original design: nothing copied from real places, brands or cars. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a police barricade: a sturdy metal frame with a solid panel painted with diagonal navy blue and white stripes, a small red and blue light on top, no text.
+```
+
+## T10 — T10_Charcos (fase 5)
+- **Adjuntar:** `K01_Barrio_HUDnuevo.png`
+
+```
+Use the attached image ONLY for the mood. A mask texture seen straight from above (orthographic, flat): several puddles of irregular natural shapes and different sizes scattered across the square, with soft feathered edges, the water drawn in white and light grey with subtle variation; everything that is not water is PURE BLACK (#000000). The pattern should tile seamlessly at the edges. No reflections of objects, no text.
+```
