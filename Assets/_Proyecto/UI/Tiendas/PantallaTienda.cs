@@ -864,7 +864,17 @@ namespace MechaCyberpunk.UI.Tiendas
             HoverH10.Agregar(caja.gameObject, linea, reposo, TrazoH10.Turquesa);
             EventTrigger disparador = caja.gameObject.AddComponent<EventTrigger>();
             EventTrigger.Entry clic = new EventTrigger.Entry { eventID = EventTriggerType.PointerClick };
-            clic.callback.AddListener(_ => ElegirFila(numero));
+            clic.callback.AddListener(datos =>
+            {
+                ElegirFila(numero);
+                // T-1492: el doble clic acepta (compra) sin Enter. En El Mercado ya compra el clic sobre la fila elegida.
+                if (datos is PointerEventData puntero && puntero.clickCount >= 2 && !modoMercado && visible && PilaPantallas.EsArriba(this)
+                    && pestana == PestanaTienda.Comprar && numero == indice)
+                {
+                    Sonidos.Reproducir("UI_ACEPTAR");
+                    Comprar();
+                }
+            });
             disparador.triggers.Add(clic);
 
             Text texto = Instantiate(plantillaFila, caja);

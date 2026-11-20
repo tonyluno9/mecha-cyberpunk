@@ -169,6 +169,14 @@ namespace MechaCyberpunk.UI.Hud
                     return TeclasHud.Texto(TeclasHud.Buscar("Rueda"), omision);
                 case ReglaTutorial.TeclaConsumir:
                     return TeclasHud.Texto(AccionConsumirEquipado.Accion, omision);
+                case ReglaTutorial.TeclaConsumir2:
+                    return TeclasHud.Texto(AccionConsumirEquipado.Accion2, omision);
+                case ReglaTutorial.TeclaCambiarConsumible:
+                    return TeclasHud.Texto(AccionConsumirEquipado.Cambiar, omision);
+                case ReglaTutorial.TeclaConsumirCarro1:
+                    return TeclasHud.Texto(AccionConsumirEquipado.EnCarro1, omision);
+                case ReglaTutorial.TeclaConsumirCarro2:
+                    return TeclasHud.Texto(AccionConsumirEquipado.EnCarro2, omision);
                 case ReglaTutorial.TeclaMapa:
                     return Keyboard.current != null ? TeclasHud.Nombre(Keyboard.current.mKey.displayName) : omision;
                 default:

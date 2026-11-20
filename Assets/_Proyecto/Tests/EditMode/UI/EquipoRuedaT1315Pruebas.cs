@@ -90,9 +90,11 @@ namespace MechaCyberpunk.Tests.UI
         public void TutorialConsumibles_DiceLaTeclaDeConsumir_QueSaleDeLaFuncionDeTeclas()
         {
             string normal = ReglaTutorial.Texto(AccionTutorial.Consumibles);
-            StringAssert.Contains("B USA EL OBJETO EQUIPADO", normal);
+            StringAssert.Contains("E Y C USAN TUS DOS OBJETOS", normal);
+            StringAssert.Contains("ALT + TECLA CAMBIA EL OBJETO", normal);
+            StringAssert.Contains("EN CARRO: Z Y X", normal);
             string otra = ReglaTutorial.Texto(AccionTutorial.Consumibles, n => n == ReglaTutorial.TeclaConsumir ? "Z" : "Tab");
-            StringAssert.Contains("Z USA EL OBJETO EQUIPADO", otra, "La tecla no está escrita en el aviso: viene de quien contesta");
+            StringAssert.Contains("Z Y TAB USAN TUS DOS OBJETOS", otra, "La tecla no está escrita en el aviso: viene de quien contesta");
         }
     }
 }

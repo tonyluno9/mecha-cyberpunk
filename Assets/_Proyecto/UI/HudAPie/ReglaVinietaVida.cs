@@ -6,7 +6,7 @@ namespace MechaCyberpunk.UI.Hud
     public static class ReglaVinietaVida
     {
         /// <summary>Fracción de vida por debajo de la cual aparece la viñeta.</summary>
-        public const float FraccionUmbral = 0.3f;
+        public const float FraccionUmbral = 0.4f;
         /// <summary>Opacidad base justo bajo el umbral y con la vida casi en 0.</summary>
         public const float AlfaMinima = 0.2f;
         public const float AlfaMaxima = 0.65f;

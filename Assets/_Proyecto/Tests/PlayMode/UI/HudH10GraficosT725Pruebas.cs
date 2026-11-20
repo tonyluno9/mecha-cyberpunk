@@ -70,7 +70,7 @@ namespace MechaCyberpunk.Tests.UI
             Transform casilla = h10.GrupoObjetos.transform.Find("Objeto0/Casilla");
             Assert.IsNotNull(casilla, "Casilla de H26");
             Assert.AreSame(cfg.CasillaObjeto, casilla.GetComponent<Image>().sprite);
-            Assert.AreEqual(string.Empty, h10.TeclaRanura(0), "T-991: sin tecla por casilla (los objetos van en la rueda)");
+            Assert.AreEqual("E", h10.TeclaRanura(0), "T-1492: la ranura 1 lleva su tecla");
         }
 
         [UnityTest]

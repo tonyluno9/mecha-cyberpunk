@@ -55,7 +55,7 @@ namespace MechaCyberpunk.Tests.Personaje
         [Test]
         public void Vinieta_VidaSobreUmbral_NoSeVe()
         {
-            Assert.AreEqual(0f, ReglaVinietaVida.Alfa(31f, 100f, 0.3f));
+            Assert.AreEqual(0f, ReglaVinietaVida.Alfa(41f, 100f, 0.3f));
             Assert.AreEqual(0f, ReglaVinietaVida.Alfa(100f, 100f, 1f));
         }
 

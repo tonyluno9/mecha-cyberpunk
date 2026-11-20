@@ -250,7 +250,7 @@ namespace MechaCyberpunk.Tests.UI
             inventario.Agregar(bebida, 2);
             yield return new WaitForSecondsRealtime(0.5f);
             string tecla = TeclasHud.Texto(AccionConsumirEquipado.Accion, "?").ToUpperInvariant();
-            Assert.AreEqual("B", tecla);
+            Assert.AreEqual("E", tecla);
             Assert.IsNotNull(hud.ObjetoEquipado, "Hay un objeto equipado para consumir");
             StringAssert.StartsWith("[" + tecla + "] ", hud.TextoConsumo.text);
             StringAssert.Contains(hud.ObjetoEquipado.Nombre.ToUpperInvariant(), hud.TextoConsumo.text);
@@ -259,8 +259,8 @@ namespace MechaCyberpunk.Tests.UI
             DatosConsumible antes = hud.ObjetoEquipado;
             int cantidadAntes = inventario.Cantidad(antes);
             Assert.IsTrue(ControlActivo(), "El jugador tiene el control");
-            yield return Pulsar(teclado.bKey);
-            Assert.AreEqual(cantidadAntes - 1, inventario.Cantidad(antes), "B consume una pieza del objeto equipado");
+            yield return Pulsar(teclado.eKey);
+            Assert.AreEqual(cantidadAntes - 1, inventario.Cantidad(antes), "E consume una pieza del objeto equipado");
 
             // Lo que se quita de la rueda ya no es el objeto de la tecla.
             EquipoRueda.Poner(antes.Id, false);

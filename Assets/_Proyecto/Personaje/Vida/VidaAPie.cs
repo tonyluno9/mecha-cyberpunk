@@ -251,7 +251,7 @@ namespace MechaCyberpunk.Personaje.Vida
         }
 
         // T-442: avisos de sonido de la vida. Vida baja una vez al cruzar el umbral hacia abajo; regenera una vez cuando empieza a curar.
-        private const float FraccionVidaBaja = 0.25f;
+        public const float FraccionVidaBaja = 0.4f; // T-1492: antes 0.25
         private float vidaAnterior = -1f;
         private bool avisoVidaBaja;
         private bool avisoRegenera;
