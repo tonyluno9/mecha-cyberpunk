@@ -91,6 +91,7 @@ namespace MechaCyberpunk.Personaje.Habilidades
         private static void Limpiar()
         {
             cabezaActiva = false;
+            VisorJugador.ModoActivo = false;
             CabezaCambio = null;
             Actual = null;
         }
@@ -103,6 +104,7 @@ namespace MechaCyberpunk.Personaje.Habilidades
                 return;
             }
             cabezaActiva = valor;
+            VisorJugador.ModoActivo = valor; // T-1528
             CabezaCambio?.Invoke();
         }
 

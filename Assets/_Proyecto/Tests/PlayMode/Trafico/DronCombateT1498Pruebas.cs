@@ -142,7 +142,8 @@ namespace MechaCyberpunk.Tests.Trafico
             yield return null;
             yield return null;
             Assert.IsTrue(d.Amenazando, "recién disparó: está amenazando");
-            Assert.IsTrue(marcador.Visible, "aparece en el indicador del HUD");
+            Assert.IsFalse(marcador.Visible, "T-1528: sin el visor puesto el dron no se marca en el indicador");
+            Assert.AreEqual(0, marcador.MarcasPedidas);
         }
 
         [UnityTest]

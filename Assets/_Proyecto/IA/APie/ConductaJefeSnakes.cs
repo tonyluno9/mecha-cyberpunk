@@ -59,9 +59,11 @@ namespace MechaCyberpunk.IA.APie
             {
                 // El orden de ejecución deja esto antes del OnEnable de la pandilla: los dos escoltas están siempre, de día y de noche.
                 escoltas.ModoMision = true;
+                escoltas.EsDeGuion = true; // T-1528
             }
             if (refuerzos != null)
             {
+                refuerzos.EsDeGuion = true; // T-1528
                 refuerzos.ModoMision = true; // al llamarlos salen los dos aunque sea de día
             }
             pandillero.MarcarComoJefe();
