@@ -26,6 +26,8 @@ namespace MechaCyberpunk.IA.APie
         [SerializeField] private DatosPandilleroAPie datos;
         [Tooltip("T-714: siempre en alerta contra el jugador (los SKULLS de refuerzo que bajan del carro), aunque no tengan un grupo con territorio.")]
         [SerializeField] private bool siempreAlerta;
+        [Tooltip("T-1497: cuánto más grande que el guardia de 1.85 m es este agente (x). Sube la boca del arma, el grito y la zona de la cabeza.")]
+        [Min(0.25f)] [SerializeField] private float escalaCuerpo = 1f;
         [Tooltip("Cuerpo que parpadea al recibir daño.")]
         [SerializeField] private Renderer cuerpo;
         [Tooltip("Pivote del hombro del brazo que golpea. Sube durante el aviso.")]
@@ -153,6 +155,12 @@ namespace MechaCyberpunk.IA.APie
         public bool EstaAtacando => datos != null && !datos.EsPolicia && !EstaKO && ObjetivoActual != null;
 
         public DatosPandilleroAPie Datos => datos;
+
+        /// <summary>T-1497: factor de tamaño del agente respecto al guardia de referencia (1 = 1.85 m).</summary>
+        public float EscalaCuerpo => escalaCuerpo;
+
+        /// <summary>T-1497: de dónde sale el tiro: 1.4 m de alto y 0.4 m al frente a escala 1, más arriba y más lejos en los grandes.</summary>
+        private Vector3 BocaDelArma() => transform.position + Vector3.up * AlturaBoca * escalaCuerpo + transform.forward * AdelanteBoca * escalaCuerpo;
 
         /// <summary>Fase del patrón del jefe cuerpo a cuerpo (T-693); Acecho si no lo es.</summary>
         public ReglaJefeNova.Fase FaseJefe => reglaJefe != null ? reglaJefe.Actual : ReglaJefeNova.Fase.Acecho;
@@ -709,7 +717,7 @@ namespace MechaCyberpunk.IA.APie
             if (soloPercepcion)
             {
                 Vector3 pechoReal = posicionJugador + Vector3.up * AlturaPechoJugador();
-                Vector3 bocaReal = transform.position + Vector3.up * AlturaBoca + transform.forward * AdelanteBoca;
+                Vector3 bocaReal = BocaDelArma();
                 Vector3 haciaReal = pechoReal - bocaReal;
                 ve = haciaReal.magnitude <= datos.DistanciaVision && pistola.HayLinea(bocaReal, haciaReal.normalized, haciaReal.magnitude, recibe, out _);
                 percepcion.Avanzar(Time.deltaTime, ve, posicionJugador, transform.position);
@@ -725,7 +733,7 @@ namespace MechaCyberpunk.IA.APie
             float distancia = DistanciaPlana(transform.position, posicionJugador);
             // T-673: si el jugador se agacha su pecho baja con su cápsula y una cobertura baja le tapa la línea de vista.
             Vector3 pecho = posicionJugador + Vector3.up * (ObjetivoActual == raizJugador ? AlturaPechoJugador() : AlturaPecho);
-            Vector3 boca = transform.position + Vector3.up * AlturaBoca + transform.forward * AdelanteBoca;
+            Vector3 boca = BocaDelArma();
             bool puedeTirar = false;
             if (atacable && ve && distancia <= datos.DistanciaMaxTiro)
             {
@@ -1310,7 +1318,7 @@ namespace MechaCyberpunk.IA.APie
             {
                 GameObject objeto = new GameObject("Grito");
                 objeto.transform.SetParent(transform, false);
-                objeto.transform.localPosition = Vector3.up * AlturaGrito;
+                objeto.transform.localPosition = Vector3.up * AlturaGrito * escalaCuerpo;
                 textoGrito = objeto.AddComponent<TextMesh>();
                 textoGrito.anchor = TextAnchor.LowerCenter;
                 textoGrito.alignment = TextAlignment.Center;
