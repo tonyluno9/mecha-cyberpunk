@@ -25,6 +25,9 @@ namespace MechaCyberpunk.Personaje.Combate
         private const float AdelanteManoGranada = 0.35f;
         private const float LatidoRayo = 18f;
         private const float AnchoLaser = 0.01f;
+        private const float AnchoMarcador = 0.05f;
+        private const int PuntosMarcador = 32;
+        private const float LevantarMarcador = 0.05f;
         private const float IntensidadBola = 1.4f;
         private static readonly int ColorBase = Shader.PropertyToID("_BaseColor");
 
@@ -37,6 +40,7 @@ namespace MechaCyberpunk.Personaje.Combate
         private bool pulsadoAntes;
         private LineRenderer arco;
         private LineRenderer laser;
+        private LineRenderer marcador;
         private EfectoRayoPlasma rayo;
         private int bucleChispeo = Sonidos.SinBucle;
         private int bucleRayo = Sonidos.SinBucle;
@@ -69,6 +73,12 @@ namespace MechaCyberpunk.Personaje.Combate
         /// <summary>True si se está dibujando el arco de la granada.</summary>
         public bool ArcoVisible => arco != null && arco.enabled;
 
+        /// <summary>T-1491: True si se dibuja el marcador (círculo del radio de la explosión) donde caerá la granada.</summary>
+        public bool MarcadorVisible => marcador != null && marcador.enabled;
+
+        /// <summary>T-1491: centro del marcador de caída (el último punto del arco).</summary>
+        public Vector3 PuntoMarcador { get; private set; }
+
         /// <summary>T-1337: True si se dibuja la línea de mira del rifle de plasma (apuntando, antes y durante la carga).</summary>
         public bool LaserVisible => laser != null && laser.enabled;
 
@@ -84,6 +94,9 @@ namespace MechaCyberpunk.Personaje.Combate
             arco = Linea("ArcoGranada", cfg.AnchoArco, cfg.ColorArco);
             laser = Linea("MiraLaserPlasma", AnchoLaser, cfg.ColorRayo);
             laser.positionCount = 2;
+            marcador = Linea("MarcadorCaidaGranada", AnchoMarcador, cfg.ColorArco);
+            marcador.loop = true;
+            marcador.positionCount = PuntosMarcador;
             rayo = EfectoRayoPlasma.Crear(transform, cfg.MaterialRayo, cfg.ColorRayo, cfg.AnchoRayo);
             puntosArco = new Vector3[Mathf.Max(2, cfg.PuntosArco)];
             GameObject bola = GameObject.CreatePrimitive(PrimitiveType.Sphere);
@@ -149,6 +162,7 @@ namespace MechaCyberpunk.Personaje.Combate
         {
             if (arco != null) Destroy(arco.gameObject);
             if (laser != null) Destroy(laser.gameObject);
+            if (marcador != null) Destroy(marcador.gameObject);
             if (rayo != null) Destroy(rayo.gameObject);
         }
 
@@ -255,6 +269,7 @@ namespace MechaCyberpunk.Personaje.Combate
                     break;
                 case TipoDisparoArma.Rayo:
                     arco.enabled = false;
+                    marcador.enabled = false;
                     Plasma(arma, cargador, d, pulsado);
                     DibujarLaser(arma, d);
                     break;
@@ -273,6 +288,10 @@ namespace MechaCyberpunk.Personaje.Combate
             if (laser != null)
             {
                 laser.enabled = false;
+            }
+            if (marcador != null)
+            {
+                marcador.enabled = false;
             }
             plasma?.Cancelar();
             ApagarPlasma();
@@ -325,11 +344,14 @@ namespace MechaCyberpunk.Personaje.Combate
             if (!controlador.Apuntando)
             {
                 arco.enabled = false;
+                marcador.enabled = false;
                 return;
             }
             Vector3 velocidad = VelocidadDe(arma, d, out Vector3 origen);
             ReglaBalistica.Arco(origen, velocidad, Physics.gravity, cfg.SegundosArco, puntosArco);
             int usados = puntosArco.Length;
+            bool cae = false;
+            Vector3 normalCaida = Vector3.up;
             for (int i = 1; i < puntosArco.Length; i++)
             {
                 Vector3 tramo = puntosArco[i] - puntosArco[i - 1];
@@ -338,6 +360,8 @@ namespace MechaCyberpunk.Personaje.Combate
                     && golpe.collider.transform.root != transform.root)
                 {
                     puntosArco[i] = golpe.point;
+                    normalCaida = golpe.normal;
+                    cae = true;
                     usados = i + 1;
                     break;
                 }
@@ -345,6 +369,26 @@ namespace MechaCyberpunk.Personaje.Combate
             arco.positionCount = usados;
             arco.SetPositions(puntosArco);
             arco.enabled = true;
+            PonerMarcador(cae, puntosArco[usados - 1], normalCaida, d.RadioExplosion);
+        }
+
+        // T-1491: un círculo del radio de la explosión donde cae la granada (sobre la superficie que toca); sin choque no hay marcador.
+        private void PonerMarcador(bool cae, Vector3 punto, Vector3 normal, float radio)
+        {
+            marcador.enabled = cae;
+            if (!cae)
+            {
+                return;
+            }
+            PuntoMarcador = punto;
+            Vector3 eje = Vector3.Cross(normal, Mathf.Abs(normal.y) > 0.9f ? Vector3.right : Vector3.up).normalized;
+            Vector3 otro = Vector3.Cross(normal, eje);
+            float r = Mathf.Max(0.3f, radio);
+            for (int i = 0; i < PuntosMarcador; i++)
+            {
+                float a = Mathf.PI * 2f * i / PuntosMarcador;
+                marcador.SetPosition(i, punto + normal * LevantarMarcador + (eje * Mathf.Cos(a) + otro * Mathf.Sin(a)) * r);
+            }
         }
 
         // ---- Rifle de plasma ----

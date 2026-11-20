@@ -296,9 +296,13 @@ namespace MechaCyberpunk.UI.Rueda
                 && vida != null && !vida.EstaKO && !Pausa.Activa && PilaPantallas.Vacia && MenuCyberfix.Abiertos == 0;
         }
 
+        /// <summary>T-1491: sonido al entrar en cámara lenta (el whoosh de aire más cercano del catálogo; no hay uno grave propio). Al salir no suena nada.</summary>
+        public const string IdCamaraLenta = "PUN_GOLPE_AIRE";
+
         private void Abrir()
         {
             abierta = true;
+            Sonidos.Reproducir(IdCamaraLenta);
             aperturas++;
             escalaAnterior = Time.timeScale;
             fixedAnterior = Time.fixedDeltaTime;
