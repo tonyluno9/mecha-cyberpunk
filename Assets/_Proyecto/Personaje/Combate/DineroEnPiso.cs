@@ -9,6 +9,8 @@ namespace MechaCyberpunk.Personaje.Combate
     /// </summary>
     public class DineroEnPiso : MonoBehaviour
     {
+        /// <summary>Prefab en Resources (lo crea ModelosPickupsT1523 en Personaje/Editor).</summary>
+        public const string RecursoModelo = "DineroEnPiso_Modelo";
         private const float RadioRecoger = 1.3f;
         private const float AlturaFlotar = 0.35f;
         private const float AmplitudFlotar = 0.06f;
@@ -38,14 +40,42 @@ namespace MechaCyberpunk.Personaje.Combate
 
         private void Armar()
         {
+            Color verde = new Color(0.2f, 1f, 0.55f);
+            modelo = new GameObject("Fajo").transform;
+            modelo.SetParent(transform, false);
+            GameObject prefab = Resources.Load<GameObject>(RecursoModelo);
+            if (prefab != null)
+            {
+                // T-1523: modelo real (el maletín MA01 a escala de pickup; no hay un modelo de billetes en Assets/Arte).
+                GameObject instancia = Instantiate(prefab, modelo, false);
+                instancia.name = "Maletin";
+                foreach (Collider c in instancia.GetComponentsInChildren<Collider>(true))
+                {
+                    Destroy(c);
+                }
+            }
+            else
+            {
+                ArmarRespaldo(verde);
+            }
+            Light luz = new GameObject("Luz").AddComponent<Light>();
+            luz.transform.SetParent(transform, false);
+            luz.transform.localPosition = Vector3.up * AlturaFlotar;
+            luz.type = LightType.Point;
+            luz.color = verde;
+            luz.intensity = 0.5f;
+            luz.range = 1.2f;
+            luz.shadows = LightShadows.None;
+        }
+
+        /// <summary>Respaldo si falta el prefab en Resources: el fajo hecho de cubos (solo debería verse si alguien borró el recurso).</summary>
+        private void ArmarRespaldo(Color verde)
+        {
             Shader sombreador = Shader.Find("Universal Render Pipeline/Lit");
             var material = new Material(sombreador) { name = "DineroEnPiso" };
-            Color verde = new Color(0.2f, 1f, 0.55f);
             material.SetColor("_BaseColor", verde * 0.5f);
             material.EnableKeyword("_EMISSION");
             material.SetColor("_EmissionColor", verde * 1.2f);
-            modelo = new GameObject("Fajo").transform;
-            modelo.SetParent(transform, false);
             for (int i = 0; i < 3; i++)
             {
                 GameObject billete = GameObject.CreatePrimitive(PrimitiveType.Cube);
@@ -57,14 +87,6 @@ namespace MechaCyberpunk.Personaje.Combate
                 billete.transform.localScale = new Vector3(0.28f, 0.02f, 0.14f);
                 billete.GetComponent<Renderer>().sharedMaterial = material;
             }
-            Light luz = new GameObject("Luz").AddComponent<Light>();
-            luz.transform.SetParent(transform, false);
-            luz.transform.localPosition = Vector3.up * AlturaFlotar;
-            luz.type = LightType.Point;
-            luz.color = verde;
-            luz.intensity = 0.5f;
-            luz.range = 1.2f;
-            luz.shadows = LightShadows.None;
         }
 
         private void Update()

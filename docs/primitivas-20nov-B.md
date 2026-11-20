@@ -30,3 +30,12 @@ Lista completa por objeto en `Logs/t1523-primitivas.txt`.
 | Flotantes o sobre 60 m | | |
 
 Orden: `PrimitivasT1523.Diagnostico` (linea base en `Logs/t1523-antes.txt`), `PrimitivasT1523.Aplicar`, `PrimitivasT1523.Diagnostico`.
+
+## Segunda vuelta (runtime y menu)
+
+- `FondoCiudad3D` (Inicio): edificios, carros, vehiculos aereos, antenas y pasos elevados salen de prefabs serializados (`ModelosFondoInicioT1523.Aplicar` los llena; `CreadorEscenaInicio` tambien). Cada bloque se escala al hueco y, si es muy alto, se apilan copias del modelo. Se quitan colliders, scripts y luces del modelo. Si una lista queda vacia, esa pieza usa la caja de antes. Se dejan como cajas emisivas los anuncios de neon, las tiras de neon, faros y pilotos, las rayas de la calle y la losa de la calle (luz y rotulo, no edificios). La baliza roja ya no es cubo, solo su halo.
+- `Menu_Calles` y `FondoCallesInicio` no crean primitivas: usan fotos y las calles reales de la ciudad.
+- `MaletinAsalto`: ya usaba `Resources/MaletinAsalto` (T-1499, MA01); se quito el respaldo de cubos.
+- `DineroEnPiso` y `MunicionEnPiso`: no hay modelos de billetes, fajos, cargadores ni cajas de balas en Assets/Arte (solo el material W01_Cargador). Usan prefabs de `Personaje/Resources` que crea `ModelosPickupsT1523.Aplicar` (dinero = maletin MA01, municion = CB03_CajasMetal_a, ambos a ~0.3 m). Si falta el recurso queda la primitiva como respaldo.
+- `VarianteVisual`: las franjas eran cubos pegados a los huesos; ya no se crean (queda el brillo de la luz puntual y el material de la variante).
+- `ConstructorRecintoJefe`: la barrera de energia es un cubo translucido con `Mat_BarreraEnergiaNova` que se apaga al terminar; se deja (efecto, no edificio).

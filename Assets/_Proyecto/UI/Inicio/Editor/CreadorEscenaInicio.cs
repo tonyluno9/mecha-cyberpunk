@@ -65,6 +65,7 @@ namespace MechaCyberpunk.UI.Inicio.Editor
             GameObject fondoObjeto = new GameObject("FondoCiudad3D");
             FondoCiudad3D fondo = fondoObjeto.AddComponent<FondoCiudad3D>();
             fondo.Configurar(AssetDatabase.LoadAssetAtPath<Material>(RutaLit), AssetDatabase.LoadAssetAtPath<Material>(RutaAditivo3D), camara);
+            ModelosFondoInicioT1523.AsignarA(fondo); // T-1523: edificios y carros reales en vez de cajas
 
             GameObject servicios = new GameObject("Servicios");
             servicios.AddComponent<ServicioOpciones>();

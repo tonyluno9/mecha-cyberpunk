@@ -34,6 +34,18 @@ namespace MechaCyberpunk.UI.Inicio
         [SerializeField] private Material plantillaAditivo;
         [SerializeField] private Camera camara;
 
+        [Header("Modelos reales (T-1523; los llena ModelosFondoInicioT1523)")]
+        [Tooltip("Edificios (prefabs de Assets/Arte) para los bloques de la avenida y del fondo. Vacío = cajas de respaldo.")]
+        [SerializeField] private GameObject[] edificios = new GameObject[0];
+        [Tooltip("Carros de la calle. Vacío = caja de respaldo.")]
+        [SerializeField] private GameObject[] autos = new GameObject[0];
+        [Tooltip("Vehículos que vuelan entre los edificios. Vacío = caja de respaldo.")]
+        [SerializeField] private GameObject[] vehiculosAereos = new GameObject[0];
+        [Tooltip("Antenas de las azoteas. Vacío = caja de respaldo.")]
+        [SerializeField] private GameObject[] antenas = new GameObject[0];
+        [Tooltip("Tramo de autopista para los pasos elevados. Vacío = cajas de respaldo.")]
+        [SerializeField] private GameObject[] pasos = new GameObject[0];
+
         [Header("Ciudad")]
         [Tooltip("Semilla del azar: la misma ciudad en cada arranque.")]
         [SerializeField] private int semilla = 20871;
@@ -121,6 +133,16 @@ namespace MechaCyberpunk.UI.Inicio
                 }
             }
             creados.Clear();
+        }
+
+        /// <summary>Para los creadores: los modelos reales de cada pieza (cualquiera puede ir vacío).</summary>
+        public void ConfigurarModelos(GameObject[] nuevosEdificios, GameObject[] nuevosAutos, GameObject[] nuevosAereos, GameObject[] nuevasAntenas, GameObject[] nuevosPasos)
+        {
+            edificios = nuevosEdificios ?? new GameObject[0];
+            autos = nuevosAutos ?? new GameObject[0];
+            vehiculosAereos = nuevosAereos ?? new GameObject[0];
+            antenas = nuevasAntenas ?? new GameObject[0];
+            pasos = nuevosPasos ?? new GameObject[0];
         }
 
         public void Configurar(Material lit, Material aditivo, Camera camaraFondo)
@@ -329,6 +351,86 @@ namespace MechaCyberpunk.UI.Inicio
             return g;
         }
 
+        /// <summary>
+        /// Pone un modelo real (uno al azar de <paramref name="lista"/>) en el hueco: <paramref name="baseCentro"/> es el centro de su base y
+        /// <paramref name="tamano"/> el hueco en el mundo. El modelo mira a +Z antes del giro. Si el hueco es muy alto se apilan copias, cada una
+        /// a lo más <paramref name="estiramientoAlto"/> veces más alta que el modelo. Quita colliders y scripts del modelo (es solo fondo).
+        /// Devuelve null si no hay modelos.
+        /// </summary>
+        private Transform Colocar(GameObject[] lista, Vector3 baseCentro, Vector3 tamano, float giro, Transform padre, float estiramientoAlto)
+        {
+            if (lista == null || lista.Length == 0)
+            {
+                return null;
+            }
+            GameObject prefab = lista[azar.Next(lista.Length)];
+            if (prefab == null)
+            {
+                return null;
+            }
+            Transform contenedor = new GameObject(prefab.name).transform;
+            contenedor.SetParent(padre != null ? padre : mundo, false);
+            contenedor.localPosition = baseCentro;
+            contenedor.localRotation = Quaternion.identity;
+            GameObject primera = Instantiate(prefab, contenedor, false);
+            LimpiarModelo(primera);
+            primera.transform.localPosition = Vector3.zero;
+            primera.transform.localRotation = Quaternion.identity;
+            primera.transform.localScale = Vector3.one;
+            Renderer[] rs = primera.GetComponentsInChildren<Renderer>(true);
+            if (rs.Length == 0)
+            {
+                Destroy(contenedor.gameObject);
+                return null;
+            }
+            Bounds b = rs[0].bounds;
+            foreach (Renderer r in rs)
+            {
+                b.Encapsulate(r.bounds);
+            }
+            Vector3 centro = b.center - contenedor.position;
+            float baseY = b.min.y - contenedor.position.y;
+            bool girado = Mathf.Abs(Mathf.Sin(giro * Mathf.Deg2Rad)) > 0.5f;
+            float anchoHueco = girado ? tamano.z : tamano.x;
+            float fondoHueco = girado ? tamano.x : tamano.z;
+            int pilas = Mathf.Max(1, Mathf.RoundToInt(tamano.y / Mathf.Max(0.01f, b.size.y * estiramientoAlto)));
+            float altoPila = tamano.y / pilas;
+            Vector3 escala = new Vector3(anchoHueco / Mathf.Max(0.01f, b.size.x), altoPila / Mathf.Max(0.01f, b.size.y), fondoHueco / Mathf.Max(0.01f, b.size.z));
+            for (int i = 0; i < pilas; i++)
+            {
+                GameObject copia = i == 0 ? primera : Instantiate(primera, contenedor, false);
+                copia.transform.localScale = escala;
+                copia.transform.localPosition = new Vector3(-centro.x * escala.x, i * altoPila - baseY * escala.y, -centro.z * escala.z);
+            }
+            contenedor.localRotation = Quaternion.Euler(0f, giro, 0f);
+            return contenedor;
+        }
+
+        /// <summary>El fondo es solo imagen: fuera colliders, cuerpos, scripts, sonidos y luces del modelo, y sin sombras (igual que las cajas).</summary>
+        private static void LimpiarModelo(GameObject modelo)
+        {
+            foreach (MonoBehaviour m in modelo.GetComponentsInChildren<MonoBehaviour>(true))
+            {
+                DestroyImmediate(m);
+            }
+            foreach (Component c in modelo.GetComponentsInChildren<Component>(true))
+            {
+                if (c is Collider || c is AudioSource || c is Light)
+                {
+                    DestroyImmediate(c);
+                }
+            }
+            foreach (Rigidbody rb in modelo.GetComponentsInChildren<Rigidbody>(true))
+            {
+                DestroyImmediate(rb);
+            }
+            foreach (Renderer r in modelo.GetComponentsInChildren<Renderer>(true))
+            {
+                r.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                r.receiveShadows = false;
+            }
+        }
+
         private GameObject Caja(string nombre, Material material, Vector3 posicion, Vector3 tamano, Transform padre = null)
         {
             return Pieza(nombre, cajaUnidad, material, posicion, tamano, padre);
@@ -432,16 +534,26 @@ namespace MechaCyberpunk.UI.Inicio
 
         private void Edificio(Vector3 centro, Vector3 tamano, int lado, bool conAnuncios)
         {
-            Mesh malla = Registrar(CrearCaja(tamano, MetrosPorTextura, MetrosAltoTextura, new Vector2(Azar(0f, 1f), Azar(0f, 1f))));
-            Material material = materialesVentana[azar.Next(materialesVentana.Count)];
-            Pieza("Edificio", malla, material, centro, Vector3.one);
+            float giro = lado > 0 ? -90f : (lado < 0 ? 90f : 180f); // la fachada (+Z del modelo) mira a la calle
+            if (Colocar(edificios, new Vector3(centro.x, 0f, centro.z), tamano, giro, null, 2f) == null)
+            {
+                Mesh malla = Registrar(CrearCaja(tamano, MetrosPorTextura, MetrosAltoTextura, new Vector2(Azar(0f, 1f), Azar(0f, 1f))));
+                Material material = materialesVentana[azar.Next(materialesVentana.Count)];
+                Pieza("Edificio", malla, material, centro, Vector3.one);
+            }
             Edificios++;
             float techo = centro.y + tamano.y * 0.5f;
             if (tamano.y > 60f && azar.NextDouble() < 0.5)
             {
                 float antena = Azar(6f, 16f);
-                Caja("Antena", materialOscuro, new Vector3(centro.x, techo + antena * 0.5f, centro.z), new Vector3(0.5f, antena, 0.5f));
-                GameObject baliza = Caja("Baliza", materialesNeon[2], new Vector3(centro.x, techo + antena + 0.4f, centro.z), Vector3.one * 0.9f);
+                if (Colocar(antenas, new Vector3(centro.x, techo, centro.z), new Vector3(1.5f, antena, 1.5f), 0f, null, 1000f) == null)
+                {
+                    Caja("Antena", materialOscuro, new Vector3(centro.x, techo + antena * 0.5f, centro.z), new Vector3(0.5f, antena, 0.5f));
+                }
+                // La baliza es solo el halo rojo que parpadea (sin cubo).
+                GameObject baliza = new GameObject("Baliza");
+                baliza.transform.SetParent(mundo, false);
+                baliza.transform.localPosition = new Vector3(centro.x, techo + antena + 0.4f, centro.z);
                 GameObject resplandor = Halo(new Vector3(centro.x, techo + antena + 0.4f, centro.z), Vector2.one * 10f, new Color(1f, 0.2f, 0.15f, 0.8f), true);
                 resplandor.transform.SetParent(baliza.transform, true);
                 balizas.Add(new Baliza { objeto = baliza, fase = Azar(0f, 6f) });
@@ -507,11 +619,19 @@ namespace MechaCyberpunk.UI.Inicio
             {
                 float y = Azar(20f, 28f);
                 float largo = AnchoCalle * 2f + 30f;
-                Caja("Paso", materialOscuro, new Vector3(0f, y, z), new Vector3(largo, 2.4f, 7f));
+                bool conModelo = Colocar(pasos, new Vector3(0f, y - 1.2f, z), new Vector3(largo, 2.4f, 7f), 90f, null, 1000f) != null;
+                if (!conModelo)
+                {
+                    Caja("Paso", materialOscuro, new Vector3(0f, y, z), new Vector3(largo, 2.4f, 7f));
+                }
                 Caja("PasoNeon", materialesNeon[azar.Next(0, 3)], new Vector3(0f, y - 1.35f, z - 3.4f), new Vector3(largo, 0.25f, 0.2f));
                 Caja("PasoNeon", materialesNeon[azar.Next(0, 3)], new Vector3(0f, y + 1.3f, z - 3.4f), new Vector3(largo, 0.2f, 0.2f));
                 foreach (int lado in new[] { -1, 1 })
                 {
+                    if (conModelo)
+                    {
+                        break;
+                    }
                     Caja("Pilar", materialOscuro, new Vector3(lado * (AnchoCalle + 2f), y * 0.5f, z), new Vector3(2.4f, y, 5f));
                 }
                 Halo(new Vector3(0f, y - 2f, z - 4f), new Vector2(largo * 0.9f, 6f), new Color(0.2f, 0.7f, 1f, 0.2f), true);
@@ -541,7 +661,11 @@ namespace MechaCyberpunk.UI.Inicio
             Transform raiz = new GameObject(aereo ? "VehiculoAereo" : "Auto").transform;
             raiz.SetParent(mundo, false);
             raiz.localPosition = posicion;
-            Caja("Cuerpo", materialOscuro, Vector3.zero, aereo ? new Vector3(1.6f, 0.5f, 3.6f) : new Vector3(1.8f, 0.7f, 4.2f), raiz);
+            Vector3 medidaCuerpo = aereo ? new Vector3(1.6f, 0.5f, 3.6f) : new Vector3(1.8f, 0.7f, 4.2f);
+            if (Colocar(aereo ? vehiculosAereos : autos, new Vector3(0f, -medidaCuerpo.y * 0.5f, 0f), medidaCuerpo, direccion > 0f ? 0f : 180f, raiz, 1000f) == null)
+            {
+                Caja("Cuerpo", materialOscuro, Vector3.zero, medidaCuerpo, raiz);
+            }
             Color delante = aereo ? ColorNeon(azar.Next(0, 3)) : new Color(1f, 0.95f, 0.8f);
             Color atras = aereo ? delante : new Color(1f, 0.1f, 0.08f);
             float medioLargo = aereo ? 1.8f : 2.1f;

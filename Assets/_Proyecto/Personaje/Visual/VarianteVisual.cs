@@ -90,52 +90,11 @@ namespace MechaCyberpunk.Personaje.Visual
 
         private const float AlturaLuz = 1.4f;
 
+        /// <summary>T-1523: las franjas eran cubos pegados a los huesos (pecho y brazos). Ya no se crean: el brillo de la variante lo da
+        /// la luz puntual de <see cref="colorLuz"/> y el material de la variante. El material de franja queda por si hay una malla de franjas en el modelo.</summary>
         private void PonerFranjas()
         {
-            Animator animador = GetComponentInChildren<Animator>(true);
-            if (animador == null || animador.avatar == null || !animador.isHuman)
-            {
-                return;
-            }
             franjasPuestas = true;
-            Transform raiz = transform;
-            Transform pecho = animador.GetBoneTransform(HumanBodyBones.UpperChest);
-            if (pecho == null)
-            {
-                pecho = animador.GetBoneTransform(HumanBodyBones.Chest);
-            }
-            if (pecho != null)
-            {
-                Cubo("FranjaPecho", pecho, pecho.position + raiz.forward * 0.13f, Quaternion.LookRotation(raiz.forward), new Vector3(0.3f, 0.05f, 0.03f));
-            }
-            Banda(animador, HumanBodyBones.LeftUpperArm, HumanBodyBones.LeftLowerArm, "FranjaBrazoIzq");
-            Banda(animador, HumanBodyBones.RightUpperArm, HumanBodyBones.RightLowerArm, "FranjaBrazoDer");
-        }
-
-        private void Banda(Animator animador, HumanBodyBones desde, HumanBodyBones hasta, string nombre)
-        {
-            Transform a = animador.GetBoneTransform(desde);
-            Transform b = animador.GetBoneTransform(hasta);
-            if (a == null || b == null)
-            {
-                return;
-            }
-            Vector3 eje = (b.position - a.position).normalized;
-            Cubo(nombre, a, Vector3.Lerp(a.position, b.position, 0.55f), Quaternion.FromToRotation(Vector3.up, eje), new Vector3(grosorFranja, 0.05f, grosorFranja));
-        }
-
-        private void Cubo(string nombre, Transform padre, Vector3 posicion, Quaternion giro, Vector3 tamano)
-        {
-            GameObject cubo = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            cubo.name = nombre;
-            Collider colision = cubo.GetComponent<Collider>();
-            if (Application.isPlaying) { Destroy(colision); } else { DestroyImmediate(colision); }
-            cubo.transform.SetParent(padre, true);
-            cubo.transform.SetPositionAndRotation(posicion, giro);
-            cubo.transform.localScale = tamano;
-            Renderer r = cubo.GetComponent<Renderer>();
-            r.sharedMaterial = materialFranja;
-            r.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
         }
     }
 }
