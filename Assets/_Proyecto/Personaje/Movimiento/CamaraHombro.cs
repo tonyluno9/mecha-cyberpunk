@@ -237,7 +237,7 @@ namespace MechaCyberpunk.Personaje.Movimiento
             seguir.CameraDistance = distancia * (1f - config.AcercarMirandoAbajo * Mathf.Clamp01(controlador.Inclinacion / 30f));
             LensSettings lente = vcam.Lens;
             float fovTotal = fov + extraFovCorrer;
-            lente.FieldOfView = zoom != null ? Mathf.Lerp(fovTotal, config.FovSniper, zoom.Mezcla) : fovTotal;
+            lente.FieldOfView = zoom != null ? Mathf.Lerp(fovTotal, zoom.FovZoom, zoom.Mezcla) : fovTotal;
             vcam.Lens = lente;
 
             if (!brain.enabled)

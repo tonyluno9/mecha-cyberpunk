@@ -24,11 +24,29 @@ namespace MechaCyberpunk.Personaje.Combate
         private VidaAPie vida;
         private float mezcla;
         private float inicioSacudida = -100f;
+        private float fovZoom;
 
         /// <summary>0 sin zoom, 1 con el zoom completo.</summary>
         public float Mezcla => mezcla;
         /// <summary>True cuando el zoom ya cubre más de la mitad: la mira se prende.</summary>
         public bool Activo => mezcla > 0.5f;
+
+        /// <summary>T-1527: FOV (°) con el zoom completo; la rueda del ratón lo ajusta mientras se apunta con el francotirador.</summary>
+        public float FovZoom => fovZoom > 0f ? fovZoom : (config != null ? config.FovSniper : 15f);
+
+        /// <summary>T-1527: mueve el zoom (rueda positiva acerca). Devuelve true si lo tomó (francotirador en mano y apuntando).</summary>
+        public bool AjustarConRueda(float rueda)
+        {
+            if (!ReglaZoomSniper.RuedaAjustaZoom(armas.ArmaActiva, controlador.QuiereApuntar))
+            {
+                return false;
+            }
+            float minimo = config != null ? config.FovSniperMinimo : 3f;
+            float maximo = config != null ? config.FovSniperMaximo : 24f;
+            float paso = config != null ? config.FactorPasoZoom : 1.3f;
+            fovZoom = ReglaZoomSniper.AjustarFov(FovZoom, rueda, paso, minimo, maximo);
+            return true;
+        }
 
         /// <summary>Sacudida vertical actual (°, positivo sube la mira).</summary>
         public float Sacudida

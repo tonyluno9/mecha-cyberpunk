@@ -61,7 +61,7 @@ namespace MechaCyberpunk.Personaje.Editor
             new Familia { arma = ArmaAPie.Fusil, clave = "fusil", nombre = "Fusil", danio = new[] { 15f, 18f, 21f, 25f },
                 cargador = new[] { 30, 30, 35, 40 }, recarga = new[] { 2.0f, 1.8f, 1.6f, 1.3f }, entre = 0.11f, automatica = true, alcance = 150f, inicioCaida = 0.6f, danioMinimo = 0.6f,
                 dispersion = 1.5f, dispersionApuntando = 0.6f, precio = new[] { 700, 350, 600, 850 } },
-            new Familia { arma = ArmaAPie.Sniper, clave = "sniper", nombre = "Sniper", danio = new[] { 70f, 85f, 100f, 120f },
+            new Familia { arma = ArmaAPie.Sniper, clave = "sniper", nombre = "Sniper", danio = new[] { 40f, 44f, 48f, 52f },
                 cargador = new[] { 4, 5, 6, 7 }, recarga = new[] { 2.8f, 2.5f, 2.2f, 1.9f }, entre = 1.2f, alcance = 300f,
                 dispersion = 1.2f, dispersionApuntando = 0f, precio = new[] { 2200, 400, 650, 900 } },
             // T-1013: las armas nuevas (imageassets/modelos3d/armas_nuevas).

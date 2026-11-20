@@ -92,7 +92,11 @@ namespace MechaCyberpunk.Tests.Personaje
                 {
                     continue; // T-1013: el daño del lanzagranadas, la granada y el rifle de plasma es de explosión o de rayo, no por bala
                 }
-                Assert.Greater(sniper.Danio, otra.Danio, "El sniper pega más por bala que " + tipo);
+                // T-1527: el sniper ya no mata de un tiro al cuerpo (la cabeza x3 sí); el revólver pega más por bala al cuerpo.
+                if (tipo != ArmaAPie.Revolver)
+                {
+                    Assert.Greater(sniper.Danio, otra.Danio, "El sniper pega más por bala que " + tipo);
+                }
                 Assert.LessOrEqual(sniper.Cargador, otra.Cargador, "El sniper tiene el menor cargador (o igual) que " + tipo);
             }
 
