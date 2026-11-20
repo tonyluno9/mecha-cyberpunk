@@ -118,24 +118,39 @@ namespace MechaCyberpunk.Trafico.Persecucion
         /// <summary>T-1526: cuántos nodos quedaron fuera del muro.</summary>
         public int NodosFuera => nodosFuera.Count;
 
+        /// <summary>T-1526: cuántos nodos se movieron al borde del área porque quedaban apenas fuera (ver <see cref="Recortar"/>).</summary>
+        public int NodosAjustados { get; private set; }
+
         /// <summary>
-        /// T-1526: desconecta los nodos cuyo punto en el plano (x, z) cae fuera de <paramref name="area"/> (el interior del muro). Sus tramos se quitan, así que una
-        /// calle que llegaba a una salida del muro termina en su último nodo de adentro (los carros dan vuelta ahí). Devuelve cuántos nodos quitó.
-        /// Si el área deja menos de <paramref name="minimoDentro"/> nodos no hace nada (el área estaría mal detectada).
+        /// T-1526: deja el grafo dentro de <paramref name="area"/> (el interior del muro, plano x, z). Un nodo que queda fuera por menos de <paramref name="holgura"/> m (el final de una
+        /// calle de la cuadrícula, pegado al muro) se mueve al borde del área; los más lejanos (las calles de las afueras, que salen por las puertas del muro) se desconectan.
+        /// Así una calle que llegaba a una salida termina dentro y los carros dan vuelta ahí. Devuelve cuántos nodos desconectó. Si el área dejaría menos de
+        /// <paramref name="minimoDentro"/> nodos no hace nada (el área estaría mal detectada).
         /// </summary>
-        public int Recortar(Rect area, int minimoDentro = 4)
+        public int Recortar(Rect area, float holgura = 12f, int minimoDentro = 4)
         {
             List<int> fuera = new List<int>();
+            List<int> ajustar = new List<int>();
             for (int i = 0; i < nodos.Count; i++)
             {
-                if (!area.Contains(new Vector2(nodos[i].x, nodos[i].z)))
+                float dx = Mathf.Max(area.xMin - nodos[i].x, 0f, nodos[i].x - area.xMax);
+                float dz = Mathf.Max(area.yMin - nodos[i].z, 0f, nodos[i].z - area.yMax);
+                float d = Mathf.Max(dx, dz);
+                if (d <= 0f)
                 {
-                    fuera.Add(i);
+                    continue;
                 }
+                (d <= holgura ? ajustar : fuera).Add(i);
             }
-            if (fuera.Count == 0 || nodos.Count - fuera.Count < minimoDentro)
+            if ((fuera.Count == 0 && ajustar.Count == 0) || nodos.Count - fuera.Count < minimoDentro)
             {
                 return 0;
+            }
+            foreach (int i in ajustar)
+            {
+                Vector3 p = nodos[i];
+                nodos[i] = new Vector3(Mathf.Clamp(p.x, area.xMin, area.xMax), p.y, Mathf.Clamp(p.z, area.yMin, area.yMax));
+                NodosAjustados++;
             }
             foreach (int i in fuera)
             {

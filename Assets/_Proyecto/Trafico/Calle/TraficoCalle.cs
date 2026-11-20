@@ -173,7 +173,7 @@ namespace MechaCyberpunk.Trafico.Calle
             }
             AlargarHaciaLasAfueras(calles);
             AreaMuro.Definir(areaMuro); // T-1526: vacío = detectar en esta escena
-            AreaMuro.Recortar(calles, margenAlMuro); // T-1526: los carros solo ciclan dentro del muro: lo de afuera se desconecta y las calles de salida dan vuelta
+            RecortarAlMuro(); // T-1526: los carros solo ciclan dentro del muro
             if (configZonas == null)
             {
                 configZonas = Resources.Load<ConfigCarrosZonas>("ConfigCarrosZonas");
@@ -262,12 +262,52 @@ namespace MechaCyberpunk.Trafico.Calle
             return general != null && general.Count > 0 ? general[indice % general.Count] : null;
         }
 
+        // T-1526: recorta el grafo al interior del muro. Si en Start aún no hay muro en la escena, reintenta unos segundos (hasta MaximoIntentosDeMuro).
+        private const float SegundosEntreIntentosDeMuro = 2f;
+        private const int MaximoIntentosDeMuro = 8;
+        private const float SegundosEntreBarridosDeMuro = 1f;
+        private bool muroAplicado;
+        private int intentosDeMuro;
+        private float proximoIntentoDeMuro;
+        private float proximoBarridoDeMuro;
+
+        private void RecortarAlMuro()
+        {
+            intentosDeMuro++;
+            AreaMuro.Definir(areaMuro); // vacío = detectar en esta escena
+            muroAplicado = AreaMuro.Actual(margenAlMuro).HasValue;
+            AreaMuro.Recortar(calles, margenAlMuro);
+            proximoIntentoDeMuro = Time.time + SegundosEntreIntentosDeMuro;
+        }
+
+        // T-1526: cada segundo revisa el muro (aunque un carro esté parado o sin ruta): el que esté fuera se recicla dentro o se apaga.
+        private void RevisarMuro()
+        {
+            if (!muroAplicado && intentosDeMuro < MaximoIntentosDeMuro && Time.time >= proximoIntentoDeMuro)
+            {
+                RecortarAlMuro();
+            }
+            if (Time.time < proximoBarridoDeMuro)
+            {
+                return;
+            }
+            proximoBarridoDeMuro = Time.time + SegundosEntreBarridosDeMuro;
+            foreach (CarroTrafico c in carros)
+            {
+                if (c != null && c.gameObject.activeSelf)
+                {
+                    c.ReciclarSiEstaFueraDelMuro();
+                }
+            }
+        }
+
         private void Update()
         {
             if (!listo)
             {
                 return;
             }
+            RevisarMuro();
             IRelojMundo reloj = Registro<IRelojMundo>.Actual;
             int objetivo = config.Cantidad(reloj != null && reloj.EsDeNoche);
             int lugares = objetivo;

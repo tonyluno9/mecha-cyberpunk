@@ -68,15 +68,18 @@ namespace MechaCyberpunk.Trafico.Calle
         public static int Recortar(Persecucion.GrafoCalles grafo, float margen = MargenPorOmision)
         {
             Rect? area = Actual(margen);
-            if (grafo == null || !area.HasValue)
+            if (grafo == null)
             {
                 return 0;
             }
-            int quitados = grafo.Recortar(area.Value);
-            if (quitados > 0)
+            if (!area.HasValue)
             {
-                Debug.Log("[Trafico] T-1526: " + quitados + " nodos de calle fuera del muro desconectados (" + grafo.Cantidad + " en total). Área " + area.Value);
+                Debug.LogWarning("[Trafico] T-1526: no encontré el área del muro (piezas MU01/MU02/MU03, T1513_MuroCiudad o muro viejo); el grafo de " + grafo.Cantidad + " nodos no se recorta.");
+                return 0;
             }
+            int quitados = grafo.Recortar(area.Value);
+            Debug.Log("[Trafico] T-1526: área del muro " + area.Value + "; grafo de " + grafo.Cantidad + " nodos: " + quitados + " desconectados, " + grafo.NodosAjustados + " movidos al borde"
+                + (quitados == 0 && grafo.NodosAjustados == 0 ? " (nada fuera del área, o el área dejaba muy pocos nodos)" : "") + ".");
             return quitados;
         }
 
