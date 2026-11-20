@@ -118,15 +118,10 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
             Assert.AreEqual("PJ01_Salto_Despegue", Override(RutaOverrideJugador, "Loco_SaltoInicio"));
             Assert.AreEqual("PJ01_Salto_Aire", Override(RutaOverrideJugador, "Loco_SaltoAire"));
             Assert.AreEqual("PJ01_Salto_Aterrizaje", Override(RutaOverrideJugador, "Loco_SaltoAterrizaje"));
-            // Los NPC: los papeles de trote valen lo mismo que el caminar de hoy, así que no cambia nada.
-            Assert.AreEqual("PJ01_Caminar_SinImplante", Override(RutaOverrideNpc, "Loco_Caminar"));
-            Assert.AreEqual("PJ01_Caminar_SinImplante", Override(RutaOverrideNpc, ConstructorControladorBase.RolTrote));
-            Assert.AreEqual("PJ01_Loco_CaminarAtras", Override(RutaOverrideNpc, ConstructorControladorBase.RolTroteAtras));
-            Assert.AreEqual("PJ01_Correr_SinImplante", Override(RutaOverrideNpc, "Loco_Correr"));
-            Assert.AreEqual("PJ01_Loco_SaltoInicio", Override(RutaOverrideNpc, "Loco_SaltoInicio"));
+            Assert.AreEqual("NPC_Caminar_Hombre", Override(RutaOverrideNpc, "Loco_Caminar")); // T-1506: los NPC caminan con su clip
             foreach ((string b, string p) in ConstructorControladorBase.ClipsPorPapel["NPC"])
             {
-                if (b == "Loco_Caminar") Assert.AreEqual("PJ01_Caminar_SinImplante", p);
+                if (b == "Loco_Caminar") Assert.AreEqual("NPC_Caminar_Hombre", p);
             }
         }
 

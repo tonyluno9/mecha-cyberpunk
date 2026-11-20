@@ -33,6 +33,25 @@ namespace MechaCyberpunk.IA.APie
             }
         }
 
+        /// <summary>T-1506: empieza a huir: juega NPC_Asustarse una vez (brinco atrás con las manos a la cara) y sigue corriendo. Sin clip configurado, no hace nada.</summary>
+        public void AlAsustarCivil()
+        {
+            ConfigClipsNovaNpc config = ConfigClipsNovaNpc.Actual;
+            if (Visual == null || Visual.Animador == null || config == null || config.Asustarse == null || Visual.Caido)
+            {
+                return;
+            }
+            ReproductorClipUnico reproductor = Visual.GetComponent<ReproductorClipUnico>();
+            if (reproductor == null)
+            {
+                reproductor = Visual.gameObject.AddComponent<ReproductorClipUnico>();
+            }
+            if (!reproductor.Reproduciendo)
+            {
+                reproductor.Reproducir(Visual.Animador, config.Asustarse);
+            }
+        }
+
         /// <summary>El peatón vuelve a la vida (el pool lo reutiliza).</summary>
         public void AlRevivirCivil()
         {

@@ -42,7 +42,7 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             {
                 return limpio;
             }
-            string carpeta = nombre.StartsWith(PrefijoClipPJ01) ? CarpetaClipsPJ01 : Carpeta;
+            string carpeta = nombre.StartsWith(PrefijoClipPJ01) || ClipsNpcNovaT1506.EsClipBlender(nombre) ? CarpetaClipsPJ01 : Carpeta;
             foreach (string guid in AssetDatabase.FindAssets(nombre + " t:Model", new[] { carpeta }))
             {
                 string ruta = AssetDatabase.GUIDToAssetPath(guid);
@@ -80,6 +80,7 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             AssetDatabase.SaveAssets();
             CrearOverrides(c);
             AplicarClipsPorPapel();
+            ClipsNpcNovaT1506.AplicarOverridesExtra(); // T-1506: overrides de NPC mujer/mayor/celular, E15, E16, E18 y hacker
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             Debug.Log("[Personaje] T-561: controlador base y " + Papeles.Length + " overrides listos.");
@@ -198,6 +199,7 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
                 mapa[papel] = ClipsDeJugadorPJ01;
             }
             mapa["Jugador"] = ConCambios(ClipsDeJugadorPJ01, ClipsSoloJugador);
+            ClipsNpcNovaT1506.AgregarATabla(mapa); // T-1506: golpes, muerte, daño y manejar del jugador; NPC y guardias de Nova
             return mapa;
         }
 

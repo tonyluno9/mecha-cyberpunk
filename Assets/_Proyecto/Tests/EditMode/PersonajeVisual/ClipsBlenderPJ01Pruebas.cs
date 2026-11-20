@@ -74,16 +74,16 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
         [TestCase("Loco_SaltoAire", "PJ01_Salto_Aire")]
         [TestCase("Loco_SaltoAterrizaje", "PJ01_Salto_Aterrizaje")]
         [TestCase("Loco_Caida", "PJ01_Loco_Caida")]
-        [TestCase("Punos_GolpeIzq", "PJ01_Punos_GolpeIzq")]
-        [TestCase("Punos_GolpeDer", "PJ01_Punos_GolpeDer")]
+        [TestCase("Punos_GolpeIzq", "PJ01_Golpe2_Gancho")] // T-1506
+        [TestCase("Punos_GolpeDer", "PJ01_Golpe1_Directo")] // T-1506
         [TestCase("Punos_Fuerte", "PJ01_Punos_Fuerte")]
-        [TestCase("Muerte_Adelante", "PJ01_Muerte_Adelante")]
-        [TestCase("Muerte_Atras", "PJ01_Muerte_Atras")]
+        [TestCase("Muerte_Adelante", "PJ01_Muerte_Frente")] // T-1506
+        [TestCase("Muerte_Atras", "PJ01_Muerte_Espaldas")] // T-1506
         [TestCase("Muerte_Desmayo", "PJ01_Muerte_Desmayo")]
         [TestCase("Dano_Levantarse_BocaArriba", "PJ01_Dano_Levantarse_BocaArriba")]
         [TestCase("Dano_Levantarse_BocaAbajo", "PJ01_Dano_Levantarse_BocaAbajo")]
         [TestCase("Carro_Entrar", "PJ01_Carro_Entrar")]
-        [TestCase("Carro_Manejar_Bucle", "PJ01_Carro_Manejar")]
+        [TestCase("Carro_Manejar_Bucle", "PJ01_Manejar_Carro")] // T-1506
         [TestCase("Carro_Salir", "PJ01_Carro_Salir")]
         [TestCase("Rifle_Idle", "PJ01_Rifle_Idle")]
         [TestCase("Rifle_Caminar", "PJ01_Rifle_Caminar")]
@@ -112,7 +112,7 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
             var o = AssetDatabase.LoadAssetAtPath<AnimatorOverrideController>(ConstructorControladorBase.RutaOverride("NPC"));
             var pares = new List<KeyValuePair<AnimationClip, AnimationClip>>();
             o.GetOverrides(pares);
-            Assert.AreEqual("PJ01_Loco_Idle", pares.First(p => p.Key.name == "Loco_Idle").Value.name);
+            Assert.AreEqual("NPC_Esperar", pares.First(p => p.Key.name == "Loco_Idle").Value.name); // T-1506: el papel NPC espera con NPC_Esperar
         }
 
         [TestCase("PJ01_Loco_SaltoAire", false)]

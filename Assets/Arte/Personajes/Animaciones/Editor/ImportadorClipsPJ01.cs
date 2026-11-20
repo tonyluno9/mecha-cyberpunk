@@ -98,6 +98,7 @@ namespace MechaCyberpunk.Arte.Editor
         {
             if (System.Array.IndexOf(SinBucle, baseNombre) >= 0) { return false; }
             if (System.Array.IndexOf(ConBucle, baseNombre) >= 0) { return true; }
+            if (ClipsCiclicosT1506.EsCiclico(baseNombre)) { return true; }
             // La versión con implante se repite igual que la de sin implante (Loco_Idle_ConImplante como Loco_Idle).
             const string conImplante = "_ConImplante";
             if (baseNombre.EndsWith(conImplante)) { return TieneBucle(baseNombre.Substring(0, baseNombre.Length - conImplante.Length)); }
@@ -217,7 +218,7 @@ namespace MechaCyberpunk.Arte.Editor
                 clip.lastFrame = UltimoCuadroTelefono;
                 clip.events = new[] { new AnimationEvent { functionName = FuncionTelefonoEnOreja, time = CuadroTelefonoEnOreja / UltimoCuadroTelefono } };
             }
-            if (baseNombre.StartsWith("Pistola_Dano_"))
+            if (baseNombre.StartsWith("Pistola_Dano_") || ClipsCiclicosT1506.EsAditivo(baseNombre))
             {
                 clip.hasAdditiveReferencePose = true;
                 clip.additiveReferencePoseFrame = clip.firstFrame;
