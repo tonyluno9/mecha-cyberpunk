@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1410749954835941603}
-  - component: {fileID: 5904398314087896935}
+  - component: {fileID: 2894750124195160392}
   m_Layer: 0
   m_Name: ES01_Semaforo
   m_TagString: Untagged
@@ -33,8 +33,8 @@ Transform:
   - {fileID: 4503364414652965546}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &5904398314087896935
-BoxCollider:
+--- !u!136 &2894750124195160392
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -51,9 +51,11 @@ BoxCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.8, y: 4.5, z: 0.8}
-  m_Center: {x: 0.3, y: 2.25, z: 0}
+  serializedVersion: 2
+  m_Radius: 0.2
+  m_Height: 4.5
+  m_Direction: 1
+  m_Center: {x: 0, y: 2.25, z: 0}
 --- !u!1001 &4176406331105412417
 PrefabInstance:
   m_ObjectHideFlags: 0

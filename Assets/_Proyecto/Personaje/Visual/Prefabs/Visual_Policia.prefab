@@ -52,6 +52,8 @@ MonoBehaviour:
   velocidadClipCorrer: 3.19
   rapidezMinima: 0.6
   rapidezMaxima: 3
+  velocidadClipAtras: 0
+  velocidadClipLado: 0
   rapidezCapaArriba: 8
   suavizadoDireccion: 14
   segundosTumbarse: 0.35
@@ -129,15 +131,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 6e8a9aa3c2d41ab4b991a30d60d6e2d7, type: 3}
       propertyPath: m_LocalScale.x
-      value: 1.5235
+      value: 1.4962243
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6e8a9aa3c2d41ab4b991a30d60d6e2d7, type: 3}
       propertyPath: m_LocalScale.y
-      value: 1.5235
+      value: 1.4962243
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6e8a9aa3c2d41ab4b991a30d60d6e2d7, type: 3}
       propertyPath: m_LocalScale.z
-      value: 1.5235
+      value: 1.4962243
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6e8a9aa3c2d41ab4b991a30d60d6e2d7, type: 3}
       propertyPath: m_LocalPosition.x

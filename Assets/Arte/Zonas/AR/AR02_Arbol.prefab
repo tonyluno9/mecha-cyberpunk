@@ -42,7 +42,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8301512488538907272}
-  - component: {fileID: 8358788571232801629}
   m_Layer: 0
   m_Name: tronco
   m_TagString: Untagged
@@ -65,29 +64,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4506737611400593110}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!136 &8358788571232801629
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6121582372495751543}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.6
-  m_Height: 3.5
-  m_Direction: 1
-  m_Center: {x: -0.032215238, y: 1.75, z: -0.22908819}
 --- !u!1 &7565033924760166661
 GameObject:
   m_ObjectHideFlags: 0
@@ -97,7 +73,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1213912415913125930}
-  - component: {fileID: 2969469190799258517}
   m_Layer: 0
   m_Name: base
   m_TagString: Untagged
@@ -120,27 +95,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4506737611400593110}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &2969469190799258517
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7565033924760166661}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 5.960958, y: 0.5996746, z: 6.014636}
-  m_Center: {x: -0.005637169, y: 0.2998375, z: -0.26642323}
 --- !u!1 &8624541697984502512
 GameObject:
   m_ObjectHideFlags: 0
@@ -150,6 +104,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1142173101790883708}
+  - component: {fileID: 7764353271571641306}
   m_Layer: 0
   m_Name: AR02_Arbol
   m_TagString: Untagged
@@ -174,6 +129,29 @@ Transform:
   - {fileID: 4506737611400593110}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &7764353271571641306
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8624541697984502512}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.35
+  m_Height: 4
+  m_Direction: 1
+  m_Center: {x: 0, y: 2, z: 0}
 --- !u!1001 &6926792985481107435
 PrefabInstance:
   m_ObjectHideFlags: 0

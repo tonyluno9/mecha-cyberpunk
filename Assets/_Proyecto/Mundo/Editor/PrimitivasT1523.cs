@@ -225,6 +225,12 @@ namespace MechaCyberpunk.Mundo.Editor
             return lista;
         }
 
+        private static readonly string[] ClavesEstructura =
+        {
+            "asfalto", "calle", "calzada", "losa", "piso", "autopista", "pilar", "puente", "fachada", "relleno", "dintel",
+            "techo", "grada", "forro", "muro", "banqueta", "acera", "rampa", "escalon", "baranda", "barandal", "jaula",
+        };
+
         private static bool Tiene(string texto, params string[] claves)
         {
             string t = texto.ToLowerInvariant();
@@ -290,6 +296,12 @@ namespace MechaCyberpunk.Mundo.Editor
             if (s.y >= AltoCasaBaja && Mathf.Min(s.x, s.z) >= LadoMinimoCasaBaja && largoSuelo >= LadoLargoCasaBaja)
             {
                 return Cat.Edificio;
+            }
+            // Integración 20-nov B: piso, calles, autopista, puentes, fachadas y gradas son estructura con collider propio.
+            // Apagar su render deja pisos invisibles: se cuentan aparte y se quedan.
+            if (Tiene(ruta, ClavesEstructura))
+            {
+                return Cat.EstructuraInterior;
             }
             return Cat.Prop;
         }
@@ -468,6 +480,11 @@ namespace MechaCyberpunk.Mundo.Editor
                 }
                 bool poste;
                 string ruta = ElegirProp(grupo, miembros, g.size, out poste);
+                if (ruta == null && Mathf.Max(g.size.x, Mathf.Max(g.size.y, g.size.z)) > TamanoMaximoGrupo)
+                {
+                    Debug.Log("[T-1523] Se deja (grande, sin equivalente): " + RutaDe(grupo) + " " + ReemplazarEdificiosT1502.Tam(g.size));
+                    continue;
+                }
                 if (ruta == null)
                 {
                     foreach (Item m in miembros)
