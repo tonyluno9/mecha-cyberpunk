@@ -6,6 +6,7 @@ using MechaCyberpunk.Personaje.Combate;
 using MechaCyberpunk.Personaje.Interaccion;
 using MechaCyberpunk.Personaje.Jugador;
 using MechaCyberpunk.UI.Kit;
+using MechaCyberpunk.UI.Rueda;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -32,7 +33,7 @@ namespace MechaCyberpunk.UI.Hud
         private const float PasoEstrella = 49f;
         private const float Linea = 2f;
         private const float DistanciaAvisoCentro = 170f; // T-1329: px de referencia bajo el centro de la pantalla
-        private const float UmbralVidaBaja = 0.25f;
+        private const float UmbralVidaBaja = 0.4f; // T-1492: antes 0.25
 
         private static readonly Color Turquesa = new Color(0.30f, 0.92f, 0.90f, 1f);
         private static readonly Color TurquesaSuave = new Color(0.78f, 1f, 1f, 1f);
@@ -569,7 +570,7 @@ namespace MechaCyberpunk.UI.Hud
             Activar(grupoIzquierda, aPie);
             Activar(grupoEstrellas, aPie || carro);
             Activar(grupoObjetivo, (aPie || carro) && hud.GrupoObjetivo != null && hud.GrupoObjetivo.activeSelf);
-            Activar(grupoObjetos, aPie);
+            Activar(grupoObjetos, aPie || carro); // T-1492: también en carro (curarse en la persecución)
             Activar(grupoArma, aPie);
             ActualizarTitulo(aPie || carro);
             if (!aPie && !carro)
@@ -578,6 +579,7 @@ namespace MechaCyberpunk.UI.Hud
             }
             ActualizarEstrellas();
             ActualizarObjetivo();
+            ActualizarObjetos();
             if (!aPie)
             {
                 return;
@@ -585,7 +587,6 @@ namespace MechaCyberpunk.UI.Hud
             ActualizarVida();
             ActualizarEscudo();
             ActualizarDinero();
-            ActualizarObjetos();
             ActualizarArma();
             ActualizarAyudas();
             ActualizarCuerpo();
@@ -725,12 +726,14 @@ namespace MechaCyberpunk.UI.Hud
 
         private void ActualizarObjetos()
         {
-            IReadOnlyList<DatosConsumible> lista = consumibles != null ? consumibles.Disponibles : null;
+            // T-1492: solo las dos ranuras equipables (E y C; Z y X en carro), con su ícono, su cantidad y su tecla.
+            HudConsumibles hudConsumibles = hud != null ? hud.GetComponent<HudConsumibles>() : null;
             ServicioInventario inventario = Registro<ServicioInventario>.Actual;
+            bool enCarro = jugador != null && jugador.Modo == ModoJugador.Carro;
             for (int i = 0; i < ranuras.Length; i++)
             {
                 RanuraObjeto r = ranuras[i];
-                DatosConsumible c = lista != null && i < lista.Count ? lista[i] : null;
+                DatosConsumible c = hudConsumibles != null && i < RanurasConsumibles.Cantidad ? hudConsumibles.Equipado(i) : null;
                 Activar(r.Raiz, c != null && inventario != null);
                 if (c == null || inventario == null)
                 {
@@ -743,7 +746,8 @@ namespace MechaCyberpunk.UI.Hud
                 }
                 r.Icono.enabled = icono != null;
                 Poner(r.Nombre, icono == null ? c.Nombre : string.Empty);
-                Poner(r.Tecla, string.Empty); // T-991: los objetos se usan desde la rueda (Tab), ya no hay una tecla por casilla
+                UnityEngine.InputSystem.InputAction accion = enCarro ? AccionConsumirEquipado.DeCarro(i) : AccionConsumirEquipado.De(i);
+                Poner(r.Tecla, TeclasHud.Texto(accion, i == 0 ? "E" : "C").ToUpperInvariant());
                 Poner(r.Cantidad, "x" + inventario.Cantidad(c));
                 r.Fondo.color = FondoCasilla;
             }

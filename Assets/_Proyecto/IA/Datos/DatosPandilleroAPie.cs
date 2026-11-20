@@ -171,12 +171,29 @@ namespace MechaCyberpunk.IA.Datos
         [Min(1f)] [Tooltip("El daño que recibe mientras se recupera se multiplica por esto.")]
         [SerializeField] private float multiplicadorCastigo = 1.5f;
 
+        [Header("Percepción de disparos y perro robot (T-1494)")]
+        [Tooltip("Si es true, el guardia armado reacciona a un impacto o a un disparo del jugador oído desde cualquier distancia: va hacia donde vino, lo busca si no lo ve y lo ataca.")]
+        [SerializeField] private bool reaccionaADisparos;
+        [Tooltip("Hasta aquí oye el disparo del jugador (m).")]
+        [Min(1f)] [SerializeField] private float radioOido = 60f;
+        [Tooltip("Hasta aquí ve al jugador si no hay nada en medio (m).")]
+        [Min(1f)] [SerializeField] private float distanciaVision = 45f;
+        [Tooltip("Segundos que busca al jugador al llegar a su última posición conocida (s).")]
+        [Min(0.5f)] [SerializeField] private float segundosBusqueda = 6f;
+        [Tooltip("Si es true usa la conducta del perro robot de Nova (patrulla, detecta, corre y muerde).")]
+        [SerializeField] private bool perroRobot;
+
         [Header("Colores")]
         [SerializeField] private Color colorNormal = new Color(0.55f, 0.15f, 0.65f);
         [SerializeField] private Color colorGolpe = new Color(1f, 0.2f, 0.2f);
         [SerializeField] private Color colorKO = new Color(0.2f, 0.2f, 0.2f);
         [SerializeField] private Color colorAviso = new Color(1f, 0.55f, 0.1f);
 
+        public bool ReaccionaADisparos => reaccionaADisparos;
+        public float RadioOido => radioOido;
+        public float DistanciaVision => distanciaVision;
+        public float SegundosBusqueda => segundosBusqueda;
+        public bool PerroRobot => perroRobot;
         public bool JefeCuerpoACuerpo => jefeCuerpoACuerpo;
         public bool SeDefiende => seDefiende;
         public float SegundosDefensa => segundosDefensa;

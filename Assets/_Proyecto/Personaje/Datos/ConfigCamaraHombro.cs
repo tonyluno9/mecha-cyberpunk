@@ -42,7 +42,7 @@ namespace MechaCyberpunk.Personaje
         [Tooltip("Factor de la sensibilidad del ratón mientras dura el zoom.")]
         [Range(0.05f, 1f)] [SerializeField] private float sensibilidadZoom = 0.35f;
         [Tooltip("Sacudida hacia arriba de cada tiro con zoom (°).")]
-        [Min(0f)] [SerializeField] private float sacudidaZoom = 1.5f;
+        [Min(0f)] [SerializeField] private float sacudidaZoom = 0.3f;
         [Tooltip("Cuánto tarda la sacudida en volver (s).")]
         [Min(0.01f)] [SerializeField] private float duracionSacudida = 0.3f;
 
@@ -72,9 +72,9 @@ namespace MechaCyberpunk.Personaje
         [Tooltip("Rapidez del suavizado al entrar o salir de apuntar (1/s): mueve hombro, distancia y FOV. Menor = más lento.")]
         [Min(0.1f)] [SerializeField] private float suavizadoApuntar = 10f;
         [Tooltip("Balanceo: subida y bajada máxima de la cámara al correr (m).")]
-        [Min(0f)] [SerializeField] private float balanceoVertical = 0.035f;
+        [Min(0f)] [SerializeField] private float balanceoVertical = 0.0175f;
         [Tooltip("Balanceo: vaivén lateral máximo al correr (m).")]
-        [Min(0f)] [SerializeField] private float balanceoLateral = 0.02f;
+        [Min(0f)] [SerializeField] private float balanceoLateral = 0.01f;
         [Tooltip("Balanceo: pasos completos (dos pasos) por metro recorrido (ciclos/m).")]
         [Min(0.01f)] [SerializeField] private float balanceoCiclosPorMetro = 0.25f;
         [Tooltip("Balanceo: rapidez de la velocidad (m/s) con la que alcanza su amplitud completa (la de correr).")]
@@ -83,8 +83,8 @@ namespace MechaCyberpunk.Personaje
         [Min(0.1f)] [SerializeField] private float balanceoSuavizado = 6f;
         [Tooltip("Colisión: rapidez con la que la cámara recupera su distancia tras quedar pegada a un muro (s de amortiguado). Mayor = más lenta.")]
         [Min(0f)] [SerializeField] private float recuperacionColision = 0.35f;
-        [Tooltip("Temblor (impulsos de Cinemachine): ganancia del listener de la cámara. Multiplica la fuerza de TemblorCamara.Generar.")]
-        [Min(0f)] [SerializeField] private float gananciaTemblor = 1f;
+        [Tooltip("Temblor (impulsos de Cinemachine): ganancia del listener de la cámara. Multiplica la fuerza de TemblorCamara.Generar. T-1490: 0.18 (playtest 19-nov, casi sin temblor).")]
+        [Min(0f)] [SerializeField] private float gananciaTemblor = 0.18f;
 
         public float FovExtraCorrer => fovExtraCorrer;
         public float VelocidadInicioFovCorrer => velocidadInicioFovCorrer;

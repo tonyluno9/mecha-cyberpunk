@@ -26,6 +26,8 @@ namespace MechaCyberpunk.IA.APie
         [SerializeField] private DatosPandilleroAPie datos;
         [Tooltip("T-714: siempre en alerta contra el jugador (los SKULLS de refuerzo que bajan del carro), aunque no tengan un grupo con territorio.")]
         [SerializeField] private bool siempreAlerta;
+        [Tooltip("T-1497: cuánto más grande que el guardia de 1.85 m es este agente (x). Sube la boca del arma, el grito y la zona de la cabeza.")]
+        [Min(0.25f)] [SerializeField] private float escalaCuerpo = 1f;
         [Tooltip("Cuerpo que parpadea al recibir daño.")]
         [SerializeField] private Renderer cuerpo;
         [Tooltip("Pivote del hombro del brazo que golpea. Sube durante el aviso.")]
@@ -154,6 +156,12 @@ namespace MechaCyberpunk.IA.APie
 
         public DatosPandilleroAPie Datos => datos;
 
+        /// <summary>T-1497: factor de tamaño del agente respecto al guardia de referencia (1 = 1.85 m).</summary>
+        public float EscalaCuerpo => escalaCuerpo;
+
+        /// <summary>T-1497: de dónde sale el tiro: 1.4 m de alto y 0.4 m al frente a escala 1, más arriba y más lejos en los grandes.</summary>
+        private Vector3 BocaDelArma() => transform.position + Vector3.up * AlturaBoca * escalaCuerpo + transform.forward * AdelanteBoca * escalaCuerpo;
+
         /// <summary>Fase del patrón del jefe cuerpo a cuerpo (T-693); Acecho si no lo es.</summary>
         public ReglaJefeNova.Fase FaseJefe => reglaJefe != null ? reglaJefe.Actual : ReglaJefeNova.Fase.Acecho;
 
@@ -168,7 +176,7 @@ namespace MechaCyberpunk.IA.APie
         /// <summary>True cuando la pandilla dice que el jugador está en su territorio (solo pandilleros armados).</summary>
         public bool Alerta
         {
-            get => alerta || Provocado;
+            get => alerta || Provocado || (percepcion != null && percepcion.Activa);
             set
             {
                 if (Acosando)
@@ -186,6 +194,38 @@ namespace MechaCyberpunk.IA.APie
                 }
                 alerta = value || siempreAlerta || (datos != null && datos.EsPolicia);
             }
+        }
+
+        // T-1494: percepción de disparos (solo los guardias armados de Nova con datos.ReaccionaADisparos).
+        private ReglaPercepcionDisparo percepcion;
+        private const float DistanciaLlegadaBusqueda = 2f;
+        private const float GradosBusqueda = 90f;
+        private const float CercaniaDisparoJugador = 3f;
+
+        /// <summary>T-1494: la memoria de disparos (null si este pandillero no reacciona a disparos).</summary>
+        public ReglaPercepcionDisparo Percepcion => percepcion;
+
+        /// <summary>T-1494: avisa que el jugador disparó o pegó desde <paramref name="punto"/>: el guardia va hacia allá, lo busca y lo ataca.</summary>
+        public void AvisarDisparo(Vector3 punto)
+        {
+            if (percepcion != null && modelo != null && !modelo.EstaKO)
+            {
+                percepcion.Avisar(punto);
+            }
+        }
+
+        private void AlOirDisparo(Vector3 donde)
+        {
+            if (percepcion == null || EstaKO || raizJugador == null || !EsAtacable())
+            {
+                return;
+            }
+            // Solo los disparos del jugador (los de otros enemigos no cuentan).
+            if (DistanciaPlana(donde, raizJugador.position) > CercaniaDisparoJugador || DistanciaPlana(transform.position, donde) > datos.RadioOido)
+            {
+                return;
+            }
+            percepcion.Avisar(raizJugador.position);
         }
 
         private bool alerta;
@@ -260,7 +300,7 @@ namespace MechaCyberpunk.IA.APie
         {
             controlador = GetComponent<CharacterController>();
             ResolverGanchos();
-            if (datos == null || (!datos.UsaPistola && !datos.JefeCuerpoACuerpo && (cuerpo == null || brazo == null || piezasBrazo == null || piezasBrazo.Length == 0)))
+            if (datos == null || (!datos.UsaPistola && !datos.JefeCuerpoACuerpo && !datos.PerroRobot && (cuerpo == null || brazo == null || piezasBrazo == null || piezasBrazo.Length == 0)))
             {
                 Debug.LogError("[IA] Faltan referencias en PandilleroAPie de " + name, this);
                 enabled = false;
@@ -279,8 +319,15 @@ namespace MechaCyberpunk.IA.APie
             {
                 conducta = gameObject.AddComponent<ConductaEscaleraPolicia>(); // T-1303: si estás en un techo, sube por la escalera
             }
+            if (conducta == null && datos != null && datos.PerroRobot)
+            {
+                conducta = gameObject.AddComponent<ConductaPerroNova>(); // T-1494: el perro robot de Nova patrulla, te detecta y muerde
+            }
             filtroDanio = GetComponent<IFiltroDanioAPie>();
         }
+
+        /// <summary>T-1494: el paso de patrulla (m/s) alrededor de su punto, para las conductas que lo reusan.</summary>
+        public Vector3 PasoDePatrulla() => VelocidadDePatrulla();
 
         private void Iniciar()
         {
@@ -297,6 +344,10 @@ namespace MechaCyberpunk.IA.APie
                 regla = new ReglaPandilleroAPie(GranDistancia, GranDistancia, datos.DistanciaMaxTiro, datos.PreparacionGolpe,
                     datos.RecargaGolpe, datos.MargenLlegada);
                 tactica = new ReglaTacticaPandillero(datos.FraccionHuida, datos.SegundosCubierto, datos.SegundosAsomado);
+                if (datos.ReaccionaADisparos && !datos.EsPolicia)
+                {
+                    percepcion = new ReglaPercepcionDisparo(datos.SegundosBusqueda, DistanciaLlegadaBusqueda);
+                }
                 pistola = GetComponent<PistolaPandillero>();
                 if (pistola == null)
                 {
@@ -341,6 +392,10 @@ namespace MechaCyberpunk.IA.APie
             Activos.Add(this);
             Registro<ICriminalCalle>.Agregar(this);
             EventosJugador.Desperto += AlDespertarElJugador;
+            if (percepcion != null)
+            {
+                EventosRuido.Disparo += AlOirDisparo;
+            }
         }
 
         /// <summary>
@@ -363,6 +418,7 @@ namespace MechaCyberpunk.IA.APie
             regla?.Reiniciar();
             reglaJefe?.Reiniciar();
             tactica?.Reiniciar();
+            percepcion?.Reiniciar();
             patrulla?.Reiniciar();
             tieneCubierta = false;
             disparoReciente = false;
@@ -375,6 +431,7 @@ namespace MechaCyberpunk.IA.APie
         private void OnDisable()
         {
             EventosJugador.Desperto -= AlDespertarElJugador;
+            EventosRuido.Disparo -= AlOirDisparo;
             Registro<ICriminalCalle>.Quitar(this);
             Registro<ILecturaRival>.Quitar(this);
             Registro<IMarcaMapa>.Quitar(this);
@@ -386,6 +443,7 @@ namespace MechaCyberpunk.IA.APie
         private void OnDestroy()
         {
             EventosJugador.Desperto -= AlDespertarElJugador;
+            EventosRuido.Disparo -= AlOirDisparo;
             Registro<ILecturaRival>.Quitar(this);
             Registro<IMarcaMapa>.Quitar(this);
             Activos.Remove(this);
@@ -414,6 +472,7 @@ namespace MechaCyberpunk.IA.APie
             reglaJefe?.Reiniciar();
             ApagarBrillo();
             tactica?.Reiniciar();
+            percepcion?.Reiniciar();
             patrulla?.Reiniciar();
             tieneCubierta = false;
             disparoReciente = false;
@@ -468,6 +527,12 @@ namespace MechaCyberpunk.IA.APie
             {
                 // T-1009: si lo golpean o le disparan, pelea contra el jugador un buen rato.
                 provocadoHasta = Time.time + datos.SegundosDefensa;
+            }
+            if (percepcion != null && raizJugador != null && !modelo.EstaKO)
+            {
+                // T-1494: un impacto desde cualquier distancia: va hacia donde vino, y bajo fuego busca cubierta.
+                percepcion.Avisar(raizJugador.position);
+                disparoReciente = true;
             }
             if (datos.UsaPistola && !modelo.EstaKO && Grupo != null && !Acosando)
             {
@@ -645,12 +710,32 @@ namespace MechaCyberpunk.IA.APie
                     ObjetivoActual = criminal.transform;
                 }
             }
+            // T-1494: el guardia que solo sabe de ti por un disparo ve con línea de vista y, si te pierde, va a tu última posición y te busca.
+            bool soloPercepcion = percepcion != null && !alerta && atacable && ObjetivoActual == raizJugador;
+            bool ve = true;
+            bool buscando = false;
+            if (soloPercepcion)
+            {
+                Vector3 pechoReal = posicionJugador + Vector3.up * AlturaPechoJugador();
+                Vector3 bocaReal = BocaDelArma();
+                Vector3 haciaReal = pechoReal - bocaReal;
+                ve = haciaReal.magnitude <= datos.DistanciaVision && pistola.HayLinea(bocaReal, haciaReal.normalized, haciaReal.magnitude, recibe, out _);
+                percepcion.Avanzar(Time.deltaTime, ve, posicionJugador, transform.position);
+                posicionJugador = percepcion.Ultima;
+                buscando = percepcion.Actual == ReglaPercepcionDisparo.Estado.Buscando;
+                if (!percepcion.Activa)
+                {
+                    atacable = false;
+                    ObjetivoActual = null;
+                    provocadoHasta = -1f; // se cansó de buscar: no sigue omnisciente por la defensa
+                }
+            }
             float distancia = DistanciaPlana(transform.position, posicionJugador);
             // T-673: si el jugador se agacha su pecho baja con su cápsula y una cobertura baja le tapa la línea de vista.
             Vector3 pecho = posicionJugador + Vector3.up * (ObjetivoActual == raizJugador ? AlturaPechoJugador() : AlturaPecho);
-            Vector3 boca = transform.position + Vector3.up * AlturaBoca + transform.forward * AdelanteBoca;
+            Vector3 boca = BocaDelArma();
             bool puedeTirar = false;
-            if (atacable && distancia <= datos.DistanciaMaxTiro)
+            if (atacable && ve && distancia <= datos.DistanciaMaxTiro)
             {
                 Vector3 hacia = pecho - boca;
                 puedeTirar = pistola.HayLinea(boca, hacia.normalized, hacia.magnitude, recibe, out _);
@@ -760,6 +845,11 @@ namespace MechaCyberpunk.IA.APie
                     aMeta.y = 0f;
                     deseada = aMeta.magnitude > LlegadaCubierta ? aMeta.normalized * datos.Velocidad : Vector3.zero;
                 }
+                else if (soloPercepcion && !ve)
+                {
+                    // T-1494: no te ve: va a tu última posición conocida (y ahí te busca).
+                    deseada = buscando ? Vector3.zero : adelante * datos.Velocidad;
+                }
                 else if (distancia > datos.DistanciaMaxTiro || !puedeTirar && distancia > datos.DistanciaMinTiro)
                 {
                     deseada = adelante * datos.Velocidad;
@@ -778,11 +868,16 @@ namespace MechaCyberpunk.IA.APie
                 }
             }
 
-            if (deseada.sqrMagnitude < PasoMinimoCuadrado)
+            if (deseada.sqrMagnitude < PasoMinimoCuadrado && !soloPercepcion)
             {
                 deseada = VelocidadDePatrulla();
             }
             Vector3 mirada = atacable && !huyendo ? haciaJugador : deseada;
+            if (buscando && !ve)
+            {
+                // T-1494: buscando en su última posición conocida: gira mirando alrededor.
+                mirada = Quaternion.Euler(0f, GradosBusqueda * Time.deltaTime, 0f) * transform.forward;
+            }
             if (datos.EsPolicia && deseada.magnitude > VelocidadCaminarPolicia + 0.5f)
             {
                 mirada = deseada; // T-1303: corriendo mira hacia donde corre (no corre de lado ni de espaldas)
@@ -1223,7 +1318,7 @@ namespace MechaCyberpunk.IA.APie
             {
                 GameObject objeto = new GameObject("Grito");
                 objeto.transform.SetParent(transform, false);
-                objeto.transform.localPosition = Vector3.up * AlturaGrito;
+                objeto.transform.localPosition = Vector3.up * AlturaGrito * escalaCuerpo;
                 textoGrito = objeto.AddComponent<TextMesh>();
                 textoGrito.anchor = TextAnchor.LowerCenter;
                 textoGrito.alignment = TextAlignment.Center;

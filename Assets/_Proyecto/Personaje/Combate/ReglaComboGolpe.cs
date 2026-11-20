@@ -28,7 +28,10 @@ namespace MechaCyberpunk.Personaje.Combate
         public int Paso { get; private set; } = -1;
 
         /// <summary>El golpe en curso es el último del combo.</summary>
-        public bool EsGolpeFinal => Paso == golpes - 1;
+        public bool EsGolpeFinal => TieneGolpeFinal && Paso == golpes - 1;
+
+        /// <summary>T-1490: solo un combo de 3 o más golpes tiene golpe final fuerte; con 2 el ciclo es golpe 1, golpe 2 y vuelta al 1.</summary>
+        public bool TieneGolpeFinal => golpes >= 3;
 
         public bool HayBuffer => buffer > 0f;
 

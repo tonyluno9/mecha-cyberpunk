@@ -54,6 +54,56 @@ namespace MechaCyberpunk.IA.Datos
         [Tooltip("Un agente de Nova que estuvo a esta distancia del jugador ya lo vio: lo persigue aunque baje la búsqueda (m).")]
         [Min(1f)] [SerializeField] private float distanciaVista = 40f;
 
+        [Header("T-1498: naves que bajan soldados")]
+        [Tooltip("Naves (prefabs Dron_NV01, Dron_NV03_a, Dron_NV03_b): una a la vez, por turnos. Vacío: no hay naves.")]
+        [SerializeField] private GameObject[] naves = new GameObject[0];
+        [Min(0)] [SerializeField] private int soldadosNaveConCuatro = 2;
+        [Min(0)] [SerializeField] private int soldadosNaveConCinco = 4;
+        [Tooltip("Segundos tras empezar la búsqueda de Nova para que llegue la primera nave (s).")]
+        [Min(0f)] [SerializeField] private float segundosPrimeraNave = 8f;
+        [Tooltip("Segundos entre que una nave se va y llega la siguiente (s).")]
+        [Min(1f)] [SerializeField] private float segundosEntreNaves = 40f;
+        [Tooltip("Altura a la que flota la nave sobre el piso (m).")]
+        [Min(2f)] [SerializeField] private float alturaFlote = 10f;
+        [Tooltip("Altura mínima de flote aceptable si hay techo cerca (m).")]
+        [Min(2f)] [SerializeField] private float alturaMinimaFlote = 6f;
+        [Tooltip("Aire libre que necesita la nave sobre el piso además de su altura (m) y radio de su caja libre.")]
+        [Min(0f)] [SerializeField] private float margenAireNave = 2f;
+        [Min(1f)] [SerializeField] private float radioLibreNave = 5f;
+        [Tooltip("Velocidad de la nave al llegar y al irse (m/s).")]
+        [Min(1f)] [SerializeField] private float velocidadNave = 28f;
+        [Tooltip("Velocidad con que baja cada soldado por la cuerda (m/s).")]
+        [Min(0.5f)] [SerializeField] private float velocidadDescenso = 6f;
+        [Min(0.1f)] [SerializeField] private float segundosEntreSoldados = 0.7f;
+        [Tooltip("Distancia (m) desde donde llega y hacia donde se va.")]
+        [Min(20f)] [SerializeField] private float distanciaLlegadaNave = 140f;
+        [Tooltip("Material de la cuerda (opcional: sin él se usa uno sencillo).")]
+        [SerializeField] private Material materialCuerda;
+
+        public IReadOnlyList<GameObject> Naves => naves;
+        public int SoldadosNave(int estrellas) => MechaCyberpunk.IA.APie.ReglaNaveNova.Soldados(estrellas, soldadosNaveConCuatro, soldadosNaveConCinco);
+        public float SegundosPrimeraNave => segundosPrimeraNave;
+        public float SegundosEntreNaves => segundosEntreNaves;
+        public float AlturaFlote => alturaFlote;
+        public float AlturaMinimaFlote => alturaMinimaFlote;
+        public float MargenAireNave => margenAireNave;
+        public float RadioLibreNave => radioLibreNave;
+        public float VelocidadNave => velocidadNave;
+        public float VelocidadDescenso => velocidadDescenso;
+        public float SegundosEntreSoldados => segundosEntreSoldados;
+        public float DistanciaLlegadaNave => distanciaLlegadaNave;
+        public Material MaterialCuerda => materialCuerda;
+
+        /// <summary>Para el editor y las pruebas.</summary>
+        public void ConfigurarNaves(GameObject[] nuevas, int conCuatro, int conCinco)
+        {
+            naves = nuevas ?? new GameObject[0];
+            soldadosNaveConCuatro = conCuatro;
+            soldadosNaveConCinco = conCinco;
+        }
+
+        public void PonerMaterialCuerda(Material material) => materialCuerda = material;
+
         public float AlturaCaida => alturaCaida;
         public float SegundosDestello => segundosDestello;
         public float IntensidadDestello => intensidadDestello;

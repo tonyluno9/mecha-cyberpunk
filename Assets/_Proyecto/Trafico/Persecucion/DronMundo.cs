@@ -44,7 +44,22 @@ namespace MechaCyberpunk.Trafico.Persecucion
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void LimpiarActivos() => ActivosLista.Clear();
 
-        private void OnEnable() => ActivosLista.Add(this);
+        private void OnEnable()
+        {
+            ActivosLista.Add(this);
+            if (GetComponent<MarcadorDronHud>() == null)
+            {
+                gameObject.AddComponent<MarcadorDronHud>(); // T-1492: el marcador en pantalla del dron que te dispara
+            }
+        }
+
+        /// <summary>T-1492: segundos que el marcador sigue en pantalla después de un disparo.</summary>
+        public const float SegundosMarcaTrasTiro = 1.5f;
+
+        private float ultimoTiro = -1f;
+
+        /// <summary>T-1492: True mientras avisa (luz roja) o acaba de disparar: el HUD lo marca.</summary>
+        public bool Amenazando => !EstaCayendo && CalculoMarcadorDron.Amenazando(finAviso >= 0f, Time.time, ultimoTiro, SegundosMarcaTrasTiro);
 
         private void OnDisable()
         {
@@ -114,6 +129,58 @@ namespace MechaCyberpunk.Trafico.Persecucion
             config = numeros;
             posicionJugador = dondeEstaElJugador;
             vida = numeros != null ? numeros.VidaDron : -1f;
+        }
+
+
+        // ---- T-1498: variantes de combate (DR04, DR02, E13) ----
+
+        public const string NombreVisualVariante = "Visual_Variante";
+        private const string NombreVisualBase = "Visual_T1397";
+
+        private VarianteDronCombate variante;
+
+        /// <summary>La variante que se le aplicó (null: es el DR01 de siempre).</summary>
+        public VarianteDronCombate Variante => variante;
+
+        private float Danio => variante != null && variante.Danio > 0f ? variante.Danio : config.DanioDron;
+        private float SegundosEntreTiros => variante != null && variante.SegundosEntreTiros > 0f ? variante.SegundosEntreTiros : config.SegundosEntreTirosDron;
+        private float Acierto => variante != null && variante.Acierto > 0f ? variante.Acierto : config.AciertoDron;
+        private float AlturaOrbita => variante != null && variante.Altura > 0f ? variante.Altura : config.AlturaDron;
+
+        /// <summary>T-1498: vuelve a este dron una variante: su vida, daño, cadencia, altura y modelo. Se llama después de <see cref="Preparar"/>.</summary>
+        public void AplicarVariante(VarianteDronCombate datos)
+        {
+            variante = datos;
+            if (datos == null)
+            {
+                return;
+            }
+            if (datos.Vida > 0f)
+            {
+                vida = datos.Vida;
+            }
+            if (datos.RadioImpacto > 0f)
+            {
+                SphereCollider esfera = GetComponent<SphereCollider>();
+                if (esfera != null)
+                {
+                    esfera.radius = datos.RadioImpacto;
+                }
+            }
+            if (datos.Modelo == null)
+            {
+                return;
+            }
+            Transform viejo = transform.Find(NombreVisualBase);
+            if (viejo != null)
+            {
+                viejo.gameObject.SetActive(false);
+            }
+            GameObject visual = Instantiate(datos.Modelo, transform);
+            visual.name = NombreVisualVariante;
+            visual.transform.localPosition = Vector3.zero;
+            visual.transform.localRotation = Quaternion.identity;
+            visual.transform.localScale = Vector3.one * (datos.Escala > 0f ? datos.Escala : 1f);
         }
 
         // ---- T-730: derribar al dron ----
@@ -261,14 +328,15 @@ namespace MechaCyberpunk.Trafico.Persecucion
             }
             finAviso = -1f;
             PonerLuces(false);
-            proximoTiro = Time.time + config.SegundosEntreTirosDron;
+            proximoTiro = Time.time + SegundosEntreTiros;
+            ultimoTiro = Time.time;
             Disparos++;
             Vector3 origen = transform.position + Vector3.down * BajoElDron;
             Vector3 pecho = jugador.Raiz.position + Vector3.up * AlturaPecho;
             Vector3 direccion = (pecho - origen).normalized;
             EventosRuido.PublicarDisparo(origen);
             Sonidos.ReproducirEn(IdDisparo, origen);
-            bool acierta = Azar() <= config.AciertoDron;
+            bool acierta = Azar() <= Acierto;
             // T-421: si el jugador está agachado tras una cubierta, la bala pega en ella y no le llega.
             if (acierta && objetivo is IProtegeDeBalas protegido && protegido.ProtegeDe(origen, out Vector3 puntoCubierta))
             {
@@ -285,7 +353,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
             if (acierta)
             {
                 Aciertos++;
-                objetivo.RecibirDanio(new InfoDanio(config.DanioDron, TipoDanio.Disparo, pecho, direccion, null));
+                objetivo.RecibirDanio(new InfoDanio(Danio, TipoDanio.Disparo, pecho, direccion, null));
                 return;
             }
             float cerca = CalculoTiroDron.DistanciaALaBala(origen, direccion, pecho, out Vector3 masCercano);
@@ -392,7 +460,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
             {
                 return;
             }
-            Vector3 meta = CalculoSeparacionDrones.PuntoEnCirculo(jugador.Value, indiceOrbita, totalOrbita, config.RadioOrbitaDron, config.AlturaDron);
+            Vector3 meta = CalculoSeparacionDrones.PuntoEnCirculo(jugador.Value, indiceOrbita, totalOrbita, config.RadioOrbitaDron, AlturaOrbita);
             Vector3 haciaJugador = jugador.Value - transform.position;
             haciaJugador.y = 0f;
             float rumbo = haciaJugador.sqrMagnitude > 0.001f ? Mathf.Atan2(haciaJugador.x, haciaJugador.z) * Mathf.Rad2Deg : RumboActual();

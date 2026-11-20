@@ -17,6 +17,15 @@ namespace MechaCyberpunk.Personaje.Visual
         [Tooltip("Amplitud del vaivén de las manos al teclear (m).")]
         [SerializeField] private float vaiven = 0.02f;
 
+        [Tooltip("T-1506: si es true el Animator juega NPC_Hacker_Tecleando (sentado, en el controlador) y esta pose por huesos no hace nada. Se queda el componente por su altura de cadera.")]
+        [SerializeField] private bool usarClip;
+
+        /// <summary>True si el clip de Blender hace de pose sentada y no se tocan los huesos.</summary>
+        public bool UsarClip { get => usarClip; set => usarClip = value; }
+
+        /// <summary>T-1506: clip de Blender de teclear sentado; si el controlador lo tiene, reemplaza la pose por huesos.</summary>
+        public const string ClipSentado = "NPC_Hacker_Tecleando";
+
         private Animator animador;
         private Vector3 piso;
         private Transform raizVisual;
@@ -27,6 +36,17 @@ namespace MechaCyberpunk.Personaje.Visual
         private void Awake()
         {
             animador = GetComponent<Animator>();
+            // T-1506: el componente lo agrega la escena (no el prefab); si el controlador trae el clip sentado, el clip manda y no se tocan los huesos.
+            if (!usarClip && animador.runtimeAnimatorController != null)
+            {
+                foreach (AnimationClip clip in animador.runtimeAnimatorController.animationClips)
+                {
+                    if (clip != null && clip.name == ClipSentado)
+                    {
+                        usarClip = true;
+                    }
+                }
+            }
             VisualPersonaje visual = GetComponentInParent<VisualPersonaje>();
             raizVisual = visual != null ? visual.transform : transform;
         }
@@ -38,7 +58,7 @@ namespace MechaCyberpunk.Personaje.Visual
 
         private void LateUpdate()
         {
-            if (animador == null || !animador.isHuman)
+            if (usarClip || animador == null || !animador.isHuman)
             {
                 return;
             }

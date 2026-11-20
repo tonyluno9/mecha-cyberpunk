@@ -16,7 +16,7 @@ El código ya está listo con un hueco para cada uno. Cuando llegue el asset se 
 | Más NPCs de distintos tipos | Variedad | No se hizo |
 | Parque con árboles (referencia K09) | Ciudad | 18-nov B: prefabs listos en `Assets/Arte/Zonas/PZ/Plazas/` (T-1341); falta colocarlos en la ciudad (sesión A o Tony) y el piso de adoquín |
 | Texturas de techos y calles | Ciudad | Pedidas al chat de arte |
-| Maletín del dinero (MA01 por Tripo) | Atraco | No se hizo |
+| Maletín del dinero (MA01 por Tripo) | Atraco | T-1499: importado desde imageassets/modelos3d/MA01_Maletin.zip (ImportarMaletinT1499); ya no falta |
 | Lugares nuevos | Ciudad | Pedir referencia a Tony antes de armarlos |
 
 ## T-1337: mira del rifle de plasma (W07)
@@ -133,3 +133,22 @@ No existe aún. `ZonaTrafico_LasLomas` (T-1364) cubre por ahora los corredores n
 | Tramo de tablero elevado en curva (pieza AU) | K18 y A18: la curva que entra al túnel | AU02 es recto; la curva del ramal T-1415 se armó con tramos rectos |
 | Material o shader aditivo de estela de luz | Estelas del tráfico en el tablero (K18, A18) | Las de T-1464 son cintas opacas con degradado |
 | Columna AU04 más gruesa (5 m) con capitel | Primer plano de K18 | Hoy se escalan las de la rampa |
+
+## T-1499 (19-nov): pedidos para Blender y sin modelo
+| Qué | Para qué | Nota |
+| --- | --- | --- |
+| Rig (humanoide, como T-1381) de NP01_Senora, NP02_Trabajador, NP03_Joven, NP04_Senor, NP05_Vendedor y NP06_ChicaPunk | Completar la mezcla de peatones (hoy NP07 a NP14, 14 variantes en Peaton.prefab) | Solo existen los zips de Tripo sin rig en imageassets/modelos-nuevos/nuevos-17nov/; no hay FBX en imageassets/blender/personajes ni en Assets. Al llegar: copiar a imageassets/blender/personajes, agregar a PostprocesadorAssetsT250.PersonajesDeTripo y correr PersonajesNuevosT1389b y PeatonesBarriosT1482 |
+| Modelo 3D de las tragamonedas TR01 y TR02 | Casino (hoy Casino/Prefabs/Tragamonedas.prefab es de primitivas, CreadorTragamonedas) | Solo hay imageassets/modelos-nuevos/TR01_Tragamonedas.png y TR02_Tragamonedas.png; sin zip ni FBX no se pueden meter sin inventarlas |
+## 20-nov: edificios de primitivas (T-1502)
+Medidas del cubo (ancho x alto x fondo, m) leídas de Ciudad_Prologo. Lo de las afueras (`T530_Afueras/Salida_N/Edificio`, 102 cubos) lo reemplaza `ReemplazarEdificiosT1502.Reemplazar` con edificios que ya existen; lo que no llene su hueco queda con la marca `T1502_Pendiente` y en `Logs/t1502-pendientes.txt`.
+
+| Qué | Para qué | Medida y lugar |
+| --- | --- | --- |
+| ED01 a ED05 (edificios de nuevos-19nov) | Variedad de edificios de las afueras y los barrios | Solo hay PNG; falta el modelo |
+| Torre alta de oficinas (con azotea y antena) | Skyline de NeonAlto: 7 torres, 14 cuerpos | ~34 x 128 x 28 en `T530_NeonAlto/Torres/Torre_N/Cuerpo` |
+| Torre de fondo muy alta | Horizonte de Suburbios: 24 torres | ~29 x 209 x 48 en `T530_Suburbios/Horizonte/Torre_N/Cuerpo` |
+| Muro de la ciudad (modelo exacto, modular) | Orillas de las afueras: 10 tramos | 2 x 6 x ~78 en `T530_Afueras/Orillas/Muro` |
+| Edificio de 10 a 28 m con fachada propia (sin kit) | Cuerpos de barrio hoy vestidos con piezas C01/C02/C03 sobre un cubo | ~22 x 12 x 23 en `S2n_Calles/Edificios/Edificio` (8 cubos, con LODGroup: no se cambian) |
+| Cuerpo del taller mecánico | Local con interior | 24.7 x 17.9 x 8.3 en `S2n_TallerMecanico/Cuerpo/*` (el interior depende de él: se deja) |
+
+Se dejan sin cambiar a propósito (el interior o el kit dependen de ellos): `Lugar_*`, `Cuerpo_T*`, muros de `Locales/*`, Armería (T-1503) y el parque de Plaza_K09 (T-1499).

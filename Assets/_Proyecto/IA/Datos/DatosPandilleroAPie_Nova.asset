@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: DatosPandilleroAPie_Nova
   m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.Datos.DatosPandilleroAPie
   nombre: GUARDIA NOVA
-  vidaMaxima: 300
+  vidaMaxima: 420
   danioGolpe: 30
   preparacionGolpe: 0.35
   recargaGolpe: 0.85
@@ -85,6 +85,11 @@ MonoBehaviour:
   distanciaMinCarga: 4
   distanciaMaxCarga: 14
   multiplicadorCastigo: 1.5
+  reaccionaADisparos: 1
+  radioOido: 60
+  distanciaVision: 45
+  segundosBusqueda: 6
+  perroRobot: 0
   colorNormal: {r: 0.62, g: 0.4, b: 1, a: 1}
   colorGolpe: {r: 1, g: 0.2, b: 0.2, a: 1}
   colorKO: {r: 0.2, g: 0.2, b: 0.2, a: 1}

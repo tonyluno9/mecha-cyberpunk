@@ -51,7 +51,7 @@ namespace MechaCyberpunk.Arte.Editor
         /// SaltoAterrizaje; en una caída larga se queda en la última pose y entra Loco_Caida, que sí es bucle; BITACORA 03, ajuste 2), y los que en Mixamo llevaban "_Bucle" en el
         /// archivo y aquí no (Carro_Manejar, Moto_Manejar, Inter_VerTelefono).
         /// </summary>
-        public static readonly string[] SinBucle = { "Loco_SaltoAire", "Escalera_Entrar", "Escalera_SalirArriba", "Escalera_SalirAbajo", "Parkour_SaltarBarda", "Parkour_TreparBorde", "Parkour_RodarCaida", "CoberturaRifle_Entrar", "CoberturaRifle_Disparo", "Carro_SacarConductor", "Conductor_SerSacado" };
+        public static readonly string[] SinBucle = { "Salto_Despegue", "Salto_Aterrizaje", "Aterrizaje_Fuerte", "Loco_SaltoAire", "Escalera_Entrar", "Escalera_SalirArriba", "Escalera_SalirAbajo", "Parkour_SaltarBarda", "Parkour_TreparBorde", "Parkour_RodarCaida", "CoberturaRifle_Entrar", "CoberturaRifle_Disparo", "Carro_SacarConductor", "Conductor_SerSacado" };
 
         /// <summary>T-964: último cuadro (30 fps) del tramo útil de PJ01_Inter_Telefono: el teléfono ya está en el oído (7.8 s de 37; el estado sale al 88 %, el evento tiene que quedar antes).</summary>
         public const float UltimoCuadroTelefono = 235f;
@@ -59,12 +59,46 @@ namespace MechaCyberpunk.Arte.Editor
         public const float CuadroTelefonoEnOreja = 195f;
         /// <summary>T-964: función del evento (la recibe ReceptorEventosArma en Personaje.Visual).</summary>
         public const string FuncionTelefonoEnOreja = "AlTelefonoEnOreja";
-        public static readonly string[] ConBucle = { "Carro_Manejar", "Moto_Manejar", "Inter_VerTelefono", "Escalera_Subir", "Escalera_Bajar", "CoberturaRifle_Idle" };
+        // T-1505: locomoción, escaleras y salto en el aire de Blender (el último cuadro es el primero: bucle perfecto).
+        public static readonly string[] ConBucle = { "Caminar", "Trote", "Sprint", "Trote_Izquierda", "Trote_Derecha", "Trote_Atras", "Escaleras_Subir", "Escaleras_Bajar", "Salto_Aire", "Carro_Manejar", "Moto_Manejar", "Inter_VerTelefono", "Escalera_Subir", "Escalera_Bajar", "CoberturaRifle_Idle" };
+
+        /// <summary>T-1505: evento de pisada (lo recibe ReceptorPasosPJ01 en Personaje.Visual; la prueba EditMode compara el nombre con ReglaPasosAnimados.FuncionPaso).</summary>
+        public const string FuncionPasoPJ01 = "AlPasoPJ01";
+
+        /// <summary>
+        /// T-1505: clips con pisadas (BITACORA, pedido 19-nov noche): fotogramas del archivo (1 a <c>Cuadros</c>, 30 fps) en que toca el pie izquierdo y el derecho.
+        /// El izquierdo cae en el fotograma 1 (= el último, bucle perfecto).
+        /// </summary>
+        public static readonly (string Base, int Cuadros, int Izquierdo, int Derecho)[] ClipsConPisadas =
+        {
+            ("Caminar", 31, 1, 16), ("Trote", 21, 1, 11), ("Sprint", 19, 1, 10),
+            ("Trote_Izquierda", 21, 1, 11), ("Trote_Derecha", 21, 1, 11), ("Trote_Atras", 21, 1, 11),
+        };
+
+        /// <summary>Fracción mínima del clip del evento del cuadro 1: justo en 0 no dispara de forma fiable al arrancar el bucle.</summary>
+        public const float FraccionMinimaEvento = 0.005f;
+
+        /// <summary>Los eventos de pisada de un clip por su nombre base (vacío si no lleva). El tiempo del importador es la fracción del clip (0 a 1); intParameter: pie 0 izquierdo, 1 derecho.</summary>
+        public static AnimationEvent[] EventosPisadas(string baseNombre)
+        {
+            foreach ((string nombre, int cuadros, int izq, int der) in ClipsConPisadas)
+            {
+                if (nombre != baseNombre) { continue; }
+                float Fraccion(int cuadro) => Mathf.Max(FraccionMinimaEvento, (cuadro - 1f) / (cuadros - 1f));
+                return new[]
+                {
+                    new AnimationEvent { functionName = FuncionPasoPJ01, time = Fraccion(izq), intParameter = 0 },
+                    new AnimationEvent { functionName = FuncionPasoPJ01, time = Fraccion(der), intParameter = 1 },
+                };
+            }
+            return new AnimationEvent[0];
+        }
 
         public static bool TieneBucle(string baseNombre)
         {
             if (System.Array.IndexOf(SinBucle, baseNombre) >= 0) { return false; }
             if (System.Array.IndexOf(ConBucle, baseNombre) >= 0) { return true; }
+            if (ClipsCiclicosT1506.EsCiclico(baseNombre)) { return true; }
             // La versión con implante se repite igual que la de sin implante (Loco_Idle_ConImplante como Loco_Idle).
             const string conImplante = "_ConImplante";
             if (baseNombre.EndsWith(conImplante)) { return TieneBucle(baseNombre.Substring(0, baseNombre.Length - conImplante.Length)); }
@@ -173,6 +207,10 @@ namespace MechaCyberpunk.Arte.Editor
             clip.lockRootHeightY = true;
             clip.keepOriginalPositionY = true;
             clip.events = ImportadorMixamo.EventosDe(baseNombre, clip.firstFrame, clip.lastFrame);
+            if (clip.events.Length == 0)
+            {
+                clip.events = EventosPisadas(baseNombre);
+            }
             if (baseNombre == "Inter_Telefono")
             {
                 // T-964: el clip dura 37 s (saca el teléfono, se lo lleva al oído y habla 25 s). El gesto usa solo sacar y llevar al oído; un evento avisa cuando llega.
@@ -180,7 +218,7 @@ namespace MechaCyberpunk.Arte.Editor
                 clip.lastFrame = UltimoCuadroTelefono;
                 clip.events = new[] { new AnimationEvent { functionName = FuncionTelefonoEnOreja, time = CuadroTelefonoEnOreja / UltimoCuadroTelefono } };
             }
-            if (baseNombre.StartsWith("Pistola_Dano_"))
+            if (baseNombre.StartsWith("Pistola_Dano_") || ClipsCiclicosT1506.EsAditivo(baseNombre))
             {
                 clip.hasAdditiveReferencePose = true;
                 clip.additiveReferencePoseFrame = clip.firstFrame;

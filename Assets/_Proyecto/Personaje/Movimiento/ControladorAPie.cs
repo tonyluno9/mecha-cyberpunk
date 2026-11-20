@@ -24,8 +24,25 @@ namespace MechaCyberpunk.Personaje.Movimiento
         private readonly LimitadorPasos limitadorPasos = new LimitadorPasos();
         private float alturaMaximaAire;
 
+        // T-1505: caminar de verdad (tecla que alterna) y pasos por evento de animación (los clips de locomoción de PJ01 traen la pisada).
+        private readonly InputAction caminarLento = new InputAction("CaminarLento", InputActionType.Button, ReglaCaminarLento.TeclaCaminar);
+        private readonly LimitadorPasos limitadorPasosAnimados = new LimitadorPasos(SegundosMinimosEntrePasosAnimados);
+        private const float SegundosMinimosEntrePasosAnimados = 0.12f;
+        private ReceptorPasosPJ01 receptorPasos;
+        private bool pasosPorAnimacion;
+        private bool corriendoAhora;
+
+        /// <summary>T-1505: true si el jugador va caminando de verdad (1.6 m/s) por la tecla de caminar.</summary>
+        public bool CaminandoLento { get; private set; }
+
+        /// <summary>T-1505: pasos que sonaron por evento de animación (para pruebas).</summary>
+        public int PasosAnimados { get; private set; }
+
+        /// <summary>T-1505: true mientras el clip activo lleva eventos de pisada: el sonido por distancia está apagado.</summary>
+        public bool PasosPorAnimacion => pasosPorAnimacion;
+
         /// <summary>Pasos dados (para pruebas) y el ID del último paso que sonó.</summary>
-        public int PasosDados => zancada.Pasos;
+        public int PasosDados => zancada.Pasos + PasosAnimados;
         public string UltimoIdPaso { get; private set; }
         /// <summary>T-1489: al aterrizar, con los metros que cayó (para el polvo).</summary>
         public event System.Action<float> Aterrizo;
@@ -112,6 +129,30 @@ namespace MechaCyberpunk.Personaje.Movimiento
         public bool MovimientoSuspendido { get; set; }
         private Vector3 impulso;
 
+        // T-1493: mientras el Animator juega una animación que bloquea (ReglaBloqueoAnimacion) no se camina, gira ni salta; con tope de tiempo.
+        private VisualPersonaje visualBloqueo;
+        private float segundosBloqueado;
+        /// <summary>T-1493: true si ahora mismo una animación bloqueante (bajar de la moto, abrir puerta...) detiene el movimiento.</summary>
+        public bool BloqueadoPorAnimacion { get; private set; }
+
+        private bool ActualizarBloqueoAnimacion(float dt)
+        {
+            if (visualBloqueo == null)
+            {
+                visualBloqueo = GetComponentInChildren<VisualPersonaje>();
+            }
+            Animator a = visualBloqueo != null ? visualBloqueo.Animador : null;
+            bool estadoBloquea = false;
+            if (a != null && a.isActiveAndEnabled && a.runtimeAnimatorController != null)
+            {
+                estadoBloquea = ReglaBloqueoAnimacion.HashBloquea(a.GetCurrentAnimatorStateInfo(0).shortNameHash)
+                    || (a.IsInTransition(0) && ReglaBloqueoAnimacion.HashBloquea(a.GetNextAnimatorStateInfo(0).shortNameHash));
+            }
+            segundosBloqueado = estadoBloquea ? segundosBloqueado + dt : 0f;
+            BloqueadoPorAnimacion = ReglaBloqueoAnimacion.DebeBloquear(estadoBloquea, segundosBloqueado);
+            return BloqueadoPorAnimacion;
+        }
+
         private void Awake()
         {
             controlador = GetComponent<CharacterController>();
@@ -170,6 +211,7 @@ namespace MechaCyberpunk.Personaje.Movimiento
             saltar.action.Enable();
             atacar.action.Enable();
             apuntar?.action.Enable();
+            caminarLento.Enable();
             implantes.Activar();
             AplicarCursor(true);
         }
@@ -184,7 +226,44 @@ namespace MechaCyberpunk.Personaje.Movimiento
             saltar.action.Disable();
             atacar.action.Disable();
             apuntar?.action.Disable();
+            caminarLento.Disable();
             implantes.Desactivar();
+            SuscribirReceptor(null);
+        }
+
+        private void OnDestroy()
+        {
+            caminarLento.Dispose();
+        }
+
+        // T-1505: el visual puede cambiar de modelo: se vuelve a suscribir al receptor de pisadas del visual actual.
+        private void SuscribirReceptor(ReceptorPasosPJ01 nuevo)
+        {
+            if (receptorPasos == nuevo)
+            {
+                return;
+            }
+            if (receptorPasos != null)
+            {
+                receptorPasos.Paso -= AlPasoAnimado;
+            }
+            receptorPasos = nuevo;
+            if (receptorPasos != null)
+            {
+                receptorPasos.Paso += AlPasoAnimado;
+            }
+        }
+
+        private void AlPasoAnimado(int pie)
+        {
+            if (!enPiso || !limitadorPasosAnimados.Permitir(Time.time))
+            {
+                return;
+            }
+            PasosAnimados++;
+            UltimoIdPaso = IdPasoDelPiso();
+            Sonidos.ReproducirEn(UltimoIdPaso, transform.position);
+            PasoDado?.Invoke(transform.position, UltimoIdPaso, corriendoAhora);
         }
 
         /// <summary>Congela o libera el control (lo usan el KO y el carro). Al congelar se detiene el movimiento.</summary>
@@ -262,12 +341,21 @@ namespace MechaCyberpunk.Personaje.Movimiento
                 return;
             }
 
-            Vector2 entrada = mover.action.ReadValue<Vector2>();
-            bool quiereCorrer = correr.action.IsPressed() && !apuntando;
+            bool bloqueadoAnim = ActualizarBloqueoAnimacion(dt);
+            Vector2 entrada = bloqueadoAnim ? Vector2.zero : mover.action.ReadValue<Vector2>();
+            bool quiereCorrer = correr.action.IsPressed() && !apuntando && !bloqueadoAnim;
+            CaminandoLento = ReglaCaminarLento.Alternar(CaminandoLento, caminarLento.WasPressedThisFrame());
+            corriendoAhora = quiereCorrer;
+            if (visualBloqueo == null)
+            {
+                visualBloqueo = GetComponentInChildren<VisualPersonaje>();
+            }
+            SuscribirReceptor(visualBloqueo != null ? visualBloqueo.ReceptorPasos : null);
+            pasosPorAnimacion = receptorPasos != null && receptorPasos.ClipActivoTienePasos();
             Vector2 velocidad = movimiento.ActualizarHorizontal(entrada, quiereCorrer,
-                enPiso, dt, datos.VelocidadCaminar * (Habilidades != null ? Habilidades.FactorCaminar : 1f),
+                enPiso, dt, ReglaCaminarLento.VelocidadCaminar(CaminandoLento, datos.VelocidadCaminar) * (Habilidades != null ? Habilidades.FactorCaminar : 1f),
                 EfectosAPie.VelocidadCorrer(datos, implantes.Efectos) * (Habilidades != null ? Habilidades.FactorCorrer : 1f), config.AceleracionPiso, config.FrenadoPiso, config.ControlAire);
-            bool quiereSaltar = !SaltoBloqueado && saltar.action.WasPressedThisFrame();
+            bool quiereSaltar = !SaltoBloqueado && !bloqueadoAnim && saltar.action.WasPressedThisFrame();
             float vertical = movimiento.ActualizarVertical(enPiso, quiereSaltar, dt,
                 EfectosAPie.AlturaSalto(datos, implantes.Efectos) * (Habilidades != null ? Habilidades.FactorSalto : 1f), config.Gravedad);
             if (enPiso && quiereSaltar && vertical > 0f)
@@ -280,7 +368,10 @@ namespace MechaCyberpunk.Personaje.Movimiento
             Vector3 horizontal = marco * new Vector3(velocidad.x, 0f, velocidad.y);
             horizontal = horizontal * FactorVelocidad * FactorExtraVelocidad + DesplazamientoExterno + impulso;
             impulso = Vector3.MoveTowards(impulso, Vector3.zero, config.FrenadoPiso * config.ControlAire * dt);
-            GirarCuerpo(dt, horizontal);
+            if (!bloqueadoAnim)
+            {
+                GirarCuerpo(dt, horizontal);
+            }
             bool estabaEnPiso = enPiso;
             controlador.Move(horizontal * dt + Vector3.up * vertical);
             enPiso = controlador.isGrounded;
@@ -315,7 +406,7 @@ namespace MechaCyberpunk.Personaje.Movimiento
                 zancada.Reiniciar(MetrosPorPasoCaminar * FraccionPrimerPaso);
             }
             estabaMoviendo = moviendo;
-            if (moviendo && zancada.Avanzar(new Vector2(horizontal.x, horizontal.z).magnitude * dt, quiereCorrer, enPiso) > 0
+            if (moviendo && !pasosPorAnimacion && zancada.Avanzar(new Vector2(horizontal.x, horizontal.z).magnitude * dt, quiereCorrer, enPiso) > 0
                 && limitadorPasos.Permitir(Time.time))
             {
                 UltimoIdPaso = IdPasoDelPiso();

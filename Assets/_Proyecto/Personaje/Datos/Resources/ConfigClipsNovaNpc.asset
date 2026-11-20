@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9b71c47a5acd834186eefdcf1b2ca8a, type: 3}
+  m_Name: ConfigClipsNovaNpc
+  m_EditorClassIdentifier: MechaCyberpunk.Personaje.Visual::MechaCyberpunk.Personaje.Visual.ConfigClipsNovaNpc
+  caidaAire: {fileID: -4310133368712878802, guid: a4b97fb704d26c24d80a7294afa7ce44, type: 3}
+  caidaAterrizaje: {fileID: 1174725764441994575, guid: 6dc3f1a5ba95981478c0feec058ed681, type: 3}
+  caidaLevantarse: {fileID: -1488352137952123842, guid: 8830054fdbe190846b74dd3a754acbc6, type: 3}
+  asustarse: {fileID: 2363089613603330901, guid: 182174f9e2f0ec441a7cc33a3baaa853, type: 3}

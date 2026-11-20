@@ -79,7 +79,7 @@ namespace MechaCyberpunk.Trafico.Peatones
             Vector3? jugador = posicionJugador?.Invoke();
             if (mato)
             {
-                Matar();
+                Matar(info.Direccion);
                 // T-1305: matar a un civil suma calor (con testigos, lo decide el decorador de calor) si lo hizo el jugador.
                 if (config != null && ReglaCivil.EsAgresionDelJugador(info.Tipo, info.Punto, info.Direccion, jugador, info.Atacante != null))
                 {
@@ -88,6 +88,8 @@ namespace MechaCyberpunk.Trafico.Peatones
             }
             else
             {
+                // T-1495: reacción de daño en el visual (la recibe el puente de IA, si está) y luego huye o pelea.
+                SendMessage(MensajeHerido, info.Direccion, SendMessageOptions.DontRequireReceiver);
                 ReaccionarAlGolpe(info, jugador);
             }
             return new ResultadoDanio(Mathf.Min(antes, info.Cantidad), TipoBloqueo.Ninguno, mato);
@@ -150,10 +152,14 @@ namespace MechaCyberpunk.Trafico.Peatones
             sentidoDecidido = false;
             calculo.MultiplicadorVelocidad = config.MultiplicadorHuida;
             calculo.CancelarEspera();
+            SendMessage(MensajeAsustado, SendMessageOptions.DontRequireReceiver);
         }
 
         /// <summary>Lo mata: cae, queda tirado <see cref="SegundosCuerpo"/> s y se esconde. Cancela cualquier llamada.</summary>
-        public void Matar()
+        public void Matar() => Matar(null);
+
+        /// <summary>T-1495: igual, con la dirección del golpe (decide si cae de frente, de espalda o desmayado).</summary>
+        public void Matar(Vector3? direccionGolpe)
         {
             if (Muerto)
             {
@@ -166,6 +172,14 @@ namespace MechaCyberpunk.Trafico.Peatones
             {
                 capsula.enabled = false;
             }
+            // T-1495: con un visual que sabe morir (parámetro Caer) cae con su animación; si no, tirado al piso como antes.
+            if (TieneMuerteAnimada())
+            {
+                progresoCaida = 1f;
+                SendMessage(MensajeMuerte, direccionGolpe ?? -transform.forward, SendMessageOptions.DontRequireReceiver);
+                Murio?.Invoke(this);
+                return;
+            }
             // T-1305: cae tirado al piso (90°) en SegundosCaida; la rotación se interpola en Update.
             rotacionInicialCaida = transform.rotation;
             rotacionTirado = Quaternion.Euler(90f, transform.eulerAngles.y, 0f);
@@ -177,6 +191,34 @@ namespace MechaCyberpunk.Trafico.Peatones
             }
             transform.position += Vector3.up * RadioCapsula;
             Murio?.Invoke(this);
+        }
+
+        /// <summary>Mensajes (SendMessage) que recibe el puente de animación del visual; Trafico no referencia a Personaje.</summary>
+        public const string MensajeHerido = "AlHerirCivil";
+        public const string MensajeMuerte = "AlMorirCivil";
+        public const string MensajeRevivir = "AlRevivirCivil";
+        /// <summary>T-1506: empieza a huir (el puente juega NPC_Asustarse una vez).</summary>
+        public const string MensajeAsustado = "AlAsustarCivil";
+        public const string ParametroCaer = "KO"; // ReglasVisual.Caer: el parámetro Bool que tumba al personaje
+
+        /// <summary>True si algún Animator del peatón tiene el parámetro de caer, "KO" (controlador base o propio, con clip de muerte).</summary>
+        public bool TieneMuerteAnimada()
+        {
+            foreach (Animator animador in GetComponentsInChildren<Animator>(false))
+            {
+                if (animador == null || animador.runtimeAnimatorController == null)
+                {
+                    continue;
+                }
+                foreach (AnimatorControllerParameter p in animador.parameters)
+                {
+                    if (p.name == ParametroCaer && p.type == AnimatorControllerParameterType.Bool)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
 
         private void Awake()
@@ -210,6 +252,7 @@ namespace MechaCyberpunk.Trafico.Peatones
                 r.enabled = true;
             }
             transform.rotation = Quaternion.identity;
+            SendMessage(MensajeRevivir, SendMessageOptions.DontRequireReceiver);
         }
 
         private Vector3[] puntos;

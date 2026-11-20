@@ -35,6 +35,9 @@ namespace MechaCyberpunk.Personaje.Editor
             public float dispersion;
             public float dispersionApuntando;
             public float alcance;
+            // T-1491: caída de daño por distancia (1 y 1 = sin caída).
+            public float inicioCaida = 1f;
+            public float danioMinimo = 1f;
             public int[] precio;
             // T-1013: armas especiales.
             public TipoDisparoArma tipo = TipoDisparoArma.Bala;
@@ -53,18 +56,18 @@ namespace MechaCyberpunk.Personaje.Editor
                 cargador = new[] { 8, 10, 12, 15 }, recarga = new[] { 1.4f, 1.2f, 1.0f, 0.8f }, entre = 0.25f, alcance = 60f,
                 precio = new[] { 150, 150, 300, 500 } },
             new Familia { arma = ArmaAPie.Escopeta, clave = "escopeta", nombre = "Escopeta", danio = new[] { 9f, 11f, 13f, 16f }, perdigones = 8,
-                cargador = new[] { 4, 5, 6, 8 }, recarga = new[] { 2.4f, 2.0f, 1.7f, 1.4f }, entre = 0.9f, alcance = 20f,
+                cargador = new[] { 4, 5, 6, 8 }, recarga = new[] { 2.4f, 2.0f, 1.7f, 1.4f }, entre = 0.9f, alcance = 20f, inicioCaida = 0.3f, danioMinimo = 0.2f,
                 dispersion = 6f, dispersionApuntando = 4f, precio = new[] { 350, 250, 450, 700 } },
             new Familia { arma = ArmaAPie.Fusil, clave = "fusil", nombre = "Fusil", danio = new[] { 15f, 18f, 21f, 25f },
-                cargador = new[] { 30, 30, 35, 40 }, recarga = new[] { 2.0f, 1.8f, 1.6f, 1.3f }, entre = 0.11f, automatica = true, alcance = 70f,
-                dispersion = 2.5f, dispersionApuntando = 1.2f, precio = new[] { 700, 350, 600, 850 } },
+                cargador = new[] { 30, 30, 35, 40 }, recarga = new[] { 2.0f, 1.8f, 1.6f, 1.3f }, entre = 0.11f, automatica = true, alcance = 150f, inicioCaida = 0.6f, danioMinimo = 0.6f,
+                dispersion = 1.5f, dispersionApuntando = 0.6f, precio = new[] { 700, 350, 600, 850 } },
             new Familia { arma = ArmaAPie.Sniper, clave = "sniper", nombre = "Sniper", danio = new[] { 70f, 85f, 100f, 120f },
-                cargador = new[] { 4, 5, 6, 7 }, recarga = new[] { 2.8f, 2.5f, 2.2f, 1.9f }, entre = 1.2f, alcance = 150f,
-                dispersion = 8f, dispersionApuntando = 0f, precio = new[] { 2200, 400, 650, 900 } },
+                cargador = new[] { 4, 5, 6, 7 }, recarga = new[] { 2.8f, 2.5f, 2.2f, 1.9f }, entre = 1.2f, alcance = 300f,
+                dispersion = 1.2f, dispersionApuntando = 0f, precio = new[] { 2200, 400, 650, 900 } },
             // T-1013: las armas nuevas (imageassets/modelos3d/armas_nuevas).
             new Familia { arma = ArmaAPie.Subfusil, clave = "subfusil", nombre = "Subfusil", danio = new[] { 11f, 13f, 15f, 18f },
-                cargador = new[] { 25, 30, 35, 40 }, recarga = new[] { 1.6f, 1.4f, 1.25f, 1.1f }, entre = 0.07f, automatica = true, alcance = 45f,
-                dispersion = 4f, dispersionApuntando = 2.5f, precio = new[] { 500, 300, 500, 700 } },
+                cargador = new[] { 25, 30, 35, 40 }, recarga = new[] { 1.6f, 1.4f, 1.25f, 1.1f }, entre = 0.07f, automatica = true, alcance = 70f, inicioCaida = 0.4f, danioMinimo = 0.5f,
+                dispersion = 2.5f, dispersionApuntando = 1.5f, precio = new[] { 500, 300, 500, 700 } },
             new Familia { arma = ArmaAPie.Revolver, clave = "revolver", nombre = "Revólver", danio = new[] { 55f, 65f, 78f, 95f },
                 cargador = new[] { 6, 6, 6, 6 }, recarga = new[] { 2.2f, 2.0f, 1.7f, 1.5f }, entre = 0.55f, alcance = 70f,
                 dispersion = 1.5f, dispersionApuntando = 0.3f, precio = new[] { 400, 300, 500, 700 } },
@@ -188,6 +191,8 @@ namespace MechaCyberpunk.Personaje.Editor
             so.FindProperty("dispersion").floatValue = f.dispersion;
             so.FindProperty("dispersionApuntando").floatValue = f.dispersionApuntando;
             so.FindProperty("alcance").floatValue = f.alcance;
+            so.FindProperty("inicioCaida").floatValue = f.inicioCaida;
+            so.FindProperty("danioMinimo").floatValue = f.danioMinimo;
             so.FindProperty("tipoDisparo").enumValueIndex = (int)f.tipo;
             so.FindProperty("radioExplosion").floatValue = f.radio != null ? f.radio[nivel] : 0f;
             so.FindProperty("velocidadProyectil").floatValue = f.velocidad;

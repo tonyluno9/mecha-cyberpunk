@@ -30,6 +30,8 @@ MonoBehaviour:
   dispersion: 0
   dispersionApuntando: 0
   alcance: 40
+  inicioCaida: 1
+  danioMinimo: 1
   tipoDisparo: 2
   radioExplosion: 6.5
   velocidadProyectil: 16

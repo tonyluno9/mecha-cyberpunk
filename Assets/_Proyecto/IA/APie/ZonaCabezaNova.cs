@@ -28,7 +28,13 @@ namespace MechaCyberpunk.IA.APie
             {
                 return;
             }
+            // T-1497: el tamaño sale de la escala del modelo (el pesado base se agranda en su nodo) o del factor del cuerpo (los demás se agrandan al importar): el mayor, sin sumarlos.
             float escala = Mathf.Max(0.1f, Mathf.Abs(animador.transform.lossyScale.y));
+            PandilleroAPie dueno = GetComponent<PandilleroAPie>();
+            if (dueno != null)
+            {
+                escala = Mathf.Max(escala, dueno.EscalaCuerpo);
+            }
             GameObject objeto = new GameObject("CabezaImpacto");
             objeto.transform.SetParent(hueso, false);
             objeto.transform.position = hueso.position + Vector3.up * SubidaCentro * escala;

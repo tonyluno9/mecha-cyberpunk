@@ -72,13 +72,13 @@ namespace MechaCyberpunk.Tests
             var pares = new System.Collections.Generic.List<System.Collections.Generic.KeyValuePair<AnimationClip, AnimationClip>>();
             o.GetOverrides(pares);
             string Valor(string clipBase) => pares.Find(p => p.Key != null && p.Key.name == clipBase).Value.name;
-            Assert.AreEqual("PJ01_Caminar_SinImplante", Valor("Loco_Caminar")); // T-749: clips de Blender aplicados a PJ01
-            Assert.AreEqual("PJ01_Correr_SinImplante", Valor("Loco_Correr"));
+            Assert.AreEqual("PJ01_Caminar", Valor("Loco_Caminar")); // T-749 / T-1505: clips de Blender aplicados a PJ01
+            Assert.AreEqual("PJ01_Sprint", Valor("Loco_Correr"));
             Assert.AreEqual("PJ01_Caminar_ConImplante", Valor("Loco_Caminar_ConImplante"));
             var npc = AssetDatabase.LoadAssetAtPath<AnimatorOverrideController>(ConstructorControladorBase.RutaOverride("NPC"));
             pares.Clear();
             npc.GetOverrides(pares);
-            Assert.AreEqual("PJ01_Caminar_SinImplante", Valor("Loco_Caminar"), "T-1004: los demas papeles caminan con el clip de PJ01 sin implante");
+            Assert.AreEqual("NPC_Caminar_Hombre", Valor("Loco_Caminar"), "T-1506: el papel NPC camina con NPC_Caminar_Hombre");
         }
     }
 }

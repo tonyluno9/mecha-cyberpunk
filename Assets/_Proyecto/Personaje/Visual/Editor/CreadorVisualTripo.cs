@@ -33,11 +33,12 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
                 case "E11_JefeSnakes": return 1.95f;
                 case "E12_GuardiaPesadoNova": return 2.05f;
                 case "E14_JefeFinalNova": return 2.3f;
+                // T-1497: la altura real de los agentes de Nova sale de EscalasNova (E15 2.6 m, E16 3.5 m, E18 2.2 m).
                 case "E15_CentinelaNova_a":
-                case "E15_CentinelaNova_b": return 1.85f;
+                case "E15_CentinelaNova_b": return EscalasNova.AlturaCentinelaE15;
                 case "E16_RobotPesadoNova_a":
-                case "E16_RobotPesadoNova_b": return 2.45f;
-                case "E18_EliteNova_a": return 1.9f;
+                case "E16_RobotPesadoNova_b": return EscalasNova.AlturaRobotPesadoE16;
+                case "E18_EliteNova_a": return EscalasNova.AlturaEliteE18;
                 case "E19_PandilleroSkulls_a":
                 case "E19_PandilleroSkulls_a_2":
                 case "E19_PandilleroSkulls_b": return 1.78f;
@@ -239,7 +240,7 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             }
 
             // 3) Controlador (el umbral definitivo se pone al medir los clips).
-            AnimatorController controlador = ConstructorControladorVisual.Construir(CreadorVisualPersonaje.RutaControlador(nombre), clips, out List<ClipVisual> faltan);
+            AnimatorController controlador = ConstructorControladorVisual.Construir(CarpetaDe(nombre) + "/" + nombre + ".controller", clips, out List<ClipVisual> faltan);
             foreach (ClipVisual f in faltan)
             {
                 Debug.LogWarning("[Personaje] " + nombre + ": falta la animación " + f + ".");

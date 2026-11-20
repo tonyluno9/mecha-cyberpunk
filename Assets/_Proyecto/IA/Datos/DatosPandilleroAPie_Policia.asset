@@ -85,6 +85,11 @@ MonoBehaviour:
   distanciaMinCarga: 4
   distanciaMaxCarga: 14
   multiplicadorCastigo: 1.5
+  reaccionaADisparos: 0
+  radioOido: 60
+  distanciaVision: 45
+  segundosBusqueda: 6
+  perroRobot: 0
   colorNormal: {r: 0.25, g: 0.5, b: 1, a: 1}
   colorGolpe: {r: 1, g: 0.2, b: 0.2, a: 1}
   colorKO: {r: 0.2, g: 0.2, b: 0.2, a: 1}

@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe861ea66f9d4fd8be82078c9fb6d133, type: 3}
+  m_Name: ConfigDronesCombate
+  m_EditorClassIdentifier: MechaCyberpunk.Trafico::MechaCyberpunk.Trafico.Datos.ConfigDronesCombate
+  variantes:
+  - nombre: DR01_Policia
+    modelo: {fileID: 0}
+    estrellasMinimas: 1
+    vida: 0
+    danio: 0
+    segundosEntreTiros: 0
+    acierto: 0
+    altura: 0
+    escala: 1
+    radioImpacto: 0
+  - nombre: DR04_Explorador
+    modelo: {fileID: 2890503708066785737, guid: 5fd80201c1b70b44b905fff4c81133f7, type: 3}
+    estrellasMinimas: 2
+    vida: 40
+    danio: 4
+    segundosEntreTiros: 1.2
+    acierto: 0.7
+    altura: 6
+    escala: 1
+    radioImpacto: 0.7
+  - nombre: DR02_Pesado
+    modelo: {fileID: 7145531209595269329, guid: 840ee2ec5032fdd469e42082ceaa8530, type: 3}
+    estrellasMinimas: 4
+    vida: 90
+    danio: 9
+    segundosEntreTiros: 2
+    acierto: 0.7
+    altura: 6.5
+    escala: 1
+    radioImpacto: 1.1
+  - nombre: E13_Asalto
+    modelo: {fileID: 4071485984450003096, guid: cba0419ee01811c45bda839a655a4548, type: 3}
+    estrellasMinimas: 5
+    vida: 55
+    danio: 6
+    segundosEntreTiros: 1
+    acierto: 0.7
+    altura: 5.5
+    escala: 1
+    radioImpacto: 0.8

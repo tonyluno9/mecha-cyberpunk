@@ -70,9 +70,42 @@ namespace MechaCyberpunk.IA.APie
             }
         }
 
+        private static readonly System.Collections.Generic.List<PandillaAPie> todas = new System.Collections.Generic.List<PandillaAPie>();
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void LimpiarRegistro() => todas.Clear();
+
+        // T-1495: pandilleros en pie de todos los grupos dentro de ReglaTopePandilleros.RadioZona de un punto.
+        private static int VivosCerca(Vector3 punto)
+        {
+            int cuenta = 0;
+            float r2 = ReglaTopePandilleros.RadioZona * ReglaTopePandilleros.RadioZona;
+            foreach (PandillaAPie g in todas)
+            {
+                if (g == null || g.pandilleros == null)
+                {
+                    continue;
+                }
+                foreach (PandilleroAPie p in g.pandilleros)
+                {
+                    if (p != null && p.gameObject.activeSelf && !p.EstaKO)
+                    {
+                        Vector3 d = p.transform.position - punto;
+                        d.y = 0f;
+                        if (d.sqrMagnitude <= r2)
+                        {
+                            cuenta++;
+                        }
+                    }
+                }
+            }
+            return cuenta;
+        }
+
         private void Awake()
         {
             pandilleros = GetComponentsInChildren<PandilleroAPie>(true);
+            todas.Add(this);
             if (datos == null || pandilleros.Length == 0)
             {
                 Debug.LogError("[IA] Faltan referencias en PandillaAPie de " + name, this);
@@ -119,6 +152,7 @@ namespace MechaCyberpunk.IA.APie
 
         private void OnDestroy()
         {
+            todas.Remove(this);
             if (pandilleros == null)
             {
                 return;
@@ -366,6 +400,8 @@ namespace MechaCyberpunk.IA.APie
 
         private void Aparecer(int cuantos)
         {
+            // T-1495: tope de pandilleros vivos por punto y por zona (las misiones piden un número fijo y quedan fuera).
+            int cupo = ModoMision ? int.MaxValue : ReglaTopePandilleros.Cupo(Presentes, VivosCerca(centro));
             for (int i = 0; i < pandilleros.Length && i < cuantos; i++)
             {
                 PandilleroAPie p = pandilleros[i];
@@ -379,6 +415,11 @@ namespace MechaCyberpunk.IA.APie
                 {
                     continue;
                 }
+                if (cupo <= 0)
+                {
+                    break;
+                }
+                cupo--;
                 p.gameObject.SetActive(true);
                 p.Reaparecer();
             }

@@ -4,7 +4,9 @@ namespace MechaCyberpunk.Trafico.Drones
 {
     /// <summary>
     /// T-1398: mueve este objeto en bucle por una ruta de puntos (x, z) a una altura, con velocidad en m/s, inclinándose al girar y oscilando suave.
-    /// Los puntos y el movimiento van en el espacio local del padre. Solo mueve el visual: no tiene colisión ni IA. La lógica está en <see cref="CalculoRutaAerea"/>.
+    /// Los puntos y el movimiento van en el espacio local del padre. La lógica está en <see cref="CalculoRutaAerea"/>.
+    /// T-1494: no atraviesa muros. Antes de cada paso lanza una esfera hacia donde va; si hay un obstáculo fijo no avanza y sube (<see cref="ReglaDesvioAereo"/>)
+    /// hasta librarlo, y luego vuelve a bajar. La altura de ruta se limita a <c>alturaMaxima</c> para que se vea desde la calle.
     /// </summary>
     public class RutaAerea : MonoBehaviour
     {
@@ -19,11 +21,25 @@ namespace MechaCyberpunk.Trafico.Drones
         [SerializeField, Min(0f), Tooltip("Grados de inclinación por cada °/s que gira el rumbo.")] private float alabeoPorGiro = 0.5f;
         [SerializeField, Range(0f, 1f), Tooltip("Fracción de vuelta en que arranca, para que dos drones de la misma ruta no vayan juntos.")] private float fase;
 
+        [Header("Obstáculos (T-1494)")]
+        [SerializeField, Tooltip("Si es true, el dron no atraviesa geometría: sube para rodear lo que le bloquea el paso.")] private bool evitaObstaculos = true;
+        [SerializeField, Min(0.05f), Tooltip("Radio de la esfera con que revisa su paso (m).")] private float radioDron = 0.8f;
+        [SerializeField, Min(0.1f), Tooltip("Cuánto sube al toparse con algo (m/s).")] private float velocidadSubida = 8f;
+        [SerializeField, Min(0.1f), Tooltip("Cuánto baja de regreso a su altura cuando está libre (m/s).")] private float velocidadBajada = 3f;
+        [SerializeField, Min(0f), Tooltip("Máximo que sube sobre su altura de ruta (m).")] private float desvioMaximo = 40f;
+        [SerializeField, Min(2f), Tooltip("Tope de la altura de ruta para que el dron se vea desde la calle (m).")] private float alturaMaxima = 14f;
+
+        private static readonly RaycastHit[] impactos = new RaycastHit[16];
+        private ReglaDesvioAereo desvio;
         private CalculoRutaAerea calculo;
         private float tiempo;
         private float alabeoActual;
 
         public float Altura => altura;
+        /// <summary>Altura de ruta que se usa: la de la ruta, con el tope <c>alturaMaxima</c> (m).</summary>
+        public float AlturaEfectiva => Mathf.Min(altura, alturaMaxima);
+        /// <summary>Metros que ha subido para rodear un obstáculo.</summary>
+        public float Desvio => desvio != null ? desvio.Desvio : 0f;
         public float Velocidad => velocidad;
         public int CantidadPuntos => puntos != null ? puntos.Length : 0;
 
@@ -35,14 +51,76 @@ namespace MechaCyberpunk.Trafico.Drones
                 enabled = false;
                 return;
             }
-            calculo = new CalculoRutaAerea(puntos, altura, velocidad, amplitudOscilacion, periodoOscilacion, alabeoMaximo, alabeoPorGiro);
+            calculo = new CalculoRutaAerea(puntos, AlturaEfectiva, velocidad, amplitudOscilacion, periodoOscilacion, alabeoMaximo, alabeoPorGiro);
+            desvio = new ReglaDesvioAereo(velocidadSubida, velocidadBajada, desvioMaximo);
             Aplicar(0f, true);
         }
 
         private void Update()
         {
-            tiempo += Time.deltaTime;
-            Aplicar(Time.deltaTime, false);
+            float dt = Time.deltaTime;
+            if (!evitaObstaculos)
+            {
+                tiempo += dt;
+                Aplicar(dt, false);
+                return;
+            }
+            float siguiente = tiempo + dt;
+            MuestraRutaAerea m = calculo.Muestra(siguiente, fase);
+            Vector3 actual = transform.position;
+            float bajo = desvio.DesvioBajando(dt);
+            Vector3 destino = EnMundo(m.Posicion + Vector3.up * bajo);
+            if (!Bloqueado(actual, destino))
+            {
+                desvio.Fijar(bajo);
+                Avanzar(siguiente, m, destino, dt);
+                return;
+            }
+            destino = EnMundo(m.Posicion + Vector3.up * desvio.Desvio);
+            if (!Bloqueado(actual, destino))
+            {
+                Avanzar(siguiente, m, destino, dt);
+                return;
+            }
+            // Bloqueado: no avanza en la ruta y sube hasta librar el obstáculo.
+            float sube = desvio.DesvioSubiendo(dt) - desvio.Desvio;
+            if (sube > 0f && !Bloqueado(actual, actual + Vector3.up * sube))
+            {
+                desvio.Fijar(desvio.Desvio + sube);
+                transform.position = actual + Vector3.up * sube;
+            }
+        }
+
+        private Vector3 EnMundo(Vector3 local) => transform.parent != null ? transform.parent.TransformPoint(local) : local;
+
+        private void Avanzar(float nuevoTiempo, MuestraRutaAerea m, Vector3 destino, float dt)
+        {
+            tiempo = nuevoTiempo;
+            alabeoActual = Mathf.Lerp(alabeoActual, m.Alabeo, 1f - Mathf.Exp(-SuavizadoAlabeo * dt));
+            transform.position = destino;
+            transform.localRotation = Quaternion.LookRotation(m.Rumbo, Vector3.up) * Quaternion.Euler(0f, 0f, alabeoActual);
+        }
+
+        // True si entre los dos puntos hay geometría fija (no se cuentan sus propias piezas ni cuerpos con Rigidbody: carros, objetos).
+        private bool Bloqueado(Vector3 desde, Vector3 hasta)
+        {
+            Vector3 dir = hasta - desde;
+            float distancia = dir.magnitude;
+            if (distancia < 0.0001f)
+            {
+                return false;
+            }
+            int n = Physics.SphereCastNonAlloc(desde, radioDron, dir / distancia, impactos, distancia, ~0, QueryTriggerInteraction.Ignore);
+            for (int i = 0; i < n; i++)
+            {
+                Collider c = impactos[i].collider;
+                if (impactos[i].distance <= 0f || c.transform.IsChildOf(transform) || c.attachedRigidbody != null)
+                {
+                    continue;
+                }
+                return true;
+            }
+            return false;
         }
 
         private void Aplicar(float dt, bool saltar)

@@ -55,6 +55,8 @@ namespace MechaCyberpunk.Personaje.Visual
         public const string CoberturaTipo = "CoberturaTipo";
         public const string DisparoCobertura = "DisparoCobertura";
         public const string Frenar = "Frenar";
+        /// <summary>T-1505: trigger del aterrizaje fuerte (PJ01_Aterrizaje_Fuerte); lo dispara VisualPersonaje del jugador al tocar el piso tras una caída de <see cref="VelocidadAterrizajeFuerte"/>.</summary>
+        public const string AterrizajeFuerte = "AterrizajeFuerte";
         /// <summary>T-985: puños en guardia (estado PunosGuardia de la capa de arriba, PJ01_Punos_Guardia). Lo pone VisualPersonaje unos segundos después de cada golpe de puños, solo en quien tiene <c>GuardiaTrasGolpe</c> (el jugador).</summary>
         public const string EnGuardia = "EnGuardia";
         /// <summary>T-1310: el jugador lleva un arma larga (aunque no apunte). Con ella, cubrirse usa PJ01_CoberturaRifle_* en vez de los de pistola.</summary>
@@ -192,7 +194,7 @@ namespace MechaCyberpunk.Personaje.Visual
             "CoberturaRifleEntrar", "CoberturaRifleIdle", "CoberturaRifleDisparo",
             "MuerteAdelante", "MuerteAtras", "MuerteDesmayo", "LevantarseBocaArriba", "LevantarseBocaAbajo",
             "CarroEntrar", "CarroManejar", "CarroSalir", "AbrirPuerta", "Boton", "Recoger", "Telefono", "VerTelefono", "Burla", "Presumir",
-            "MotoSubir", "MotoManejar", "MotoBajar",
+            "MotoSubir", "MotoManejar", "MotoBajar", "AterrizajeFuerte",
         };
 
         /// <summary>Estados de la capa aditiva de daño (T-735).</summary>
@@ -211,16 +213,42 @@ namespace MechaCyberpunk.Personaje.Visual
         public static readonly string[] ParametrosInt = { ReglasVisual.TipoArma, DanoTipo, MuerteTipo, GolpeTipo, CoberturaTipo, GestoTipo };
         public static readonly string[] ParametrosTrigger =
         {
-            ReglasVisual.Disparar, ReglasVisual.Recargar, ReglasVisual.Golpe, ReglasVisual.Herido, DisparoCobertura, Frenar, Gesto, Rodar,
+            ReglasVisual.Disparar, ReglasVisual.Recargar, ReglasVisual.Golpe, ReglasVisual.Herido, DisparoCobertura, Frenar, Gesto, Rodar, AterrizajeFuerte,
         };
 
         /// <summary>
         /// Velocidad del Animator para que los pies no patinen: real / la del clip, limitada. Sin velocidad de clip (0) no se ajusta (1).
         /// </summary>
-        /// <summary>T-1484: velocidad (m/s) de los clips del jugador medida con MedirLocomocionT1484 (averageSpeed de la raíz sobre Visual_PJ01).</summary>
-        public const float VelocidadPJ01Caminar = 1.66f, VelocidadPJ01Correr = 4.25f, VelocidadPJ01Lado = 1.61f, VelocidadPJ01Atras = 1.04f;
-        /// <summary>T-1484: rango de Animator.speed del jugador al igualar los pies con el cuerpo. Arriba de 1.6 el clip se ve acelerado.</summary>
-        public const float RapidezMinimaJugador = 0.7f, RapidezMaximaJugador = 1.6f;
+        /// <summary>
+        /// T-1505: velocidad (m/s) a la que avanzan los clips de Blender del jugador (BITACORA, pedido 19-nov noche). Caminar de verdad 1.60, trote (paso normal)
+        /// 4.50, sprint (Shift) 7.25, trote de lado y hacia atrás 4.00; los de caminar de lado (1.61) y atrás (1.04) quedan en el extremo lento de la mezcla.
+        /// </summary>
+        public const float VelocidadPJ01Caminar = 1.60f, VelocidadPJ01Trote = 4.5f, VelocidadPJ01Sprint = 7.25f, VelocidadPJ01TroteLado = 4.0f, VelocidadPJ01TroteAtras = 4.0f;
+        public const float VelocidadPJ01CaminarLado = 1.61f, VelocidadPJ01CaminarAtras = 1.04f;
+        /// <summary>T-1505: rango de Animator.speed del jugador al igualar los pies con el cuerpo.</summary>
+        public const float RapidezMinimaJugador = 0.85f, RapidezMaximaJugador = 1.15f;
+
+        /// <summary>
+        /// T-1505: velocidad (m/s) con la que avanza la mezcla 1D por Velocidad (caminar lento, trote) del estado Caminar del jugador: interpola la velocidad
+        /// de los dos clips con el mismo peso que usa el árbol (umbrales <paramref name="umbralBajo"/> y <paramref name="umbralAlto"/>).
+        /// </summary>
+        public static float VelocidadClipMezcla(float velocidad, float umbralBajo, float umbralAlto, float clipBajo, float clipAlto)
+        {
+            if (umbralAlto <= umbralBajo)
+            {
+                return clipAlto;
+            }
+            return Mathf.Lerp(clipBajo, clipAlto, Mathf.InverseLerp(umbralBajo, umbralAlto, velocidad));
+        }
+
+        /// <summary>T-1505: velocidad vertical de llegada (m/s hacia abajo) desde la que el jugador hace el aterrizaje fuerte: ~2.5 m con gravedad 16; arriba de ~4 m rueda (CaidaJugador).</summary>
+        public const float VelocidadAterrizajeFuerte = 9f;
+
+        /// <summary>T-1505: true si la velocidad vertical más negativa del aire (m/s) pide el aterrizaje fuerte.</summary>
+        public static bool EsAterrizajeFuerte(float velocidadVerticalMinima, float metrosCaidos) => velocidadVerticalMinima <= -VelocidadAterrizajeFuerte && metrosCaidos >= CaidaMinimaAterrizajeFuerte;
+
+        /// <summary>T-1505: caída mínima (m) para el aterrizaje fuerte: evita dispararlo por una velocidad vertical espuria al arrancar o al teletransportar.</summary>
+        public const float CaidaMinimaAterrizajeFuerte = 2f;
 
         /// <summary>
         /// T-1484: velocidad a la que avanza la mezcla direccional de un árbol 2D (adelante, atrás, lados) para la dirección local

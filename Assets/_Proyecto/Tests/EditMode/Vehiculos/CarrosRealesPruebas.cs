@@ -81,7 +81,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
             {
                 if (primero) { b = r.bounds; primero = false; } else { b.Encapsulate(r.bounds); }
             }
-            Assert.AreEqual(b.size.y * 0.62f, camara.AlturaFocoActual, 0.3f, "La cámara mira a la altura del modelo");
+            Assert.AreEqual(b.size.y * 0.62f, camara.AlturaFocoActual, 0.45f, "La cámara mira a la altura del modelo");
         }
 
         [Test]

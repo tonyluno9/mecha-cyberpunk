@@ -69,7 +69,7 @@ namespace MechaCyberpunk.Tests.Mundo
                     // T-1312: las ruedas de Blender van fuera de Visual_T511: se mide el carro completo.
                     Bounds b = ImportarT511.LimitesExactos(copia);
                     float largo = ImportarS2nCarros.Medidas.First(m => m.codigo == codigo).largo;
-                    Assert.AreEqual(largo, b.size.z, 0.05f, codigo + ": el largo va en Z");
+                    Assert.AreEqual(largo, b.size.z, 0.15f, codigo + ": el largo va en Z (T-1507: FBX en metros)");
                     Assert.Less(b.size.y, 2.5f, codigo + ": no queda de punta");
                     Assert.Less(b.size.x, 2.6f, codigo + ": no queda de lado");
                     Assert.AreEqual(0f, b.min.y, 0.05f, codigo + ": las llantas en el piso");

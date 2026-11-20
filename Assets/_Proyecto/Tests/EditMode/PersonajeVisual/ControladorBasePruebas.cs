@@ -146,7 +146,7 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
             {
                 GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(CreadorVisualPersonaje.RutaPrefab(modelo));
                 Animator a = prefab.GetComponentInChildren<Animator>(true);
-                Assert.AreEqual(ConstructorControladorBase.RutaOverride(papel), AssetDatabase.GetAssetPath(a.runtimeAnimatorController), modelo);
+                Assert.AreEqual(modelo == "Hacker" ? ClipsNpcNovaT1506.RutaOverrideExtra("Hacker") : ConstructorControladorBase.RutaOverride(papel), AssetDatabase.GetAssetPath(a.runtimeAnimatorController), modelo); // T-1506: el hacker tiene su override
                 ApuntadoIK apuntado = prefab.GetComponentInChildren<ApuntadoIK>(true);
                 if (apuntado != null) { Assert.IsFalse(apuntado.ManosPorIK, modelo + ": ya hay clip de apuntar"); }
                 IKPiesYMirada ik = a.GetComponent<IKPiesYMirada>();

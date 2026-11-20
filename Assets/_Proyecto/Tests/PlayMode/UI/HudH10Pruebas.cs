@@ -210,8 +210,8 @@ namespace MechaCyberpunk.Tests.UI
             Assert.IsFalse(h10.RanuraVisible(2));
             Assert.AreEqual("x1", h10.CantidadRanura(0));
             Assert.AreEqual("x2", h10.CantidadRanura(1));
-            Assert.AreEqual(string.Empty, h10.TeclaRanura(0), "T-991: los objetos se usan desde la rueda (Tab), la casilla ya no lleva tecla");
-            Assert.AreEqual(string.Empty, h10.TeclaRanura(1));
+            Assert.AreEqual("E", h10.TeclaRanura(0), "T-1492: la ranura 1 se usa con E");
+            Assert.AreEqual("C", h10.TeclaRanura(1), "T-1492: la ranura 2 se usa con C");
             Assert.IsNotNull(h10.IconoRanura(0), "Ícono de la bebida");
             Assert.IsNotNull(h10.IconoRanura(1), "Ícono de las papitas");
             Assert.AreNotSame(h10.IconoRanura(0), h10.IconoRanura(1));
@@ -319,7 +319,7 @@ namespace MechaCyberpunk.Tests.UI
             Assert.IsTrue(h10.GrupoEstrellas.activeSelf, "En el carro se ven las estrellas");
             Assert.IsFalse(h10.GrupoIzquierda.activeSelf, "pero no la vida");
             Assert.IsFalse(h10.GrupoArma.activeSelf);
-            Assert.IsFalse(h10.GrupoObjetos.activeSelf);
+            Assert.IsTrue(h10.GrupoObjetos.activeSelf, "T-1492: en el carro se ven las ranuras para curarse en la persecución");
             falso.CambiarModo(ModoJugador.Mecha);
             yield return null;
             Assert.IsFalse(h10.GrupoEstrellas.activeSelf, "En el mecha no se ve nada");

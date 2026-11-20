@@ -130,7 +130,7 @@ namespace MechaCyberpunk.Vehiculos.Editor
 
         // ------------------------------------------------------------------ motos
 
-        private static void ArmarMotoPrefab(string codigo, string nombreCuerpo, float largo, StringBuilder informe)
+        public static void ArmarMotoPrefab(string codigo, string nombreCuerpo, float largo, StringBuilder informe)
         {
             if (!ExistePrefab(codigo))
             {
@@ -188,7 +188,8 @@ namespace MechaCyberpunk.Vehiculos.Editor
             visual.localScale = Vector3.one;
             visual.localPosition = Vector3.zero;
             Bounds sinEscala = CreadorCarrosT511.LimitesExactos(visual.gameObject);
-            visual.localScale = Vector3.one * (largoFinal / sinEscala.size.z);
+            // T-1507: las motos que ya vienen en metros (V07, V08) no se escalan.
+            visual.localScale = Vector3.one * (CarrosRevisadosT1507.EnMetros(codigo) ? 1f : largoFinal / sinEscala.size.z);
             Vector3 centroD = CentroEnModelo(rd);
             Vector3 centroT = CentroEnModelo(rt);
             Vector3 medio = visual.TransformPoint((centroD + centroT) * 0.5f);

@@ -1617,20 +1617,19 @@ namespace MechaCyberpunk.Tests.Demo
             yield return EsperarCiudad(directorViejo, d => director = d);
             yield return Segundos(1f);
             TerminarTramo();
-            Assert.AreEqual(PasoHistoria.Despierta, director.Paso);
+            Assert.AreEqual(PasoHistoria.Asalto, director.Paso, "T-1496: sin cuarto, abre afuera en el asalto");
 
-            // 3. Despertar y salir de casa.
+            // 3. Despertar afuera (T-1496: ya no hay que salir de casa).
             IniciarTramo("03 Despertar y salir de casa");
             string ayudaInicio = director.Pantalla.Ayuda;
             if (ayudaInicio != DirectorPandillas.AyudaInicio)
             {
                 Bug("Al despertar no sale MEGALOPOLIS · SUBURBIOS", "la ayuda dice \"" + ayudaInicio + "\"", "A", true);
             }
-            if (TextoObjetivo != DirectorPandillas.TextoSalir)
+            if (TextoObjetivo != AsaltoDinero.TextoRobarCarro)
             {
                 Bug("Objetivo inicial incorrecto", "dice \"" + TextoObjetivo + "\"", "A", true);
             }
-            yield return IrYUsar("la puerta de casa", () => director.Paso != PasoHistoria.Despierta, 60f, 0.1f);
             TerminarTramo();
             if (Environment.GetEnvironmentVariable("T474_HASTA") == "3")
             {

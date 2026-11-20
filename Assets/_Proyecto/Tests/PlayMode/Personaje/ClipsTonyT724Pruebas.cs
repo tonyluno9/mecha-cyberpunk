@@ -55,7 +55,7 @@ namespace MechaCyberpunk.Tests.Personaje
         /// <summary>Todos los clips que suenan en alguna capa con peso de capa mayor que cero deben ser de locomoción de Tony.</summary>
         private static void AfirmarSoloLocomocionDeTony(Animator a, string esperado)
         {
-            // T-1484: la rapidez sigue a la velocidad del cuerpo (pies sin patinar) entre 0.7 y 1.6.
+            // T-1484: la rapidez sigue a la velocidad del cuerpo (pies sin patinar) entre 0.85 y 1.15.
             Assert.GreaterOrEqual(a.speed, ReglasAnimacion.RapidezMinimaJugador - 0.001f, "La animación no va en cámara lenta");
             Assert.LessOrEqual(a.speed, ReglasAnimacion.RapidezMaximaJugador + 0.001f, "La animación no va acelerada de más");
             Assert.IsFalse(a.applyRootMotion, "Sin movimiento de raíz");
@@ -67,7 +67,9 @@ namespace MechaCyberpunk.Tests.Personaje
                 string clips = ClipsActivos(a, capa);
                 Assert.IsEmpty(clips, "La capa " + a.GetLayerName(capa) + " (peso " + a.GetLayerWeight(capa) + ") no pone clips encima: " + clips);
             }
-            AnimationClip clip = a.GetCurrentAnimatorClipInfo(0)[0].clip;
+            AnimationClip clip = null;
+            float pesoMax = -1f;
+            foreach (AnimatorClipInfo info in a.GetCurrentAnimatorClipInfo(0)) { if (info.weight > pesoMax) { pesoMax = info.weight; clip = info.clip; } }
             Assert.AreEqual("Assets/Arte/Personajes/PJ01/Clips/" + esperado + ".fbx", AssetDatabase.GetAssetPath(clip), "El clip es el de Blender aplicado a PJ01 (T-749)");
         }
 
@@ -114,7 +116,7 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return Esperar(1.3f);
             Debug.Log("[T724] caminando: " + Volcado(a));
             Assert.AreEqual("Caminar", Estado(a));
-            AfirmarSoloLocomocionDeTony(a, "PJ01_Correr_SinImplante"); // T-1484: a 4.5 m/s el paso normal del jugador es el trote
+            AfirmarSoloLocomocionDeTony(a, "PJ01_Trote"); // T-1505: a 4.5 m/s el paso normal del jugador es el trote
             AfirmarSinProcedurales(visual);
             Capturar("s1d-T-724-caminar");
             Release(teclado.wKey);
@@ -133,7 +135,7 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return Esperar(1.6f);
             Debug.Log("[T724] corriendo: " + Volcado(a));
             Assert.AreEqual("Correr", Estado(a));
-            AfirmarSoloLocomocionDeTony(a, "PJ01_Correr_SinImplante");
+            AfirmarSoloLocomocionDeTony(a, "PJ01_Sprint");
             AfirmarSinProcedurales(visual);
             Capturar("s1d-T-724-correr");
             Release(teclado.leftShiftKey);
@@ -152,7 +154,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Press(teclado.wKey);
             yield return Esperar(1.3f);
             Debug.Log("[T724] caminando con pistola: " + Volcado(a));
-            AfirmarSoloLocomocionDeTony(a, "PJ01_Correr_SinImplante"); // T-1484: a 4.5 m/s el paso normal del jugador es el trote
+            AfirmarSoloLocomocionDeTony(a, "PJ01_Trote"); // T-1505: a 4.5 m/s el paso normal del jugador es el trote
             AfirmarSinProcedurales(visual);
             Release(teclado.wKey);
         }

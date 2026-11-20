@@ -44,6 +44,10 @@ Shader "MechaCyberpunk/Mundo/Charco"
             SAMPLER(sampler_ReflejoCharcosTex);
             float4x4 _ReflejoCharcosVP;
             float _ReflejoCharcosHay;
+            // T-1503: ondas de las pisadas (las llena EfectosPieJugador, globales para todos los charcos): xyz = posición, w = momento.
+            float4 _OndasPisadas[8];
+            float _OndasPisadasN;
+            float _TiempoOndasCharco;
 
             CBUFFER_START(UnityPerMaterial)
                 float4 _Mascara_ST;
@@ -87,21 +91,51 @@ Shader "MechaCyberpunk/Mundo/Charco"
                 half2 mascara = SAMPLE_TEXTURE2D(_Mascara, sampler_Mascara, salida.uv).rg;
                 half forma = mascara.r;
                 half mojado = mascara.g;
-                // Ondas de dos escalas con su fuerza variando por el charco: unas partes casi quietas y otras rizadas.
+                // Ondas de dos escalas que se mueven despacio, con su fuerza variando por el charco: unas partes casi quietas y otras rizadas.
                 float2 p = salida.mundo.xz;
-                float fuerza = 0.5 + 0.5 * sin(p.x * 0.9 + 1.7 * sin(p.y * 0.7));
-                float2 ondas = (float2(sin(p.x * 3.1 + p.y * 1.7), cos(p.y * 2.9 - p.x * 1.3))
-                              + 0.5 * float2(sin(p.x * 11.3 - p.y * 7.1), cos(p.y * 9.7 + p.x * 5.3))) * _Ondas * fuerza;
+                float t = _Time.y;
+                float fuerza = 0.5 + 0.5 * sin(p.x * 0.9 + 1.7 * sin(p.y * 0.7) + t * 0.4);
+                float2 ondas = (float2(sin(p.x * 3.1 + p.y * 1.7 + t * 1.3), cos(p.y * 2.9 - p.x * 1.3 + t * 1.1))
+                              + 0.5 * float2(sin(p.x * 11.3 - p.y * 7.1 + t * 2.3), cos(p.y * 9.7 + p.x * 5.3 - t * 2.1))) * _Ondas * fuerza;
+                // T-1503: ondas concéntricas que salen de cada pisada reciente: anillo que se abre, se apaga y empuja el reflejo.
+                float2 empuje = 0;
+                half anillo = 0;
+                half brillo = 0;
+                int cuantas = (int)_OndasPisadasN;
+                for (int i = 0; i < cuantas; i++)
+                {
+                    float4 o = _OndasPisadas[i];
+                    float edad = _TiempoOndasCharco - o.w;
+                    float2 delta = p - o.xz;
+                    float d = length(delta);
+                    float x = d - edad * 1.5;
+                    if (edad < 0.0 || edad > 2.2 || abs(x) > 0.5)
+                    {
+                        continue;
+                    }
+                    float vida = saturate(1.0 - edad / 2.2);
+                    float cresta = exp(-x * x * 40.0) * vida * vida;
+                    float onda = sin(x * 30.0) * cresta;
+                    empuje += delta / max(d, 1e-3) * onda;
+                    anillo += cresta;
+                    brillo += max(onda, 0.0);
+                }
+                ondas += empuje * 0.012;
                 float4 c = mul(_ReflejoCharcosVP, float4(salida.mundo, 1.0));
                 float2 uv = c.xy / max(c.w, 1e-5) * 0.5 + 0.5 + ondas;
-                half3 reflejo = SAMPLE_TEXTURE2D(_ReflejoCharcosTex, sampler_ReflejoCharcosTex, uv).rgb * _ReflejoCharcosHay;
                 half3 vista = normalize(GetWorldSpaceViewDir(salida.mundo));
+                // Sin cámara de reflejo (calidad baja) se toma el reflejo de la sonda del entorno, borroso.
+                half3 reflejado = reflect(-vista, normalize(half3(ondas.x * 6.0, 1.0, ondas.y * 6.0)));
+                half4 cubo = SAMPLE_TEXTURECUBE_LOD(unity_SpecCube0, samplerunity_SpecCube0, reflejado, 3.0);
+                half3 entorno = cubo.rgb * (unity_SpecCube0_HDR.x * pow(abs(cubo.a), unity_SpecCube0_HDR.y));
+                half3 reflejo = lerp(entorno * 0.8, SAMPLE_TEXTURE2D(_ReflejoCharcosTex, sampler_ReflejoCharcosTex, uv).rgb, _ReflejoCharcosHay);
                 half fresnel = lerp(_FresnelMin, 1.0, pow(1.0 - saturate(vista.y), _FresnelPotencia));
                 half3 charco = lerp(_ColorFondo.rgb, reflejo * _Intensidad, fresnel);
                 half3 borde = _ColorBorde.rgb + reflejo * _Intensidad * fresnel * _ReflejoBorde;
                 half3 color = lerp(borde, charco, saturate(forma * 2.0));
+                color += half3(0.55, 0.7, 0.85) * (saturate(brillo) * 0.5 + saturate(anillo) * 0.12) * forma;
                 color = MixFog(color, salida.niebla);
-                return half4(color, max(saturate(forma * _Opacidad), mojado * _OpacidadBorde));
+                return half4(color, max(max(saturate(forma * _Opacidad), mojado * _OpacidadBorde), saturate(anillo) * 0.5 * forma));
             }
             ENDHLSL
         }

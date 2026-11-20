@@ -33,13 +33,36 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
         }
 
         [Test]
-        public void RapidezJugador_A4y5ConElTrote_CasiNormal_YCorriendoNoPasaDe1y6()
+        public void RapidezJugador_TroteYSprint_ConLosClipsNuevos_EntreLosLimites()
         {
-            float caminar = ReglasAnimacion.EscalaVelocidad(ReglasAnimacion.VelocidadAndar, ReglasAnimacion.VelocidadPJ01Correr, ReglasAnimacion.RapidezMinimaJugador, ReglasAnimacion.RapidezMaximaJugador);
-            Assert.AreEqual(4.5f / 4.25f, caminar, 1e-3f);
-            float correr = ReglasAnimacion.EscalaVelocidad(ReglasAnimacion.VelocidadCarrera, ReglasAnimacion.VelocidadPJ01Correr, ReglasAnimacion.RapidezMinimaJugador, ReglasAnimacion.RapidezMaximaJugador);
-            Assert.AreEqual(ReglasAnimacion.RapidezMaximaJugador, correr, 1e-3f);
-            Assert.Less(Mathf.Abs(correr * ReglasAnimacion.VelocidadPJ01Correr - 7.5f) / 7.5f, 0.1f, "Corriendo los pies patinan menos de 10 %");
+            float trote = ReglasAnimacion.EscalaVelocidad(ReglasAnimacion.VelocidadAndar, ReglasAnimacion.VelocidadPJ01Trote, ReglasAnimacion.RapidezMinimaJugador, ReglasAnimacion.RapidezMaximaJugador);
+            Assert.AreEqual(1f, trote, 1e-3f, "A 4.5 m/s el trote va a su velocidad");
+            float sprint = ReglasAnimacion.EscalaVelocidad(ReglasAnimacion.VelocidadCarrera, ReglasAnimacion.VelocidadPJ01Sprint, ReglasAnimacion.RapidezMinimaJugador, ReglasAnimacion.RapidezMaximaJugador);
+            Assert.AreEqual(7.5f / 7.25f, sprint, 1e-3f);
+            Assert.That(sprint, Is.InRange(ReglasAnimacion.RapidezMinimaJugador, ReglasAnimacion.RapidezMaximaJugador));
+            float lado = ReglasAnimacion.EscalaVelocidad(ReglasAnimacion.VelocidadAndar, ReglasAnimacion.VelocidadPJ01TroteLado, ReglasAnimacion.RapidezMinimaJugador, ReglasAnimacion.RapidezMaximaJugador);
+            Assert.That(lado, Is.InRange(ReglasAnimacion.RapidezMinimaJugador, ReglasAnimacion.RapidezMaximaJugador), "De lado a 4.5 m/s el clip de 4.0 va a 1.125");
+        }
+
+        [Test]
+        public void MezclaCaminarTrote_InterpolaLaVelocidadDelClip_ConElPesoDelArbol()
+        {
+            Assert.AreEqual(1.6f, ReglasAnimacion.VelocidadClipMezcla(1.6f, 1.6f, 4.5f, 1.6f, 4.5f), 1e-4f);
+            Assert.AreEqual(4.5f, ReglasAnimacion.VelocidadClipMezcla(4.5f, 1.6f, 4.5f, 1.6f, 4.5f), 1e-4f);
+            Assert.AreEqual(3.05f, ReglasAnimacion.VelocidadClipMezcla(3.05f, 1.6f, 4.5f, 1.6f, 4.5f), 1e-3f, "A mitad del camino el clip avanza lo que el cuerpo: rapidez 1");
+            Assert.AreEqual(1.6f, ReglasAnimacion.VelocidadClipMezcla(0.5f, 1.6f, 4.5f, 1.6f, 4.5f), 1e-4f, "Abajo del umbral lento se queda en el clip lento");
+            Assert.AreEqual(4.5f, ReglasAnimacion.VelocidadClipMezcla(6f, 1.6f, 4.5f, 1.6f, 4.5f), 1e-4f);
+            Assert.AreEqual(2.52f, ReglasAnimacion.VelocidadClipMezcla(3.05f, 1.6f, 4.5f, 1.04f, 4f), 1e-2f, "Hacia atrás mezcla 1.04 y 4.0");
+        }
+
+        [Test]
+        public void AterrizajeFuerte_SoloDesdeLaVelocidadDeLlegada()
+        {
+            Assert.IsFalse(ReglasAnimacion.EsAterrizajeFuerte(-5f, 5f));
+            Assert.IsFalse(ReglasAnimacion.EsAterrizajeFuerte(0f, 5f));
+            Assert.IsTrue(ReglasAnimacion.EsAterrizajeFuerte(-ReglasAnimacion.VelocidadAterrizajeFuerte, 3f));
+            Assert.IsTrue(ReglasAnimacion.EsAterrizajeFuerte(-14f, 3f));
+            Assert.IsFalse(ReglasAnimacion.EsAterrizajeFuerte(-14f, 0.3f), "Sin caída real no cuenta");
         }
 
         [Test]
@@ -85,14 +108,21 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
         }
 
         [Test]
-        public void OverrideJugador_CaminarEsElTrote_YLosNpcSiguenCaminando()
+        public void OverrideJugador_MapeaLosClipsNuevos_YLosNpcQuedanComoAntes()
         {
-            Assert.AreEqual("PJ01_Correr_SinImplante", Override(RutaOverrideJugador, "Loco_Caminar"));
-            Assert.AreEqual("PJ01_Correr_ConImplante", Override(RutaOverrideJugador, "Loco_Caminar_ConImplante"));
-            Assert.AreEqual("PJ01_Caminar_SinImplante", Override(RutaOverrideNpc, "Loco_Caminar"));
+            Assert.AreEqual("PJ01_Caminar", Override(RutaOverrideJugador, "Loco_Caminar"));
+            Assert.AreEqual("PJ01_Trote", Override(RutaOverrideJugador, ConstructorControladorBase.RolTrote));
+            Assert.AreEqual("PJ01_Sprint", Override(RutaOverrideJugador, "Loco_Correr"));
+            Assert.AreEqual("PJ01_Trote_Atras", Override(RutaOverrideJugador, ConstructorControladorBase.RolTroteAtras));
+            Assert.AreEqual("PJ01_Trote_Derecha", Override(RutaOverrideJugador, ConstructorControladorBase.RolTroteDer));
+            Assert.AreEqual("PJ01_Trote_Izquierda", Override(RutaOverrideJugador, ConstructorControladorBase.RolTroteIzq));
+            Assert.AreEqual("PJ01_Salto_Despegue", Override(RutaOverrideJugador, "Loco_SaltoInicio"));
+            Assert.AreEqual("PJ01_Salto_Aire", Override(RutaOverrideJugador, "Loco_SaltoAire"));
+            Assert.AreEqual("PJ01_Salto_Aterrizaje", Override(RutaOverrideJugador, "Loco_SaltoAterrizaje"));
+            Assert.AreEqual("NPC_Caminar_Hombre", Override(RutaOverrideNpc, "Loco_Caminar")); // T-1506: los NPC caminan con su clip
             foreach ((string b, string p) in ConstructorControladorBase.ClipsPorPapel["NPC"])
             {
-                if (b == "Loco_Caminar") Assert.AreEqual("PJ01_Caminar_SinImplante", p);
+                if (b == "Loco_Caminar") Assert.AreEqual("NPC_Caminar_Hombre", p);
             }
         }
 

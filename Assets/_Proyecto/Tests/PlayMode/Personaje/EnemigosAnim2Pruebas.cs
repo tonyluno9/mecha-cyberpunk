@@ -124,7 +124,7 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return Hasta(() => Reproduce(a, 1, "PJ01_Punos_Fuerte"), "PJ01_Punos_Fuerte", 2f);
 
             visual.Caido = true;
-            yield return Hasta(() => Reproduce(a, 0, "PJ01_Muerte_*"), "PJ01_Muerte_*");
+            yield return Hasta(() => Reproduce(a, 0, "Guardia_Muerte"), "Guardia_Muerte"); // T-1506
         }
 
         [UnityTest]

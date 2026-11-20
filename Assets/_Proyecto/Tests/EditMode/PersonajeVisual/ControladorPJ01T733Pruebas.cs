@@ -127,6 +127,7 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
                 float v = new SerializedObject(visual).FindProperty("velocidadClipCaminar").floatValue;
                 // T-1004: el jugador (woman, PJ01) sigue con Loco_Caminar de Tony; los NPC van con PJ01_Caminar_SinImplante.
                 float esperada = n == "woman" || n == "PJ01" ? ReglasAnimacion.VelocidadClipCaminar : ReglasAnimacion.VelocidadClipCaminarSinImplante;
+                foreach (var fila in ClipsNpcNovaT1506.Visuales) { if (fila.Visual == n && fila.Caminar > 0f) { esperada = fila.Caminar; } } // T-1506: velocidad del clip propio del tipo
                 Assert.AreEqual(esperada, v, 0.005f, "Visual_" + n);
             }
         }

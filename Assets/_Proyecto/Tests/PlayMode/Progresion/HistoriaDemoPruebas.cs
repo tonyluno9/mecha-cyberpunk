@@ -241,14 +241,15 @@ namespace MechaCyberpunk.Tests.Progresion
             ArsenalJugador arsenal = Registro<ArsenalJugador>.Actual;
             VidaAPie vida = jugador.Raiz.GetComponentInChildren<VidaAPie>();
             PantallaHistoriaPandillas pantalla = director.Pantalla;
-            Assert.AreEqual(PasoHistoria.Despierta, director.Paso);
+            Assert.AreEqual(PasoHistoria.Asalto, director.Paso, "T-1496: sin cuarto, abre afuera en el asalto");
             Assert.AreEqual(DirectorPandillas.AyudaInicio, pantalla.Ayuda, "Al despertar: MEGALOPOLIS · SUBURBIOS");
 
             // Como después de la primera pelea: ya traes la pistola y cargas el paso Chato.
             Registro<ServicioInventario>.Actual.Agregar(arsenal.Catalogo.Buscar(ArmaAPie.Pistola, 0), 1);
+            int snakesAntes = SnakesPrendidos(); // T-1496: se empieza en la calle, donde ya hay SNAKES ambientales
             director.Cargar("{\"paso\":\"Chato\"}");
             Assert.AreEqual(PasoHistoria.Chato, director.Paso);
-            Assert.AreEqual(0, SnakesPrendidos(), "Antes de Libre no hay SNAKES");
+            Assert.AreEqual(snakesAntes, SnakesPrendidos(), "Antes de Libre la historia no prende SNAKES");
             cartera.Abonar(500 - cartera.Dinero, MotivoDinero.Otro);
 
             // a. T-930: el paso del Chato avanza solo y toca ir con EL DOC.

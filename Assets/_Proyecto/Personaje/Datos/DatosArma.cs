@@ -47,6 +47,12 @@ namespace MechaCyberpunk.Personaje
         [Tooltip("Distancia máxima del disparo (m).")]
         [Min(1f)] [SerializeField] private float alcance = 60f;
 
+        [Header("Caída de daño por distancia (T-1491)")]
+        [Tooltip("Fracción del alcance (0 a 1) hasta donde el daño es completo. 1 = sin caída.")]
+        [Range(0f, 1f)] [SerializeField] private float inicioCaida = 1f;
+        [Tooltip("Fracción del daño (0 a 1) que queda justo en el alcance máximo.")]
+        [Range(0f, 1f)] [SerializeField] private float danioMinimo = 1f;
+
         [Header("Armas especiales (T-1013)")]
         [Tooltip("Cómo dispara: bala (rayo), proyectil en arco, lanzada con la mano o rayo que se carga.")]
         [SerializeField] private TipoDisparoArma tipoDisparo = TipoDisparoArma.Bala;
@@ -60,6 +66,16 @@ namespace MechaCyberpunk.Personaje
         [Min(0f)] [SerializeField] private float segundosRayo;
 
         public ArmaAPie Arma => arma;
+        public float InicioCaida => inicioCaida;
+        public float DanioMinimo => danioMinimo;
+
+        /// <summary>T-1491: pone la caída de daño por distancia (para pruebas y CreadorArmas).</summary>
+        public DatosArma ConCaida(float inicio, float minimo)
+        {
+            inicioCaida = Mathf.Clamp01(inicio);
+            danioMinimo = Mathf.Clamp01(minimo);
+            return this;
+        }
         public TipoDisparoArma TipoDisparo => tipoDisparo;
         public float RadioExplosion => radioExplosion;
         public float VelocidadProyectil => velocidadProyectil;

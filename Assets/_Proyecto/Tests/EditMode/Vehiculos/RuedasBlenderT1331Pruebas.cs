@@ -18,7 +18,8 @@ namespace MechaCyberpunk.Tests.Vehiculos
         {
             GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(ruta);
             Assert.IsNotNull(prefab, ruta);
-            GameObject fbx = AssetDatabase.LoadAssetAtPath<GameObject>(CreadorRuedasT1331.RutaFbxRueda);
+            // T-1507: la patrulla se rehízo desde Carro_V05, así que lleva las llantas de V05.fbx (rin de policía).
+            GameObject fbx = AssetDatabase.LoadAssetAtPath<GameObject>(ruta.EndsWith("/Patrulla.prefab") ? CreadorCarrosBlenderT1312.RutaFbx("V05") : CreadorRuedasT1331.RutaFbxRueda);
             Assert.IsNotNull(fbx, "FBX de la rueda");
             Assert.IsNotNull(prefab.GetComponent<RuedasVisualesCarro>(), ruta);
             foreach (string nombre in Ruedas)

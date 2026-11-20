@@ -18,10 +18,11 @@ MonoBehaviour:
   acercamientoMaximo: 1.2
   distanciaParada: 1
   rapidezAcercamiento: 7
-  golpesCombo: 3
+  golpesCombo: 2
   segundosBuffer: 0.3
   ventanaCombo: 0.45
   segundosReinicioCombo: 0.7
+  multiplicadorPunosContraEnemigos: 0.45
   hitstop: 0.05
   hitstopFinal: 0.08
   impulsoCamara: 0.8

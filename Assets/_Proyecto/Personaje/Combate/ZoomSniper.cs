@@ -37,7 +37,7 @@ namespace MechaCyberpunk.Personaje.Combate
             {
                 float duracion = config != null ? config.DuracionSacudida : 0.3f;
                 float t = Mathf.Clamp01((Time.time - inicioSacudida) / duracion);
-                return (config != null ? config.SacudidaZoom : 1.5f) * (1f - t);
+                return (config != null ? config.SacudidaZoom : 0.3f) * (1f - t);
             }
         }
 
