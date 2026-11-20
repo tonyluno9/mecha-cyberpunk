@@ -48,6 +48,32 @@ namespace MechaCyberpunk.UI.Datos
         [Tooltip("Lugares donde se coloca una máquina.")]
         [SerializeField] private List<Posicion> posiciones = new List<Posicion>();
 
+        [Header("T-1529: tiendita de la esquina (edificio ED02)")]
+        [Tooltip("False: las máquinas expendedoras (y las de adorno de las escenas) ya no venden: son de decorado. Los consumibles se compran en la tiendita.")]
+        [SerializeField] private bool maquinasVenden = true;
+
+        [Tooltip("Edificio de la tiendita (ED02_TienditaEsquina_a). Vacío = no hay tiendita.")]
+        [SerializeField] private GameObject tiendita;
+
+        [Tooltip("Mostrador que va a la entrada de la tiendita (modelo existente).")]
+        [SerializeField] private GameObject mostrador;
+
+        [Tooltip("El tendero que está tras el mostrador (visual de un NPC existente).")]
+        [SerializeField] private GameObject tendero;
+
+        [Tooltip("Qué vende la tiendita (los consumibles).")]
+        [SerializeField] private DatosTienda tiendaTiendita;
+
+        [Tooltip("Sitios candidatos de la tiendita, en orden: se usa el primero que esté libre (sin otros colliders). Con 'marcador' manda el objeto de la escena con ese nombre; 'giro' es el de la fachada.")]
+        [SerializeField] private List<Posicion> sitiosTiendita = new List<Posicion>();
+
+        public bool MaquinasVenden => maquinasVenden;
+        public GameObject Tiendita => tiendita;
+        public GameObject Mostrador => mostrador;
+        public GameObject Tendero => tendero;
+        public DatosTienda TiendaTiendita => tiendaTiendita;
+        public IReadOnlyList<Posicion> SitiosTiendita => sitiosTiendita;
+
         public GameObject Modelo => modelo;
         public PantallaTienda Pantalla => pantalla;
         public DatosTienda Tienda => tienda;

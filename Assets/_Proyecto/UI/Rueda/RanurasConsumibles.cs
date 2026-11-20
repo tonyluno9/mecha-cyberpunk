@@ -85,6 +85,15 @@ namespace MechaCyberpunk.UI.Rueda
                     }
                 }
             }
+            // T-1529: lo que se llenó solo se queda en su ranura. Antes, al gastarse el objeto de la ranura 1 (la bebida), las papitas de la ranura 2
+            // pasaban solas a la ranura 1 y la tecla C quedaba sin objeto: "no deja usar el segundo consumible".
+            for (int i = 0; i < Cantidad; i++)
+            {
+                if (r[i] != null)
+                {
+                    asignados[i] = r[i];
+                }
+            }
             return r;
         }
 

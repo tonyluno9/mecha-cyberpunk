@@ -748,7 +748,8 @@ namespace MechaCyberpunk.UI.Hud
                 Poner(r.Nombre, icono == null ? c.Nombre : string.Empty);
                 UnityEngine.InputSystem.InputAction accion = enCarro ? AccionConsumirEquipado.DeCarro(i) : AccionConsumirEquipado.De(i);
                 Poner(r.Tecla, TeclasHud.Texto(accion, i == 0 ? "E" : "C").ToUpperInvariant());
-                Poner(r.Cantidad, "x" + inventario.Cantidad(c));
+                // T-1529: sin número encima del ícono (la cantidad no se escribe; el ícono basta).
+                Poner(r.Cantidad, string.Empty);
                 r.Fondo.color = FondoCasilla;
             }
         }

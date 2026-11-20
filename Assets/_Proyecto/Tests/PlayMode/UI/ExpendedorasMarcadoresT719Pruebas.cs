@@ -72,7 +72,8 @@ namespace MechaCyberpunk.Tests.UI
             // a. Salen de los lugares de Core: cada una a su desplazamiento de la entrada del lugar.
             Transform raiz = Raiz().transform;
             Expendedora[] maquinas = raiz.GetComponentsInChildren<Expendedora>();
-            Assert.AreEqual(3, maquinas.Length, "Casa, tianguis y Nova");
+            Assert.IsNotNull(raiz.Find("Expendedora_3"), "Casa, tianguis y Nova siguen de decorado");
+            Assert.LessOrEqual(maquinas.Length, 1, "T-1529: las máquinas ya no venden; solo el mostrador de la tiendita");
             Vector3 casa = Entrada(IdLugar.Casa);
             Vector3 bar = Entrada(IdLugar.Bar);
             Assert.Less(Vector3.Distance(raiz.Find("Expendedora_1").position, casa + new Vector3(0f, 0f, 6f)), 0.01f, "La de la casa mide desde Lugar_Casa");

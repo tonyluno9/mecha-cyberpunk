@@ -43,7 +43,6 @@ namespace MechaCyberpunk.UI.Hud
 
         private readonly DatosConsumible[] equipados = new DatosConsumible[RanurasConsumibles.Cantidad];
         private readonly System.Collections.Generic.List<DatosConsumible> llevados = new System.Collections.Generic.List<DatosConsumible>();
-        private readonly System.Text.StringBuilder linea = new System.Text.StringBuilder();
         private InteraccionAPie interaccion;
 
         private void OnEnable() => AccionConsumirEquipado.Habilitar();
@@ -137,8 +136,6 @@ namespace MechaCyberpunk.UI.Hud
             {
                 ResolverRanuras();
             }
-            linea.Length = 0;
-            ServicioInventario servicio = Registro<ServicioInventario>.Actual;
             bool hayInteraccion = interaccion != null && interaccion.TipoCandidato != TipoCandidatoAPie.Ninguno;
             bool libre = EntradaLibre();
             bool alt = AccionConsumirEquipado.Cambiar.IsPressed();
@@ -158,21 +155,10 @@ namespace MechaCyberpunk.UI.Hud
                         consumibles.Usar(equipados[r]);
                     }
                 }
-                DatosConsumible c = equipados[r];
-                if (c == null)
-                {
-                    continue;
-                }
-                if (linea.Length > 0)
-                {
-                    linea.Append("   ");
-                }
-                string tecla = TeclasHud.Texto(accion, r == 0 ? "E" : "C").ToUpperInvariant();
-                int cantidad = servicio != null ? servicio.Cantidad(c) : 0;
-                linea.Append('[').Append(tecla).Append("] ").Append(c.Nombre.ToUpperInvariant()).Append(" x").Append(cantidad);
             }
             ObjetoEquipado = equipados[0];
-            textoConsumo.text = linea.ToString();
+            // T-1529: la línea "[E] BEBIDA x2" repetía lo que ya dicen las casillas (ícono, tecla y cantidad): ya no se escribe.
+            textoConsumo.text = string.Empty;
         }
 
         // Qué objeto hay en cada ranura con lo que lleva ahora (sin los que se quitaron de la rueda).

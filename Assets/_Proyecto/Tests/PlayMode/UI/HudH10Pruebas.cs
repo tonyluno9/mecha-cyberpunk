@@ -208,8 +208,8 @@ namespace MechaCyberpunk.Tests.UI
             Assert.IsTrue(h10.RanuraVisible(0));
             Assert.IsTrue(h10.RanuraVisible(1));
             Assert.IsFalse(h10.RanuraVisible(2));
-            Assert.AreEqual("x1", h10.CantidadRanura(0));
-            Assert.AreEqual("x2", h10.CantidadRanura(1));
+            Assert.AreEqual(string.Empty, h10.CantidadRanura(0), "T-1529: sin número sobre el ícono");
+            Assert.AreEqual(string.Empty, h10.CantidadRanura(1));
             Assert.AreEqual("E", h10.TeclaRanura(0), "T-1492: la ranura 1 se usa con E");
             Assert.AreEqual("C", h10.TeclaRanura(1), "T-1492: la ranura 2 se usa con C");
             Assert.IsNotNull(h10.IconoRanura(0), "Ícono de la bebida");
@@ -223,7 +223,7 @@ namespace MechaCyberpunk.Tests.UI
             yield return ElegirEnRueda(MechaCyberpunk.UI.Rueda.ReglaRuedaArmas.CasillaObjeto(1));
             yield return null;
             yield return null;
-            Assert.AreEqual("x1", h10.CantidadRanura(1), "Usar las papitas con la tecla 7 baja la cantidad en el HUD");
+            Assert.AreEqual(1, inventario.Cantidad(papitas), "Usar las papitas con la tecla 7 baja la cantidad");
         }
 
         [UnityTest]

@@ -14,7 +14,7 @@ namespace MechaCyberpunk.Personaje.Vida
         private float sinDanio;
 
         public float Actual { get; private set; }
-        public float Maxima { get; }
+        public float Maxima { get; private set; }
         public bool EstaKO { get; private set; }
 
         public event Action Cambio;
@@ -81,6 +81,25 @@ namespace MechaCyberpunk.Personaje.Vida
                 return;
             }
             Actual = Math.Min(Maxima, Actual + porSegundo * dt);
+            Cambio?.Invoke();
+        }
+
+        /// <summary>
+        /// T-1529: cambia la vida máxima (los implantes la suben). Al subir, la vida de ahora sube lo mismo (se gana esa vida); al bajar, no queda por
+        /// encima del nuevo máximo. Con KO no cambia la vida de ahora. Avisa solo si algo cambió.
+        /// </summary>
+        public void PonerMaxima(float maxima)
+        {
+            if (maxima <= 0f || Math.Abs(maxima - Maxima) < 1e-4f)
+            {
+                return;
+            }
+            float delta = maxima - Maxima;
+            Maxima = maxima;
+            if (!EstaKO)
+            {
+                Actual = Math.Min(Maxima, Math.Max(0f, Actual + Math.Max(0f, delta)));
+            }
             Cambio?.Invoke();
         }
 
