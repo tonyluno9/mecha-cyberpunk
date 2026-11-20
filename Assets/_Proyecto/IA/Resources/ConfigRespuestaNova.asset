@@ -42,3 +42,20 @@ MonoBehaviour:
   sonidoLlegada: POL_NOVA_AVISO
   escalaPesado: 1.43
   distanciaVista: 40
+  naves:
+  - {fileID: 1991756589746152423, guid: c61d8861d955e1743b5e7bd5fb241374, type: 3}
+  - {fileID: 1812590631265041335, guid: f07c942ab93d4314e8389c36a786c612, type: 3}
+  - {fileID: 1919591894994445281, guid: 1cf1585c2f0d94a42af29db4bb20c029, type: 3}
+  soldadosNaveConCuatro: 2
+  soldadosNaveConCinco: 4
+  segundosPrimeraNave: 8
+  segundosEntreNaves: 40
+  alturaFlote: 10
+  alturaMinimaFlote: 6
+  margenAireNave: 2
+  radioLibreNave: 5
+  velocidadNave: 28
+  velocidadDescenso: 6
+  segundosEntreSoldados: 0.7
+  distanciaLlegadaNave: 140
+  materialCuerda: {fileID: 2100000, guid: b3c52d620879d974abe1406e2105c112, type: 2}

@@ -39,7 +39,7 @@ namespace MechaCyberpunk.Arte.Editor
         /// <summary>imageassets no se versiona: en un worktree está en la carpeta principal del repo (tres niveles arriba de .claude/worktrees/x).</summary>
         private static string BuscarZip()
         {
-            foreach (string candidato in new[] { Zip, "../../../" + Zip })
+            foreach (string candidato in new[] { Zip, "../../" + Zip, "../../../" + Zip })
             {
                 if (File.Exists(candidato))
                 {
