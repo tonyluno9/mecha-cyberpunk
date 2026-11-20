@@ -158,6 +158,12 @@ namespace MechaCyberpunk.Arte.Editor
             foreach (string v in Variantes)
             {
                 string origen = Path.Combine(raiz, CarpetaOrigen, v + ".fbx");
+                // T-1497: E15, E16 y E18 (_a) tienen modelo a escala real (Blender, bloque C del 19-nov): se prefiere ese.
+                string real = Path.Combine(raiz, CarpetaOrigen, "escala_real", v.Substring(0, v.Length - 2) + ".fbx");
+                if (v.EndsWith("_a") && EscalasNova.Altura(v) > 0f && v != PerroVariante && File.Exists(real))
+                {
+                    origen = real;
+                }
                 if (!File.Exists(origen))
                 {
                     Informe.AppendLine("  falta el FBX " + origen);
@@ -356,7 +362,7 @@ namespace MechaCyberpunk.Arte.Editor
             return datos;
         }
 
-        private static GameObject ArmarEnemigo(string rutaBase, string visual, string rutaPrefab, DatosPandilleroAPie datos, bool pasarArmas, Action<GameObject> extra = null)
+        public static GameObject ArmarEnemigo(string rutaBase, string visual, string rutaPrefab, DatosPandilleroAPie datos, bool pasarArmas, Action<GameObject> extra = null)
         {
             GameObject visualPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(RutaVisual(visual));
             if (visualPrefab == null)
@@ -441,6 +447,8 @@ namespace MechaCyberpunk.Arte.Editor
             EditorUtility.SetDirty(config);
             Informe.AppendLine("  ConfigRespuestaNova: " + guardias.Count + " guardias extra, " + pesados.Count + " pesados extra, " + perros.Count + " perro(s) ("
                 + PerrosConCuatro + " con 4 estrellas, " + PerrosConCinco + " con 5)");
+            // T-1497: escala real, cápsula y arma W10 de los agentes de Nova (si no, al rehacer los prefabs se perderían).
+            EscalaNovaT1497.RetocarEnemigos(Informe);
         }
 
         public static void ConectarSkulls()

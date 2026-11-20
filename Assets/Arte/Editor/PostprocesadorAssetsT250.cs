@@ -42,7 +42,8 @@ namespace MechaCyberpunk.Arte.Editor
                 perro.animationType = ModelImporterAnimationType.Generic;
                 perro.materialImportMode = ModelImporterMaterialImportMode.ImportStandard;
                 perro.useFileScale = true;
-                perro.globalScale = 1f;
+                // T-1497: la escala que lleva al perro a su alto real (1.2 m) va en userData ("escala=1.15") para que un reimport no la pierda; 1 si no hay.
+                perro.globalScale = EscalaPersonaje(perro.userData);
                 return;
             }
 
