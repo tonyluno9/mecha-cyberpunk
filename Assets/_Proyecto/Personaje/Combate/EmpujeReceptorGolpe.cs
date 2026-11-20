@@ -10,6 +10,8 @@ namespace MechaCyberpunk.Personaje.Combate
     {
         private readonly EmpujeLineal empuje = new EmpujeLineal();
         private CharacterController cuerpo;
+        // CharacterController.Move ignora pasos menores que minMoveDistance: con muchos cuadros por segundo casi todo el empuje se perdía.
+        private Vector3 pendiente;
 
         public bool Empujando => empuje.Activo;
 
@@ -17,6 +19,7 @@ namespace MechaCyberpunk.Personaje.Combate
         {
             velocidad.y = 0f;
             empuje.Iniciar(velocidad, segundos);
+            pendiente = Vector3.zero;
         }
 
         private void Awake()
@@ -30,7 +33,12 @@ namespace MechaCyberpunk.Personaje.Combate
             {
                 return;
             }
-            cuerpo.Move(empuje.Avanzar(Time.deltaTime));
+            pendiente += empuje.Avanzar(Time.deltaTime);
+            if (pendiente.magnitude > cuerpo.minMoveDistance || !empuje.Activo)
+            {
+                cuerpo.Move(pendiente);
+                pendiente = Vector3.zero;
+            }
         }
     }
 }
