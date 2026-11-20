@@ -55,3 +55,13 @@ La cinemática del asalto usa Idle y Caminar/Correr de Skull (asaltante) y el Id
 | La víctima levanta las manos al ser asaltada | Hands Up (o Surrender, Being Robbed) | NPC_ManosArriba_Bucle.fbx | NPC |
 | El asaltante apunta o amenaza con el arma | Pistol Aim / Threatening | Skull_Amenazar_Bucle.fbx | Skull |
 | La víctima se asusta y retrocede | Terrified (ya está en la tabla de arriba como NPC_Aterrado_Bucle) | NPC_Aterrado_Bucle.fbx | NPC |
+
+## T-1487: golpear a pie (19-nov-2026)
+
+Con los clips actuales (GolpeIzq, GolpeDer, GolpeFuerte, Dano*) el combo funciona. Para que se vea mejor, opcionales:
+
+| Para qué | Búscalo en Mixamo como | Archivo | Carpeta |
+| --- | --- | --- | --- |
+| Golpe final del combo distinto al GolpeFuerte (patada o gancho) | Roundhouse Kick / Hook Punch | Punos_GolpeFinal.fbx | Combate |
+| El enemigo sale volando hacia atrás con el golpe final | Standing React Large From Front (o Knocked Back) | Dano_EmpujadoAtras.fbx | Combate |
+| Sonido de golpe final más pesado (audio, no animación) | MEL_GOLPE con graves | MEL_GOLPE.wav | Assets/Arte audio |
