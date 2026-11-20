@@ -257,7 +257,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
             Bounds b = LimitesEn(patrulla.transform.Find("Visual_T511/Carroceria"), patrulla.transform);
             Bounds v05 = LimitesEn(Carro("V05").transform.Find("Visual_T511/Carroceria"), Carro("V05").transform);
             Assert.AreEqual(v05.size.z, b.size.z, Margen);
-            Assert.AreEqual(0f, b.min.y, Margen);
+            Assert.AreEqual(v05.min.y, b.min.y, Margen); // la carrocería de Blender va sobre las llantas: se compara con la del V05
         }
 
         [Test]

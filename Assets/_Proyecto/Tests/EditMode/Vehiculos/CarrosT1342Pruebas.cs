@@ -63,6 +63,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
                 Assert.IsNotNull(bisagra, codigo + " " + par.Item1);
                 Assert.IsNotNull(bisagra.Find(par.Item2), codigo + " " + par.Item2 + " bajo su bisagra");
             }
+            if (codigo == "V22") { return; } // T-1507: el V22 rehecho solo lleva parabrisas; sus ventanas laterales van pintadas
             Assert.IsNotNull(visual.Find("Bisagra_Puerta_I/Puerta_I/" + PiezasCarroT1342.NombreCristalPuertaI), codigo + " cristal de la puerta izquierda");
             Assert.IsNotNull(visual.Find("Bisagra_Puerta_D/Puerta_D/" + PiezasCarroT1342.NombreCristalPuertaD), codigo + " cristal de la puerta derecha");
         }
@@ -75,7 +76,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
             Assert.AreEqual(1f, cristal.GetFloat("_Surface"), "transparente");
             Assert.GreaterOrEqual(cristal.renderQueue, 3000);
             Renderer[] cristales = Prefab(codigo).GetComponentsInChildren<Renderer>(true).Where(r => r.name.StartsWith("Cristal_")).ToArray();
-            Assert.GreaterOrEqual(cristales.Length, 2, codigo + " cristales");
+            Assert.GreaterOrEqual(cristales.Length, codigo == "V22" ? 1 : 2, codigo + " cristales");
             foreach (Renderer r in cristales)
             {
                 Assert.AreSame(cristal, r.sharedMaterial, codigo + " " + r.name);

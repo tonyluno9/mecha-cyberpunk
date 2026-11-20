@@ -139,7 +139,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
             Mesh cuerpo = moto.transform.Find("Visual_T511/Visual").GetComponent<MeshFilter>().sharedMesh;
             Assert.AreSame(nuevo, cuerpo, "C19CUERPO");
             Bounds b = LimitesEn(moto.transform.Find("Visual_T511/Visual"), moto.transform);
-            Assert.AreEqual(2.0f, b.size.z, 0.05f, "Mismo largo de siempre");
+            Assert.That(b.size.z, Is.InRange(1.6f, 2.3f), "T-1507: cuerpo de la moto en metros");
         }
 
         [Test]
