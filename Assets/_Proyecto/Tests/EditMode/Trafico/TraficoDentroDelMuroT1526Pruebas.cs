@@ -129,7 +129,7 @@ namespace MechaCyberpunk.Tests.Trafico
                 finalesDespues += grafo.Dentro(i) && grafo.Vecinos(i).Count == 1 ? 1 : 0;
             }
             Assert.AreEqual(6, finalesDespues, "los 6 finales de calle de la cuadrícula siguen siendo finales (la vuelta en U es ahí)");
-            Assert.Greater(finalesAntes, 0);
+            Assert.AreEqual(0, finalesAntes, "antes del recorte cada final de la cuadrícula sigue hacia su calle de afuera (2 vecinos)");
         }
 
         private static bool IsAfuera(GrafoCalles grafo, int i) => Mathf.Abs(grafo.Nodo(i).x) > 200f || Mathf.Abs(grafo.Nodo(i).z) > 140f;
