@@ -99,14 +99,15 @@ namespace MechaCyberpunk.Arte.Editor
         public const float AlturaJugador = 1.80f;
         public static readonly (string prefab, float medida, float relativa)[] Personajes =
         {
-            ("Visual_Doctor", 1.17f, 1.09f),       // El Doc un poco más grande (playtest del 6-nov, T-812)
+            // T-1521: las relativas siguen a EscalasHumanos (altura objetivo / 1.80); la escala fina la pone EscalaHumanosT1521.Aplicar midiendo la malla animada.
+            ("Visual_Doctor", 1.17f, 1.00f),       // el Doc ya no es más alto que el jugador (antes 1.09, T-812)
             ("Visual_Inventor", 1.18f, 0.98f),
-            ("Visual_Hacker", 1.43f, 1.00f),
+            ("Visual_Hacker", 1.43f, 0.98f),
             ("Visual_man", 1.35f, 1.00f),
-            ("Visual_RobotHombre", 1.28f, 1.00f),
+            ("Visual_RobotHombre", 1.28f, 0.99f),
             ("Visual_SkullHombre", 1.39f, 1.00f),
             ("Visual_GuardiaNova", 1.36f, 1.25f),   // los robots de Nova son más altos que una persona (T-530)
-            ("Visual_woman", 1.41f, 1.00f),
+            ("Visual_woman", 1.41f, 0.97f),
             ("Visual_woman2", 1.35f, 0.97f),
         };
         private const string RutaVisuales = "Assets/_Proyecto/Personaje/Visual/Prefabs/";
