@@ -12,6 +12,9 @@ namespace MechaCyberpunk.Trafico.Peatones
         /// <summary>Primer peatón que platica (los de antes caminan siempre).</summary>
         public const int IndiceInicial = 3;
         public const float RadioCorro = 0.55f;
+
+        /// <summary>Lo de lado del lugar se aprieta a esta fracción para que el corro no salga de la banqueta (la ruta tolera 0.35 m).</summary>
+        public const float FraccionLateral = 0.6f;
         private const float GradosVuelta = 360f;
 
         /// <summary>Cuántos peatones platican de <paramref name="total"/> (0 si <paramref name="unoDeCada"/> es 0; al menos 2 si hay lugar).</summary>

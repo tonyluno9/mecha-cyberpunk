@@ -300,7 +300,7 @@ namespace MechaCyberpunk.Trafico.Peatones
         private void AtenderPlatica()
         {
             Detenido = true;
-            Vector3 haciaElCentro = -lugarPlatica;
+            Vector3 haciaElCentro = desvioPlatica.sqrMagnitude > 0.0001f ? -desvioPlatica : -lugarPlatica;
             Mirar(transform.parent != null ? transform.parent.TransformDirection(haciaElCentro) : haciaElCentro);
             proximoAviso -= Time.deltaTime;
             if (proximoAviso <= 0f)
@@ -615,14 +615,22 @@ namespace MechaCyberpunk.Trafico.Peatones
             posRuta = RutasBanqueta.Posicion(puntos, calculo);
             Vector3 mundo = haciaDonde;
             mundo.y = 0f;
+            Vector3 metaPlatica = Vector3.zero;
             if (mundo.sqrMagnitude > 0.01f && transform.parent != null)
             {
                 // Camina por su derecha, en espacio local del padre.
                 Vector3 derecha = transform.parent.InverseTransformDirection(Vector3.Cross(Vector3.up, mundo.normalized));
                 derecha.y = 0f;
-                desvio = Vector3.MoveTowards(desvio, derecha.normalized * DesvioLateral, VelocidadDesvio * Time.deltaTime);
+                derecha.Normalize();
+                desvio = Vector3.MoveTowards(desvio, platicando ? Vector3.zero : derecha * DesvioLateral, VelocidadDesvio * Time.deltaTime);
+                if (platicando)
+                {
+                    // El corro se acomoda a lo largo de la banqueta (z del lugar = sentido de la ruta) y se aprieta de lado para no salirse de ella.
+                    Vector3 adelante = Vector3.Cross(derecha, Vector3.up);
+                    metaPlatica = derecha * (lugarPlatica.x * ReglaPlatica.FraccionLateral) - adelante * lugarPlatica.z;
+                }
             }
-            desvioPlatica = Vector3.MoveTowards(desvioPlatica, platicando ? lugarPlatica : Vector3.zero, VelocidadDesvio * Time.deltaTime);
+            desvioPlatica = Vector3.MoveTowards(desvioPlatica, metaPlatica, VelocidadDesvio * Time.deltaTime);
             transform.localPosition = posRuta + desvio + desvioPlatica;
         }
 
