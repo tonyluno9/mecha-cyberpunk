@@ -106034,6 +106034,8 @@ MonoBehaviour:
   velocidadClipCorrer: 2.1075106
   rapidezMinima: 0.6
   rapidezMaxima: 2.8
+  velocidadClipAtras: 0
+  velocidadClipLado: 0
   rapidezCapaArriba: 8
   suavizadoDireccion: 14
   segundosTumbarse: 0.35
@@ -158026,7 +158028,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 784416540159638324, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -63.44983
+      value: -55.5
       objectReference: {fileID: 0}
     - target: {fileID: 784416540159638324, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_LocalPosition.y
@@ -158034,15 +158036,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 784416540159638324, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -73.44971
+      value: -77
       objectReference: {fileID: 0}
     - target: {fileID: 784416540159638324, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 784416540159638324, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 786383023245920548, guid: ffa603cd0d23bbf49b2126223eb43652, type: 3}
       propertyPath: m_IsActive
@@ -275728,6 +275730,8 @@ MonoBehaviour:
   velocidadClipCorrer: 2.1075106
   rapidezMinima: 0.6
   rapidezMaxima: 2.8
+  velocidadClipAtras: 0
+  velocidadClipLado: 0
   rapidezCapaArriba: 8
   suavizadoDireccion: 14
   segundosTumbarse: 0.35
@@ -651015,6 +651019,9 @@ MonoBehaviour:
   alturaRayo: 0.6
   alcanceRayo: 1.1
   rapidezPies: 10
+  soloDesnivel: 0
+  desnivelMaximo: 0.35
+  inclinarEnGiros: 0
   objetivo: {fileID: 0}
   mirarAlJugador: 1
   distanciaMirada: 7
@@ -790911,7 +790918,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 395581257372076035, guid: c7f401c0667ecd94b837e6d0bb969c65, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 395581257372076035, guid: c7f401c0667ecd94b837e6d0bb969c65, type: 3}
       propertyPath: m_LocalRotation.x
@@ -790919,11 +790926,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 395581257372076035, guid: c7f401c0667ecd94b837e6d0bb969c65, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 395581257372076035, guid: c7f401c0667ecd94b837e6d0bb969c65, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 395581257372076035, guid: c7f401c0667ecd94b837e6d0bb969c65, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -790999,7 +791006,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13afa5b580f3e7349a10fcc8a0a008db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: MechaCyberpunk.Personaje.Visual::MechaCyberpunk.Personaje.Visual.PoseSentado
-  alturaCadera: 0.534
+  alturaCadera: 0.554
   vaiven: 0.02
 --- !u!1 &1148791990
 GameObject:
@@ -974765,6 +974772,9 @@ MonoBehaviour:
   alturaRayo: 0.6
   alcanceRayo: 1.1
   rapidezPies: 10
+  soloDesnivel: 0
+  desnivelMaximo: 0.35
+  inclinarEnGiros: 0
   objetivo: {fileID: 0}
   mirarAlJugador: 1
   distanciaMirada: 7
@@ -1186295,7 +1186305,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1759386823
 MonoBehaviour:
   m_ObjectHideFlags: 0

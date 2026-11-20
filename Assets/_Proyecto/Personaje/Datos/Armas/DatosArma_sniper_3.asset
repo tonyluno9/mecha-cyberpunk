@@ -27,9 +27,11 @@ MonoBehaviour:
   recarga: 1.9
   tiempoEntreDisparos: 1.2
   automatica: 0
-  dispersion: 8
+  dispersion: 1.2
   dispersionApuntando: 0
-  alcance: 150
+  alcance: 300
+  inicioCaida: 1
+  danioMinimo: 1
   tipoDisparo: 0
   radioExplosion: 0
   velocidadProyectil: 22

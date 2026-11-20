@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: DatosPandilleroAPie_RobotPesadoE16
   m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.Datos.DatosPandilleroAPie
   nombre: ROBOT PESADO NOVA
-  vidaMaxima: 260
+  vidaMaxima: 364
   danioGolpe: 10
   preparacionGolpe: 0.5
   recargaGolpe: 1.2
@@ -85,6 +85,11 @@ MonoBehaviour:
   distanciaMinCarga: 4
   distanciaMaxCarga: 14
   multiplicadorCastigo: 1.5
+  reaccionaADisparos: 0
+  radioOido: 60
+  distanciaVision: 45
+  segundosBusqueda: 6
+  perroRobot: 0
   colorNormal: {r: 1, g: 1, b: 1, a: 1}
   colorGolpe: {r: 1, g: 0.2, b: 0.2, a: 1}
   colorKO: {r: 0.2, g: 0.2, b: 0.2, a: 1}

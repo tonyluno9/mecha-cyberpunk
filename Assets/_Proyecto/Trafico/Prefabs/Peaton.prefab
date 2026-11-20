@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8154291515107379166}
   - component: {fileID: 1583736450955593197}
   - component: {fileID: 7679416067220448177}
+  - component: {fileID: 8926064737005248538}
   m_Layer: 0
   m_Name: Peaton
   m_TagString: Untagged
@@ -79,6 +80,18 @@ MonoBehaviour:
   - {fileID: 8385579478277162656, guid: eb4b3f49a77134044b6cf24c35887549, type: 3}
   probabilidadVariante: 0.65
   configZona: {fileID: 11400000, guid: d08b4574cf8f44d43b626e5c3dae227d, type: 2}
+--- !u!114 &8926064737005248538
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5461681330256039366}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b8e1d47a9c24f6d8a05e2c7f1d96b30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.APie.AnimacionCivilMundo
 --- !u!1001 &1373700004045835116
 PrefabInstance:
   m_ObjectHideFlags: 0
