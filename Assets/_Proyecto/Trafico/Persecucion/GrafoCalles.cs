@@ -20,6 +20,8 @@ namespace MechaCyberpunk.Trafico.Persecucion
         // T-1350: nodos y tramos de las calles de zona (CalleZona): los de zona no se alargan hacia las afueras; los tramos rápidos son de autopista.
         private readonly HashSet<int> nodosDeZona = new HashSet<int>();
         private readonly HashSet<long> tramosRapidos = new HashSet<long>();
+        // T-1526: nodos fuera del muro de la ciudad: sin vecinos y nunca se eligen para salir, llegar o retirarse.
+        private readonly HashSet<int> nodosFuera = new HashSet<int>();
         private float alturaMinima = float.MaxValue;
         private float alturaMaxima = float.MinValue;
 
@@ -110,6 +112,51 @@ namespace MechaCyberpunk.Trafico.Persecucion
             }
         }
 
+        /// <summary>T-1526: false si el nodo quedó fuera del muro (<see cref="Recortar"/>): no sirve para aparecer ni para ir.</summary>
+        public bool Dentro(int indice) => nodosFuera.Count == 0 || !nodosFuera.Contains(indice);
+
+        /// <summary>T-1526: cuántos nodos quedaron fuera del muro.</summary>
+        public int NodosFuera => nodosFuera.Count;
+
+        /// <summary>
+        /// T-1526: desconecta los nodos cuyo punto en el plano (x, z) cae fuera de <paramref name="area"/> (el interior del muro). Sus tramos se quitan, así que una
+        /// calle que llegaba a una salida del muro termina en su último nodo de adentro (los carros dan vuelta ahí). Devuelve cuántos nodos quitó.
+        /// Si el área deja menos de <paramref name="minimoDentro"/> nodos no hace nada (el área estaría mal detectada).
+        /// </summary>
+        public int Recortar(Rect area, int minimoDentro = 4)
+        {
+            List<int> fuera = new List<int>();
+            for (int i = 0; i < nodos.Count; i++)
+            {
+                if (!area.Contains(new Vector2(nodos[i].x, nodos[i].z)))
+                {
+                    fuera.Add(i);
+                }
+            }
+            if (fuera.Count == 0 || nodos.Count - fuera.Count < minimoDentro)
+            {
+                return 0;
+            }
+            foreach (int i in fuera)
+            {
+                foreach (int v in vecinos[i])
+                {
+                    vecinos[v].Remove(i);
+                }
+                vecinos[i].Clear();
+                nodosFuera.Add(i);
+            }
+            // Un nodo de adentro que solo llegaba a lo de afuera queda suelto: tampoco sirve para nada.
+            for (int i = 0; i < nodos.Count; i++)
+            {
+                if (vecinos[i].Count == 0 && nodosFuera.Add(i))
+                {
+                    fuera.Add(i);
+                }
+            }
+            return fuera.Count;
+        }
+
         /// <summary>T-1350: true si el nodo es de una calle de zona.</summary>
         public bool EsDeZona(int indice) => nodosDeZona.Contains(indice);
 
@@ -141,7 +188,11 @@ namespace MechaCyberpunk.Trafico.Persecucion
             bool tridimensional = TieneAlturas;
             for (int i = 0; i < nodos.Count; i++)
             {
-                float d = tridimensional ? Vector3.Distance(nodos[i], punto) : Plano(nodos[i], punto);
+                if (!Dentro(i))
+                {
+                    continue;
+                }
+                float d = tridimensional ?Vector3.Distance(nodos[i], punto) : Plano(nodos[i], punto);
                 if (d < menor)
                 {
                     menor = d;
@@ -158,6 +209,10 @@ namespace MechaCyberpunk.Trafico.Persecucion
             float mayor = -1f;
             for (int i = 0; i < nodos.Count; i++)
             {
+                if (!Dentro(i))
+                {
+                    continue;
+                }
                 float d = Plano(nodos[i], punto);
                 if (d > mayor)
                 {

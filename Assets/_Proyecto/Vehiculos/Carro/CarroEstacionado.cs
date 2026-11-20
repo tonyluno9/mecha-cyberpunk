@@ -169,7 +169,8 @@ namespace MechaCyberpunk.Vehiculos.Carro
         private void AlCambiarOcupado(bool ocupado)
         {
             // T-450: la puerta suena al subir y al bajar; la primera vez (robo) también la cerradura forzada.
-            Sonidos.ReproducirEn(ocupado ? "VEH_PUERTA_ABRIR" : "VEH_PUERTA_CERRAR", transform.position);
+            // T-1526: al subir suena la puerta cerrándose detrás de ti (VEH_PUERTA_CERRAR, antes VEH_PUERTA_ABRIR, que no gustó) y luego el arranque del motor; al bajar, la puerta que se abre.
+            Sonidos.ReproducirEn(ocupado ? "VEH_PUERTA_CERRAR" : "VEH_PUERTA_ABRIR", transform.position);
             if (!ocupado)
             {
                 StartCoroutine(RevisarAlEstacionar());
