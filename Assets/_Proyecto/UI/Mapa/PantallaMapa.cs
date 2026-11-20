@@ -13,7 +13,7 @@ namespace MechaCyberpunk.UI.Mapa
     /// <summary>
     /// El mapa del barrio con M (T-404, D-tony-220; T-409 con el kit): vista desde arriba con las 6 manzanas del color del dueño de su zona,
     /// su nombre y respeto, tú como flecha blanca, los enemigos, el objetivo y los iconos de El Mercado, I+D+I, el CIC y la casa.
-    /// La rueda hace zoom de 1x a 6x centrado en el cursor; un clic izquierdo marca un punto (que sale en el minimapa) y otro clic sobre él lo
+    /// La rueda hace zoom de 1x a 3x centrado en el cursor; un clic izquierdo marca un punto (que sale en el minimapa) y otro clic sobre él lo
     /// quita. A la derecha va la leyenda. M o Esc lo cierran. Mientras está abierto el jugador a pie no se mueve ni dispara y el cursor se ve.
     /// </summary>
     public class PantallaMapa : MonoBehaviour
@@ -24,13 +24,13 @@ namespace MechaCyberpunk.UI.Mapa
         public const string TextoAyuda = "M O ESC PARA CERRAR · RUEDA: ZOOM · CLIC: MARCAR UN PUNTO O UN LUGAR";
         public const int OrdenCanvas = 40;
         public const float ZoomMinimo = 1f;
-        public const float ZoomMaximo = 6f;
+        public const float ZoomMaximo = 3f;
         public const string SonidoAbrir = "UI_MAPA_ABRIR";
         public const string SonidoCerrar = "UI_MAPA_CERRAR";
         public static readonly string[] EtiquetasFijasLeyenda =
             { "SKULLS", "SNAKES", "NOVA", "TÚ", "ENEMIGOS", "OBJETIVO", "EL MERCADO", "I+D+I", "CIC", "CASA", "PUNTO MARCADO" };
 
-        // T-747: la imagen de la ciudad entera (825 x 620 m) cabe en la vista de 800 x 560 con zoom 1. Constante: el valor viejo seguía guardado en la escena.
+        // T-747: la imagen de la ciudad entera (400 x 280 m) llena la vista de 800 x 560 con zoom 1. Constante: el valor viejo seguía guardado en la escena.
         private const float pixelesPorMetro = MapaImagen.PixelesVistaPorMetro;
         [Tooltip("Tamaño de la vista del mapa (px).")]
         [SerializeField] private Vector2 tamanoVista = new Vector2(800f, 560f);
@@ -435,8 +435,7 @@ namespace MechaCyberpunk.UI.Mapa
         private void AplicarZoom()
         {
             contenido.localScale = new Vector3(zoom, zoom, 1f);
-            // T-1352: el cuadro del mapa ya no está centrado en el origen del mundo: con zoom 1 su centro queda en el centro de la vista.
-            contenido.anchoredPosition = desplazamiento - MapaImagen.Centro * (pixelesPorMetro * zoom);
+            contenido.anchoredPosition = desplazamiento;
             lineasCalles.FijarGrosor(GrosorCallesPx / zoom);
             lineasEdificios.FijarGrosor(GrosorEdificiosPx / zoom);
         }

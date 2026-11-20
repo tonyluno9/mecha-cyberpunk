@@ -20,8 +20,8 @@ namespace MechaCyberpunk.Tests.UI
         {
             Vector2 mundo = new Vector2(-63f, -77f);
             Vector2 pixel = MapaImagen.MundoAPixel(mundo);
-            Assert.AreEqual((-63f - MapaImagen.MinX) * MapaImagen.PixelesPorMetro, pixel.x, 0.001f);
-            Assert.AreEqual((-77f - MapaImagen.MinZ) * MapaImagen.PixelesPorMetro, pixel.y, 0.001f);
+            Assert.AreEqual((-63f + 200f) * MapaImagen.PixelesPorMetro, pixel.x, 0.001f);
+            Assert.AreEqual((-77f + 140f) * MapaImagen.PixelesPorMetro, pixel.y, 0.001f);
             Vector2 vuelta = MapaImagen.PixelAMundo(pixel);
             Assert.AreEqual(mundo.x, vuelta.x, 0.001f);
             Assert.AreEqual(mundo.y, vuelta.y, 0.001f);
@@ -38,85 +38,20 @@ namespace MechaCyberpunk.Tests.UI
         }
 
         [Test]
-        public void ElCentroDelCuadro_EsElMedioDeLosLimites_YMundoADibujoSeMideDesdeEl()
+        public void ElCentroDelCuadroEsElOrigenDelMundo_ComoLasCuentasViejasDelMapa()
         {
-            Assert.AreEqual((MapaImagen.MinX + MapaImagen.MaxX) * 0.5f, MapaImagen.Centro.x, 0.001f);
-            Assert.AreEqual((MapaImagen.MinZ + MapaImagen.MaxZ) * 0.5f, MapaImagen.Centro.y, 0.001f);
-            Assert.AreEqual(Vector2.zero, MapaImagen.MundoADibujo(MapaImagen.Centro, 2f));
+            // PantallaMapa y Minimapa ponen todo en (x, z) * px/m desde el origen: el centro de la imagen debe ser el origen.
+            Assert.AreEqual(Vector2.zero, MapaImagen.Centro);
             Vector2 punto = new Vector2(30f, -12f);
-            Assert.AreEqual((punto - MapaImagen.Centro) * 2f, MapaImagen.MundoADibujo(punto, 2f));
+            Assert.AreEqual(punto * 2f, MapaImagen.MundoADibujo(punto, 2f));
         }
 
         [Test]
-        public void ElCuadro_CubreElMundoNuevo_YLaImagenNoPasaDe4096()
-        {
-            Assert.LessOrEqual(MapaImagen.MinX, -480f);
-            Assert.GreaterOrEqual(MapaImagen.MaxX, 345f);
-            Assert.GreaterOrEqual(MapaImagen.MaxZ, 290f);
-            Assert.LessOrEqual(MapaImagen.MinZ, -268f);
-            Assert.LessOrEqual(MapaImagen.AnchoPx, 4096);
-            Assert.LessOrEqual(MapaImagen.AltoPx, 4096);
-        }
-
-        [Test]
-        public void MundoAPixel_ElOrigenYLasZonasNuevas_VanAPixelesDeLaImagen_YDeVuelta()
-        {
-            Vector2[] puntos = { Vector2.zero, new Vector2(0f, -240f), new Vector2(-400f, 0f), new Vector2(220f, -150f), new Vector2(-45f, 250f) };
-            foreach (Vector2 mundo in puntos)
-            {
-                Vector2 pixel = MapaImagen.MundoAPixel(mundo);
-                Assert.GreaterOrEqual(pixel.x, 0f);
-                Assert.GreaterOrEqual(pixel.y, 0f);
-                Assert.LessOrEqual(pixel.x, MapaImagen.AnchoPx);
-                Assert.LessOrEqual(pixel.y, MapaImagen.AltoPx);
-                Vector2 vuelta = MapaImagen.PixelAMundo(pixel);
-                Assert.AreEqual(mundo.x, vuelta.x, 0.001f);
-                Assert.AreEqual(mundo.y, vuelta.y, 0.001f);
-            }
-        }
-
-        [Test]
-        public void LaImagenEntera_CabeEnLaVistaDelMapaGrande_ConZoomUno_LlenandoUnLado()
+        public void LaImagenEntera_LlenaLaVistaDelMapaGrande_ConZoomUno()
         {
             Vector2 px = MapaImagen.Tamano * MapaImagen.PixelesVistaPorMetro;
-            Assert.LessOrEqual(px.x, 800f + 0.01f);
-            Assert.LessOrEqual(px.y, 560f + 0.01f);
-            Assert.GreaterOrEqual(Mathf.Max(px.x / 800f, px.y / 560f), 0.95f, "El cuadro llena la vista al menos por un lado");
-        }
-
-        [Test]
-        public void LasZonasNuevas_DanSuNombre_YLosBarriosViejosSiguenIgual()
-        {
-            Assert.AreEqual("MALECÓN", BarriosMapa.Todos[BarriosMapa.De(new Vector2(0f, -240f))].Nombre);
-            Assert.AreEqual("COLONIA DEL CERRO", BarriosMapa.Todos[BarriosMapa.De(new Vector2(-400f, 0f))].Nombre);
-            Assert.AreEqual("PUERTO", BarriosMapa.Todos[BarriosMapa.De(new Vector2(220f, -150f))].Nombre);
-            Assert.AreEqual("AUTOPISTA", BarriosMapa.Todos[BarriosMapa.De(new Vector2(-45f, 250f))].Nombre);
-            Assert.AreEqual("SUBURBIOS", BarriosMapa.Todos[BarriosMapa.De(new Vector2(-120f, -50f))].Nombre);
-            Assert.AreEqual("EL MERCADO", BarriosMapa.Todos[BarriosMapa.De(new Vector2(0f, 40f))].Nombre);
-            Assert.AreEqual("NEÓN ALTO", BarriosMapa.Todos[BarriosMapa.De(new Vector2(100f, 60f))].Nombre);
-            Assert.AreEqual("NOVA", BarriosMapa.Todos[BarriosMapa.De(new Vector2(100f, -60f))].Nombre);
-        }
-
-        [Test]
-        public void ZonaNuevaEn_SoloDentroDeLasZonasNuevas()
-        {
-            Assert.AreEqual("MALECÓN", BarriosMapa.ZonaNuevaEn(new Vector2(0f, -240f)));
-            Assert.AreEqual("COLONIA DEL CERRO", BarriosMapa.ZonaNuevaEn(new Vector2(-400f, 0f)));
-            Assert.AreEqual("PUERTO", BarriosMapa.ZonaNuevaEn(new Vector2(220f, -150f)));
-            Assert.IsNull(BarriosMapa.ZonaNuevaEn(new Vector2(-120f, -50f)), "Suburbios no es zona nueva");
-            Assert.IsNull(BarriosMapa.ZonaNuevaEn(Vector2.zero));
-        }
-
-        [Test]
-        public void TramosDeLinea_UnoPorCadaParDePuntos_ConXYZ()
-        {
-            Vector3[] puntos = { new Vector3(0f, 10f, 250f), new Vector3(50f, 10f, 250f), new Vector3(80f, 10f, 270f) };
-            List<CalculoCallesMapa.Tramo> tramos = CalculoCallesMapa.TramosDeLinea(puntos);
-            Assert.AreEqual(2, tramos.Count);
-            Assert.AreEqual(new Vector2(50f, 250f), tramos[0].B);
-            Assert.AreEqual(new Vector2(50f, 250f), tramos[1].A);
-            Assert.AreEqual(new Vector2(80f, 270f), tramos[1].B);
-            Assert.AreEqual(0, CalculoCallesMapa.TramosDeLinea(new Vector3[1]).Count);
+            Assert.AreEqual(800f, px.x, 0.01f);
+            Assert.AreEqual(560f, px.y, 0.01f);
         }
 
         [Test]
