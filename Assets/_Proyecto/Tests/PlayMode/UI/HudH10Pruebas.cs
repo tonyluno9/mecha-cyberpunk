@@ -319,7 +319,7 @@ namespace MechaCyberpunk.Tests.UI
             Assert.IsTrue(h10.GrupoEstrellas.activeSelf, "En el carro se ven las estrellas");
             Assert.IsFalse(h10.GrupoIzquierda.activeSelf, "pero no la vida");
             Assert.IsFalse(h10.GrupoArma.activeSelf);
-            Assert.IsFalse(h10.GrupoObjetos.activeSelf);
+            Assert.IsTrue(h10.GrupoObjetos.activeSelf, "T-1492: en el carro se ven las ranuras para curarse en la persecución");
             falso.CambiarModo(ModoJugador.Mecha);
             yield return null;
             Assert.IsFalse(h10.GrupoEstrellas.activeSelf, "En el mecha no se ve nada");

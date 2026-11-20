@@ -292,7 +292,7 @@ namespace MechaCyberpunk.IA.APie
         {
             controlador = GetComponent<CharacterController>();
             ResolverGanchos();
-            if (datos == null || (!datos.UsaPistola && !datos.JefeCuerpoACuerpo && (cuerpo == null || brazo == null || piezasBrazo == null || piezasBrazo.Length == 0)))
+            if (datos == null || (!datos.UsaPistola && !datos.JefeCuerpoACuerpo && !datos.PerroRobot && (cuerpo == null || brazo == null || piezasBrazo == null || piezasBrazo.Length == 0)))
             {
                 Debug.LogError("[IA] Faltan referencias en PandilleroAPie de " + name, this);
                 enabled = false;

@@ -19,6 +19,7 @@ namespace MechaCyberpunk.Tests.Mundo
         }
 
         [Test]
+        [Ignore("T-1496: el juego ya no usa el cuarto (Cuarto_Habitacion apagado); sus colliders apagados no tienen bounds")]
         public void Cuarto_DeCincoPorCuatro()
         {
             Bounds piso = cuarto.Find("Piso").GetComponent<Renderer>().bounds;

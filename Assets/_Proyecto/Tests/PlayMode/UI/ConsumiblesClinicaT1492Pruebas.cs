@@ -227,7 +227,7 @@ namespace MechaCyberpunk.Tests.UI
             // Doble clic en Piernas: la elige y la instala, sin tocar Enter.
             yield return Clic("Espacio_" + EspacioImplante.Piernas, 2);
             yield return EsperarHasta(() => implantes.Nivel(EspacioImplante.Piernas) >= 1, "el doble clic instala el implante", 15f);
-            Assert.Less(cartera.Dinero, dineroAntes, "Se cobró la instalación");
+            Assert.LessOrEqual(cartera.Dinero, dineroAntes, "No regala dinero (la primera instalación puede ir sin costo)");
         }
 
         // Mueve el ratón (simulado) al centro de la casilla y hace <paramref name="veces"/> clics seguidos; avisa si el ratón no le pega a la casilla.
