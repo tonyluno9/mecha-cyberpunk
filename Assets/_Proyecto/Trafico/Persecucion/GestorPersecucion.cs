@@ -33,6 +33,16 @@ namespace MechaCyberpunk.Trafico.Persecucion
         [Tooltip("T-1322: la camioneta de los 5 estrellas. Vacío: no hay modelo todavía y salen patrullas normales.")]
         [SerializeField] private PatrullaMundo prefabCamioneta;
         private int estrellasPublicadas;
+        [Tooltip("T-1498: variantes de dron de combate por estrellas. Vacío: se busca en Resources; sin él todos los drones son el DR01.")]
+        [SerializeField] private ConfigDronesCombate variantesDron;
+        private bool variantesBuscadas;
+
+        /// <summary>T-1498: para pruebas y el editor.</summary>
+        public void ConfigurarVariantes(ConfigDronesCombate variantes)
+        {
+            variantesDron = variantes;
+            variantesBuscadas = true;
+        }
 
         private readonly List<DronMundo> drones = new List<DronMundo>();
         private readonly List<PatrullaMundo> patrullas = new List<PatrullaMundo>();
@@ -500,6 +510,18 @@ namespace MechaCyberpunk.Trafico.Persecucion
             }
             DronMundo dron = Instantiate(prefabDron, lejos, Quaternion.identity, transform);
             dron.Preparar(calculo, config, PosicionDelJugador);
+            if (!variantesBuscadas)
+            {
+                variantesBuscadas = true;
+                if (variantesDron == null)
+                {
+                    variantesDron = Resources.Load<ConfigDronesCombate>(ConfigDronesCombate.Recurso);
+                }
+            }
+            if (variantesDron != null)
+            {
+                dron.AplicarVariante(variantesDron.Elegir(EstrellasBusqueda.De(calor), indice)); // T-1498
+            }
             drones.Add(dron);
             dron.AsignarOrbita(indice, total);
         }
