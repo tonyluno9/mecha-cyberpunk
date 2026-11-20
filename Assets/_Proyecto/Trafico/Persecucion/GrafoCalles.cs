@@ -128,9 +128,9 @@ namespace MechaCyberpunk.Trafico.Persecucion
         /// T-1526: deja el grafo dentro de <paramref name="area"/> (el interior del muro, plano x, z) sin cambiar su topología: cada nodo que cae fuera se MUEVE al punto de su calle
         /// donde entra al área (hacia su vecino de adentro). Si queda a menos de <paramref name="separacionMinima"/> m de ese vecino (los finales de calle de la cuadrícula están pegados
         /// al muro y las calles de las afueras llegan al mismo punto) se fusiona con él: el nodo se quita y sus otros vecinos pasan al vecino. Un nodo fuera sin camino hacia adentro
-        /// se desconecta. Devuelve cuántos nodos quitó (fusionados o desconectados). Si el área dejaría menos de <paramref name="minimoDentro"/> nodos no hace nada.
+        /// se desconecta. Devuelve cuántos nodos quitó (fusionados o desconectados). Solo no hace nada si no hay ni <paramref name="minimoDentro"/> nodo dentro del área (el área estaría mal detectada): contar los nodos de adentro ANTES de mover no sirve, el grafo real tiene 2 dentro y 12 que se mueven o fusionan.
         /// </summary>
-        public int Recortar(Rect area, float separacionMinima = 3f, int minimoDentro = 4)
+        public int Recortar(Rect area, float separacionMinima = 3f, int minimoDentro = 1)
         {
             List<int> fuera = new List<int>();
             for (int i = 0; i < nodos.Count; i++)
@@ -239,7 +239,8 @@ namespace MechaCyberpunk.Trafico.Persecucion
             if (dz > 0f) { t = Mathf.Min(t, (area.yMax - dentro.z) / dz); }
             if (dz < 0f) { t = Mathf.Min(t, (area.yMin - dentro.z) / dz); }
             t = Mathf.Clamp01(t);
-            return Vector3.Lerp(dentro, fuera, t);
+            Vector3 p = Vector3.Lerp(dentro, fuera, t);
+            return new Vector3(Mathf.Clamp(p.x, area.xMin, area.xMax), p.y, Mathf.Clamp(p.z, area.yMin, area.yMax)); // sin error de redondeo: queda dentro
         }
 
         /// <summary>
