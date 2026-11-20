@@ -43,6 +43,7 @@ namespace MechaCyberpunk.Personaje.Combate
         private ArmaAPie armaActiva = ArmaAPie.Punos;
         private VisualPersonaje visualJugador;
         private bool pistolaVisible;
+        private ZoomSniper zoomSniper;
 
         public ArmaAPie ArmaActiva => armaActiva;
 
@@ -66,7 +67,7 @@ namespace MechaCyberpunk.Personaje.Combate
         {
             get
             {
-                arsenal = arsenal != null ? arsenal : Registro<ArsenalJugador>.Actual;
+                ResolverArsenal();
                 return arsenal != null ? Mathf.Max(0, arsenal.Nivel(armaActiva)) : 0;
             }
         }
@@ -98,6 +99,11 @@ namespace MechaCyberpunk.Personaje.Combate
         {
             cambiarArma?.action.Disable();
             pistola.Cambio -= AlCambiarPistola;
+            if (arsenal != null)
+            {
+                arsenal.Reemplazada -= AlReemplazarse;
+                arsenal = null;
+            }
         }
 
         // T-733: la pistola no se ve aunque esté seleccionada; solo aparece mientras se apunta (o justo después de disparar o recargar).
@@ -127,7 +133,13 @@ namespace MechaCyberpunk.Personaje.Combate
             if (cambiarArma != null && cambiarArma.action.WasPerformedThisFrame() && !controlador.EntradaBloqueada)
             {
                 float rueda = cambiarArma.action.ReadValue<float>();
-                if (rueda != 0f)
+                // T-1527: con el francotirador en la mano y apuntando, la rueda ajusta el zoom y NO cambia de arma.
+                if (ReglaZoomSniper.RuedaAjustaZoom(armaActiva, controlador.QuiereApuntar))
+                {
+                    zoomSniper = zoomSniper != null ? zoomSniper : GetComponent<ZoomSniper>();
+                    zoomSniper?.AjustarConRueda(rueda);
+                }
+                else if (rueda != 0f)
                 {
                     Rotar(rueda > 0f ? 1 : -1);
                 }
@@ -140,14 +152,35 @@ namespace MechaCyberpunk.Personaje.Combate
         /// <summary>True si el jugador ya tiene esa arma (T-445).</summary>
         public bool TieneArma(ArmaAPie arma) => Tiene(arma);
 
+        private void ResolverArsenal()
+        {
+            if (arsenal == null)
+            {
+                arsenal = Registro<ArsenalJugador>.Actual;
+                if (arsenal != null)
+                {
+                    arsenal.Reemplazada += AlReemplazarse; // T-1527
+                }
+            }
+        }
+
         private bool Tiene(ArmaAPie arma)
         {
-            arsenal = arsenal != null ? arsenal : Registro<ArsenalJugador>.Actual;
+            ResolverArsenal();
             if (arsenal == null)
             {
                 return arma == ArmaAPie.Punos || arma == ArmaAPie.Pistola;
             }
             return arsenal.Tiene(arma);
+        }
+
+        // T-1527: si el arma de la mano la reemplazó otra del mismo tipo, esa pasa a la mano.
+        private void AlReemplazarse(ArmaAPie vieja, ArmaAPie nueva)
+        {
+            if (armaActiva == vieja)
+            {
+                Cambiar(nueva);
+            }
         }
 
         // Pasa a la siguiente (o anterior) arma que se tiene, dando la vuelta.

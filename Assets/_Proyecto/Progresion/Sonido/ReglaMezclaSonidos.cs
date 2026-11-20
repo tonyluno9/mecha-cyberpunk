@@ -359,6 +359,7 @@ namespace MechaCyberpunk.Progresion.Sonido
                 case "UI_LOGO_INTRO": return P("ui-logo", 1, 0.6f, 0f, 1f, 0f, 0.03f);
                 case "UI_MENU_ABRIR":
                 case "UI_MENU_CERRAR": return P("ui-menu", 1, 0.55f, 0.02f, 0.1f, 0f, 0.05f);
+                case "UI_CAMARA_LENTA": return P("ui-camara-lenta", 1, 0.6f, 0f, 0.3f, 0f, 0.05f); // T-1527
                 case "UI_ERROR": return P("ui", 2, 0.6f, 0.03f, 0.1f, 0f, 0.05f);
                 case "HUD_LOGRO":
                 case "HUD_NOTIFICACION": return P("objetivo", 1, 0.6f, 0.02f, 1f, 0f, 0.05f);

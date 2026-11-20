@@ -523,7 +523,7 @@ namespace MechaCyberpunk.Personaje.Combate
         public Vector3 PuntoDeMira(float alcance)
         {
             Transform camara = controlador.Camara;
-            return BuscarImpacto(camara.position, camara.forward, alcance, out RaycastHit centro) ? centro.point : camara.position + camara.forward * alcance;
+            return BuscarCentroMira(camara, alcance, out RaycastHit centro) ? centro.point : camara.position + camara.forward * alcance;
         }
 
         /// <summary>T-977: el sonido del tiro que falla y pega en una superficie (pared, piso, carro): uno por tiro, aunque la escopeta lance varios perdigones.</summary>
@@ -541,7 +541,9 @@ namespace MechaCyberpunk.Personaje.Combate
             Transform visualArma = visuales[(int)arma];
             Transform boca = luz != null ? luz.transform : (visualArma != null ? visualArma : camara);
             Vector3 punto = camara.position + camara.forward * d.Alcance;
-            if (BuscarImpacto(camara.position, camara.forward, d.Alcance, out RaycastHit centro))
+            float alcanceVehiculos = d.Alcance * FactorAlcanceVehiculos;
+            bool hayCentro = BuscarCentroMira(camara, alcanceVehiculos, out RaycastHit centro) && DentroDelAlcance(centro, d.Alcance);
+            if (hayCentro)
             {
                 punto = centro.point;
             }
@@ -549,6 +551,7 @@ namespace MechaCyberpunk.Personaje.Combate
             Vector3 haciaPunto = punto - origen;
             float largo = haciaPunto.magnitude;
             Vector3 direccionBase = largo > 0.01f ? haciaPunto / largo : camara.forward;
+            float largoAlPunto = largo;
             // T-1486: si lo que marca la mira queda detrás del cañón (pegado al arma), la bala sigue la mira y no sale hacia atrás.
             if (!desdeCarro && Vector3.Dot(direccionBase, camara.forward) <= 0f)
             {
@@ -592,10 +595,12 @@ namespace MechaCyberpunk.Personaje.Combate
                         direccion = Quaternion.AngleAxis(cono * Mathf.Sqrt(UnityEngine.Random.value), eje.normalized) * direccionBase;
                     }
                 }
-                if (BuscarImpacto(origen, direccion, d.Alcance, out RaycastHit mejor))
+                if (BuscarImpactoDeBala(origen, direccion, alcanceVehiculos, cono <= 0.001f && hayCentro && !desdeCarro, largoAlPunto, centro, out RaycastHit mejor)
+                    && DentroDelAlcance(mejor, d.Alcance))
                 {
                     // T-1491: el daño baja con la distancia según el arma (el francotirador no pierde nada).
-                    float factorDistancia = ReglaDanioDistancia.Multiplicador(mejor.distance, d.Alcance, d.InicioCaida, d.DanioMinimo);
+                    // T-1527: un vehículo no pierde daño por la distancia (si no, de lejos las balas casi no le hacían nada).
+                    float factorDistancia = EsVehiculo(mejor.collider) ? 1f : ReglaDanioDistancia.Multiplicador(mejor.distance, d.Alcance, d.InicioCaida, d.DanioMinimo);
                     Impactar(arma, d.Danio * multiplicadorGuarida * factorDistancia, mejor, direccion);
                     Trazo?.Invoke(arma, origen, mejor.point);
                 }
@@ -671,6 +676,50 @@ namespace MechaCyberpunk.Personaje.Combate
         {
             return ReglaImpactoBala.BuscarPrimero(origen, direccion, alcance, transform.root, raizCarro, out mejor);
         }
+
+        /// <summary>
+        /// T-1527: el rayo de la mira sale del plano del jugador (no de la cámara, que va detrás del hombro): así un poste, un cartel o una pared
+        /// pegados a la cámara y detrás del jugador no se vuelven "el punto de la mira". Tampoco cuentan los triggers ni el propio jugador.
+        /// </summary>
+        private bool BuscarCentroMira(Transform camara, float alcance, out RaycastHit centro)
+        {
+            Vector3 adelante = camara.forward;
+            float avance = Mathf.Clamp(Vector3.Dot(transform.position - camara.position, adelante), 0f, MaximoAvanceMira);
+            return BuscarImpacto(camara.position + adelante * avance, adelante, alcance, out centro);
+        }
+
+        /// <summary>
+        /// T-1527: sin dispersión, la bala llega al punto de la mira salvo que algo bloquee de verdad entre la boca y el punto (más de
+        /// <see cref="ToleranciaBloqueo"/> m antes). Con dispersión se tira el rayo del cono como antes.
+        /// </summary>
+        private bool BuscarImpactoDeBala(Vector3 origen, Vector3 direccion, float alcance, bool haciaPunto, float largoAlPunto, RaycastHit centro, out RaycastHit mejor)
+        {
+            if (!haciaPunto)
+            {
+                return BuscarImpacto(origen, direccion, alcance, out mejor);
+            }
+            float tramo = Mathf.Max(0.01f, largoAlPunto - ToleranciaBloqueo);
+            if (BuscarImpacto(origen, direccion, tramo, out mejor))
+            {
+                return true;
+            }
+            mejor = centro;
+            mejor.distance = largoAlPunto;
+            return true;
+        }
+
+        /// <summary>T-1527: los vehículos (patrullas, carros) se alcanzan hasta este múltiplo del alcance del arma, sin caída de daño.</summary>
+        public const float FactorAlcanceVehiculos = 2f;
+
+        private static bool EsVehiculo(Collider c) => c != null && c.GetComponentInParent<IMontable>() != null;
+
+        // Dentro del alcance del arma, o un vehículo (que se alcanza más lejos).
+        private static bool DentroDelAlcance(RaycastHit impacto, float alcance) => impacto.distance <= alcance + 0.01f || EsVehiculo(impacto.collider);
+
+        /// <summary>T-1527: lo que se adelanta el rayo de la mira desde la cámara hasta el plano del jugador, como máximo (m).</summary>
+        private const float MaximoAvanceMira = 8f;
+        /// <summary>T-1527: margen (m) antes del punto de la mira en que un obstáculo todavía no bloquea la bala.</summary>
+        private const float ToleranciaBloqueo = 0.35f;
 
         private void AlCambiar() => Cambio?.Invoke();
 
