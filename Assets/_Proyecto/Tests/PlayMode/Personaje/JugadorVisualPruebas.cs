@@ -64,7 +64,7 @@ namespace MechaCyberpunk.Tests.Personaje
         /// <summary>T-1484: el clip avanza (rapidez × velocidad del clip) casi lo mismo que el cuerpo: los pies no patinan más de 15 %.</summary>
         private static void AfirmarPiesSinPatinar(VisualPersonaje visual, Animator animador)
         {
-            float clip = ReglasAnimacion.VelocidadPJ01Correr * visual.EscalaClips;
+            float clip = (Estado(animador) == "Correr" ? ReglasAnimacion.VelocidadPJ01Sprint : ReglasAnimacion.VelocidadPJ01Trote) * visual.EscalaClips;
             float avanceClip = animador.speed * clip;
             Assert.Less(Mathf.Abs(avanceClip - visual.Velocidad) / Mathf.Max(0.1f, visual.Velocidad), 0.15f,
                 $"Pies sin patinar: clip {avanceClip:F2} m/s, cuerpo {visual.Velocidad:F2} m/s (rapidez {animador.speed:F2})");

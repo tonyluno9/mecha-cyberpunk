@@ -19,6 +19,8 @@ namespace MechaCyberpunk.Personaje.Movimiento
             "MotoSubir", "MotoBajar", "CarroEntrar", "CarroSalir",
             "AbrirPuerta", "Boton", "Recoger",
             "LevantarseBocaArriba", "LevantarseBocaAbajo",
+            // T-1505: el aterrizaje fuerte (PJ01_Aterrizaje_Fuerte, 1.47 s: sentadilla profunda y se levanta) no deja caminar ni saltar hasta terminar.
+            "AterrizajeFuerte",
         };
 
         private static readonly int[] HashesBloqueantes = CalcularHashes();

@@ -197,19 +197,30 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             {
                 mapa[papel] = ClipsDeJugadorPJ01;
             }
-            mapa["Jugador"] = ConCambios(ClipsDeJugadorPJ01, ClipsSoloJugadorT1484);
+            mapa["Jugador"] = ConCambios(ClipsDeJugadorPJ01, ClipsSoloJugador);
             return mapa;
         }
 
+        // T-1505: papeles nuevos del estado Caminar: el extremo rápido (trote) de la mezcla 1D por Velocidad. Su clip por defecto es el que los demás papeles usan
+        // hoy en ese lugar (así los NPC no cambian) y se nombran por ese clip; el override del jugador los manda a los clips de trote de Blender.
+        /// <summary>Trote adelante (sin y con implante), y de lado y atrás: clip por defecto de los demás papeles.</summary>
+        public const string RolTrote = "PJ01_Caminar_SinImplante", RolTroteConImplante = "PJ01_Caminar_ConImplante";
+        public const string RolTroteAtras = "PJ01_Loco_CaminarAtras", RolTroteDer = "PJ01_Loco_CaminarDer", RolTroteIzq = "PJ01_Loco_CaminarIzq";
+        /// <summary>Velocidad (m/s) de los extremos de la mezcla 1D del estado Caminar (caminar de verdad y trote): ReglasAnimacion.VelocidadPJ01Caminar y VelocidadPJ01Trote.</summary>
+        private const float UmbralCaminarLento = ReglasAnimacion.VelocidadPJ01Caminar, UmbralTrote = ReglasAnimacion.VelocidadPJ01Trote;
+
         /// <summary>
-        /// T-1484: el jugador camina a 4.5 m/s y el clip de caminar de PJ01 avanza 1.66 m/s (los pies patinaban 2.7 veces). A esa velocidad el paso normal
-        /// es un trote: el estado Caminar del jugador usa el clip de correr (4.25 m/s, rapidez 1.06) y Correr lo acelera hasta 1.6 (MedirLocomocionT1484).
-        /// Los NPC caminan despacio y siguen con el clip de caminar.
+        /// T-1505: clips solo del jugador (los NPC no cambian). Caminar de verdad 1.6 m/s (PJ01_Caminar) mezcla por Velocidad con el trote 4.5 (PJ01_Trote, y de lado y
+        /// atrás PJ01_Trote_*); Correr es PJ01_Sprint 7.25; el salto y el aterrizaje son los de Blender. Con implante el trote sigue siendo PJ01_Correr_ConImplante
+        /// (no hay trote con implante). Reemplaza el provisional de T-1484 (el clip de correr en Caminar).
         /// </summary>
         // Propiedad y no campo: ClipsPorPapel se inicializa antes en el orden de los campos estáticos.
-        public static (string Base, string Papel)[] ClipsSoloJugadorT1484 => new[]
+        public static (string Base, string Papel)[] ClipsSoloJugador => new[]
         {
-            ("Loco_Caminar", "PJ01_Correr_SinImplante"), ("Loco_Caminar_ConImplante", "PJ01_Correr_ConImplante"),
+            ("Loco_Caminar", "PJ01_Caminar"), (RolTrote, "PJ01_Trote"), ("Loco_Correr", "PJ01_Sprint"),
+            (RolTroteConImplante, "PJ01_Correr_ConImplante"),
+            (RolTroteAtras, "PJ01_Trote_Atras"), (RolTroteDer, "PJ01_Trote_Derecha"), (RolTroteIzq, "PJ01_Trote_Izquierda"),
+            ("Loco_SaltoInicio", "PJ01_Salto_Despegue"), ("Loco_SaltoAire", "PJ01_Salto_Aire"), ("Loco_SaltoAterrizaje", "PJ01_Salto_Aterrizaje"),
         };
 
         private static (string Base, string Papel)[] ConCambios((string Base, string Papel)[] tabla, (string Base, string Papel)[] cambios)
@@ -336,6 +347,8 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             Estado("SaltoAire", "Loco_SaltoAire");
             Estado("SaltoAterrizaje", "Loco_SaltoAterrizaje");
             Estado("Caida", "Loco_Caida");
+            // T-1505: aterrizaje fuerte tras una caída larga (trigger AterrizajeFuerte que solo dispara el jugador); ReglaBloqueoAnimacion lo bloquea mientras dura.
+            Estado("AterrizajeFuerte", "PJ01_Aterrizaje_Fuerte");
             // T-733: los clips de agachado de Tony (agarre.txt): agacharse, quieto, caminar en las cuatro direcciones, pararse y rodar.
             AnimatorState agachadoCaminar = Estado("AgachadoCaminar", null);
             agachadoCaminar.motion = Arbol2D(c, "AgachadoCaminar", new (string, Vector2)[]
@@ -437,6 +450,9 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             Unir(e["SaltoAire"], e["Caida"], false, 0f, Mezcla, Menor(ReglasAnimacion.VelY, -ReglasAnimacion.VelocidadCaidaLibre));
             Unir(e["SaltoAire"], e["SaltoAterrizaje"], false, 0f, MezclaCorta, Bool(ReglasVisual.EnSuelo, true));
             Unir(e["Caida"], e["SaltoAterrizaje"], false, 0f, MezclaCorta, Bool(ReglasVisual.EnSuelo, true));
+            AnimatorStateTransition fuerte = m.AddAnyStateTransition(e["AterrizajeFuerte"]);
+            Configurar(fuerte, false, 0f, MezclaCorta, false, Disparador(ReglasAnimacion.AterrizajeFuerte), Bool(ReglasVisual.EnSuelo, true), Bool(ReglasVisual.Caer, false));
+            Unir(e["AterrizajeFuerte"], e["Idle"], true, SalidaUnaVez, Mezcla);
             Unir(e["SaltoAterrizaje"], e["Idle"], true, SalidaUnaVez, Mezcla);
             Unir(e["SaltoAterrizaje"], e["Caida"], false, 0f, Mezcla, Bool(ReglasVisual.EnSuelo, false), Menor(ReglasAnimacion.VelY, -ReglasAnimacion.VelocidadCaidaLibre));
 
@@ -574,15 +590,38 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             return Arbol1D(c, nombre, ReglasAnimacion.ConImplante, new (string, float)[] { (clipSin, 0f), (ClipConImplante(clipSin), 1f) });
         }
 
+        // T-1505: Caminar es 1D por Velocidad (clip lento en 1.6 m/s, clip rápido en 4.5) dentro de cada dirección del 2D. Correr (nombre "Correr") deja
+        // adelante el clip de correr y de lado y atrás los roles de trote.
         private static BlendTree ArbolImplante(AnimatorController c, string nombre, string clipSin, string clipCon)
         {
-            // T-960: los lados y atrás con implante son los PJ01_Loco_Caminar*_ConImplante (antes el árbol con implante repetía los de Mixamo).
-            BlendTree Lados(string sufijo, string adelante, bool implante) => Arbol2D(c, nombre + sufijo, new (string, Vector2)[]
+            bool esCaminar = nombre == "Caminar";
+            BlendTree Mezcla1D(string sufijo, string lento, string rapido) => Arbol1D(c, nombre + sufijo, ReglasVisual.Velocidad,
+                new (string, float)[] { (lento, UmbralCaminarLento), (rapido, UmbralTrote) });
+            // Un lado o atrás: en Caminar (sin implante) mezcla el clip lento con el rol de trote; con implante el clip con implante; en Correr el rol de trote.
+            Motion Direccion(string sufijo, string lento, string rol, bool implante)
             {
-                (adelante, new Vector2(0f, 1f)), (implante ? ClipConImplante("Loco_CaminarAtras") : "Loco_CaminarAtras", new Vector2(0f, -1f)),
-                (implante ? ClipConImplante("Loco_CaminarDer") : "Loco_CaminarDer", new Vector2(1f, 0f)),
-                (implante ? ClipConImplante("Loco_CaminarIzq") : "Loco_CaminarIzq", new Vector2(-1f, 0f)),
-            });
+                if (implante) { return Clip(ClipConImplante(lento)); }
+                return esCaminar ? (Motion)Mezcla1D(sufijo, lento, rol) : Clip(rol);
+            }
+            // T-960: los lados y atrás con implante son los PJ01_Loco_Caminar*_ConImplante (antes el árbol con implante repetía los de Mixamo).
+            BlendTree Lados(string sufijo, string adelante, bool implante)
+            {
+                var arbol = new BlendTree
+                {
+                    name = nombre + sufijo,
+                    blendType = BlendTreeType.SimpleDirectional2D,
+                    blendParameter = ReglasAnimacion.VelX,
+                    blendParameterY = ReglasAnimacion.VelZ,
+                    useAutomaticThresholds = false,
+                };
+                AssetDatabase.AddObjectToAsset(arbol, c);
+                Motion adelanteMotion = esCaminar ? (Motion)Mezcla1D(sufijo + "_Ade", adelante, implante ? RolTroteConImplante : RolTrote) : Clip(adelante);
+                arbol.AddChild(adelanteMotion, new Vector2(0f, 1f));
+                arbol.AddChild(Direccion(sufijo + "_Atr", "Loco_CaminarAtras", RolTroteAtras, implante), new Vector2(0f, -1f));
+                arbol.AddChild(Direccion(sufijo + "_Der", "Loco_CaminarDer", RolTroteDer, implante), new Vector2(1f, 0f));
+                arbol.AddChild(Direccion(sufijo + "_Izq", "Loco_CaminarIzq", RolTroteIzq, implante), new Vector2(-1f, 0f));
+                return arbol;
+            }
             var raiz = new BlendTree
             {
                 name = nombre,

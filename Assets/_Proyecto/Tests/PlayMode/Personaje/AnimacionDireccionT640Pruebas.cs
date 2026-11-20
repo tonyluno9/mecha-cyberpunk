@@ -122,7 +122,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.Greater(Vector3.Dot(FrenteHuesos(a), mov.normalized), 0.7f, "El cuerpo (huesos) mira hacia donde camina");
             Assert.Greater(Vector3.Dot(visual.transform.forward, mov.normalized), 0.7f, "El visual mira hacia donde camina");
             Assert.AreEqual("Caminar", Estado(a), "Caminar normal usa Caminar");
-            Assert.AreEqual("PJ01_Correr_SinImplante", ClipDominante(a)); // T-1484: el paso normal del jugador es el trote
+            Assert.AreEqual("PJ01_Trote", ClipDominante(a)); // T-1505: el paso normal del jugador es el trote (PJ01_Trote)
 
             // El clip no gira el cuerpo: el frente se queda estable mientras camina recto.
             Vector3 f0 = FrenteHuesos(a);
@@ -140,7 +140,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Press(teclado.leftShiftKey);
             yield return Esperar(1.2f);
             Assert.AreEqual("Correr", Estado(a), "Con Shift usa Correr");
-            Assert.AreEqual("PJ01_Correr_SinImplante", ClipDominante(a));
+            Assert.AreEqual("PJ01_Sprint", ClipDominante(a));
             Assert.Greater(Vector3.Dot(FrenteHuesos(a), Mundo().normalized), 0.7f, "Corriendo también mira al frente");
             Release(teclado.leftShiftKey);
             yield return Esperar(1.2f);
@@ -161,7 +161,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Press(teclado.sKey);
             yield return Esperar(1.0f);
             Assert.Greater(Vector3.Dot(FrenteHuesos(a), Mundo().normalized), 0.7f, "Con S el cuerpo se voltea y mira hacia donde camina");
-            Assert.AreEqual("PJ01_Correr_SinImplante", ClipDominante(a)); // T-1484: el paso normal del jugador es el trote
+            Assert.AreEqual("PJ01_Trote", ClipDominante(a)); // T-1505: el paso normal del jugador es el trote (PJ01_Trote)
             Release(teclado.sKey);
             yield return Esperar(0.5f);
             Press(raton.rightButton);
@@ -172,7 +172,7 @@ namespace MechaCyberpunk.Tests.Personaje
 
             Press(teclado.sKey);
             yield return Esperar(1.0f);
-            Assert.AreEqual("PJ01_Loco_CaminarAtras", ClipDominante(a), "S usa Caminar hacia atrás");
+            Assert.AreEqual("PJ01_Trote_Atras", ClipDominante(a), "S usa Caminar hacia atrás");
             // T-1484: la dirección de la cadera oscila con la zancada (el clip de atrás va ahora a la rapidez de los pies): -0.6 en vez de -0.7.
             Assert.Less(Vector3.Dot(frente, Mundo().normalized), -0.6f, "Va hacia atrás: el cuerpo sigue mirando al frente");
             Assert.Less(YawEntre(frenteVisual, Visual().transform.forward), 20f, "El cuerpo no se voltea al ir de reversa");
@@ -181,7 +181,7 @@ namespace MechaCyberpunk.Tests.Personaje
 
             Press(teclado.dKey);
             yield return Esperar(1.0f);
-            Assert.AreEqual("PJ01_Loco_CaminarDer", ClipDominante(a), "D usa Caminar a la derecha");
+            Assert.AreEqual("PJ01_Trote_Derecha", ClipDominante(a), "D usa Caminar a la derecha");
             Vector3 derecha = Vector3.Cross(Vector3.up, frenteVisual);
             Assert.Greater(Vector3.Dot(derecha, Mundo().normalized), 0.7f, "D va a la derecha del cuerpo");
             Release(teclado.dKey);
@@ -189,7 +189,7 @@ namespace MechaCyberpunk.Tests.Personaje
 
             Press(teclado.aKey);
             yield return Esperar(1.0f);
-            Assert.AreEqual("PJ01_Loco_CaminarIzq", ClipDominante(a), "A usa Caminar a la izquierda");
+            Assert.AreEqual("PJ01_Trote_Izquierda", ClipDominante(a), "A usa Caminar a la izquierda");
             Assert.Less(Vector3.Dot(derecha, Mundo().normalized), -0.7f, "A va a la izquierda del cuerpo");
             Assert.Less(YawEntre(frenteVisual, Visual().transform.forward), 30f, "El cuerpo no gira al desplazarse de lado");
             Release(teclado.aKey);

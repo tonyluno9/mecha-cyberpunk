@@ -109,7 +109,7 @@ namespace MechaCyberpunk.Tests
                 Assert.IsNotNull(ik);
                 AnimacionJugador.ClipsDeTony(visual);
                 Assert.IsTrue(ik.ClipPuro, "El jugador apunta con el clip puro: sin torso girado, sin mano derecha corregida, sin mano izquierda por IK");
-                Assert.IsFalse(go.GetComponentInChildren<IKPiesYMirada>(true).Pies, "Sin IK de pies encima del clip");
+                Assert.IsTrue(go.GetComponentInChildren<IKPiesYMirada>(true).SoloDesnivel, "T-1484: el IK de pies solo corrige desniveles, no se encima del clip");
                 Assert.IsNotNull(go.GetComponentInChildren<AgarrePistolaPJ01>(true), "T-738: PJ01 lleva la compensacion del agarre de la pistola (no toca huesos)");
             }
             finally { Object.DestroyImmediate(go); }

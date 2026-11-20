@@ -82,11 +82,14 @@ namespace MechaCyberpunk.Tests.Personaje
             }
             Assert.IsNotNull(caminar, "Estado Caminar");
             Assert.IsNotNull(correr, "Estado Correr");
-            Assert.AreEqual("Loco_Caminar", ClipAdelante(caminar), "Caminar hacia delante es Loco_Caminar");
+            // T-1505: Caminar hacia delante es una mezcla 1D por Velocidad (Loco_Caminar lento -> el papel de trote); Correr es Loco_Correr.
+            Assert.AreEqual("Caminar_Sin_Ade", ClipAdelante(caminar), "Caminar hacia delante es la mezcla caminar-trote");
             Assert.AreEqual("Loco_Correr", ClipAdelante(correr), "Correr hacia delante es Loco_Correr");
-            // T-749: el jugador usa los de Blender. T-1484: a 4.5 m/s su Caminar es el trote (PJ01_Correr), PJ01_Caminar queda para los NPC.
-            Assert.AreEqual(CarpetaClipsPJ01 + "PJ01_Correr_SinImplante.fbx", AssetDatabase.GetAssetPath(ClipPorNombre("PJ01_Correr_SinImplante")));
-            Assert.AreEqual(CarpetaClipsPJ01 + "PJ01_Correr_SinImplante.fbx", AssetDatabase.GetAssetPath(ClipPorNombre("PJ01_Correr_SinImplante")));
+            // T-749: el jugador usa los de Blender. T-1505: caminar PJ01_Caminar, trote PJ01_Trote, sprint PJ01_Sprint.
+            foreach (string nombre in new[] { "PJ01_Caminar", "PJ01_Trote", "PJ01_Sprint", "PJ01_Trote_Izquierda", "PJ01_Trote_Derecha", "PJ01_Trote_Atras" })
+            {
+                Assert.AreEqual(CarpetaClipsPJ01 + nombre + ".fbx", AssetDatabase.GetAssetPath(ClipPorNombre(nombre)));
+            }
         }
 
         private static AnimationClip ClipPorNombre(string nombre)
