@@ -13,18 +13,19 @@ nada de PlayMode completo (pruebas por clase), no correr CreadorTodo, nunca forc
 ## Tareas
 | Tarea | Qué | Estado |
 | --- | --- | --- |
-| Inventario | Qué modelos faltan de importar o de usar | pendiente |
-| T-1490 | Cámara casi sin temblor; combo de 2 golpes; enemigos con más vida contra golpes | pendiente |
-| T-1491 | Armas: alcance y daño de todas, trazos, mira/arco de granada, sonido cámara lenta en la rueda | pendiente |
-| T-1492 | HUD: daño de drones y de dónde disparan, vida baja antes, curarse en persecución, prótesis clic/doble clic, 2 ranuras E/C | pendiente |
-| T-1493 | Animaciones que bloquean el movimiento (bajar de moto y similares) | pendiente |
-| T-1494 | Nova y robots: detectar de lejos, buscar, usar arma, cubrirse agachados, más vida; perro robot; drones sin atravesar muros | pendiente |
-| T-1495 | SKULLS con tope por lugar; NPCs reaccionan a disparos y mueren con animación; meseras; hacker sentado | pendiente |
-| T-1496 | Menú con poca niebla; juego sin cuarto (tutorial y despertar intactos) | pendiente |
-| T-1497.. | Modelos: Nova a escala y W10, drones y naves, V11, NPCs, tragamonedas, maletín, parque | pendiente |
-| T-15xx | Ciudad: flotando/hundido, texturas de calles, primitivos, armería, charcos | pendiente |
-| Blender | Revisar BITACORA y nuevos-19nov e integrar lo que llegue | pendiente |
+| Inventario | Qué modelos faltan de importar o de usar | hecho ($CLAUDE_JOB_DIR/tmp/inventario-modelos.md) |
+| T-1490 | Cámara casi sin temblor; combo de 2 golpes; enemigos con más vida contra golpes | integrada y probada |
+| T-1491 | Armas: alcance y daño de todas, trazos, mira/arco de granada, sonido cámara lenta en la rueda | integrada y probada |
+| T-1492 | HUD: daño de drones, vida baja 40 %, curarse en persecución, prótesis clic/doble clic, ranuras E/C | integrada y probada |
+| T-1493 | Animaciones que bloquean el movimiento | integrada y probada |
+| T-1494 | Nova y robots, perro robot, drones sin atravesar muros | integrada y probada |
+| T-1495 | SKULLS con tope; civiles; meseras; hacker sentado | integrada y probada |
+| T-1496 | Menú con poca niebla; juego sin cuarto | integrada; pendiente HistoriaDemo (8 SNAKES antes de Libre) |
+| T-1497..T-1499 | Nova a escala y W10; drones y naves; maletín, parque, V11, NPCs | en curso (subagentes) |
+| T-1501..T-1503 | Barrido de la ciudad; edificios primitivos; armería y charcos | en curso (subagentes) |
+| T-1505 / Blender | Bloque A de Blender (caminar, trote, sprint, lados, escaleras, salto) importado; integración en curso | en curso |
 | Final | Builds, reporte, cerrar Unity | pendiente |
 
 ## Bitácora
 - 20-nov: paso 0 (Unity cerrado, sin lockfile, main f35707b, 11 GB RAM libres, 153 GB disco; Blender abierto).
+- 20-nov: T-1490..T-1496 integradas en integ/20nov (cf6ecc0), métodos de editor corridos, pruebas por clase. Segunda tanda lanzada (T-1497..T-1503, T-1505).
