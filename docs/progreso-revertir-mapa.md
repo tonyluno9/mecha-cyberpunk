@@ -38,3 +38,7 @@ niebla global, Barrio.prefab (sonido de puertas, persecución), PisoAdoquin, Pla
 - 19-nov: inventario hecho, rama de integración creada.
 - T-1481 integrada en integ/revertir-mapa (5139687).
 - T-1480, T-1482, T-1483 integradas (487ea5c). Siguiente: validar, pruebas por clase, capturas, reporte, builds.
+- Validar T-1480: OK (0 scripts faltantes, 0 referencias rotas). Se agregaron a la reversión las plazas del Malecón
+  (T1364_ZonasTrafico/Plazas). Raíces de la escena = las de 8b33987^1 + T1398_DronesAereos + T1364_ZonasTrafico (solo zonas de barrios).
+- EditMode Mundo+UI+Trafico+PersonajeVisual: 1733, 1 falla (FlotantesS2t: 19 tinacos/aires/antenas que T-1410 bajó cuando
+  estaban las zonas). Se agregó a T-1480 regresar esos 29 cambios de T-1410 (ad662b8) a su valor de antes.
