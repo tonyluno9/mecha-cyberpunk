@@ -87,3 +87,18 @@ Subir, bajar y robar usan los clips que ya hay (PJ01_Carro_Entrar, Carro_Salir, 
 | Conductor contravolantea en derrape (brazos girando rápido el volante) | Driving Fast (si existe) o animación de volante hecha en Blender | PJ01_Carro_Derrape_Bucle.fbx | PJ01 |
 | Subir a un camión o microbús (escalón alto) | Climb Up Ladder / Get Into Truck | PJ01_Camion_Entrar.fbx | PJ01 |
 | Moto: pie en el piso al parar (apoyar el pie al frenar a cero) | Motorcycle Stop / Foot Down (Blender) | PJ01_Moto_ApoyarPie.fbx | PJ01 |
+## Caminar y correr, 19-nov (T-1484)
+
+Medido con MedirLocomocionT1484: el jugador va a 4.5 m/s (paso normal) y 7.5 m/s (Shift). Los clips de PJ01 avanzan: caminar 1.66, correr 4.25,
+de lado 1.61, atrás 1.04 m/s. Hoy el paso normal usa el clip de correr como trote y el sprint lo acelera a 1.6. Para que nada patine hacen falta,
+de Blender (rig PJ01) o Mixamo, en bucle y sin root motion, a estas velocidades:
+
+| Para qué | Búscalo en Mixamo como | Archivo | Velocidad del clip |
+| --- | --- | --- | --- |
+| Sprint con Shift (hoy el trote a 1.6x) | Fast Run / Sprint | PJ01_Loco_Sprint.fbx | 7 a 7.5 m/s |
+| Trote de lado apuntando (hoy caminar de lado a 1.6x, patina) | Jog Strafe Left / Right (o Pistol Strafe) | PJ01_Loco_TroteDer.fbx, PJ01_Loco_TroteIzq.fbx | 4 a 4.5 m/s |
+| Trote hacia atrás apuntando (hoy caminar atrás a 1.6x) | Jog Backward | PJ01_Loco_TroteAtras.fbx | 4 a 4.5 m/s |
+| Arranque y frenada del trote (opcional) | Start Running / Run To Stop | PJ01_Loco_ArrancarTrote.fbx, PJ01_Loco_FrenarTrote.fbx | sin bucle |
+| Subir y bajar escalones caminando (opcional, hoy lo cubre el IK de desnivel) | Walking Up The Stairs / Descending Stairs | PJ01_Loco_SubirEscalones.fbx | 1.5 a 2 m/s |
+
+Con el sprint propio se cambia `ReglasAnimacion.VelocidadPJ01Correr` por la del sprint en el estado Correr y se devuelve el Caminar del jugador a su clip.

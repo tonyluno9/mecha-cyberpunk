@@ -29,3 +29,22 @@ Que caminar y correr del jugador a pie se vean y se sientan perfectos: pies sin 
 ## Dudas
 - Si Tony quiere mantener 4.5 m/s al caminar (parece rápido para un caminar natural) o se puede bajar con el clip real.
 - Si hay clips de trote o de correr de lado/atrás en Mixamo que Tony pueda bajar (hoy no existen; ver docs/animaciones-faltan.md).
+
+## Fase 2 (hecha, 19-nov noche)
+Medidas (Logs/t1484-medir.txt, averageSpeed de la raíz sobre Visual_PJ01): PJ01_Caminar 1.66 m/s, PJ01_Correr 4.25 m/s, de lado 1.61, atrás 1.04.
+El jugador va a 4.5 m/s (paso normal) y 7.5 m/s (Shift) con Animator.speed = 1: los pies patinaban 2.7 veces al caminar y 1.76 al correr.
+
+- **Trote en el paso normal**: a 4.5 m/s nadie camina. `Override_Jugador` pone PJ01_Correr_{Sin,Con}Implante en el estado Caminar
+  (`ConstructorControladorBase.ClipsSoloJugadorT1484`, se aplica con `AjustarLocomocionT1484.Aplicar`). Los NPC siguen con PJ01_Caminar.
+- **Rapidez por velocidad real**: `VisualPersonaje.ConfigurarClipsDireccionales` + `ReglasAnimacion.VelocidadClipDireccional`: la referencia es la mezcla
+  del árbol 2D (adelante, atrás, lados) y la rapidez queda entre 0.7 y 1.6. A 4.5 m/s el trote va a 1.06 (pies quietos); a 7.5 m/s a 1.6 (patina 9 %).
+  De lado y atrás (apuntando) llega al tope 1.6: ahí todavía patina (faltan clips de trote lateral y hacia atrás).
+- **IK de pies solo de desniveles** (`IKPiesYMirada.SoloDesnivel`): sube o baja el pie lo que el piso bajo él difiere del piso bajo el centro
+  (zona muerta 3 cm, tope 35 cm) y baja la cadera con el pie más bajo. En plano no toca el clip (antes aplanaba la zancada y por eso T-724 lo apagó).
+- **Giro suave** (`ReglasAnimacion.GirarSuave`, `ControladorAPie.SuavizadoGiroCuerpo` 14/s, tope 720 °/s): caminando el cuerpo arranca rápido y llega suave;
+  apuntando sigue a la cámara sin retraso.
+- **Inclinación en curvas** (`ReglasAnimacion.InclinacionEnGiro`, `IKPiesYMirada.InclinarEnGiros`): 30 % de la inclinación física, tope 10°, sobre la cadera
+  en el pase de IK (los pies se quedan en su lugar).
+- Sin cambiar: velocidades del jugador, aceleración (30 m/s²) y frenado (40 m/s²) de `ConfigControlesAPie_Base`, controlador base, escaleras (AnimacionEscalera).
+- Pruebas: EditMode `LocomocionT1484Pruebas` (8). PlayMode ajustadas al trote: JugadorVisualPruebas, ClipsTonyT724Pruebas, AnimacionDireccionT640Pruebas,
+  VerificacionPJ01T741Pruebas (y EditMode ClipsTonyT724, ClipsPJ01JugadorT985).
