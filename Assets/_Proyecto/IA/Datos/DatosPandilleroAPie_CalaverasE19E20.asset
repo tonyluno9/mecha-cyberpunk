@@ -34,6 +34,7 @@ MonoBehaviour:
   esPolicia: 0
   calorAlGolpear: 8
   calorAlMatar: 30
+  provocaAntesDeAtacar: 1
   tamanoPandilla: 3
   maxAtacando: 2
   radioFormacion: 2.5
@@ -85,6 +86,11 @@ MonoBehaviour:
   distanciaMinCarga: 4
   distanciaMaxCarga: 14
   multiplicadorCastigo: 1.5
+  reaccionaADisparos: 0
+  radioOido: 60
+  distanciaVision: 45
+  segundosBusqueda: 6
+  perroRobot: 0
   colorNormal: {r: 1, g: 1, b: 1, a: 1}
   colorGolpe: {r: 1, g: 0.2, b: 0.2, a: 1}
   colorKO: {r: 0.2, g: 0.2, b: 0.2, a: 1}
