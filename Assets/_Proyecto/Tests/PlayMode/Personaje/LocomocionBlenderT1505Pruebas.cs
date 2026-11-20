@@ -76,6 +76,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Animator a = Preparar();
             yield return Esperar(0.8f);
             Press(teclado.wKey);
+            yield return null; // dos Press en el mismo cuadro: el segundo estado del teclado tapaba la W
             Press(teclado.leftShiftKey);
             yield return Esperar(1.6f);
             Debug.Log("[T1505] sprint: Velocidad " + controlador.Velocidad + " Bloqueado " + controlador.BloqueadoPorAnimacion + " CaminandoLento " + controlador.CaminandoLento
