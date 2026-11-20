@@ -17,22 +17,122 @@ MonoBehaviour:
     desvio: 0.5
     destello: 0
     particulas: 0
+    retrocesoArma: 0
+    duracionRetrocesoArma: 0.12
+    recuperacion: 0
+    impulso: 0
+    casquillos: 0
+    floracion: 0
+    topeFloracion: 0
+    recuperacionFloracion: 8
   - patada: 1
     desvio: 0.25
     destello: 0.26
     particulas: 6
+    retrocesoArma: 0.07
+    duracionRetrocesoArma: 0.12
+    recuperacion: 0
+    impulso: 0.25
+    casquillos: 1
+    floracion: 0.3
+    topeFloracion: 1.5
+    recuperacionFloracion: 6
   - patada: 3.2
     desvio: 0.5
     destello: 0.5
     particulas: 4
+    retrocesoArma: 0.16
+    duracionRetrocesoArma: 0.26
+    recuperacion: 0.3
+    impulso: 0.6
+    casquillos: 1
+    floracion: 0
+    topeFloracion: 0
+    recuperacionFloracion: 8
   - patada: 0.6
     desvio: 0.35
     destello: 0.3
     particulas: 5
+    retrocesoArma: 0.045
+    duracionRetrocesoArma: 0.07
+    recuperacion: 0.1
+    impulso: 0.3
+    casquillos: 1
+    floracion: 0.15
+    topeFloracion: 2.5
+    recuperacionFloracion: 5
   - patada: 4.5
     desvio: 0.3
     destello: 0.4
     particulas: 10
+    retrocesoArma: 0.2
+    duracionRetrocesoArma: 0.4
+    recuperacion: 0.45
+    impulso: 0.6
+    casquillos: 1
+    floracion: 0
+    topeFloracion: 0
+    recuperacionFloracion: 8
+  - patada: 0.5
+    desvio: 0.3
+    destello: 0.22
+    particulas: 4
+    retrocesoArma: 0.035
+    duracionRetrocesoArma: 0.06
+    recuperacion: 0.09
+    impulso: 0.22
+    casquillos: 1
+    floracion: 0.12
+    topeFloracion: 2
+    recuperacionFloracion: 5
+  - patada: 2.6
+    desvio: 0.4
+    destello: 0.4
+    particulas: 8
+    retrocesoArma: 0.14
+    duracionRetrocesoArma: 0.2
+    recuperacion: 0.28
+    impulso: 0.5
+    casquillos: 0
+    floracion: 0
+    topeFloracion: 0
+    recuperacionFloracion: 8
+  - patada: 3
+    desvio: 0.3
+    destello: 0.3
+    particulas: 0
+    retrocesoArma: 0.15
+    duracionRetrocesoArma: 0.3
+    recuperacion: 0.3
+    impulso: 0.6
+    casquillos: 0
+    floracion: 0
+    topeFloracion: 0
+    recuperacionFloracion: 8
+  - patada: 0
+    desvio: 0
+    destello: 0
+    particulas: 0
+    retrocesoArma: 0
+    duracionRetrocesoArma: 0.12
+    recuperacion: 0
+    impulso: 0
+    casquillos: 0
+    floracion: 0
+    topeFloracion: 0
+    recuperacionFloracion: 8
+  - patada: 0.7
+    desvio: 0.2
+    destello: 0.3
+    particulas: 5
+    retrocesoArma: 0.05
+    duracionRetrocesoArma: 0.1
+    recuperacion: 0.12
+    impulso: 0.3
+    casquillos: 0
+    floracion: 0
+    topeFloracion: 0
+    recuperacionFloracion: 8
   duracionPatada: 0.18
   topePatada: 5
   duracionDestello: 0.04

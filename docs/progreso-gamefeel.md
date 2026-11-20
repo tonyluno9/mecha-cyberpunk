@@ -13,14 +13,15 @@ No grabar videos. Al final: builds Demo y Juego uno por uno, docs/reporte-gamefe
 ## Tareas
 | Tarea | Qué | Estado |
 | --- | --- | --- |
-| T-1484 | Caminar y correr: velocidad real de cada clip, blend tree por velocidad, Loco_Caminar vs PJ01, arranque/frenado, inclinación, foot IK, escaleras | en curso (subagente Sonnet) |
-| T-1485 | Cámara a pie: suavizado, sin atravesar paredes, balanceo al correr, ajuste al apuntar, FOV al correr | en curso (subagente Sonnet) |
-| T-1486 | Disparar: peso por arma, retroceso, temblor, destello, casquillo, cañón a la mira, hitmarker y marca de muerte, reacción, apuntar/recargar | en curso (subagente Sonnet) |
-| T-1487 | Golpear: asistencia al más cercano con acercamiento, congelamiento 50-80 ms, temblor, sonido, reacción/empuje, combo | en curso (subagente Sonnet) |
+| T-1484 | Caminar y correr: velocidad real de cada clip, blend tree por velocidad, Loco_Caminar vs PJ01, arranque/frenado, inclinación, foot IK, escaleras | fase 1 integrada (MedirLocomocionT1484.Medir); fase 2 espera medidas |
+| T-1485 | Cámara a pie: suavizado, sin atravesar paredes, balanceo al correr, ajuste al apuntar, FOV al correr | integrada, EditMode 10/10 |
+| T-1486 | Disparar: peso por arma, retroceso, temblor, destello, casquillo, cañón a la mira, hitmarker y marca de muerte, reacción, apuntar/recargar | integrada; falta AjustarSensacionT1486.Ajustar y pruebas |
+| T-1487 | Golpear: asistencia al más cercano con acercamiento, congelamiento 50-80 ms, temblor, sonido, reacción/empuje, combo | integrada; falta CrearConfigGolpeT1487.Crear y pruebas |
 | T-1488 | Manejar: peso por carro, frenos, derrape, suspensión, cámara por velocidad y FOV, temblor al chocar, motor, subir/bajar/robar alineado, motos estables | en curso (subagente Sonnet) |
-| T-1489 | Detalles: polvo al caer, salpicadura en charcos, temblor e indicador de dirección del daño, viñeta roja con vida baja | en curso (subagente Sonnet) |
+| T-1489 | Detalles: polvo al caer, salpicadura en charcos, temblor e indicador de dirección del daño, viñeta roja con vida baja | integrada; falta compilar y pruebas |
 | Final | Integrar, compilar, pruebas por clase, reporte, builds | pendiente |
 
 ## Bitácora
 - 19-nov: paso 0 hecho (Unity cerrado, main 3b2a58a, 16 GB RAM libres, 154 GB de disco). Worktrees creados.
 - 6 subagentes lanzados. Temblor de cámara: contrato común CinemachineImpulseSource -> listener en las cámaras (T-1485 a pie, T-1488 carro).
+- Integradas T-1484 fase 1, T-1485, T-1486, T-1487, T-1489 en integ/gamefeel (4b6f913). Temblor: TemblorCamara en MechaCyberpunk.Personaje.Movimiento.
