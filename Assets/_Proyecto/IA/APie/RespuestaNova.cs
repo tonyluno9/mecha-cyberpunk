@@ -32,6 +32,12 @@ namespace MechaCyberpunk.IA.APie
         private readonly List<PandilleroAPie> guardias = new List<PandilleroAPie>();
         private readonly List<PandilleroAPie> pesados = new List<PandilleroAPie>();
         private readonly List<PandilleroAPie> perros = new List<PandilleroAPie>();
+        private readonly List<PandilleroAPie> deNave = new List<PandilleroAPie>();
+        private NaveNova nave;
+        private bool naveLlamada;
+        private bool enNova;
+        private float proximaNave;
+        private int navesLanzadas;
         private PandilleroAPie jefe;
         private bool jefeSalio;
         private float proximaRevision;
@@ -53,6 +59,11 @@ namespace MechaCyberpunk.IA.APie
         /// <summary>T-1389b: perros robot de Nova (E17) en juego.</summary>
         public IReadOnlyList<PandilleroAPie> Perros => perros;
         public int PerrosVivos => Vivos(perros);
+        /// <summary>T-1498: soldados que bajaron de una nave de Nova (aparte de los guardias de las oleadas).</summary>
+        public IReadOnlyList<PandilleroAPie> DeNave => deNave;
+        public int DeNaveVivos => Vivos(deNave);
+        /// <summary>T-1498: la nave que está en escena ahora (null si ninguna).</summary>
+        public NaveNova Nave => nave;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void LimpiarEstatico()
@@ -110,9 +121,11 @@ namespace MechaCyberpunk.IA.APie
             guardias.RemoveAll(p => p == null);
             pesados.RemoveAll(p => p == null);
             perros.RemoveAll(p => p == null);
+            deNave.RemoveAll(p => p == null);
             if (jugador == null || jugador.Raiz == null || !EstrellasBusqueda.EsNova(Estrellas))
             {
                 anunciada = false;
+                enNova = false;
                 segundosSinNova += SegundosRevisar;
                 if (Apagada || config == null || Estrellas <= 0 || jugador == null || jugador.Raiz == null)
                 {
@@ -155,8 +168,147 @@ namespace MechaCyberpunk.IA.APie
                 jefe = Aparecer(config.JefeFinal, donde, "Nova_JefeFinal");
                 jefeSalio = jefe != null;
             }
+            LlevarNave(donde);
             MarcarVistos(donde);
             Azuzar(donde);
+        }
+
+        // T-1498: con Nova en la ciudad llega una nave a la vez, a intervalos; cuando se va pasa el tiempo de espera y llega otra.
+        private void LlevarNave(Vector3 donde)
+        {
+            if (config.Naves.Count == 0)
+            {
+                return;
+            }
+            if (!enNova)
+            {
+                enNova = true;
+                proximaNave = Time.time + config.SegundosPrimeraNave;
+            }
+            if (naveLlamada && nave == null)
+            {
+                naveLlamada = false;
+                proximaNave = Time.time + config.SegundosEntreNaves;
+            }
+            if (nave != null || Time.time < proximaNave)
+            {
+                return;
+            }
+            naveLlamada = LlamarNave(donde, Estrellas) != null;
+            if (!naveLlamada)
+            {
+                proximaNave = Time.time + SegundosReintentoNave;
+            }
+        }
+
+        private const float SegundosReintentoNave = 3f;
+        private const float AltoDeBusquedaNave = 60f;
+        private const float DistanciaNaveMin = 14f;
+        private const float DistanciaNaveMax = 26f;
+        private const float MismoPisoNave = 2f;
+        private const float RadioFilaSoldados = 2f;
+        private const float SeparacionRoce = 0.3f;
+        private const float AlturaLlegadaNave = 15f;
+        private const float AlturaSalidaNave = 25f;
+        private const float GradosVariosSalida = 60f;
+        private const float DescensoMaximo = 80f;
+        private const float SobrePiso = 0.05f;
+        private const float GradosEntreSoldados = 90f;
+
+        /// <summary>
+        /// T-1498: busca un punto libre en el piso (sin edificios ni techos encima) cerca del jugador y hace llegar una nave a flotar ahí con soldados de Nova.
+        /// Devuelve la nave, o null si no hay naves configuradas, ya hay una, no toca nave con estas estrellas o no hay punto libre.
+        /// </summary>
+        public NaveNova LlamarNave(Vector3 jugador, int estrellas)
+        {
+            if (config == null || nave != null || config.Naves.Count == 0)
+            {
+                return null;
+            }
+            int cantidad = config.SoldadosNave(estrellas);
+            if (cantidad <= 0 || config.TodosLosGuardias().Count == 0 || !BuscarPuntoNave(jugador, out Vector3 suelo, out float altura))
+            {
+                return null;
+            }
+            GameObject modelo = config.Naves[navesLanzadas % config.Naves.Count];
+            navesLanzadas++;
+            Vector3 flote = suelo + Vector3.up * altura;
+            Vector3 rumbo = flote - jugador;
+            Vector3 rumboSalida = Quaternion.Euler(0f, Random.Range(-GradosVariosSalida, GradosVariosSalida), 0f) * rumbo;
+            Vector3 desde = ReglaNaveNova.PuntoLejano(flote, rumbo, config.DistanciaLlegadaNave, AlturaLlegadaNave);
+            Vector3 salida = ReglaNaveNova.PuntoLejano(flote, -rumboSalida, config.DistanciaLlegadaNave, AlturaSalidaNave);
+            nave = NaveNova.Crear(modelo, desde, flote, salida, config.VelocidadNave, cantidad, config.SegundosEntreSoldados,
+                ReglaNaveNova.SegundosDescenso(altura, config.VelocidadDescenso));
+            nave.Soltar += AlSoltarSoldado;
+            return nave;
+        }
+
+        /// <summary>T-1498: un punto del piso a 14-26 m del jugador, a su nivel, con la columna de aire libre que necesita la nave (raycast al piso desde arriba, esfera hacia arriba).</summary>
+        public bool BuscarPuntoNave(Vector3 jugador, out Vector3 suelo, out float altura)
+        {
+            float radio = config.RadioLibreNave;
+            for (int i = 0; i < Intentos; i++)
+            {
+                float angulo = Random.Range(0f, Mathf.PI * 2f);
+                float d = Random.Range(DistanciaNaveMin, DistanciaNaveMax);
+                Vector3 arriba = new Vector3(jugador.x + Mathf.Cos(angulo) * d, jugador.y + AltoDeBusquedaNave, jugador.z + Mathf.Sin(angulo) * d);
+                if (!Physics.Raycast(arriba, Vector3.down, out RaycastHit golpe, AltoDeBusquedaNave * 2f, ~0, QueryTriggerInteraction.Ignore)
+                    || golpe.normal.y < 0.7f || Mathf.Abs(golpe.point.y - jugador.y) > MismoPisoNave)
+                {
+                    continue;
+                }
+                Vector3 centro = golpe.point + Vector3.up * (radio + SeparacionRoce);
+                if (Physics.CheckSphere(centro, radio, ~0, QueryTriggerInteraction.Ignore))
+                {
+                    continue;
+                }
+                float libre = Physics.SphereCast(centro, radio, Vector3.up, out RaycastHit techo, AltoDeBusquedaNave, ~0, QueryTriggerInteraction.Ignore)
+                    ? techo.distance + radio + SeparacionRoce : AltoDeBusquedaNave;
+                float flote = ReglaNaveNova.AlturaDeFlote(libre, config.AlturaFlote, config.AlturaMinimaFlote, config.MargenAireNave);
+                if (flote < 0f)
+                {
+                    continue;
+                }
+                suelo = golpe.point;
+                altura = flote;
+                return true;
+            }
+            suelo = jugador;
+            altura = 0f;
+            return false;
+        }
+
+        // T-1498: baja un soldado por la cuerda, a un costado del anterior; ataca al jugador al tocar el piso.
+        private void AlSoltarSoldado(NaveNova quien, int numero)
+        {
+            IJugador jugador = Registro<IJugador>.Actual;
+            List<GameObject> prefabs = config.TodosLosGuardias();
+            if (jugador == null || jugador.Raiz == null || prefabs.Count == 0)
+            {
+                return;
+            }
+            float angulo = numero * GradosEntreSoldados * Mathf.Deg2Rad;
+            Vector3 lado = new Vector3(Mathf.Cos(angulo), 0f, Mathf.Sin(angulo)) * (numero == 0 ? 0f : RadioFilaSoldados);
+            Vector3 anclaLocal = quien.AnclaLocal + quien.transform.InverseTransformVector(lado);
+            Vector3 anclaMundo = quien.transform.TransformPoint(anclaLocal);
+            bool hayPiso = Physics.Raycast(anclaMundo, Vector3.down, out RaycastHit golpe, DescensoMaximo, ~0, QueryTriggerInteraction.Ignore)
+                && !golpe.collider.transform.IsChildOf(quien.transform) && golpe.normal.y >= 0.7f;
+            Vector3 suelo = hayPiso ? golpe.point + Vector3.up * SobrePiso : new Vector3(anclaMundo.x, quien.PuntoFlote.y - config.AlturaFlote + SobrePiso, anclaMundo.z);
+            Vector3 mira = jugador.Raiz.position - suelo;
+            mira.y = 0f;
+            Quaternion giro = mira.sqrMagnitude > 0.01f ? Quaternion.LookRotation(mira) : Quaternion.identity;
+            GameObject objeto = Instantiate(prefabs[deNave.Count % prefabs.Count], anclaMundo, giro);
+            objeto.name = "Nova_Soldado_" + (deNave.Count + 1);
+            PandilleroAPie p = objeto.GetComponent<PandilleroAPie>();
+            if (p == null)
+            {
+                Destroy(objeto);
+                return;
+            }
+            objeto.AddComponent<ZonaCabezaNova>();
+            Azuzar(p, jugador.Raiz.position);
+            deNave.Add(p);
+            DescensoNova.Iniciar(p, quien.transform, anclaLocal, suelo, config.VelocidadDescenso, config.MaterialCuerda);
         }
 
         /// <summary>T-1323: marca como "ya te vio" a los agentes de Nova en pie que están a <see cref="ConfigRespuestaNova.DistanciaVista"/> o menos del jugador.</summary>
@@ -166,6 +318,7 @@ namespace MechaCyberpunk.IA.APie
             MarcarVistos(guardias, donde, vista);
             MarcarVistos(pesados, donde, vista);
             MarcarVistos(perros, donde, vista);
+            MarcarVistos(deNave, donde, vista);
             if (jefe != null && !jefe.EstaKO)
             {
                 MarcarVisto(jefe, donde, vista);
@@ -205,6 +358,10 @@ namespace MechaCyberpunk.IA.APie
                 Azuzar(p, donde);
             }
             foreach (PandilleroAPie p in perros)
+            {
+                Azuzar(p, donde);
+            }
+            foreach (PandilleroAPie p in deNave)
             {
                 Azuzar(p, donde);
             }
@@ -357,6 +514,14 @@ namespace MechaCyberpunk.IA.APie
             Quitar(guardias);
             Quitar(pesados);
             Quitar(perros);
+            Quitar(deNave);
+            if (nave != null)
+            {
+                Destroy(nave.gameObject);
+            }
+            nave = null;
+            naveLlamada = false;
+            enNova = false;
             if (jefe != null && !jefe.EstaKO)
             {
                 Destroy(jefe.gameObject);
@@ -374,6 +539,7 @@ namespace MechaCyberpunk.IA.APie
             QuitarNoVistos(guardias);
             QuitarNoVistos(pesados);
             QuitarNoVistos(perros);
+            QuitarNoVistos(deNave);
             if (jefe != null && !jefe.EstaKO && !vistos.Contains(jefe))
             {
                 Destroy(jefe.gameObject);
