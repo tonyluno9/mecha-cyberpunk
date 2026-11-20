@@ -1,5 +1,6 @@
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Personaje.Jugador;
+using MechaCyberpunk.Personaje.Visual;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -357,6 +358,9 @@ namespace MechaCyberpunk.Personaje.Movimiento
             segundosMirarAlDisparo = configCamara != null ? configCamara.SegundosGiroAlDisparar : 0f;
         }
 
+        /// <summary>T-1484: rapidez del suavizado del giro del cuerpo al caminar (1/s): 90° se completan al 75 % en 0.1 s.</summary>
+        public const float SuavizadoGiroCuerpo = 14f;
+
         private void GirarCuerpo(float dt, Vector3 horizontal)
         {
             float giroMaximo = (configCamara != null ? configCamara.GiroCuerpo : 720f) * dt;
@@ -375,7 +379,10 @@ namespace MechaCyberpunk.Personaje.Movimiento
             {
                 return;
             }
-            float angulo = Mathf.MoveTowardsAngle(transform.eulerAngles.y, objetivo, giroMaximo);
+            // T-1484: caminando el cuerpo gira con suavizado (arranca rápido y llega suave); apuntando o al disparar sigue a la cámara sin retraso.
+            float angulo = apuntando || mirandoAlDisparo
+                ? Mathf.MoveTowardsAngle(transform.eulerAngles.y, objetivo, giroMaximo)
+                : ReglasAnimacion.GirarSuave(transform.eulerAngles.y, objetivo, dt, configCamara != null ? configCamara.GiroCuerpo : 720f, SuavizadoGiroCuerpo);
             transform.rotation = Quaternion.Euler(0f, angulo, 0f);
         }
 

@@ -87,7 +87,9 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
             string[] noPJ01 = tabla.Where(t => !t.Clip.StartsWith(ConstructorControladorBase.PrefijoClipPJ01)).Select(t => t.Estado + " -> " + t.Clip).ToArray();
             string[] todos = ClipsDeLaCarpeta();
             var usados = new HashSet<string>(tabla.Select(t => t.Clip));
-            string[] sinUsar = todos.Where(n => !usados.Contains(n)).ToArray();
+            // T-1484: el paso normal del jugador es el trote; los clips de caminar de PJ01 los usan los NPC.
+            var soloNpc = new HashSet<string> { "PJ01_Caminar_SinImplante", "PJ01_Caminar_ConImplante" };
+            string[] sinUsar = todos.Where(n => !usados.Contains(n) && !soloNpc.Contains(n)).ToArray();
             Debug.Log("[T-985] clips no PJ01: " + noPJ01.Length + "; PJ01 sin usar: " + sinUsar.Length + " de " + todos.Length);
 
             Assert.AreEqual(83, todos.Length, "La carpeta de clips debe tener los 83 PJ01_* del controlador (T-1310: +3 de cobertura con rifle)");

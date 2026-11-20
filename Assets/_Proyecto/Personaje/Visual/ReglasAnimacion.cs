@@ -217,6 +217,84 @@ namespace MechaCyberpunk.Personaje.Visual
         /// <summary>
         /// Velocidad del Animator para que los pies no patinen: real / la del clip, limitada. Sin velocidad de clip (0) no se ajusta (1).
         /// </summary>
+        /// <summary>T-1484: velocidad (m/s) de los clips del jugador medida con MedirLocomocionT1484 (averageSpeed de la raíz sobre Visual_PJ01).</summary>
+        public const float VelocidadPJ01Caminar = 1.66f, VelocidadPJ01Correr = 4.25f, VelocidadPJ01Lado = 1.61f, VelocidadPJ01Atras = 1.04f;
+        /// <summary>T-1484: rango de Animator.speed del jugador al igualar los pies con el cuerpo. Arriba de 1.6 el clip se ve acelerado.</summary>
+        public const float RapidezMinimaJugador = 0.7f, RapidezMaximaJugador = 1.6f;
+
+        /// <summary>
+        /// T-1484: velocidad a la que avanza la mezcla direccional de un árbol 2D (adelante, atrás, lados) para la dirección local
+        /// (<paramref name="x"/> derecha, <paramref name="z"/> adelante). Sin dirección cuenta como adelante.
+        /// </summary>
+        public static float VelocidadClipDireccional(float x, float z, float adelante, float atras, float lado)
+        {
+            float pa = Mathf.Max(0f, z), pt = Mathf.Max(0f, -z), pl = Mathf.Abs(x);
+            float suma = pa + pt + pl;
+            if (suma < 1e-4f)
+            {
+                return adelante;
+            }
+            if (atras <= 0f) atras = adelante;
+            if (lado <= 0f) lado = adelante;
+            return (pa * adelante + pt * atras + pl * lado) / suma;
+        }
+
+        /// <summary>T-1484: desnivel (m) por debajo del cual el pie se deja como viene en el clip (piso plano, piel del CharacterController).</summary>
+        public const float DesnivelMinimo = 0.03f;
+
+        /// <summary>
+        /// T-1484: cuánto hay que subir (+) o bajar (-) un pie para que llegue al piso que tiene debajo, recortado a ±<paramref name="maximo"/>.
+        /// Menos de <see cref="DesnivelMinimo"/> no se corrige.
+        /// </summary>
+        public static float Desnivel(float alturaPiso, float alturaBase, float maximo)
+        {
+            float d = alturaPiso - alturaBase;
+            if (Mathf.Abs(d) < DesnivelMinimo)
+            {
+                return 0f;
+            }
+            return Mathf.Clamp(d, -maximo, maximo);
+        }
+
+        /// <summary>T-1484: la cadera baja lo que baje el pie más bajo (para que alcance el escalón); si los dos suben, no se mueve.</summary>
+        public static float BajadaCadera(float desnivelIzq, float desnivelDer)
+        {
+            return Mathf.Min(0f, Mathf.Min(desnivelIzq, desnivelDer));
+        }
+
+        /// <summary>T-1484: fracción de la inclinación física (atan(v·ω/g)) que se usa y su tope (°): se nota al dar vuelta corriendo sin verse exagerada.</summary>
+        public const float FraccionInclinacion = 0.3f, InclinacionMaxima = 10f;
+
+        /// <summary>
+        /// T-1484: inclinación del cuerpo hacia dentro de la curva (°, positiva hacia la derecha) a <paramref name="velocidad"/> m/s
+        /// girando <paramref name="giroGradosSeg"/> °/s.
+        /// </summary>
+        public static float InclinacionEnGiro(float velocidad, float giroGradosSeg, float gravedad = 9.81f)
+        {
+            if (velocidad <= 0.5f || gravedad <= 0f)
+            {
+                return 0f;
+            }
+            float fisica = Mathf.Atan(velocidad * giroGradosSeg * Mathf.Deg2Rad / gravedad) * Mathf.Rad2Deg;
+            return Mathf.Clamp(fisica * FraccionInclinacion, -InclinacionMaxima, InclinacionMaxima);
+        }
+
+        /// <summary>
+        /// T-1484: siguiente ángulo (°) del cuerpo hacia <paramref name="objetivo"/>: se acerca con suavizado exponencial (arranca rápido y llega suave)
+        /// sin pasar de <paramref name="maximoGradosSeg"/>. A menos de medio grado llega.
+        /// </summary>
+        public static float GirarSuave(float actual, float objetivo, float dt, float maximoGradosSeg, float suavizado)
+        {
+            float delta = Mathf.DeltaAngle(actual, objetivo);
+            if (Mathf.Abs(delta) < 0.5f || dt <= 0f)
+            {
+                return Mathf.Abs(delta) < 0.5f ? objetivo : actual;
+            }
+            float paso = delta * (1f - Mathf.Exp(-suavizado * dt));
+            float tope = maximoGradosSeg * dt;
+            return actual + Mathf.Clamp(paso, -tope, tope);
+        }
+
         public static float EscalaVelocidad(float velocidadReal, float velocidadClip, float minima, float maxima)
         {
             if (velocidadClip <= 0f)

@@ -28,6 +28,10 @@ namespace MechaCyberpunk.Personaje.Visual
         [Min(0.1f)] [SerializeField] private float rapidezMinima = 0.6f;
         [Tooltip("Rapidez máxima de la animación al ajustarla a la velocidad real (1 = normal).")]
         [Min(1f)] [SerializeField] private float rapidezMaxima = 2.2f;
+        [Tooltip("T-1484: velocidad (m/s) del clip de caminar hacia atrás. 0 = usar la de adelante (sin mezcla direccional).")]
+        [Min(0f)] [SerializeField] private float velocidadClipAtras;
+        [Tooltip("T-1484: velocidad (m/s) de los clips de caminar de lado. 0 = usar la de adelante.")]
+        [Min(0f)] [SerializeField] private float velocidadClipLado;
         [Header("Controlador base (T-561)")]
         [Tooltip("Rapidez con la que la capa de arriba (torso) se apaga al cubrirse, agacharse o caer (1/s).")]
         [Min(0.1f)] [SerializeField] private float rapidezCapaArriba = 8f;
@@ -124,6 +128,28 @@ namespace MechaCyberpunk.Personaje.Visual
             velocidadClipCorrer = correr;
         }
 
+        /// <summary>
+        /// T-1484: velocidades de los clips por dirección y rango de rapidez. Con atrás y lado la referencia es la mezcla del árbol 2D
+        /// (VelX/VelZ), así los pies no patinan al ir de lado o hacia atrás.
+        /// </summary>
+        public void ConfigurarClipsDireccionales(float caminar, float correr, float atras, float lado, float rapidezMin, float rapidezMax)
+        {
+            ConfigurarClips(caminar, correr);
+            velocidadClipAtras = atras;
+            velocidadClipLado = lado;
+            rapidezMinima = Mathf.Max(0.1f, rapidezMin);
+            rapidezMaxima = Mathf.Max(1f, rapidezMax);
+        }
+
+        /// <summary>Animator.speed que se pondría caminando o corriendo a esta velocidad y dirección (para las pruebas).</summary>
+        public float RapidezLocomocion(bool corriendo, float velocidadReal, float x, float z)
+        {
+            float adelante = corriendo ? velocidadClipCorrer : velocidadClipCaminar;
+            float referencia = ReglasAnimacion.VelocidadClipDireccional(x, z, adelante, velocidadClipAtras, velocidadClipLado);
+            float tope = corriendo ? rapidezMaxima : Mathf.Min(rapidezMaxima, ReglasAnimacion.RapidezMaximaCaminar);
+            return ReglasAnimacion.EscalaVelocidad(velocidadReal, referencia * EscalaClips, rapidezMinima, tope);
+        }
+
         /// <summary>Para los creadores: las velocidades de los clips y la rapidez máxima de la animación (T-562).</summary>
         public void ConfigurarClips(float caminar, float correr, float rapidezMax)
         {
@@ -154,6 +180,9 @@ namespace MechaCyberpunk.Personaje.Visual
             get => velocidad;
             set { velocidad = Mathf.Max(0f, value); Aplicar(); }
         }
+
+        /// <summary>T-1484: giro del cuerpo suavizado (°/s, positivo a la derecha).</summary>
+        public float GiroSuavizado => giro;
 
         public bool EnSuelo
         {
@@ -765,10 +794,14 @@ namespace MechaCyberpunk.Personaje.Visual
                 animador.speed = rapidezIdle;
                 return;
             }
-            float referencia = estado == HashCaminar ? velocidadClipCaminar : estado == HashCorrer ? velocidadClipCorrer : 0f;
+            if (estado != HashCaminar && estado != HashCorrer)
+            {
+                animador.speed = 1f;
+                return;
+            }
             // T-640: caminar normal (4.5 m/s) ya no es Correr: Caminar se acelera menos que Correr para no verse apresurado.
-            float tope = estado == HashCaminar ? Mathf.Min(rapidezMaxima, ReglasAnimacion.RapidezMaximaCaminar) : rapidezMaxima;
-            animador.speed = ReglasAnimacion.EscalaVelocidad(velocidad, referencia * EscalaClips, rapidezMinima, tope);
+            // T-1484: la referencia es la mezcla direccional (adelante, atrás, lados) si hay velocidades por dirección.
+            animador.speed = RapidezLocomocion(estado == HashCorrer, velocidad, velX, velZ);
         }
 
         private const float HolguraPisoCerca = 0.25f;

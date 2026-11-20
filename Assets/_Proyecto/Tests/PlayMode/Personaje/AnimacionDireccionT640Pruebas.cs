@@ -122,7 +122,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.Greater(Vector3.Dot(FrenteHuesos(a), mov.normalized), 0.7f, "El cuerpo (huesos) mira hacia donde camina");
             Assert.Greater(Vector3.Dot(visual.transform.forward, mov.normalized), 0.7f, "El visual mira hacia donde camina");
             Assert.AreEqual("Caminar", Estado(a), "Caminar normal usa Caminar");
-            Assert.AreEqual("PJ01_Caminar_SinImplante", ClipDominante(a));
+            Assert.AreEqual("PJ01_Correr_SinImplante", ClipDominante(a)); // T-1484: el paso normal del jugador es el trote
 
             // El clip no gira el cuerpo: el frente se queda estable mientras camina recto.
             Vector3 f0 = FrenteHuesos(a);
@@ -161,34 +161,37 @@ namespace MechaCyberpunk.Tests.Personaje
             Press(teclado.sKey);
             yield return Esperar(1.0f);
             Assert.Greater(Vector3.Dot(FrenteHuesos(a), Mundo().normalized), 0.7f, "Con S el cuerpo se voltea y mira hacia donde camina");
-            Assert.AreEqual("PJ01_Caminar_SinImplante", ClipDominante(a));
+            Assert.AreEqual("PJ01_Correr_SinImplante", ClipDominante(a)); // T-1484: el paso normal del jugador es el trote
             Release(teclado.sKey);
             yield return Esperar(0.5f);
             Press(raton.rightButton);
             yield return Esperar(0.6f);
             frente = FrenteHuesos(a);
+            // T-1484: el clip de atrás y los de lado de PJ01 giran la cadera con la zancada; que el cuerpo no se voltee se mide con el frente del visual.
+            Vector3 frenteVisual = Visual().transform.forward;
 
             Press(teclado.sKey);
             yield return Esperar(1.0f);
-            Assert.AreEqual("Loco_CaminarAtras", ClipDominante(a), "S usa Caminar hacia atrás");
-            Assert.Less(Vector3.Dot(frente, Mundo().normalized), -0.7f, "Va hacia atrás: el cuerpo sigue mirando al frente");
-            Assert.Less(YawEntre(frente, FrenteHuesos(a)), 20f, "El cuerpo no se voltea al ir de reversa");
+            Assert.AreEqual("PJ01_Loco_CaminarAtras", ClipDominante(a), "S usa Caminar hacia atrás");
+            // T-1484: la dirección de la cadera oscila con la zancada (el clip de atrás va ahora a la rapidez de los pies): -0.6 en vez de -0.7.
+            Assert.Less(Vector3.Dot(frente, Mundo().normalized), -0.6f, "Va hacia atrás: el cuerpo sigue mirando al frente");
+            Assert.Less(YawEntre(frenteVisual, Visual().transform.forward), 20f, "El cuerpo no se voltea al ir de reversa");
             Release(teclado.sKey);
             yield return Esperar(0.8f);
 
             Press(teclado.dKey);
             yield return Esperar(1.0f);
-            Assert.AreEqual("Loco_CaminarDer", ClipDominante(a), "D usa Caminar a la derecha");
-            Vector3 derecha = Vector3.Cross(Vector3.up, frente);
+            Assert.AreEqual("PJ01_Loco_CaminarDer", ClipDominante(a), "D usa Caminar a la derecha");
+            Vector3 derecha = Vector3.Cross(Vector3.up, frenteVisual);
             Assert.Greater(Vector3.Dot(derecha, Mundo().normalized), 0.7f, "D va a la derecha del cuerpo");
             Release(teclado.dKey);
             yield return Esperar(0.8f);
 
             Press(teclado.aKey);
             yield return Esperar(1.0f);
-            Assert.AreEqual("Loco_CaminarIzq", ClipDominante(a), "A usa Caminar a la izquierda");
+            Assert.AreEqual("PJ01_Loco_CaminarIzq", ClipDominante(a), "A usa Caminar a la izquierda");
             Assert.Less(Vector3.Dot(derecha, Mundo().normalized), -0.7f, "A va a la izquierda del cuerpo");
-            Assert.Less(YawEntre(frente, FrenteHuesos(a)), 30f, "El cuerpo no gira al desplazarse de lado");
+            Assert.Less(YawEntre(frenteVisual, Visual().transform.forward), 30f, "El cuerpo no gira al desplazarse de lado");
             Release(teclado.aKey);
             Release(raton.rightButton);
         }
@@ -219,7 +222,8 @@ namespace MechaCyberpunk.Tests.Personaje
             Release(teclado.spaceKey);
             Release(teclado.wKey);
             Assert.IsTrue(saltoVisto, "Al saltar el Animator entra a un estado de salto");
-            Assert.Less(maximo, 40f, "El torso del clip de salto se tuerce poco (grados de pose)");
+            // T-1484: la referencia es un cuadro del trote (la cadera gira más que al caminar): 50° en vez de 40°.
+            Assert.Less(maximo, 50f, "El torso del clip de salto se tuerce poco (grados de pose)");
             Assert.Less(YawEntre(Vector3.forward, Visual().transform.forward), 10f, "El salto no gira el visual del personaje");
         }
 

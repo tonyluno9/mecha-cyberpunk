@@ -109,8 +109,8 @@ namespace MechaCyberpunk.Personaje.Jugador
         }
 
         /// <summary>
-        /// T-724: caminar y correr del jugador son Loco_Caminar y Loco_Correr de Tony tal como vienen: a su rapidez original (Animator.speed = 1,
-        /// sin el ajuste que los aceleraba hasta 2.2x para igualar la velocidad del cuerpo) y con los pies sin IK procedural encima del clip.
+        /// T-724: caminar y correr del jugador son clips de Tony. T-1484: su rapidez sigue a la velocidad del cuerpo (0.7 a 1.6) para que los pies no patinen,
+        /// y el IK de pies solo corrige desniveles del piso.
         /// </summary>
         public static void ClipsDeTony(VisualPersonaje visual)
         {
@@ -118,11 +118,17 @@ namespace MechaCyberpunk.Personaje.Jugador
             {
                 return;
             }
-            visual.ConfigurarClips(0f, 0f);
+            // T-1484: la rapidez del clip sigue a la velocidad real para que el pie de apoyo no patine (Caminar del jugador es el clip de trote,
+            // ver ConstructorControladorBase.ClipsSoloJugadorT1484), entre 0.7 y 1.6 para no verse en cámara lenta ni acelerado.
+            visual.ConfigurarClipsDireccionales(ReglasAnimacion.VelocidadPJ01Correr, ReglasAnimacion.VelocidadPJ01Correr,
+                ReglasAnimacion.VelocidadPJ01Atras, ReglasAnimacion.VelocidadPJ01Lado, ReglasAnimacion.RapidezMinimaJugador, ReglasAnimacion.RapidezMaximaJugador);
             IKPiesYMirada ik = visual.GetComponentInChildren<IKPiesYMirada>(true);
             if (ik != null)
             {
-                ik.Pies = false;
+                // T-1484: el IK solo corrige la altura del piso (escalones, banquetas, pendientes); en piso plano el pie hace lo del clip.
+                ik.Pies = true;
+                ik.SoloDesnivel = true;
+                ik.InclinarEnGiros = true;
             }
             // T-737: al apuntar se ve el clip tal cual: ni torso girado a la mira, ni mano derecha corregida, ni mano izquierda pegada al arma por IK.
             ApuntadoIK apuntado = visual.GetComponentInChildren<ApuntadoIK>(true);

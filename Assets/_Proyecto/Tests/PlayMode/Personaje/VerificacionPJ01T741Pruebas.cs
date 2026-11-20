@@ -268,12 +268,12 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return Asentar();
             Press(teclado.wKey);
             yield return Esperar(1.0f);
-            Assert.AreEqual("PJ01_Caminar_SinImplante", ClipBase());
+            Assert.AreEqual("PJ01_Correr_SinImplante", ClipBase()); // T-1484: el paso normal del jugador es el trote
             Fotos("caminar-sin-implante");
             implantes.Poner(EspacioImplante.Piernas, 2);
             implantes.Poner(EspacioImplante.Brazos, 2);
             yield return Asentar();
-            Assert.AreEqual("PJ01_Caminar_ConImplante", ClipBase());
+            Assert.AreEqual("PJ01_Correr_ConImplante", ClipBase());
             Fotos("caminar-con-implante");
             Press(teclado.leftShiftKey);
             yield return Esperar(1.6f);
