@@ -96,9 +96,10 @@ namespace MechaCyberpunk.Tests
                     Vector3 v = torre.Centro - segs[i].A;
                     float lateral = Mathf.Abs(Vector3.Dot(v, new Vector3(-d.z, 0f, d.x)));
                     float mitad = Mathf.Abs(d.x) * TamTorre.x * 0.5f + Mathf.Abs(d.z) * TamTorre.y * 0.5f;
-                    if (lateral < 1f)
+                    float c = Vector3.Dot(v, d);
+                    // Solo las torres de este segmento: las del segmento de enfrente (del otro lado de una salida) quedan en la misma línea.
+                    if (lateral < 1f && c >= -mitad && c <= largo + mitad)
                     {
-                        float c = Vector3.Dot(v, d);
                         intervalos.Add(new Vector2(c - mitad, c + mitad));
                     }
                 }
@@ -147,7 +148,7 @@ namespace MechaCyberpunk.Tests
             Scene escena = Escena();
             try
             {
-                GameObject orillas = escena.GetRootGameObjects().Select(g => g.transform.Find("Orillas")).Where(t => t != null).Select(t => t.gameObject).FirstOrDefault();
+                GameObject orillas = escena.GetRootGameObjects().Where(g => g.name == "T530_Afueras").Select(g => g.transform.Find("Orillas")).Where(t => t != null).Select(t => t.gameObject).FirstOrDefault();
                 Assert.IsNotNull(orillas, "no encontré Orillas");
                 Transform[] muros = orillas.transform.Cast<Transform>().Where(t => t.name == "Muro").ToArray();
                 Assert.AreEqual(10, muros.Length);
