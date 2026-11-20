@@ -118,10 +118,13 @@ namespace MechaCyberpunk.Personaje.Jugador
             {
                 return;
             }
-            // T-1484: la rapidez del clip sigue a la velocidad real para que el pie de apoyo no patine (Caminar del jugador es el clip de trote,
-            // ver ConstructorControladorBase.ClipsSoloJugadorT1484), entre 0.7 y 1.6 para no verse en cámara lenta ni acelerado.
-            visual.ConfigurarClipsDireccionales(ReglasAnimacion.VelocidadPJ01Correr, ReglasAnimacion.VelocidadPJ01Correr,
-                ReglasAnimacion.VelocidadPJ01Atras, ReglasAnimacion.VelocidadPJ01Lado, ReglasAnimacion.RapidezMinimaJugador, ReglasAnimacion.RapidezMaximaJugador);
+            // T-1505: el estado Caminar del jugador mezcla por Velocidad caminar (1.6) -> trote (4.5); Correr es el sprint (7.25). La rapidez sigue esa mezcla
+            // (ConstructorControladorBase.ClipsSoloJugador) y queda entre 0.85 y 1.15.
+            visual.ConfigurarClipsDireccionales(ReglasAnimacion.VelocidadPJ01Trote, ReglasAnimacion.VelocidadPJ01Sprint,
+                ReglasAnimacion.VelocidadPJ01TroteAtras, ReglasAnimacion.VelocidadPJ01TroteLado, ReglasAnimacion.RapidezMinimaJugador, ReglasAnimacion.RapidezMaximaJugador);
+            visual.ConfigurarMezclaLenta(ReglasAnimacion.VelocidadPJ01Caminar, ReglasAnimacion.VelocidadPJ01CaminarAtras, ReglasAnimacion.VelocidadPJ01CaminarLado,
+                ReglasAnimacion.VelocidadPJ01Caminar, ReglasAnimacion.VelocidadPJ01Trote);
+            visual.AterrizajeFuerteActivo = true;
             IKPiesYMirada ik = visual.GetComponentInChildren<IKPiesYMirada>(true);
             if (ik != null)
             {

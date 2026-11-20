@@ -57,10 +57,10 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
             var raiz = (BlendTree)Estado(0, "Caminar").motion;
             var con = (BlendTree)raiz.children[1].motion;
             CollectionAssert.AreEquivalent(
-                new[] { "Loco_Caminar_ConImplante", "PJ01_Loco_CaminarAtras_ConImplante", "PJ01_Loco_CaminarDer_ConImplante", "PJ01_Loco_CaminarIzq_ConImplante" },
+                new[] { "Caminar_Con_Ade", "PJ01_Loco_CaminarAtras_ConImplante", "PJ01_Loco_CaminarDer_ConImplante", "PJ01_Loco_CaminarIzq_ConImplante" },
                 con.children.Select(h => h.motion.name).ToArray());
             var sin = (BlendTree)raiz.children[0].motion;
-            CollectionAssert.Contains(sin.children.Select(h => h.motion.name).ToArray(), "Loco_CaminarAtras");
+            CollectionAssert.Contains(sin.children.Select(h => h.motion.name).ToArray(), "Caminar_Sin_Atr"); // T-1505: cada dirección es una mezcla 1D por Velocidad
         }
 
         [TestCase("Loco_Idle", "PJ01_Loco_Idle")]
@@ -70,9 +70,9 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
         [TestCase("Loco_GirarDer", "PJ01_Loco_GirarDer")]
         [TestCase("Loco_GirarIzq", "PJ01_Loco_GirarIzq")]
         [TestCase("Loco_Frenar", "PJ01_Loco_Frenar")]
-        [TestCase("Loco_SaltoInicio", "PJ01_Loco_SaltoInicio")]
-        [TestCase("Loco_SaltoAire", "PJ01_Loco_SaltoAire")]
-        [TestCase("Loco_SaltoAterrizaje", "PJ01_Loco_SaltoAterrizaje")]
+        [TestCase("Loco_SaltoInicio", "PJ01_Salto_Despegue")] // T-1505
+        [TestCase("Loco_SaltoAire", "PJ01_Salto_Aire")]
+        [TestCase("Loco_SaltoAterrizaje", "PJ01_Salto_Aterrizaje")]
         [TestCase("Loco_Caida", "PJ01_Loco_Caida")]
         [TestCase("Punos_GolpeIzq", "PJ01_Punos_GolpeIzq")]
         [TestCase("Punos_GolpeDer", "PJ01_Punos_GolpeDer")]

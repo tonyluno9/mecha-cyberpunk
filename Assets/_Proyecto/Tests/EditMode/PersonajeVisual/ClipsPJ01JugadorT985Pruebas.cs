@@ -62,6 +62,8 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
         }
 
         private const string PrefijoEscalera = "PJ01_Escalera_";
+        // T-1505: PJ01_Escaleras_Subir/Bajar (stairs) van en ConfigAnimacionEscalera en lugar de PJ01_Escalera_Subir/Bajar.
+        private const string PrefijoEscalerasT1505 = "PJ01_Escaleras_";
 
         // T-1310: el parkour, la caída y el robo de carro los juega un PlayableGraph desde ConfigAnimacionParkour (se revisan en ClipsRonda2T1310Pruebas).
         private static bool FueraDelControlador(string n)
@@ -73,7 +75,7 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
         {
             // T-1204: los PJ01_Escalera_* no van en el controlador: los juega AnimacionEscalera desde ConfigAnimacionEscalera (se revisan aparte).
             return Directory.GetFiles(ConstructorControladorBase.CarpetaClipsPJ01, "PJ01_*.fbx").Select(Path.GetFileNameWithoutExtension)
-                .Where(n => !n.StartsWith(PrefijoEscalera) && !FueraDelControlador(n)).OrderBy(n => n).ToArray();
+                .Where(n => !n.StartsWith(PrefijoEscalera) && !n.StartsWith(PrefijoEscalerasT1505) && !FueraDelControlador(n)).OrderBy(n => n).ToArray();
         }
 
         [Test]
@@ -88,11 +90,11 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
             string[] todos = ClipsDeLaCarpeta();
             var usados = new HashSet<string>(tabla.Select(t => t.Clip));
             // T-1484: el paso normal del jugador es el trote; los clips de caminar de PJ01 los usan los NPC.
-            var soloNpc = new HashSet<string> { "PJ01_Caminar_SinImplante", "PJ01_Caminar_ConImplante" };
+            var soloNpc = new HashSet<string> { "PJ01_Caminar_SinImplante", "PJ01_Correr_SinImplante", "PJ01_Loco_SaltoInicio", "PJ01_Loco_SaltoAire", "PJ01_Loco_SaltoAterrizaje" };
             string[] sinUsar = todos.Where(n => !usados.Contains(n) && !soloNpc.Contains(n)).ToArray();
             Debug.Log("[T-985] clips no PJ01: " + noPJ01.Length + "; PJ01 sin usar: " + sinUsar.Length + " de " + todos.Length);
 
-            Assert.AreEqual(83, todos.Length, "La carpeta de clips debe tener los 83 PJ01_* del controlador (T-1310: +3 de cobertura con rifle)");
+            Assert.AreEqual(93, todos.Length, "La carpeta de clips debe tener los 93 PJ01_* del controlador (T-1505: 95 menos los 2 PJ01_Escaleras_* de la config de escalera)");
             Assert.IsEmpty(noPJ01, "Clips que no son PJ01 en el jugador:\n" + string.Join("\n", noPJ01));
             Assert.IsEmpty(sinUsar, "PJ01 sin ningún estado:\n" + string.Join("\n", sinUsar));
         }
@@ -107,8 +109,11 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
             Assert.AreEqual(5, escalera.Length, "Los 5 PJ01_Escalera_*");
             foreach (string nombre in escalera)
             {
+                // T-1505: subir y bajar de la config son PJ01_Escaleras_Subir/Bajar (el resto sigue siendo PJ01_Escalera_*).
+                if (nombre == "PJ01_Escalera_Subir" || nombre == "PJ01_Escalera_Bajar") { continue; }
                 Assert.IsTrue(enConfig.Contains(nombre), nombre + " no está en ConfigAnimacionEscalera");
             }
+            Assert.IsTrue(enConfig.Contains("PJ01_Escaleras_Subir") && enConfig.Contains("PJ01_Escaleras_Bajar"), "T-1505: subir y bajar son los de Escaleras");
         }
     }
 }

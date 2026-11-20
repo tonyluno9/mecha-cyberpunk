@@ -77,6 +77,7 @@ namespace MechaCyberpunk.Personaje.Visual
         private static readonly int IdCoberturaTipo = Animator.StringToHash(ReglasAnimacion.CoberturaTipo);
         private static readonly int IdDisparoCobertura = Animator.StringToHash(ReglasAnimacion.DisparoCobertura);
         private static readonly int IdFrenar = Animator.StringToHash(ReglasAnimacion.Frenar);
+        private static readonly int IdAterrizajeFuerte = Animator.StringToHash(ReglasAnimacion.AterrizajeFuerte);
         private static readonly int IdEnGuardia = Animator.StringToHash(ReglasAnimacion.EnGuardia);
         private static readonly int IdGesto = Animator.StringToHash(ReglasAnimacion.Gesto);
         private static readonly int IdGestoTipo = Animator.StringToHash(ReglasAnimacion.GestoTipo);
@@ -92,6 +93,12 @@ namespace MechaCyberpunk.Personaje.Visual
         public bool ForzarSuelo { get; set; }
 
         public Animator Animador => animador;
+
+        /// <summary>T-1505: receptor de los eventos de pisada de los clips de PJ01 (null si no hay Animator).</summary>
+        public ReceptorPasosPJ01 ReceptorPasos { get; private set; }
+
+        /// <summary>T-1505: con true, al tocar el piso tras una caída de <see cref="ReglasAnimacion.VelocidadAterrizajeFuerte"/> dispara el aterrizaje fuerte (solo el jugador).</summary>
+        public bool AterrizajeFuerteActivo { get; set; }
         public bool LeerDelPadre
         {
             get => leerDelPadre;
@@ -141,11 +148,34 @@ namespace MechaCyberpunk.Personaje.Visual
             rapidezMaxima = Mathf.Max(1f, rapidezMax);
         }
 
+        private float lentaAdelante, lentaAtras, lentaLado, umbralLento, umbralRapido;
+
+        /// <summary>
+        /// T-1505: el estado Caminar es un árbol 1D por Velocidad (clip lento en <paramref name="umbralBajo"/>, el de ConfigurarClips en <paramref name="umbralAlto"/>).
+        /// Con esto la rapidez sigue esa mezcla: interpola la velocidad del clip (adelante, atrás, lado) con el mismo peso del árbol. Sin llamarlo (NPC) no hay mezcla.
+        /// </summary>
+        public void ConfigurarMezclaLenta(float adelante, float atras, float lado, float umbralBajo, float umbralAlto)
+        {
+            lentaAdelante = adelante;
+            lentaAtras = atras;
+            lentaLado = lado;
+            umbralLento = umbralBajo;
+            umbralRapido = umbralAlto;
+        }
+
         /// <summary>Animator.speed que se pondría caminando o corriendo a esta velocidad y dirección (para las pruebas).</summary>
         public float RapidezLocomocion(bool corriendo, float velocidadReal, float x, float z)
         {
             float adelante = corriendo ? velocidadClipCorrer : velocidadClipCaminar;
-            float referencia = ReglasAnimacion.VelocidadClipDireccional(x, z, adelante, velocidadClipAtras, velocidadClipLado);
+            float atras = velocidadClipAtras > 0f ? velocidadClipAtras : adelante;
+            float lado = velocidadClipLado > 0f ? velocidadClipLado : adelante;
+            if (!corriendo && umbralRapido > umbralLento)
+            {
+                adelante = ReglasAnimacion.VelocidadClipMezcla(velocidadReal, umbralLento, umbralRapido, lentaAdelante, adelante);
+                atras = ReglasAnimacion.VelocidadClipMezcla(velocidadReal, umbralLento, umbralRapido, lentaAtras, atras);
+                lado = ReglasAnimacion.VelocidadClipMezcla(velocidadReal, umbralLento, umbralRapido, lentaLado, lado);
+            }
+            float referencia = ReglasAnimacion.VelocidadClipDireccional(x, z, adelante, atras, lado);
             float tope = corriendo ? rapidezMaxima : Mathf.Min(rapidezMaxima, ReglasAnimacion.RapidezMaximaCaminar);
             return ReglasAnimacion.EscalaVelocidad(velocidadReal, referencia * EscalaClips, rapidezMinima, tope);
         }
@@ -582,6 +612,7 @@ namespace MechaCyberpunk.Personaje.Visual
         private float velX;
         private float velZ;
         private float velY;
+        private float velYMinimaAire;
         private float giro;
         private float rapidezIdle = 1f;
         private bool rapidezAgachadoAplicada;
@@ -620,6 +651,11 @@ namespace MechaCyberpunk.Personaje.Visual
             if (animador.GetComponent<ReceptorEventosArma>() == null)
             {
                 animador.gameObject.AddComponent<ReceptorEventosArma>();
+            }
+            ReceptorPasos = animador.GetComponent<ReceptorPasosPJ01>();
+            if (ReceptorPasos == null)
+            {
+                ReceptorPasos = animador.gameObject.AddComponent<ReceptorPasosPJ01>();
             }
             Transform padre = transform.parent != null ? transform.parent : transform;
             controlador = padre.GetComponentInParent<CharacterController>();
@@ -826,6 +862,7 @@ namespace MechaCyberpunk.Personaje.Visual
         {
             Transform padre = transform.parent != null ? transform.parent : transform;
             float objetivo;
+            bool estabaEnSuelo = enSuelo;
             Vector3 mundo = Vector3.zero;
             if (controlador != null && controlador.enabled)
             {
@@ -861,6 +898,18 @@ namespace MechaCyberpunk.Personaje.Visual
             velX = Mathf.Lerp(velX, local.x, paso);
             velZ = Mathf.Lerp(velZ, local.y, paso);
             velY = mundo.y;
+            if (!enSuelo)
+            {
+                velYMinimaAire = Mathf.Min(velYMinimaAire, mundo.y);
+            }
+            else
+            {
+                if (!estabaEnSuelo && AterrizajeFuerteActivo && ReglasAnimacion.EsAterrizajeFuerte(velYMinimaAire))
+                {
+                    Disparo(IdAterrizajeFuerte);
+                }
+                velYMinimaAire = 0f;
+            }
             float yaw = transform.eulerAngles.y;
             float grados = dt > 0f ? Mathf.DeltaAngle(yawAnterior, yaw) / dt : 0f;
             yawAnterior = yaw;
