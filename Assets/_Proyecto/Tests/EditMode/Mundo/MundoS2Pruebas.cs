@@ -148,7 +148,7 @@ namespace MechaCyberpunk.Tests.Mundo
         }
 
         [Test]
-        public void Casa_FachadaDelKit_TableroSinCuboBlanco_Y_CuartoSegunLaReferencia()
+        public void Casa_FachadaDelKit_TableroSinCuboBlanco_Y_SinCuarto()
         {
             Transform casa = escena.GetRootGameObjects().First(g => g.name == "S2_Casa").transform;
             Assert.GreaterOrEqual(casa.Find("Fachada").childCount, 12, "fachada armada con el kit");
@@ -159,22 +159,7 @@ namespace MechaCyberpunk.Tests.Mundo
             Assert.IsFalse(tablero.GetComponent<Renderer>().enabled, "sin el cubo blanco del tablero");
             Assert.IsNotNull(casa.Find("Tablero/Tablero_CY10"));
 
-            Transform cuarto = escena.GetRootGameObjects().First(g => g.name == "T550_Cuartos").transform.Find("Cuarto_Habitacion");
-            Bounds Limites(Transform t) => t.GetComponentsInChildren<Renderer>().Select(r => r.bounds).Aggregate((a, b) => { a.Encapsulate(b); return a; });
-            Bounds mochila = Limites(cuarto.Find("I05"));
-            Assert.That(mochila.size.y, Is.InRange(0.4f, 0.65f), "mochila de tamaño real");
-            Assert.Greater(cuarto.InverseTransformPoint(Limites(cuarto.Find("I01")).center).x, 0.5f, "ropero a la derecha, como en la referencia");
-            Assert.IsFalse(Limites(cuarto.Find("I01")).Contains(cuarto.Find("Aparicion").position + Vector3.up), "el jugador no aparece dentro del ropero");
-            Bounds puerta = Limites(cuarto.Find("Puerta_Cuarto/Hoja/Puerta_P10")); // T-804: la hoja gira en su bisagra; T-923: ahora con el modelo P10
-            Assert.That(puerta.size.y, Is.InRange(2f, 2.3f), "puerta de verdad de unos 2.1 m");
-            Assert.LessOrEqual(puerta.size.x, 1.2f);
-            Assert.IsNotNull(cuarto.Find("S2_Cuarto/Foco_Pelon"));
-            foreach (MonoBehaviour p in todos.SelectMany(x => x.GetComponents<MonoBehaviour>()).Where(m => m != null && m.GetType().Name == "PuertaCuarto"))
-            {
-                UnityEditor.SerializedObject so = new UnityEditor.SerializedObject(p);
-                float total = so.FindProperty("segundosAlNegro").floatValue + so.FindProperty("segundosEnNegro").floatValue + so.FindProperty("segundosDesdeNegro").floatValue;
-                Assert.LessOrEqual(total, 0.7f, p.name + ": fundido corto y limpio");
-            }
+            // T-1520: el cuarto (T550_Cuartos) se borró de la escena; ya no se mide.
         }
 
         [Test]
