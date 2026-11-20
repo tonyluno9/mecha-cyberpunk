@@ -76,7 +76,8 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
         {
             ("Loco_Idle", "NPC_Esperar"),
             ("Loco_Caminar", "NPC_Caminar_Hombre"), ("Loco_Caminar_ConImplante", "NPC_Caminar_Hombre"),
-            ("Loco_Correr", "NPC_Huir_Corriendo"), ("Loco_Correr_ConImplante", "NPC_Huir_Corriendo"),
+            ("Loco_Correr", "NPC_Huir_Corriendo"), (ConstructorControladorBase.RolTrote, "NPC_Huir_Corriendo"), // T-1506: huir a 3.6 m/s cae en el extremo rápido (trote) de Caminar, no en Correr (>5.5)
+             ("Loco_Correr_ConImplante", "NPC_Huir_Corriendo"),
             ("Pistola_Dano_Frente", "NPC_Balazo_Frente"), ("Pistola_Dano_Espalda", "NPC_Balazo_Espalda"), ("Pistola_Dano_Fuerte", "NPC_Balazo_Frente"),
             ("Muerte_Adelante", "NPC_Muerte_Frente"), ("Muerte_Atras", "NPC_Muerte_Espaldas"),
         };
@@ -98,13 +99,13 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             ("NPC_Celular", "NPC", new[] { ("Loco_Caminar", "NPC_Caminar_Celular"), ("Loco_Caminar_ConImplante", "NPC_Caminar_Celular") }),
             ("E15", "Guardias", new[]
             {
-                ("Loco_Caminar", "E15_Caminar"), ("Loco_Caminar_ConImplante", "E15_Caminar"), ("Loco_Correr", "E15_Correr"), ("Loco_Correr_ConImplante", "E15_Correr"),
+                ("Loco_Caminar", "E15_Caminar"), ("Loco_Caminar_ConImplante", "E15_Caminar"), ("Loco_Correr", "E15_Correr"), ("Loco_Correr_ConImplante", "E15_Correr"), (ConstructorControladorBase.RolTrote, "E15_Correr"),
                 ("Pistola_Disparo", "E15_Disparar"), ("Rifle_DisparoCaminar", "E15_Disparar"),
                 ("Pistola_Dano_Frente", "E15_Impacto"), ("Pistola_Dano_Espalda", "E15_Impacto"), ("Pistola_Dano_Fuerte", "E15_Impacto"),
             }),
             ("E16", "Guardias", new[]
             {
-                ("Loco_Caminar", "E16_Caminar"), ("Loco_Caminar_ConImplante", "E16_Caminar"), ("Loco_Correr", "E16_Caminar"), ("Loco_Correr_ConImplante", "E16_Caminar"),
+                ("Loco_Caminar", "E16_Caminar"), ("Loco_Caminar_ConImplante", "E16_Caminar"), ("Loco_Correr", "E16_Caminar"), ("Loco_Correr_ConImplante", "E16_Caminar"), (ConstructorControladorBase.RolTrote, "E16_Caminar"),
                 ("Loco_GirarDer", "E16_Girar_Derecha"), ("Loco_GirarIzq", "E16_Girar_Izquierda"),
                 ("Pistola_Disparo", "E16_Disparar_Canon"), ("Rifle_DisparoCaminar", "E16_Disparar_Canon"),
                 ("Punos_GolpeDer", "E16_Golpe_Escudo"), ("Punos_GolpeIzq", "E16_Golpe_Escudo"), ("Punos_Fuerte", "E16_Golpe_Escudo"),
