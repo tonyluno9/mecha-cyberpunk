@@ -28,3 +28,16 @@ Prueba EditMode: `Assets/_Proyecto/Tests/EditMode/Mundo/RevertirMapaT1480Pruebas
 - Correr Aplicar, luego Validar (debe salir 0) y las pruebas EditMode.
 - Revisar los huérfanos y referencias rotas del informe de Validar (p. ej. rutas de `T1398_DronesAereos`, que otra tarea ajusta).
 - Capturas de los 4 barrios y sus bordes contra la escena de antes.
+
+## Fotos
+
+`Assets/Arte/Editor/FotosT1480.cs` toma las mismas fotos de la escena de ahora y de la de antes de la expansión
+(`git show 8b33987^1:Assets/_Proyecto/Escenas/Ciudad_Prologo.unity`, copiada a `Assets/_Temp_T1480/Ciudad_Antes.unity`, sin versionar).
+Con Unity cerrado, desde la raíz:
+
+```
+Unity.exe -batchmode -quit -projectPath . -executeMethod MechaCyberpunk.Arte.Editor.FotosT1480.FotosAhora
+Unity.exe -batchmode -quit -projectPath . -executeMethod MechaCyberpunk.Arte.Editor.FotosT1480.FotosAntes
+```
+
+Salen a `docs/capturas/t-1480/<nombre>-ahora.png` y `-antes.png` (noche) y `<nombre>-dia-<sufijo>.png` (13 h); la lista queda en `Logs/t1480-fotos.txt` (se agrega, bórrala antes de repetir).
