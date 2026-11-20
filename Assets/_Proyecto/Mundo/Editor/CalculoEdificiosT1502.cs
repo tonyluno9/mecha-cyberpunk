@@ -114,7 +114,7 @@ namespace MechaCyberpunk.Mundo.Editor
         /// Escala un modelo (medido sin girar: ancho x, alto y, fondo z; mira a +Z) para llenar un hueco de frente x fondo x alto,
         /// partiendo el frente en 'tramos' copias. Falla si alguna escala sale de los límites o el modelo queda muy estirado.
         /// </summary>
-        public static bool Ajustar(Vector3 modelo, float frente, float fondo, float alto, out int tramos, out Vector3 escala, out float costo)
+        public static bool Ajustar(Vector3 modelo, float frente, float fondo, float alto, out int tramos, out Vector3 escala, out float costo, float distorsionMaxima = DistorsionMaxima)
         {
             tramos = 0;
             escala = Vector3.one;
@@ -130,7 +130,7 @@ namespace MechaCyberpunk.Mundo.Editor
                 float sz = fondo / modelo.z;
                 float menor = Mathf.Min(sx, Mathf.Min(sy, sz));
                 float mayor = Mathf.Max(sx, Mathf.Max(sy, sz));
-                if (menor < EscalaMinima || mayor > EscalaMaxima || mayor / menor > DistorsionMaxima)
+                if (menor < EscalaMinima || mayor > EscalaMaxima || mayor / menor > distorsionMaxima)
                 {
                     continue;
                 }

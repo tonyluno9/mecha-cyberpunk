@@ -144,7 +144,6 @@ Medidas del cubo (ancho x alto x fondo, m) leídas de Ciudad_Prologo. Lo de las 
 
 | Qué | Para qué | Medida y lugar |
 | --- | --- | --- |
-| ED01 a ED05 (edificios de nuevos-19nov) | Variedad de edificios de las afueras y los barrios | Solo hay PNG; falta el modelo |
 | Torre alta de oficinas (con azotea y antena) | Skyline de NeonAlto: 7 torres, 14 cuerpos | ~34 x 128 x 28 en `T530_NeonAlto/Torres/Torre_N/Cuerpo` |
 | Torre de fondo muy alta | Horizonte de Suburbios: 24 torres | ~29 x 209 x 48 en `T530_Suburbios/Horizonte/Torre_N/Cuerpo` |
 | Muro de la ciudad (modelo exacto, modular) | Orillas de las afueras: 10 tramos | 2 x 6 x ~78 en `T530_Afueras/Orillas/Muro` |
@@ -152,3 +151,10 @@ Medidas del cubo (ancho x alto x fondo, m) leídas de Ciudad_Prologo. Lo de las 
 | Cuerpo del taller mecánico | Local con interior | 24.7 x 17.9 x 8.3 en `S2n_TallerMecanico/Cuerpo/*` (el interior depende de él: se deja) |
 
 Se dejan sin cambiar a propósito (el interior o el kit dependen de ellos): `Lugar_*`, `Cuerpo_T*`, muros de `Locales/*`, Armería (T-1503) y el parque de Plaza_K09 (T-1499).
+
+## 20-nov: segunda vuelta de edificios (T-1512)
+Ya cubierto: ED01 a ED12 (13 de 24 variantes importadas, ver docs/identificacion-nuevos-19nov.md), colocados en las afueras por `ReemplazarEdificiosT1512.Aplicar`. Los cubos de las afueras que ni con ED entren en su hueco siguen con la marca `T1502_Pendiente` y quedan en `Logs/t1512-diagnostico.txt` (medida y lugar). Lo demás de la lista de T-1502 sigue igual (torres del skyline, muro de la ciudad, edificios con kit y LODGroup, taller).
+
+| Qué | Para qué | Nota |
+| --- | --- | --- |
+| Variantes sin modelo: ED01_b, ED02_b, ED03_a, ED04_a, ED05_b, ED06_b, ED07_b, ED09_a, ED10_b, ED11_b, ED12_b, MU02_b, MU03_b | Más variedad por barrio | Solo hay PNG en nuevos-19nov |
