@@ -16,32 +16,33 @@ Generado por `PrimitivasT1523.Diagnostico` (Mundo/Editor). Lista completa en `Lo
 
 | Categoria | Que se hace | Antes | Despues |
 | --- | --- | --- | --- |
-| Edificio | modelo ED/NV/P/LO/CC segun barrio | 39 | 11 |
+| Edificio | modelo ED/NV/P/LO/CC segun barrio | 39 | 9 |
 | EdificioConKit | se apaga el render si el kit lo cubre | 8 | 0 |
-| Prop | prop real equivalente o se apaga | 798 | 1 |
+| Prop | prop real equivalente o se apaga | 798 | 27 |
 | DecalPlano | se deja (linea, charco, ventana, pantalla) | 992 | 992 |
 | LuzRotulo | se deja (foco, lente, neon, rotulo) | 283 | 283 |
 | LosaPlana | se deja (piso, banqueta, calle) | 263 | 263 |
 | MuroPerimetral | T-1524 | - | 0 |
 | MuroOtro | se anota (muro largo) | 25 | 25 |
-| EstructuraInterior | se deja (paredes de interiores y locales) | 100 | 597 |
+| EstructuraInterior | se deja (paredes de interiores y locales) | 100 | 612 |
 | PendienteArte | esperan TR01/TR02 (assets-faltan.md) | 432 | 432 |
-| **Total visibles** | | 2940 | 2604 |
-| **Por cambiar (Edificio + EdificioConKit + Prop)** | objetivo 0 | 845 | 12 |
+| **Total visibles** | | 2940 | 2643 |
+| **Por cambiar (Edificio + EdificioConKit + Prop)** | objetivo 0 | 845 | 36 |
 | Flotantes o muy altos | asentar o apagar | - | 0 |
 
 ## Por barrio y tamano (solo las que faltan por cambiar)
 
 | Barrio | <0.5 m | 0.5-2 m | 2-6 m | 6-15 m | >15 m | Total |
 | --- | --- | --- | --- | --- | --- | --- |
-| Mercado | 0 | 0 | 0 | 2 | 2 | 4 |
-| NeonAlto | 0 | 0 | 0 | 1 | 0 | 1 |
-| Suburbios | 0 | 0 | 0 | 0 | 5 | 5 |
+| Mercado | 0 | 0 | 14 | 0 | 2 | 16 |
+| NeonAlto | 0 | 0 | 6 | 1 | 0 | 7 |
+| Suburbios | 0 | 0 | 0 | 6 | 5 | 11 |
 | Tianguis | 0 | 0 | 0 | 1 | 1 | 2 |
 
 ## Zonas (raiz de la jerarquia) con mas primitivas por cambiar
 
-- `Barrio`: 8
+- `GTA_T407`: 20
+- `Barrio`: 12
 - `T530_Afueras`: 4
 
 ## Otras escenas del build (solo cuenta; no se cambian)

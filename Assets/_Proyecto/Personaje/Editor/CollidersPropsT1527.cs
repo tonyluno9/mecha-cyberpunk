@@ -159,7 +159,7 @@ namespace MechaCyberpunk.Personaje.Editor
                 // Ya está bien si tiene un tronco de cápsula delgada y, a lo más, cajas chicas de base (diseño de T-1340).
                 bool tronco = colliders.Any(x => x is CapsuleCollider capsula && capsula.radius <= RadioMaximoTronco + 0.01f);
                 bool cajasChicas = colliders.All(x => !(x is BoxCollider) || Mathf.Max(x.bounds.size.x, x.bounds.size.z) <= 1.5f);
-                bool yaDelgada = tronco && cajasChicas;
+                bool yaDelgada = tronco || (cajasChicas && colliders.Count == 0);
                 grande = !yaDelgada;
             }
             Debug.Log("[T-1527] " + ruta + " / " + prop.name + ": render " + render.size.ToString("F2") + " collider " + collider.size.ToString("F2") + (grande ? " GRANDE" : " ok"));
