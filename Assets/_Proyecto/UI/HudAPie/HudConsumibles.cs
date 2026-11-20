@@ -1,5 +1,6 @@
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Economia;
+using MechaCyberpunk.Personaje.Interaccion;
 using MechaCyberpunk.Personaje.Jugador;
 using MechaCyberpunk.Personaje.Vida;
 using MechaCyberpunk.UI.Kit;
@@ -37,9 +38,17 @@ namespace MechaCyberpunk.UI.Hud
         /// <summary>T-1315: el objeto equipado que consumiría la tecla ahora, o null.</summary>
         public DatosConsumible ObjetoEquipado { get; private set; }
 
-        private void OnEnable() => AccionConsumirEquipado.Accion.Enable();
+        /// <summary>T-1492: el objeto de la ranura (0 = la de E, 1 = la de C), o null si está vacía.</summary>
+        public DatosConsumible Equipado(int ranura) => ranura >= 0 && ranura < RanurasConsumibles.Cantidad ? equipados[ranura] : null;
 
-        private void OnDisable() => AccionConsumirEquipado.Accion.Disable();
+        private readonly DatosConsumible[] equipados = new DatosConsumible[RanurasConsumibles.Cantidad];
+        private readonly System.Collections.Generic.List<DatosConsumible> llevados = new System.Collections.Generic.List<DatosConsumible>();
+        private readonly System.Text.StringBuilder linea = new System.Text.StringBuilder();
+        private InteraccionAPie interaccion;
+
+        private void OnEnable() => AccionConsumirEquipado.Habilitar();
+
+        private void OnDisable() => AccionConsumirEquipado.Deshabilitar();
 
         private void Start()
         {
@@ -98,6 +107,7 @@ namespace MechaCyberpunk.UI.Hud
                 IJugador j = Registro<IJugador>.Actual;
                 consumibles = j != null && j.Raiz != null ? j.Raiz.GetComponent<ConsumiblesJugador>() : null;
                 vida = j != null && j.Raiz != null ? j.Raiz.GetComponent<VidaAPie>() : null;
+                interaccion = j != null && j.Raiz != null ? j.Raiz.GetComponentInChildren<InteraccionAPie>() : null;
                 if (consumibles == null)
                 {
                     texto.text = string.Empty;
@@ -108,37 +118,89 @@ namespace MechaCyberpunk.UI.Hud
             }
             IJugador actual = Registro<IJugador>.Actual;
             texto.text = actual != null && actual.Modo == ModoJugador.APie ? Linea() : string.Empty;
-            ActualizarConsumo(actual != null && actual.Modo == ModoJugador.APie);
+            ActualizarConsumo(actual != null ? actual.Modo : ModoJugador.Mecha);
         }
 
+        // T-1492: no se usan objetos con una pantalla, el menú o la pausa abiertos (E y C se usan ahí para otras cosas).
+        private static bool EntradaLibre() => !Pausa.Activa && PilaPantallas.Vacia && MenuCyberfix.Abiertos == 0 && Time.timeScale > 0.01f;
+
         // T-1315: elige el objeto equipado que consume la tecla, lo muestra con su tecla real y lo consume al pulsarla.
-        private void ActualizarConsumo(bool aPie)
+        // T-1492: las dos ranuras (E y C a pie; Z y X en carro). Muestra cada una con su tecla real, la usa al pulsarla y, con Alt apretado, cambia su objeto.
+        private void ActualizarConsumo(ModoJugador modo)
         {
-            ObjetoEquipado = null;
-            if (aPie)
+            bool carro = modo == ModoJugador.Carro;
+            for (int r = 0; r < equipados.Length; r++)
             {
-                var disponibles = consumibles.Disponibles;
-                idsDisponibles.Clear();
-                for (int i = 0; i < disponibles.Count; i++)
+                equipados[r] = null;
+            }
+            if (modo == ModoJugador.APie || carro)
+            {
+                ResolverRanuras();
+            }
+            linea.Length = 0;
+            ServicioInventario servicio = Registro<ServicioInventario>.Actual;
+            bool hayInteraccion = interaccion != null && interaccion.TipoCandidato != TipoCandidatoAPie.Ninguno;
+            bool libre = EntradaLibre();
+            bool alt = AccionConsumirEquipado.Cambiar.IsPressed();
+            for (int r = 0; r < equipados.Length; r++)
+            {
+                InputAction accion = carro ? AccionConsumirEquipado.DeCarro(r) : AccionConsumirEquipado.De(r);
+                if (libre)
+                {
+                    AccionRanura que = ReglaUsoConsumibles.Decidir(r, accion.WasPressedThisFrame(), alt, modo, hayInteraccion);
+                    if (que == AccionRanura.Cambiar)
+                    {
+                        RanurasConsumibles.Rotar(r, idsDisponibles);
+                        ResolverRanuras();
+                    }
+                    else if (que == AccionRanura.Usar && equipados[r] != null)
+                    {
+                        consumibles.Usar(equipados[r]);
+                    }
+                }
+                DatosConsumible c = equipados[r];
+                if (c == null)
+                {
+                    continue;
+                }
+                if (linea.Length > 0)
+                {
+                    linea.Append("   ");
+                }
+                string tecla = TeclasHud.Texto(accion, r == 0 ? "E" : "C").ToUpperInvariant();
+                int cantidad = servicio != null ? servicio.Cantidad(c) : 0;
+                linea.Append('[').Append(tecla).Append("] ").Append(c.Nombre.ToUpperInvariant()).Append(" x").Append(cantidad);
+            }
+            ObjetoEquipado = equipados[0];
+            textoConsumo.text = linea.ToString();
+        }
+
+        // Qué objeto hay en cada ranura con lo que lleva ahora (sin los que se quitaron de la rueda).
+        private void ResolverRanuras()
+        {
+            var disponibles = consumibles.Disponibles;
+            idsDisponibles.Clear();
+            llevados.Clear();
+            for (int i = 0; i < disponibles.Count; i++)
+            {
+                if (EquipoRueda.Equipado(disponibles[i].Id))
                 {
                     idsDisponibles.Add(disponibles[i].Id);
+                    llevados.Add(disponibles[i]);
                 }
-                int elegido = EquipoRueda.ElegirConsumible(idsDisponibles, i => consumibles.Sirve(disponibles[i]));
-                ObjetoEquipado = elegido >= 0 ? disponibles[elegido] : null;
             }
-            if (ObjetoEquipado == null)
+            string[] ids = RanurasConsumibles.Efectivos(idsDisponibles);
+            for (int r = 0; r < equipados.Length; r++)
             {
-                textoConsumo.text = string.Empty;
-                return;
-            }
-            InputAction accion = AccionConsumirEquipado.Accion;
-            string tecla = TeclasHud.Texto(accion, "B").ToUpperInvariant();
-            ServicioInventario servicio = Registro<ServicioInventario>.Actual;
-            int cantidad = servicio != null ? servicio.Cantidad(ObjetoEquipado) : 0;
-            textoConsumo.text = "[" + tecla + "] " + ObjetoEquipado.Nombre.ToUpperInvariant() + " x" + cantidad;
-            if (accion.WasPressedThisFrame())
-            {
-                consumibles.Usar(ObjetoEquipado);
+                equipados[r] = null;
+                for (int i = 0; ids[r] != null && i < llevados.Count; i++)
+                {
+                    if (llevados[i].Id == ids[r])
+                    {
+                        equipados[r] = llevados[i];
+                        break;
+                    }
+                }
             }
         }
 

@@ -970,6 +970,10 @@ namespace MechaCyberpunk.UI.Clinica
                 EventTrigger.Entry entrar = new EventTrigger.Entry { eventID = EventTriggerType.PointerEnter };
                 entrar.callback.AddListener(_ => ElegirFila(fila));
                 disparador.triggers.Add(entrar);
+                // T-1492: un clic elige la casilla (el Button de arriba) y el doble clic la acepta, sin Enter.
+                EventTrigger.Entry clic = new EventTrigger.Entry { eventID = EventTriggerType.PointerClick };
+                clic.callback.AddListener(datos => AlClicEnFila(fila, datos));
+                disparador.triggers.Add(clic);
                 f.Icono = KitUI.CrearImagen(f.Fondo.transform, "Icono", Color.white);
                 f.Icono.preserveAspect = true;
                 f.Icono.raycastTarget = false;
@@ -1051,7 +1055,7 @@ namespace MechaCyberpunk.UI.Clinica
             textoEspacioElegido = Texto(areaHolo, "EspacioElegido", RolTexto.Ayuda, TextAnchor.UpperCenter, new Vector2(0.5f, 1f), new Vector2(0f, -12f),
                 new Vector2(AnchoHolo, 34f), string.Empty, TrazoH10.Amarillo);
             Texto(areaHolo, "AyudaRaton", RolTexto.Ayuda, TextAnchor.UpperCenter, new Vector2(0.5f, 1f), new Vector2(0f, -46f),
-                new Vector2(AnchoHolo, 30f), config.TextoAyudaRaton, TrazoH10.TextoTenue);
+                new Vector2(AnchoHolo, 30f), config.TextoAyudaRaton + TextoAyudaDobleClic, TrazoH10.TextoTenue);
         }
 
         // Centrado verticalmente en su padre y creciendo hacia la derecha desde x.
@@ -1128,6 +1132,32 @@ namespace MechaCyberpunk.UI.Clinica
         private void AlClicBoton()
         {
             if (visible)
+            {
+                AlConfirmar();
+            }
+        }
+
+        /// <summary>T-1492: lo que se agrega a la ayuda del ratón.</summary>
+        public const string TextoAyudaDobleClic = " · DOBLE CLIC EN UNA CASILLA PARA INSTALAR";
+
+        private void AlClicEnFila(int fila, BaseEventData datos)
+        {
+            if (datos is PointerEventData puntero && puntero.clickCount >= 2)
+            {
+                AceptarFila(fila);
+            }
+        }
+
+        /// <summary>T-1492: acepta la casilla como el doble clic: la elige y, si se puede instalar, instala sin pedir Enter (si no, avisa por qué no).</summary>
+        public void AceptarFila(int fila)
+        {
+            if (!visible || instalando)
+            {
+                return;
+            }
+            ElegirFila(fila);
+            AlConfirmar();
+            if (confirmando)
             {
                 AlConfirmar();
             }

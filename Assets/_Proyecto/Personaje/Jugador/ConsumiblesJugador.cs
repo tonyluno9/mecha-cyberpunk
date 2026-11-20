@@ -96,8 +96,8 @@ namespace MechaCyberpunk.Personaje.Jugador
 
         private bool PuedeActuar()
         {
-            return jugador != null && jugador.Modo == ModoJugador.APie && controlador != null && controlador.ControlActivo
-                && vida != null && !vida.EstaKO;
+            return ReglaConsumibles.PuedeActuar(jugador != null ? jugador.Modo : ModoJugador.Mecha,
+                controlador != null && controlador.ControlActivo, vida != null && !vida.EstaKO);
         }
 
         private void Refrescar()

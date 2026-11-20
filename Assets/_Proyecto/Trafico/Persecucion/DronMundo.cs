@@ -44,7 +44,22 @@ namespace MechaCyberpunk.Trafico.Persecucion
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void LimpiarActivos() => ActivosLista.Clear();
 
-        private void OnEnable() => ActivosLista.Add(this);
+        private void OnEnable()
+        {
+            ActivosLista.Add(this);
+            if (GetComponent<MarcadorDronHud>() == null)
+            {
+                gameObject.AddComponent<MarcadorDronHud>(); // T-1492: el marcador en pantalla del dron que te dispara
+            }
+        }
+
+        /// <summary>T-1492: segundos que el marcador sigue en pantalla después de un disparo.</summary>
+        public const float SegundosMarcaTrasTiro = 1.5f;
+
+        private float ultimoTiro = -1f;
+
+        /// <summary>T-1492: True mientras avisa (luz roja) o acaba de disparar: el HUD lo marca.</summary>
+        public bool Amenazando => !EstaCayendo && CalculoMarcadorDron.Amenazando(finAviso >= 0f, Time.time, ultimoTiro, SegundosMarcaTrasTiro);
 
         private void OnDisable()
         {
@@ -262,6 +277,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
             finAviso = -1f;
             PonerLuces(false);
             proximoTiro = Time.time + config.SegundosEntreTirosDron;
+            ultimoTiro = Time.time;
             Disparos++;
             Vector3 origen = transform.position + Vector3.down * BajoElDron;
             Vector3 pecho = jugador.Raiz.position + Vector3.up * AlturaPecho;

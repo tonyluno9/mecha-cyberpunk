@@ -110,7 +110,7 @@ namespace MechaCyberpunk.UI.Hud
         private void AlImpacto(IPeleador objetivo, InfoDanio info, ResultadoDanio resultado)
         {
             IJugador jugador = Registro<IJugador>.Actual;
-            if (objetivo != null || jugador == null || jugador.Raiz == null || info.Cantidad <= 0f || resultado.DanioAplicado <= 0f)
+            if (objetivo != null || jugador == null || jugador.Raiz == null || info.Cantidad <= 0f)
             {
                 return;
             }

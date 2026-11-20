@@ -45,6 +45,19 @@ namespace MechaCyberpunk.Personaje.Jugador
     /// <summary>Reglas puras de la selección de consumibles (T-685).</summary>
     public static class ReglaConsumibles
     {
+        /// <summary>
+        /// T-1492: cuándo se puede usar un consumible. A pie, con el control activo; y también dentro de un carro (la persecución casi siempre es en carro:
+        /// antes no dejaba curarse ahí), donde el controlador a pie no tiene control pero el jugador sigue vivo. Nunca KO ni en el mecha.
+        /// </summary>
+        public static bool PuedeActuar(MechaCyberpunk.Core.ModoJugador modo, bool controlAPieActivo, bool vivo)
+        {
+            if (!vivo)
+            {
+                return false;
+            }
+            return modo == MechaCyberpunk.Core.ModoJugador.Carro || (modo == MechaCyberpunk.Core.ModoJugador.APie && controlAPieActivo);
+        }
+
         /// <summary>Índice siguiente con vuelta al inicio. Con lista vacía devuelve -1.</summary>
         public static int Siguiente(int actual, int cantidad)
         {

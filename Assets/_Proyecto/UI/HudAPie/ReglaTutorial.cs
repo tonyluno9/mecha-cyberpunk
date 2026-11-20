@@ -86,6 +86,10 @@ namespace MechaCyberpunk.UI.Hud
         public const string TeclaTelefono = "Telefono";
         public const string TeclaRueda = "Rueda";
         public const string TeclaConsumir = "ConsumirEquipado";
+        public const string TeclaConsumir2 = "ConsumirEquipado2";
+        public const string TeclaCambiarConsumible = "CambiarConsumible";
+        public const string TeclaConsumirCarro1 = "ConsumirEnCarro1";
+        public const string TeclaConsumirCarro2 = "ConsumirEnCarro2";
         public const string TeclaRuedaExo = "RuedaExo";
 
         /// <summary>Las teclas de siempre, para cuando no hay Input System que preguntar (pruebas y respaldo).</summary>
@@ -105,7 +109,11 @@ namespace MechaCyberpunk.UI.Hud
                 case TeclaMapa: return "M";
                 case TeclaTelefono: return "T";
                 case TeclaRueda: return "Rueda (clic)";
-                case TeclaConsumir: return "B";
+                case TeclaConsumir: return "E";
+                case TeclaConsumir2: return "C";
+                case TeclaCambiarConsumible: return "Alt";
+                case TeclaConsumirCarro1: return "Z";
+                case TeclaConsumirCarro2: return "X";
                 case TeclaRuedaExo: return "Tab";
                 default: return nombre;
             }
@@ -137,7 +145,8 @@ namespace MechaCyberpunk.UI.Hud
                 case AccionTutorial.Moto: return k(TeclaInteractuar) + " TE SUBE A LA MOTO · " + k(TeclaMover) + " ACELERA, FRENA Y GIRA";
                 case AccionTutorial.Mapa: return k(TeclaMapa) + " ABRE EL MAPA";
                 case AccionTutorial.Misiones: return k(TeclaTelefono) + " ABRE EL TELÉFONO Y TUS MISIONES";
-                case AccionTutorial.Consumibles: return "MANTÉN " + k(TeclaRueda) + " PARA ELEGIR UN ARMA O USAR UN OBJETO · " + k(TeclaConsumir) + " USA EL OBJETO EQUIPADO";
+                case AccionTutorial.Consumibles: return "MANTÉN " + k(TeclaRueda) + " PARA ELEGIR UN ARMA O USAR UN OBJETO · " + k(TeclaConsumir) + " Y " + k(TeclaConsumir2) + " USAN TUS DOS OBJETOS · "
+                    + k(TeclaCambiarConsumible) + " + TECLA CAMBIA EL OBJETO · EN CARRO: " + k(TeclaConsumirCarro1) + " Y " + k(TeclaConsumirCarro2);
                 case AccionTutorial.Escudo: return "TU ESCUDO ABSORBE BALAS Y SE RECARGA SOLO";
                 case AccionTutorial.Habilidades: return TextoHabilidades(tecla, true, true, true);
                 default: return string.Empty;
