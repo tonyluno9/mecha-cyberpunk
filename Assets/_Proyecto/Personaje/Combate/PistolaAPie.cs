@@ -117,6 +117,8 @@ namespace MechaCyberpunk.Personaje.Combate
         public event Action Disparo;
         /// <summary>Se dispara en cada tiro con el arma y la posición de la boca (T-420).</summary>
         public event Action<ArmaAPie, Vector3> Fogonazo;
+        /// <summary>T-1491: se dispara por cada bala o perdigón con su recorrido (cañón y punto final: el impacto o el alcance), para el trazo.</summary>
+        public event Action<ArmaAPie, Vector3, Vector3> Trazo;
         /// <summary>Se dispara en cada bala o perdigón que pega a algo (T-420).</summary>
         public event Action<ArmaAPie, ImpactoBala> BalaImpacto;
 
@@ -178,6 +180,10 @@ namespace MechaCyberpunk.Personaje.Combate
             }
             RevisarArmas();
             CrearMarcas();
+            if (GetComponent<TrazosBala>() == null)
+            {
+                gameObject.AddComponent<TrazosBala>();
+            }
             if (GetComponent<SensacionDisparo>() == null)
             {
                 gameObject.AddComponent<SensacionDisparo>();
@@ -588,7 +594,14 @@ namespace MechaCyberpunk.Personaje.Combate
                 }
                 if (BuscarImpacto(origen, direccion, d.Alcance, out RaycastHit mejor))
                 {
-                    Impactar(arma, d.Danio * multiplicadorGuarida, mejor, direccion);
+                    // T-1491: el daño baja con la distancia según el arma (el francotirador no pierde nada).
+                    float factorDistancia = ReglaDanioDistancia.Multiplicador(mejor.distance, d.Alcance, d.InicioCaida, d.DanioMinimo);
+                    Impactar(arma, d.Danio * multiplicadorGuarida * factorDistancia, mejor, direccion);
+                    Trazo?.Invoke(arma, origen, mejor.point);
+                }
+                else
+                {
+                    Trazo?.Invoke(arma, origen, origen + direccion * d.Alcance);
                 }
             }
 
