@@ -21,8 +21,9 @@ namespace MechaCyberpunk.Tests.Personaje
 
         public override void Setup()
         {
-            base.Setup();
+            // Limpiar ANTES de crear al jugador: si se limpia después, le quita su suscripción al impacto y nunca reacciona al daño.
             EventosPelea.LimpiarSuscriptores();
+            base.Setup();
             visual = jugador.GetComponentInChildren<VisualPersonaje>(true);
             anim = visual != null ? visual.Animador : null;
             vida = jugador.GetComponent<VidaAPie>();
@@ -73,7 +74,8 @@ namespace MechaCyberpunk.Tests.Personaje
 
             yield return Pulsar(Key.V);
             Assert.IsTrue(cubierta.Cubierto, "V se pega a la pared");
-            yield return Hasta(() => EnEstado(anim, 0, "CoberturaMantener"), 3f);
+            // Ya dentro de Mantener y sin mezcla: durante la transición el clip actual todavía es el de Entrar.
+            yield return Hasta(() => anim.GetCurrentAnimatorStateInfo(0).IsName("CoberturaMantener") && !anim.IsInTransition(0), 3f);
             Assert.IsTrue(EnEstado(anim, 0, "CoberturaMantener"), "quieto en cobertura (PJ01_Cobertura_Quieto)");
             Assert.AreEqual("PJ01_Cobertura_Quieto", anim.GetCurrentAnimatorClipInfo(0).Length > 0 ? anim.GetCurrentAnimatorClipInfo(0)[0].clip.name : "");
 

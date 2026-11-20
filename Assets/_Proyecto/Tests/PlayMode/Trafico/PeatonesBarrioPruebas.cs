@@ -148,7 +148,9 @@ namespace MechaCyberpunk.Tests.Trafico
                     if (!p.gameObject.activeSelf) { continue; }
                     muestras++;
                     Vector3 local = barrio.transform.InverseTransformPoint(p.transform.position);
-                    if (DistanciaARutas(local, rutas) > 0.35f) { problemas.Add(p.name + " fuera de ruta @" + local.x.ToString("F1") + "," + local.z.ToString("F1")); }
+                    // T-1516: el que se quedó platicando está parado en su lugar del corro, a un lado de la ruta.
+                    float tolerancia = p.Platicando ? 0.35f + ReglaPlatica.RadioCorro : 0.35f;
+                    if (DistanciaARutas(local, rutas) > tolerancia) { problemas.Add(p.name + " fuera de ruta @" + local.x.ToString("F1") + "," + local.z.ToString("F1")); }
                     if (Mathf.Abs(local.y - AlturaBanqueta) > 0.05f) { problemas.Add(p.name + " fuera de la banqueta (y=" + local.y.ToString("F2") + ")"); }
                     Collider[] choques = Physics.OverlapCapsule(p.transform.position + Vector3.up * AlturaInferior, p.transform.position + Vector3.up * AlturaSuperior, RadioCuerpo, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore);
                     foreach (Collider c in choques)

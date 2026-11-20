@@ -50,17 +50,24 @@ namespace MechaCyberpunk.Tests.Vehiculos
             return prefab;
         }
 
+        /// <summary>Fondo de una llanta tomada como cilindro de eje horizontal: centro de su malla en el mundo menos su radio
+        /// (la mayor extensión local escalada). No depende de cuánto haya rodado ni necesita leer vértices.</summary>
+        internal static float FondoCilindro(MeshFilter f)
+        {
+            Bounds local = f.sharedMesh.bounds;
+            Vector3 escala = f.transform.lossyScale;
+            Vector3 ext = new Vector3(Mathf.Abs(local.extents.x * escala.x), Mathf.Abs(local.extents.y * escala.y), Mathf.Abs(local.extents.z * escala.z));
+            float radio = Mathf.Max(ext.x, Mathf.Max(ext.y, ext.z));
+            return f.transform.TransformPoint(local.center).y - radio;
+        }
+
         private static float FondoDeLlanta(Transform carro, string rueda)
         {
-            // Fondo exacto por vértices: el AABB de un Renderer con la llanta girada sale inflado.
+            // Fondo de la llanta como cilindro: el AABB de un Renderer con la llanta girada sale inflado, y las mallas no son legibles (sin Read/Write).
             float menor = float.MaxValue;
             foreach (MeshFilter f in carro.Find(rueda).GetComponentsInChildren<MeshFilter>())
             {
-                Matrix4x4 m = f.transform.localToWorldMatrix;
-                foreach (Vector3 v in f.sharedMesh.vertices)
-                {
-                    menor = Mathf.Min(menor, m.MultiplyPoint3x4(v).y);
-                }
+                menor = Mathf.Min(menor, FondoCilindro(f));
             }
             Assert.Less(menor, float.MaxValue, rueda + " sin llanta visible");
             return menor;

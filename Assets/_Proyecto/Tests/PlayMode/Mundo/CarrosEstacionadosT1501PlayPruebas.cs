@@ -39,18 +39,18 @@ namespace MechaCyberpunk.Tests.Mundo
                     {
                         continue;
                     }
-                    Bounds b = default;
-                    bool primero = true;
+                    // Llanta como cilindro (centro de la malla menos su radio): las mallas no son legibles y el AABB girado se infla.
+                    float fondoLlanta = float.MaxValue;
+                    Vector3 centroLlanta = Vector3.zero;
                     foreach (MeshFilter f in mallas)
                     {
-                        Matrix4x4 m = f.transform.localToWorldMatrix;
-                        foreach (Vector3 v in f.sharedMesh.vertices)
-                        {
-                            Vector3 w = m.MultiplyPoint3x4(v);
-                            if (primero) { b = new Bounds(w, Vector3.zero); primero = false; }
-                            else { b.Encapsulate(w); }
-                        }
+                        Bounds local = f.sharedMesh.bounds;
+                        Vector3 e = Vector3.Scale(local.extents, f.transform.lossyScale);
+                        float radio = Mathf.Max(Mathf.Abs(e.x), Mathf.Max(Mathf.Abs(e.y), Mathf.Abs(e.z)));
+                        Vector3 c = f.transform.TransformPoint(local.center);
+                        if (c.y - radio < fondoLlanta) { fondoLlanta = c.y - radio; centroLlanta = c; }
                     }
+                    Bounds b = new Bounds(new Vector3(centroLlanta.x, fondoLlanta, centroLlanta.z), Vector3.zero);
                     Vector3 origen = new Vector3(b.center.x, b.min.y + 1f, b.center.z);
                     RaycastHit[] hits = Physics.RaycastAll(origen, Vector3.down, 50f, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore)
                         .Where(h => !h.collider.transform.IsChildOf(carro.transform)).OrderBy(h => h.distance).ToArray();
