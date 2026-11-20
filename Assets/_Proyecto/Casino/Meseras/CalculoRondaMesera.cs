@@ -15,6 +15,21 @@ namespace MechaCyberpunk.Casino.Meseras
         private int sentido = 1;
         private float esperaRestante;
 
+        /// <summary>
+        /// T-1495: cuántos grados hay que sumar al giro del modelo para que el cuerpo mire hacia donde camina. <paramref name="frenteRaiz"/> es hacia donde mira
+        /// la raíz y <paramref name="frenteCuerpo"/> hacia donde mira el cuerpo animado (de los muslos); los dos en el plano. Devuelve 0 si alguno no tiene dirección.
+        /// </summary>
+        public static float CorreccionDeGiro(Vector3 frenteRaiz, Vector3 frenteCuerpo)
+        {
+            frenteRaiz.y = 0f;
+            frenteCuerpo.y = 0f;
+            if (frenteRaiz.sqrMagnitude < 1e-6f || frenteCuerpo.sqrMagnitude < 1e-6f)
+            {
+                return 0f;
+            }
+            return -Vector3.SignedAngle(frenteRaiz, frenteCuerpo, Vector3.up);
+        }
+
         public Vector3 Posicion { get; private set; }
 
         /// <summary>Hacia dónde mira (sin componente vertical): se conserva durante la pausa.</summary>
