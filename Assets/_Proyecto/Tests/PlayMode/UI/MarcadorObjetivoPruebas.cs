@@ -109,6 +109,7 @@ namespace MechaCyberpunk.Tests.UI
             return texto.cachedTextGeneratorForLayout.GetPreferredWidth(contenido, ajustes);
         }
 
+        [Ignore("T-1496: recorría el paso SAL A LA CALLE desde el cuarto; ese paso ya no se juega (se empieza afuera). Pendiente de reescribir con el objetivo del asalto.")]
         [UnityTest]
         public IEnumerator RecorridoJugadorNuevo()
         {

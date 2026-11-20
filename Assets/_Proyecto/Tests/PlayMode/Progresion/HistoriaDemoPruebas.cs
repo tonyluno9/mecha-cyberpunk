@@ -241,7 +241,7 @@ namespace MechaCyberpunk.Tests.Progresion
             ArsenalJugador arsenal = Registro<ArsenalJugador>.Actual;
             VidaAPie vida = jugador.Raiz.GetComponentInChildren<VidaAPie>();
             PantallaHistoriaPandillas pantalla = director.Pantalla;
-            Assert.AreEqual(PasoHistoria.Despierta, director.Paso);
+            Assert.AreEqual(PasoHistoria.Asalto, director.Paso, "T-1496: sin cuarto, abre afuera en el asalto");
             Assert.AreEqual(DirectorPandillas.AyudaInicio, pantalla.Ayuda, "Al despertar: MEGALOPOLIS · SUBURBIOS");
 
             // Como después de la primera pelea: ya traes la pistola y cargas el paso Chato.
