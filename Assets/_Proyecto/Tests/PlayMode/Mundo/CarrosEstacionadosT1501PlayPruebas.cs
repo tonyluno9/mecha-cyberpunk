@@ -33,15 +33,23 @@ namespace MechaCyberpunk.Tests.Mundo
                     {
                         continue;
                     }
-                    Renderer[] rs = rueda.GetComponentsInChildren<Renderer>();
-                    if (rs.Length == 0)
+                    // Fondo exacto por vértices: el AABB de un Renderer con la llanta rodada sale inflado (hasta 1.4 radios) y parecía hundida.
+                    MeshFilter[] mallas = rueda.GetComponentsInChildren<MeshFilter>().Where(f => f.sharedMesh != null).ToArray();
+                    if (mallas.Length == 0)
                     {
                         continue;
                     }
-                    Bounds b = rs[0].bounds;
-                    foreach (Renderer r in rs)
+                    Bounds b = default;
+                    bool primero = true;
+                    foreach (MeshFilter f in mallas)
                     {
-                        b.Encapsulate(r.bounds);
+                        Matrix4x4 m = f.transform.localToWorldMatrix;
+                        foreach (Vector3 v in f.sharedMesh.vertices)
+                        {
+                            Vector3 w = m.MultiplyPoint3x4(v);
+                            if (primero) { b = new Bounds(w, Vector3.zero); primero = false; }
+                            else { b.Encapsulate(w); }
+                        }
                     }
                     Vector3 origen = new Vector3(b.center.x, b.min.y + 1f, b.center.z);
                     RaycastHit[] hits = Physics.RaycastAll(origen, Vector3.down, 50f, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore)
