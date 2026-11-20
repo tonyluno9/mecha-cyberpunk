@@ -613,7 +613,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
             {
                 Vector3 d = calles.Nodo(i) - centro;
                 d.y = 0f;
-                bool vale = d.magnitude >= config.DistanciaMinimaSalida && !ReglaVistaPolicia.LoVe(camara, calles.Nodo(i), AlcanceCamara)
+                bool vale = calles.Dentro(i) && d.magnitude >= config.DistanciaMinimaSalida && !ReglaVistaPolicia.LoVe(camara, calles.Nodo(i), AlcanceCamara)
                     && !CarroTrafico.PuntoEnVista(camara, calles.Nodo(i)) && !HayPatrullaCerca(calles.Nodo(i))
                     && EspacioLibre.Libre(calles.Nodo(i)); // T-728: nunca encima de otro vehículo
                 permitido.Add(vale);
@@ -673,6 +673,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
             GrafoCalles grafo = GrafoCalles.DeManzanas(centros, LadoManzana, AlturaCalles);
             CallesDeZona.Agregar(grafo); // T-1350
             TraficoCalle.AlargarHaciaLasAfueras(grafo); // T-587: las patrullas llegan y se van por las calles de las afueras, lejos de la vista
+            AreaMuro.Recortar(grafo); // T-1526: pero solo dentro del muro: las calles de salida terminan ahí y las patrullas dan vuelta
             BloqueosDeCalles.Marcar(grafo); // T-986: manejan con física: un cierre en la calle las detiene, así que ninguna sale ni va por ahí
             return grafo;
         }
