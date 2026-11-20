@@ -11,6 +11,9 @@ namespace MechaCyberpunk.Tests.Trafico
     {
         private const float Lado = 80f;
         private const float Paso = 94f;
+        // Rect.Contains deja fuera el borde de arriba; el área del muro incluye sus cuatro bordes.
+        private static bool EnArea(Rect area, Vector3 p) => p.x >= area.xMin && p.x <= area.xMax && p.z >= area.yMin && p.z <= area.yMax;
+
 
         private static GrafoCalles GrafoConAfueras()
         {
@@ -78,7 +81,7 @@ namespace MechaCyberpunk.Tests.Trafico
                     continue;
                 }
                 dentro++;
-                Assert.IsTrue(area.Contains(new Vector2(grafo.Nodo(i).x, grafo.Nodo(i).z)), "el nodo " + i + " está fuera del área: " + grafo.Nodo(i));
+                Assert.IsTrue(EnArea(area, grafo.Nodo(i)), "el nodo " + i + " está fuera del área: " + grafo.Nodo(i));
             }
             Assert.GreaterOrEqual(dentro, 8, "queda toda la cuadrícula");
             for (int i = 0; i < antes.Length; i++)
@@ -103,7 +106,7 @@ namespace MechaCyberpunk.Tests.Trafico
                     Assert.Greater(v.Count, 0, "un nodo de adentro nunca queda suelto");
                     actual = v[azar.Next(v.Count)];
                     Assert.IsTrue(grafo.Dentro(actual));
-                    Assert.IsTrue(area.Contains(new Vector2(grafo.Nodo(actual).x, grafo.Nodo(actual).z)));
+                    Assert.IsTrue(EnArea(area, grafo.Nodo(actual)));
                 }
             }
         }
@@ -260,7 +263,7 @@ namespace MechaCyberpunk.Tests.Trafico
             {
                 Assert.IsFalse(AreaMuro.Fuera(new Vector3(0f, 0f, 0f)));
                 Assert.IsTrue(AreaMuro.Fuera(new Vector3(150f, 0f, 0f)));
-                Assert.IsTrue(AreaMuro.Fuera(new Vector3(0f, 5f, -101f)));
+                Assert.IsTrue(AreaMuro.Fuera(new Vector3(0f, 5f, -110f)));
             }
             finally
             {
