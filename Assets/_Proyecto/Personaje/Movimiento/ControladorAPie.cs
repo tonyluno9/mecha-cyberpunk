@@ -26,6 +26,10 @@ namespace MechaCyberpunk.Personaje.Movimiento
         /// <summary>Pasos dados (para pruebas) y el ID del último paso que sonó.</summary>
         public int PasosDados => zancada.Pasos;
         public string UltimoIdPaso { get; private set; }
+        /// <summary>T-1489: al aterrizar, con los metros que cayó (para el polvo).</summary>
+        public event System.Action<float> Aterrizo;
+        /// <summary>T-1489: en cada paso que suena, con la posición, el ID del paso y si corría (para la salpicadura de los charcos).</summary>
+        public event System.Action<Vector3, string, bool> PasoDado;
         private const float SegundosMinimosAire = 0.25f;
         // T-442: la respiración se oye tras correr este rato seguido y no más seguido que cada tanto.
         private const float SegundosParaRespirar = 4f;
@@ -121,6 +125,10 @@ namespace MechaCyberpunk.Personaje.Movimiento
             controlador.slopeLimit = PendienteMaxima;
             controlador.minMoveDistance = 0f;
             giroCamara = transform.eulerAngles.y;
+            if (GetComponent<EfectosPieJugador>() == null)
+            {
+                gameObject.AddComponent<EfectosPieJugador>(); // T-1489
+            }
             if (GetComponent<CubiertaYRodada>() == null)
             {
                 gameObject.AddComponent<CubiertaYRodada>();
@@ -283,6 +291,10 @@ namespace MechaCyberpunk.Personaje.Movimiento
             {
                 alturaMaximaAire = estabaEnPiso ? transform.position.y : Mathf.Max(alturaMaximaAire, transform.position.y);
             }
+            if (enPiso && tiempoAire > SegundosMinimosAire)
+            {
+                Aterrizo?.Invoke(alturaMaximaAire - transform.position.y); // T-1489
+            }
             if (enPiso && tiempoAire > SegundosMinimosAire && ReglaSonidosJugador.DebeSonarAterrizaje(alturaMaximaAire - transform.position.y))
             {
                 Sonidos.ReproducirEn(ReglaSonidosJugador.Aterrizaje, transform.position);
@@ -307,6 +319,7 @@ namespace MechaCyberpunk.Personaje.Movimiento
             {
                 UltimoIdPaso = IdPasoDelPiso();
                 Sonidos.ReproducirEn(UltimoIdPaso, transform.position);
+                PasoDado?.Invoke(transform.position, UltimoIdPaso, quiereCorrer); // T-1489
             }
         }
 
