@@ -81,7 +81,7 @@ namespace MechaCyberpunk.Trafico.Testigos
         {
             if (interno.Nivel > 0 && piso > interno.Valor + Tolerancia)
             {
-                interno.Sumar(piso - interno.Valor, MotivoCalor.Otro);
+                interno.Sumar(piso - interno.Valor, MotivoCalor.Mision); // Mision: sin el factor de T-1528, es devolver al piso
             }
         }
 

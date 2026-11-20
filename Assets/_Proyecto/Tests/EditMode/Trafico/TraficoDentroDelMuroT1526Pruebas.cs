@@ -55,6 +55,46 @@ namespace MechaCyberpunk.Tests.Trafico
             Assert.IsTrue(grafo.Dentro(grafo.MasLejano(new Vector3(0f, 0f, 0f))));
         }
 
+
+        [Test]
+        public void Recortar_ConElAreaRealDelMuro_MueveLosExtremosAlBordeYNingunRecorridoSale()
+        {
+            // El muro de la ciudad: área de 262 x 168 m (x de -131 a 131, z de -84 a 84), más chica que la cuadrícula (los nodos de los extremos están en +-134 y +-87).
+            GrafoCalles grafo = GrafoConAfueras();
+            Rect area = Rect.MinMaxRect(-131f, -84f, 131f, 84f);
+            int quitados = grafo.Recortar(area);
+            Assert.Greater(quitados, 0, "las calles de las afueras se desconectan");
+            Assert.Greater(grafo.NodosAjustados, 0, "los extremos de la cuadrícula se mueven al borde del área");
+            int dentro = 0;
+            for (int i = 0; i < grafo.Cantidad; i++)
+            {
+                if (!grafo.Dentro(i))
+                {
+                    continue;
+                }
+                dentro++;
+                Assert.IsTrue(area.Contains(new Vector2(grafo.Nodo(i).x, grafo.Nodo(i).z)), "el nodo " + i + " está fuera del área: " + grafo.Nodo(i));
+            }
+            Assert.GreaterOrEqual(dentro, 10, "queda la red de calles de adentro");
+            // Un recorrido al azar (como el de los carros, que no regresan salvo en un callejón) nunca llega a un nodo de afuera.
+            System.Random azar = new System.Random(1526);
+            for (int inicio = 0; inicio < grafo.Cantidad; inicio++)
+            {
+                if (!grafo.Dentro(inicio))
+                {
+                    continue;
+                }
+                int actual = inicio;
+                for (int paso = 0; paso < 2000; paso++)
+                {
+                    IReadOnlyList<int> v = grafo.Vecinos(actual);
+                    Assert.Greater(v.Count, 0, "un nodo de adentro nunca queda suelto");
+                    actual = v[azar.Next(v.Count)];
+                    Assert.IsTrue(grafo.Dentro(actual));
+                    Assert.IsTrue(area.Contains(new Vector2(grafo.Nodo(actual).x, grafo.Nodo(actual).z)));
+                }
+            }
+        }
         [Test]
         public void Recortar_ConUnAreaQueDejaPocosNodos_NoHaceNada()
         {

@@ -468,6 +468,10 @@ namespace MechaCyberpunk.Trafico.Calle
 
         private void Update()
         {
+            if (SalioDelMuro(Time.deltaTime)) // T-1526: se revisa aunque el carro no tenga ruta (calculo)
+            {
+                return;
+            }
             if (calculo == null)
             {
                 return;
@@ -475,10 +479,6 @@ namespace MechaCyberpunk.Trafico.Calle
             float dt = Time.deltaTime;
             Vector3? jugador = posicionJugador?.Invoke();
             SeguirElSuelo(dt);
-            if (SalioDelMuro(dt))
-            {
-                return;
-            }
             if (EnRefuerzo && RefuerzoLlego)
             {
                 return; // T-714: ya llegó y está estacionado
@@ -532,15 +532,10 @@ namespace MechaCyberpunk.Trafico.Calle
         private const float SegundosEntreRevisionesDeMuro = 1f;
         private float segundosParaRevisarMuro;
 
-        private bool SalioDelMuro(float dt)
+        /// <summary>T-1526: si el carro está fuera del muro lo recicla dentro (o lo apaga si no hay dónde). Devuelve true si estaba fuera. No toca robados, en robo ni de refuerzo.</summary>
+        public bool ReciclarSiEstaFueraDelMuro()
         {
-            segundosParaRevisarMuro -= dt;
-            if (segundosParaRevisarMuro > 0f)
-            {
-                return false;
-            }
-            segundosParaRevisarMuro = SegundosEntreRevisionesDeMuro;
-            if (Robado || EstaSiendoRobado || EnRefuerzo || !AreaMuro.Fuera(transform.position))
+            if (calles == null || Robado || EstaSiendoRobado || EnRefuerzo || !AreaMuro.Fuera(transform.position))
             {
                 return false;
             }
@@ -550,6 +545,17 @@ namespace MechaCyberpunk.Trafico.Calle
                 gameObject.SetActive(false);
             }
             return true;
+        }
+
+        private bool SalioDelMuro(float dt)
+        {
+            segundosParaRevisarMuro -= dt;
+            if (segundosParaRevisarMuro > 0f)
+            {
+                return false;
+            }
+            segundosParaRevisarMuro = SegundosEntreRevisionesDeMuro;
+            return ReciclarSiEstaFueraDelMuro();
         }
 
         // T-1475: VEH_CLAXON_CAMION para los pesados, VEH_CLAXON_NORMAL para el resto.
