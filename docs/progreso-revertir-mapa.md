@@ -44,3 +44,4 @@ niebla global, Barrio.prefab (sonido de puertas, persecución), PisoAdoquin, Pla
   estaban las zonas). Se agregó a T-1480 regresar esos 29 cambios de T-1410 (ad662b8) a su valor de antes.
 - Azoteas de T-1410 regresadas; flotantes/encimados/RevertirMapa 8/8. PlayMode por clase 24/24. Fotos antes/después iguales.
 - Reporte en docs/reporte-revertir-mapa.md. Tareas a hechas. Siguiente: merge --no-ff a main, push, builds Demo y Juego.
+- TERMINADO: main 24ff6d1 subida; builds Demo (19:05) y Juego (19:07) sin errores, 2584 MB cada una; Unity cerrado.
