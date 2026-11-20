@@ -60,6 +60,34 @@ namespace MechaCyberpunk.Personaje.Vida
             quemadura.Iniciar(this);
         }
 
+        private readonly SeguidorImplantes implantes = new SeguidorImplantes();
+
+        /// <summary>T-1529: la vida máxima que dan solo los implantes instalados (suma de su vida máxima extra).</summary>
+        public float VidaMaximaPorImplantes => Mathf.Max(0f, implantes.Efectos.vidaMaximaExtra);
+
+        private void OnEnable()
+        {
+            implantes.Cambio += AplicarVidaMaxima;
+            implantes.Activar();
+            AplicarVidaMaxima();
+        }
+
+        private void OnDisable()
+        {
+            implantes.Cambio -= AplicarVidaMaxima;
+            implantes.Desactivar();
+        }
+
+        // T-1529: cada implante instalado suma vida máxima (+10 a +25 según el nivel). Se recalcula al instalar, al cargar la partida y al llegar el servicio,
+        // así lo guardado (los ids de implantes) basta: no se guarda la vida máxima aparte.
+        private void AplicarVidaMaxima()
+        {
+            if (modelo != null && datos != null)
+            {
+                modelo.PonerMaxima(datos.VidaMaxima + VidaMaximaPorImplantes);
+            }
+        }
+
         public QuemaduraJugador Quemadura => quemadura;
 
         /// <summary>Daño del fuego (T-691): lo absorbe el escudo primero, como cualquier daño; devuelve lo que bajó la vida. Sin sonido de golpe.</summary>

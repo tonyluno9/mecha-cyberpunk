@@ -29,6 +29,9 @@ namespace MechaCyberpunk.Progresion
             return new OfertaImplante(siguiente, EstadoOfertaImplante.Instalar, costo, 0);
         }
 
+        /// <summary>T-1529: vida máxima extra que da un implante instalado según su nivel (I: +10, II: +25). Es el valor que lleva cada DatosImplante.</summary>
+        public static float VidaMaximaExtra(int nivel) => nivel >= 2 ? 25f : (nivel == 1 ? 10f : 0f);
+
         /// <summary>La combinación de los efectos de todo lo instalado. Sin nada: <see cref="EfectosImplantes.Ninguno"/>.</summary>
         public static EfectosImplantes Combinar(IEnumerable<DatosImplante> instalados)
         {

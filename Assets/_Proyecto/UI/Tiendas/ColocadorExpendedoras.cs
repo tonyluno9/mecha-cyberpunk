@@ -56,8 +56,10 @@ namespace MechaCyberpunk.UI.Tiendas
                     lugares.Add(p);
                 }
             }
-            List<Transform> decoradas = BuscarDecoradas(escena);
-            if (lugares.Count == 0 && decoradas.Count == 0)
+            // T-1529: con maquinasVenden en false las máquinas son de decorado (los consumibles se compran en la tiendita).
+            List<Transform> decoradas = datos.MaquinasVenden ? BuscarDecoradas(escena) : new List<Transform>();
+            bool hayTiendita = datos.Tiendita != null && datos.TiendaTiendita != null;
+            if (lugares.Count == 0 && decoradas.Count == 0 && !hayTiendita)
             {
                 return null;
             }
@@ -95,7 +97,10 @@ namespace MechaCyberpunk.UI.Tiendas
                     caja.center = new Vector3(0f, 1f, 0f);
                     caja.size = new Vector3(1.64f, 2f, 0.98f);
                 }
-                maquina.AddComponent<Expendedora>().Iniciar(datos.Tienda, datos.Catalogo, pantalla);
+                if (datos.MaquinasVenden)
+                {
+                    maquina.AddComponent<Expendedora>().Iniciar(datos.Tienda, datos.Catalogo, pantalla);
+                }
             }
             // T-1315: toda máquina de la escena vende, también las de adorno del tianguis y de las fachadas.
             foreach (Transform decorada in decoradas)
@@ -108,6 +113,8 @@ namespace MechaCyberpunk.UI.Tiendas
                 }
                 decorada.gameObject.AddComponent<Expendedora>().Iniciar(datos.Tienda, datos.Catalogo, pantalla);
             }
+            // T-1529: la tiendita de la esquina (ED02) con su mostrador y su tendero: ahí se compran los consumibles.
+            ColocadorTiendita.Colocar(escena, datos, raiz.transform, pantalla);
             return raiz.transform;
         }
 

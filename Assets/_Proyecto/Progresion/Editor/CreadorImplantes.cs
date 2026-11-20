@@ -19,7 +19,7 @@ namespace MechaCyberpunk.Progresion.Editor
 
         private static EfectosImplantes Efecto(float golpe = 1f, float correr = 1f, float salto = 1f, float reaccion = 1f,
             bool vida = false, bool numeros = false, float anticipacion = 0f,
-            float alcance = 0f, float retroceso = 0f, float rodada = 0f, float recarga = 0f)
+            float alcance = 0f, float retroceso = 0f, float rodada = 0f, float recarga = 0f, float vidaMax = 0f)
         {
             return new EfectosImplantes
             {
@@ -33,7 +33,8 @@ namespace MechaCyberpunk.Progresion.Editor
                 bonusAlcanceApuntado = alcance,
                 reduccionRetroceso = retroceso,
                 reduccionEnfriamientoRodada = rodada,
-                reduccionRecarga = recarga
+                reduccionRecarga = recarga,
+                vidaMaximaExtra = vidaMax
             };
         }
 
@@ -69,6 +70,7 @@ namespace MechaCyberpunk.Progresion.Editor
             ef.FindPropertyRelative("reduccionRetroceso").floatValue = tabla.Efectos.reduccionRetroceso;
             ef.FindPropertyRelative("reduccionEnfriamientoRodada").floatValue = tabla.Efectos.reduccionEnfriamientoRodada;
             ef.FindPropertyRelative("reduccionRecarga").floatValue = tabla.Efectos.reduccionRecarga;
+            ef.FindPropertyRelative("vidaMaximaExtra").floatValue = ReglaImplantes.VidaMaximaExtra(tabla.Nivel); // T-1529
             so.FindProperty("descripcion").stringValue = tabla.Descripcion;
             so.ApplyModifiedPropertiesWithoutUndo();
             EditorUtility.SetDirty(actual);

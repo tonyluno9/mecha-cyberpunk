@@ -49,6 +49,9 @@ namespace MechaCyberpunk.Core
         /// <summary>SINAPSIS: fracción que se quita al tiempo de recarga del arma a pie (0.2 = 20 % menos). Neutro: 0.</summary>
         public float reduccionRecarga;
 
+        /// <summary>T-1529: vida máxima extra del jugador a pie que da cada implante instalado (+10 a +25 según el nivel). Se suma al combinar. Neutro: 0.</summary>
+        public float vidaMaximaExtra;
+
         /// <summary>Todo neutro: sin implantes.</summary>
         public static EfectosImplantes Ninguno => new EfectosImplantes
         {
@@ -62,7 +65,8 @@ namespace MechaCyberpunk.Core
             bonusAlcanceApuntado = 0f,
             reduccionRetroceso = 0f,
             reduccionEnfriamientoRodada = 0f,
-            reduccionRecarga = 0f
+            reduccionRecarga = 0f,
+            vidaMaximaExtra = 0f
         };
 
         /// <summary>
@@ -83,7 +87,8 @@ namespace MechaCyberpunk.Core
                 bonusAlcanceApuntado = a.bonusAlcanceApuntado + b.bonusAlcanceApuntado,
                 reduccionRetroceso = Math.Min(0.9f, a.reduccionRetroceso + b.reduccionRetroceso),
                 reduccionEnfriamientoRodada = Math.Min(0.9f, a.reduccionEnfriamientoRodada + b.reduccionEnfriamientoRodada),
-                reduccionRecarga = Math.Min(0.9f, a.reduccionRecarga + b.reduccionRecarga)
+                reduccionRecarga = Math.Min(0.9f, a.reduccionRecarga + b.reduccionRecarga),
+                vidaMaximaExtra = a.vidaMaximaExtra + b.vidaMaximaExtra
             };
         }
     }

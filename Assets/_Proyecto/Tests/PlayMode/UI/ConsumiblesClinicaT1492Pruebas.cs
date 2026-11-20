@@ -134,12 +134,11 @@ namespace MechaCyberpunk.Tests.UI
             Assert.IsNotNull(hud);
             Assert.AreEqual(bebida, hud.Equipado(0), "Ranura 1: el primero del catálogo");
             Assert.AreEqual(papitas, hud.Equipado(1), "Ranura 2: el segundo");
-            StringAssert.Contains("[E] ", hud.TextoConsumo.text);
-            StringAssert.Contains("[C] ", hud.TextoConsumo.text);
+            Assert.AreEqual(string.Empty, hud.TextoConsumo.text, "T-1529: sin línea de texto repetida encima de las casillas");
             HudH10 h10 = Object.FindFirstObjectByType<HudH10>();
             Assert.AreEqual("E", h10.TeclaRanura(0));
             Assert.AreEqual("C", h10.TeclaRanura(1));
-            StringAssert.StartsWith("x", h10.CantidadRanura(1), "Cada casilla dice la cantidad");
+            Assert.AreEqual(string.Empty, h10.CantidadRanura(1), "T-1529: la casilla no escribe la cantidad");
 
             ServicioInventario inventario = Registro<ServicioInventario>.Actual;
             int antes = inventario.Cantidad(papitas);
@@ -200,6 +199,73 @@ namespace MechaCyberpunk.Tests.UI
             Assert.AreEqual(tercero, hud.Equipado(1), "Alt + C pasa al siguiente objeto que lleva");
             Assert.AreEqual(bebida, hud.Equipado(0), "La ranura 1 no cambia");
             Assert.AreEqual(antes, inventario.Cantidad(papitas), "Cambiar de objeto no gasta nada");
+        }
+
+        // T-1529: bebida y luego papitas. Al gastarse la bebida (ranura 1), las papitas siguen en la ranura 2 y la tecla C las usa.
+        [UnityTest]
+        public IEnumerator BebidaYLuegoPapitas_ElSegundoConsumibleSiSeUsa()
+        {
+            yield return CargarCiudad();
+            DatosConsumible bebida = Consumible("bebida_energetica");
+            DatosConsumible papitas = Consumible("papitas");
+            ServicioInventario inventario = Registro<ServicioInventario>.Actual;
+            inventario.Agregar(bebida, 1);
+            inventario.Agregar(papitas, 3);
+            VidaAPie vida = Registro<IJugador>.Actual.Raiz.GetComponentInChildren<VidaAPie>();
+            vida.RecibirDanioSoloVida(new InfoDanio(60f, TipoDanio.Disparo, vida.transform.position, Vector3.forward, null));
+            yield return new WaitForSecondsRealtime(0.5f);
+            HudConsumibles hud = Object.FindFirstObjectByType<HudConsumibles>();
+            Assert.AreEqual(bebida, hud.Equipado(0));
+            Assert.AreEqual(papitas, hud.Equipado(1));
+
+            // La bebida (ranura 1, tecla E) se gasta: se usa con el componente para no depender de que no haya nada enfrente.
+            ConsumiblesJugador consumibles = Registro<IJugador>.Actual.Raiz.GetComponent<ConsumiblesJugador>();
+            Assert.IsTrue(consumibles.Usar(bebida), "La bebida se usa");
+            Assert.AreEqual(0, inventario.Cantidad(bebida), "Era la única");
+            yield return new WaitForSecondsRealtime(0.5f);
+            Assert.IsNull(hud.Equipado(0), "La ranura 1 queda vacía");
+            Assert.AreEqual(papitas, hud.Equipado(1), "Las papitas siguen en la ranura 2 (tecla C)");
+
+            // 60 de daño menos 25 de la bebida: la vida sigue incompleta y las papitas sirven.
+            int antes = inventario.Cantidad(papitas);
+            Assert.Less(vida.Actual, vida.Maxima, "La vida sigue incompleta");
+            yield return Pulsar(teclado.cKey);
+            Assert.AreEqual(antes - 1, inventario.Cantidad(papitas), "C usa las papitas después de la bebida");
+        }
+
+        // T-1529: cada implante instalado suma vida máxima (+10 nivel I, +25 nivel II), se ve en la vida del jugador y se conserva al guardar y cargar.
+        [UnityTest]
+        public IEnumerator Implantes_SumanVidaMaxima_YSeConservanAlGuardarYCargar()
+        {
+            yield return CargarCiudad();
+            ServicioImplantes implantes = Registro<ServicioImplantes>.Actual;
+            VidaAPie vida = Registro<IJugador>.Actual.Raiz.GetComponentInChildren<VidaAPie>();
+            implantes.QuitarTodos();
+            yield return null;
+            float baseMax = vida.Maxima;
+            Assert.AreEqual(0f, vida.VidaMaximaPorImplantes, 1e-4f);
+            var piernas = UnityEditor.AssetDatabase.LoadAssetAtPath<DatosImplante>("Assets/_Proyecto/Progresion/Datos/Implantes/DatosImplante_implante_piernas_1.asset");
+            var ojos = UnityEditor.AssetDatabase.LoadAssetAtPath<DatosImplante>("Assets/_Proyecto/Progresion/Datos/Implantes/DatosImplante_implante_ojos_2.asset");
+            Assert.IsNotNull(piernas);
+            Assert.IsNotNull(ojos);
+            float actualAntes = vida.Actual;
+
+            implantes.Regalar(piernas);
+            yield return null;
+            Assert.AreEqual(baseMax + 10f, vida.Maxima, 1e-3f, "Nivel I suma 10");
+            Assert.AreEqual(actualAntes + 10f, vida.Actual, 1e-3f, "La vida que se gana se llena");
+            implantes.Regalar(ojos);
+            yield return null;
+            Assert.AreEqual(baseMax + 35f, vida.Maxima, 1e-3f, "10 + 25");
+
+            string guardado = implantes.Guardar();
+            implantes.QuitarTodos();
+            yield return null;
+            Assert.AreEqual(baseMax, vida.Maxima, 1e-3f, "Sin implantes vuelve la base");
+            implantes.Cargar(guardado);
+            yield return null;
+            Assert.AreEqual(baseMax + 35f, vida.Maxima, 1e-3f, "Cargar la partida devuelve la vida máxima");
+            Assert.LessOrEqual(vida.Actual, vida.Maxima);
         }
 
         [UnityTest]
