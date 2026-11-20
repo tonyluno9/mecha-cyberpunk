@@ -198,7 +198,7 @@ namespace MechaCyberpunk.Tests.Progresion
             Assert.AreEqual(PasoHistoria.PrimeraPelea, director.Paso);
 
             // b. La primera pelea: clics sobre los Calaveras hasta vencerlos.
-            float finPelea = Time.realtimeSinceStartup + 90f;
+            float finPelea = Time.realtimeSinceStartup + 300f; // T-1490: los puños pegan 0.45 contra enemigos, la pelea a golpes tarda más
             while (director.Paso == PasoHistoria.PrimeraPelea)
             {
                 Assert.Less(Time.realtimeSinceStartup, finPelea, "La primera pelea no terminó.");
