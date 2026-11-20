@@ -127,7 +127,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
         /// Así una calle que llegaba a una salida termina dentro y los carros dan vuelta ahí. Devuelve cuántos nodos desconectó. Si el área dejaría menos de
         /// <paramref name="minimoDentro"/> nodos no hace nada (el área estaría mal detectada).
         /// </summary>
-        public int Recortar(Rect area, float holgura = 24f, int minimoDentro = 4)
+        public int Recortar(Rect area, float holgura = 0f, int minimoDentro = 4)
         {
             List<int> fuera = new List<int>();
             List<int> ajustar = new List<int>();

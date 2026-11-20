@@ -18,16 +18,36 @@ namespace MechaCyberpunk.Trafico.Calle
         public static readonly string[] PrefijosPieza = { "MU01", "MU02", "MU03" };
         /// <summary>Con menos puntos que esto no se puede decir que hay un muro que cierra la ciudad.</summary>
         public const int MinimoDePuntos = 4;
+        /// <summary>Cuánto (m) puede pasarse un carro del área antes de contar como fuera (un carro dando vuelta pegado al muro).</summary>
+        public const float ToleranciaFuera = 3f;
         /// <summary>Lado mínimo (m) del área para darla por buena.</summary>
         public const float LadoMinimo = 100f;
-        /// <summary>Cuánto (m) se mete el área hacia adentro del trazo del muro (grosor, collider y el largo de un carro).</summary>
-        public const float MargenPorOmision = 12f;
+        /// <summary>Cuánto (m) se mete el área hacia adentro del trazo del muro. 0: los finales de calle de la cuadrícula (a ~1 m del muro) siguen dentro; el carro da vuelta antes por ReglaCallejon.</summary>
+        public const float MargenPorOmision = 0f;
 
         private static Rect? cache;
         private static bool buscada;
+        private static Object fuente; // un objeto del muro del que salió el área; si se destruye, el área ya no vale
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void Reiniciar()
+        {
+            cache = null;
+            buscada = false;
+            // T-1526: el área es de la escena: al cargar o descargar una escena se vuelve a buscar (si no, una prueba o una escena nueva heredaban el muro de la anterior).
+            UnityEngine.SceneManagement.SceneManager.sceneLoaded -= AlCambiarEscena;
+            UnityEngine.SceneManagement.SceneManager.sceneUnloaded -= AlDescargarEscena;
+            UnityEngine.SceneManagement.SceneManager.sceneLoaded += AlCambiarEscena;
+            UnityEngine.SceneManagement.SceneManager.sceneUnloaded += AlDescargarEscena;
+        }
+
+        private static void AlCambiarEscena(UnityEngine.SceneManagement.Scene escena, UnityEngine.SceneManagement.LoadSceneMode modo)
+        {
+            cache = null;
+            buscada = false;
+        }
+
+        private static void AlDescargarEscena(UnityEngine.SceneManagement.Scene escena)
         {
             cache = null;
             buscada = false;
@@ -43,12 +63,17 @@ namespace MechaCyberpunk.Trafico.Calle
                 return;
             }
             cache = area;
+            fuente = null;
             buscada = true;
         }
 
         /// <summary>El área del interior del muro (x, y = x, z), o null si no hay muro. La busca una vez por escena.</summary>
         public static Rect? Actual(float margen = MargenPorOmision)
         {
+            if (buscada && (object)fuente != null && fuente == null)
+            {
+                buscada = false; // el muro de donde salió el área ya no existe (otra escena, o se borró)
+            }
             if (!buscada)
             {
                 buscada = true;
@@ -58,10 +83,10 @@ namespace MechaCyberpunk.Trafico.Calle
         }
 
         /// <summary>true si el punto está fuera del muro. Sin área conocida siempre false (no se recicla nada por error).</summary>
-        public static bool Fuera(Vector3 punto)
+        public static bool Fuera(Vector3 punto, float tolerancia = ToleranciaFuera)
         {
             Rect? area = Actual();
-            return area.HasValue && !area.Value.Contains(new Vector2(punto.x, punto.z));
+            return area.HasValue && (punto.x < area.Value.xMin - tolerancia || punto.x > area.Value.xMax + tolerancia || punto.z < area.Value.yMin - tolerancia || punto.z > area.Value.yMax + tolerancia);
         }
 
         /// <summary>Recorta el grafo al interior del muro. Devuelve cuántos nodos quitó (0 si no hay muro).</summary>
@@ -116,7 +141,9 @@ namespace MechaCyberpunk.Trafico.Calle
         private static Rect? Buscar(float margen)
         {
             List<Vector2> puntos = new List<Vector2>();
+            fuente = null;
             GameObject raiz = GameObject.Find(NombreRaiz);
+            fuente = raiz;
             if (raiz != null)
             {
                 foreach (Transform hijo in raiz.transform)
@@ -135,6 +162,7 @@ namespace MechaCyberpunk.Trafico.Calle
                 if (EsPiezaDelMuro(t.name))
                 {
                     puntos.Add(new Vector2(t.position.x, t.position.z));
+                    fuente = t;
                 }
             }
             area = Calcular(puntos, margen);
@@ -144,6 +172,7 @@ namespace MechaCyberpunk.Trafico.Calle
             }
             puntos.Clear();
             GameObject orillas = GameObject.Find(RutaOrillas);
+            fuente = orillas;
             if (orillas != null)
             {
                 foreach (Transform hijo in orillas.transform)
