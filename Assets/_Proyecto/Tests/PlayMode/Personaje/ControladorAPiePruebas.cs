@@ -240,7 +240,8 @@ namespace MechaCyberpunk.Tests.Personaje
                 yield return null;
             }
             Release(teclado.wKey);
-            Assert.Less(maximo - minimo, 0.02f);
+            // T-1485: un balanceo leve al moverse (balanceoVertical 3.5 cm a 7.5 m/s); nada de mecerse como en primera persona.
+            Assert.Less(maximo - minimo, 0.08f);
             Assert.AreEqual(alturaInicial, controlador.Camara.localPosition.y, 0.05f);
         }
 
