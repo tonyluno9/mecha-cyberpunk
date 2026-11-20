@@ -6,7 +6,7 @@ Pedido completo: el /goal del 20-nov (Tony). Regla: nada se marca hecho sin verl
 ## Dónde está todo
 - Carpeta principal: en `main`. **El chat de Blender trabaja ahí** (imageassets/blender): no hacer checkout ni restore ahí sin revisar.
 - Integración y Unity: `.sesiones/s2` en la rama `integ/20nov-C` (tiene su Library). Una sola instancia de Unity.
-- Subagentes Sonnet: worktrees en `.claude/worktrees/`, sin Library: no corren Unity, dejan `Aplicar()` para -executeMethod.
+- Subagentes Sonnet: worktrees dispersos (sin imageassets ni binarios LFS) en `Desktop/videojuego/wt20/T15xx-*`, sin Library: no corren Unity, dejan `Aplicar()` para -executeMethod.
 - Al final: merge --no-ff de integ/20nov-C a main, push, builds Demo y Juego en la carpeta principal (uno por uno).
 
 ## Paso 0 (hecho)
@@ -33,3 +33,4 @@ Pedido completo: el /goal del 20-nov (Tony). Regla: nada se marca hecho sin verl
 
 ## Bitácora
 - 20-nov: paso 0 hecho. integ/20nov-C creada en s2 desde main 601dd62.
+- 20-nov: 10 subagentes lanzados (T-1520..T-1529) en wt20/. Compilación base de main en s2 corriendo.
