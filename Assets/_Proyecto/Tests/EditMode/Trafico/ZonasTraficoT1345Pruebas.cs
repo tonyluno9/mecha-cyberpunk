@@ -78,12 +78,12 @@ namespace MechaCyberpunk.Tests
         }
 
         [Test]
-        public void Config_ExisteConLasSeisZonasYSinCarrosNulos()
+        public void Config_ExisteConLasCuatroZonasYSinCarrosNulos()
         {
             ConfigCarrosZonas config = Resources.Load<ConfigCarrosZonas>("ConfigCarrosZonas");
             Assert.IsNotNull(config);
-            Assert.GreaterOrEqual(config.Zonas.Count, 6); // T-1389a suma Autopista y Cerro
-            foreach (string nombre in new[] { "Deshuesadero", "Malecon", "NeonAlto", "LasLomas", "Avenida", "Puerto" })
+            Assert.GreaterOrEqual(config.Zonas.Count, 4); // T-1482: solo las 4 zonas de los barrios
+            foreach (string nombre in new[] { "Deshuesadero", "NeonAlto", "LasLomas", "Avenida" })
             {
                 ConfigCarrosZonas.Zona z = config.Buscar(nombre);
                 Assert.IsNotNull(z, nombre);
@@ -95,9 +95,9 @@ namespace MechaCyberpunk.Tests
         }
 
         [Test]
-        public void Prefabs_ExistenLosSeisDeZonaYLosCarrosV12aV24()
+        public void Prefabs_ExistenLosCuatroDeZonaYLosCarrosV12aV24()
         {
-            foreach (string nombre in new[] { "Deshuesadero", "Malecon", "NeonAlto", "LasLomas", "Avenida", "Puerto" })
+            foreach (string nombre in new[] { "Deshuesadero", "NeonAlto", "LasLomas", "Avenida" })
             {
                 GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Proyecto/Trafico/Prefabs/Zonas/ZonaTrafico_" + nombre + ".prefab");
                 Assert.IsNotNull(prefab, nombre);

@@ -10,6 +10,7 @@ namespace MechaCyberpunk.Tests
         private static string ZonaDe(float x, float y, float z) => ColocarT1364ZonasTrafico.ZonaDe(ColocarT1364ZonasTrafico.Cajas, new Vector3(x, y, z));
 
         [Test]
+        [Ignore("T-1482: zonas nuevas quitadas del mapa (revertir mapa 19-nov)")]
         public void ZonaDe_PuntoDelMalecon_DaMalecon()
         {
             Assert.AreEqual("Malecon", ZonaDe(-100f, 0f, -226f));
@@ -17,6 +18,7 @@ namespace MechaCyberpunk.Tests
         }
 
         [Test]
+        [Ignore("T-1482: zonas nuevas quitadas del mapa (revertir mapa 19-nov)")]
         public void ZonaDe_PuntoDelPuerto_DaPuerto()
         {
             Assert.AreEqual("Puerto", ZonaDe(220f, 0f, -150f));
@@ -24,6 +26,7 @@ namespace MechaCyberpunk.Tests
         }
 
         [Test]
+        [Ignore("T-1482: zonas nuevas quitadas del mapa (revertir mapa 19-nov)")]
         public void ZonaDe_AutopistaElevada_DaAutopista()
         {
             Assert.AreEqual("Autopista", ZonaDe(0f, 10f, 250f));

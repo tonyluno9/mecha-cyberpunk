@@ -97,7 +97,7 @@ namespace MechaCyberpunk.Arte.Editor
         /// <summary>
         /// Territorios (coordenadas del mundo): SKULLS = el Tianguis, calle z = 0 entre x -40 y 40 (centro del barrio, ColocarS2Pandillas y CreadorCiudadPandillasT407).
         /// Nova = la Manzana_6 al sureste (x 54 a 134) con su calle en z = -43 y la torre al final, hacia x 130 (ColocarS2cNova). Barrio: 3 x 2 manzanas, avenidas en z = 0, +-94 y x = +-47, +-141.
-        /// Mundo completo: x -480 a 345, z -330 a 290 (MapaImagen).
+        /// T-1482: la ciudad quedó en 4 barrios (Suburbios, El Mercado, Neón Alto, Nova), aprox. x -250 a 250, z -190 a 190: ninguna ruta sale de x -240..240, z -180..180.
         /// </summary>
         private static List<Dron> Plan()
         {
@@ -111,8 +111,8 @@ namespace MechaCyberpunk.Arte.Editor
                 new Dron("Nova", "Nova_DR02_b", "DR02_b", Elipse(nova, 40f, 20f, false), 26f, 5f, 0.5f, Luz.Cian),
                 new Dron("Nova", "Nova_DR04_a1", "DR04_a", Elipse(new Vector2(125f, -43f), 22f, 18f, true), 16f, 9f, 0.25f, Luz.Cian),
                 new Dron("Nova", "Nova_DR04_a2", "DR04_a", Rectangulo(new Vector2(54f, -87f), new Vector2(134f, -7f), true), 29f, 10f, 0.7f, Luz.Cian),
-                new Dron("Nova", "Nova_NV03_a", "NV03_a", Elipse(nova, 170f, 110f, true, 10), 70f, 12f, 0f, Luz.Ninguna),
-                new Dron("Nova", "Nova_NV03_b", "NV03_b", Elipse(nova, 140f, 90f, false, 10), 90f, 10f, 0.5f, Luz.Ninguna),
+                new Dron("Nova", "Nova_NV03_a", "NV03_a", Elipse(nova, 140f, 110f, true, 10), 70f, 12f, 0f, Luz.Ninguna),
+                new Dron("Nova", "Nova_NV03_b", "NV03_b", Elipse(nova, 120f, 90f, false, 10), 90f, 10f, 0.5f, Luz.Ninguna),
                 // SKULLS: muy bajo sobre el Tianguis.
                 new Dron("Skulls", "Skulls_E13_1", "E13", Elipse(tianguis, 45f, 14f, true), 8f, 7f, 0f, Luz.Magenta),
                 new Dron("Skulls", "Skulls_E13_2", "E13", Elipse(tianguis, 45f, 14f, true), 10f, 7f, 0.33f, Luz.Magenta),
@@ -120,35 +120,32 @@ namespace MechaCyberpunk.Arte.Editor
                 // Policía: dos DR01 a 25 m sobre las avenidas, además del dron de persecución (Trafico/Prefabs/Dron.prefab).
                 new Dron("Policia", "Policia_DR01_1", "DR01", Rectangulo(new Vector2(-141f, -94f), new Vector2(141f, 94f), true), 25f, 14f, 0f, Luz.Roja),
                 new Dron("Policia", "Policia_DR01_2", "DR01", Elipse(tianguis, 141f, 10f, false, 8), 25f, 12f, 0.4f, Luz.Roja),
-                // Ciudad: carga y naves altas cruzando la ciudad y las zonas nuevas (80 a 120 m).
-                new Dron("Ciudad", "Ciudad_DR03_1", "DR03_a", Rectangulo(new Vector2(-440f, -290f), new Vector2(300f, 250f), true), 100f, 14f, 0f, Luz.Ninguna),
-                new Dron("Ciudad", "Ciudad_DR03_2", "DR03_a", Rectangulo(new Vector2(-440f, -290f), new Vector2(300f, 250f), false), 110f, 13f, 0.5f, Luz.Ninguna),
-                new Dron("Ciudad", "Ciudad_DR03_3", "DR03_a", Elipse(new Vector2(-200f, 0f), 230f, 150f, true, 10), 85f, 11f, 0.2f, Luz.Ninguna),
-                new Dron("Ciudad", "Ciudad_DR03_4", "DR03_a", Elipse(new Vector2(100f, -100f), 230f, 150f, false, 10), 95f, 11f, 0.6f, Luz.Ninguna),
-                new Dron("Ciudad", "Ciudad_DR03_5", "DR03_a", Elipse(ciudad, 400f, 20f, true, 8), 120f, 16f, 0.3f, Luz.Ninguna),
-                new Dron("Ciudad", "Ciudad_NV01_1", "NV01", Elipse(ciudad, 420f, 260f, true, 12), 110f, 8f, 0f, Luz.Ninguna),
-                new Dron("Ciudad", "Ciudad_NV01_2", "NV01", Elipse(ciudad, 300f, 180f, false, 12), 100f, 8f, 0.5f, Luz.Ninguna),
+                // Ciudad: carga y naves altas cruzando los 4 barrios (80 a 120 m). T-1482: todas las rutas dentro de x -240..240, z -180..180 (sin las zonas quitadas).
+                new Dron("Ciudad", "Ciudad_DR03_1", "DR03_a", Rectangulo(new Vector2(-230f, -170f), new Vector2(230f, 170f), true), 100f, 14f, 0f, Luz.Ninguna),
+                new Dron("Ciudad", "Ciudad_DR03_2", "DR03_a", Rectangulo(new Vector2(-230f, -170f), new Vector2(230f, 170f), false), 110f, 13f, 0.5f, Luz.Ninguna),
+                new Dron("Ciudad", "Ciudad_DR03_3", "DR03_a", Elipse(new Vector2(-100f, 0f), 130f, 150f, true, 10), 85f, 11f, 0.2f, Luz.Ninguna),
+                new Dron("Ciudad", "Ciudad_DR03_4", "DR03_a", Elipse(new Vector2(100f, -30f), 130f, 140f, false, 10), 95f, 11f, 0.6f, Luz.Ninguna),
+                new Dron("Ciudad", "Ciudad_DR03_5", "DR03_a", Elipse(ciudad, 160f, 20f, true, 8), 120f, 16f, 0.3f, Luz.Ninguna),
+                new Dron("Ciudad", "Ciudad_NV01_1", "NV01", Elipse(ciudad, 160f, 150f, true, 12), 110f, 8f, 0f, Luz.Ninguna),
+                new Dron("Ciudad", "Ciudad_NV01_2", "NV01", Elipse(ciudad, 140f, 120f, false, 12), 100f, 8f, 0.5f, Luz.Ninguna),
             };
         }
 
         // ------------------------------------------------------------------ aplicar
 
-        [MenuItem("Mecha Cyberpunk/T-1398/Colocar drones aéreos")]
-        public static void Aplicar()
+        private static bool ConstruirPrefab(List<Dron> plan)
         {
-            ColocarS2.Informe.Clear();
-            List<Dron> plan = Plan();
             if (plan.Count > TopeDrones)
             {
                 Debug.LogError("[Arte] T-1398: " + plan.Count + " drones pasan del tope " + TopeDrones);
-                return;
+                return false;
             }
             foreach (string codigo in plan.Select(d => d.Codigo).Distinct())
             {
                 if (AssetDatabase.LoadAssetAtPath<GameObject>(DronesT1397.RutaPrefab(codigo)) == null)
                 {
                     Debug.LogError("[Arte] T-1398: falta " + DronesT1397.RutaPrefab(codigo) + ": corre DronesT1397.Aplicar primero.");
-                    return;
+                    return false;
                 }
             }
             Material rojo = MaterialHalo("T1398_HaloRojo", ColorRojo);
@@ -156,7 +153,7 @@ namespace MechaCyberpunk.Arte.Editor
             if (rojo == null || verde == null)
             {
                 Debug.LogError("[Arte] T-1398: falta el shader MechaCyberpunk/Mundo/HaloLuz.");
-                return;
+                return false;
             }
 
             GameObject raiz = new GameObject(NombreRaiz);
@@ -173,7 +170,51 @@ namespace MechaCyberpunk.Arte.Editor
             }
             PrefabUtility.SaveAsPrefabAsset(raiz, RutaPrefab);
             Object.DestroyImmediate(raiz);
+            return true;
+        }
 
+        /// <summary>T-1482: rutas de este plan (x, z) fuera de los límites de los 4 barrios. Vacío = todo dentro. Las pruebas lo usan.</summary>
+        public const float LimiteX = 240f;
+        public const float LimiteZ = 180f;
+
+        public static bool PlanDentroDeLosBarrios()
+        {
+            foreach (Dron d in Plan())
+            {
+                foreach (Vector2 p in d.Puntos)
+                {
+                    if (Mathf.Abs(p.x) > LimiteX || Mathf.Abs(p.y) > LimiteZ)
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// T-1482: rehace solo el prefab T1398_DronesAereos.prefab (la escena no se toca: su instancia se actualiza sola al guardar el prefab).
+        /// Batchmode: -executeMethod MechaCyberpunk.Arte.Editor.DronesZonasT1398.SoloPrefab
+        /// </summary>
+        [MenuItem("Mecha Cyberpunk/T-1482/Rehacer prefab de drones aéreos")]
+        public static void SoloPrefab()
+        {
+            ColocarS2.Informe.Clear();
+            if (ConstruirPrefab(Plan()))
+            {
+                Debug.Log("[Arte] T-1482: prefab de drones rehecho en " + RutaPrefab);
+            }
+        }
+
+        [MenuItem("Mecha Cyberpunk/T-1398/Colocar drones aéreos")]
+        public static void Aplicar()
+        {
+            ColocarS2.Informe.Clear();
+            List<Dron> plan = Plan();
+            if (!ConstruirPrefab(plan))
+            {
+                return;
+            }
             ColocarS2.Abrir();
             GameObject viejo = GameObject.Find(NombreRaiz);
             if (viejo != null)

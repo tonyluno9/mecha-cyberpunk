@@ -16,18 +16,15 @@ namespace MechaCyberpunk.Trafico.Datos
             ("NeonAlto", new[] { "V22", "V23", "V24", "V12" }, 0.5f),
             ("LasLomas", new[] { "V15", "V13" }, 0.7f),
             ("Avenida", new[] { "V16", "V17", "V18", "V13", "V14", "V09", "V10" }, 0.4f),
-            // Malecón: superdeportivos, convertibles, taxis y motos.
-            ("Malecon", new[] { "V22", "V23", "V24", "V12", "V15", "V09", "MT01", "MT02" }, 0.7f),
-            // Puerto: camión, tráiler, microbús y pickups.
-            ("Puerto", new[] { "V17", "V18", "V16", "V10", "V03", "V19", "V04" }, 0.8f),
-            // Autopista: todo, con más camiones (V16, V17, V18 repetidos).
-            ("Autopista", new[] { "V12", "V13", "V14", "V15", "V16", "V17", "V18", "V19", "V20", "V21", "V22", "V23", "V24", "V16", "V17", "V18", "MT01" }, 0.9f),
-            // Cerro: viejos, pickups, vochos y motos; nada de tráileres ni camiones por la pendiente.
-            ("Cerro", new[] { "V01a", "V01b", "V02", "V03", "V10", "V04", "V14", "MT01", "MT02" }, 0.8f),
+            // T-1482: se quitaron del mapa Malecón, Puerto, Autopista y Cerro (revertir mapa 19-nov). Sus carros (V03, V04, V01a, V01b, V02 ya salen en la lista general;
+            // las motos MT01 y MT02 pasan a los Extras) siguen en los 4 barrios.
         };
 
-        /// <summary>Carros que se suman a la lista general en toda la ciudad (como T-1345).</summary>
-        public static readonly string[] Extras = { "V12", "V13", "V14", "V19" };
+        /// <summary>
+        /// Carros que se suman a la lista general en toda la ciudad (como T-1345). T-1482: suma las motos MT01/MT02 (antes solo en Malecón, Autopista y Cerro) y
+        /// V20/V21 (antes solo en Deshuesadero y Autopista), para que salgan en los 4 barrios.
+        /// </summary>
+        public static readonly string[] Extras = { "V12", "V13", "V14", "V19", "V20", "V21", "MT01", "MT02" };
 
         /// <summary>Carros nuevos de T-1342/T-1343 que tienen que aparecer en el tráfico (V11 es solo de la policía).</summary>
         public static readonly string[] CarrosNuevos =
