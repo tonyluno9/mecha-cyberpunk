@@ -127,7 +127,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
         /// Así una calle que llegaba a una salida termina dentro y los carros dan vuelta ahí. Devuelve cuántos nodos desconectó. Si el área dejaría menos de
         /// <paramref name="minimoDentro"/> nodos no hace nada (el área estaría mal detectada).
         /// </summary>
-        public int Recortar(Rect area, float holgura = 24f, int minimoDentro = 4)
+        public int Recortar(Rect area, float holgura = 0f, int minimoDentro = 4)
         {
             List<int> fuera = new List<int>();
             List<int> ajustar = new List<int>();
@@ -149,7 +149,8 @@ namespace MechaCyberpunk.Trafico.Persecucion
             foreach (int i in ajustar)
             {
                 Vector3 p = nodos[i];
-                nodos[i] = new Vector3(Mathf.Clamp(p.x, area.xMin, area.xMax), p.y, Mathf.Clamp(p.z, area.yMin, area.yMax));
+                // Rect.Contains no incluye el borde de arriba (xMax, yMax): se deja 1 cm adentro para que el nodo cuente como dentro del área.
+                nodos[i] = new Vector3(Mathf.Clamp(p.x, area.xMin, area.xMax - 0.01f), p.y, Mathf.Clamp(p.z, area.yMin, area.yMax - 0.01f));
                 NodosAjustados++;
             }
             foreach (int i in fuera)

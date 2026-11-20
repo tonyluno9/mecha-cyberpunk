@@ -988,7 +988,7 @@ namespace MechaCyberpunk.Trafico.Calle
                 {
                     continue; // T-1526: nunca sale fuera del muro
                 }
-                if (soloFinales && calles.NodosFuera == 0 && calles.Vecinos(nodo).Count != 1) // T-1526: con el muro recortado, los finales no son salidas ocultas: se recicla en cualquier nodo de adentro
+                if (soloFinales && calles.Vecinos(nodo).Count != 1)
                 {
                     continue;
                 }

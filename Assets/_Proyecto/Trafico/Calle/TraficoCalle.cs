@@ -271,8 +271,8 @@ namespace MechaCyberpunk.Trafico.Calle
         private float proximoIntentoDeMuro;
         private float proximoBarridoDeMuro;
 
-        // Un valor viejo guardado en la escena (4 m) dejaba los finales de calle pegados al muro: nunca menos que el margen por omisión.
-        private float MargenEfectivo => Mathf.Max(margenAlMuro, AreaMuro.MargenPorOmision);
+        // El campo serializado margenAlMuro ya no se usa (un valor viejo guardado en la escena, 4 m, recortaba la cuadrícula): siempre el margen por omisión.
+        private float MargenEfectivo => AreaMuro.MargenPorOmision;
 
         private void RecortarAlMuro()
         {
