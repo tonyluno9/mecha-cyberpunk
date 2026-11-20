@@ -35,6 +35,8 @@ namespace MechaCyberpunk.Vehiculos.Editor
             { "V04", TipoManejo.Camioneta },   // combi vieja
             { "V05", TipoManejo.Sedan },       // patrulla
             { "V06", TipoManejo.Camioneta },   // patrulla camioneta
+            { "PA01", TipoManejo.Sedan },      // T-1510: patrulla sedán nueva
+            { "PA02", TipoManejo.Camioneta },  // T-1510: patrulla SUV nueva
             { "V12", TipoManejo.Deportivo },   // deportivo propio
             { "V13", TipoManejo.Sedan },       // sedán familiar
             { "V14", TipoManejo.Compacto },    // compacto viejo
@@ -132,7 +134,7 @@ namespace MechaCyberpunk.Vehiculos.Editor
             EditorUtility.SetDirty(reparto);
         }
 
-        private static string AsignarAPrefab(string ruta)
+        public static string AsignarAPrefab(string ruta)
         {
             string codigo = Path.GetFileNameWithoutExtension(ruta).Substring("Carro_".Length);
             GameObject raiz = PrefabUtility.LoadPrefabContents(ruta);

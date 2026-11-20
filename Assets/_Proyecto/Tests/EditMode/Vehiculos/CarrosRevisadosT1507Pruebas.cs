@@ -8,7 +8,7 @@ using UnityEngine;
 namespace MechaCyberpunk.Tests.Vehiculos
 {
     /// <summary>
-    /// T-1507: los carros y motos revisados en Blender vienen en metros: sin escala vieja (x4.5), largo real, llantas en el piso,
+    /// T-1507 (patrullas desde T-1510): los carros y motos revisados en Blender vienen en metros: sin escala vieja (x4.5), largo real, llantas en el piso,
     /// rin de policía en V05, V06 y V11, patrullas con puertas y V22 sin mallas faltantes.
     /// </summary>
     public class CarrosRevisadosT1507Pruebas
@@ -130,7 +130,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
         }
 
         [Test]
-        public void Patrullas_ConPuertasCofreYRinDePolicia([ValueSource(nameof(Patrullas))] string ruta)
+        public void Patrullas_ConPuertasYLlantasEnElPiso([ValueSource(nameof(Patrullas))] string ruta)
         {
             GameObject patrulla = Cargar(ruta);
             Assert.IsNotNull(patrulla.GetComponent<MechaCyberpunk.Trafico.Persecucion.PatrullaMundo>(), "PatrullaMundo sigue en la raíz");
@@ -143,8 +143,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
             Assert.IsNotNull(patrulla.transform.Find("LuzAzul"), "Sirena azul");
             foreach (string nombre in CreadorCarrosPiezasT742.NombresRuedas)
             {
-                MeshRenderer dibujo = patrulla.transform.Find(nombre + "/Direccion/Giro/Modelo").GetComponent<MeshRenderer>();
-                Assert.IsTrue(dibujo.sharedMaterials.Any(m => m != null && m.name == "Rin_Cromo"), nombre + ": rin de policía");
+                // T-1510: las patrullas usan el cuerpo de PA01/PA02 (su llanta lleva el rin en la textura); el rin de policía de V05/V06/V11 se prueba en Policia_LlantasConRinDePolicia.
                 Bounds b = LimitesEn(patrulla.transform.Find(nombre + "/Direccion/Giro/Modelo"), patrulla.transform);
                 Assert.AreEqual(0f, b.min.y, MargenPiso, nombre + ": llanta en el piso");
             }
