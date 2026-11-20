@@ -82,7 +82,8 @@ namespace MechaCyberpunk.Tests.Vehiculos
         {
             Transform raiz = Carro(codigo).transform;
             Bounds b = LimitesEn(raiz.Find("Visual_T511/Carroceria"), raiz);
-            Assert.AreEqual(Largo(codigo), b.size.z, Margen, "Largo");
+            // T-1507: los FBX revisados vienen en metros (V01a, V01b y V05 miden cerca de 4.4 m).
+            Assert.That(b.size.z, Is.InRange(Largo(codigo) - 0.4f, Largo(codigo) + 0.4f), "Largo");
             // T-1343: la carrocería de Blender va sin llantas y queda sobre ellas; lo que toca el piso son las llantas (abajo).
             Assert.AreEqual(0f, b.center.x, Margen, "Centrado a lo ancho");
             // Las llantas también tocan el piso (nada se hunde ni flota).
@@ -236,7 +237,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
             Assert.IsNotNull(patrulla.transform.Find("LuzRoja"), "Sirena roja");
             Assert.IsNotNull(patrulla.transform.Find("LuzAzul"), "Sirena azul");
             Assert.IsNotNull(patrulla.transform.Find("Visual_T511/Carroceria"));
-            SinPuertasNiFaltantes(patrulla, "Patrulla");
+            SinPuertasNiFaltantes(patrulla, "Patrulla", true); // T-1507: la patrulla lleva las puertas del V05
             Assert.IsNotNull(patrulla.GetComponent<RuedasVisualesCarro>());
             foreach (string nombre in Ruedas)
             {
@@ -254,7 +255,8 @@ namespace MechaCyberpunk.Tests.Vehiculos
         {
             GameObject patrulla = Cargar(RutaPatrulla);
             Bounds b = LimitesEn(patrulla.transform.Find("Visual_T511/Carroceria"), patrulla.transform);
-            Assert.AreEqual(4.6f, b.size.z, Margen);
+            Bounds v05 = LimitesEn(Carro("V05").transform.Find("Visual_T511/Carroceria"), Carro("V05").transform);
+            Assert.AreEqual(v05.size.z, b.size.z, Margen);
             Assert.AreEqual(0f, b.min.y, Margen);
         }
 
