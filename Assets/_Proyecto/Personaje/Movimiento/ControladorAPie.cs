@@ -112,6 +112,30 @@ namespace MechaCyberpunk.Personaje.Movimiento
         public bool MovimientoSuspendido { get; set; }
         private Vector3 impulso;
 
+        // T-1493: mientras el Animator juega una animación que bloquea (ReglaBloqueoAnimacion) no se camina, gira ni salta; con tope de tiempo.
+        private VisualPersonaje visualBloqueo;
+        private float segundosBloqueado;
+        /// <summary>T-1493: true si ahora mismo una animación bloqueante (bajar de la moto, abrir puerta...) detiene el movimiento.</summary>
+        public bool BloqueadoPorAnimacion { get; private set; }
+
+        private bool ActualizarBloqueoAnimacion(float dt)
+        {
+            if (visualBloqueo == null)
+            {
+                visualBloqueo = GetComponentInChildren<VisualPersonaje>();
+            }
+            Animator a = visualBloqueo != null ? visualBloqueo.Animador : null;
+            bool estadoBloquea = false;
+            if (a != null && a.isActiveAndEnabled && a.runtimeAnimatorController != null)
+            {
+                estadoBloquea = ReglaBloqueoAnimacion.HashBloquea(a.GetCurrentAnimatorStateInfo(0).shortNameHash)
+                    || (a.IsInTransition(0) && ReglaBloqueoAnimacion.HashBloquea(a.GetNextAnimatorStateInfo(0).shortNameHash));
+            }
+            segundosBloqueado = estadoBloquea ? segundosBloqueado + dt : 0f;
+            BloqueadoPorAnimacion = ReglaBloqueoAnimacion.DebeBloquear(estadoBloquea, segundosBloqueado);
+            return BloqueadoPorAnimacion;
+        }
+
         private void Awake()
         {
             controlador = GetComponent<CharacterController>();
@@ -262,12 +286,13 @@ namespace MechaCyberpunk.Personaje.Movimiento
                 return;
             }
 
-            Vector2 entrada = mover.action.ReadValue<Vector2>();
-            bool quiereCorrer = correr.action.IsPressed() && !apuntando;
+            bool bloqueadoAnim = ActualizarBloqueoAnimacion(dt);
+            Vector2 entrada = bloqueadoAnim ? Vector2.zero : mover.action.ReadValue<Vector2>();
+            bool quiereCorrer = correr.action.IsPressed() && !apuntando && !bloqueadoAnim;
             Vector2 velocidad = movimiento.ActualizarHorizontal(entrada, quiereCorrer,
                 enPiso, dt, datos.VelocidadCaminar * (Habilidades != null ? Habilidades.FactorCaminar : 1f),
                 EfectosAPie.VelocidadCorrer(datos, implantes.Efectos) * (Habilidades != null ? Habilidades.FactorCorrer : 1f), config.AceleracionPiso, config.FrenadoPiso, config.ControlAire);
-            bool quiereSaltar = !SaltoBloqueado && saltar.action.WasPressedThisFrame();
+            bool quiereSaltar = !SaltoBloqueado && !bloqueadoAnim && saltar.action.WasPressedThisFrame();
             float vertical = movimiento.ActualizarVertical(enPiso, quiereSaltar, dt,
                 EfectosAPie.AlturaSalto(datos, implantes.Efectos) * (Habilidades != null ? Habilidades.FactorSalto : 1f), config.Gravedad);
             if (enPiso && quiereSaltar && vertical > 0f)
@@ -280,7 +305,10 @@ namespace MechaCyberpunk.Personaje.Movimiento
             Vector3 horizontal = marco * new Vector3(velocidad.x, 0f, velocidad.y);
             horizontal = horizontal * FactorVelocidad * FactorExtraVelocidad + DesplazamientoExterno + impulso;
             impulso = Vector3.MoveTowards(impulso, Vector3.zero, config.FrenadoPiso * config.ControlAire * dt);
-            GirarCuerpo(dt, horizontal);
+            if (!bloqueadoAnim)
+            {
+                GirarCuerpo(dt, horizontal);
+            }
             bool estabaEnPiso = enPiso;
             controlador.Move(horizontal * dt + Vector3.up * vertical);
             enPiso = controlador.isGrounded;
