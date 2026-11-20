@@ -504,6 +504,10 @@ namespace MechaCyberpunk.Trafico.Calle
                 // T-714: frena suave al acercarse al último nodo (no se clava de golpe).
                 velocidad = Mathf.Min(velocidad, Mathf.Max(FrenadoMinimoRefuerzo, MetrosPorRecorrer * FactorFrenadoRefuerzo));
             }
+            if (!EnRefuerzo && ReglaCallejon.DebeDarVuelta(Causa, calculo.SegundosBloqueado, calles.Vecinos(nodoDestino).Count, Distancia(eje, calles.Nodo(nodoDestino))))
+            {
+                DarVuelta(); // T-1526: parado contra el muro al final de una calle sin salida: vuelta en U por el carril contrario
+            }
             if (!EnRefuerzo && calculo.SegundosBloqueado > 0f && Causa != "jugador" && Destrabar())
             {
                 return;
@@ -984,7 +988,7 @@ namespace MechaCyberpunk.Trafico.Calle
                 {
                     continue; // T-1526: nunca sale fuera del muro
                 }
-                if (soloFinales && calles.Vecinos(nodo).Count != 1)
+                if (soloFinales && calles.NodosFuera == 0 && calles.Vecinos(nodo).Count != 1) // T-1526: con el muro recortado, los finales no son salidas ocultas: se recicla en cualquier nodo de adentro
                 {
                     continue;
                 }

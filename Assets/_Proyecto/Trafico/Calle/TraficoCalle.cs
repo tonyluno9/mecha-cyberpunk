@@ -271,12 +271,15 @@ namespace MechaCyberpunk.Trafico.Calle
         private float proximoIntentoDeMuro;
         private float proximoBarridoDeMuro;
 
+        // Un valor viejo guardado en la escena (4 m) dejaba los finales de calle pegados al muro: nunca menos que el margen por omisión.
+        private float MargenEfectivo => Mathf.Max(margenAlMuro, AreaMuro.MargenPorOmision);
+
         private void RecortarAlMuro()
         {
             intentosDeMuro++;
             AreaMuro.Definir(areaMuro); // vacío = detectar en esta escena
-            muroAplicado = AreaMuro.Actual(margenAlMuro).HasValue;
-            AreaMuro.Recortar(calles, margenAlMuro);
+            muroAplicado = AreaMuro.Actual(MargenEfectivo).HasValue;
+            AreaMuro.Recortar(calles, MargenEfectivo);
             proximoIntentoDeMuro = Time.time + SegundosEntreIntentosDeMuro;
         }
 

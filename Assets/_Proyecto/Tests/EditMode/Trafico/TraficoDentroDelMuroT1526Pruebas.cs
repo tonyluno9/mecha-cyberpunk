@@ -95,6 +95,45 @@ namespace MechaCyberpunk.Tests.Trafico
                 }
             }
         }
+
+        [Test]
+        public void Callejon_ParadoContraElMuroAlFinalDeLaCalle_DaVuelta()
+        {
+            Assert.IsTrue(ReglaCallejon.DebeDarVuelta("fisico", ReglaCallejon.SegundosParaVuelta, 1, 4f), "parado contra el muro en un nodo sin salida: vuelta en U");
+            Assert.IsFalse(ReglaCallejon.DebeDarVuelta("fisico", 0.5f, 1, 4f), "todavía no esperó lo suficiente");
+            Assert.IsFalse(ReglaCallejon.DebeDarVuelta("fisico", 5f, 3, 4f), "en un cruce no da vuelta: elige otra calle");
+            Assert.IsFalse(ReglaCallejon.DebeDarVuelta("carro CarroTrafico_2", 5f, 1, 4f), "esperar a otro carro no es dar vuelta");
+            Assert.IsFalse(ReglaCallejon.DebeDarVuelta("fisico", 5f, 1, 200f), "lejos del final no da vuelta");
+        }
+
+        [Test]
+        public void Callejon_LosFinalesDeCalleQuedanLejosDelMuro_ParaQueElCarroNoLoToque()
+        {
+            // El muro está a 4 m más allá del área vieja: el final de calle debe quedar a más de un largo de carro del muro.
+            Assert.GreaterOrEqual(AreaMuro.MargenPorOmision, 10f);
+            GrafoCalles grafo = GrafoConAfueras();
+            Rect area = Rect.MinMaxRect(-135f + AreaMuro.MargenPorOmision, -88f + AreaMuro.MargenPorOmision, 135f - AreaMuro.MargenPorOmision, 88f - AreaMuro.MargenPorOmision);
+            grafo.Recortar(area);
+            int finales = 0;
+            for (int i = 0; i < grafo.Cantidad; i++)
+            {
+                if (grafo.Dentro(i) && grafo.Vecinos(i).Count == 1)
+                {
+                    finales++;
+                    Assert.LessOrEqual(Mathf.Abs(grafo.Nodo(i).x), 135f - AreaMuro.MargenPorOmision + 0.01f);
+                    Assert.LessOrEqual(Mathf.Abs(grafo.Nodo(i).z), 88f - AreaMuro.MargenPorOmision + 0.01f);
+                }
+            }
+            Assert.Greater(finales, 0, "hay finales de calle");
+            // Un carro que llega a un final vuelve por donde vino (el único vecino) y nunca se queda sin siguiente nodo.
+            for (int i = 0; i < grafo.Cantidad; i++)
+            {
+                if (grafo.Dentro(i))
+                {
+                    Assert.GreaterOrEqual(grafo.Vecinos(i).Count, 1, "el nodo " + i + " quedó sin salida ni regreso");
+                }
+            }
+        }
         [Test]
         public void Recortar_ConUnAreaQueDejaPocosNodos_NoHaceNada()
         {
