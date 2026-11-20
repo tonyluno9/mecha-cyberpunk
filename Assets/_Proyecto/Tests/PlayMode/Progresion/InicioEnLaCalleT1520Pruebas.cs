@@ -49,10 +49,15 @@ namespace MechaCyberpunk.Tests.Progresion
             Assert.IsNotNull(puerta, "hay aparición Casa_Puerta");
             Vector3 p = inicio.Pose.position;
             Assert.LessOrEqual(Vector3.Distance(p, puerta.Pose.position), 15f, "cerca de donde empezaba la historia");
-            Assert.IsTrue(Physics.Raycast(p + Vector3.up * 2f, Vector3.down, out RaycastHit suelo, 4f, ~0, QueryTriggerInteraction.Ignore), "hay suelo");
-            Assert.Less(Mathf.Abs(suelo.point.y - p.y), 0.5f, "la aparición está sobre el suelo");
-            Assert.IsFalse(Physics.Raycast(p + Vector3.up * 1.8f, Vector3.up, 10f, ~0, QueryTriggerInteraction.Ignore), "sin techo encima (no es un interior)");
-            Assert.IsFalse(Physics.CheckCapsule(p + Vector3.up * 0.5f, p + Vector3.up * 1.6f, 0.4f, ~0, QueryTriggerInteraction.Ignore), "nada dentro del cuerpo");
+            // El jugador ya está parado en la aparición: las cápsulas de personajes (CharacterController) no cuentan como suelo, techo ni estorbo.
+            RaycastHit[] abajo = Physics.RaycastAll(p + Vector3.up * 2f, Vector3.down, 4f, ~0, QueryTriggerInteraction.Ignore)
+                .Where(h => !(h.collider is CharacterController)).OrderBy(h => h.distance).ToArray();
+            Assert.IsTrue(abajo.Length > 0, "hay suelo");
+            Assert.Less(Mathf.Abs(abajo[0].point.y - p.y), 0.5f, "la aparición está sobre el suelo");
+            Assert.IsFalse(Physics.RaycastAll(p + Vector3.up * 1.8f, Vector3.up, 10f, ~0, QueryTriggerInteraction.Ignore).Any(h => !(h.collider is CharacterController)),
+                "sin techo encima (no es un interior)");
+            Assert.IsFalse(Physics.OverlapCapsule(p + Vector3.up * 0.5f, p + Vector3.up * 1.6f, 0.4f, ~0, QueryTriggerInteraction.Ignore).Any(c => !(c is CharacterController)),
+                "nada dentro del cuerpo");
             yield return null;
         }
 

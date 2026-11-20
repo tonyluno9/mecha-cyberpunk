@@ -174,7 +174,7 @@ namespace MechaCyberpunk.Tests.Mecha
         }
 
         [UnityTest]
-        public IEnumerator Manejar_DiezSegundos_SumaVeinteYLaCabinaMuestraNivel1()
+        public IEnumerator Manejar_VeinteSegundos_SumaVeinteYLaCabinaMuestraNivel1()
         {
             yield return CargarCalle();
             yield return Llamar();
@@ -183,10 +183,11 @@ namespace MechaCyberpunk.Tests.Mecha
             Assert.Greater(antes, 0f, "Ir dentro del mecha en la calle ya suma");
 
             Press(teclado.wKey);
-            yield return Esperar(10f);
+            yield return Esperar(20f);
             Release(teclado.wKey);
 
-            Assert.AreEqual(antes + 20f, calor.Valor, 1.5f, "Diez segundos manejando suman 2 por segundo");
+            // T-1528: el calor sube a la mitad; hacen falta 20 s manejando para lo que antes eran 10.
+            Assert.AreEqual(antes + 20f, calor.Valor, 2.5f, "Veinte segundos manejando suman 1 por segundo");
             Assert.GreaterOrEqual(calor.Nivel, 1);
             PantallaCalorCabina pantalla = montaje.GetComponentInChildren<PantallaCalorCabina>(true);
             Assert.IsNotNull(pantalla, "El mecha trae la pantalla de calor");

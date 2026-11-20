@@ -95,6 +95,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
         private float continuaraEn = -1f;
         private float finRevelacion = -1f;
         private bool textosTianguisPendientes;
+        private bool levantandose;
         private int respetoMostrado = -1;
         private bool arrancado;
         private bool cargadoAntes;
@@ -230,6 +231,11 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
             {
                 arma.Tomada -= AlTomarArma;
             }
+            // T-1520: si la escena se descarga a media levantada (salir al menú en los primeros segundos), no se queda la pantalla en negro.
+            if (levantandose && PantallaFundido.Actual != null)
+            {
+                PantallaFundido.Actual.Fijar(0f);
+            }
         }
 
         private IEnumerator Start()
@@ -314,6 +320,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
             {
                 control.ActivarControl(false);
             }
+            levantandose = true;
             visual.Caido = true;
             PantallaFundido fundido = PantallaFundido.Actual;
             if (fundido != null)
@@ -332,6 +339,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
             {
                 control.ActivarControl(true);
             }
+            levantandose = false;
         }
 
         // ---------- Cada cuadro ----------

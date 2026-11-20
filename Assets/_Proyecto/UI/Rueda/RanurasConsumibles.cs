@@ -15,6 +15,21 @@ namespace MechaCyberpunk.UI.Rueda
 
         private static readonly string[] asignados = new string[Cantidad];
 
+        // Lo que quedó en cada ranura la última vez (T-1529): un objeto no se cambia solo de ranura mientras lo lleve.
+        private static readonly string[] ultimos = new string[Cantidad];
+
+        private static bool EraDeOtraRanura(int ranura, string id, IReadOnlyList<string> lleva)
+        {
+            for (int j = 0; j < Cantidad; j++)
+            {
+                if (j != ranura && ultimos[j] == id && Lleva(lleva, id))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         /// <summary>Se avisa al asignar o rotar.</summary>
         public static event System.Action Cambio;
 
@@ -31,6 +46,7 @@ namespace MechaCyberpunk.UI.Rueda
             for (int i = 0; i < Cantidad; i++)
             {
                 asignados[i] = null;
+                ultimos[i] = null;
             }
         }
 
@@ -78,21 +94,18 @@ namespace MechaCyberpunk.UI.Rueda
                 }
                 for (int k = 0; lleva != null && k < lleva.Count; k++)
                 {
-                    if (!Esta(r, lleva[k]))
+                    // T-1529: no se toma lo que estaba en la otra ranura y todavía lleva. Antes, al gastarse la bebida de la ranura 1,
+                    // las papitas de la ranura 2 pasaban solas a la 1 y la tecla C quedaba sin objeto ("no deja usar el segundo consumible").
+                    if (!Esta(r, lleva[k]) && !EraDeOtraRanura(i, lleva[k], lleva))
                     {
                         r[i] = lleva[k];
                         break;
                     }
                 }
             }
-            // T-1529: lo que se llenó solo se queda en su ranura. Antes, al gastarse el objeto de la ranura 1 (la bebida), las papitas de la ranura 2
-            // pasaban solas a la ranura 1 y la tecla C quedaba sin objeto: "no deja usar el segundo consumible".
             for (int i = 0; i < Cantidad; i++)
             {
-                if (r[i] != null)
-                {
-                    asignados[i] = r[i];
-                }
+                ultimos[i] = r[i];
             }
             return r;
         }
