@@ -29,6 +29,9 @@ namespace MechaCyberpunk.Personaje.Movimiento
         private float altura;
         private float distancia;
         private float fov;
+        private float extraFovCorrer;
+        private readonly BalanceoCamara balanceo = new BalanceoCamara();
+        private CinemachineImpulseListener temblor;
         private float lado = 1f;
         private bool iniciada;
         private ZoomSniper zoom;
@@ -121,7 +124,7 @@ namespace MechaCyberpunk.Personaje.Movimiento
             obstaculos.IgnoreTag = EtiquetaJugador;
             obstaculos.CameraRadius = config.RadioColision;
             obstaculos.DampingIntoCollision = 0f;
-            obstaculos.DampingFromCollision = 0.2f;
+            obstaculos.DampingFromCollision = config.RecuperacionColision;
             seguir.AvoidObstacles = obstaculos;
 
             desocluir = objeto.AddComponent<CinemachineDeoccluder>();
@@ -136,10 +139,17 @@ namespace MechaCyberpunk.Personaje.Movimiento
             desocluir.AvoidObstacles.Strategy = CinemachineDeoccluder.ObstacleAvoidance.ResolutionStrategy.PullCameraForward;
             desocluir.AvoidObstacles.MaximumEffort = 4;
             desocluir.AvoidObstacles.SmoothingTime = 0f;
-            desocluir.AvoidObstacles.Damping = 0f;
+            desocluir.AvoidObstacles.Damping = config.RecuperacionColision;
             desocluir.AvoidObstacles.DampingWhenOccluded = 0f;
             desocluir.AvoidObstacles.UseFollowTarget.Enabled = true;
             desocluir.AvoidObstacles.UseFollowTarget.YOffset = 0f;
+
+            // T-1485: contrato común de temblor. Disparo, golpe y daño usan TemblorCamara.Generar (canal TemblorCamara.Canal).
+            temblor = objeto.AddComponent<CinemachineImpulseListener>();
+            temblor.ChannelMask = TemblorCamara.Canal;
+            temblor.Gain = config.GananciaTemblor;
+            temblor.Use2DDistance = false;
+            temblor.UseCameraSpace = true;
 
             objeto.SetActive(true);
         }
@@ -169,6 +179,9 @@ namespace MechaCyberpunk.Personaje.Movimiento
             float objetivoAltura = apuntando ? config.AlturaApuntando : config.AlturaNormal;
             float objetivoDistancia = apuntando ? config.DistanciaApuntando : config.DistanciaNormal;
             float objetivoFov = apuntando ? config.FovApuntando : config.FovNormal;
+            // T-1485: rapidez real del jugador (la que le queda al CharacterController, no la que pide la tecla).
+            float rapidez = controlador.Velocidad.magnitude;
+            float dt = Time.deltaTime;
             if (!iniciada)
             {
                 iniciada = true;
@@ -176,16 +189,25 @@ namespace MechaCyberpunk.Personaje.Movimiento
                 altura = objetivoAltura;
                 distancia = objetivoDistancia;
                 fov = objetivoFov;
+                extraFovCorrer = 0f;
+                balanceo.Reiniciar();
                 lado = 1f;
             }
             else
             {
-                float paso = 1f - Mathf.Exp(-config.Suavizado * Time.deltaTime);
+                float paso = 1f - Mathf.Exp(-config.SuavizadoApuntar * Time.deltaTime);
                 lateral = Mathf.Lerp(lateral, objetivoLateral, paso);
                 altura = Mathf.Lerp(altura, objetivoAltura, paso);
                 distancia = Mathf.Lerp(distancia, objetivoDistancia, paso);
                 fov = Mathf.Lerp(fov, objetivoFov, paso);
             }
+
+            float factorCorrer = apuntando || !controlador.EnPiso ? 0f
+                : LogicaCamaraAPie.FactorVelocidad(rapidez, config.VelocidadInicioFovCorrer, config.VelocidadFinFovCorrer);
+            extraFovCorrer = LogicaCamaraAPie.Suavizar(extraFovCorrer, config.FovExtraCorrer * factorCorrer, config.SuavizadoFov, dt);
+            bool balanceoActivo = !apuntando && controlador.EnPiso && (zoom == null || zoom.Mezcla < 0.01f);
+            balanceo.Actualizar(rapidez, config.BalanceoVelocidadReferencia, balanceoActivo, config.BalanceoCiclosPorMetro,
+                config.BalanceoVertical, config.BalanceoLateral, config.BalanceoSuavizado, dt);
 
             if (sensacion == null)
             {
@@ -202,16 +224,20 @@ namespace MechaCyberpunk.Personaje.Movimiento
             float brazo = Mathf.Max(0f, total - pivoteLibre);
 
             punto.SetPositionAndRotation(controlador.transform.position + Vector3.up * pivoteLibre, giro);
+            Vector3 posicionBase = punto.position;
 
             // T-1001: si el hombro derecho choca con una pared, la cámara pasa al izquierdo (y vuelve cuando hay sitio).
-            float objetivoLado = HombroDerechoLibre(punto.position, giro * Vector3.right, lateral) ? 1f : 0f;
+            float objetivoLado = HombroDerechoLibre(posicionBase, giro * Vector3.right, lateral) ? 1f : 0f;
             lado = Mathf.MoveTowards(lado, objetivoLado, config.RapidezCambioHombro * Time.deltaTime);
             seguir.CameraSide = Mathf.SmoothStep(0f, 1f, lado);
-            seguir.ShoulderOffset = new Vector3(lateral, 0f, 0f);
+            // T-1485: el balanceo se suma después de las colisiones: no las engaña ni las dispara.
+            punto.position = posicionBase + Vector3.up * balanceo.Vertical;
+            seguir.ShoulderOffset = new Vector3(lateral + balanceo.Lateral, 0f, 0f);
             seguir.VerticalArmLength = brazo;
             seguir.CameraDistance = distancia * (1f - config.AcercarMirandoAbajo * Mathf.Clamp01(controlador.Inclinacion / 30f));
             LensSettings lente = vcam.Lens;
-            lente.FieldOfView = zoom != null ? Mathf.Lerp(fov, config.FovSniper, zoom.Mezcla) : fov;
+            float fovTotal = fov + extraFovCorrer;
+            lente.FieldOfView = zoom != null ? Mathf.Lerp(fovTotal, config.FovSniper, zoom.Mezcla) : fovTotal;
             vcam.Lens = lente;
 
             if (!brain.enabled)

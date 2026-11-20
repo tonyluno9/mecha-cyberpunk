@@ -60,6 +60,44 @@ namespace MechaCyberpunk.Personaje
         [Tooltip("Segundos que el cuerpo mira hacia donde dispara sin estar apuntando (s).")]
         [Min(0f)] [SerializeField] private float segundosGiroAlDisparar = 0.6f;
 
+        [Header("Pulido (T-1485)")]
+        [Tooltip("FOV extra al correr (°). Se suma al FOV normal; apuntando no se aplica.")]
+        [Range(0f, 15f)] [SerializeField] private float fovExtraCorrer = 7f;
+        [Tooltip("Rapidez del jugador (m/s) a la que empieza a abrirse el FOV.")]
+        [Min(0f)] [SerializeField] private float velocidadInicioFovCorrer = 5f;
+        [Tooltip("Rapidez del jugador (m/s) a la que el FOV extra está completo (la de correr).")]
+        [Min(0.1f)] [SerializeField] private float velocidadFinFovCorrer = 7.5f;
+        [Tooltip("Rapidez del suavizado del FOV al correr o dejar de correr (1/s). Menor = más lento.")]
+        [Min(0.1f)] [SerializeField] private float suavizadoFov = 5f;
+        [Tooltip("Rapidez del suavizado al entrar o salir de apuntar (1/s): mueve hombro, distancia y FOV. Menor = más lento.")]
+        [Min(0.1f)] [SerializeField] private float suavizadoApuntar = 10f;
+        [Tooltip("Balanceo: subida y bajada máxima de la cámara al correr (m).")]
+        [Min(0f)] [SerializeField] private float balanceoVertical = 0.035f;
+        [Tooltip("Balanceo: vaivén lateral máximo al correr (m).")]
+        [Min(0f)] [SerializeField] private float balanceoLateral = 0.02f;
+        [Tooltip("Balanceo: pasos completos (dos pasos) por metro recorrido (ciclos/m).")]
+        [Min(0.01f)] [SerializeField] private float balanceoCiclosPorMetro = 0.25f;
+        [Tooltip("Balanceo: rapidez de la velocidad (m/s) con la que alcanza su amplitud completa (la de correr).")]
+        [Min(0.1f)] [SerializeField] private float balanceoVelocidadReferencia = 7.5f;
+        [Tooltip("Balanceo: rapidez con la que aparece o desaparece (1/s). Quieto o apuntando baja a 0.")]
+        [Min(0.1f)] [SerializeField] private float balanceoSuavizado = 6f;
+        [Tooltip("Colisión: rapidez con la que la cámara recupera su distancia tras quedar pegada a un muro (s de amortiguado). Mayor = más lenta.")]
+        [Min(0f)] [SerializeField] private float recuperacionColision = 0.35f;
+        [Tooltip("Temblor (impulsos de Cinemachine): ganancia del listener de la cámara. Multiplica la fuerza de TemblorCamara.Generar.")]
+        [Min(0f)] [SerializeField] private float gananciaTemblor = 1f;
+
+        public float FovExtraCorrer => fovExtraCorrer;
+        public float VelocidadInicioFovCorrer => velocidadInicioFovCorrer;
+        public float VelocidadFinFovCorrer => velocidadFinFovCorrer;
+        public float SuavizadoFov => suavizadoFov;
+        public float SuavizadoApuntar => suavizadoApuntar;
+        public float BalanceoVertical => balanceoVertical;
+        public float BalanceoLateral => balanceoLateral;
+        public float BalanceoCiclosPorMetro => balanceoCiclosPorMetro;
+        public float BalanceoVelocidadReferencia => balanceoVelocidadReferencia;
+        public float BalanceoSuavizado => balanceoSuavizado;
+        public float RecuperacionColision => recuperacionColision;
+        public float GananciaTemblor => gananciaTemblor;
         public float LateralNormal => lateralNormal;
         public float AlturaNormal => alturaNormal;
         public float DistanciaNormal => distanciaNormal;
