@@ -75,7 +75,7 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
         /// </summary>
         public static string CarpetaDe(string nombre)
         {
-            Match m = Regex.Match(nombre, @"^((?:E|NP)\d\d_[A-Za-z]+)_(?:a_2|a|b)$");
+            Match m = Regex.Match(nombre, @"^((?:E|NP)\d\d_[A-Za-z]+)_(?:a_2|a|b|esc)$");
             return Carpeta + "/" + (m.Success ? m.Groups[1].Value : nombre);
         }
 

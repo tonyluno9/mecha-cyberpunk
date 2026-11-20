@@ -15,6 +15,7 @@ namespace MechaCyberpunk.Personaje.Visual
         private AnimationClipPlayable playable;
         private AnimationClip clip;
         private bool vivo;
+        private bool bucle;
         private bool rootMotionPrevio;
 
         /// <summary>True mientras el clip se está jugando.</summary>
@@ -23,11 +24,14 @@ namespace MechaCyberpunk.Personaje.Visual
         /// <summary>El clip que se juega (null si no hay).</summary>
         public AnimationClip ClipActual => vivo ? clip : null;
 
+        /// <summary>T-1516: true si el clip se repite hasta que alguien lo detenga.</summary>
+        public bool Repite => vivo && bucle;
+
         /// <summary>Segundos que lleva jugando el clip.</summary>
         public float Tiempo => vivo && playable.IsValid() ? (float)playable.GetTime() : 0f;
 
         /// <summary>Empieza a jugar <paramref name="nuevo"/> con rapidez <paramref name="rapidez"/> (1 = normal). Devuelve false si no hay Animator o clip.</summary>
-        public bool Reproducir(Animator sobre, AnimationClip nuevo, float rapidez = 1f)
+        public bool Reproducir(Animator sobre, AnimationClip nuevo, float rapidez = 1f, bool repetir = false)
         {
             if (sobre == null || nuevo == null)
             {
@@ -40,6 +44,7 @@ namespace MechaCyberpunk.Personaje.Visual
             playable = AnimationPlayableUtilities.PlayClip(animador, nuevo, out grafo);
             playable.SetSpeed(Mathf.Max(0.01f, rapidez));
             clip = nuevo;
+            bucle = repetir;
             vivo = true;
             return true;
         }
@@ -65,9 +70,24 @@ namespace MechaCyberpunk.Personaje.Visual
 
         private void Update()
         {
-            if (vivo && (!playable.IsValid() || playable.GetTime() >= clip.length))
+            if (!vivo)
+            {
+                return;
+            }
+            if (!playable.IsValid())
             {
                 Detener();
+            }
+            else if (playable.GetTime() >= clip.length)
+            {
+                if (bucle)
+                {
+                    playable.SetTime(playable.GetTime() % clip.length);
+                }
+                else
+                {
+                    Detener();
+                }
             }
         }
 

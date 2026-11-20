@@ -147,6 +147,12 @@ namespace MechaCyberpunk.Trafico.Peatones
 
         private void IniciarHuida(Vector3 origen)
         {
+            DejarDePlaticar();
+            if (agachadoRestante > 0f)
+            {
+                agachadoRestante = 0f;
+                SendMessage(MensajeLevantar, SendMessageOptions.DontRequireReceiver);
+            }
             origenDelRuido = origen;
             huidaRestante = config.SegundosHuida;
             sentidoDecidido = false;
@@ -166,6 +172,8 @@ namespace MechaCyberpunk.Trafico.Peatones
                 return;
             }
             Muerto = true;
+            platicando = false;
+            agachadoRestante = 0f;
             Calmar();
             segundosMuerto = 0f;
             if (capsula != null)
@@ -199,6 +207,108 @@ namespace MechaCyberpunk.Trafico.Peatones
         public const string MensajeRevivir = "AlRevivirCivil";
         /// <summary>T-1506: empieza a huir (el puente juega NPC_Asustarse una vez).</summary>
         public const string MensajeAsustado = "AlAsustarCivil";
+        /// <summary>T-1516: se agacha cubriéndose la cabeza (el puente juega NPC_Agachado_CubriendoCabeza en bucle) y se levanta.</summary>
+        public const string MensajeAgachar = "AlAgacharCivil";
+        public const string MensajeLevantar = "AlLevantarseCivil";
+        /// <summary>T-1516: platica (parámetro: 0 o 1, qué clip de plática) y deja de platicar. Se repite cada <see cref="SegundosEntreAvisos"/> s mientras dura.</summary>
+        public const string MensajePlaticar = "AlPlaticarCivil";
+        public const string MensajeDejarPlaticar = "AlDejarPlaticarCivil";
+        public const float SegundosEntreAvisos = 1f;
+        private const float ProbabilidadHuirTrasAgacharse = 0.5f;
+
+        private System.Random azarReaccion;
+        private float agachadoRestante;
+        private Vector3 origenAgachado;
+        private float proximoAviso;
+        private bool platicando;
+        private int variantePlatica;
+        private Vector3 lugarPlatica;
+        private Vector3 desvioPlatica;
+
+        /// <summary>T-1516: true mientras está agachado por haber oído un disparo.</summary>
+        public bool Agachado => agachadoRestante > 0f;
+
+        /// <summary>T-1516: true mientras se queda platicando en su corro.</summary>
+        public bool Platicando => platicando;
+
+        /// <summary>T-1516: la plática que le toca (0 o 1).</summary>
+        public int VariantePlatica => variantePlatica;
+
+        /// <summary>
+        /// T-1516: lo deja platicando en un corro de <paramref name="tamano"/> personas como el miembro <paramref name="miembro"/>: se queda quieto en su
+        /// lugar del corro (<see cref="ReglaPlatica.Lugar"/>) mirando al centro. Un disparo o un golpe lo sacan de ahí y se comporta como los demás.
+        /// </summary>
+        public void Platicar(int miembro, int tamano)
+        {
+            platicando = true;
+            variantePlatica = miembro % 2;
+            lugarPlatica = ReglaPlatica.Lugar(miembro, tamano);
+            desvioPlatica = lugarPlatica;
+            Colocar();
+        }
+
+        private void DejarDePlaticar()
+        {
+            if (!platicando)
+            {
+                return;
+            }
+            platicando = false;
+            SendMessage(MensajeDejarPlaticar, SendMessageOptions.DontRequireReceiver);
+        }
+
+        /// <summary>T-1516: se agacha <see cref="ConfigPeatones.SegundosAgachado"/> s y luego huye o sigue su camino.</summary>
+        public void Agacharse(Vector3 origen)
+        {
+            if (Muerto || config == null)
+            {
+                return;
+            }
+            DejarDePlaticar();
+            origenAgachado = origen;
+            agachadoRestante = config.SegundosAgachado;
+            proximoAviso = 0f;
+            SendMessage(MensajeAgachar, SendMessageOptions.DontRequireReceiver);
+        }
+
+        private void AtenderAgachado()
+        {
+            Detenido = true;
+            agachadoRestante -= Time.deltaTime;
+            if (agachadoRestante > 0f)
+            {
+                proximoAviso -= Time.deltaTime;
+                if (proximoAviso <= 0f)
+                {
+                    proximoAviso = SegundosEntreAvisos;
+                    SendMessage(MensajeAgachar, SendMessageOptions.DontRequireReceiver);
+                }
+                return;
+            }
+            agachadoRestante = 0f;
+            SendMessage(MensajeLevantar, SendMessageOptions.DontRequireReceiver);
+            if (azarReaccion != null && azarReaccion.NextDouble() < ProbabilidadHuirTrasAgacharse)
+            {
+                IniciarHuida(origenAgachado);
+            }
+            else
+            {
+                Calmar();
+            }
+        }
+
+        private void AtenderPlatica()
+        {
+            Detenido = true;
+            Vector3 haciaElCentro = -lugarPlatica;
+            Mirar(transform.parent != null ? transform.parent.TransformDirection(haciaElCentro) : haciaElCentro);
+            proximoAviso -= Time.deltaTime;
+            if (proximoAviso <= 0f)
+            {
+                proximoAviso = SegundosEntreAvisos;
+                SendMessage(MensajePlaticar, variantePlatica, SendMessageOptions.DontRequireReceiver);
+            }
+        }
         public const string ParametroCaer = "KO"; // ReglasVisual.Caer: el parámetro Bool que tumba al personaje
 
         /// <summary>True si algún Animator del peatón tiene el parámetro de caer, "KO" (controlador base o propio, con clip de muerte).</summary>
@@ -241,6 +351,7 @@ namespace MechaCyberpunk.Trafico.Peatones
                 return;
             }
             Muerto = false;
+            desvioPlatica = Vector3.zero;
             visuales = GetComponentsInChildren<Renderer>(true); // T-1409: el visual por zona se crea después del Awake
             vida = config != null ? config.VidaPeaton : vida;
             if (capsula != null)
@@ -272,6 +383,7 @@ namespace MechaCyberpunk.Trafico.Peatones
         public void Preparar(Vector3[] ruta, ConfigPeatones numeros, System.Random azar, Func<Vector3?> dondeEstaElJugador, float segundosPrevios)
         {
             puntos = ruta;
+            azarReaccion = azar;
             config = numeros;
             posicionJugador = dondeEstaElJugador;
             calculo = numeros.Crear(RutasBanqueta.Largos(ruta), azar);
@@ -311,6 +423,18 @@ namespace MechaCyberpunk.Trafico.Peatones
             {
                 return; // T-1305: pelea y no hace caso del ruido
             }
+            if (agachadoRestante > 0f)
+            {
+                agachadoRestante = config.SegundosAgachado; // otro tiro: sigue agachado
+                origenAgachado = posicion;
+                return;
+            }
+            // T-1516: una parte de los civiles se agacha cubriéndose antes de huir (si ya corría, sigue corriendo).
+            if (huidaRestante <= 0f && azarReaccion != null && config.ProbabilidadAgacharse > 0f && azarReaccion.NextDouble() < config.ProbabilidadAgacharse)
+            {
+                Agacharse(posicion);
+                return;
+            }
             IniciarHuida(posicion);
         }
 
@@ -343,6 +467,11 @@ namespace MechaCyberpunk.Trafico.Peatones
                 AtenderRevancha();
                 return;
             }
+            if (agachadoRestante > 0f)
+            {
+                AtenderAgachado();
+                return;
+            }
             bool huyendo = huidaRestante > 0f;
             if (huyendo)
             {
@@ -358,6 +487,11 @@ namespace MechaCyberpunk.Trafico.Peatones
             {
                 Detenido = true;
                 Mirar(jugador.Value - transform.position);
+                return;
+            }
+            if (platicando && !huyendo)
+            {
+                AtenderPlatica();
                 return;
             }
             Detenido = false;
@@ -488,7 +622,8 @@ namespace MechaCyberpunk.Trafico.Peatones
                 derecha.y = 0f;
                 desvio = Vector3.MoveTowards(desvio, derecha.normalized * DesvioLateral, VelocidadDesvio * Time.deltaTime);
             }
-            transform.localPosition = posRuta + desvio;
+            desvioPlatica = Vector3.MoveTowards(desvioPlatica, platicando ? lugarPlatica : Vector3.zero, VelocidadDesvio * Time.deltaTime);
+            transform.localPosition = posRuta + desvio + desvioPlatica;
         }
 
         private void Mirar(Vector3 direccion)
