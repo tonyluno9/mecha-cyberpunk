@@ -178,4 +178,4 @@ leído en Play) o solo con pruebas, y así lo digo. Lo de "Le gustó" no se toc�
 8. Visor con drones. Tiendita de la calle del Doc. Bebida y luego papitas con C. Brazo láser y tu vida máxima.
 
 ## Builds
-Ver al final de `docs/progreso-20nov-B.md`.
+`Builds/Demo/CyberCity.exe` (Demo, con DEMO_FINAL) y `Builds/Juego/CyberCity.exe`, hechos en la carpeta principal desde `main` 4935d4d, uno por uno: los dos "Build Finished, Result: Success". **No los abrí para jugar**: lo comprobado en juego fue en el editor (Play), no en el .exe.
