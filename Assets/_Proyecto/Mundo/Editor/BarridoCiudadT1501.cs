@@ -40,6 +40,8 @@ namespace MechaCyberpunk.Mundo.Editor
         public const float MaximoFlotante = 1f;
         public const float MaximoHundido = 2f;
         public const float ExtensionMaximaUnidad = 30f;
+        /// <summary>Un prop suelto (el único que Arreglar toca) mide como mucho esto (m) de ancho y de alto; más grande es estructura y se revisa.</summary>
+        public const float TamanoMaximoProp = 6f;
         private const float EscalaMinima = 0.01f;
         private const float EscalaMaxima = 400f;
 
@@ -53,7 +55,9 @@ namespace MechaCyberpunk.Mundo.Editor
 
         private static readonly string[] NombresRuedas = { "Rueda_DI", "Rueda_DD", "Rueda_TI", "Rueda_TD" };
         private static readonly Regex NombreCalle = new Regex("asfalto|calle(?!jon)|banqueta|acera|calzada|pavimento|cruce|camell|road|street|sidewalk", RegexOptions.IgnoreCase);
-        private static readonly Regex NombreNoCalle = new Regex("marca|raya|linea|línea|charco|letrero|poste|luz", RegexOptions.IgnoreCase);
+        private static readonly Regex NombreNoCalle = new Regex("marca|raya|linea|línea|charco|letrero|poste|luz|cable", RegexOptions.IgnoreCase);
+        private static readonly Regex NombrePiso = new Regex("piso|calle|asfalto|banqueta|arroyo|losa|puente|callej|rampa|acera|autopista|camell|salida_|cruzada|suelo|pasto|terreno", RegexOptions.IgnoreCase);
+        private static readonly Regex NombreEstructura = new Regex("fachada|kit_|edificio|frente|casas|fondo|mercado|gta_t|^c_|mecha|muro|pared|barrio|bloque|local", RegexOptions.IgnoreCase);
         private static readonly Regex NombreBanqueta = new Regex("banqueta|acera|sidewalk", RegexOptions.IgnoreCase);
 
         private static HashSet<Transform> carrosActuales = new HashSet<Transform>();
@@ -71,6 +75,10 @@ namespace MechaCyberpunk.Mundo.Editor
             public Transform Objeto;
             public Renderer Renderer;
             public float AjusteY;
+            /// <summary>True si es seguro arreglarlo solo (prop suelto o carro con suspensión); false = a revisar a mano.</summary>
+            public bool Arreglable;
+            /// <summary>Por qué es "a revisar" o qué piso se encontró debajo.</summary>
+            public string Detalle;
         }
 
         [MenuItem("Mecha Cyberpunk/T-1501 Diagnóstico de la ciudad")]
@@ -90,7 +98,7 @@ namespace MechaCyberpunk.Mundo.Editor
             StringBuilder movidos = new StringBuilder();
             int cambios = 0;
 
-            foreach (Hallazgo h in antes.Where(x => x.Tipo <= Tipo.CarroHundido))
+            foreach (Hallazgo h in antes.Where(x => x.Tipo <= Tipo.CarroHundido && x.Arreglable))
             {
                 if (h.Objeto == null)
                 {
@@ -183,6 +191,7 @@ namespace MechaCyberpunk.Mundo.Editor
         private static void AnalizarCarro(Transform carro, List<Hallazgo> res)
         {
             float? minGap = null;
+            Collider pisoMin = null;
             foreach (string nombreRueda in NombresRuedas)
             {
                 Transform rueda = carro.Find(nombreRueda);
@@ -200,24 +209,36 @@ namespace MechaCyberpunk.Mundo.Editor
                 {
                     b.Encapsulate(r.bounds);
                 }
-                float? gap = HuecoBajoPunto(new Vector3(b.center.x, b.min.y, b.center.z), carro);
-                if (gap.HasValue)
+                float? gap = HuecoBajoPunto(new Vector3(b.center.x, b.min.y, b.center.z), carro, out Collider piso);
+                if (gap.HasValue && (!minGap.HasValue || gap.Value < minGap.Value))
                 {
-                    minGap = minGap.HasValue ? Mathf.Min(minGap.Value, gap.Value) : gap.Value;
+                    minGap = gap.Value;
+                    pisoMin = piso;
                 }
             }
             if (!minGap.HasValue)
             {
                 return;
             }
+            // Solo los carros con suspensión (CarroViejo: el que se maneja o se roba) se arreglan solos: su suspensión se asienta con la llanta en el
+            // piso. Los de adorno (sin CarroViejo), como los de la autopista elevada, se dejan a revisar (puede faltar un collider de losa).
+            bool conSuspension = carro.GetComponent("CarroViejo") != null;
+            string donde = pisoMin != null ? "piso: " + Ruta(pisoMin.transform) + (conSuspension ? "" : " (carro de adorno)") : "";
+            Hallazgo h = null;
             if (minGap.Value > Tolerancia && minGap.Value <= MaximoFlotante)
             {
-                res.Add(NuevoHallazgo(Tipo.CarroFlotante, carro, minGap.Value, -minGap.Value));
+                h = NuevoHallazgo(Tipo.CarroFlotante, carro, minGap.Value, -minGap.Value);
             }
             else if (minGap.Value < -Tolerancia && minGap.Value >= -MaximoHundido)
             {
                 // Se sube lo justo para que la llanta más hundida toque el piso.
-                res.Add(NuevoHallazgo(Tipo.CarroHundido, carro, -minGap.Value, -minGap.Value));
+                h = NuevoHallazgo(Tipo.CarroHundido, carro, -minGap.Value, -minGap.Value);
+            }
+            if (h != null)
+            {
+                h.Arreglable = conSuspension;
+                h.Detalle = donde;
+                res.Add(h);
             }
         }
 
@@ -268,14 +289,25 @@ namespace MechaCyberpunk.Mundo.Editor
                     new Vector3(c.x, baseY, c.z), new Vector3(c.x + ix, baseY, c.z + iz), new Vector3(c.x - ix, baseY, c.z + iz),
                     new Vector3(c.x + ix, baseY, c.z - iz), new Vector3(c.x - ix, baseY, c.z - iz)
                 };
+                // Pisos, calles, banquetas, losas, puentes y cualquier cosa plana y grande (alto < 0.5 m, ancho > 4 m) son piso sobre piso: nunca
+                // cuentan como flotantes ni hundidos (de ellos solo se revisa el material).
+                if (NombrePiso.IsMatch(u.name) || (b.size.y < 0.5f && Mathf.Max(b.size.x, b.size.z) > 4f))
+                {
+                    continue;
+                }
                 float? min = null;
                 float? max = null;
+                Collider pisoMin = null;
                 foreach (Vector3 p in puntos)
                 {
-                    float? gap = HuecoBajoPunto(p, u);
+                    float? gap = HuecoBajoPunto(p, u, out Collider piso);
                     if (gap.HasValue)
                     {
-                        min = min.HasValue ? Mathf.Min(min.Value, gap.Value) : gap.Value;
+                        if (!min.HasValue || gap.Value < min.Value)
+                        {
+                            min = gap.Value;
+                            pisoMin = piso;
+                        }
                         max = max.HasValue ? Mathf.Max(max.Value, gap.Value) : gap.Value;
                     }
                 }
@@ -283,13 +315,25 @@ namespace MechaCyberpunk.Mundo.Editor
                 {
                     continue;
                 }
+                // Solo un prop suelto se arregla solo. Fachadas, edificios, kits, charcos y todo lo grande o alto quedan a revisar: pueden estar
+                // pegados a una pared sobre una banqueta más alta que el piso que ve el rayo.
+                bool prop = !NombreEstructura.IsMatch(u.name) && !u.name.ToLowerInvariant().Contains("charco")
+                    && Mathf.Max(b.size.x, b.size.z) <= TamanoMaximoProp && b.size.y <= TamanoMaximoProp;
+                string donde = pisoMin != null ? "piso: " + Ruta(pisoMin.transform) + " | tamaño " + b.size.x.ToString("F1") + "x" + b.size.y.ToString("F1") + "x" + b.size.z.ToString("F1") : "";
+                Hallazgo h = null;
                 if (min.Value > Tolerancia && min.Value <= MaximoFlotante)
                 {
-                    res.Add(NuevoHallazgo(Tipo.Flotante, u, min.Value, -min.Value));
+                    h = NuevoHallazgo(Tipo.Flotante, u, min.Value, -min.Value);
                 }
                 else if (max.Value < -Tolerancia && max.Value >= -MaximoHundido)
                 {
-                    res.Add(NuevoHallazgo(Tipo.Hundido, u, -max.Value, -max.Value));
+                    h = NuevoHallazgo(Tipo.Hundido, u, -max.Value, -max.Value);
+                }
+                if (h != null)
+                {
+                    h.Arreglable = prop;
+                    h.Detalle = donde;
+                    res.Add(h);
                 }
             }
         }
@@ -355,8 +399,9 @@ namespace MechaCyberpunk.Mundo.Editor
         /// Distancia del punto al piso que tiene debajo (positivo: está arriba; negativo: está hundido), ignorando los colliders de
         /// <paramref name="propio"/>. Null si no hay nada. Primero cae desde 0.5 m sobre el punto; si no encuentra nada sale de más arriba (3 m).
         /// </summary>
-        private static float? HuecoBajoPunto(Vector3 punto, Transform propio)
+        private static float? HuecoBajoPunto(Vector3 punto, Transform propio, out Collider piso)
         {
+            piso = null;
             foreach (float subida in new[] { 0.5f, 3f })
             {
                 RaycastHit[] hits = Physics.RaycastAll(punto + Vector3.up * subida, Vector3.down, 200f, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore);
@@ -367,6 +412,7 @@ namespace MechaCyberpunk.Mundo.Editor
                     {
                         continue;
                     }
+                    piso = h.collider;
                     return punto.y - h.point.y;
                 }
             }
@@ -522,14 +568,15 @@ namespace MechaCyberpunk.Mundo.Editor
                 sb.AppendLine(movidos.Length == 0 ? "(nada)" : movidos);
                 sb.AppendLine("== Lo que queda después de arreglar ==");
             }
-            sb.AppendLine("Total: " + restantes.Count);
+            sb.AppendLine("Total: " + restantes.Count + " (ARREGLAR " + restantes.Count(h => h.Tipo <= Tipo.CarroHundido && h.Arreglable) + ", REVISAR " + restantes.Count(h => h.Tipo <= Tipo.CarroHundido && !h.Arreglable) + ", CALLE " + restantes.Count(h => h.Tipo > Tipo.CarroHundido) + ")");
             foreach (IGrouping<string, Hallazgo> barrio in restantes.GroupBy(h => h.Barrio).OrderBy(g => g.Key))
             {
                 sb.AppendLine();
                 sb.AppendLine("== " + barrio.Key + " (" + barrio.Count() + ") ==");
-                foreach (Hallazgo h in barrio.OrderBy(x => x.Tipo))
+                foreach (Hallazgo h in barrio.OrderBy(x => !x.Arreglable && x.Tipo <= Tipo.CarroHundido).ThenBy(x => x.Tipo))
                 {
-                    sb.AppendLine(h.Tipo + "\t" + h.Nombre + "\t" + h.Medida.ToString("F3") + "\t" + h.Ruta);
+                    string categoria = h.Tipo <= Tipo.CarroHundido ? (h.Arreglable ? "ARREGLAR" : "REVISAR") : "CALLE";
+                    sb.AppendLine(categoria + "\t" + h.Tipo + "\t" + h.Nombre + "\t" + h.Medida.ToString("F3") + "\t" + h.Ruta + (string.IsNullOrEmpty(h.Detalle) ? "" : "\t" + h.Detalle));
                 }
             }
             Directory.CreateDirectory(Path.GetDirectoryName(ruta));
