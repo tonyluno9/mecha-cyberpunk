@@ -1,0 +1,2825 @@
+{
+ "AL10": {
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Personajes\\AL10\\AL10.fbx",
+  "gs": 1.844,
+  "acts": [],
+  "objs": [
+   [
+    "Armature",
+    "ARMATURE"
+   ],
+   [
+    "tripo_node_3c2e1c78",
+    "MESH"
+   ]
+  ],
+  "alto": 1.796,
+  "ancho": 1.819,
+  "fondo": 0.42,
+  "zmin": -0.0,
+  "cx": 0.0,
+  "cy": 0.0,
+  "arm": "Armature",
+  "huesos": 52,
+  "falta_hum": [],
+  "hmap": {
+   "Hips": "mixamorig:Hips",
+   "Spine": "mixamorig:Spine",
+   "Chest": "mixamorig:Spine1",
+   "Neck": "mixamorig:Neck",
+   "Head": "mixamorig:Head",
+   "LUpperArm": "mixamorig:LeftArm",
+   "LLowerArm": "mixamorig:LeftForeArm",
+   "LHand": "mixamorig:LeftHand",
+   "RUpperArm": "mixamorig:RightArm",
+   "RLowerArm": "mixamorig:RightForeArm",
+   "RHand": "mixamorig:RightHand",
+   "LUpperLeg": "mixamorig:LeftUpLeg",
+   "LLowerLeg": "mixamorig:LeftLeg",
+   "LFoot": "mixamorig:LeftFoot",
+   "RUpperLeg": "mixamorig:RightUpLeg",
+   "RLowerLeg": "mixamorig:RightLeg",
+   "RFoot": "mixamorig:RightFoot",
+   "LToe": "mixamorig:LeftToeBase",
+   "RToe": "mixamorig:RightToeBase"
+  },
+  "arm_rot": [
+   -0.0,
+   0.0,
+   0.0
+  ],
+  "arm_scale": [
+   1.844,
+   1.844,
+   1.844
+  ],
+  "mallas": {
+   "tripo_node_3c2e1c78": {
+    "v": 9874,
+    "f": 19764,
+    "bordes": 0,
+    "no_manifold": 0,
+    "winding_inv": 0.0,
+    "sin_peso": 0
+   }
+  }
+ },
+ "AL11": {
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Personajes\\AL11\\AL11.fbx",
+  "gs": 1.839,
+  "acts": [],
+  "objs": [
+   [
+    "Armature.001",
+    "ARMATURE"
+   ],
+   [
+    "tripo_node_ccae2817",
+    "MESH"
+   ]
+  ],
+  "alto": 1.798,
+  "ancho": 1.806,
+  "fondo": 0.333,
+  "zmin": -0.0,
+  "cx": 0.0,
+  "cy": 0.0,
+  "arm": "Armature.001",
+  "huesos": 52,
+  "falta_hum": [],
+  "hmap": {
+   "Hips": "mixamorig:Hips",
+   "Spine": "mixamorig:Spine",
+   "Chest": "mixamorig:Spine1",
+   "Neck": "mixamorig:Neck",
+   "Head": "mixamorig:Head",
+   "LUpperArm": "mixamorig:LeftArm",
+   "LLowerArm": "mixamorig:LeftForeArm",
+   "LHand": "mixamorig:LeftHand",
+   "RUpperArm": "mixamorig:RightArm",
+   "RLowerArm": "mixamorig:RightForeArm",
+   "RHand": "mixamorig:RightHand",
+   "LUpperLeg": "mixamorig:LeftUpLeg",
+   "LLowerLeg": "mixamorig:LeftLeg",
+   "LFoot": "mixamorig:LeftFoot",
+   "RUpperLeg": "mixamorig:RightUpLeg",
+   "RLowerLeg": "mixamorig:RightLeg",
+   "RFoot": "mixamorig:RightFoot",
+   "LToe": "mixamorig:LeftToeBase",
+   "RToe": "mixamorig:RightToeBase"
+  },
+  "arm_rot": [
+   -0.0,
+   0.0,
+   0.0
+  ],
+  "arm_scale": [
+   1.839,
+   1.839,
+   1.839
+  ],
+  "mallas": {
+   "tripo_node_ccae2817": {
+    "v": 9514,
+    "f": 19060,
+    "bordes": 0,
+    "no_manifold": 0,
+    "winding_inv": 0.0,
+    "sin_peso": 0
+   }
+  }
+ },
+ "Doctor": {
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Personajes\\Doctor\\Doctor.fbx",
+  "gs": 1.17266,
+  "acts": [],
+  "objs": [
+   [
+    "Armature.002",
+    "ARMATURE"
+   ],
+   [
+    "tripo_node_b1d8beaa",
+    "MESH"
+   ]
+  ],
+  "alto": 1.17,
+  "ancho": 1.172,
+  "fondo": 0.238,
+  "zmin": 0.0,
+  "cx": 0.0,
+  "cy": 0.0,
+  "arm": "Armature.002",
+  "huesos": 58,
+  "falta_hum": [],
+  "hmap": {
+   "Hips": "Hip",
+   "Spine": "Waist",
+   "Chest": "Spine01",
+   "Neck": "NeckTwist01",
+   "Head": "Head",
+   "LUpperArm": "L_Upperarm",
+   "LLowerArm": "L_Forearm",
+   "LHand": "L_Hand",
+   "RUpperArm": "R_Upperarm",
+   "RLowerArm": "R_Forearm",
+   "RHand": "R_Hand",
+   "LUpperLeg": "L_Thigh",
+   "LLowerLeg": "L_Calf",
+   "LFoot": "L_Foot",
+   "RUpperLeg": "R_Thigh",
+   "RLowerLeg": "R_Calf",
+   "RFoot": "R_Foot"
+  },
+  "arm_rot": [
+   -0.0,
+   0.0,
+   0.0
+  ],
+  "arm_scale": [
+   1.1727,
+   1.1727,
+   1.1727
+  ],
+  "mallas": {
+   "tripo_node_b1d8beaa": {
+    "v": 5471,
+    "f": 6228,
+    "bordes": 184,
+    "no_manifold": 184,
+    "winding_inv": 0.0,
+    "sin_peso": 0
+   }
+  }
+ },
+ "E10_PandilleroSnakes": {
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Personajes\\E10_PandilleroSnakes\\E10_PandilleroSnakes.fbx",
+  "gs": 1.65707,
+  "acts": [],
+  "objs": [
+   [
+    "Armature.003",
+    "ARMATURE"
+   ],
+   [
+    "tripo_node_d0b54489",
+    "MESH"
+   ]
+  ],
+  "alto": 1.623,
+  "ancho": 1.627,
+  "fondo": 0.31,
+  "zmin": -0.0,
+  "cx": 0.0,
+  "cy": -0.0,
+  "arm": "Armature.003",
+  "huesos": 52,
+  "falta_hum": [],
+  "hmap": {
+   "Hips": "mixamorig:Hips",
+   "Spine": "mixamorig:Spine",
+   "Chest": "mixamorig:Spine1",
+   "Neck": "mixamorig:Neck",
+   "Head": "mixamorig:Head",
+   "LUpperArm": "mixamorig:LeftArm",
+   "LLowerArm": "mixamorig:LeftForeArm",
+   "LHand": "mixamorig:LeftHand",
+   "RUpperArm": "mixamorig:RightArm",
+   "RLowerArm": "mixamorig:RightForeArm",
+   "RHand": "mixamorig:RightHand",
+   "LUpperLeg": "mixamorig:LeftUpLeg",
+   "LLowerLeg": "mixamorig:LeftLeg",
+   "LFoot": "mixamorig:LeftFoot",
+   "RUpperLeg": "mixamorig:RightUpLeg",
+   "RLowerLeg": "mixamorig:RightLeg",
+   "RFoot": "mixamorig:RightFoot",
+   "LToe": "mixamorig:LeftToeBase",
+   "RToe": "mixamorig:RightToeBase"
+  },
+  "arm_rot": [
+   -0.0,
+   0.0,
+   0.0
+  ],
+  "arm_scale": [
+   1.6571,
+   1.6571,
+   1.6571
+  ],
+  "mallas": {
+   "tripo_node_d0b54489": {
+    "v": 18611,
+    "f": 18609,
+    "bordes": 17,
+    "no_manifold": 17,
+    "winding_inv": 0.0,
+    "sin_peso": 0
+   }
+  }
+ },
+ "E11_JefeSnakes": {
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Personajes\\E11_JefeSnakes\\E11_JefeSnakes.fbx",
+  "gs": 1.85168,
+  "acts": [],
+  "objs": [
+   [
+    "Armature.004",
+    "ARMATURE"
+   ],
+   [
+    "tripo_node_ae7a5050",
+    "MESH"
+   ]
+  ],
+  "alto": 1.781,
+  "ancho": 1.807,
+  "fondo": 0.417,
+  "zmin": 0.0,
+  "cx": 0.0,
+  "cy": 0.0,
+  "arm": "Armature.004",
+  "huesos": 52,
+  "falta_hum": [],
+  "hmap": {
+   "Hips": "mixamorig:Hips",
+   "Spine": "mixamorig:Spine",
+   "Chest": "mixamorig:Spine1",
+   "Neck": "mixamorig:Neck",
+   "Head": "mixamorig:Head",
+   "LUpperArm": "mixamorig:LeftArm",
+   "LLowerArm": "mixamorig:LeftForeArm",
+   "LHand": "mixamorig:LeftHand",
+   "RUpperArm": "mixamorig:RightArm",
+   "RLowerArm": "mixamorig:RightForeArm",
+   "RHand": "mixamorig:RightHand",
+   "LUpperLeg": "mixamorig:LeftUpLeg",
+   "LLowerLeg": "mixamorig:LeftLeg",
+   "LFoot": "mixamorig:LeftFoot",
+   "RUpperLeg": "mixamorig:RightUpLeg",
+   "RLowerLeg": "mixamorig:RightLeg",
+   "RFoot": "mixamorig:RightFoot",
+   "LToe": "mixamorig:LeftToeBase",
+   "RToe": "mixamorig:RightToeBase"
+  },
+  "arm_rot": [
+   -0.0,
+   0.0,
+   0.0
+  ],
+  "arm_scale": [
+   1.8517,
+   1.8517,
+   1.8517
+  ],
+  "mallas": {
+   "tripo_node_ae7a5050": {
+    "v": 19832,
+    "f": 19708,
+    "bordes": 301,
+    "no_manifold": 303,
+    "winding_inv": 0.0,
+    "sin_peso": 0
+   }
+  }
+ },
+ "E12_GuardiaPesadoNova": {
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Personajes\\E12_GuardiaPesadoNova\\E12_GuardiaPesadoNova.fbx",
+  "gs": 1.8921,
+  "acts": [],
+  "objs": [
+   [
+    "Armature.005",
+    "ARMATURE"
+   ],
+   [
+    "tripo_node_4b5e117d",
+    "MESH"
+   ]
+  ],
+  "alto": 1.766,
+  "ancho": 1.854,
+  "fondo": 0.482,
+  "zmin": -0.0,
+  "cx": 0.0,
+  "cy": 0.0,
+  "arm": "Armature.005",
+  "huesos": 52,
+  "falta_hum": [],
+  "hmap": {
+   "Hips": "mixamorig:Hips",
+   "Spine": "mixamorig:Spine",
+   "Chest": "mixamorig:Spine1",
+   "Neck": "mixamorig:Neck",
+   "Head": "mixamorig:Head",
+   "LUpperArm": "mixamorig:LeftArm",
+   "LLowerArm": "mixamorig:LeftForeArm",
+   "LHand": "mixamorig:LeftHand",
+   "RUpperArm": "mixamorig:RightArm",
+   "RLowerArm": "mixamorig:RightForeArm",
+   "RHand": "mixamorig:RightHand",
+   "LUpperLeg": "mixamorig:LeftUpLeg",
+   "LLowerLeg": "mixamorig:LeftLeg",
+   "LFoot": "mixamorig:LeftFoot",
+   "RUpperLeg": "mixamorig:RightUpLeg",
+   "RLowerLeg": "mixamorig:RightLeg",
+   "RFoot": "mixamorig:RightFoot",
+   "LToe": "mixamorig:LeftToeBase",
+   "RToe": "mixamorig:RightToeBase"
+  },
+  "arm_rot": [
+   -0.0,
+   0.0,
+   0.0
+  ],
+  "arm_scale": [
+   1.8921,
+   1.8921,
+   1.8921
+  ],
+  "mallas": {
+   "tripo_node_4b5e117d": {
+    "v": 19485,
+    "f": 19461,
+    "bordes": 92,
+    "no_manifold": 93,
+    "winding_inv": 0.0,
+    "sin_peso": 0
+   }
+  }
+ },
+ "E14_JefeFinalNova": {
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Personajes\\E14_JefeFinalNova\\E14_JefeFinalNova.fbx",
+  "gs": 2.08156,
+  "acts": [],
+  "objs": [
+   [
+    "Armature.006",
+    "ARMATURE"
+   ],
+   [
+    "tripo_node_389e9bcb",
+    "MESH"
+   ]
+  ],
+  "alto": 1.891,
+  "ancho": 2.034,
+  "fondo": 0.721,
+  "zmin": -0.0,
+  "cx": 0.0,
+  "cy": 0.0,
+  "arm": "Armature.006",
+  "huesos": 52,
+  "falta_hum": [],
+  "hmap": {
+   "Hips": "mixamorig:Hips",
+   "Spine": "mixamorig:Spine",
+   "Chest": "mixamorig:Spine1",
+   "Neck": "mixamorig:Neck",
+   "Head": "mixamorig:Head",
+   "LUpperArm": "mixamorig:LeftArm",
+   "LLowerArm": "mixamorig:LeftForeArm",
+   "LHand": "mixamorig:LeftHand",
+   "RUpperArm": "mixamorig:RightArm",
+   "RLowerArm": "mixamorig:RightForeArm",
+   "RHand": "mixamorig:RightHand",
+   "LUpperLeg": "mixamorig:LeftUpLeg",
+   "LLowerLeg": "mixamorig:LeftLeg",
+   "LFoot": "mixamorig:LeftFoot",
+   "RUpperLeg": "mixamorig:RightUpLeg",
+   "RLowerLeg": "mixamorig:RightLeg",
+   "RFoot": "mixamorig:RightFoot",
+   "LToe": "mixamorig:LeftToeBase",
+   "RToe": "mixamorig:RightToeBase"
+  },
+  "arm_rot": [
+   -0.0,
+   0.0,
+   0.0
+  ],
+  "arm_scale": [
+   2.0816,
+   2.0816,
+   2.0816
+  ],
+  "mallas": {
+   "tripo_node_389e9bcb": {
+    "v": 19310,
+    "f": 19306,
+    "bordes": 20,
+    "no_manifold": 20,
+    "winding_inv": 0.0,
+    "sin_peso": 0
+   }
+  }
+ },
+ "E15_CentinelaNova_a": {
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Personajes\\E15_CentinelaNova\\E15_CentinelaNova_a.fbx",
+  "gs": 0.91084,
+  "acts": [],
+  "objs": [
+   [
+    "E15_CentinelaNova_a",
+    "MESH"
+   ],
+   [
+    "E15_CentinelaNova_a_rig",
+    "ARMATURE"
+   ]
+  ],
+  "alto": 2.368,
+  "ancho": 2.374,
+  "fondo": 0.51,
+  "zmin": -0.0,
+  "cx": 0.0,
+  "cy": 0.0,
+  "arm": "E15_CentinelaNova_a_rig",
+  "huesos": 39,
+  "falta_hum": [
+   "Head"
+  ],
+  "hmap": {
+   "Hips": "mixamorig:Hips",
+   "Spine": "mixamorig:Spine",
+   "Chest": "mixamorig:Spine1",
+   "Neck": "mixamorig:Neck",
+   "LUpperArm": "mixamorig:LeftArm",
+   "LLowerArm": "mixamorig:LeftForeArm",
+   "LHand": "mixamorig:LeftHand",
+   "RUpperArm": "mixamorig:RightArm",
+   "RLowerArm": "mixamorig:RightForeArm",
+   "RHand": "mixamorig:RightHand",
+   "LUpperLeg": "mixamorig:LeftUpLeg",
+   "LLowerLeg": "mixamorig:LeftLeg",
+   "LFoot": "mixamorig:LeftFoot",
+   "RUpperLeg": "mixamorig:RightUpLeg",
+   "RLowerLeg": "mixamorig:RightLeg",
+   "RFoot": "mixamorig:RightFoot"
+  },
+  "arm_rot": [
+   -0.0,
+   0.0,
+   0.0
+  ],
+  "arm_scale": [
+   0.9108,
+   0.9108,
+   0.9108
+  ],
+  "mallas": {
+   "E15_CentinelaNova_a": {
+    "v": 28018,
+    "f": 28001,
+    "bordes": 37,
+    "no_manifold": 37,
+    "winding_inv": 0.0,
+    "sin_peso": 0
+   }
+  }
+ },
+ "E15_CentinelaNova_b": {
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Personajes\\E15_CentinelaNova\\E15_CentinelaNova_b.fbx",
+  "gs": 1.28478,
+  "acts": [],
+  "objs": [
+   [
+    "E15_CentinelaNova_b",
+    "MESH"
+   ],
+   [
+    "E15_CentinelaNova_b_rig",
+    "ARMATURE"
+   ]
+  ],
+  "alto": 2.377,
+  "ancho": 2.38,
+  "fondo": 0.474,
+  "zmin": -0.0,
+  "cx": 0.0,
+  "cy": 0.0,
+  "arm": "E15_CentinelaNova_b_rig",
+  "huesos": 39,
+  "falta_hum": [
+   "Head"
+  ],
+  "hmap": {
+   "Hips": "mixamorig:Hips",
+   "Spine": "mixamorig:Spine",
+   "Chest": "mixamorig:Spine1",
+   "Neck": "mixamorig:Neck",
+   "LUpperArm": "mixamorig:LeftArm",
+   "LLowerArm": "mixamorig:LeftForeArm",
+   "LHand": "mixamorig:LeftHand",
+   "RUpperArm": "mixamorig:RightArm",
+   "RLowerArm": "mixamorig:RightForeArm",
+   "RHand": "mixamorig:RightHand",
+   "LUpperLeg": "mixamorig:LeftUpLeg",
+   "LLowerLeg": "mixamorig:LeftLeg",
+   "LFoot": "mixamorig:LeftFoot",
+   "RUpperLeg": "mixamorig:RightUpLeg",
+   "RLowerLeg": "mixamorig:RightLeg",
+   "RFoot": "mixamorig:RightFoot"
+  },
+  "arm_rot": [
+   -0.0,
+   0.0,
+   0.0
+  ],
+  "arm_scale": [
+   1.2848,
+   1.2848,
+   1.2848
+  ],
+  "mallas": {
+   "E15_CentinelaNova_b": {
+    "v": 28334,
+    "f": 28306,
+    "bordes": 109,
+    "no_manifold": 109,
+    "winding_inv": 0.0,
+    "sin_peso": 0
+   }
+  }
+ },
+ "E16_RobotPesadoNova_a": {
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Personajes\\E16_RobotPesadoNova\\E16_RobotPesadoNova_a.fbx",
+  "gs": 0.83607,
+  "acts": [],
+  "objs": [
+   [
+    "E16_RobotPesadoNova_a",
+    "MESH"
+   ],
+   [
+    "E16_RobotPesadoNova_a_rig",
+    "ARMATURE"
+   ]
+  ],
+  "alto": 2.926,
+  "ancho": 3.479,
+  "fondo": 0.857,
+  "zmin": -0.0,
+  "cx": 0.001,
+  "cy": -0.002,
+  "arm": "E16_RobotPesadoNova_a_rig",
+  "huesos": 39,
+  "falta_hum": [
+   "Head"
+  ],
+  "hmap": {
+   "Hips": "mixamorig:Hips",
+   "Spine": "mixamorig:Spine",
+   "Chest": "mixamorig:Spine1",
+   "Neck": "mixamorig:Neck",
+   "LUpperArm": "mixamorig:LeftArm",
+   "LLowerArm": "mixamorig:LeftForeArm",
+   "LHand": "mixamorig:LeftHand",
+   "RUpperArm": "mixamorig:RightArm",
+   "RLowerArm": "mixamorig:RightForeArm",
+   "RHand": "mixamorig:RightHand",
+   "LUpperLeg": "mixamorig:LeftUpLeg",
+   "LLowerLeg": "mixamorig:LeftLeg",
+   "LFoot": "mixamorig:LeftFoot",
+   "RUpperLeg": "mixamorig:RightUpLeg",
+   "RLowerLeg": "mixamorig:RightLeg",
+   "RFoot": "mixamorig:RightFoot"
+  },
+  "arm_rot": [
+   -0.0,
+   0.0,
+   0.0
+  ],
+  "arm_scale": [
+   0.8361,
+   0.8361,
+   0.8361
+  ],
+  "mallas": {
+   "E16_RobotPesadoNova_a": {
+    "v": 28277,
+    "f": 28268,
+    "bordes": 34,
+    "no_manifold": 34,
+    "winding_inv": 0.0,
+    "sin_peso": 0
+   }
+  }
+ },
+ "E16_RobotPesadoNova_b": {
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Personajes\\E16_RobotPesadoNova\\E16_RobotPesadoNova_b.fbx",
+  "gs": 1.21218,
+  "acts": [],
+  "objs": [
+   [
+    "E16_RobotPesadoNova_b",
+    "MESH"
+   ],
+   [
+    "E16_RobotPesadoNova_b_rig.001",
+    "ARMATURE"
+   ]
+  ],
+  "alto": 3.018,
+  "ancho": 4.601,
+  "fondo": 0.972,
+  "zmin": 0.0,
+  "cx": -0.044,
+  "cy": 0.143,
+  "arm": "E16_RobotPesadoNova_b_rig.001",
+  "huesos": 39,
+  "falta_hum": [
+   "Head"
+  ],
+  "hmap": {
+   "Hips": "mixamorig:Hips",
+   "Spine": "mixamorig:Spine",
+   "Chest": "mixamorig:Spine1",
+   "Neck": "mixamorig:Neck",
+   "LUpperArm": "mixamorig:LeftArm",
+   "LLowerArm": "mixamorig:LeftForeArm",
+   "LHand": "mixamorig:LeftHand",
+   "RUpperArm": "mixamorig:RightArm",
+   "RLowerArm": "mixamorig:RightForeArm",
+   "RHand": "mixamorig:RightHand",
+   "LUpperLeg": "mixamorig:LeftUpLeg",
+   "LLowerLeg": "mixamorig:LeftLeg",
+   "LFoot": "mixamorig:LeftFoot",
+   "RUpperLeg": "mixamorig:RightUpLeg",
+   "RLowerLeg": "mixamorig:RightLeg",
+   "RFoot": "mixamorig:RightFoot"
+  },
+  "arm_rot": [
+   -0.0,
+   0.0,
+   0.0
+  ],
+  "arm_scale": [
+   1.2122,
+   1.2122,
+   1.2122
+  ],
+  "mallas": {
+   "E16_RobotPesadoNova_b": {
+    "v": 29628,
+    "f": 29575,
+    "bordes": 139,
+    "no_manifold": 140,
+    "winding_inv": 0.0,
+    "sin_peso": 0
+   }
+  }
+ },
+ "E17_PerroRobotNova_a": {
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Personajes\\E17_PerroRobotNova\\E17_PerroRobotNova_a.fbx",
+  "gs": 1.15505,
+  "acts": [
+   "E17_PerroRobotNova_a_rig|E17_PerroRobotNova_a_rig|Perro_Caminar",
+   "E17_PerroRobotNova_a_rig|E17_PerroRobotNova_a_rig|Perro_Idle"
+  ],
+  "objs": [
+   [
+    "E17_PerroRobotNova_a",
+    "MESH"
+   ],
+   [
+    "E17_PerroRobotNova_a_rig",
+    "ARMATURE"
+   ]
+  ],
+  "alto": 1.04,
+  "ancho": 1.005,
+  "fondo": 1.3,
+  "zmin": 0.0,
+  "cx": -0.0,
+  "cy": 0.0,
+  "arm": "E17_PerroRobotNova_a_rig",
+  "huesos": 13,
+  "falta_hum": [
+   "Hips",
+   "Spine",
+   "Head",
+   "LUpperArm",
+   "LLowerArm",
+   "LHand",
+   "RUpperArm",
+   "RLowerArm",
+   "RHand",
+   "LUpperLeg",
+   "LLowerLeg",
+   "LFoot",
+   "RUpperLeg",
+   "RLowerLeg",
+   "RFoot"
+  ],
+  "hmap": {},
+  "arm_rot": [
+   -0.0,
+   0.0,
+   0.0
+  ],
+  "arm_scale": [
+   1.1551,
+   1.1551,
+   1.1551
+  ],
+  "mallas": {
+   "E17_PerroRobotNova_a": {
+    "v": 29676,
+    "f": 29682,
+    "bordes": 16,
+    "no_manifold": 16,
+    "winding_inv": 0.0,
+    "sin_peso": 0
+   }
+  }
+ },
+ "E17_PerroRobotNova_esc": {
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Personajes\\E17_PerroRobotNova\\E17_PerroRobotNova_esc.fbx",
+  "gs": 1.28197,
+  "acts": [],
+  "objs": [
+   [
+    "E17_PerroRobotNova_a.001",
+    "MESH"
+   ],
+   [
+    "E17_PerroRobotNova_a_rig.001",
+    "ARMATURE"
+   ]
+  ],
+  "alto": 1.04,
+  "ancho": 1.005,
+  "fondo": 1.3,
+  "zmin": 0.0,
+  "cx": -0.0,
+  "cy": 0.0,
+  "arm": "E17_PerroRobotNova_a_rig.001",
+  "huesos": 13,
+  "falta_hum": [
+   "Hips",
+   "Spine",
+   "Head",
+   "LUpperArm",
+   "LLowerArm",
+   "LHand",
+   "RUpperArm",
+   "RLowerArm",
+   "RHand",
+   "LUpperLeg",
+   "LLowerLeg",
+   "LFoot",
+   "RUpperLeg",
+   "RLowerLeg",
+   "RFoot"
+  ],
+  "hmap": {},
+  "arm_rot": [
+   -0.0,
+   0.0,
+   0.0
+  ],
+  "arm_scale": [
+   1.282,
+   1.282,
+   1.282
+  ],
+  "mallas": {
+   "E17_PerroRobotNova_a.001": {
+    "v": 29676,
+    "f": 29682,
+    "bordes": 16,
+    "no_manifold": 16,
+    "winding_inv": 0.0,
+    "sin_peso": 0
+   }
+  }
+ },
+ "E18_EliteNova_a": {
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Personajes\\E18_EliteNova\\E18_EliteNova_a.fbx",
+  "gs": 0.8786,
+  "acts": [],
+  "objs": [
+   [
+    "E18_EliteNova_a",
+    "MESH"
+   ],
+   [
+    "E18_EliteNova_a_rig",
+    "ARMATURE"
+   ]
+  ],
+  "alto": 1.933,
+  "ancho": 1.928,
+  "fondo": 0.588,
+  "zmin": 0.0,
+  "cx": 0.0,
+  "cy": 0.0,
+  "arm": "E18_EliteNova_a_rig",
+  "huesos": 39,
+  "falta_hum": [
+   "Head"
+  ],
+  "hmap": {
+   "Hips": "mixamorig:Hips",
+   "Spine": "mixamorig:Spine",
+   "Chest": "mixamorig:Spine1",
+   "Neck": "mixamorig:Neck",
+   "LUpperArm": "mixamorig:LeftArm",
+   "LLowerArm": "mixamorig:LeftForeArm",
+   "LHand": "mixamorig:LeftHand",
+   "RUpperArm": "mixamorig:RightArm",
+   "RLowerArm": "mixamorig:RightForeArm",
+   "RHand": "mixamorig:RightHand",
+   "LUpperLeg": "mixamorig:LeftUpLeg",
+   "LLowerLeg": "mixamorig:LeftLeg",
+   "LFoot": "mixamorig:LeftFoot",
+   "RUpperLeg": "mixamorig:RightUpLeg",
+   "RLowerLeg": "mixamorig:RightLeg",
+   "RFoot": "mixamorig:RightFoot"
+  },
+  "arm_rot": [
+   -0.0,
+   0.0,
+   0.0
+  ],
+  "arm_scale": [
+   0.8786,
+   0.8786,
+   0.8786
+  ],
+  "mallas": {
+   "E18_EliteNova_a": {
+    "v": 28528,
+    "f": 28532,
+    "bordes": 0,
+    "no_manifold": 0,
+    "winding_inv": 0.0,
+    "sin_peso": 0
+   }
+  }
+ },
+ "E19_PandilleroSkulls_a_2": {
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Personajes\\E19_PandilleroSkulls\\E19_PandilleroSkulls_a_2.fbx",
+  "gs": 0.89658,
+  "acts": [],
+  "objs": [
+   [
+    "E19_PandilleroSkulls_a_2",
+    "MESH"
+   ],
+   [
+    "E19_PandilleroSkulls_a_2_rig",
+    "ARMATURE"
+   ]
+  ],
+  "alto": 1.596,
+  "ancho": 1.591,
+  "fondo": 0.301,
+  "zmin": 0.0,
+  "cx": -0.0,
+  "cy": -0.0,
+  "arm": "E19_PandilleroSkulls_a_2_rig",
+  "huesos": 39,
+  "falta_hum": [
+   "Head"
+  ],
+  "hmap": {
+   "Hips": "mixamorig:Hips",
+   "Spine": "mixamorig:Spine",
+   "Chest": "mixamorig:Spine1",
+   "Neck": "mixamorig:Neck",
+   "LUpperArm": "mixamorig:LeftArm",
+   "LLowerArm": "mixamorig:LeftForeArm",
+   "LHand": "mixamorig:LeftHand",
+   "RUpperArm": "mixamorig:RightArm",
+   "RLowerArm": "mixamorig:RightForeArm",
+   "RHand": "mixamorig:RightHand",
+   "LUpperLeg": "mixamorig:LeftUpLeg",
+   "LLowerLeg": "mixamorig:LeftLeg",
+   "LFoot": "mixamorig:LeftFoot",
+   "RUpperLeg": "mixamorig:RightUpLeg",
+   "RLowerLeg": "mixamorig:RightLeg",
+   "RFoot": "mixamorig:RightFoot"
+  },
+  "arm_rot": [
+   -0.0,
+   0.0,
+   0.0
+  ],
+  "arm_scale": [
+   0.8966,
+   0.8966,
+   0.8966
+  ],
+  "mallas": {
+   "E19_PandilleroSkulls_a_2": {
+    "v": 28977,
+    "f": 28722,
+    "bordes": 697,
+    "no_manifold": 706,
+    "winding_inv": 0.0,
+    "sin_peso": 0
+   }
+  }
+ },
+ "E19_PandilleroSkulls_b": {
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Personajes\\E19_PandilleroSkulls\\E19_PandilleroSkulls_b.fbx",
+  "gs": 0.88961,
+  "acts": [],
+  "objs": [
+   [
+    "E19_PandilleroSkulls_b",
+    "MESH"
+   ],
+   [
+    "E19_PandilleroSkulls_b_rig",
+    "ARMATURE"
+   ]
+  ],
+  "alto": 1.584,
+  "ancho": 1.591,
+  "fondo": 0.302,
+  "zmin": 0.0,
+  "cx": 0.0,
+  "cy": 0.0,
+  "arm": "E19_PandilleroSkulls_b_rig",
+  "huesos": 39,
+  "falta_hum": [
+   "Head"
+  ],
+  "hmap": {
+   "Hips": "mixamorig:Hips",
+   "Spine": "mixamorig:Spine",
+   "Chest": "mixamorig:Spine1",
+   "Neck": "mixamorig:Neck",
+   "LUpperArm": "mixamorig:LeftArm",
+   "LLowerArm": "mixamorig:LeftForeArm",
+   "LHand": "mixamorig:LeftHand",
+   "RUpperArm": "mixamorig:RightArm",
+   "RLowerArm": "mixamorig:RightForeArm",
+   "RHand": "mixamorig:RightHand",
+   "LUpperLeg": "mixamorig:LeftUpLeg",
+   "LLowerLeg": "mixamorig:LeftLeg",
+   "LFoot": "mixamorig:LeftFoot",
+   "RUpperLeg": "mixamorig:RightUpLeg",
+   "RLowerLeg": "mixamorig:RightLeg",
+   "RFoot": "mixamorig:RightFoot"
+  },
+  "arm_rot": [
+   -0.0,
+   0.0,
+   0.0
+  ],
+  "arm_scale": [
+   0.8896,
+   0.8896,
+   0.8896
+  ],
+  "mallas": {
+   "E19_PandilleroSkulls_b": {
+    "v": 27667,
+    "f": 27545,
+    "bordes": 336,
+    "no_manifold": 347,
+    "winding_inv": 0.0,
+    "sin_peso": 0
+   }
+  }
+ },
+ "E20_MatonSkulls_a": {
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Personajes\\E20_MatonSkulls\\E20_MatonSkulls_a.fbx",
+  "gs": 0.90329,
+  "acts": [],
+  "objs": [
+   [
+    "E20_MatonSkulls_a",
+    "MESH"
+   ],
+   [
+    "E20_MatonSkulls_a_rig",
+    "ARMATURE"
+   ]
+  ],
+  "alto": 1.698,
+  "ancho": 1.711,
+  "fondo": 0.351,
+  "zmin": 0.0,
+  "cx": -0.0,
+  "cy": 0.0,
+  "arm": "E20_MatonSkulls_a_rig",
+  "huesos": 39,
+  "falta_hum": [
+   "Head"
+  ],
+  "hmap": {
+   "Hips": "mixamorig:Hips",
+   "Spine": "mixamorig:Spine",
+   "Chest": "mixamorig:Spine1",
+   "Neck": "mixamorig:Neck",
+   "LUpperArm": "mixamorig:LeftArm",
+   "LLowerArm": "mixamorig:LeftForeArm",
+   "LHand": "mixamorig:LeftHand",
+   "RUpperArm": "mixamorig:RightArm",
+   "RLowerArm": "mixamorig:RightForeArm",
+   "RHand": "mixamorig:RightHand",
+   "LUpperLeg": "mixamorig:LeftUpLeg",
+   "LLowerLeg": "mixamorig:LeftLeg",
+   "LFoot": "mixamorig:LeftFoot",
+   "RUpperLeg": "mixamorig:RightUpLeg",
+   "RLowerLeg": "mixamorig:RightLeg",
+   "RFoot": "mixamorig:RightFoot"
+  },
+  "arm_rot": [
+   -0.0,
+   0.0,
+   0.0
+  ],
+  "arm_scale": [
+   0.9033,
+   0.9033,
+   0.9033
+  ],
+  "mallas": {
+   "E20_MatonSkulls_a": {
+    "v": 27748,
+    "f": 27695,
+    "bordes": 209,
+    "no_manifold": 216,
+    "winding_inv": 0.0,
+    "sin_peso": 0
+   }
+  }
+ },
+ "E20_MatonSkulls_b": {
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Personajes\\E20_MatonSkulls\\E20_MatonSkulls_b.fbx",
+  "gs": 0.89071,
+  "acts": [],
+  "objs": [
+   [
+    "E20_MatonSkulls_b",
+    "MESH"
+   ],
+   [
+    "E20_MatonSkulls_b_rig",
+    "ARMATURE"
+   ]
+  ],
+  "alto": 1.675,
+  "ancho": 1.677,
+  "fondo": 0.382,
+  "zmin": -0.0,
+  "cx": -0.0,
+  "cy": 0.0,
+  "arm": "E20_MatonSkulls_b_rig",
+  "huesos": 39,
+  "falta_hum": [
+   "Head"
+  ],
+  "hmap": {
+   "Hips": "mixamorig:Hips",
+   "Spine": "mixamorig:Spine",
+   "Chest": "mixamorig:Spine1",
+   "Neck": "mixamorig:Neck",
+   "LUpperArm": "mixamorig:LeftArm",
+   "LLowerArm": "mixamorig:LeftForeArm",
+   "LHand": "mixamorig:LeftHand",
+   "RUpperArm": "mixamorig:RightArm",
+   "RLowerArm": "mixamorig:RightForeArm",
+   "RHand": "mixamorig:RightHand",
+   "LUpperLeg": "mixamorig:LeftUpLeg",
+   "LLowerLeg": "mixamorig:LeftLeg",
+   "LFoot": "mixamorig:LeftFoot",
+   "RUpperLeg": "mixamorig:RightUpLeg",
+   "RLowerLeg": "mixamorig:RightLeg",
+   "RFoot": "mixamorig:RightFoot"
+  },
+  "arm_rot": [
+   -0.0,
+   0.0,
+   0.0
+  ],
+  "arm_scale": [
+   0.8907,
+   0.8907,
+   0.8907
+  ],
+  "mallas": {
+   "E20_MatonSkulls_b": {
+    "v": 28822,
+    "f": 28824,
+    "bordes": 227,
+    "no_manifold": 227,
+    "winding_inv": 0.0,
+    "sin_peso": 0
+   }
+  }
+ },
+ "GuardiaNova": {
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Personajes\\GuardiaNova\\GuardiaNova.fbx",
+  "gs": 1.57638,
+  "acts": [],
+  "objs": [
+   [
+    "Armature.007",
+    "ARMATURE"
+   ],
+   [
+    "tripo_node_962fa961",
+    "MESH"
+   ]
+  ],
+  "alto": 1.489,
+  "ancho": 1.576,
+  "fondo": 0.43,
+  "zmin": 0.0,
+  "cx": 0.0,
+  "cy": 0.0,
+  "arm": "Armature.007",
+  "huesos": 58,
+  "falta_hum": [],
+  "hmap": {
+   "Hips": "Hip",
+   "Spine": "Waist",
+   "Chest": "Spine01",
+   "Neck": "NeckTwist01",
+   "Head": "Head",
+   "LUpperArm": "L_Upperarm",
+   "LLowerArm": "L_Forearm",
+   "LHand": "L_Hand",
+   "RUpperArm": "R_Upperarm",
+   "RLowerArm": "R_Forearm",
+   "RHand": "R_Hand",
+   "LUpperLeg": "L_Thigh",
+   "LLowerLeg": "L_Calf",
+   "LFoot": "L_Foot",
+   "RUpperLeg": "R_Thigh",
+   "RLowerLeg": "R_Calf",
+   "RFoot": "R_Foot"
+  },
+  "arm_rot": [
+   -0.0,
+   0.0,
+   0.0
+  ],
+  "arm_scale": [
+   1.5764,
+   1.5764,
+   1.5764
+  ],
+  "mallas": {
+   "tripo_node_962fa961": {
+    "v": 10857,
+    "f": 12300,
+    "bordes": 272,
+    "no_manifold": 288,
+    "winding_inv": 0.0,
+    "sin_peso": 0
+   }
+  }
+ },
+ "Hacker": {
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Personajes\\Hacker\\Hacker.fbx",
+  "gs": 1.43469,
+  "acts": [],
+  "objs": [
+   [
+    "Armature.008",
+    "ARMATURE"
+   ],
+   [
+    "tripo_node_82684427",
+    "MESH"
+   ]
+  ],
+  "alto": 1.427,
+  "ancho": 1.434,
+  "fondo": 0.271,
+  "zmin": -0.0,
+  "cx": 0.0,
+  "cy": 0.0,
+  "arm": "Armature.008",
+  "huesos": 58,
+  "falta_hum": [],
+  "hmap": {
+   "Hips": "Hip",
+   "Spine": "Waist",
+   "Chest": "Spine01",
+   "Neck": "NeckTwist01",
+   "Head": "Head",
+   "LUpperArm": "L_Upperarm",
+   "LLowerArm": "L_Forearm",
+   "LHand": "L_Hand",
+   "RUpperArm": "R_Upperarm",
+   "RLowerArm": "R_Forearm",
+   "RHand": "R_Hand",
+   "LUpperLeg": "L_Thigh",
+   "LLowerLeg": "L_Calf",
+   "LFoot": "L_Foot",
+   "RUpperLeg": "R_Thigh",
+   "RLowerLeg": "R_Calf",
+   "RFoot": "R_Foot"
+  },
+  "arm_rot": [
+   -0.0,
+   0.0,
+   0.0
+  ],
+  "arm_scale": [
+   1.4347,
+   1.4347,
+   1.4347
+  ],
+  "mallas": {
+   "tripo_node_82684427": {
+    "v": 10659,
+    "f": 11264,
+    "bordes": 715,
+    "no_manifold": 744,
+    "winding_inv": 0.0,
+    "sin_peso": 0
+   }
+  }
+ },
+ "Inventor": {
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Personajes\\Inventor\\Inventor.fbx",
+  "gs": 1.19336,
+  "acts": [],
+  "objs": [
+   [
+    "Armature.009",
+    "ARMATURE"
+   ],
+   [
+    "tripo_node_30e6a7e5",
+    "MESH"
+   ]
+  ],
+  "alto": 1.175,
+  "ancho": 1.193,
+  "fondo": 0.335,
+  "zmin": -0.0,
+  "cx": 0.0,
+  "cy": 0.0,
+  "arm": "Armature.009",
+  "huesos": 58,
+  "falta_hum": [],
+  "hmap": {
+   "Hips": "Hip",
+   "Spine": "Waist",
+   "Chest": "Spine01",
+   "Neck": "NeckTwist01",
+   "Head": "Head",
+   "LUpperArm": "L_Upperarm",
+   "LLowerArm": "L_Forearm",
+   "LHand": "L_Hand",
+   "RUpperArm": "R_Upperarm",
+   "RLowerArm": "R_Forearm",
+   "RHand": "R_Hand",
+   "LUpperLeg": "L_Thigh",
+   "LLowerLeg": "L_Calf",
+   "LFoot": "L_Foot",
+   "RUpperLeg": "R_Thigh",
+   "RLowerLeg": "R_Calf",
+   "RFoot": "R_Foot"
+  },
+  "arm_rot": [
+   -0.0,
+   0.0,
+   0.0
+  ],
+  "arm_scale": [
+   1.1934,
+   1.1934,
+   1.1934
+  ],
+  "mallas": {
+   "tripo_node_30e6a7e5": {
+    "v": 5483,
+    "f": 5651,
+    "bordes": 728,
+    "no_manifold": 742,
+    "winding_inv": 0.03,
+    "sin_peso": 0
+   }
+  }
+ },
+ "Mecanico": {
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Personajes\\Mecanico\\Mecanico.fbx",
+  "gs": 1.23315,
+  "acts": [],
+  "objs": [
+   [
+    "Armature.010",
+    "ARMATURE"
+   ],
+   [
+    "tripo_node_e1e57821",
+    "MESH"
+   ]
+  ],
+  "alto": 1.186,
+  "ancho": 1.233,
+  "fondo": 0.308,
+  "zmin": -0.0,
+  "cx": 0.0,
+  "cy": 0.0,
+  "arm": "Armature.010",
+  "huesos": 58,
+  "falta_hum": [],
+  "hmap": {
+   "Hips": "Hip",
+   "Spine": "Waist",
+   "Chest": "Spine01",
+   "Neck": "NeckTwist01",
+   "Head": "Head",
+   "LUpperArm": "L_Upperarm",
+   "LLowerArm": "L_Forearm",
+   "LHand": "L_Hand",
+   "RUpperArm": "R_Upperarm",
+   "RLowerArm": "R_Forearm",
+   "RHand": "R_Hand",
+   "LUpperLeg": "L_Thigh",
+   "LLowerLeg": "L_Calf",
+   "LFoot": "L_Foot",
+   "RUpperLeg": "R_Thigh",
+   "RLowerLeg": "R_Calf",
+   "RFoot": "R_Foot"
+  },
+  "arm_rot": [
+   -0.0,
+   0.0,
+   0.0
+  ],
+  "arm_scale": [
+   1.2332,
+   1.2332,
+   1.2332
+  ],
+  "mallas": {
+   "tripo_node_e1e57821": {
+    "v": 10912,
+    "f": 11660,
+    "bordes": 1008,
+    "no_manifold": 1045,
+    "winding_inv": 0.0,
+    "sin_peso": 0
+   }
+  }
+ },
+ "MeseraRobot": {
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Personajes\\MeseraRobot\\MeseraRobot.fbx",
+  "gs": 1.69251,
+  "acts": [],
+  "objs": [
+   [
+    "Armature.011",
+    "ARMATURE"
+   ],
+   [
+    "tripo_node_3a993998",
+    "MESH"
+   ]
+  ],
+  "alto": 1.651,
+  "ancho": 1.656,
+  "fondo": 0.372,
+  "zmin": -0.0,
+  "cx": 0.0,
+  "cy": 0.0,
+  "arm": "Armature.011",
+  "huesos": 52,
+  "falta_hum": [],
+  "hmap": {
+   "Hips": "mixamorig:Hips",
+   "Spine": "mixamorig:Spine",
+   "Chest": "mixamorig:Spine1",
+   "Neck": "mixamorig:Neck",
+   "Head": "mixamorig:Head",
+   "LUpperArm": "mixamorig:LeftArm",
+   "LLowerArm": "mixamorig:LeftForeArm",
+   "LHand": "mixamorig:LeftHand",
+   "RUpperArm": "mixamorig:RightArm",
+   "RLowerArm": "mixamorig:RightForeArm",
+   "RHand": "mixamorig:RightHand",
+   "LUpperLeg": "mixamorig:LeftUpLeg",
+   "LLowerLeg": "mixamorig:LeftLeg",
+   "LFoot": "mixamorig:LeftFoot",
+   "RUpperLeg": "mixamorig:RightUpLeg",
+   "RLowerLeg": "mixamorig:RightLeg",
+   "RFoot": "mixamorig:RightFoot",
+   "LToe": "mixamorig:LeftToeBase",
+   "RToe": "mixamorig:RightToeBase"
+  },
+  "arm_rot": [
+   -0.0,
+   0.0,
+   0.0
+  ],
+  "arm_scale": [
+   1.6925,
+   1.6925,
+   1.6925
+  ],
+  "mallas": {
+   "tripo_node_3a993998": {
+    "v": 9563,
+    "f": 19138,
+    "bordes": 0,
+    "no_manifold": 0,
+    "winding_inv": 0.0,
+    "sin_peso": 0
+   }
+  }
+ },
+ "NP07_Pescador_a": {
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Personajes\\NP07_Pescador\\NP07_Pescador_a.fbx",
+  "gs": 0.90458,
+  "acts": [],
+  "objs": [
+   [
+    "NP07_Pescador_a",
+    "MESH"
+   ],
+   [
+    "NP07_Pescador_a_rig",
+    "ARMATURE"
+   ]
+  ],
+  "alto": 1.556,
+  "ancho": 1.547,
+  "fondo": 0.364,
+  "zmin": -0.0,
+  "cx": -0.0,
+  "cy": 0.0,
+  "arm": "NP07_Pescador_a_rig",
+  "huesos": 39,
+  "falta_hum": [
+   "Head"
+  ],
+  "hmap": {
+   "Hips": "mixamorig:Hips",
+   "Spine": "mixamorig:Spine",
+   "Chest": "mixamorig:Spine1",
+   "Neck": "mixamorig:Neck",
+   "LUpperArm": "mixamorig:LeftArm",
+   "LLowerArm": "mixamorig:LeftForeArm",
+   "LHand": "mixamorig:LeftHand",
+   "RUpperArm": "mixamorig:RightArm",
+   "RLowerArm": "mixamorig:RightForeArm",
+   "RHand": "mixamorig:RightHand",
+   "LUpperLeg": "mixamorig:LeftUpLeg",
+   "LLowerLeg": "mixamorig:LeftLeg",
+   "LFoot": "mixamorig:LeftFoot",
+   "RUpperLeg": "mixamorig:RightUpLeg",
+   "RLowerLeg": "mixamorig:RightLeg",
+   "RFoot": "mixamorig:RightFoot"
+  },
+  "arm_rot": [
+   -0.0,
+   0.0,
+   0.0
+  ],
+  "arm_scale": [
+   0.9046,
+   0.9046,
+   0.9046
+  ],
+  "mallas": {
+   "NP07_Pescador_a": {
+    "v": 27750,
+    "f": 27701,
+    "bordes": 122,
+    "no_manifold": 122,
+    "winding_inv": 0.0,
+    "sin_peso": 0
+   }
+  }
+ },
+ "NP07_Pescador_b": {
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Personajes\\NP07_Pescador\\NP07_Pescador_b.fbx",
+  "gs": 0.90437,
+  "acts": [],
+  "objs": [
+   [
+    "NP07_Pescador_b",
+    "MESH"
+   ],
+   [
+    "NP07_Pescador_b_rig",
+    "ARMATURE"
+   ]
+  ],
+  "alto": 1.556,
+  "ancho": 1.556,
+  "fondo": 0.396,
+  "zmin": 0.0,
+  "cx": 0.0,
+  "cy": 0.0,
+  "arm": "NP07_Pescador_b_rig",
+  "huesos": 39,
+  "falta_hum": [
+   "Head"
+  ],
+  "hmap": {
+   "Hips": "mixamorig:Hips",
+   "Spine": "mixamorig:Spine",
+   "Chest": "mixamorig:Spine1",
+   "Neck": "mixamorig:Neck",
+   "LUpperArm": "mixamorig:LeftArm",
+   "LLowerArm": "mixamorig:LeftForeArm",
+   "LHand": "mixamorig:LeftHand",
+   "RUpperArm": "mixamorig:RightArm",
+   "RLowerArm": "mixamorig:RightForeArm",
+   "RHand": "mixamorig:RightHand",
+   "LUpperLeg": "mixamorig:LeftUpLeg",
+   "LLowerLeg": "mixamorig:LeftLeg",
+   "LFoot": "mixamorig:LeftFoot",
+   "RUpperLeg": "mixamorig:RightUpLeg",
+   "RLowerLeg": "mixamorig:RightLeg",
+   "RFoot": "mixamorig:RightFoot"
+  },
+  "arm_rot": [
+   -0.0,
+   0.0,
+   0.0
+  ],
+  "arm_scale": [
+   0.9044,
+   0.9044,
+   0.9044
+  ],
+  "mallas": {
+   "NP07_Pescador_b": {
+    "v": 27797,
+    "f": 27766,
+    "bordes": 73,
+    "no_manifold": 74,
+    "winding_inv": 0.0,
+    "sin_peso": 0
+   }
+  }
+ },
+ "NP08_Turista_a": {
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Personajes\\NP08_Turista\\NP08_Turista_a.fbx",
+  "gs": 0.89597,
+  "acts": [],
+  "objs": [
+   [
+    "NP08_Turista_a",
+    "MESH"
+   ],
+   [
+    "NP08_Turista_a_rig",
+    "ARMATURE"
+   ]
+  ],
+  "alto": 1.568,
+  "ancho": 1.574,
+  "fondo": 0.307,
+  "zmin": -0.0,
+  "cx": 0.0,
+  "cy": 0.0,
+  "arm": "NP08_Turista_a_rig",
+  "huesos": 39,
+  "falta_hum": [
+   "Head"
+  ],
+  "hmap": {
+   "Hips": "mixamorig:Hips",
+   "Spine": "mixamorig:Spine",
+   "Chest": "mixamorig:Spine1",
+   "Neck": "mixamorig:Neck",
+   "LUpperArm": "mixamorig:LeftArm",
+   "LLowerArm": "mixamorig:LeftForeArm",
+   "LHand": "mixamorig:LeftHand",
+   "RUpperArm": "mixamorig:RightArm",
+   "RLowerArm": "mixamorig:RightForeArm",
+   "RHand": "mixamorig:RightHand",
+   "LUpperLeg": "mixamorig:LeftUpLeg",
+   "LLowerLeg": "mixamorig:LeftLeg",
+   "LFoot": "mixamorig:LeftFoot",
+   "RUpperLeg": "mixamorig:RightUpLeg",
+   "RLowerLeg": "mixamorig:RightLeg",
+   "RFoot": "mixamorig:RightFoot"
+  },
+  "arm_rot": [
+   -0.0,
+   0.0,
+   0.0
+  ],
+  "arm_scale": [
+   0.896,
+   0.896,
+   0.896
+  ],
+  "mallas": {
+   "NP08_Turista_a": {
+    "v": 27447,
+    "f": 27391,
+    "bordes": 189,
+    "no_manifold": 189,
+    "winding_inv": 0.0,
+    "sin_peso": 0
+   }
+  }
+ },
+ "NP08_Turista_b": {
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Personajes\\NP08_Turista\\NP08_Turista_b.fbx",
+  "gs": 0.9064,
+  "acts": [],
+  "objs": [
+   [
+    "NP08_Turista_b",
+    "MESH"
+   ],
+   [
+    "NP08_Turista_b_rig",
+    "ARMATURE"
+   ]
+  ],
+  "alto": 1.586,
+  "ancho": 1.589,
+  "fondo": 0.36,
+  "zmin": -0.0,
+  "cx": -0.0,
+  "cy": 0.0,
+  "arm": "NP08_Turista_b_rig",
+  "huesos": 39,
+  "falta_hum": [
+   "Head"
+  ],
+  "hmap": {
+   "Hips": "mixamorig:Hips",
+   "Spine": "mixamorig:Spine",
+   "Chest": "mixamorig:Spine1",
+   "Neck": "mixamorig:Neck",
+   "LUpperArm": "mixamorig:LeftArm",
+   "LLowerArm": "mixamorig:LeftForeArm",
+   "LHand": "mixamorig:LeftHand",
+   "RUpperArm": "mixamorig:RightArm",
+   "RLowerArm": "mixamorig:RightForeArm",
+   "RHand": "mixamorig:RightHand",
+   "LUpperLeg": "mixamorig:LeftUpLeg",
+   "LLowerLeg": "mixamorig:LeftLeg",
+   "LFoot": "mixamorig:LeftFoot",
+   "RUpperLeg": "mixamorig:RightUpLeg",
+   "RLowerLeg": "mixamorig:RightLeg",
+   "RFoot": "mixamorig:RightFoot"
+  },
+  "arm_rot": [
+   -0.0,
+   0.0,
+   0.0
+  ],
+  "arm_scale": [
+   0.9064,
+   0.9064,
+   0.9064
+  ],
+  "mallas": {
+   "NP08_Turista_b": {
+    "v": 28322,
+    "f": 28303,
+    "bordes": 78,
+    "no_manifold": 78,
+    "winding_inv": 0.0,
+    "sin_peso": 0
+   }
+  }
+ },
+ "NP09_Corredor_a": {
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Personajes\\NP09_Corredor\\NP09_Corredor_a.fbx",
+  "gs": 0.90774,
+  "acts": [],
+  "objs": [
+   [
+    "NP09_Corredor_a",
+    "MESH"
+   ],
+   [
+    "NP09_Corredor_a_rig",
+    "ARMATURE"
+   ]
+  ],
+  "alto": 1.616,
+  "ancho": 1.616,
+  "fondo": 0.298,
+  "zmin": -0.0,
+  "cx": -0.0,
+  "cy": 0.0,
+  "arm": "NP09_Corredor_a_rig",
+  "huesos": 39,
+  "falta_hum": [
+   "Head"
+  ],
+  "hmap": {
+   "Hips": "mixamorig:Hips",
+   "Spine": "mixamorig:Spine",
+   "Chest": "mixamorig:Spine1",
+   "Neck": "mixamorig:Neck",
+   "LUpperArm": "mixamorig:LeftArm",
+   "LLowerArm": "mixamorig:LeftForeArm",
+   "LHand": "mixamorig:LeftHand",
+   "RUpperArm": "mixamorig:RightArm",
+   "RLowerArm": "mixamorig:RightForeArm",
+   "RHand": "mixamorig:RightHand",
+   "LUpperLeg": "mixamorig:LeftUpLeg",
+   "LLowerLeg": "mixamorig:LeftLeg",
+   "LFoot": "mixamorig:LeftFoot",
+   "RUpperLeg": "mixamorig:RightUpLeg",
+   "RLowerLeg": "mixamorig:RightLeg",
+   "RFoot": "mixamorig:RightFoot"
+  },
+  "arm_rot": [
+   -0.0,
+   0.0,
+   0.0
+  ],
+  "arm_scale": [
+   0.9077,
+   0.9077,
+   0.9077
+  ],
+  "mallas": {
+   "NP09_Corredor_a": {
+    "v": 27637,
+    "f": 27562,
+    "bordes": 201,
+    "no_manifold": 201,
+    "winding_inv": 0.0,
+    "sin_peso": 0
+   }
+  }
+ },
+ "NP09_Corredor_b": {
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Personajes\\NP09_Corredor\\NP09_Corredor_b.fbx",
+  "gs": 0.91619,
+  "acts": [],
+  "objs": [
+   [
+    "NP09_Corredor_b",
+    "MESH"
+   ],
+   [
+    "NP09_Corredor_b_rig",
+    "ARMATURE"
+   ]
+  ],
+  "alto": 1.631,
+  "ancho": 1.629,
+  "fondo": 0.382,
+  "zmin": -0.0,
+  "cx": 0.0,
+  "cy": 0.0,
+  "arm": "NP09_Corredor_b_rig",
+  "huesos": 39,
+  "falta_hum": [
+   "Head"
+  ],
+  "hmap": {
+   "Hips": "mixamorig:Hips",
+   "Spine": "mixamorig:Spine",
+   "Chest": "mixamorig:Spine1",
+   "Neck": "mixamorig:Neck",
+   "LUpperArm": "mixamorig:LeftArm",
+   "LLowerArm": "mixamorig:LeftForeArm",
+   "LHand": "mixamorig:LeftHand",
+   "RUpperArm": "mixamorig:RightArm",
+   "RLowerArm": "mixamorig:RightForeArm",
+   "RHand": "mixamorig:RightHand",
+   "LUpperLeg": "mixamorig:LeftUpLeg",
+   "LLowerLeg": "mixamorig:LeftLeg",
+   "LFoot": "mixamorig:LeftFoot",
+   "RUpperLeg": "mixamorig:RightUpLeg",
+   "RLowerLeg": "mixamorig:RightLeg",
+   "RFoot": "mixamorig:RightFoot"
+  },
+  "arm_rot": [
+   -0.0,
+   0.0,
+   0.0
+  ],
+  "arm_scale": [
+   0.9162,
+   0.9162,
+   0.9162
+  ],
+  "mallas": {
+   "NP09_Corredor_b": {
+    "v": 31839,
+    "f": 31549,
+    "bordes": 1030,
+    "no_manifold": 1041,
+    "winding_inv": 0.0,
+    "sin_peso": 1
+   }
+  }
+ },
+ "NP10_Elotero_a": {
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Personajes\\NP10_Elotero\\NP10_Elotero_a.fbx",
+  "gs": 0.91438,
+  "acts": [],
+  "objs": [
+   [
+    "NP10_Elotero_a",
+    "MESH"
+   ],
+   [
+    "NP10_Elotero_a_rig",
+    "ARMATURE"
+   ]
+  ],
+  "alto": 1.509,
+  "ancho": 1.512,
+  "fondo": 0.318,
+  "zmin": -0.0,
+  "cx": -0.0,
+  "cy": 0.0,
+  "arm": "NP10_Elotero_a_rig",
+  "huesos": 39,
+  "falta_hum": [
+   "Head"
+  ],
+  "hmap": {
+   "Hips": "mixamorig:Hips",
+   "Spine": "mixamorig:Spine",
+   "Chest": "mixamorig:Spine1",
+   "Neck": "mixamorig:Neck",
+   "LUpperArm": "mixamorig:LeftArm",
+   "LLowerArm": "mixamorig:LeftForeArm",
+   "LHand": "mixamorig:LeftHand",
+   "RUpperArm": "mixamorig:RightArm",
+   "RLowerArm": "mixamorig:RightForeArm",
+   "RHand": "mixamorig:RightHand",
+   "LUpperLeg": "mixamorig:LeftUpLeg",
+   "LLowerLeg": "mixamorig:LeftLeg",
+   "LFoot": "mixamorig:LeftFoot",
+   "RUpperLeg": "mixamorig:RightUpLeg",
+   "RLowerLeg": "mixamorig:RightLeg",
+   "RFoot": "mixamorig:RightFoot"
+  },
+  "arm_rot": [
+   -0.0,
+   0.0,
+   0.0
+  ],
+  "arm_scale": [
+   0.9144,
+   0.9144,
+   0.9144
+  ],
+  "mallas": {
+   "NP10_Elotero_a": {
+    "v": 26853,
+    "f": 26845,
+    "bordes": 80,
+    "no_manifold": 80,
+    "winding_inv": 0.0,
+    "sin_peso": 0
+   }
+  }
+ },
+ "NP11_Estibador_a": {
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Personajes\\NP11_Estibador\\NP11_Estibador_a.fbx",
+  "gs": 0.88361,
+  "acts": [],
+  "objs": [
+   [
+    "NP11_Estibador_a",
+    "MESH"
+   ],
+   [
+    "NP11_Estibador_a_rig",
+    "ARMATURE"
+   ]
+  ],
+  "alto": 1.608,
+  "ancho": 1.608,
+  "fondo": 0.34,
+  "zmin": -0.0,
+  "cx": -0.0,
+  "cy": 0.0,
+  "arm": "NP11_Estibador_a_rig",
+  "huesos": 39,
+  "falta_hum": [
+   "Head"
+  ],
+  "hmap": {
+   "Hips": "mixamorig:Hips",
+   "Spine": "mixamorig:Spine",
+   "Chest": "mixamorig:Spine1",
+   "Neck": "mixamorig:Neck",
+   "LUpperArm": "mixamorig:LeftArm",
+   "LLowerArm": "mixamorig:LeftForeArm",
+   "LHand": "mixamorig:LeftHand",
+   "RUpperArm": "mixamorig:RightArm",
+   "RLowerArm": "mixamorig:RightForeArm",
+   "RHand": "mixamorig:RightHand",
+   "LUpperLeg": "mixamorig:LeftUpLeg",
+   "LLowerLeg": "mixamorig:LeftLeg",
+   "LFoot": "mixamorig:LeftFoot",
+   "RUpperLeg": "mixamorig:RightUpLeg",
+   "RLowerLeg": "mixamorig:RightLeg",
+   "RFoot": "mixamorig:RightFoot"
+  },
+  "arm_rot": [
+   -0.0,
+   0.0,
+   0.0
+  ],
+  "arm_scale": [
+   0.8836,
+   0.8836,
+   0.8836
+  ],
+  "mallas": {
+   "NP11_Estibador_a": {
+    "v": 28360,
+    "f": 28398,
+    "bordes": 17,
+    "no_manifold": 17,
+    "winding_inv": 0.0,
+    "sin_peso": 0
+   }
+  }
+ },
+ "NP11_Estibador_b": {
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Personajes\\NP11_Estibador\\NP11_Estibador_b.fbx",
+  "gs": 0.91548,
+  "acts": [],
+  "objs": [
+   [
+    "NP11_Estibador_b",
+    "MESH"
+   ],
+   [
+    "NP11_Estibador_b_rig",
+    "ARMATURE"
+   ]
+  ],
+  "alto": 1.666,
+  "ancho": 1.662,
+  "fondo": 0.33,
+  "zmin": -0.0,
+  "cx": -0.0,
+  "cy": 0.0,
+  "arm": "NP11_Estibador_b_rig",
+  "huesos": 39,
+  "falta_hum": [
+   "Head"
+  ],
+  "hmap": {
+   "Hips": "mixamorig:Hips",
+   "Spine": "mixamorig:Spine",
+   "Chest": "mixamorig:Spine1",
+   "Neck": "mixamorig:Neck",
+   "LUpperArm": "mixamorig:LeftArm",
+   "LLowerArm": "mixamorig:LeftForeArm",
+   "LHand": "mixamorig:LeftHand",
+   "RUpperArm": "mixamorig:RightArm",
+   "RLowerArm": "mixamorig:RightForeArm",
+   "RHand": "mixamorig:RightHand",
+   "LUpperLeg": "mixamorig:LeftUpLeg",
+   "LLowerLeg": "mixamorig:LeftLeg",
+   "LFoot": "mixamorig:LeftFoot",
+   "RUpperLeg": "mixamorig:RightUpLeg",
+   "RLowerLeg": "mixamorig:RightLeg",
+   "RFoot": "mixamorig:RightFoot"
+  },
+  "arm_rot": [
+   -0.0,
+   0.0,
+   0.0
+  ],
+  "arm_scale": [
+   0.9155,
+   0.9155,
+   0.9155
+  ],
+  "mallas": {
+   "NP11_Estibador_b": {
+    "v": 27176,
+    "f": 27172,
+    "bordes": 35,
+    "no_manifold": 37,
+    "winding_inv": 0.0,
+    "sin_peso": 0
+   }
+  }
+ },
+ "NP12_Abuela_a": {
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Personajes\\NP12_Abuela\\NP12_Abuela_a.fbx",
+  "gs": 0.91466,
+  "acts": [],
+  "objs": [
+   [
+    "NP12_Abuela_a",
+    "MESH"
+   ],
+   [
+    "NP12_Abuela_a_rig",
+    "ARMATURE"
+   ]
+  ],
+  "alto": 1.418,
+  "ancho": 1.419,
+  "fondo": 0.328,
+  "zmin": 0.0,
+  "cx": -0.0,
+  "cy": 0.0,
+  "arm": "NP12_Abuela_a_rig",
+  "huesos": 39,
+  "falta_hum": [
+   "Head"
+  ],
+  "hmap": {
+   "Hips": "mixamorig:Hips",
+   "Spine": "mixamorig:Spine",
+   "Chest": "mixamorig:Spine1",
+   "Neck": "mixamorig:Neck",
+   "LUpperArm": "mixamorig:LeftArm",
+   "LLowerArm": "mixamorig:LeftForeArm",
+   "LHand": "mixamorig:LeftHand",
+   "RUpperArm": "mixamorig:RightArm",
+   "RLowerArm": "mixamorig:RightForeArm",
+   "RHand": "mixamorig:RightHand",
+   "LUpperLeg": "mixamorig:LeftUpLeg",
+   "LLowerLeg": "mixamorig:LeftLeg",
+   "LFoot": "mixamorig:LeftFoot",
+   "RUpperLeg": "mixamorig:RightUpLeg",
+   "RLowerLeg": "mixamorig:RightLeg",
+   "RFoot": "mixamorig:RightFoot"
+  },
+  "arm_rot": [
+   -0.0,
+   0.0,
+   0.0
+  ],
+  "arm_scale": [
+   0.9147,
+   0.9147,
+   0.9147
+  ],
+  "mallas": {
+   "NP12_Abuela_a": {
+    "v": 28658,
+    "f": 28658,
+    "bordes": 47,
+    "no_manifold": 47,
+    "winding_inv": 0.0,
+    "sin_peso": 0
+   }
+  }
+ },
+ "NP13_Repartidor_a": {
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Personajes\\NP13_Repartidor\\NP13_Repartidor_a.fbx",
+  "gs": 0.87978,
+  "acts": [],
+  "objs": [
+   [
+    "NP13_Repartidor_a",
+    "MESH"
+   ],
+   [
+    "NP13_Repartidor_a_rig",
+    "ARMATURE"
+   ]
+  ],
+  "alto": 1.513,
+  "ancho": 1.517,
+  "fondo": 0.5,
+  "zmin": 0.0,
+  "cx": 0.0,
+  "cy": 0.0,
+  "arm": "NP13_Repartidor_a_rig",
+  "huesos": 39,
+  "falta_hum": [
+   "Head"
+  ],
+  "hmap": {
+   "Hips": "mixamorig:Hips",
+   "Spine": "mixamorig:Spine",
+   "Chest": "mixamorig:Spine1",
+   "Neck": "mixamorig:Neck",
+   "LUpperArm": "mixamorig:LeftArm",
+   "LLowerArm": "mixamorig:LeftForeArm",
+   "LHand": "mixamorig:LeftHand",
+   "RUpperArm": "mixamorig:RightArm",
+   "RLowerArm": "mixamorig:RightForeArm",
+   "RHand": "mixamorig:RightHand",
+   "LUpperLeg": "mixamorig:LeftUpLeg",
+   "LLowerLeg": "mixamorig:LeftLeg",
+   "LFoot": "mixamorig:LeftFoot",
+   "RUpperLeg": "mixamorig:RightUpLeg",
+   "RLowerLeg": "mixamorig:RightLeg",
+   "RFoot": "mixamorig:RightFoot"
+  },
+  "arm_rot": [
+   -0.0,
+   0.0,
+   0.0
+  ],
+  "arm_scale": [
+   0.8798,
+   0.8798,
+   0.8798
+  ],
+  "mallas": {
+   "NP13_Repartidor_a": {
+    "v": 28290,
+    "f": 28172,
+    "bordes": 301,
+    "no_manifold": 301,
+    "winding_inv": 0.0,
+    "sin_peso": 0
+   }
+  }
+ },
+ "NP13_Repartidor_b": {
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Personajes\\NP13_Repartidor\\NP13_Repartidor_b.fbx",
+  "gs": 0.87627,
+  "acts": [],
+  "objs": [
+   [
+    "NP13_Repartidor_b",
+    "MESH"
+   ],
+   [
+    "NP13_Repartidor_b_rig",
+    "ARMATURE"
+   ]
+  ],
+  "alto": 1.507,
+  "ancho": 1.503,
+  "fondo": 0.471,
+  "zmin": 0.0,
+  "cx": -0.0,
+  "cy": 0.0,
+  "arm": "NP13_Repartidor_b_rig",
+  "huesos": 39,
+  "falta_hum": [
+   "Head"
+  ],
+  "hmap": {
+   "Hips": "mixamorig:Hips",
+   "Spine": "mixamorig:Spine",
+   "Chest": "mixamorig:Spine1",
+   "Neck": "mixamorig:Neck",
+   "LUpperArm": "mixamorig:LeftArm",
+   "LLowerArm": "mixamorig:LeftForeArm",
+   "LHand": "mixamorig:LeftHand",
+   "RUpperArm": "mixamorig:RightArm",
+   "RLowerArm": "mixamorig:RightForeArm",
+   "RHand": "mixamorig:RightHand",
+   "LUpperLeg": "mixamorig:LeftUpLeg",
+   "LLowerLeg": "mixamorig:LeftLeg",
+   "LFoot": "mixamorig:LeftFoot",
+   "RUpperLeg": "mixamorig:RightUpLeg",
+   "RLowerLeg": "mixamorig:RightLeg",
+   "RFoot": "mixamorig:RightFoot"
+  },
+  "arm_rot": [
+   -0.0,
+   0.0,
+   0.0
+  ],
+  "arm_scale": [
+   0.8763,
+   0.8763,
+   0.8763
+  ],
+  "mallas": {
+   "NP13_Repartidor_b": {
+    "v": 27830,
+    "f": 27783,
+    "bordes": 146,
+    "no_manifold": 146,
+    "winding_inv": 0.0,
+    "sin_peso": 0
+   }
+  }
+ },
+ "NP14_Oficinista_a": {
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Personajes\\NP14_Oficinista\\NP14_Oficinista_a.fbx",
+  "gs": 0.90833,
+  "acts": [],
+  "objs": [
+   [
+    "NP14_Oficinista_a",
+    "MESH"
+   ],
+   [
+    "NP14_Oficinista_a_rig",
+    "ARMATURE"
+   ]
+  ],
+  "alto": 1.59,
+  "ancho": 1.589,
+  "fondo": 0.29,
+  "zmin": -0.0,
+  "cx": -0.0,
+  "cy": 0.0,
+  "arm": "NP14_Oficinista_a_rig",
+  "huesos": 39,
+  "falta_hum": [
+   "Head"
+  ],
+  "hmap": {
+   "Hips": "mixamorig:Hips",
+   "Spine": "mixamorig:Spine",
+   "Chest": "mixamorig:Spine1",
+   "Neck": "mixamorig:Neck",
+   "LUpperArm": "mixamorig:LeftArm",
+   "LLowerArm": "mixamorig:LeftForeArm",
+   "LHand": "mixamorig:LeftHand",
+   "RUpperArm": "mixamorig:RightArm",
+   "RLowerArm": "mixamorig:RightForeArm",
+   "RHand": "mixamorig:RightHand",
+   "LUpperLeg": "mixamorig:LeftUpLeg",
+   "LLowerLeg": "mixamorig:LeftLeg",
+   "LFoot": "mixamorig:LeftFoot",
+   "RUpperLeg": "mixamorig:RightUpLeg",
+   "RLowerLeg": "mixamorig:RightLeg",
+   "RFoot": "mixamorig:RightFoot"
+  },
+  "arm_rot": [
+   -0.0,
+   0.0,
+   0.0
+  ],
+  "arm_scale": [
+   0.9083,
+   0.9083,
+   0.9083
+  ],
+  "mallas": {
+   "NP14_Oficinista_a": {
+    "v": 28663,
+    "f": 28656,
+    "bordes": 63,
+    "no_manifold": 64,
+    "winding_inv": 0.0,
+    "sin_peso": 0
+   }
+  }
+ },
+ "NP14_Oficinista_b": {
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Personajes\\NP14_Oficinista\\NP14_Oficinista_b.fbx",
+  "gs": 0.9117,
+  "acts": [],
+  "objs": [
+   [
+    "NP14_Oficinista_b",
+    "MESH"
+   ],
+   [
+    "NP14_Oficinista_b_rig",
+    "ARMATURE"
+   ]
+  ],
+  "alto": 1.595,
+  "ancho": 1.559,
+  "fondo": 0.3,
+  "zmin": -0.0,
+  "cx": -0.0,
+  "cy": 0.0,
+  "arm": "NP14_Oficinista_b_rig",
+  "huesos": 39,
+  "falta_hum": [
+   "Head"
+  ],
+  "hmap": {
+   "Hips": "mixamorig:Hips",
+   "Spine": "mixamorig:Spine",
+   "Chest": "mixamorig:Spine1",
+   "Neck": "mixamorig:Neck",
+   "LUpperArm": "mixamorig:LeftArm",
+   "LLowerArm": "mixamorig:LeftForeArm",
+   "LHand": "mixamorig:LeftHand",
+   "RUpperArm": "mixamorig:RightArm",
+   "RLowerArm": "mixamorig:RightForeArm",
+   "RHand": "mixamorig:RightHand",
+   "LUpperLeg": "mixamorig:LeftUpLeg",
+   "LLowerLeg": "mixamorig:LeftLeg",
+   "LFoot": "mixamorig:LeftFoot",
+   "RUpperLeg": "mixamorig:RightUpLeg",
+   "RLowerLeg": "mixamorig:RightLeg",
+   "RFoot": "mixamorig:RightFoot"
+  },
+  "arm_rot": [
+   -0.0,
+   0.0,
+   0.0
+  ],
+  "arm_scale": [
+   0.9117,
+   0.9117,
+   0.9117
+  ],
+  "mallas": {
+   "NP14_Oficinista_b": {
+    "v": 29149,
+    "f": 29102,
+    "bordes": 111,
+    "no_manifold": 111,
+    "winding_inv": 0.0,
+    "sin_peso": 0
+   }
+  }
+ },
+ "PJ01": {
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Personajes\\PJ01\\PJ01.fbx",
+  "gs": 1.88,
+  "acts": [],
+  "objs": [
+   [
+    "Armature.012",
+    "ARMATURE"
+   ],
+   [
+    "tripo_node_b5fb242c",
+    "MESH"
+   ]
+  ],
+  "alto": 1.842,
+  "ancho": 1.845,
+  "fondo": 0.36,
+  "zmin": -0.0,
+  "cx": 0.0,
+  "cy": -0.0,
+  "arm": "Armature.012",
+  "huesos": 58,
+  "falta_hum": [],
+  "hmap": {
+   "Hips": "Hip",
+   "Spine": "Waist",
+   "Chest": "Spine01",
+   "Neck": "NeckTwist01",
+   "Head": "Head",
+   "LUpperArm": "L_Upperarm",
+   "LLowerArm": "L_Forearm",
+   "LHand": "L_Hand",
+   "RUpperArm": "R_Upperarm",
+   "RLowerArm": "R_Forearm",
+   "RHand": "R_Hand",
+   "LUpperLeg": "L_Thigh",
+   "LLowerLeg": "L_Calf",
+   "LFoot": "L_Foot",
+   "RUpperLeg": "R_Thigh",
+   "RLowerLeg": "R_Calf",
+   "RFoot": "R_Foot"
+  },
+  "arm_rot": [
+   -0.0,
+   0.0,
+   0.0
+  ],
+  "arm_scale": [
+   1.88,
+   1.88,
+   1.88
+  ],
+  "mallas": {
+   "tripo_node_b5fb242c": {
+    "v": 9862,
+    "f": 19760,
+    "bordes": 0,
+    "no_manifold": 0,
+    "winding_inv": 0.0,
+    "sin_peso": 0
+   }
+  }
+ },
+ "Policia": {
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Personajes\\Policia\\Policia.fbx",
+  "gs": 1.22259,
+  "acts": [],
+  "objs": [
+   [
+    "Armature.013",
+    "ARMATURE"
+   ],
+   [
+    "tripo_node_df8dc0e4",
+    "MESH"
+   ]
+  ],
+  "alto": 1.222,
+  "ancho": 1.203,
+  "fondo": 0.295,
+  "zmin": -0.0,
+  "cx": 0.0,
+  "cy": 0.0,
+  "arm": "Armature.013",
+  "huesos": 58,
+  "falta_hum": [],
+  "hmap": {
+   "Hips": "Hip",
+   "Spine": "Waist",
+   "Chest": "Spine01",
+   "Neck": "NeckTwist01",
+   "Head": "Head",
+   "LUpperArm": "L_Upperarm",
+   "LLowerArm": "L_Forearm",
+   "LHand": "L_Hand",
+   "RUpperArm": "R_Upperarm",
+   "RLowerArm": "R_Forearm",
+   "RHand": "R_Hand",
+   "LUpperLeg": "L_Thigh",
+   "LLowerLeg": "L_Calf",
+   "LFoot": "L_Foot",
+   "RUpperLeg": "R_Thigh",
+   "RLowerLeg": "R_Calf",
+   "RFoot": "R_Foot"
+  },
+  "arm_rot": [
+   -0.0,
+   0.0,
+   0.0
+  ],
+  "arm_scale": [
+   1.2226,
+   1.2226,
+   1.2226
+  ],
+  "mallas": {
+   "tripo_node_df8dc0e4": {
+    "v": 12605,
+    "f": 13132,
+    "bordes": 1212,
+    "no_manifold": 1212,
+    "winding_inv": 0.0,
+    "sin_peso": 0
+   }
+  }
+ },
+ "RobotHombre": {
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Personajes\\RobotHombre\\RobotHombre.fbx",
+  "gs": 1.31753,
+  "acts": [],
+  "objs": [
+   [
+    "Armature.014",
+    "ARMATURE"
+   ],
+   [
+    "tripo_node_17d640cf",
+    "MESH"
+   ]
+  ],
+  "alto": 1.278,
+  "ancho": 1.317,
+  "fondo": 0.275,
+  "zmin": -0.0,
+  "cx": 0.0,
+  "cy": 0.0,
+  "arm": "Armature.014",
+  "huesos": 58,
+  "falta_hum": [],
+  "hmap": {
+   "Hips": "Hip",
+   "Spine": "Waist",
+   "Chest": "Spine01",
+   "Neck": "NeckTwist01",
+   "Head": "Head",
+   "LUpperArm": "L_Upperarm",
+   "LLowerArm": "L_Forearm",
+   "LHand": "L_Hand",
+   "RUpperArm": "R_Upperarm",
+   "RLowerArm": "R_Forearm",
+   "RHand": "R_Hand",
+   "LUpperLeg": "L_Thigh",
+   "LLowerLeg": "L_Calf",
+   "LFoot": "L_Foot",
+   "RUpperLeg": "R_Thigh",
+   "RLowerLeg": "R_Calf",
+   "RFoot": "R_Foot"
+  },
+  "arm_rot": [
+   -0.0,
+   0.0,
+   0.0
+  ],
+  "arm_scale": [
+   1.3175,
+   1.3175,
+   1.3175
+  ],
+  "mallas": {
+   "tripo_node_17d640cf": {
+    "v": 10524,
+    "f": 11836,
+    "bordes": 306,
+    "no_manifold": 346,
+    "winding_inv": 0.03,
+    "sin_peso": 0
+   }
+  }
+ },
+ "SkullHombre": {
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Personajes\\SkullHombre\\SkullHombre.fbx",
+  "gs": 1.33339,
+  "acts": [],
+  "objs": [
+   [
+    "Armature.015",
+    "ARMATURE"
+   ],
+   [
+    "tripo_node_f25faae8",
+    "MESH"
+   ]
+  ],
+  "alto": 1.333,
+  "ancho": 1.333,
+  "fondo": 0.277,
+  "zmin": 0.0,
+  "cx": 0.0,
+  "cy": 0.0,
+  "arm": "Armature.015",
+  "huesos": 58,
+  "falta_hum": [],
+  "hmap": {
+   "Hips": "Hip",
+   "Spine": "Waist",
+   "Chest": "Spine01",
+   "Neck": "NeckTwist01",
+   "Head": "Head",
+   "LUpperArm": "L_Upperarm",
+   "LLowerArm": "L_Forearm",
+   "LHand": "L_Hand",
+   "RUpperArm": "R_Upperarm",
+   "RLowerArm": "R_Forearm",
+   "RHand": "R_Hand",
+   "LUpperLeg": "L_Thigh",
+   "LLowerLeg": "L_Calf",
+   "LFoot": "L_Foot",
+   "RUpperLeg": "R_Thigh",
+   "RLowerLeg": "R_Calf",
+   "RFoot": "R_Foot"
+  },
+  "arm_rot": [
+   -0.0,
+   0.0,
+   0.0
+  ],
+  "arm_scale": [
+   1.3334,
+   1.3334,
+   1.3334
+  ],
+  "mallas": {
+   "tripo_node_f25faae8": {
+    "v": 10949,
+    "f": 11668,
+    "bordes": 658,
+    "no_manifold": 694,
+    "winding_inv": 0.04,
+    "sin_peso": 0
+   }
+  }
+ },
+ "man": {
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Personajes\\man\\man.fbx",
+  "gs": 1.3738,
+  "acts": [
+   "Armature.016|agree.001",
+   "Armature.016|angry_01.001",
+   "Armature.016|run.001",
+   "Armature.016|walk.001"
+  ],
+  "objs": [
+   [
+    "Armature.016",
+    "ARMATURE"
+   ],
+   [
+    "tripo_node_0f9d95ea",
+    "MESH"
+   ]
+  ],
+  "alto": 1.318,
+  "ancho": 1.345,
+  "fondo": 0.31,
+  "zmin": 0.0,
+  "cx": -0.0,
+  "cy": 0.0,
+  "arm": "Armature.016",
+  "huesos": 58,
+  "falta_hum": [],
+  "hmap": {
+   "Hips": "Hip",
+   "Spine": "Waist",
+   "Chest": "Spine01",
+   "Neck": "NeckTwist01",
+   "Head": "Head",
+   "LUpperArm": "L_Upperarm",
+   "LLowerArm": "L_Forearm",
+   "LHand": "L_Hand",
+   "RUpperArm": "R_Upperarm",
+   "RLowerArm": "R_Forearm",
+   "RHand": "R_Hand",
+   "LUpperLeg": "L_Thigh",
+   "LLowerLeg": "L_Calf",
+   "LFoot": "L_Foot",
+   "RUpperLeg": "R_Thigh",
+   "RLowerLeg": "R_Calf",
+   "RFoot": "R_Foot"
+  },
+  "arm_rot": [
+   -0.0,
+   0.0,
+   0.0
+  ],
+  "arm_scale": [
+   1.3738,
+   1.3738,
+   1.3738
+  ],
+  "mallas": {
+   "tripo_node_0f9d95ea": {
+    "v": 46042,
+    "f": 45943,
+    "bordes": 252,
+    "no_manifold": 255,
+    "winding_inv": 0.0,
+    "sin_peso": 0
+   }
+  }
+ },
+ "woman": {
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Personajes\\woman\\woman.fbx",
+  "gs": 1.41119,
+  "acts": [
+   "Armature.017|afraid.001",
+   "Armature.017|agree.001",
+   "Armature.017|angry_01.001",
+   "Armature.017|run.001",
+   "Armature.017|walk.001"
+  ],
+  "objs": [
+   [
+    "Armature.017",
+    "ARMATURE"
+   ],
+   [
+    "tripo_node_86ec4d7a",
+    "MESH"
+   ]
+  ],
+  "alto": 1.411,
+  "ancho": 1.38,
+  "fondo": 0.311,
+  "zmin": 0.0,
+  "cx": 0.0,
+  "cy": 0.0,
+  "arm": "Armature.017",
+  "huesos": 58,
+  "falta_hum": [],
+  "hmap": {
+   "Hips": "Hip",
+   "Spine": "Waist",
+   "Chest": "Spine01",
+   "Neck": "NeckTwist01",
+   "Head": "Head",
+   "LUpperArm": "L_Upperarm",
+   "LLowerArm": "L_Forearm",
+   "LHand": "L_Hand",
+   "RUpperArm": "R_Upperarm",
+   "RLowerArm": "R_Forearm",
+   "RHand": "R_Hand",
+   "LUpperLeg": "L_Thigh",
+   "LLowerLeg": "L_Calf",
+   "LFoot": "L_Foot",
+   "RUpperLeg": "R_Thigh",
+   "RLowerLeg": "R_Calf",
+   "RFoot": "R_Foot"
+  },
+  "arm_rot": [
+   -0.0,
+   0.0,
+   0.0
+  ],
+  "arm_scale": [
+   1.4112,
+   1.4112,
+   1.4112
+  ],
+  "mallas": {
+   "tripo_node_86ec4d7a": {
+    "v": 11320,
+    "f": 12317,
+    "bordes": 678,
+    "no_manifold": 728,
+    "winding_inv": 0.01,
+    "sin_peso": 0
+   }
+  }
+ },
+ "woman2": {
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Personajes\\woman2\\woman2.fbx",
+  "gs": 1.33736,
+  "acts": [
+   "Armature.018|agree.001",
+   "Armature.018|run.001",
+   "Armature.018|walk.001"
+  ],
+  "objs": [
+   [
+    "Armature.018",
+    "ARMATURE"
+   ],
+   [
+    "tripo_node_bbe11e0e",
+    "MESH"
+   ]
+  ],
+  "alto": 1.337,
+  "ancho": 1.316,
+  "fondo": 0.3,
+  "zmin": -0.0,
+  "cx": 0.0,
+  "cy": 0.0,
+  "arm": "Armature.018",
+  "huesos": 58,
+  "falta_hum": [],
+  "hmap": {
+   "Hips": "Hip",
+   "Spine": "Waist",
+   "Chest": "Spine01",
+   "Neck": "NeckTwist01",
+   "Head": "Head",
+   "LUpperArm": "L_Upperarm",
+   "LLowerArm": "L_Forearm",
+   "LHand": "L_Hand",
+   "RUpperArm": "R_Upperarm",
+   "RLowerArm": "R_Forearm",
+   "RHand": "R_Hand",
+   "LUpperLeg": "L_Thigh",
+   "LLowerLeg": "L_Calf",
+   "LFoot": "L_Foot",
+   "RUpperLeg": "R_Thigh",
+   "RLowerLeg": "R_Calf",
+   "RFoot": "R_Foot"
+  },
+  "arm_rot": [
+   -0.0,
+   0.0,
+   0.0
+  ],
+  "arm_scale": [
+   1.3374,
+   1.3374,
+   1.3374
+  ],
+  "mallas": {
+   "tripo_node_bbe11e0e": {
+    "v": 10747,
+    "f": 11636,
+    "bordes": 348,
+    "no_manifold": 356,
+    "winding_inv": 0.0,
+    "sin_peso": 0
+   }
+  }
+ }
+}
