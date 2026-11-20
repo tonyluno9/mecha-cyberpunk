@@ -40,6 +40,37 @@ namespace MechaCyberpunk.Casino.Meseras
         /// <summary>Hacia dónde gira la raíz para que el modelo mire a su camino.</summary>
         private Quaternion Mirada() => Quaternion.LookRotation(ronda.Direccion) * Quaternion.Euler(0f, giroModelo, 0f);
 
+        // T-1495: tras la primera pose animada se mide hacia dónde mira el cuerpo de verdad (muslos) y se corrige el giro del modelo; así no
+        // camina de espaldas aunque cambien los clips o el avatar (el valor 180 fijo ya falló una vez).
+        private const int CuadrosParaCalibrar = 3;
+        private const float ToleranciaGrados = 5f;
+        private int cuadros;
+        private bool calibrada;
+
+        private void LateUpdate()
+        {
+            if (calibrada || ++cuadros < CuadrosParaCalibrar)
+            {
+                return;
+            }
+            calibrada = true;
+            Transform izq = animador.isHuman ? animador.GetBoneTransform(HumanBodyBones.LeftUpperLeg) : null;
+            Transform der = animador.isHuman ? animador.GetBoneTransform(HumanBodyBones.RightUpperLeg) : null;
+            if (izq == null || der == null)
+            {
+                return;
+            }
+            Vector3 cuerpo = Vector3.Cross(der.position - izq.position, Vector3.up);
+            float correccion = CalculoRondaMesera.CorreccionDeGiro(transform.forward, cuerpo);
+            if (Mathf.Abs(correccion) > ToleranciaGrados)
+            {
+                giroModelo += correccion;
+            }
+        }
+
+        /// <summary>Grados de giro del modelo (ya calibrado).</summary>
+        public float GiroModelo => giroModelo;
+
         private void Update()
         {
             ronda.Avanzar(Time.deltaTime);
