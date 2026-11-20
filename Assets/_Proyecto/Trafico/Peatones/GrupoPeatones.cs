@@ -67,11 +67,42 @@ namespace MechaCyberpunk.Trafico.Peatones
                 return;
             }
             azar = new System.Random(Semilla);
+            // T-1516: algunos peatones se quedan platicando en corros: los de un corro comparten ruta y punto de partida y se reparten alrededor del centro.
+            var corros = ReglaPlatica.Corros(config.Maximo, config.UnoDeCadaPlatica);
+            int rutaCorro = 0;
+            float previosCorro = 0f;
             for (int i = 0; i < config.Maximo; i++)
             {
+                int miembro = -1;
+                int tamano = 0;
+                foreach ((int primero, int tam) in corros)
+                {
+                    if (i >= primero && i < primero + tam)
+                    {
+                        miembro = i - primero;
+                        tamano = tam;
+                    }
+                }
+                int ruta = i % rutas.Count;
+                int semilla = azar.Next();
+                float previos = (float)azar.NextDouble() * SegundosPreviosMaximos;
+                if (miembro == 0)
+                {
+                    rutaCorro = ruta;
+                    previosCorro = previos;
+                }
+                else if (miembro > 0)
+                {
+                    ruta = rutaCorro;
+                    previos = previosCorro;
+                }
                 PeatonMundo peaton = Instantiate(prefabPeaton, transform);
                 peaton.name = "Peaton_" + (i + 1);
-                peaton.Preparar(rutas[i % rutas.Count].puntos, config, new System.Random(azar.Next()), PosicionDelJugador, (float)azar.NextDouble() * SegundosPreviosMaximos);
+                peaton.Preparar(rutas[ruta].puntos, config, new System.Random(semilla), PosicionDelJugador, previos);
+                if (miembro >= 0)
+                {
+                    peaton.Platicar(miembro, tamano);
+                }
                 peaton.gameObject.SetActive(false);
                 peatones.Add(peaton);
             }

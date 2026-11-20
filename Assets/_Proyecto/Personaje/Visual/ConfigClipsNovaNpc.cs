@@ -23,6 +23,32 @@ namespace MechaCyberpunk.Personaje.Visual
         [Tooltip("NPC_Asustarse: brinco hacia atrás con las manos a la cara (0.67 s) al empezar a huir.")]
         [SerializeField] private AnimationClip asustarse;
 
+        [Tooltip("T-1516: NPC_Platicar_1 (gestos con las dos manos), en bucle.")]
+        [SerializeField] private AnimationClip platicar1;
+
+        [Tooltip("T-1516: NPC_Platicar_2 (mano en la cadera, la otra señala), en bucle.")]
+        [SerializeField] private AnimationClip platicar2;
+
+        [Tooltip("T-1516: NPC_Sentado_Banca (asiento a 0.46 m, manos en los muslos), en bucle.")]
+        [SerializeField] private AnimationClip sentadoBanca;
+
+        [Tooltip("T-1516: NPC_Agachado_CubriendoCabeza (en cuclillas con las manos en la cabeza), en bucle.")]
+        [SerializeField] private AnimationClip agachado;
+
+        public AnimationClip Platicar1 => platicar1;
+        public AnimationClip Platicar2 => platicar2;
+        public AnimationClip SentadoBanca => sentadoBanca;
+        public AnimationClip Agachado => agachado;
+
+        /// <summary>T-1516: platicar, sentado y agachado (los pone el método de editor ClipsNpcPlaticarT1516).</summary>
+        public void ConfigurarNpc(AnimationClip platica1, AnimationClip platica2, AnimationClip sentado, AnimationClip clipAgachado)
+        {
+            platicar1 = platica1;
+            platicar2 = platica2;
+            sentadoBanca = sentado;
+            agachado = clipAgachado;
+        }
+
         public AnimationClip CaidaAire => caidaAire;
         public AnimationClip CaidaAterrizaje => caidaAterrizaje;
         public AnimationClip CaidaLevantarse => caidaLevantarse;
