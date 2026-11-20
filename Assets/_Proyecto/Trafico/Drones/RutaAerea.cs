@@ -24,6 +24,7 @@ namespace MechaCyberpunk.Trafico.Drones
         [Header("Obstáculos (T-1494)")]
         [SerializeField, Tooltip("Si es true, el dron no atraviesa geometría: sube para rodear lo que le bloquea el paso.")] private bool evitaObstaculos = true;
         [SerializeField, Min(0.05f), Tooltip("Radio de la esfera con que revisa su paso (m).")] private float radioDron = 0.8f;
+        [SerializeField, Min(0f), Tooltip("Margen de despeje extra sobre el radio: el dron pasa al menos a este tramo de cualquier muro, sin rozarlo (m).")] private float margenDespeje = 1.5f;
         [SerializeField, Min(0.1f), Tooltip("Cuánto sube al toparse con algo (m/s).")] private float velocidadSubida = 8f;
         [SerializeField, Min(0.1f), Tooltip("Cuánto baja de regreso a su altura cuando está libre (m/s).")] private float velocidadBajada = 3f;
         [SerializeField, Min(0f), Tooltip("Máximo que sube sobre su altura de ruta (m).")] private float desvioMaximo = 40f;
@@ -110,7 +111,7 @@ namespace MechaCyberpunk.Trafico.Drones
             {
                 return false;
             }
-            int n = Physics.SphereCastNonAlloc(desde, radioDron, dir / distancia, impactos, distancia, ~0, QueryTriggerInteraction.Ignore);
+            int n = Physics.SphereCastNonAlloc(desde, radioDron + margenDespeje, dir / distancia, impactos, distancia, ~0, QueryTriggerInteraction.Ignore);
             for (int i = 0; i < n; i++)
             {
                 Collider c = impactos[i].collider;

@@ -48,7 +48,10 @@ namespace MechaCyberpunk.Tests
             yield return new WaitForSeconds(1f);
             Physics.SyncTransforms();
             Bounds b = modelo.GetComponentsInChildren<Renderer>().Select(r => r.bounds).Aggregate((a, c) => { a.Encapsulate(c); return a; });
-            Assert.AreEqual(0.45f, Mathf.Max(b.size.x, b.size.z), 0.04f, "mide ~45 cm de largo");
+            // El maletín cae girado 30 grados: la caja de ejes del mundo (renderer.bounds) lo infla (0.45*cos30 + 0.33*sin30 = 0.55),
+            // así que el largo se mide en local, con la caja del collider (la raíz no tiene escala).
+            Vector3 medidaLocal = Vector3.Scale(caja.size, caja.transform.lossyScale);
+            Assert.AreEqual(0.45f, Mathf.Max(medidaLocal.x, medidaLocal.z), 0.03f, "mide ~45 cm de largo");
             Assert.Less(b.size.y, 0.3f, "va acostado");
             Assert.AreEqual(suelo.y, b.min.y, 0.03f, "descansa en el piso, sin flotar");
             Assert.IsTrue(maletin.PuedeUsar);

@@ -246,10 +246,13 @@ namespace MechaCyberpunk.Tests.Progresion
 
             // Como después de la primera pelea: ya traes la pistola y cargas el paso Chato.
             Registro<ServicioInventario>.Actual.Agregar(arsenal.Catalogo.Buscar(ArmaAPie.Pistola, 0), 1);
-            int snakesAntes = SnakesPrendidos(); // T-1496: se empieza en la calle, donde ya hay SNAKES ambientales
+            // T-1514: los SNAKES ambientales (2 riñas de T-1107 y las escoltas del jefe de T-1108) están prendidos desde la carga, lejos de la ruta (T-1107/T-1108 lo exigen);
+            // la historia no los controla. Lo que la historia debe cuidar es no prender MÁS SNAKES antes de Libre: se compara con esta base.
+            int snakesAntes = SnakesPrendidos();
+            int gruposAntes = GruposSnakesPrendidos();
             director.Cargar("{\"paso\":\"Chato\"}");
             Assert.AreEqual(PasoHistoria.Chato, director.Paso);
-            Assert.AreEqual(snakesAntes, SnakesPrendidos(), "Antes de Libre la historia no prende SNAKES");
+            Assert.LessOrEqual(SnakesPrendidos(), snakesAntes, "Antes de Libre la historia no prende SNAKES (las riñas pueden bajar, no subir)");
             cartera.Abonar(500 - cartera.Dinero, MotivoDinero.Otro);
 
             // a. T-930: el paso del Chato avanza solo y toca ir con EL DOC.
@@ -289,7 +292,7 @@ namespace MechaCyberpunk.Tests.Progresion
             Assert.AreEqual(DirectorPandillas.TextoTianguis(0, VencidosParaJefe), Objetivo);
             yield return EsperarHasta(() => pantalla.Subtitulo == DirectorPandillas.SubtituloTianguis, "los textos del Tianguis, después de los del INVENTOR", 10f);
             Assert.AreEqual(DirectorPandillas.AyudaTianguis, pantalla.Ayuda);
-            Assert.AreEqual(0, SnakesPrendidos(), "Antes de Libre no hay SNAKES");
+            Assert.LessOrEqual(SnakesPrendidos(), snakesAntes, "Antes de Libre la historia no prende SNAKES (las riñas pueden bajar, no subir)");
 
             // d. F6 lleva al paso del jefe; el respeto llega a 70, sale el jefe y cae por daño directo.
             yield return Pulsar(teclado.f6Key);
@@ -307,7 +310,7 @@ namespace MechaCyberpunk.Tests.Progresion
             Assert.AreEqual("VE CON EL HACKER A NEÓN ALTO", Objetivo);
             StringAssert.StartsWith(DirectorPandillas.PrefijoTianguisTuyo, pantalla.Ayuda);
             StringAssert.Contains(Registro<IPerfilJugador>.Actual.NombrePandilla.ToUpperInvariant(), pantalla.Ayuda, "Con el nombre de tu pandilla");
-            Assert.AreEqual(0, SnakesPrendidos(), "Llegar con EL HACKER no es una balacera");
+            Assert.LessOrEqual(SnakesPrendidos(), snakesAntes, "Llegar con EL HACKER no es una balacera");
 
             // e. EL HACKER: E saca los tres subtítulos (captura 1) y después CONTINUARÁ (captura 2).
             PersonajeApoyo hacker = Profe(DirectorPandillas.IdHacker);
@@ -332,7 +335,7 @@ namespace MechaCyberpunk.Tests.Progresion
                     yield return new WaitForSecondsRealtime(0.5f);
                     yield return Capturar(jugador, "T-418-1.png");
                 }
-                Assert.AreEqual(0, SnakesPrendidos(), "Antes de Libre no hay SNAKES");
+                Assert.LessOrEqual(SnakesPrendidos(), snakesAntes, "Antes de Libre la historia no prende SNAKES (las riñas pueden bajar, no subir)");
                 yield return null;
             }
             CollectionAssert.AreEquivalent(DirectorPandillas.SubtitulosHacker, dichos, "Los tres subtítulos de EL HACKER, y nada más");
@@ -343,10 +346,10 @@ namespace MechaCyberpunk.Tests.Progresion
 
             // f. Enter: juego libre y se prenden los SNAKES.
             yield return new WaitForSecondsRealtime(1.1f);
-            Assert.AreEqual(0, GruposSnakesPrendidos());
+            Assert.AreEqual(gruposAntes, GruposSnakesPrendidos());
             yield return Pulsar(teclado.enterKey);
             yield return EsperarHasta(() => director.Paso == PasoHistoria.Libre, "cerrar CONTINUARÁ", 5f);
-            Assert.AreEqual(1, GruposSnakesPrendidos(), "En Libre se prende el grupo de SNAKES de Neon Alto (el otro es de NOVA, T-428)");
+            Assert.AreEqual(gruposAntes + 1, GruposSnakesPrendidos(), "En Libre se prende el grupo de SNAKES de Neon Alto (el otro es de NOVA, T-428)");
 
             // g. Neón Alto se conquista como El Tianguis: 70 de respeto, su jefe sale y al vencerlo la zona es tuya.
             JefePandilla jefeNeon = Jefe("neon");
