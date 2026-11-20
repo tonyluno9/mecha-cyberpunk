@@ -24,14 +24,18 @@ namespace MechaCyberpunk.Personaje
         [Min(0.1f)] [SerializeField] private float rapidezAcercamiento = 7f;
 
         [Header("Combo")]
-        [Tooltip("Golpes del combo; el último es el golpe final, más fuerte.")]
-        [Min(1)] [SerializeField] private int golpesCombo = 3;
+        [Tooltip("Golpes del combo (T-1490: 1 o 2; sin golpe final fuerte). Tras el último vuelve al primero.")]
+        [Range(1, 2)] [SerializeField] private int golpesCombo = 2;
         [Tooltip("Cuánto se recuerda un clic dado antes de poder golpear (s).")]
         [Min(0f)] [SerializeField] private float segundosBuffer = 0.3f;
         [Tooltip("Parte de la recuperación (0 a 1) desde la cual ya se puede encadenar el siguiente golpe.")]
         [Range(0f, 1f)] [SerializeField] private float ventanaCombo = 0.45f;
         [Tooltip("Segundos sin golpear tras los que el combo vuelve al primer golpe (s).")]
         [Min(0.05f)] [SerializeField] private float segundosReinicioCombo = 0.7f;
+
+        [Header("Daño (T-1490)")]
+        [Tooltip("Factor del daño de los puños contra enemigos (pandilleros): 0.45 hace que uno de 60 de vida aguante unos 7 golpes de 20. No afecta a las armas.")]
+        [Range(0.05f, 1f)] [SerializeField] private float multiplicadorPunosContraEnemigos = 0.45f;
 
         [Header("Impacto")]
         [Tooltip("Congelado de la animación al conectar un golpe normal (s).")]
@@ -55,7 +59,8 @@ namespace MechaCyberpunk.Personaje
         public float AcercamientoMaximo => acercamientoMaximo;
         public float DistanciaParada => distanciaParada;
         public float RapidezAcercamiento => rapidezAcercamiento;
-        public int GolpesCombo => golpesCombo;
+        public float MultiplicadorPunosContraEnemigos => multiplicadorPunosContraEnemigos;
+        public int GolpesCombo => Mathf.Clamp(golpesCombo, 1, 2);
         public float SegundosBuffer => segundosBuffer;
         public float VentanaCombo => ventanaCombo;
         public float SegundosReinicioCombo => segundosReinicioCombo;

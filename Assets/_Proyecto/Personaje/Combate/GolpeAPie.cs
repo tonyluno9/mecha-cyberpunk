@@ -1,5 +1,6 @@
 using System;
 using MechaCyberpunk.Combate.Golpe;
+using MechaCyberpunk.Combate.Lectura;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Personaje.Jugador;
 using MechaCyberpunk.Personaje.Movimiento;
@@ -148,7 +149,7 @@ namespace MechaCyberpunk.Personaje.Combate
                 MoverPuno();
                 return;
             }
-            bool enCombo = combo.Paso >= 0 && combo.Paso < combo.Golpes - 1;
+            bool enCombo = combo.Paso >= 0 && !combo.EsGolpeFinal;
             bool animacionLibre = enCombo || !AnimacionOcupada();
             if (combo.Avanzar(dt, ciclo.Fase, ciclo.Progreso, animacionLibre))
             {
@@ -292,11 +293,13 @@ namespace MechaCyberpunk.Personaje.Combate
         private MechaCyberpunk.Personaje.Habilidades.HabilidadesProtesis Habilidades =>
             habilidades != null ? habilidades : (habilidades = GetComponent<MechaCyberpunk.Personaje.Habilidades.HabilidadesProtesis>());
 
-        private float DanioDelGolpe()
+        private float DanioDelGolpe(Component objetivo)
         {
             DatosArma punos = DatosPunos();
             float basico = punos != null ? punos.Danio : datos.DanioGolpe;
-            return basico * implantes.Efectos.multiplicadorGolpeAPie * (Habilidades != null ? Habilidades.FactorGolpe : 1f);
+            float total = basico * implantes.Efectos.multiplicadorGolpeAPie * (Habilidades != null ? Habilidades.FactorGolpe : 1f);
+            // T-1490: los puños pegan menos a los enemigos (ILecturaRival); con muchos hay que usar un arma. Las armas no pasan por aquí.
+            return ReglaDanioPunos.Danio(total, config.MultiplicadorPunosContraEnemigos, objetivo != null && objetivo.GetComponentInParent<ILecturaRival>() != null);
         }
 
         private void AjustarRecarga()
@@ -319,7 +322,7 @@ namespace MechaCyberpunk.Personaje.Combate
                 datos.RadioGolpe, impactos, out Vector3 punto);
             if (objetivo != null)
             {
-                ResultadoDanio resultado = objetivo.RecibirDanio(new InfoDanio(DanioDelGolpe(), TipoDanio.Golpe, punto, direccion, null));
+                ResultadoDanio resultado = objetivo.RecibirDanio(new InfoDanio(DanioDelGolpe(objetivo as Component), TipoDanio.Golpe, punto, direccion, null));
                 Conecto?.Invoke(resultado.CausoKO);
                 sensacion.Conectar(objetivo as Component, direccion, combo.EsGolpeFinal);
                 // T-992: con BRAZOS activa el golpe empuja a lo que tenga cuerpo con física.

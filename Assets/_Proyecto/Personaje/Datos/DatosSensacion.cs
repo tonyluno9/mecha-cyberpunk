@@ -102,16 +102,16 @@ namespace MechaCyberpunk.Personaje
         {
             return new[]
             {
-                new AjusteSensacion(0.9f, 0.5f, 0f, 0, 0f, 0.12f, 0f, 0f, 0, 0f, 0f, 8f),            // Puños
-                new AjusteSensacion(1.0f, 0.25f, 0.26f, 6, 0.07f, 0.12f, 0f, 0.25f, 1, 0.3f, 1.5f, 6f), // Pistola
-                new AjusteSensacion(3.2f, 0.5f, 0.5f, 4, 0.16f, 0.26f, 0.3f, 0.6f, 1, 0f, 0f, 8f),   // Escopeta
-                new AjusteSensacion(0.6f, 0.35f, 0.3f, 5, 0.045f, 0.07f, 0.1f, 0.3f, 1, 0.15f, 2.5f, 5f), // Fusil
-                new AjusteSensacion(4.5f, 0.3f, 0.4f, 10, 0.2f, 0.4f, 0.45f, 0.6f, 1, 0f, 0f, 8f),   // Sniper
-                new AjusteSensacion(0.5f, 0.3f, 0.22f, 4, 0.035f, 0.06f, 0.09f, 0.22f, 1, 0.12f, 2f, 5f), // Subfusil
-                new AjusteSensacion(2.6f, 0.4f, 0.4f, 8, 0.14f, 0.2f, 0.28f, 0.5f, 0, 0f, 0f, 8f),   // Revólver (los casquillos salen al recargar)
-                new AjusteSensacion(3.0f, 0.3f, 0.3f, 0, 0.15f, 0.3f, 0.3f, 0.6f, 0, 0f, 0f, 8f),    // Lanzagranadas
+                new AjusteSensacion(0.18f, 0.1f, 0f, 0, 0f, 0.12f, 0f, 0f, 0, 0f, 0f, 8f),            // Puños
+                new AjusteSensacion(0.2f, 0.05f, 0.26f, 6, 0.07f, 0.12f, 0f, 0.25f, 1, 0.3f, 1.5f, 6f), // Pistola
+                new AjusteSensacion(0.64f, 0.1f, 0.5f, 4, 0.16f, 0.26f, 0.3f, 0.6f, 1, 0f, 0f, 8f),   // Escopeta
+                new AjusteSensacion(0.12f, 0.07f, 0.3f, 5, 0.045f, 0.07f, 0.1f, 0.3f, 1, 0.15f, 2.5f, 5f), // Fusil
+                new AjusteSensacion(0.9f, 0.06f, 0.4f, 10, 0.2f, 0.4f, 0.45f, 0.6f, 1, 0f, 0f, 8f),   // Sniper
+                new AjusteSensacion(0.1f, 0.06f, 0.22f, 4, 0.035f, 0.06f, 0.09f, 0.22f, 1, 0.12f, 2f, 5f), // Subfusil
+                new AjusteSensacion(0.52f, 0.08f, 0.4f, 8, 0.14f, 0.2f, 0.28f, 0.5f, 0, 0f, 0f, 8f),   // Revólver (los casquillos salen al recargar)
+                new AjusteSensacion(0.6f, 0.06f, 0.3f, 0, 0.15f, 0.3f, 0.3f, 0.6f, 0, 0f, 0f, 8f),    // Lanzagranadas
                 new AjusteSensacion(0f, 0f, 0f, 0, 0f, 0.12f, 0f, 0f, 0, 0f, 0f, 8f),               // Granada
-                new AjusteSensacion(0.7f, 0.2f, 0.3f, 5, 0.05f, 0.1f, 0.12f, 0.3f, 0, 0f, 0f, 8f),  // Rifle de plasma
+                new AjusteSensacion(0.14f, 0.04f, 0.3f, 5, 0.05f, 0.1f, 0.12f, 0.3f, 0, 0f, 0f, 8f),  // Rifle de plasma
             };
         }
 
