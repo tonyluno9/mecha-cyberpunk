@@ -10,10 +10,12 @@ using UnityEngine.SceneManagement;
 namespace MechaCyberpunk.Personaje.Jugador
 {
     /// <summary>
-    /// T-1489: detalles de sensación del jugador a pie. Polvo en los pies al aterrizar de una caída (proporcional a la altura), salpicadura y chapoteo
-    /// al pisar un charco, y temblor de cámara al recibir daño (por TemblorCamara, que escucha la cámara). Lo agrega <see cref="ControladorAPie"/>.
-    /// Los charcos del mundo son quads sin collider en la capa 4 (Water) con nombre "Charco*": se buscan al cargar escena y cada
-    /// <see cref="SegundosRebuscarCharcos"/> s (Personaje no puede referenciar Mundo). Cada efecto usa un solo ParticleSystem que se reposiciona y emite.
+    /// T-1489: detalles de sensación del jugador a pie. Polvo en los pies al aterrizar de una caída (proporcional a la altura), ondas y chapoteo
+    /// al pisar agua, y temblor de cámara al recibir daño (por TemblorCamara, que escucha la cámara). Lo agrega <see cref="ControladorAPie"/>.
+    /// T-1525: sin salpicadura de gotas; solo las ondas de T-1503. Las ondas salen en todo piso mojado: en los charcos con el shader de agua las dibuja ese shader
+    /// (globales _OndasPisadas); en el resto (asfalto mojado, banquetas, decals de charco) las dibuja <see cref="AnillosSuelo"/> sobre el piso.
+    /// Los charcos del mundo son quads sin collider (capa 4 con nombre "Charco*", o con material de charco/mojado y planos): se buscan al cargar escena y cada
+    /// <see cref="SegundosRebuscarCharcos"/> s (Personaje no puede referenciar Mundo).
     /// </summary>
     [RequireComponent(typeof(ControladorAPie))]
     public class EfectosPieJugador : MonoBehaviour
@@ -25,11 +27,13 @@ namespace MechaCyberpunk.Personaje.Jugador
         private const float AlturaPie = 0.05f;
         private const float DistanciaOrigenImpacto = 3f;
         private const int MaximoParticulas = 128;
+        private const string NombreShaderCharco = "MechaCyberpunk/Mundo/Charco";
+        private const float GrosorMaximoDecal = 0.15f; // m: un decal de agua es plano
+        private const float LadoMaximoDecal = 40f; // m: más grande que esto es un piso, no un decal
+        private static readonly string[] PalabrasAgua = { "charco", "puddle", "mojad", "wet" };
 
         private ControladorAPie controlador;
         private ParticleSystem polvo;
-        private ParticleSystem salpicadura;
-        private ParticleSystem anillo;
         private readonly ReglaOndasCharco ondas = new ReglaOndasCharco();
         private readonly Vector4[] bufferOndas = new Vector4[ReglaOndasCharco.Maximo];
         private bool ondasPublicadas;
@@ -37,24 +41,38 @@ namespace MechaCyberpunk.Personaje.Jugador
         private static readonly int IdCuantasOndas = Shader.PropertyToID("_OndasPisadasN");
         private static readonly int IdTiempoOndas = Shader.PropertyToID("_TiempoOndasCharco");
         private CinemachineImpulseSource fuenteTemblor;
-        private readonly List<Transform> charcos = new List<Transform>();
+        private readonly AnillosSuelo anillosSuelo = new AnillosSuelo();
+        private readonly List<Charco> charcos = new List<Charco>();
+
+        private readonly struct Charco
+        {
+            public readonly Renderer Render;
+            public readonly bool EsQuadUnitario; // quad de lado 1 en local (los charcos del kit): se prueba con coordenadas locales
+            public readonly bool ConShaderAgua; // sus ondas las dibuja el shader de charco
+
+            public Charco(Renderer render, bool esQuadUnitario, bool conShaderAgua)
+            {
+                Render = render;
+                EsQuadUnitario = esQuadUnitario;
+                ConShaderAgua = conShaderAgua;
+            }
+        }
         private float ultimaBusqueda = float.NegativeInfinity;
 
         /// <summary>Últimos valores emitidos, para las pruebas.</summary>
         public int UltimoPolvo { get; private set; }
-        public int UltimasGotas { get; private set; }
         public float UltimaFuerzaTemblor { get; private set; }
 
         /// <summary>T-1503: las últimas pisadas en charcos (el shader dibuja una onda por cada una).</summary>
         public ReglaOndasCharco Ondas => ondas;
 
+        /// <summary>T-1525: las ondas dibujadas sobre pisos mojados que no son un charco con el shader de agua.</summary>
+        public AnillosSuelo Anillos => anillosSuelo;
+
         private void Awake()
         {
             controlador = GetComponent<ControladorAPie>();
             polvo = CrearParticulas("PolvoAterrizaje", new Color(0.72f, 0.68f, 0.6f, 0.55f), 0.35f, 0.9f, 0.6f, 1.6f, 0.08f, 0.22f, -0.05f);
-            salpicadura = CrearParticulas("SalpicaduraCharco", new Color(0.8f, 0.9f, 1f, 0.95f), 0.3f, 0.7f, 1.2f, 3f, 0.05f, 0.1f, 1f, TexturaRadial(32, 0f, 0.5f, 0.15f));
-            anillo = CrearParticulas("AnilloCharco", new Color(0.75f, 0.88f, 1f, 0.7f), 0.7f, 0.7f, 0f, 0f, 0.15f, 0.15f, 0f, TexturaRadial(64, 0.36f, 0.5f, 0.06f));
-            ConfigurarAnillo(anillo);
             fuenteTemblor = GetComponent<CinemachineImpulseSource>();
             if (fuenteTemblor == null)
             {
@@ -82,19 +100,23 @@ namespace MechaCyberpunk.Personaje.Jugador
                 Shader.SetGlobalFloat(IdCuantasOndas, 0f);
                 ondasPublicadas = false;
             }
+            anillosSuelo.Actualizar(float.PositiveInfinity);
         }
+
+        private void OnDestroy() => anillosSuelo.Destruir();
 
         // T-1503: pasa las ondas vivas a todos los charcos como globales del shader (un solo juego para todos, sin tocar cada material).
         private void Update()
         {
             float ahora = Time.time;
             int n = ondas.Llenar(bufferOndas, ahora);
-            if (n > 0 || ondasPublicadas)
+            int enSuelo = anillosSuelo.Actualizar(ahora);
+            if (n > 0 || enSuelo > 0 || ondasPublicadas)
             {
                 Shader.SetGlobalVectorArray(IdOndas, bufferOndas);
                 Shader.SetGlobalFloat(IdCuantasOndas, n);
-                Shader.SetGlobalFloat(IdTiempoOndas, ahora);
-                ondasPublicadas = n > 0;
+                Shader.SetGlobalFloat(IdTiempoOndas, ahora); // el mismo reloj para el shader de charco y el de las ondas de piso
+                ondasPublicadas = n > 0 || enSuelo > 0;
             }
         }
 
@@ -112,14 +134,19 @@ namespace MechaCyberpunk.Personaje.Jugador
 
         private void AlDarPaso(Vector3 posicion, string idPaso, bool corriendo)
         {
-            if (!EstaEnCharco(posicion))
+            bool enCharco = EstaEnCharco(posicion, out bool conShaderAgua);
+            if (!enCharco && idPaso != ReglaSuperficiePaso.Mojado)
             {
-                return;
+                return; // piso seco
             }
-            UltimasGotas = ReglaEfectosPie.GotasSalpicadura(corriendo);
-            Emitir(salpicadura, posicion + Vector3.up * AlturaPie, UltimasGotas);
-            Emitir(anillo, posicion + Vector3.up * 0.03f, 1);
-            ondas.Agregar(posicion, Time.time);
+            if (enCharco && conShaderAgua)
+            {
+                ondas.Agregar(posicion, Time.time); // las dibuja el shader de agua de ese charco
+            }
+            else
+            {
+                anillosSuelo.Agregar(posicion, Time.time); // asfalto mojado, banqueta mojada o decal de charco sin shader de agua
+            }
             if (idPaso != ReglaSuperficiePaso.Mojado)
             {
                 Sonidos.ReproducirEn(ReglaSuperficiePaso.Mojado, posicion); // chapoteo: el catálogo no tiene uno propio, se usa el paso mojado
@@ -138,23 +165,41 @@ namespace MechaCyberpunk.Personaje.Jugador
             TemblorCamara.Generar(fuenteTemblor, fuerza, info.Direccion);
         }
 
-        private bool EstaEnCharco(Vector3 posicion)
+        private bool EstaEnCharco(Vector3 posicion, out bool conShaderAgua)
         {
+            conShaderAgua = false;
             if (Time.time - ultimaBusqueda > SegundosRebuscarCharcos)
             {
                 ultimaBusqueda = Time.time;
                 BuscarCharcos();
             }
             float alcance2 = AlcanceCharcos * AlcanceCharcos;
-            foreach (Transform charco in charcos)
+            foreach (Charco charco in charcos)
             {
-                if (charco == null || !charco.gameObject.activeInHierarchy || (charco.position - posicion).sqrMagnitude > alcance2)
+                Renderer r = charco.Render;
+                if (r == null || !r.gameObject.activeInHierarchy)
                 {
                     continue;
                 }
-                Vector3 local = charco.InverseTransformPoint(posicion);
-                if (ReglaEfectosPie.PisaCharco(local.x, local.y, posicion.y - charco.position.y))
+                Transform t = r.transform;
+                if ((t.position - posicion).sqrMagnitude > alcance2)
                 {
+                    continue;
+                }
+                bool pisa;
+                if (charco.EsQuadUnitario)
+                {
+                    Vector3 local = t.InverseTransformPoint(posicion);
+                    pisa = ReglaEfectosPie.PisaCharco(local.x, local.y, posicion.y - t.position.y);
+                }
+                else
+                {
+                    Bounds b = r.bounds;
+                    pisa = ReglaEfectosPie.PisaAreaPlana(posicion.x - b.center.x, posicion.z - b.center.z, b.extents.x, b.extents.z, posicion.y - b.center.y);
+                }
+                if (pisa)
+                {
+                    conShaderAgua = charco.ConShaderAgua;
                     return true;
                 }
             }
@@ -166,41 +211,33 @@ namespace MechaCyberpunk.Personaje.Jugador
             charcos.Clear();
             foreach (MeshRenderer r in FindObjectsByType<MeshRenderer>(FindObjectsInactive.Exclude, FindObjectsSortMode.None))
             {
+                Material m = r.sharedMaterial;
                 if (r.gameObject.layer == CapaCharcos && r.name.StartsWith(PrefijoCharco, StringComparison.Ordinal))
                 {
-                    charcos.Add(r.transform);
+                    charcos.Add(new Charco(r, true, TieneShaderAgua(m)));
+                    continue;
                 }
-            }
-        }
-
-        // Anillo que se abre en el agua: un solo cuadro horizontal que crece y se desvanece.
-        private static void ConfigurarAnillo(ParticleSystem sistema)
-        {
-            ParticleSystem.MainModule main = sistema.main;
-            main.startSize = 1.5f;
-            ParticleSystem.ShapeModule forma = sistema.shape;
-            forma.enabled = false;
-            ParticleSystem.SizeOverLifetimeModule tamano = sistema.sizeOverLifetime;
-            tamano.enabled = true;
-            tamano.size = new ParticleSystem.MinMaxCurve(1f, AnimationCurve.EaseInOut(0f, 0.12f, 1f, 1f));
-            sistema.GetComponent<ParticleSystemRenderer>().renderMode = ParticleSystemRenderMode.HorizontalBillboard;
-        }
-
-        // Textura procedural: alfa 1 entre radios interior y exterior (de 0 a 0.5), suave en los bordes.
-        private static Texture2D TexturaRadial(int lado, float interior, float exterior, float suavidad)
-        {
-            Texture2D t = new Texture2D(lado, lado, TextureFormat.RGBA32, false) { wrapMode = TextureWrapMode.Clamp, name = "TexturaCharco" };
-            for (int y = 0; y < lado; y++)
-            {
-                for (int x = 0; x < lado; x++)
+                Vector3 tam = r.bounds.size;
+                if (m != null && tam.y <= GrosorMaximoDecal && tam.x < LadoMaximoDecal && tam.z < LadoMaximoDecal && ContieneAgua(m.name))
                 {
-                    float r = Vector2.Distance(new Vector2((x + 0.5f) / lado, (y + 0.5f) / lado), new Vector2(0.5f, 0.5f));
-                    float a = Mathf.Clamp01((r - interior) / suavidad) * Mathf.Clamp01((exterior - r) / suavidad);
-                    t.SetPixel(x, y, new Color(1f, 1f, 1f, a));
+                    // T-1525: decals planos de agua o mojado con otro material (T508, Tianguis, banqueta mojada...): se prueba con su caja plana.
+                    charcos.Add(new Charco(r, false, TieneShaderAgua(m)));
                 }
             }
-            t.Apply();
-            return t;
+        }
+
+        private static bool TieneShaderAgua(Material m) => m != null && m.shader != null && m.shader.name == NombreShaderCharco;
+
+        private static bool ContieneAgua(string nombre)
+        {
+            foreach (string p in PalabrasAgua)
+            {
+                if (nombre.IndexOf(p, StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         private static void Emitir(ParticleSystem sistema, Vector3 posicion, int cuantas)
@@ -209,7 +246,7 @@ namespace MechaCyberpunk.Personaje.Jugador
             sistema.Emit(cuantas);
         }
 
-        private ParticleSystem CrearParticulas(string nombre, Color color, float vidaMin, float vidaMax, float velMin, float velMax, float tamMin, float tamMax, float gravedad, Texture2D textura = null)
+        private ParticleSystem CrearParticulas(string nombre, Color color, float vidaMin, float vidaMax, float velMin, float velMax, float tamMin, float tamMax, float gravedad)
         {
             GameObject objeto = new GameObject(nombre);
             objeto.transform.SetParent(transform, false);
@@ -239,12 +276,8 @@ namespace MechaCyberpunk.Personaje.Jugador
                 new[] { new GradientAlphaKey(1f, 0f), new GradientAlphaKey(0f, 1f) });
             colorVida.color = degradado;
             ParticleSystemRenderer render = objeto.GetComponent<ParticleSystemRenderer>();
-            Shader s = textura != null ? Shader.Find("Sprites/Default") : Shader.Find("Universal Render Pipeline/Particles/Unlit");
+            Shader s = Shader.Find("Universal Render Pipeline/Particles/Unlit");
             Material material = new Material(s != null ? s : Shader.Find("Sprites/Default"));
-            if (textura != null)
-            {
-                material.mainTexture = textura;
-            }
             render.sharedMaterial = material;
             render.shadowCastingMode = ShadowCastingMode.Off;
             render.receiveShadows = false;
