@@ -30,3 +30,23 @@ nada de PlayMode completo (pruebas por clase), no correr CreadorTodo, nunca forc
 - 20-nov: paso 0 (Unity cerrado, sin lockfile, main f35707b, 11 GB RAM libres, 153 GB disco; Blender abierto).
 - 20-nov: T-1490..T-1496 integradas en integ/20nov (cf6ecc0), métodos de editor corridos, pruebas por clase. Segunda tanda lanzada (T-1497..T-1503, T-1505).
 - 20-nov madrugada: T-1498, T-1499, T-1501, T-1502, T-1503 integradas (b8edbcb). T-1497, T-1505, T-1507 mezcladas; métodos en curso. T-1506 (animaciones de Blender B y C) en curso. No se corre ConfigurarEscaleras de T-1505: los clips de Blender son de escalones y AnimacionEscalera es la escalera de mano.
+
+# Segunda vuelta 20-nov (goal nuevo: nuevos-19nov y lo que faltó)
+
+Rama de integración: `integ/20nov-B` en `.sesiones/s2`, sale de main e785e2a. Lo de la primera vuelta (T-1490..T-1507) ya está en main.
+Lo de Blender 19N (pj01_clips, nova_clips, npc_clips, carros en metros) ya entró en T-1505..T-1507: no se repite.
+Fuentes de modelos: `imageassets/modelos-nuevos/nuevos-19nov/` de la carpeta principal (no están en los worktrees).
+
+| Tarea | Qué | Estado |
+| --- | --- | --- |
+| T-1510 | PA01/PA02 patrullas nuevas (puertas, llantas, cristal), V22 nuevo (mejor variante), rines de policía V05/V06/V11, ninguna patrulla hundida | pendiente |
+| T-1511 | CB01-CB04 cobertura: importar, poner en la ciudad, que Nova y SKULLS se agachen detrás | pendiente |
+| T-1512 | Identificar SIN_NOMBRE_01-15 (ED03-ED12, MU01-MU03) y renombrar; ED01-ED12 en vez de edificios de primitivas por barrio | pendiente |
+| T-1513 | Muro de la ciudad con MU01-MU03 (mismo trazo del muro que le gustó) | espera T-1512 (identificación) |
+| T-1514 | Pruebas en rojo de la primera vuelta (maletín 45 cm, dron al borde del muro, SNAKES al inicio), cama/espejo sin cuarto | pendiente |
+| T-1515 | PJ01: cobertura (quieto/asomarse/regresar), daño en 4 direcciones, manejar moto, escalones; velocidades del Animator = tabla | pendiente |
+| T-1516 | NPCs: platicar, sentado en bancas, agacharse; perro E17 con su modelo de escala real y sus clips | pendiente |
+| Final | Builds Demo y Juego (CyberCity.exe) en la carpeta principal, reporte, cerrar Unity | pendiente |
+
+## Bitácora (segunda vuelta)
+- 20-nov: paso 0. Unity cerrado, sin lockfile, 10 GB RAM, 119 GB disco. Blender abierto por otra sesión (no se toca; los subagentes usan Blender 5.2 en -b).
