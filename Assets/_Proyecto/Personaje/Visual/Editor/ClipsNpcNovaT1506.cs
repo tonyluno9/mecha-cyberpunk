@@ -146,8 +146,6 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
         public static readonly (string Controlador, string Estado, string Clip)[] ClipsDeEstado =
         {
             (ControladorMesera, "Caminar", "NPC_Mesera_Charola"), (ControladorMesera, "Correr", "NPC_Mesera_Charola"),
-            (ControladorPerro, "Caminar", "E17_Caminar"), (ControladorPerro, "Correr", "E17_Correr"), (ControladorPerro, "Golpe", "E17_Morder"),
-            (ControladorPerro, "Saltar", "E17_SaltoAtaque"), (ControladorPerro, "Caer", "E17_Muerte"),
         };
 
         // ---------- Gancho de ConstructorControladorBase.ClipsPorPapel ----------

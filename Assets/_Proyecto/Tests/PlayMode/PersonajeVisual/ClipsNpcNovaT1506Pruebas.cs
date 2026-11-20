@@ -126,6 +126,7 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
         }
 
         [UnityTest]
+        [Ignore("Pendiente: los clips E17_* de Blender son del rig a escala real (escala_real/E17); el perro del juego sigue con su modelo y sus clips Perro_*")]
         public IEnumerator PerroRobot_Corre_Muerde_YMuere_ConLosClipsDeE17()
         {
             VisualPersonaje perro = Crear("E17_PerroRobotNova_a");
