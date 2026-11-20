@@ -52,14 +52,18 @@ namespace MechaCyberpunk.Tests.Vehiculos
 
         private static float FondoDeLlanta(Transform carro, string rueda)
         {
-            Renderer[] rs = carro.Find(rueda).GetComponentsInChildren<Renderer>();
-            Assert.Greater(rs.Length, 0, rueda + " sin llanta visible");
-            Bounds b = rs[0].bounds;
-            foreach (Renderer r in rs)
+            // Fondo exacto por vértices: el AABB de un Renderer con la llanta girada sale inflado.
+            float menor = float.MaxValue;
+            foreach (MeshFilter f in carro.Find(rueda).GetComponentsInChildren<MeshFilter>())
             {
-                b.Encapsulate(r.bounds);
+                Matrix4x4 m = f.transform.localToWorldMatrix;
+                foreach (Vector3 v in f.sharedMesh.vertices)
+                {
+                    menor = Mathf.Min(menor, m.MultiplyPoint3x4(v).y);
+                }
             }
-            return b.min.y;
+            Assert.Less(menor, float.MaxValue, rueda + " sin llanta visible");
+            return menor;
         }
 
         [UnityTest]
@@ -89,7 +93,11 @@ namespace MechaCyberpunk.Tests.Vehiculos
             }
             Assert.Greater(Mathf.Abs(Mathf.DeltaAngle(antes, ruedas.RodadoGrados)), 0.5f, codigo + ": las llantas rodaron");
             Transform giro = carroObjeto.transform.Find("Rueda_TI/Direccion/Giro");
-            Assert.AreEqual(ruedas.RodadoGrados, Mathf.Repeat(giro.localEulerAngles.x, 360f), 1f, codigo + ": el pivote Giro de la llanta gira lo que rodó");
+            // El ángulo se lee con el cuaternión (eulerAngles.x es ambiguo pasados los 90°): giro firmado de la llanta alrededor de su eje X local.
+            Vector3 arriba = giro.localRotation * Vector3.up;
+            float medido = Mathf.Repeat(Mathf.Atan2(arriba.z, arriba.y) * Mathf.Rad2Deg, 360f);
+            Assert.AreEqual(0f, Mathf.Abs(Mathf.DeltaAngle(ruedas.RodadoGrados, medido)), 1f, codigo + ": el pivote Giro de la llanta gira lo que rodó (" + ruedas.RodadoGrados.ToString("F1") + " contra " + medido.ToString("F1") + ")");
+            yield break;
         }
 
         [UnityTest]
