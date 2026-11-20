@@ -26,6 +26,11 @@ namespace MechaCyberpunk.Tests.Personaje
             visual = jugador.GetComponentInChildren<VisualPersonaje>(true);
             anim = visual != null ? visual.Animador : null;
             vida = jugador.GetComponent<VidaAPie>();
+            if (anim != null)
+            {
+                // Sin cámara que lo vea el Animator se detiene (culling): las demás pruebas de daño también lo fuerzan.
+                anim.cullingMode = AnimatorCullingMode.AlwaysAnimate;
+            }
         }
 
         public override void TearDown()
