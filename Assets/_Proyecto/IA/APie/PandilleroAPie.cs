@@ -685,7 +685,7 @@ namespace MechaCyberpunk.IA.APie
         public bool EsHostil => hostilDesde >= 0f;
 
         /// <summary>T-1528: segundos que lleva atacando (0 si no es hostil).</summary>
-        public float SegundosHostil => EsHostil ? Time.time - hostilDesde : 0f;
+        public float SegundosHostil => !EsHostil ? 0f : hostilFijo ? ReglaProvocacionCalle.SegundosRampa + Time.time - hostilDesde : Time.time - hostilDesde;
 
         /// <summary>T-1528: el jugador respondió: este maleante y los de su grupo atacan desde ya.</summary>
         public void VolverseHostil()
@@ -708,7 +708,9 @@ namespace MechaCyberpunk.IA.APie
                 return;
             }
             hostilFijo = completo;
-            hostilDesde = completo ? Time.time - ReglaProvocacionCalle.SegundosRampa : Time.time;
+            // Con completo, SegundosHostil ya cuenta la rampa entera (ver abajo). hostilDesde no puede ser negativo: con menos de 90 s de juego
+            // "Time.time - rampa" daba negativo y EsHostil quedaba en falso (los maleantes nunca atacaban).
+            hostilDesde = Time.time;
             ultimaAlertaHostil = Time.time;
             proximoTiroLimitado = completo ? Time.time : Time.time + ReglaProvocacionCalle.RecargaExtraInicial;
         }
