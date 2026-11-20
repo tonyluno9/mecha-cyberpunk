@@ -10,7 +10,26 @@ namespace MechaCyberpunk.IA.APie
     /// </summary>
     public class AnimacionCivilMundo : MonoBehaviour
     {
+        [Header("T-1521: guarda contra el civil vivo acostado")]
+        [Tooltip("Cabeza sobre la planta (m) por debajo de la cual un civil vivo se considera acostado.")]
+        [Min(0.1f)] [SerializeField] private float alturaMinimaCabeza = 0.5f;
+        [Tooltip("Segundos seguidos con la cabeza baja, sin estar tumbado a propósito, antes de levantarlo.")]
+        [Min(0.5f)] [SerializeField] private float segundosBajo = 2.5f;
+        [Tooltip("Segundos seguidos tumbado (KO) sin que se haya avisado su muerte antes de levantarlo. Sacar a un conductor del carro tarda menos de 2 s.")]
+        [Min(1f)] [SerializeField] private float segundosTumbado = 8f;
+        [Tooltip("Cada cuántos segundos revisa la postura (s).")]
+        [Min(0.1f)] [SerializeField] private float segundosEntreRevisiones = 0.5f;
+        [Tooltip("Cuánto debe verse la raíz derecha para revisarlo (1 = vertical, valor mínimo de transform.up.y).")]
+        [Range(0.5f, 1f)] [SerializeField] private float minimoRaizDerecha = 0.9f;
+
         private VisualPersonaje visual;
+        private bool muerto;
+        private ReglaPosturaCivil postura;
+        private Transform cabeza;
+        private float proximaRevision;
+
+        /// <summary>True desde que le avisaron su muerte hasta que vuelve a la vida.</summary>
+        public bool MuerteAvisada => muerto;
 
         public VisualPersonaje Visual => visual != null ? visual : (visual = GetComponentInChildren<VisualPersonaje>(false));
 
@@ -26,6 +45,7 @@ namespace MechaCyberpunk.IA.APie
         /// <summary>Muere: elige la caída según la dirección del golpe y la reproduce.</summary>
         public void AlMorirCivil(Vector3 direccion)
         {
+            muerto = true;
             if (Visual != null)
             {
                 ReproductorClipUnico bucle = Visual.GetComponent<ReproductorClipUnico>();
@@ -136,11 +156,60 @@ namespace MechaCyberpunk.IA.APie
         /// <summary>El peatón vuelve a la vida (el pool lo reutiliza).</summary>
         public void AlRevivirCivil()
         {
+            muerto = false;
+            postura?.Reiniciar();
             if (Visual != null)
             {
                 Reproductor().Detener();
                 Visual.Caido = false;
             }
+        }
+
+        private void Update()
+        {
+            if (Time.time < proximaRevision)
+            {
+                return;
+            }
+            proximaRevision = Time.time + segundosEntreRevisiones;
+            RevisarPostura(segundosEntreRevisiones);
+        }
+
+        /// <summary>
+        /// T-1521: si un civil vivo lleva un rato con la cabeza a ras de piso o tumbado sin que nadie lo haya matado, suelta el clip, quita el KO y reinicia el Animator
+        /// (queda de pie en Idle). Cubre un clip de caída o de agachado que no se soltó, un KO que nadie quitó y un Animator trabado.
+        /// </summary>
+        public void RevisarPostura(float dt)
+        {
+            VisualPersonaje v = Visual;
+            if (v == null || v.Animador == null)
+            {
+                return;
+            }
+            if (cabeza == null || !cabeza.IsChildOf(v.Animador.transform))
+            {
+                cabeza = v.Animador.avatar != null && v.Animador.isHuman ? v.Animador.GetBoneTransform(HumanBodyBones.Head) : null;
+            }
+            if (cabeza == null)
+            {
+                return;
+            }
+            if (postura == null)
+            {
+                postura = new ReglaPosturaCivil(alturaMinimaCabeza, segundosBajo, segundosTumbado);
+            }
+            ReproductorClipUnico reproductor = v.GetComponent<ReproductorClipUnico>();
+            bool enBucle = reproductor != null && reproductor.Repite;
+            float alturaCabeza = cabeza.position.y - transform.position.y;
+            bool derecha = transform.up.y >= minimoRaizDerecha;
+            if (postura.Avanzar(dt, alturaCabeza, muerto, v.Caido, enBucle, derecha) != ReglaPosturaCivil.Accion.Levantar)
+            {
+                return;
+            }
+            Debug.LogWarning("[IA] T-1521: " + name + " estaba vivo y acostado (cabeza a " + alturaCabeza.ToString("F2") + " m, KO " + v.Caido + "): se levanta.", this);
+            Reproductor().Detener();
+            v.Caido = false;
+            v.Animador.Rebind();
         }
 
         private Vector3 Plano(Vector3 direccion)

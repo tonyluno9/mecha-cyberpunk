@@ -110,7 +110,8 @@ namespace MechaCyberpunk.Tests.Mundo
                 GameObject go = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Proyecto/Personaje/Visual/Prefabs/" + prefab + ".prefab");
                 Assert.IsNotNull(go, prefab);
                 float altura = medida * go.transform.Find("Giro/Modelo").localScale.y;
-                Assert.AreEqual(MechaCyberpunk.Arte.Editor.ColocarS2.AlturaJugador * relativa, altura, 0.03f, prefab + " fuera de escala contra el jugador");
+                // T-1521: la escala fina sale de medir la malla animada (EscalaHumanosT1521, probada en EscalaHumanosT1521Pruebas); aquí solo se cuida que `medida` siga cerca.
+                Assert.AreEqual(MechaCyberpunk.Arte.Editor.ColocarS2.AlturaJugador * relativa, altura, 0.15f, prefab + " fuera de escala contra el jugador");
                 Assert.That(relativa, Is.InRange(0.95f, 1.3f), prefab + ": ningún adulto enano ni gigante");
             }
             Transform guardias = escena.GetRootGameObjects().First(g => g.name == "T510_Guardias").transform;

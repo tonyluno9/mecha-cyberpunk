@@ -47,12 +47,14 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.AreEqual(AlturaEsperada, AlturaAnimada(visual.gameObject), Tolerancia, "El jugador animado mide 1.80 m");
         }
 
-        // Excepcion documentada (T-688): el Doc (Visual_Doctor) mide 1.10 veces al jugador a proposito (T-812, sesion 2).
-        // Alturas relativas al jugador de cada personaje que comparte escala con él (ColocarS2.Personajes): nadie enano ni gigante.
+        // T-1521: la altura de los humanos sale de EscalasHumanos (el Doc ya no es 1.09 veces el jugador). Los que no están en esa tabla (el jugador, AL10, AL11 y los
+        // guardias de Nova, que son más altos a propósito) llevan aquí su altura relativa al jugador: nadie enano ni gigante.
         private static readonly (string prefab, float relativa)[] Personajes =
         {
-            ("Visual_man", 1.00f), ("Visual_woman", 1.00f), ("Visual_PJ01", 1.00f), ("Visual_Doctor", 1.10f), ("Visual_Inventor", 0.98f), ("Visual_Hacker", 1.00f),
-            ("Visual_RobotHombre", 1.00f), ("Visual_SkullHombre", 1.00f), ("Visual_woman2", 0.97f), ("Visual_AL10", 1.00f), ("Visual_AL11", 1.00f), ("Visual_GuardiaNova", 1.25f),
+            ("Visual_man", EscalasHumanos.Relativa("Visual_man")), ("Visual_woman", EscalasHumanos.Relativa("Visual_woman")), ("Visual_PJ01", 1.00f),
+            ("Visual_Doctor", EscalasHumanos.Relativa("Visual_Doctor")), ("Visual_Inventor", EscalasHumanos.Relativa("Visual_Inventor")), ("Visual_Hacker", EscalasHumanos.Relativa("Visual_Hacker")),
+            ("Visual_RobotHombre", EscalasHumanos.Relativa("Visual_RobotHombre")), ("Visual_SkullHombre", EscalasHumanos.Relativa("Visual_SkullHombre")),
+            ("Visual_woman2", EscalasHumanos.Relativa("Visual_woman2")), ("Visual_AL10", 1.00f), ("Visual_AL11", 1.00f), ("Visual_GuardiaNova", 1.25f),
         };
 
         [UnityTest]
