@@ -21,7 +21,7 @@ namespace MechaCyberpunk.Trafico.Calle
         /// <summary>Lado mínimo (m) del área para darla por buena.</summary>
         public const float LadoMinimo = 100f;
         /// <summary>Cuánto (m) se mete el área hacia adentro del trazo del muro (grosor, collider y el largo de un carro).</summary>
-        public const float MargenPorOmision = 4f;
+        public const float MargenPorOmision = 12f;
 
         private static Rect? cache;
         private static bool buscada;
