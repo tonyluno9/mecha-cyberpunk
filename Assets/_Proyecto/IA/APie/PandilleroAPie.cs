@@ -420,6 +420,7 @@ namespace MechaCyberpunk.IA.APie
             }
             alerta = siempreAlerta;
             hostilDesde = -1f; // T-1528
+            hostilFijo = false;
             provocadoHasta = -1f;
             regla?.Reiniciar();
             reglaJefe?.Reiniciar();
@@ -670,6 +671,7 @@ namespace MechaCyberpunk.IA.APie
         // ---- Maleante de calle (T-1528): provoca primero, ataca solo si el jugador responde ----
 
         private float hostilDesde = -1f;
+        private bool hostilFijo;
         private float ultimaAlertaHostil;
         private float proximoEmpujon = -1f;
         private float proximoTiroLimitado;
@@ -696,15 +698,19 @@ namespace MechaCyberpunk.IA.APie
             PonerHostil();
         }
 
-        internal void PonerHostil()
+        /// <summary>
+        /// T-1528: lo vuelve hostil. Con <paramref name="completo"/> (pruebas y guion) ataca ya con el daño, la precisión y la cadencia completos y no se calma solo.
+        /// </summary>
+        internal void PonerHostil(bool completo = false)
         {
-            if (EsHostil || EstaKO)
+            if (EstaKO || (EsHostil && !completo))
             {
                 return;
             }
-            hostilDesde = Time.time;
+            hostilFijo = completo;
+            hostilDesde = completo ? Time.time - ReglaProvocacionCalle.SegundosRampa : Time.time;
             ultimaAlertaHostil = Time.time;
-            proximoTiroLimitado = Time.time + ReglaProvocacionCalle.RecargaExtraInicial;
+            proximoTiroLimitado = completo ? Time.time : Time.time + ReglaProvocacionCalle.RecargaExtraInicial;
         }
 
         private void AlRespuestaDelJugador(Vector3 punto)
@@ -732,7 +738,7 @@ namespace MechaCyberpunk.IA.APie
                 {
                     ultimaAlertaHostil = Time.time;
                 }
-                else if (Time.time - ultimaAlertaHostil > ReglaProvocacionCalle.SegundosCalma)
+                else if (!hostilFijo && Time.time - ultimaAlertaHostil > ReglaProvocacionCalle.SegundosCalma)
                 {
                     hostilDesde = -1f;
                 }

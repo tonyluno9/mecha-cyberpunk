@@ -56,8 +56,8 @@ namespace MechaCyberpunk.IA.APie
 
         private readonly System.Collections.Generic.HashSet<PandilleroAPie> vencidos = new System.Collections.Generic.HashSet<PandilleroAPie>();
 
-        /// <summary>T-1528: el jugador respondió a la provocación: todos los de este grupo atacan.</summary>
-        public void HacerHostiles()
+        /// <summary>T-1528: el jugador respondió a la provocación: todos los de este grupo atacan. Con <paramref name="completo"/> (pruebas, guion) atacan ya a todo su poder y no se calman.</summary>
+        public void HacerHostiles(bool completo = false)
         {
             if (pandilleros == null)
             {
@@ -65,9 +65,9 @@ namespace MechaCyberpunk.IA.APie
             }
             foreach (PandilleroAPie p in pandilleros)
             {
-                if (p != null && p.isActiveAndEnabled)
+                if (p != null)
                 {
-                    p.PonerHostil();
+                    p.PonerHostil(completo); // también los que aún no salieron (están apagados)
                 }
             }
         }
