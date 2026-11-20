@@ -25,6 +25,14 @@ namespace MechaCyberpunk.Vehiculos.Carro
         [Range(0f, 60f)] [SerializeField] private float maximoGrados = 32f;
         [Tooltip("Qué tan rápido sigue la inclinación a la curva (1/s).")]
         [Min(0.1f)] [SerializeField] private float respuestaInclinacion = 7f;
+        [Tooltip("T-1488: bajo esta rapidez la moto no se inclina (m/s).")]
+        [Min(0f)] [SerializeField] private float rapidezInicioInclinacion = 2f;
+        [Tooltip("T-1488: desde esta rapidez la inclinación es completa (m/s).")]
+        [Min(0.1f)] [SerializeField] private float rapidezPlenaInclinacion = 7f;
+        [Tooltip("T-1488: lo más rápido que cambia la inclinación (°/s): evita sacudidas.")]
+        [Min(1f)] [SerializeField] private float maximoGradosPorSegundo = 90f;
+        [Tooltip("T-1488: qué tan rápido baja o sube el visual al cambiar el caballete (1/s), para que no dé un saltito.")]
+        [Min(0.1f)] [SerializeField] private float respuestaCaballete = 10f;
 
         [Header("Caballete")]
         [Tooltip("MeshFilter del modelo de la moto.")]
@@ -41,6 +49,8 @@ namespace MechaCyberpunk.Vehiculos.Carro
         private Vector3 posicionVisualBase;
         private Quaternion rotacionVisualBase;
         private float inclinacion;
+        private float fraccionBajada;
+        private bool enMarcha;
 
         /// <summary>Inclinación actual del visual (°, positiva a la derecha).</summary>
         public float Inclinacion => inclinacion;
@@ -64,11 +74,14 @@ namespace MechaCyberpunk.Vehiculos.Carro
             posicionVisualBase = envoltorioVisual.localPosition;
             rotacionVisualBase = envoltorioVisual.localRotation;
             PonerCaballeteOculto(false);
+            fraccionBajada = 0f;
         }
 
         private void Update()
         {
-            bool enUso = carro.Ocupado || carro.EstaEnTrafico || carro.Rapidez > RapidezEnMarcha;
+            // T-1488: con histéresis, para que la malla no parpadee entre con y sin caballete al pasar por 1 m/s.
+            enMarcha = CalculoInclinacionMoto.EnMarcha(enMarcha, carro.Rapidez, RapidezEnMarcha, RapidezEnMarcha * 0.3f);
+            bool enUso = carro.Ocupado || carro.EstaEnTrafico || enMarcha;
             if (enUso != CaballeteOculto)
             {
                 PonerCaballeteOculto(enUso);
@@ -76,9 +89,12 @@ namespace MechaCyberpunk.Vehiculos.Carro
             float objetivo = 0f;
             if (!carro.EstaEnTrafico && !carro.EstaDormido)
             {
-                objetivo = CalculoInclinacionMoto.Grados(carro.Velocidad, cuerpo.angularVelocity.y, GravedadTierra, factorInclinacion, maximoGrados);
+                objetivo = CalculoInclinacionMoto.GradosEstables(carro.Velocidad, cuerpo.angularVelocity.y, GravedadTierra, factorInclinacion, maximoGrados,
+                    rapidezInicioInclinacion, rapidezPlenaInclinacion);
             }
-            inclinacion = CalculoInclinacionMoto.Suavizar(inclinacion, objetivo, respuestaInclinacion, Time.deltaTime);
+            float suave = CalculoInclinacionMoto.Suavizar(inclinacion, objetivo, respuestaInclinacion, Time.deltaTime);
+            inclinacion = CalculoInclinacionMoto.LimitarCambio(inclinacion, suave, maximoGradosPorSegundo, Time.deltaTime);
+            fraccionBajada = CalculoInclinacionMoto.Suavizar(fraccionBajada, CaballeteOculto ? 1f : 0f, respuestaCaballete, Time.deltaTime);
             // Inclinarse a la derecha es girar sobre el eje z en sentido negativo.
             AplicarPose();
         }
@@ -94,7 +110,7 @@ namespace MechaCyberpunk.Vehiculos.Carro
         private void AplicarPose()
         {
             Quaternion giro = Quaternion.Euler(0f, 0f, -inclinacion);
-            Vector3 basePos = posicionVisualBase + (CaballeteOculto ? Vector3.down * bajarAlOcultar : Vector3.zero);
+            Vector3 basePos = posicionVisualBase + Vector3.down * (bajarAlOcultar * fraccionBajada);
             envoltorioVisual.localPosition = giro * basePos;
             envoltorioVisual.localRotation = giro * rotacionVisualBase;
         }

@@ -55,3 +55,14 @@ La cinemática del asalto usa Idle y Caminar/Correr de Skull (asaltante) y el Id
 | La víctima levanta las manos al ser asaltada | Hands Up (o Surrender, Being Robbed) | NPC_ManosArriba_Bucle.fbx | NPC |
 | El asaltante apunta o amenaza con el arma | Pistol Aim / Threatening | Skull_Amenazar_Bucle.fbx | Skull |
 | La víctima se asusta y retrocede | Terrified (ya está en la tabla de arriba como NPC_Aterrado_Bucle) | NPC_Aterrado_Bucle.fbx | NPC |
+
+## Manejar, 19-nov (T-1488)
+
+Subir, bajar y robar usan los clips que ya hay (PJ01_Carro_Entrar, Carro_Salir, Carro_SacarConductor, Moto_Subir, Moto_Bajar); ahora el personaje se alinea a la puerta en 0.2 a 0.3 s antes de animar. No se inventó ninguno. Faltan, de Mixamo o Blender, para que se vea más pesado:
+
+| Para qué | Búscalo en Mixamo como | Archivo | Carpeta |
+| --- | --- | --- | --- |
+| Conductor se aferra al volante en un choque fuerte (sacudida del torso) | Car Crash / Flinch (Hit Reaction sentado) | PJ01_Carro_Choque.fbx | PJ01 |
+| Conductor contravolantea en derrape (brazos girando rápido el volante) | Driving Fast (si existe) o animación de volante hecha en Blender | PJ01_Carro_Derrape_Bucle.fbx | PJ01 |
+| Subir a un camión o microbús (escalón alto) | Climb Up Ladder / Get Into Truck | PJ01_Camion_Entrar.fbx | PJ01 |
+| Moto: pie en el piso al parar (apoyar el pie al frenar a cero) | Motorcycle Stop / Foot Down (Blender) | PJ01_Moto_ApoyarPie.fbx | PJ01 |

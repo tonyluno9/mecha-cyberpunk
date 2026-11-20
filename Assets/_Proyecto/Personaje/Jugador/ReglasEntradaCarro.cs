@@ -11,7 +11,7 @@ namespace MechaCyberpunk.Personaje.Jugador
         /// <summary>Rapidez con la que el personaje se acomoda junto a la puerta (m/s).</summary>
         public const float VelocidadAcercar = 4f;
         /// <summary>Lo menos que dura acomodarse junto a la puerta (s).</summary>
-        public const float SegundosMinimosAcercar = 0.08f;
+        public const float SegundosMinimosAcercar = 0.2f;
         /// <summary>Lo más que dura acomodarse junto a la puerta (s): la animación no debe volverse lenta.</summary>
         public const float SegundosMaximosAcercar = 0.3f;
         /// <summary>Cuánto se arrima el punto de la puerta hacia el asiento, desde el punto de subida (m): queda casi pegado a la carrocería.</summary>

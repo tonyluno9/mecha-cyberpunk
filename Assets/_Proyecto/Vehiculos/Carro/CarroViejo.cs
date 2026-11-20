@@ -138,6 +138,10 @@ namespace MechaCyberpunk.Vehiculos.Carro
             {
                 gameObject.AddComponent<DanioCarro>();
             }
+            if (GetComponent<TemblorCarro>() == null)
+            {
+                gameObject.AddComponent<TemblorCarro>();
+            }
             // T-660: las motos no llevan faros ni calaveras (se veían raras).
             if (GetComponent<LucesCarro>() == null && GetComponent<ManejoMoto>() == null)
             {
@@ -217,6 +221,20 @@ namespace MechaCyberpunk.Vehiculos.Carro
 
         /// <summary>La cámara del carro (para saber si va en tercera persona).</summary>
         public CamaraCarro CamaraDelCarro => camaraCarro;
+
+        /// <summary>T-1488: un choque con esa rapidez relativa (m/s): tiembla la cámara del carro si lo maneja el jugador, proporcional al impacto.</summary>
+        public void TemblarPorChoque(float rapidez)
+        {
+            if (!Ocupado || camaraCarro == null || !camaraCarro.Camara.enabled)
+            {
+                return;
+            }
+            TemblorCarro temblor = GetComponent<TemblorCarro>();
+            if (temblor != null)
+            {
+                temblor.Sacudir(rapidez, camaraCarro.Config);
+            }
+        }
 
         public bool PuedeBajar => Ocupado && CalculoSalida.VaLentoParaBajar(Rapidez, config.RapidezMaximaParaBajar)
             && BuscarSalida(out _) != LadoSalida.Ninguno;
@@ -484,7 +502,7 @@ namespace MechaCyberpunk.Vehiculos.Carro
             {
                 if (motor == null)
                 {
-                    motor = new SonidoMotorCarro(GrupoSonidoVehiculo.Para(TipoSonido), Mathf.Max(1f, config.VelocidadMaxima));
+                    motor = new SonidoMotorCarro(GrupoSonidoVehiculo.Para(TipoSonido), Mathf.Max(1f, config.VelocidadMaxima), config.MarchasSonido);
                 }
                 motor.Encender(transform, Ocupado && motorConArranque);
                 motorConArranque = false;
@@ -608,7 +626,7 @@ namespace MechaCyberpunk.Vehiculos.Carro
 
             float compresion = Mathf.Min(config.LargoMaximo - (mejor - config.RadioRueda), CompresionMaximaPermitida);
             float velocidadCompresion = -Vector3.Dot(cuerpo.GetPointVelocity(puntoContacto), arriba);
-            float fuerza = CalculoSuspension.Fuerza(compresion, velocidadCompresion, config.Rigidez, config.Amortiguamiento);
+            float fuerza = CalculoSuspension.Fuerza(compresion, velocidadCompresion, config.Rigidez, config.Amortiguamiento, config.FactorRebote);
             cuerpo.AddForceAtPosition(arriba * fuerza, puntoContacto);
             return true;
         }
@@ -631,7 +649,8 @@ namespace MechaCyberpunk.Vehiculos.Carro
                 fuerzaLateral = CalculoManejo.FuerzaLateral(parametros, vLateral, e.FrenoMano, dt);
                 if (enPiso >= RuedasMinimasParaGirar)
                 {
-                    float giroDeseado = CalculoManejo.VelocidadGiro(parametros, vAdelante, e.Girar);
+                    float giroDeseado = CalculoManejo.VelocidadGiro(parametros, vAdelante, e.Girar, e.FrenoMano)
+                        + CalculoManejo.CorreccionDerrape(parametros, vAdelante, vLateral, e.Girar, e.FrenoMano);
                     float giroActual = Vector3.Dot(cuerpo.angularVelocity, arriba);
                     float cambio = (giroDeseado - giroActual) * Mathf.Min(1f, config.RespuestaGiro * dt);
                     cuerpo.AddTorque(arriba * cambio, ForceMode.VelocityChange);
@@ -645,13 +664,16 @@ namespace MechaCyberpunk.Vehiculos.Carro
                 cuerpo.AddTorque(-arriba * giroActual * Mathf.Min(1f, config.RespuestaGiro * dt), ForceMode.VelocityChange);
             }
 
-            // Cada rueda en el piso aporta una cuarta parte; se aplica a la altura del centro de masa para no cabecear ni ladear.
-            Vector3 fuerzaPorRueda = (adelante * fuerzaAdelante + derecha * fuerzaLateral) / RuedasTotales;
+            // Cada rueda en el piso aporta una cuarta parte. T-1488: la fuerza longitudinal se aplica entre el piso y el centro de masa según factorCabeceo
+            // (al frenar la carrocería cabecea hacia adelante, al acelerar se sienta) y la lateral según factorBalanceo (se inclina en la curva).
+            Vector3 fuerzaAdelanteRueda = adelante * (fuerzaAdelante / RuedasTotales);
+            Vector3 fuerzaLateralRueda = derecha * (fuerzaLateral / RuedasTotales);
             for (int i = 0; i < enPiso; i++)
             {
                 Vector3 punto = puntos[i];
-                punto += arriba * Vector3.Dot(centroMasa - punto, arriba);
-                cuerpo.AddForceAtPosition(fuerzaPorRueda, punto);
+                float haciaCentro = Vector3.Dot(centroMasa - punto, arriba);
+                cuerpo.AddForceAtPosition(fuerzaAdelanteRueda, punto + arriba * (haciaCentro * (1f - config.FactorCabeceo)));
+                cuerpo.AddForceAtPosition(fuerzaLateralRueda, punto + arriba * (haciaCentro * (1f - config.FactorBalanceo)));
             }
         }
 
@@ -701,7 +723,14 @@ namespace MechaCyberpunk.Vehiculos.Carro
         private void AplicarAntivuelco(Vector3 arriba)
         {
             Vector3 eje = Vector3.Cross(arriba, Vector3.up);
-            cuerpo.AddTorque(eje * config.FuerzaAntivuelco);
+            cuerpo.AddTorque(eje * (config.FuerzaAntivuelco * CalculoPeso.FactorAntivuelco(Rapidez, config.AntivuelcoBajaVelocidad)));
+            // T-1488: freno a la inclinación (cabeceo y balanceo, no al giro del volante) para que la carrocería se asiente sin oscilar eternamente.
+            if (config.AmortiguacionInclinacion > 0f)
+            {
+                Vector3 omega = cuerpo.angularVelocity;
+                Vector3 inclinacion = omega - arriba * Vector3.Dot(omega, arriba);
+                cuerpo.AddTorque(inclinacion * CalculoPeso.TorqueAmortiguacion(1f, config.AmortiguacionInclinacion));
+            }
         }
 
         // T-986: la entrada de la IA pasa por el mismo volante con velocidad limitada que el del jugador.

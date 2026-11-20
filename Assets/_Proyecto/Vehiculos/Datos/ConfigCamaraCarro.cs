@@ -51,6 +51,29 @@ namespace MechaCyberpunk.Vehiculos
         [Tooltip("T-658: qué tanto se atrasa la cámara en seguir hacia dónde apunta el carro al girar (s); evita que la vista se arremoline al maniobrar o dar reversa.")]
         [Min(0f)] [SerializeField] private float tiempoRumbo = 0.2f;
 
+        [Header("Velocidad y choques (T-1488)")]
+        [Tooltip("Grados que se abre el FOV al ir a la rapidez de referencia (°). 0 no cambia el FOV.")]
+        [Range(0f, 40f)] [SerializeField] private float fovExtraVelocidad = 12f;
+        [Tooltip("Rapidez a la que el FOV llega a su máximo (km/h).")]
+        [Min(1f)] [SerializeField] private float kmhFov = 100f;
+        [Tooltip("Qué tan rápido sigue el FOV a la rapidez (1/s).")]
+        [Min(0.1f)] [SerializeField] private float suavidadFov = 4f;
+        [Tooltip("Rapidez relativa de choque (m/s) bajo la cual no tiembla la cámara.")]
+        [Min(0f)] [SerializeField] private float umbralTemblor = 3f;
+        [Tooltip("Rapidez relativa de choque (m/s) con la que el temblor llega a su fuerza máxima.")]
+        [Min(1f)] [SerializeField] private float rapidezTemblorMaximo = 18f;
+        [Tooltip("Fuerza máxima del impulso de temblor (1 es un golpe normal de Cinemachine).")]
+        [Min(0f)] [SerializeField] private float fuerzaTemblorMaxima = 1.5f;
+        [Tooltip("Cuánto se aplica del temblor a la cámara (0 lo apaga).")]
+        [Range(0f, 3f)] [SerializeField] private float gananciaTemblor = 1f;
+
+        public float FovExtraVelocidad => fovExtraVelocidad;
+        public float KmhFov => kmhFov;
+        public float SuavidadFov => suavidadFov;
+        public float UmbralTemblor => umbralTemblor;
+        public float RapidezTemblorMaximo => rapidezTemblorMaximo;
+        public float FuerzaTemblorMaxima => fuerzaTemblorMaxima;
+        public float GananciaTemblor => gananciaTemblor;
         public float AlturaMira => alturaMira;
         public float InclinacionMinOrbita => inclinacionMinOrbita;
         public float InclinacionMaxOrbita => inclinacionMaxOrbita;
