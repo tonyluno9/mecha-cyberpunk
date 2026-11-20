@@ -55,3 +55,16 @@ La cinemática del asalto usa Idle y Caminar/Correr de Skull (asaltante) y el Id
 | La víctima levanta las manos al ser asaltada | Hands Up (o Surrender, Being Robbed) | NPC_ManosArriba_Bucle.fbx | NPC |
 | El asaltante apunta o amenaza con el arma | Pistol Aim / Threatening | Skull_Amenazar_Bucle.fbx | Skull |
 | La víctima se asusta y retrocede | Terrified (ya está en la tabla de arriba como NPC_Aterrado_Bucle) | NPC_Aterrado_Bucle.fbx | NPC |
+
+## Disparar con peso, 19-nov (T-1486)
+
+No se inventó nada: el retroceso del arma es posicional y el flinch del enemigo usa lo que ya existe. Si se quiere más calidad, faltan:
+
+| Para qué | Búscalo en Mixamo como | Archivo | Carpeta |
+| --- | --- | --- | --- |
+| Retroceso del cuerpo al disparar escopeta o sniper (hombro y torso) | Rifle Fire Recoil / Shotgun Fire | PJ01_Disparo_Largas.fbx | PJ01 |
+| Recarga distinta por arma larga (cargador, cartucho a cartucho) | Reloading (rifle), Shotgun Reload | PJ01_Recargar_Largas.fbx | PJ01 |
+| El enemigo se tambalea al recibir una bala | Hit Reaction / Standing React Large From Front | Loco_ImpactoBala.fbx | Loco |
+| Caída hacia atrás al morir de un tiro de escopeta | Shot Gun Death / Death From The Front | Loco_MuerteEscopeta.fbx | Loco |
+
+Sonidos sin archivo propio (hoy la marca reusa HUD_NOTIFICACION y HUD_LOGRO): IMP_HITMARKER (tic seco) e IMP_HITMARKER_MUERTE (golpe grave con campanita).
