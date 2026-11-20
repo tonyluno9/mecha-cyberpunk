@@ -57,8 +57,8 @@ namespace MechaCyberpunk.Mundo.Editor
             cam.targetTexture = null;
             Object.DestroyImmediate(rt);
             Object.DestroyImmediate(tex);
+            Debug.Log("[FotosT1513] " + nombre + " desde " + go.transform.position);
             Object.DestroyImmediate(go);
-            Debug.Log("[FotosT1513] " + nombre + " desde " + go.name);
         }
     }
 }
