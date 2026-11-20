@@ -58,10 +58,11 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
         [Test]
         public void AterrizajeFuerte_SoloDesdeLaVelocidadDeLlegada()
         {
-            Assert.IsFalse(ReglasAnimacion.EsAterrizajeFuerte(-5f));
-            Assert.IsFalse(ReglasAnimacion.EsAterrizajeFuerte(0f));
-            Assert.IsTrue(ReglasAnimacion.EsAterrizajeFuerte(-ReglasAnimacion.VelocidadAterrizajeFuerte));
-            Assert.IsTrue(ReglasAnimacion.EsAterrizajeFuerte(-14f));
+            Assert.IsFalse(ReglasAnimacion.EsAterrizajeFuerte(-5f, 5f));
+            Assert.IsFalse(ReglasAnimacion.EsAterrizajeFuerte(0f, 5f));
+            Assert.IsTrue(ReglasAnimacion.EsAterrizajeFuerte(-ReglasAnimacion.VelocidadAterrizajeFuerte, 3f));
+            Assert.IsTrue(ReglasAnimacion.EsAterrizajeFuerte(-14f, 3f));
+            Assert.IsFalse(ReglasAnimacion.EsAterrizajeFuerte(-14f, 0.3f), "Sin caída real no cuenta");
         }
 
         [Test]

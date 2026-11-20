@@ -613,6 +613,7 @@ namespace MechaCyberpunk.Personaje.Visual
         private float velZ;
         private float velY;
         private float velYMinimaAire;
+        private float yInicioAire;
         private float giro;
         private float rapidezIdle = 1f;
         private bool rapidezAgachadoAplicada;
@@ -900,11 +901,12 @@ namespace MechaCyberpunk.Personaje.Visual
             velY = mundo.y;
             if (!enSuelo)
             {
+                if (estabaEnSuelo) { yInicioAire = padre.position.y; }
                 velYMinimaAire = Mathf.Min(velYMinimaAire, mundo.y);
             }
             else
             {
-                if (!estabaEnSuelo && AterrizajeFuerteActivo && ReglasAnimacion.EsAterrizajeFuerte(velYMinimaAire))
+                if (!estabaEnSuelo && AterrizajeFuerteActivo && ReglasAnimacion.EsAterrizajeFuerte(velYMinimaAire, yInicioAire - padre.position.y))
                 {
                     Disparo(IdAterrizajeFuerte);
                 }
