@@ -81,10 +81,12 @@ MonoBehaviour:
   animador: {fileID: 236779208471809659}
   leerDelPadre: 1
   suavizadoVelocidad: 12
-  velocidadClipCaminar: 1.293
-  velocidadClipCorrer: 3.19
+  velocidadClipCaminar: 1.2
+  velocidadClipCorrer: 5
   rapidezMinima: 0.6
   rapidezMaxima: 3
+  velocidadClipAtras: 0
+  velocidadClipLado: 0
   rapidezCapaArriba: 8
   suavizadoDireccion: 14
   segundosTumbarse: 0.35
@@ -192,7 +194,7 @@ PrefabInstance:
     - target: {fileID: 5866666021909216657, guid: 68c30083a7a053f4880d6bb62682907d, type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 22100000, guid: 376c1eeada4a54444b163cca75ab4e54, type: 2}
+      objectReference: {fileID: 22100000, guid: a996e2c8d36c11f4d8be96ccdfd5847e, type: 2}
     - target: {fileID: 5866666021909216657, guid: 68c30083a7a053f4880d6bb62682907d, type: 3}
       propertyPath: m_ApplyRootMotion
       value: 0
@@ -273,6 +275,9 @@ MonoBehaviour:
   alturaRayo: 0.6
   alcanceRayo: 1.1
   rapidezPies: 10
+  soloDesnivel: 0
+  desnivelMaximo: 0.35
+  inclinarEnGiros: 0
   objetivo: {fileID: 0}
   mirarAlJugador: 1
   distanciaMirada: 7
