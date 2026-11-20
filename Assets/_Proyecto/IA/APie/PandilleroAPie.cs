@@ -419,8 +419,10 @@ namespace MechaCyberpunk.IA.APie
                 return;
             }
             alerta = siempreAlerta;
-            hostilDesde = -1f; // T-1528
-            hostilFijo = false;
+            if (!hostilFijo)
+            {
+                hostilDesde = -1f; // T-1528: despertar calma a los maleantes; los hostiles "completos" (guion, pruebas) siguen atacando
+            }
             provocadoHasta = -1f;
             regla?.Reiniciar();
             reglaJefe?.Reiniciar();
