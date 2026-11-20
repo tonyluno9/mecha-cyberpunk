@@ -117,12 +117,12 @@ namespace MechaCyberpunk.Vehiculos.Editor
             m.SetFloat("_Metallic", metalico);
             m.SetFloat("_Smoothness", suavidad);
             // Nada de material liso (SinGreybox): la llanta RU01 de siempre da la textura del hule y el relieve de todo el rin.
-            Texture2D color = AssetDatabase.LoadAssetAtPath<Texture2D>(CreadorCarrosPiezasT742.CarpetaPiezas + "RU01/RU01_basecolor.jpg");
+            Texture2D texturaBase = AssetDatabase.LoadAssetAtPath<Texture2D>(CreadorCarrosPiezasT742.CarpetaPiezas + "RU01/RU01_basecolor.jpg");
             Texture2D normal = AssetDatabase.LoadAssetAtPath<Texture2D>(CreadorCarrosPiezasT742.CarpetaPiezas + "RU01/RU01_normal.jpg");
-            if (nombre == "Llanta_Hule" && color != null)
+            if (nombre == "Llanta_Hule" && texturaBase != null)
             {
-                m.SetTexture("_BaseMap", color);
-                m.SetTexture("_MainTex", color);
+                m.SetTexture("_BaseMap", texturaBase);
+                m.SetTexture("_MainTex", texturaBase);
             }
             if (normal != null)
             {
