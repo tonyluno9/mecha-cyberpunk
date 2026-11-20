@@ -120,14 +120,18 @@ namespace MechaCyberpunk.Tests
         }
 
         [UnityTest]
-        public IEnumerator Rina_ConElJugadorA5m_LosSeisLoAtacan()
+        public IEnumerator Rina_ConElJugadorA5m_LosSeisVanPorElJugador()
         {
             CrearRina(new Vector3(0f, 0f, 5.5f)); // el más cercano queda a ~4.6 m
             yield return Esperar(2.5f);
             Assert.AreEqual(RinaPandillas.Estado.Liberada, rina.EstadoActual, "el jugador a menos de 6 m suelta la riña");
             Assert.IsTrue(rina.Miembros.All(p => !p.GetComponent<ConductaRina>().Controla), "ninguna conducta lleva el turno");
             Transform raizJugador = Registro<IJugador>.Actual.Raiz;
-            Assert.AreEqual(6, rina.Miembros.Count(p => p.ObjetivoActual == raizJugador), "los seis tienen como objetivo al jugador");
+            // T-1528 (playtest 20-nov): los maleantes primero provocan; con el jugador cerca los seis quedan en alerta contra él (van a provocarlo)
+            // y solo atacan si responde. Si son de datos sin provocación, siguen yendo directo a atacarlo.
+            Assert.IsNotNull(raizJugador);
+            Assert.AreEqual(6, rina.Miembros.Count(p => p.Alerta && (p.EsMaleanteDeCalle ? !p.EsHostil : p.ObjetivoActual == raizJugador)),
+                "los seis van por el jugador (provocan si son maleantes de calle)");
         }
 
         [UnityTest]
