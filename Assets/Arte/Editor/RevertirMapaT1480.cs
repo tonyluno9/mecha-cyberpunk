@@ -193,6 +193,8 @@ namespace MechaCyberpunk.Arte.Editor
             }
             log.AppendLine("  aplicados " + aplicados + " de " + Lista.Length + " (por ruta " + porRuta + ", no encontrados " + noEncontrados + ")");
 
+            RegresarAzoteasT1410(escena, log);
+
             Directory.CreateDirectory("Logs");
             File.WriteAllText(RutaInforme, log.ToString());
             EditorSceneManager.MarkSceneDirty(escena);
@@ -442,6 +444,74 @@ namespace MechaCyberpunk.Arte.Editor
                 }
             }
             return primero;
+        }
+
+        /// <summary>
+        /// T-1410 (con las zonas en la escena) bajó o apagó tinacos, aires, antenas y pisos C20b de azoteas de los barrios.
+        /// Sin las zonas esos cambios dejan las piezas flotando (FlotantesS2tPruebas): se regresan a como estaban antes de T-1410 (ad662b8^).
+        /// Cada entrada: fileID de la PrefabInstance en la escena, fileID del objeto dentro del prefab, y la altura local de antes
+        /// (NaN = el objeto estaba encendido y T-1410 lo apagó).
+        /// </summary>
+        private static readonly (ulong instancia, ulong objeto, float y)[] AzoteasT1410 =
+        {
+            (172822161, 5670800764093476715, 26f), (176100819, 5670800764093476715, 26f), (386124418, 9194079896672593962, 26f),
+            (441433303, 5670800764093476715, 26f), (443328421, 5670800764093476715, 26f), (452193201, 8022095352886119054, 14.825001f),
+            (478254983, 5670800764093476715, 26f), (484309436, 5670800764093476715, 26f), (713796078, 8022095352886119054, 11.3f),
+            (750833454, 4079867750756257302, float.NaN), (813288883, 6762231082045972630, 26f), (831630249, 9194079896672593962, 26f),
+            (839167906, 6762231082045972630, 26f), (841356208, 5670800764093476715, 26f), (956657567, 1758512344334579491, float.NaN),
+            (971033405, 4079867750756257302, float.NaN), (1001501784, 5670800764093476715, 26f), (1362194607, 9194079896672593962, 26f),
+            (1410599021, 1163323389240093489, float.NaN), (1412215825, 9194079896672593962, 26f), (1532987813, 5670800764093476715, 26f),
+            (1541570643, 4079867750756257302, float.NaN), (1601230598, 4079867750756257302, float.NaN), (1606855201, 5670800764093476715, 26f),
+            (1828320541, 4079867750756257302, float.NaN), (1859725651, 1163323389240093489, float.NaN), (1865118032, 9194079896672593962, 26f),
+            (1954195705, 9194079896672593962, 26f), (2082431375, 6762231082045972630, 26f),
+        };
+
+        private static void RegresarAzoteasT1410(Scene escena, StringBuilder log)
+        {
+            log.AppendLine("== Azoteas: cambios de T-1410 regresados a antes de T-1410");
+            var porPar = new Dictionary<(ulong, ulong), Object>();
+            foreach (GameObject raiz in escena.GetRootGameObjects())
+            {
+                foreach (Transform t in raiz.GetComponentsInChildren<Transform>(true))
+                {
+                    foreach (Object o in new Object[] { t, t.gameObject })
+                    {
+                        GlobalObjectId id = GlobalObjectId.GetGlobalObjectIdSlow(o);
+                        if (id.targetPrefabId != 0)
+                        {
+                            porPar[(id.targetPrefabId, id.targetObjectId)] = o;
+                        }
+                    }
+                }
+            }
+            int hechos = 0;
+            foreach ((ulong instancia, ulong objeto, float y) in AzoteasT1410)
+            {
+                if (!porPar.TryGetValue((instancia, objeto), out Object o))
+                {
+                    log.AppendLine("  NO ENCONTRADO instancia " + instancia + " objeto " + objeto);
+                    continue;
+                }
+                if (float.IsNaN(y))
+                {
+                    GameObject go = o as GameObject ?? ((Transform)o).gameObject;
+                    Undo.RecordObject(go, "T-1480");
+                    go.SetActive(true);
+                    PrefabUtility.RecordPrefabInstancePropertyModifications(go);
+                    log.AppendLine("  encendido " + go.name + " (instancia " + instancia + ")");
+                }
+                else
+                {
+                    Transform t = o as Transform ?? ((GameObject)o).transform;
+                    Undo.RecordObject(t, "T-1480");
+                    Vector3 p = t.localPosition;
+                    log.AppendLine("  " + t.name + " (instancia " + instancia + ") y " + p.y + " -> " + y);
+                    t.localPosition = new Vector3(p.x, y, p.z);
+                    PrefabUtility.RecordPrefabInstancePropertyModifications(t);
+                }
+                hechos++;
+            }
+            log.AppendLine("  regresados " + hechos + " de " + AzoteasT1410.Length);
         }
 
         private static void Encender(string tipo, Object o)
