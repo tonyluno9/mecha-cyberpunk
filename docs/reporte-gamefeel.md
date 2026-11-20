@@ -77,4 +77,7 @@ Lista completa con nombres de archivo en `docs/animaciones-faltan.md` (secciones
 6. Opcionales: arranque y frenada del trote, subir y bajar escalones caminando.
 
 ## Builds
-(se llenan al terminar)
+Hechos uno por uno desde `.sesiones/s2` con el código de main a5f74de, sin errores, 2584 MB cada uno:
+- Demo (DEMO_FINAL, sin teclas de prueba): `.sesiones/s2/Builds/Demo/CyberCity.exe` (21:28).
+- Juego: `.sesiones/s2/Builds/Juego/CyberCity.exe` (21:30).
+Los de `Builds/` en la carpeta principal son viejos (8 y 9 de noviembre). Unity quedó cerrado.

@@ -19,7 +19,7 @@ No grabar videos. Al final: builds Demo y Juego uno por uno, docs/reporte-gamefe
 | T-1487 | Golpear: asistencia al más cercano con acercamiento, congelamiento 50-80 ms, temblor, sonido, reacción/empuje, combo | hecha; empuje arreglado (se perdía con muchos FPS); PlayMode 3/3 |
 | T-1488 | Manejar: peso por carro, frenos, derrape, suspensión, cámara por velocidad y FOV, temblor al chocar, motor, subir/bajar/robar alineado, motos estables | hecha: perfiles creados y asignados; EditMode Vehiculos 359/359, PlayMode vehículos 71/71 |
 | T-1489 | Detalles: polvo al caer, salpicadura en charcos, temblor e indicador de dirección del daño, viñeta roja con vida baja | hecha; EditMode y PlayMode HUD 34/34 |
-| Final | Integrar, compilar, pruebas por clase, reporte, builds | pendiente |
+| Final | Integrar, compilar, pruebas por clase, reporte, builds | hecho: main a5f74de, builds Demo 21:28 y Juego 21:30 |
 
 ## Bitácora
 - 19-nov: paso 0 hecho (Unity cerrado, main 3b2a58a, 16 GB RAM libres, 154 GB de disco). Worktrees creados.
@@ -28,3 +28,4 @@ No grabar videos. Al final: builds Demo y Juego uno por uno, docs/reporte-gamefe
 - 19-nov (sesión 2): T-1488 compila; perfiles de manejo creados (CrearPerfilesManejoT1488.Crear) y prueba de rebote arreglada. T-1487: el empuje
   acumula pasos bajo minMoveDistance. T-1484 fase 2 con las medidas. Pruebas viejas ajustadas al diseño nuevo. Las ramas T-1484..T-1489 ya estaban
   integradas en integ/gamefeel; las otras ramas sin mergear (T-1333, T-1382, T-1440..T-1443, T-199..T-203, fase-6b, fase-7, integ/zonas*) no son de game feel.
+- TERMINADO: merge a main a5f74de y push; builds Demo y Juego sin errores en .sesiones/s2/Builds; Unity cerrado.
