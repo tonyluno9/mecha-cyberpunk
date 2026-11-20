@@ -32,15 +32,24 @@ MonoBehaviour:
   agarreLateral: 11
   factorAgarreFrenoMano: 0.25
   respuestaGiro: 10
-  velocidadVolante: 4
-  velocidadCentradoVolante: 6
+  velocidadVolante: 5
+  velocidadCentradoVolante: 8
   esperaCambioSentido: 0.25
   rampaMarcha: 0.5
   largoReposo: 0.35
   largoMaximo: 0.5
   radioRueda: 0.35
-  rigidez: 3800
-  amortiguamiento: 800
+  rigidez: 3760.5
+  amortiguamiento: 465.00403
+  tipoManejo: 5
+  factorCabeceo: 0.15
+  factorBalanceo: 0
+  factorRebote: 1.2
+  giroFrenoMano: 1.4
+  gananciaContravolante: 1.5
+  antivuelcoBajaVelocidad: 3
+  amortiguacionInclinacion: 1400
+  marchasSonido: 5
   rapidezMaximaParaBajar: 0.5
   radioSalida: 0.4
   alturaSalida: 1.8

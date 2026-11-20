@@ -297,7 +297,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69cd942f70bafdf42b282d7c03d0ea1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Carro.CarroViejo
-  config: {fileID: 11400000, guid: be12119c0d5410843b242b43d263cd34, type: 2}
+  config: {fileID: 11400000, guid: 2e8c31ca194ec6d4fbf818627c8d4960, type: 2}
   nombreModelo: Pickup de trabajo
   controles: {fileID: -944628639613478452, guid: b5fa29afc835fca468cb94b057897ac9, type: 3}
   asiento: {fileID: 7101154704726123978}
@@ -307,6 +307,8 @@ MonoBehaviour:
   ruedaDelanteraDerecha: {fileID: 7870720765003916088}
   ruedaTraseraIzquierda: {fileID: 5522006065627412549}
   ruedaTraseraDerecha: {fileID: 8144038529936711556}
+  tipoSonidoManual: 0
+  tipoSonido: 0
 --- !u!114 &9120057957954850165
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 711c25d98af48f84b9c708972e754793, type: 3}
+  m_Name: ConfigCarro_Deportivo
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.ConfigCarro
+  masa: 1300
+  alturaCentroMasa: 0.38
+  fuerzaAntivuelco: 4800
+  velocidadMaxima: 28
+  velocidadReversa: 6
+  umbralReversa: 0.5
+  fuerzaMotor: 15600
+  fuerzaReversa: 5000
+  fuerzaFreno: 28000
+  fuerzaFrenoMano: 12000
+  resistenciaRodadura: 700
+  gananciaEstacionamiento: 40
+  anguloDireccionParado: 30
+  anguloDireccionMaximo: 8.5
+  exponenteDireccion: 0.5
+  distanciaEntreEjes: 2.6
+  aceleracionLateralMaxima: 12
+  agarreLateral: 14
+  factorAgarreFrenoMano: 0.25
+  respuestaGiro: 11
+  velocidadVolante: 5.5
+  velocidadCentradoVolante: 8
+  esperaCambioSentido: 0.25
+  rampaMarcha: 0.5
+  largoReposo: 0.35
+  largoMaximo: 0.5
+  radioRueda: 0.35
+  rigidez: 21255
+  amortiguamiento: 1997.4956
+  tipoManejo: 3
+  factorCabeceo: 0.8
+  factorBalanceo: 0.3
+  factorRebote: 1.3
+  giroFrenoMano: 1.8
+  gananciaContravolante: 2.5
+  antivuelcoBajaVelocidad: 1
+  amortiguacionInclinacion: 5200
+  marchasSonido: 6
+  rapidezMaximaParaBajar: 0.5
+  radioSalida: 0.4
+  alturaSalida: 1.8
+  holguraSalida: 0.05

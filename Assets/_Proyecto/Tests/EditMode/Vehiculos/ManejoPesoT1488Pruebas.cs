@@ -250,8 +250,8 @@ namespace MechaCyberpunk.Tests.Vehiculos
         [Test]
         public void Fuerza_ConRebote_EstirandoseAmortiguaMasQueComprimiendose()
         {
-            float estirando = CalculoSuspension.Fuerza(0.1f, -1f, 18000f, 2000f, 1.5f);
-            float sinRebote = CalculoSuspension.Fuerza(0.1f, -1f, 18000f, 2000f, 1f);
+            float estirando = CalculoSuspension.Fuerza(0.1f, -0.5f, 18000f, 2000f, 1.5f);
+            float sinRebote = CalculoSuspension.Fuerza(0.1f, -0.5f, 18000f, 2000f, 1f);
             Assert.Less(estirando, sinRebote);
             Assert.AreEqual(CalculoSuspension.Fuerza(0.1f, 1f, 18000f, 2000f), CalculoSuspension.Fuerza(0.1f, 1f, 18000f, 2000f, 1.5f), 1e-3f);
         }

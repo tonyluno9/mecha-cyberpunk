@@ -2243,7 +2243,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69cd942f70bafdf42b282d7c03d0ea1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Carro.CarroViejo
-  config: {fileID: 11400000, guid: be12119c0d5410843b242b43d263cd34, type: 2}
+  config: {fileID: 11400000, guid: 0dd8d03f99605634a896ade358744537, type: 2}
   nombreModelo: 
   controles: {fileID: -944628639613478452, guid: b5fa29afc835fca468cb94b057897ac9, type: 3}
   asiento: {fileID: 8186888533596747470}
@@ -2253,6 +2253,8 @@ MonoBehaviour:
   ruedaDelanteraDerecha: {fileID: 5224475042496254606}
   ruedaTraseraIzquierda: {fileID: 8123550156738597394}
   ruedaTraseraDerecha: {fileID: 7363100899109387187}
+  tipoSonidoManual: 0
+  tipoSonido: 0
 --- !u!114 &8185936118550029523
 MonoBehaviour:
   m_ObjectHideFlags: 0
