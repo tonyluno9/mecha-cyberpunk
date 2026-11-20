@@ -69,6 +69,7 @@ namespace MechaCyberpunk.Tests.Mundo
         {
             GameObject zonas = Raiz("T1364_ZonasTrafico")?.transform.Find("Zonas")?.gameObject;
             Assert.IsNotNull(zonas);
+            Assert.IsNull(zonas.transform.parent.Find("Plazas"), "Las plazas del Malecón deben salir de la escena");
             string[] hijos = zonas.transform.Cast<Transform>().Select(t => t.name).ToArray();
             foreach (string nombre in ZonasQuitadas)
             {

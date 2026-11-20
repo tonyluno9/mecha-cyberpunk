@@ -149,6 +149,20 @@ namespace MechaCyberpunk.Arte.Editor
                 }
             }
 
+            // Las plazas del Malecón (T-1341, colocadas por T-1364 junto a las zonas de tráfico) también son de la expansión.
+            log.AppendLine("== Plazas del Malecón destruidas");
+            Transform plazas = escena.GetRootGameObjects().Where(g => g.name == "T1364_ZonasTrafico")
+                .Select(g => g.transform.Find("Plazas")).FirstOrDefault(t => t != null);
+            if (plazas == null)
+            {
+                log.AppendLine("  (no estaba) T1364_ZonasTrafico/Plazas");
+            }
+            else
+            {
+                Object.DestroyImmediate(plazas.gameObject);
+                log.AppendLine("  destruida T1364_ZonasTrafico/Plazas");
+            }
+
             log.AppendLine("== Objetos que se vuelven a encender / colocar");
             Dictionary<ulong, Object> porId = IndexarPorId(escena);
             int aplicados = 0, noEncontrados = 0, porRuta = 0;

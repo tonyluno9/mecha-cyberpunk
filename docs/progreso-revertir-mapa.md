@@ -28,12 +28,13 @@ niebla global, Barrio.prefab (sonido de puertas, persecución), PisoAdoquin, Pla
 ## Tareas
 | Tarea | Qué | Estado |
 | --- | --- | --- |
-| T-1480 | Escena: script de editor que quita las raíces y zonas de tráfico de las zonas y vuelve a encender afueras y fondos | pendiente |
+| T-1480 | Escena: script de editor que quita las raíces y zonas de tráfico de las zonas y vuelve a encender afueras y fondos | integrada; Aplicar corrido (11 raíces fuera, 66 objetos regresados por id) |
 | T-1481 | Mapa grande y minimapa sin zonas ni nombres | integrada (regresa a 8b33987^1 lo de T-1352 y el png); falta compilar y probar |
-| T-1482 | Tráfico, peatones, drones y objetivos solo en los 4 barrios | pendiente |
-| T-1483 | Pruebas de las zonas nuevas: ignoradas con razón | pendiente |
+| T-1482 | Tráfico, peatones, drones y objetivos solo en los 4 barrios | integrada; métodos ZonasTraficoT1482.Aplicar, PeatonesBarriosT1482.Aplicar, DronesZonasT1398.SoloPrefab. NO correr QuitarPrefabsViejos (los prefabs de zonas se quedan) |
+| T-1483 | Pruebas de las zonas nuevas: ignoradas con razón | integrada (3 clases ignoradas, 4 pruebas regresadas a 8b33987^1) |
 | Final | Correr T-1480 en s2, EditMode por clase, PlayMode por clases, capturas antes/después, reporte, builds | pendiente |
 
 ## Bitácora
 - 19-nov: inventario hecho, rama de integración creada.
 - T-1481 integrada en integ/revertir-mapa (5139687).
+- T-1480, T-1482, T-1483 integradas (487ea5c). Siguiente: validar, pruebas por clase, capturas, reporte, builds.
