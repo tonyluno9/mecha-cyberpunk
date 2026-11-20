@@ -85,7 +85,7 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return Hasta(() => EnEstado(a, "CarroManejar"), "CarroManejar");
             yield return Esperar(0.5f);
             clips = a.GetCurrentAnimatorClipInfo(0);
-            Assert.AreEqual("PJ01_Carro_Manejar", clips[clips.Length - 1].clip.name);
+            Assert.AreEqual("PJ01_Manejar_Carro", clips[clips.Length - 1].clip.name); // T-1506
             yield return AnimacionCarroPruebas.Capturar(cam, "docs/capturas/pj01-carro-lado.png");
             MostrarCarroceria(false);
             yield return AnimacionCarroPruebas.Capturar(cam, "docs/capturas/pj01-carro-lado-sin-carroceria.png");

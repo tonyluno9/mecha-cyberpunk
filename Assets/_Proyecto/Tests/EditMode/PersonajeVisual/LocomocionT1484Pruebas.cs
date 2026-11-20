@@ -89,10 +89,10 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
         {
             Assert.AreEqual("PJ01_Correr_SinImplante", Override(RutaOverrideJugador, "Loco_Caminar"));
             Assert.AreEqual("PJ01_Correr_ConImplante", Override(RutaOverrideJugador, "Loco_Caminar_ConImplante"));
-            Assert.AreEqual("PJ01_Caminar_SinImplante", Override(RutaOverrideNpc, "Loco_Caminar"));
+            Assert.AreEqual("NPC_Caminar_Hombre", Override(RutaOverrideNpc, "Loco_Caminar")); // T-1506
             foreach ((string b, string p) in ConstructorControladorBase.ClipsPorPapel["NPC"])
             {
-                if (b == "Loco_Caminar") Assert.AreEqual("PJ01_Caminar_SinImplante", p);
+                if (b == "Loco_Caminar") Assert.AreEqual("NPC_Caminar_Hombre", p);
             }
         }
 

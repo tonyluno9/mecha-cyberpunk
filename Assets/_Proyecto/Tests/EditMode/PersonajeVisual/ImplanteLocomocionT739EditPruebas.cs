@@ -78,7 +78,7 @@ namespace MechaCyberpunk.Tests
             var npc = AssetDatabase.LoadAssetAtPath<AnimatorOverrideController>(ConstructorControladorBase.RutaOverride("NPC"));
             pares.Clear();
             npc.GetOverrides(pares);
-            Assert.AreEqual("PJ01_Caminar_SinImplante", Valor("Loco_Caminar"), "T-1004: los demas papeles caminan con el clip de PJ01 sin implante");
+            Assert.AreEqual("NPC_Caminar_Hombre", Valor("Loco_Caminar"), "T-1506: el papel NPC camina con NPC_Caminar_Hombre");
         }
     }
 }

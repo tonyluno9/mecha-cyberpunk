@@ -21,6 +21,10 @@ namespace MechaCyberpunk.IA.APie
         private float velocidad;
         private float segundos;
         private LineRenderer cuerda;
+        private CaidaNova caida;
+
+        /// <summary>La secuencia de caída (aire, aterrizaje, levantarse); null si no hay clips configurados (para pruebas).</summary>
+        public CaidaNova Caida => caida;
 
         /// <summary>True cuando ya tocó el piso y su IA volvió a funcionar.</summary>
         public bool Llego { get; private set; }
@@ -48,6 +52,8 @@ namespace MechaCyberpunk.IA.APie
             soldado.transform.position = d.inicio;
             d.cuerda = d.CrearCuerda(material);
             d.PintarCuerda();
+            // T-1506: mientras baja juega Caida_Aire; al tocar el piso, Aterrizaje y Levantarse (null si no hay config de clips).
+            d.caida = CaidaNova.Iniciar(soldado.gameObject, false);
             return d;
         }
 
@@ -120,6 +126,10 @@ namespace MechaCyberpunk.IA.APie
         {
             Llego = true;
             transform.position = suelo;
+            if (caida != null)
+            {
+                caida.Aterrizar();
+            }
             if (controlador != null)
             {
                 controlador.enabled = true;

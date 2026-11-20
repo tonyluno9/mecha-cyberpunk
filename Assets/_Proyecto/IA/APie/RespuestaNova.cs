@@ -454,6 +454,8 @@ namespace MechaCyberpunk.IA.APie
             if (altura > 0f)
             {
                 DestelloLlegadaNova.Lanzar(punto, config, SegundosDeCaida(altura));
+                // T-1506: la caída especial (aire, aterrizaje, levantarse); aterriza sola cuando el agente toca el piso.
+                CaidaNova.Iniciar(objeto, true);
             }
             return p;
         }

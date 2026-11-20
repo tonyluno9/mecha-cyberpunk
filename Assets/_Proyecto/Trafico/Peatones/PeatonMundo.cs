@@ -152,6 +152,7 @@ namespace MechaCyberpunk.Trafico.Peatones
             sentidoDecidido = false;
             calculo.MultiplicadorVelocidad = config.MultiplicadorHuida;
             calculo.CancelarEspera();
+            SendMessage(MensajeAsustado, SendMessageOptions.DontRequireReceiver);
         }
 
         /// <summary>Lo mata: cae, queda tirado <see cref="SegundosCuerpo"/> s y se esconde. Cancela cualquier llamada.</summary>
@@ -196,6 +197,8 @@ namespace MechaCyberpunk.Trafico.Peatones
         public const string MensajeHerido = "AlHerirCivil";
         public const string MensajeMuerte = "AlMorirCivil";
         public const string MensajeRevivir = "AlRevivirCivil";
+        /// <summary>T-1506: empieza a huir (el puente juega NPC_Asustarse una vez).</summary>
+        public const string MensajeAsustado = "AlAsustarCivil";
         public const string ParametroCaer = "KO"; // ReglasVisual.Caer: el parámetro Bool que tumba al personaje
 
         /// <summary>True si algún Animator del peatón tiene el parámetro de caer, "KO" (controlador base o propio, con clip de muerte).</summary>
