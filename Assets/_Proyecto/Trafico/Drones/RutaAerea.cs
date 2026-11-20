@@ -11,6 +11,7 @@ namespace MechaCyberpunk.Trafico.Drones
     public class RutaAerea : MonoBehaviour
     {
         private const float SuavizadoAlabeo = 4f;
+        private const float FraccionRadioLlegada = 0.98f;
 
         [SerializeField, Tooltip("Esquinas de la ruta (x, z) en m, en el espacio local del padre. El bucle se cierra solo. Al menos 3.")] private Vector2[] puntos;
         [SerializeField, Min(0f), Tooltip("Altura media sobre el origen del padre (m).")] private float altura = 20f;
@@ -24,12 +25,14 @@ namespace MechaCyberpunk.Trafico.Drones
         [Header("Obstáculos (T-1494)")]
         [SerializeField, Tooltip("Si es true, el dron no atraviesa geometría: sube para rodear lo que le bloquea el paso.")] private bool evitaObstaculos = true;
         [SerializeField, Min(0.05f), Tooltip("Radio de la esfera con que revisa su paso (m).")] private float radioDron = 0.8f;
+        [SerializeField, Min(0f), Tooltip("Margen de despeje extra sobre el radio: el dron pasa al menos a este tramo de cualquier muro, sin rozarlo (m).")] private float margenDespeje = 1.5f;
         [SerializeField, Min(0.1f), Tooltip("Cuánto sube al toparse con algo (m/s).")] private float velocidadSubida = 8f;
         [SerializeField, Min(0.1f), Tooltip("Cuánto baja de regreso a su altura cuando está libre (m/s).")] private float velocidadBajada = 3f;
         [SerializeField, Min(0f), Tooltip("Máximo que sube sobre su altura de ruta (m).")] private float desvioMaximo = 40f;
         [SerializeField, Min(2f), Tooltip("Tope de la altura de ruta para que el dron se vea desde la calle (m).")] private float alturaMaxima = 14f;
 
         private static readonly RaycastHit[] impactos = new RaycastHit[16];
+        private static readonly Collider[] tocados = new Collider[16];
         private ReglaDesvioAereo desvio;
         private CalculoRutaAerea calculo;
         private float tiempo;
@@ -84,7 +87,7 @@ namespace MechaCyberpunk.Trafico.Drones
             }
             // Bloqueado: no avanza en la ruta y sube hasta librar el obstáculo.
             float sube = desvio.DesvioSubiendo(dt) - desvio.Desvio;
-            if (sube > 0f && !Bloqueado(actual, actual + Vector3.up * sube))
+            if (sube > 0f && !Bloqueado(actual, actual + Vector3.up * sube, false))
             {
                 desvio.Fijar(desvio.Desvio + sube);
                 transform.position = actual + Vector3.up * sube;
@@ -102,7 +105,7 @@ namespace MechaCyberpunk.Trafico.Drones
         }
 
         // True si entre los dos puntos hay geometría fija (no se cuentan sus propias piezas ni cuerpos con Rigidbody: carros, objetos).
-        private bool Bloqueado(Vector3 desde, Vector3 hasta)
+        private bool Bloqueado(Vector3 desde, Vector3 hasta, bool revisarDestino = true)
         {
             Vector3 dir = hasta - desde;
             float distancia = dir.magnitude;
@@ -110,7 +113,7 @@ namespace MechaCyberpunk.Trafico.Drones
             {
                 return false;
             }
-            int n = Physics.SphereCastNonAlloc(desde, radioDron, dir / distancia, impactos, distancia, ~0, QueryTriggerInteraction.Ignore);
+            int n = Physics.SphereCastNonAlloc(desde, radioDron + margenDespeje, dir / distancia, impactos, distancia, ~0, QueryTriggerInteraction.Ignore);
             for (int i = 0; i < n; i++)
             {
                 Collider c = impactos[i].collider;
@@ -119,6 +122,19 @@ namespace MechaCyberpunk.Trafico.Drones
                     continue;
                 }
                 return true;
+            }
+            // Un SphereCast no reporta lo que ya toca la esfera al salir (distance 0): sin esto, un paso que termina rozando el muro lo deja
+            // "dentro" y los siguientes lo atraviesan. Se revisa el punto de llegada (al subir junto al muro no, o no podría rozarlo para subir).
+            if (revisarDestino)
+            {
+                int m = Physics.OverlapSphereNonAlloc(hasta, (radioDron + margenDespeje) * FraccionRadioLlegada, tocados, ~0, QueryTriggerInteraction.Ignore);
+                for (int i = 0; i < m; i++)
+                {
+                    if (!tocados[i].transform.IsChildOf(transform) && tocados[i].attachedRigidbody == null)
+                    {
+                        return true;
+                    }
+                }
             }
             return false;
         }

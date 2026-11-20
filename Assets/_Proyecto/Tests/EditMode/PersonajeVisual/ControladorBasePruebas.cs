@@ -114,13 +114,11 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
         }
 
         [Test]
-        public void CoberturaMantener_ConservaLaUltimaPoseDeEntrar()
+        public void CoberturaMantener_EsElClipQuietoEnBucle_T1515()
         {
             AnimatorState mantener = Base().layers[0].stateMachine.states.First(s => s.state.name == "CoberturaMantener").state;
-            Assert.IsTrue(mantener.timeParameterActive);
-            Assert.AreEqual(ReglasAnimacion.PoseCobertura, mantener.timeParameter);
-            Assert.AreEqual("Cobertura_Entrar", mantener.motion.name);
-            Assert.Greater(Base().parameters.First(p => p.name == ReglasAnimacion.PoseCobertura).defaultFloat, 0.9f);
+            Assert.IsFalse(mantener.timeParameterActive, "T-1515: ya no congela una pose");
+            Assert.AreEqual("PJ01_Cobertura_Quieto", mantener.motion.name);
         }
 
         [Test]

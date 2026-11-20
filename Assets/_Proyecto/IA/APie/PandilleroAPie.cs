@@ -1188,7 +1188,10 @@ namespace MechaCyberpunk.IA.APie
             {
                 Collider c = candidatosCubierta[i];
                 Bounds caja = CajaDeCubierta(c);
-                if (caja.size.y < AlturaMinCubierta || Mathf.Max(caja.size.x, caja.size.z) > TamanoMaxCubierta
+                // T-1511: una cobertura CB (barrera, costales, cajas, barricada) sirve aunque sea baja y se prefiere a otra más cercana.
+                bool esCb = c.GetComponentInParent<CoberturaCB>() != null;
+                float bono = esCb ? CoberturaCB.BonoPreferencia : 0f;
+                if ((caja.size.y < AlturaMinCubierta && !esCb) || Mathf.Max(caja.size.x, caja.size.z) > TamanoMaxCubierta
                     || c.GetComponentInParent<CharacterController>() != null)
                 {
                     continue;
@@ -1204,7 +1207,7 @@ namespace MechaCyberpunk.IA.APie
                 d.Normalize();
                 float extension = Mathf.Abs(d.x) * caja.extents.x + Mathf.Abs(d.z) * caja.extents.z;
                 Vector3 puntoBase = centroCaja + d * (extension + MargenCubierta);
-                if (DistanciaPlana(transform.position, puntoBase) - caja.extents.magnitude >= mejor)
+                if (DistanciaPlana(transform.position, puntoBase) - caja.extents.magnitude - bono >= mejor)
                 {
                     continue;
                 }
@@ -1215,7 +1218,7 @@ namespace MechaCyberpunk.IA.APie
                 {
                     continue;
                 }
-                float distancia = DistanciaPlana(transform.position, punto);
+                float distancia = DistanciaPlana(transform.position, punto) - bono;
                 if (distancia >= mejor)
                 {
                     continue;

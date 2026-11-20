@@ -185,7 +185,7 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
         }
     
         [TestCase("MotoSubir", "PJ01_Moto_Subir")]
-        [TestCase("MotoManejar", "PJ01_Moto_Manejar")]
+        [TestCase("MotoManejar", "PJ01_Manejar_Moto")]
         [TestCase("MotoBajar", "PJ01_Moto_Bajar")]
         public void Moto_TieneSusEstadosConLosClipsDeBlender(string estado, string clip)
         {

@@ -53,6 +53,26 @@ namespace MechaCyberpunk.Trafico.Datos
         [Min(0f)] [Tooltip("Calor que suma matar a un civil (puntos, motivo Pelea; solo cuenta si hay testigos).")]
         [SerializeField] private float calorPorMuerte = 25f;
 
+        [Header("Platicar y agacharse (T-1516)")]
+        [Min(0)] [Tooltip("Uno de cada cuántos peatones se queda platicando en pareja o trío (0 = nadie platica).")]
+        [SerializeField] private int unoDeCadaPlatica;
+        [Range(0f, 1f)] [Tooltip("Probabilidad de que un civil que oye un disparo se agache cubriéndose la cabeza antes de huir (0 = siempre huye de inmediato).")]
+        [SerializeField] private float probabilidadAgacharse;
+        [Min(0.5f)] [Tooltip("Cuánto se queda agachado después de oír un disparo (s).")]
+        [SerializeField] private float segundosAgachado = 3f;
+
+        public int UnoDeCadaPlatica => unoDeCadaPlatica;
+        public float ProbabilidadAgacharse => probabilidadAgacharse;
+        public float SegundosAgachado => segundosAgachado;
+
+        /// <summary>T-1516: para el creador de editor y las pruebas.</summary>
+        public void ConfigurarReaccion(int unoDeCadaQuePlatica, float probabilidadDeAgacharse, float segundosDeAgachado)
+        {
+            unoDeCadaPlatica = Mathf.Max(0, unoDeCadaQuePlatica);
+            probabilidadAgacharse = Mathf.Clamp01(probabilidadDeAgacharse);
+            segundosAgachado = Mathf.Max(0.5f, segundosDeAgachado);
+        }
+
         public float VidaPeaton => vidaPeaton;
         public float ProbabilidadRevancha => probabilidadRevancha;
         public float AlcanceRevancha => alcanceRevancha;

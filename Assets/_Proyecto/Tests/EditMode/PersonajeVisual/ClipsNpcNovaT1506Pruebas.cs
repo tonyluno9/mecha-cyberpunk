@@ -80,7 +80,6 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
         }
 
         [Test]
-        [Ignore("Pendiente: los clips E17_* de Blender son del rig a escala real (escala_real/E17); el perro del juego sigue con su modelo y sus clips Perro_*")]
         public void ClipsDelPerro_SonGeneric_ConElAvatarDelModeloDelPerro()
         {
             var modelo = (ModelImporter)AssetImporter.GetAtPath(ClipsNpcNovaT1506.RutaModeloPerro);
@@ -94,7 +93,6 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
         }
 
         [Test]
-        [Ignore("Pendiente: los clips E17_* de Blender son del rig a escala real (escala_real/E17); el perro del juego sigue con su modelo y sus clips Perro_*")]
         public void ClipsDelPerro_UsanLosHuesosDelModelo_SinRutasHuerfanas()
         {
             var modelo = AssetDatabase.LoadAssetAtPath<GameObject>(ClipsNpcNovaT1506.RutaModeloPerro);

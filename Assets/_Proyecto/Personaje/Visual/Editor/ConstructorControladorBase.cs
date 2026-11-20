@@ -363,11 +363,18 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             Estado("Pararse", "Loco_Pararse");
             Estado("Rodar", "Loco_Rodar");
             Estado("CoberturaEntrar", "Cobertura_Entrar");
-            // Mantener = la última pose de Entrar congelada (no hay clip de estar cubierto).
-            // (con speed 0 las transiciones de salida no avanzan: el tiempo se fija con un parámetro).
-            AnimatorState mantener = Estado("CoberturaMantener", "Cobertura_Entrar");
-            mantener.timeParameterActive = true;
-            mantener.timeParameter = ReglasAnimacion.PoseCobertura;
+            // T-1515: Mantener (quieto en cobertura) es PJ01_Cobertura_Quieto en bucle (agachado respirando y vigilando); antes congelaba la última pose de Entrar.
+            // Asomarse y Regresar son PJ01_Cobertura_Asomarse y PJ01_Cobertura_Regresar. Los tres van directo en la base (solo existen de PJ01).
+            Estado("CoberturaMantener", "PJ01_Cobertura_Quieto");
+            Estado("CoberturaAsomarse", "PJ01_Cobertura_Asomarse");
+            Estado("CoberturaRegresar", "PJ01_Cobertura_Regresar");
+            // T-1515: escalones de concreto (solo el jugador pone Escalones; la rapidez sigue a su velocidad). Son los clips PJ01_Escaleras_*, no la escalera de mano.
+            foreach ((string nombreEscalon, string clipEscalon) in new[] { ("EscalonesSubir", "PJ01_Escaleras_Subir"), ("EscalonesBajar", "PJ01_Escaleras_Bajar") })
+            {
+                AnimatorState escalon = Estado(nombreEscalon, clipEscalon);
+                escalon.speedParameterActive = true;
+                escalon.speedParameter = ReglasAnimacion.RapidezEscalones;
+            }
             Estado("CoberturaDisparo1", "Cobertura_Disparo");
             Estado("CoberturaDisparo2", "Cobertura_Disparo2");
             // T-1310: cobertura con arma larga (solo existen de PJ01: van directo en la base).
@@ -382,7 +389,7 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             ConstruirGestos(m, e, Estado);
             m.defaultState = e["Idle"];
 
-            string[] suelo = { "Idle", "Caminar", "Correr", "GirarDer", "GirarIzq", "GirarApuntarDer", "GirarApuntarIzq", "Frenar", "AgachadoCaminar", "AgachadoQuieto" };
+            string[] suelo = { "Idle", "Caminar", "Correr", "GirarDer", "GirarIzq", "GirarApuntarDer", "GirarApuntarIzq", "Frenar", "AgachadoCaminar", "AgachadoQuieto", "EscalonesSubir", "EscalonesBajar" };
 
             // Agachado (T-733): de pie se baja con Loco_Agacharse y queda en AgachadoQuieto o AgachadoCaminar (por velocidad); para levantarse usa Loco_Pararse.
             foreach (string s in new[] { "Idle", "Caminar", "Correr", "GirarDer", "GirarIzq", "Frenar" })
@@ -420,6 +427,23 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             Unir(e["Caminar"], e["Correr"], false, 0f, Mezcla, Mayor(ReglasVisual.Velocidad, ReglasAnimacion.UmbralCorrer));
             Unir(e["Correr"], e["Caminar"], false, 0f, Mezcla, Menor(ReglasVisual.Velocidad, ReglasAnimacion.UmbralCorrer * ReglasAnimacion.HisteresisCorrer));
             Unir(e["Frenar"], e["Caminar"], false, 0f, Mezcla, Mayor(ReglasVisual.Velocidad, ReglasAnimacion.UmbralCorrer * 0.5f));
+
+            // T-1515: escalones de concreto. De Caminar (o Correr, si el trote baja de la velocidad máxima) se pasa a EscalonesSubir/Bajar mientras Escalones lo pida y
+            // la velocidad sea de andar; al terminar o acelerar vuelve a Caminar, al quedarse quieto a Idle, y en el aire a Caminar (que ya sabe saltar).
+            for (int tipoEscalon = 1; tipoEscalon <= 2; tipoEscalon++)
+            {
+                string estadoEscalon = tipoEscalon == 1 ? "EscalonesSubir" : "EscalonesBajar";
+                foreach (string s in new[] { "Caminar", "Correr" })
+                {
+                    Unir(e[s], e[estadoEscalon], false, 0f, Mezcla, Entero(ReglasAnimacion.Escalones, tipoEscalon), Bool(ReglasVisual.EnSuelo, true),
+                        Mayor(ReglasVisual.Velocidad, UmbralCaminar), Menor(ReglasVisual.Velocidad, ReglasAnimacion.VelocidadMaximaEscalones));
+                }
+                Unir(e[estadoEscalon], e["Idle"], false, 0f, Mezcla, Menor(ReglasVisual.Velocidad, UmbralCaminar));
+                Unir(e[estadoEscalon], e["Caminar"], false, 0f, Mezcla, Entero(ReglasAnimacion.Escalones, 0));
+                Unir(e[estadoEscalon], e["Caminar"], false, 0f, Mezcla, Distinto(ReglasAnimacion.Escalones, tipoEscalon));
+                Unir(e[estadoEscalon], e["Caminar"], false, 0f, Mezcla, Mayor(ReglasVisual.Velocidad, ReglasAnimacion.VelocidadMaximaEscalones + 0.3f));
+                Unir(e[estadoEscalon], e["Caminar"], false, 0f, Mezcla, Bool(ReglasVisual.EnSuelo, false));
+            }
 
             // T-985: apuntando con la pistola el giro en el sitio es PJ01_Pistola_ApuntarCaminar_*; va antes que GirarDer/GirarIzq (gana la primera transición cierta).
             int pistolaGiro = (int)TipoArmaVisual.Pistola;
@@ -464,7 +488,12 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             Unir(e["CoberturaMantener"], e["CoberturaDisparo2"], false, 0f, MezclaCorta, Disparador(ReglasAnimacion.DisparoCobertura), Entero(ReglasAnimacion.CoberturaTipo, 1));
             Unir(e["CoberturaDisparo1"], e["CoberturaMantener"], true, SalidaUnaVez, Mezcla);
             Unir(e["CoberturaDisparo2"], e["CoberturaMantener"], true, SalidaUnaVez, Mezcla);
-            foreach (string s in new[] { "CoberturaEntrar", "CoberturaMantener", "CoberturaDisparo1", "CoberturaDisparo2" })
+            // T-1515: al apuntar se asoma (Asomarse y se queda en su última pose mientras apunta); al soltar regresa (Regresar) y vuelve a Quieto.
+            Unir(e["CoberturaMantener"], e["CoberturaAsomarse"], false, 0f, MezclaCorta, Bool(ReglasVisual.Apuntando, true));
+            Unir(e["CoberturaAsomarse"], e["CoberturaRegresar"], false, 0f, MezclaCorta, Bool(ReglasVisual.Apuntando, false));
+            Unir(e["CoberturaRegresar"], e["CoberturaAsomarse"], false, 0f, MezclaCorta, Bool(ReglasVisual.Apuntando, true));
+            Unir(e["CoberturaRegresar"], e["CoberturaMantener"], true, SalidaUnaVez, Mezcla);
+            foreach (string s in new[] { "CoberturaEntrar", "CoberturaMantener", "CoberturaAsomarse", "CoberturaRegresar", "CoberturaDisparo1", "CoberturaDisparo2" })
             {
                 Unir(e[s], e["Idle"], false, 0f, Mezcla, Bool(ReglasVisual.Cubierto, false));
             }
@@ -494,7 +523,7 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             Unir(e["LevantarseBocaAbajo"], e["Idle"], true, SalidaUnaVez, Mezcla);
 
             // Entrar en cobertura desde el suelo (no desde cualquier estado: si no, saldría de Mantener y entraría otra vez en bucle).
-            foreach (string s in new[] { "Idle", "Caminar", "Correr", "GirarDer", "GirarIzq", "GirarApuntarDer", "GirarApuntarIzq", "Frenar", "AgachadoCaminar", "AgachadoQuieto", "Agacharse", "Pararse", "SaltoAterrizaje" })
+            foreach (string s in new[] { "Idle", "Caminar", "Correr", "GirarDer", "GirarIzq", "GirarApuntarDer", "GirarApuntarIzq", "Frenar", "AgachadoCaminar", "AgachadoQuieto", "Agacharse", "Pararse", "SaltoAterrizaje", "EscalonesSubir", "EscalonesBajar" })
             {
                 // T-1310: con arma larga va antes (gana la primera transición cierta).
                 Unir(e[s], e["CoberturaRifleEntrar"], false, 0f, Mezcla, Bool(ReglasVisual.Cubierto, true), Bool(ReglasAnimacion.ArmaLargaEquipada, true));
@@ -527,7 +556,7 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             }
             estado("CarroManejar", "Carro_Manejar_Bucle", 1f).tag = ReglasAnimacion.EtiquetaGesto;
             estado("VerTelefono", "Inter_VerTelefono_Bucle", 1f).tag = ReglasAnimacion.EtiquetaGesto;
-            estado("MotoManejar", "PJ01_Moto_Manejar", 1f).tag = ReglasAnimacion.EtiquetaGesto;
+            estado("MotoManejar", "PJ01_Manejar_Moto", 1f).tag = ReglasAnimacion.EtiquetaGesto;
 
             for (int i = 0; i < ClipsGestos.Length; i++)
             {
@@ -800,8 +829,9 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             AnimatorStateMachine m = c.layers[i].stateMachine;
             AnimatorState vacio = m.AddState("Vacio");
             m.defaultState = vacio;
-            string[] clips = { "Pistola_Dano_Frente", "Pistola_Dano_Espalda", "Pistola_Dano_Fuerte" };
-            string[] estados = { "DanoFrente", "DanoEspalda", "DanoFuerte" };
+            // T-1515: Izquierda (3) y Derecha (4) van directo con PJ01_Dano_Izquierda/Derecha (aditivos, primer cuadro = referencia); solo el jugador manda DanoTipo 3 o 4.
+            string[] clips = { "Pistola_Dano_Frente", "Pistola_Dano_Espalda", "Pistola_Dano_Fuerte", "PJ01_Dano_Izquierda", "PJ01_Dano_Derecha" };
+            string[] estados = { "DanoFrente", "DanoEspalda", "DanoFuerte", "DanoIzquierda", "DanoDerecha" };
             for (int k = 0; k < estados.Length; k++)
             {
                 AnimatorState s = m.AddState(estados[k]);

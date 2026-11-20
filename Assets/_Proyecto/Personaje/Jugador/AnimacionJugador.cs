@@ -51,6 +51,8 @@ namespace MechaCyberpunk.Personaje.Jugador
         private bool agachadoAntes;
         private bool rodandoAntes;
         private ApuntadoIK apuntadoIK;
+        private DetectorEscalones detectorEscalones;
+        private EscalonesVisual escalonesAntes;
         private float conImplanteAplicado = -1f;
 
         /// <summary>T-739: el jugador lleva un implante de piernas (IMP01) o de brazos (IMP02) y camina y corre con los clips ConImplante (ServicioImplantes, contrato IImplantes de Core).</summary>
@@ -70,12 +72,18 @@ namespace MechaCyberpunk.Personaje.Jugador
             pistola = GetComponent<PistolaAPie>();
             armas = GetComponent<ArmasAPie>();
             vida = GetComponent<VidaAPie>();
+            detectorEscalones = GetComponent<DetectorEscalones>();
+            if (detectorEscalones == null)
+            {
+                detectorEscalones = gameObject.AddComponent<DetectorEscalones>(); // T-1515
+            }
             cubierta = GetComponent<CubiertaYRodada>();
             visual = GetComponentInChildren<VisualPersonaje>(true);
             if (visual != null)
             {
                 visual.RapidezGolpes = ReglasAnimacion.RapidezGolpeJugador;
                 visual.GuardiaTrasGolpe = true; // T-985: PJ01_Punos_Guardia entre golpes
+                visual.DanoLateral = true; // T-1515: PJ01_Dano_Izquierda y Derecha
                 visual.RapidezMuerte = ReglasAnimacion.RapidezMuerteJugador;
             }
             ClipsDeTony(visual);
@@ -157,6 +165,7 @@ namespace MechaCyberpunk.Personaje.Jugador
             {
                 visual.RapidezGolpes = ReglasAnimacion.RapidezGolpeJugador;
                 visual.GuardiaTrasGolpe = true; // T-985: PJ01_Punos_Guardia entre golpes
+                visual.DanoLateral = true; // T-1515: PJ01_Dano_Izquierda y Derecha
                 visual.RapidezMuerte = ReglasAnimacion.RapidezMuerteJugador;
             }
             ClipsDeTony(visual);
@@ -221,6 +230,8 @@ namespace MechaCyberpunk.Personaje.Jugador
                 if (apuntando != apuntandoAntes) { visual.Apuntando = apuntando; apuntandoAntes = apuntando; }
                 if (tipoArma != tipoArmaAntes) { visual.TipoArma = tipoArma; tipoArmaAntes = tipoArma; }
                 ActualizarCaido(ko, Time.deltaTime);
+                EscalonesVisual escalones = detectorEscalones.Tipo > 0 ? EscalonesVisual.Subiendo : detectorEscalones.Tipo < 0 ? EscalonesVisual.Bajando : EscalonesVisual.Ninguno;
+                if (escalones != escalonesAntes) { visual.Escalones = escalones; escalonesAntes = escalones; }
                 if (cubierto != cubiertoAntes) { visual.Cubierto = cubierto; cubiertoAntes = cubierto; }
             }
 

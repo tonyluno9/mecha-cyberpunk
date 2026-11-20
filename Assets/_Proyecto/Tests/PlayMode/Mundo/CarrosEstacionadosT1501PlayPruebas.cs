@@ -33,16 +33,24 @@ namespace MechaCyberpunk.Tests.Mundo
                     {
                         continue;
                     }
-                    Renderer[] rs = rueda.GetComponentsInChildren<Renderer>();
-                    if (rs.Length == 0)
+                    // Fondo exacto por vértices: el AABB de un Renderer con la llanta rodada sale inflado (hasta 1.4 radios) y parecía hundida.
+                    MeshFilter[] mallas = rueda.GetComponentsInChildren<MeshFilter>().Where(f => f.sharedMesh != null).ToArray();
+                    if (mallas.Length == 0)
                     {
                         continue;
                     }
-                    Bounds b = rs[0].bounds;
-                    foreach (Renderer r in rs)
+                    // Llanta como cilindro (centro de la malla menos su radio): las mallas no son legibles y el AABB girado se infla.
+                    float fondoLlanta = float.MaxValue;
+                    Vector3 centroLlanta = Vector3.zero;
+                    foreach (MeshFilter f in mallas)
                     {
-                        b.Encapsulate(r.bounds);
+                        Bounds local = f.sharedMesh.bounds;
+                        Vector3 e = Vector3.Scale(local.extents, f.transform.lossyScale);
+                        float radio = Mathf.Max(Mathf.Abs(e.x), Mathf.Max(Mathf.Abs(e.y), Mathf.Abs(e.z)));
+                        Vector3 c = f.transform.TransformPoint(local.center);
+                        if (c.y - radio < fondoLlanta) { fondoLlanta = c.y - radio; centroLlanta = c; }
                     }
+                    Bounds b = new Bounds(new Vector3(centroLlanta.x, fondoLlanta, centroLlanta.z), Vector3.zero);
                     Vector3 origen = new Vector3(b.center.x, b.min.y + 1f, b.center.z);
                     RaycastHit[] hits = Physics.RaycastAll(origen, Vector3.down, 50f, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore)
                         .Where(h => !h.collider.transform.IsChildOf(carro.transform)).OrderBy(h => h.distance).ToArray();

@@ -17,10 +17,11 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
     public static class ClipsNpcNovaT1506
     {
         public const string CarpetaPerro = "Assets/Arte/Personajes/E17_PerroRobotNova/Clips/";
-        public const string RutaModeloPerro = "Assets/Arte/Personajes/E17_PerroRobotNova/E17_PerroRobotNova_a.fbx";
+        // T-1516: los clips E17_* son del rig a escala real; su modelo es E17_PerroRobotNova_esc (el _a viejo queda sin usar). Se crea con PerroEscalaRealT1516.Importar.
+        public const string RutaModeloPerro = "Assets/Arte/Personajes/E17_PerroRobotNova/E17_PerroRobotNova_esc.fbx";
         public const string RutaConfig = "Assets/_Proyecto/Personaje/Datos/Resources/ConfigClipsNovaNpc.asset";
         public const string ControladorMesera = "Assets/Arte/Personajes/MeseraRobot/MeseraRobot.controller";
-        public const string ControladorPerro = "Assets/Arte/Personajes/E17_PerroRobotNova/E17_PerroRobotNova_a.controller";
+        public const string ControladorPerro = "Assets/Arte/Personajes/E17_PerroRobotNova/E17_PerroRobotNova_esc.controller";
 
         // ---------- Qué se importa ----------
 
@@ -182,13 +183,19 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             {
                 ImportarHumanoide(nombre);
             }
+            ImportarClipsPerro();
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+            Debug.Log("[Personaje] T-1506: clips importados (" + ClipsHumanoides.Length + " Humanoid y " + ClipsPerro.Length + " del perro).");
+        }
+
+        /// <summary>T-1516: importa los seis clips E17_* con la escala del modelo <see cref="RutaModeloPerro"/>.</summary>
+        public static void ImportarClipsPerro()
+        {
             foreach (string nombre in ClipsPerro)
             {
                 ImportarPerro(nombre);
             }
-            AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
-            Debug.Log("[Personaje] T-1506: clips importados (" + ClipsHumanoides.Length + " Humanoid y " + ClipsPerro.Length + " del perro).");
         }
 
         private static void ImportarHumanoide(string nombre)
@@ -235,6 +242,9 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             importador.avatarSetup = ModelImporterAvatarSetup.NoAvatar;
             importador.useFileScale = modelo.useFileScale;
             importador.globalScale = modelo.globalScale;
+            // T-1516: el modelo a escala real tiene la malla y el rig como hermanos (el nodo del rig queda en la ruta); el clip solo trae el rig y Unity lo colapsaría.
+            importador.preserveHierarchy = true;
+            importador.userData = modelo.userData; // el postprocesador de escala lee userData: sin esto el clip vuelve a escala 1
             importador.materialImportMode = ModelImporterMaterialImportMode.None;
             importador.SaveAndReimport();
             importador = AssetImporter.GetAtPath(ruta) as ModelImporter;

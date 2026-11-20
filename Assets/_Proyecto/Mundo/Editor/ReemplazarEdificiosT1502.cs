@@ -25,6 +25,8 @@ namespace MechaCyberpunk.Mundo.Editor
         public const string PrefijoModelo = "T1502_Modelo";
         public const string NombrePendiente = "T1502_Pendiente";
         private const float ToleranciaEscalaPadre = 0.01f;
+        /// <summary>Estiramiento máximo que acepta Cambiar; T-1512 lo baja en su primera pasada.</summary>
+        internal static float LimiteDistorsion = CalculoEdificiosT1502.DistorsionMaxima;
         private const float MargenVentanas = 3f;
         private const float MargenCosto = 0.2f;
         private const float AzarPosicionX = 7f;
@@ -64,7 +66,7 @@ namespace MechaCyberpunk.Mundo.Editor
             public bool TienePendiente;
         }
 
-        private class Medida
+        internal class Medida
         {
             public GameObject Prefab;
             public Vector3 Tam;
@@ -159,7 +161,7 @@ namespace MechaCyberpunk.Mundo.Editor
         }
 
         // Devuelve null si cambió el edificio, o el motivo si queda pendiente.
-        private static string Cambiar(Primitivo p, Dictionary<string, List<Medida>> paletas, Dictionary<string, Vector3> centros)
+        internal static string Cambiar(Primitivo p, Dictionary<string, List<Medida>> paletas, Dictionary<string, Vector3> centros)
         {
             Transform cubo = p.Renderer.transform;
             Transform padre = cubo.parent;
@@ -200,7 +202,7 @@ namespace MechaCyberpunk.Mundo.Editor
                 int tramos;
                 Vector3 escala;
                 float costo;
-                if (CalculoEdificiosT1502.Ajustar(m.Tam, anchoFrente, fondo, b.size.y, out tramos, out escala, out costo))
+                if (CalculoEdificiosT1502.Ajustar(m.Tam, anchoFrente, fondo, b.size.y, out tramos, out escala, out costo, LimiteDistorsion))
                 {
                     opciones.Add(new KeyValuePair<Medida, (int, Vector3, float)>(m, (tramos, escala, costo)));
                 }
@@ -296,7 +298,7 @@ namespace MechaCyberpunk.Mundo.Editor
             return r;
         }
 
-        private static List<Medida> Medidas(string[] rutas, Dictionary<string, Medida> cache)
+        internal static List<Medida> Medidas(string[] rutas, Dictionary<string, Medida> cache)
         {
             List<Medida> lista = new List<Medida>();
             foreach (string ruta in rutas)
@@ -341,7 +343,7 @@ namespace MechaCyberpunk.Mundo.Editor
             return m;
         }
 
-        private static Dictionary<string, Vector3> CentrosBarrio(Scene escena)
+        internal static Dictionary<string, Vector3> CentrosBarrio(Scene escena)
         {
             Dictionary<string, Vector3> centros = new Dictionary<string, Vector3>();
             foreach (GameObject raiz in escena.GetRootGameObjects())
@@ -391,7 +393,7 @@ namespace MechaCyberpunk.Mundo.Editor
             return mejor;
         }
 
-        private static Scene Abrir()
+        internal static Scene Abrir()
         {
             Scene activa = SceneManager.GetActiveScene();
             if (activa.path == CreadorPrologoCiudad.RutaEscena && activa.isLoaded)
@@ -411,12 +413,12 @@ namespace MechaCyberpunk.Mundo.Editor
             return sb.ToString();
         }
 
-        private static string Tam(Vector3 v)
+        internal static string Tam(Vector3 v)
         {
             return v.x.ToString("F1") + "x" + v.y.ToString("F1") + "x" + v.z.ToString("F1");
         }
 
-        private static string Texto(string titulo, List<Primitivo> lista)
+        internal static string Texto(string titulo, List<Primitivo> lista)
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine(titulo + ": " + lista.Count);
@@ -428,7 +430,7 @@ namespace MechaCyberpunk.Mundo.Editor
             return sb.ToString();
         }
 
-        private static void Escribir(string ruta, string texto)
+        internal static void Escribir(string ruta, string texto)
         {
             Directory.CreateDirectory(Path.GetDirectoryName(ruta));
             File.WriteAllText(ruta, texto, new UTF8Encoding(false));
