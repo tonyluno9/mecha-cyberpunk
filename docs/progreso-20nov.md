@@ -51,3 +51,4 @@ Fuentes de modelos: `imageassets/modelos-nuevos/nuevos-19nov/` de la carpeta pri
 ## Bitácora (segunda vuelta)
 - 20-nov: paso 0. Unity cerrado, sin lockfile, 10 GB RAM, 119 GB disco. Blender abierto por otra sesión (no se toca; los subagentes usan Blender 5.2 en -b).
 - 20-nov: T-1511, T-1512, T-1514, T-1515, T-1516 hechas por subagentes e integradas en integ/20nov-B. T-1511 aplicada y probada (dc9f6b6). T-1513 (muro) lanzada. T-1510 (patrullas PA) sigue.
+- 20-nov: métodos de T-1512 (39 ED, 17 apagados por caer sobre cubos encimados de las afueras), T-1514 (cama/espejo en la puerta), T-1515 (controlador), T-1516 (perro E17 a escala real: clips con preserveHierarchy y userData de escala; 4 sentados; platica) corridos y guardados (7c3c766). T-1510 y T-1513 integradas; sus métodos corriendo. Falta: tanda de pruebas EditMode y PlayMode por clase, merge a main, builds, reporte.
