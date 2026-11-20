@@ -53,6 +53,8 @@ MonoBehaviour:
   velocidadClipCorrer: 3.19
   rapidezMinima: 0.6
   rapidezMaxima: 3
+  velocidadClipAtras: 0
+  velocidadClipLado: 0
   rapidezCapaArriba: 8
   suavizadoDireccion: 14
   segundosTumbarse: 0.35
@@ -287,6 +289,9 @@ MonoBehaviour:
   alturaRayo: 0.6
   alcanceRayo: 1.1
   rapidezPies: 10
+  soloDesnivel: 0
+  desnivelMaximo: 0.35
+  inclinarEnGiros: 0
   objetivo: {fileID: 0}
   mirarAlJugador: 1
   distanciaMirada: 7
