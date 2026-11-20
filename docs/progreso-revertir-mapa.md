@@ -42,3 +42,5 @@ niebla global, Barrio.prefab (sonido de puertas, persecución), PisoAdoquin, Pla
   (T1364_ZonasTrafico/Plazas). Raíces de la escena = las de 8b33987^1 + T1398_DronesAereos + T1364_ZonasTrafico (solo zonas de barrios).
 - EditMode Mundo+UI+Trafico+PersonajeVisual: 1733, 1 falla (FlotantesS2t: 19 tinacos/aires/antenas que T-1410 bajó cuando
   estaban las zonas). Se agregó a T-1480 regresar esos 29 cambios de T-1410 (ad662b8) a su valor de antes.
+- Azoteas de T-1410 regresadas; flotantes/encimados/RevertirMapa 8/8. PlayMode por clase 24/24. Fotos antes/después iguales.
+- Reporte en docs/reporte-revertir-mapa.md. Tareas a hechas. Siguiente: merge --no-ff a main, push, builds Demo y Juego.
