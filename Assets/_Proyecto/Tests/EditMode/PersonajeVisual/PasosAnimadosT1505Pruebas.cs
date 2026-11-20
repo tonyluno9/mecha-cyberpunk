@@ -141,6 +141,7 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
         }
 
         [Test]
+        [Ignore("T-1506: la escalera de mano no usa PJ01_Escaleras_* (son de escalones); se queda con PJ01_Escalera_*")]
         public void Escaleras_ConfigUsaLosClipsNuevos()
         {
             var config = AssetDatabase.LoadAssetAtPath<MechaCyberpunk.Personaje.ConfigAnimacionEscalera>("Assets/_Proyecto/Personaje/Datos/Resources/ConfigAnimacionEscalera.asset");

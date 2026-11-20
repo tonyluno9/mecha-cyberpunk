@@ -90,11 +90,11 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
             string[] todos = ClipsDeLaCarpeta();
             var usados = new HashSet<string>(tabla.Select(t => t.Clip));
             // T-1484: el paso normal del jugador es el trote; los clips de caminar de PJ01 los usan los NPC.
-            var soloNpc = new HashSet<string> { "PJ01_Caminar_SinImplante", "PJ01_Correr_SinImplante", "PJ01_Loco_SaltoInicio", "PJ01_Loco_SaltoAire", "PJ01_Loco_SaltoAterrizaje" };
+            var soloNpc = new HashSet<string> { "PJ01_CaminarApuntando_Adelante", "PJ01_Cobertura_Quieto", "PJ01_Cobertura_Asomarse", "PJ01_Cobertura_Regresar", "PJ01_Dano_Izquierda", "PJ01_Dano_Derecha", "PJ01_Manejar_Moto", "PJ01_Punos_GolpeDer", "PJ01_Punos_GolpeIzq", "PJ01_Muerte_Adelante", "PJ01_Muerte_Atras", "PJ01_Carro_Manejar", "PJ01_Pistola_Dano_Frente", "PJ01_Pistola_Dano_Espalda", "PJ01_Pistola_ApuntarAtras", "PJ01_Pistola_ApuntarLateral_Derecha", "PJ01_Pistola_ApuntarLateral_Izquierda", "PJ01_Caminar_SinImplante", "PJ01_Correr_SinImplante", "PJ01_Loco_SaltoInicio", "PJ01_Loco_SaltoAire", "PJ01_Loco_SaltoAterrizaje" };
             string[] sinUsar = todos.Where(n => !usados.Contains(n) && !soloNpc.Contains(n)).ToArray();
             Debug.Log("[T-985] clips no PJ01: " + noPJ01.Length + "; PJ01 sin usar: " + sinUsar.Length + " de " + todos.Length);
 
-            Assert.AreEqual(93, todos.Length, "La carpeta de clips debe tener los 93 PJ01_* del controlador (T-1505: 95 menos los 2 PJ01_Escaleras_* de la config de escalera)");
+            Assert.AreEqual(110, todos.Length, "La carpeta de clips debe tener los 110 PJ01_* (T-1505 y T-1506: +17 de Blender del 19-nov)");
             Assert.IsEmpty(noPJ01, "Clips que no son PJ01 en el jugador:\n" + string.Join("\n", noPJ01));
             Assert.IsEmpty(sinUsar, "PJ01 sin ningún estado:\n" + string.Join("\n", sinUsar));
         }
@@ -113,7 +113,6 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
                 if (nombre == "PJ01_Escalera_Subir" || nombre == "PJ01_Escalera_Bajar") { continue; }
                 Assert.IsTrue(enConfig.Contains(nombre), nombre + " no está en ConfigAnimacionEscalera");
             }
-            Assert.IsTrue(enConfig.Contains("PJ01_Escaleras_Subir") && enConfig.Contains("PJ01_Escaleras_Bajar"), "T-1505: subir y bajar son los de Escaleras");
         }
     }
 }

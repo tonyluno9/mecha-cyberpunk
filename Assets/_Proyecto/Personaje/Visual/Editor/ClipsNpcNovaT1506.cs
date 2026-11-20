@@ -101,7 +101,6 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
                 ("Loco_Caminar", "E15_Caminar"), ("Loco_Caminar_ConImplante", "E15_Caminar"), ("Loco_Correr", "E15_Correr"), ("Loco_Correr_ConImplante", "E15_Correr"),
                 ("Pistola_Disparo", "E15_Disparar"), ("Rifle_DisparoCaminar", "E15_Disparar"),
                 ("Pistola_Dano_Frente", "E15_Impacto"), ("Pistola_Dano_Espalda", "E15_Impacto"), ("Pistola_Dano_Fuerte", "E15_Impacto"),
-                ("PJ01_Cobertura_Quieto", "E15_Cubrirse"),
             }),
             ("E16", "Guardias", new[]
             {
@@ -225,16 +224,18 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             }
             AssetDatabase.ImportAsset(ruta, ImportAssetOptions.ForceUpdate);
             ModelImporter importador = AssetImporter.GetAtPath(ruta) as ModelImporter;
-            Avatar avatarPerro = AssetDatabase.LoadAllAssetsAtPath(RutaModeloPerro).OfType<Avatar>().FirstOrDefault();
-            if (importador == null || avatarPerro == null)
+            var modelo = AssetImporter.GetAtPath(RutaModeloPerro) as ModelImporter;
+            if (importador == null || modelo == null)
             {
-                Debug.LogError("[Personaje] T-1506: sin importador o sin avatar del perro para " + nombre);
+                Debug.LogError("[Personaje] T-1506: sin importador del clip o del modelo del perro para " + nombre);
                 return;
             }
+            // El modelo del perro es Generic sin avatar (T-1389b): los clips igual y con su misma escala; las curvas se enlazan por la ruta de los huesos.
             importador.importAnimation = true;
             importador.animationType = ModelImporterAnimationType.Generic;
-            importador.avatarSetup = ModelImporterAvatarSetup.CopyFromOther;
-            importador.sourceAvatar = avatarPerro;
+            importador.avatarSetup = ModelImporterAvatarSetup.NoAvatar;
+            importador.useFileScale = modelo.useFileScale;
+            importador.globalScale = modelo.globalScale;
             importador.materialImportMode = ModelImporterMaterialImportMode.None;
             importador.SaveAndReimport();
             importador = AssetImporter.GetAtPath(ruta) as ModelImporter;

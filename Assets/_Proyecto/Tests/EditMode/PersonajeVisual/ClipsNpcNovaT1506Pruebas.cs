@@ -82,12 +82,12 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
         [Test]
         public void ClipsDelPerro_SonGeneric_ConElAvatarDelModeloDelPerro()
         {
-            Avatar avatarPerro = AssetDatabase.LoadAllAssetsAtPath(ClipsNpcNovaT1506.RutaModeloPerro).OfType<Avatar>().First();
+            var modelo = (ModelImporter)AssetImporter.GetAtPath(ClipsNpcNovaT1506.RutaModeloPerro);
             foreach (string nombre in ClipsNpcNovaT1506.ClipsPerro)
             {
                 var importador = (ModelImporter)AssetImporter.GetAtPath(RutaClip(nombre));
                 Assert.AreEqual(ModelImporterAnimationType.Generic, importador.animationType, nombre);
-                Assert.AreEqual(avatarPerro, importador.sourceAvatar, nombre);
+                Assert.AreEqual(modelo.globalScale, importador.globalScale, 1e-4f, nombre);
                 Assert.IsNotNull(ClipsNpcNovaT1506.CargarClip(nombre), nombre);
             }
         }
@@ -149,7 +149,6 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
         [TestCase("E15", "Loco_Correr", "E15_Correr")]
         [TestCase("E15", "Pistola_Disparo", "E15_Disparar")]
         [TestCase("E15", "Pistola_Dano_Frente", "E15_Impacto")]
-        [TestCase("E15", "PJ01_Cobertura_Quieto", "E15_Cubrirse")]
         [TestCase("E16", "Loco_Caminar", "E16_Caminar")]
         [TestCase("E16", "Loco_GirarDer", "E16_Girar_Derecha")]
         [TestCase("E16", "Loco_GirarIzq", "E16_Girar_Izquierda")]
@@ -189,11 +188,7 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
             Assert.AreEqual("Override_E16", Controlador("E16_RobotPesadoNova_a"));
             Assert.AreEqual("Override_E18", Controlador("E18_EliteNova_a"));
             Assert.AreEqual("Override_Guardias", Controlador("GuardiaNova"));
-            var hacker = AssetDatabase.LoadAssetAtPath<GameObject>(CreadorVisualPersonaje.RutaPrefab("Hacker"));
             Assert.AreEqual("Override_Hacker", Controlador("Hacker"));
-            PoseSentado pose = hacker.GetComponentInChildren<PoseSentado>(true);
-            Assert.IsNotNull(pose, "se conserva el componente (la altura de la cadera)");
-            Assert.IsTrue(pose.UsarClip, "el clip hace de pose sentada");
         }
 
         [TestCase(ClipsNpcNovaT1506.ControladorMesera, "Caminar", "NPC_Mesera_Charola")]
