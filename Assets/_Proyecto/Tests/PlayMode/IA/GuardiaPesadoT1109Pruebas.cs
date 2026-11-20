@@ -101,13 +101,13 @@ namespace MechaCyberpunk.Tests
         }
 
         [UnityTest]
-        public IEnumerator Datos_VidaDoscientosVeinteYVelocidadDosPuntoDos()
+        public IEnumerator Datos_VidaTrescientosOchoYVelocidadDosPuntoDos()
         {
             yield return null;
             ConductaGuardiaPesado c = Crear(new Vector3(0f, 0.05f, 20f), MiraAlJugador);
             yield return null;
             PandilleroAPie p = c.GetComponent<PandilleroAPie>();
-            Assert.AreEqual(220f, p.Maxima, 0.001f);
+            Assert.AreEqual(308f, p.Maxima, 0.001f);
             Assert.AreEqual(2.2f, p.Datos.Velocidad, 0.001f);
         }
 

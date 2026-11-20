@@ -1,3 +1,4 @@
+using MechaCyberpunk.Core;
 using UnityEngine;
 
 namespace MechaCyberpunk.IA.APie
@@ -26,6 +27,9 @@ namespace MechaCyberpunk.IA.APie
         private Vector3 miraPuesto;
         private bool puestoFijado;
         private bool provocado;
+        private float mantenerHasta = -1f;
+        private const float SegundosMantenerPorDisparo = 60f;
+        private const float CercaniaDisparoJugador = 3f;
 
         public bool Controla => true;
         public ReglaGuardiaPesado Regla => regla;
@@ -51,8 +55,13 @@ namespace MechaCyberpunk.IA.APie
             if (escudo != null)
             {
                 escudo.Roto += AlRomperse;
-                escudo.Golpeado += Provocar;
+                escudo.Golpeado += ProvocarPorDisparo;
             }
+            if (pandillero != null)
+            {
+                pandillero.DanioRecibido += AlRecibirDanio;
+            }
+            EventosRuido.Disparo += AlOirDisparo;
         }
 
         private void OnDisable()
@@ -60,7 +69,39 @@ namespace MechaCyberpunk.IA.APie
             if (escudo != null)
             {
                 escudo.Roto -= AlRomperse;
-                escudo.Golpeado -= Provocar;
+                escudo.Golpeado -= ProvocarPorDisparo;
+            }
+            if (pandillero != null)
+            {
+                pandillero.DanioRecibido -= AlRecibirDanio;
+            }
+            EventosRuido.Disparo -= AlOirDisparo;
+        }
+
+        /// <summary>
+        /// T-1494: un impacto (o un disparo del jugador oído) desde cualquier distancia: pelea y va por el jugador; no vuelve a su puesto por la
+        /// distancia hasta pasados <see cref="SegundosMantenerPorDisparo"/> s (sí si el jugador deja de ser atacable).
+        /// </summary>
+        public void ProvocarPorDisparo()
+        {
+            provocado = true;
+            mantenerHasta = Time.time + SegundosMantenerPorDisparo;
+        }
+
+        private void AlRecibirDanio(PandilleroAPie p, InfoDanio info) => ProvocarPorDisparo();
+
+        private void AlOirDisparo(Vector3 donde)
+        {
+            if (pandillero == null || pandillero.EstaKO || pandillero.Jugador == null)
+            {
+                return;
+            }
+            Vector3 jugador = pandillero.Jugador.position;
+            float aDisparo = new Vector2(donde.x - jugador.x, donde.z - jugador.z).magnitude;
+            float aMi = new Vector2(donde.x - transform.position.x, donde.z - transform.position.z).magnitude;
+            if (aDisparo <= CercaniaDisparoJugador && aMi <= pandillero.Datos.RadioOido)
+            {
+                ProvocarPorDisparo();
             }
         }
 
@@ -91,6 +132,7 @@ namespace MechaCyberpunk.IA.APie
         public void Reiniciar()
         {
             provocado = false;
+            mantenerHasta = -1f;
             regla?.Reiniciar();
             escudo?.Reiniciar();
             gameObject.SetActive(true);
@@ -127,7 +169,7 @@ namespace MechaCyberpunk.IA.APie
             Vector3 haciaJugador = atacable ? jugador.position - p.transform.position : Vector3.zero;
             haciaJugador.y = 0f;
             float distancia = atacable ? haciaJugador.magnitude : float.MaxValue;
-            if (provocado && (!atacable || distancia > DistanciaVuelta))
+            if (provocado && (!atacable || (distancia > DistanciaVuelta && Time.time >= mantenerHasta)))
             {
                 provocado = false;
             }
