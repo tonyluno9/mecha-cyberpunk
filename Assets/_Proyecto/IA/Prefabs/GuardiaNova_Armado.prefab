@@ -91,7 +91,7 @@ MonoBehaviour:
   brazo: {fileID: 0}
   piezasBrazo: []
   pandillaPropia: 0
---- !u!1001 &3564616365886440322
+--- !u!1001 &6885601515142584538
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -148,10 +148,10 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9cb78e96245cb8547a468d42172b2c9b, type: 3}
---- !u!4 &7891375132394589982 stripped
+--- !u!4 &249200415109321798 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6700164846204193948, guid: 9cb78e96245cb8547a468d42172b2c9b, type: 3}
-  m_PrefabInstance: {fileID: 3564616365886440322}
+  m_PrefabInstance: {fileID: 6885601515142584538}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8026728317678701474
 PrefabInstance:
@@ -210,7 +210,7 @@ PrefabInstance:
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 5565808718058650499, guid: b49d04f70cb2433439a0b9f5ce51ed3c, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 7891375132394589982}
+      addedObject: {fileID: 249200415109321798}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b49d04f70cb2433439a0b9f5ce51ed3c, type: 3}
 --- !u!4 &2475030820036194337 stripped

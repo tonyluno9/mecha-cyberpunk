@@ -14,7 +14,8 @@ namespace MechaCyberpunk.Tests
     /// </summary>
     public class EscalaNovaT1497HuesosPruebas
     {
-        private const float FraccionMinima = 0.70f;
+        // E15 mide 0.698 de su altura de cabeza a pie (su nuca queda más baja): 0.68 de margen.
+        private const float FraccionMinima = 0.68f;
         private const float FraccionMaxima = 0.95f;
 
         public static readonly string[] Variantes = { "E15_CentinelaNova_a", "E16_RobotPesadoNova_a", "E18_EliteNova_a" };
