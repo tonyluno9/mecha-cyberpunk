@@ -1,4 +1,5 @@
 using MechaCyberpunk.Core;
+using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -37,6 +38,15 @@ namespace MechaCyberpunk.Vehiculos.Carro
         private float inclinacionOrbita;
         private float rumbo;
         private float velocidadRumbo;
+        private float fovBase;
+        private float fovActual;
+        private bool fovGuardado;
+
+        /// <summary>Valores de la cámara (T-1488: el temblor de choque los usa).</summary>
+        public ConfigCamaraCarro Config => config;
+
+        /// <summary>FOV actual (°), con el extra por velocidad.</summary>
+        public float FovActual => fovActual;
 
         /// <summary>True si la vista actual es tercera persona.</summary>
         public bool EsTerceraPersona { get; private set; } = true;
@@ -90,6 +100,9 @@ namespace MechaCyberpunk.Vehiculos.Carro
                 yawOrbita = 0f;
                 inclinacionOrbita = config.InclinacionReposo;
                 Camara.enabled = true;
+                fovBase = Camara.fieldOfView;
+                fovActual = fovBase;
+                fovGuardado = true;
                 if (oyente != null)
                 {
                     oyente.enabled = true;
@@ -98,6 +111,10 @@ namespace MechaCyberpunk.Vehiculos.Carro
             }
             else
             {
+                if (fovGuardado)
+                {
+                    Camara.fieldOfView = fovBase;
+                }
                 Camara.enabled = false;
                 if (oyente != null)
                 {
@@ -163,6 +180,33 @@ namespace MechaCyberpunk.Vehiculos.Carro
             if (Camara.enabled)
             {
                 Colocar(false);
+                AplicarFov(Time.deltaTime);
+                AplicarTemblor();
+            }
+        }
+
+        // T-1488: el FOV se abre con la rapidez (sensación de velocidad) y vuelve al cerrar el carro.
+        private void AplicarFov(float dt)
+        {
+            float kmh = cuerpo != null ? cuerpo.linearVelocity.magnitude * 3.6f : 0f;
+            float objetivo = CalculoCamaraCarro.FovPorRapidez(fovBase, config.FovExtraVelocidad, kmh, config.KmhFov);
+            fovActual = Mathf.Lerp(fovActual, objetivo, 1f - Mathf.Exp(-config.SuavidadFov * dt));
+            Camara.fieldOfView = fovActual;
+        }
+
+        // T-1488: los impulsos de choque (CinemachineImpulseSource del carro, canal TemblorCarro.CanalImpulso) se suman a la pose, como haría un
+        // CinemachineImpulseListener (este solo funciona sobre una cámara virtual, y esta cámara se mueve por código).
+        private void AplicarTemblor()
+        {
+            if (config.GananciaTemblor <= 0f)
+            {
+                return;
+            }
+            if (CinemachineImpulseManager.Instance.GetImpulseAt(transform.position, false, TemblorCarro.CanalImpulso,
+                out Vector3 posicion, out Quaternion rotacion))
+            {
+                transform.position += transform.rotation * posicion * config.GananciaTemblor;
+                transform.rotation *= Quaternion.SlerpUnclamped(Quaternion.identity, rotacion, config.GananciaTemblor);
             }
         }
 

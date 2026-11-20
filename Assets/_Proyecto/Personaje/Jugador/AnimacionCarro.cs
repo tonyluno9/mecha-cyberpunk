@@ -29,7 +29,7 @@ namespace MechaCyberpunk.Personaje.Jugador
         // T-1335: robo con conductor. El conductor (ConductorRobado, Trafico) juega PJ01_Conductor_SerSacado en 0.35 + 0.9 s; el clip del jugador dura lo mismo para que terminen juntos.
         private const string NombreConductorRobado = "ConductorRobado";
         private const float SegundosSacarConductor = 1.25f;
-        private const float SegundosAlinearPuerta = 0.15f;
+        private const float SegundosAlinearPuerta = 0.25f;
         private const float DistanciaMaximaConductor = 5f;
 
         // Cuánto cae la cadera sentada respecto del punto del asiento del carro (m) y cuánto se echa para atrás.

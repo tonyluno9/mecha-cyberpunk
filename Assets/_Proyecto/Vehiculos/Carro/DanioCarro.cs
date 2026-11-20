@@ -178,6 +178,10 @@ namespace MechaCyberpunk.Vehiculos.Carro
                 return;
             }
             float rapidez = colision.relativeVelocity.magnitude;
+            if (carro != null && rapidez <= RapidezChoqueImposible)
+            {
+                carro.TemblarPorChoque(rapidez); // T-1488
+            }
             LanzarAlConductorDeLaMoto(rapidez);
             if (rapidez <= config.UmbralChoque)
             {

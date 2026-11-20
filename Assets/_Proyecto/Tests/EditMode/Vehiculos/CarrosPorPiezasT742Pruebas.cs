@@ -212,7 +212,8 @@ namespace MechaCyberpunk.Tests.Vehiculos
             Assert.AreSame(raiz.Find("Asiento_Conductor"), so.FindProperty("asiento").objectReferenceValue, "El asiento sigue siendo el del carro");
             Assert.AreSame(raiz.Find("Punto_Puerta"), so.FindProperty("puntoSubida").objectReferenceValue, "El punto de subida sigue siendo el del carro");
             Assert.AreSame(raiz.Find("Rueda_DI"), so.FindProperty("ruedaDelanteraIzquierda").objectReferenceValue, "La suspensión usa las mismas anclas");
-            Assert.AreEqual("ConfigCarro_Viejo", so.FindProperty("config").objectReferenceValue.name, "Misma config de manejo de siempre");
+            // T-1488: cada carro usa el ConfigCarro de su tipo (Viejo, Compacto, Sedan, Camioneta, Deportivo, Pesado).
+            StringAssert.StartsWith("ConfigCarro_", so.FindProperty("config").objectReferenceValue.name, "Usa una config de manejo de carro");
         }
 
         [Test]

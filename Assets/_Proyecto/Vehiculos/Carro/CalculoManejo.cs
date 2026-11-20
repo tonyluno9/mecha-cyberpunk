@@ -83,6 +83,63 @@ namespace MechaCyberpunk.Vehiculos.Carro
             return Math.Clamp(giro, -tope, tope);
         }
 
+        /// <summary>Radianes de deslizamiento (ángulo entre el frente y la velocidad) bajo los que no se ayuda: es agarre normal.</summary>
+        public const float ZonaMuertaDerrape = 0.08f;
+
+        /// <summary>Lo máximo que la ayuda de contravolante gira el carro (rad/s).</summary>
+        public const float MaximaCorreccionDerrape = 1.2f;
+
+        /// <summary>Rapidez (m/s) bajo la cual no hay ayuda de contravolante.</summary>
+        public const float RapidezMinimaContravolante = 3f;
+
+        /// <summary>
+        /// T-1488: igual que VelocidadGiro de tres parámetros pero con el freno de mano a tope el giro (y su tope de
+        /// agarre) se multiplica por <see cref="ParametrosManejo.GiroFrenoMano"/>: el eje trasero pierde agarre y el carro se atraviesa.
+        /// </summary>
+        public static float VelocidadGiro(in ParametrosManejo p, float velocidadAdelante, float direccion, float frenoMano)
+        {
+            float multiplo = 1f + Math.Clamp(frenoMano, 0f, 1f) * (Math.Max(1f, p.GiroFrenoMano) - 1f);
+            direccion = Math.Clamp(direccion, -1f, 1f);
+            float rapidez = Math.Abs(velocidadAdelante);
+            if (rapidez < VelocidadCasiCero)
+            {
+                return 0f;
+            }
+            float anguloRad = AnguloDireccion(p, rapidez) * GradosARadianes * direccion;
+            float giro = velocidadAdelante * (float)Math.Tan(anguloRad) / p.DistanciaEntreEjes * multiplo;
+            float tope = p.AceleracionLateralMaxima / rapidez * multiplo;
+            return Math.Clamp(giro, -tope, tope);
+        }
+
+        /// <summary>
+        /// T-1488: giro extra (rad/s, positivo a la derecha) que endereza el carro hacia donde va cuando derrapa (contravolante asistido y recuperación
+        /// tras soltar el freno de mano). Cero con poca rapidez, en reversa, con el freno de mano puesto (el derrape es a propósito) o dentro de la zona muerta.
+        /// Si el conductor ya contravolantea (gira hacia donde va la velocidad), la ayuda baja.
+        /// </summary>
+        public static float CorreccionDerrape(in ParametrosManejo p, float velocidadAdelante, float velocidadLateral, float direccion, float frenoMano)
+        {
+            if (p.GananciaContravolante <= 0f || velocidadAdelante <= 0f)
+            {
+                return 0f;
+            }
+            float rapidez = (float)Math.Sqrt(velocidadAdelante * velocidadAdelante + velocidadLateral * velocidadLateral);
+            if (rapidez < RapidezMinimaContravolante)
+            {
+                return 0f;
+            }
+            float beta = (float)Math.Atan2(velocidadLateral, velocidadAdelante);
+            float exceso = Math.Abs(beta) - ZonaMuertaDerrape;
+            if (exceso <= 0f)
+            {
+                return 0f;
+            }
+            float signo = Math.Sign(beta);
+            float yaContravolantea = Math.Clamp(Math.Clamp(direccion, -1f, 1f) * signo, 0f, 1f);
+            float libre = 1f - Math.Clamp(frenoMano, 0f, 1f);
+            float correccion = signo * exceso * p.GananciaContravolante * (1f - yaContravolantea) * libre;
+            return Math.Clamp(correccion, -MaximaCorreccionDerrape, MaximaCorreccionDerrape);
+        }
+
         /// <summary>Fuerza lateral (N) que cancela el derrape. El freno de mano baja el agarre. Nunca pasa del agarre máximo.</summary>
         public static float FuerzaLateral(in ParametrosManejo p, float velocidadLateral, float frenoMano, float dt)
         {
