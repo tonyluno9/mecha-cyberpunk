@@ -34,3 +34,4 @@ Pedido completo: el /goal del 20-nov (Tony). Regla: nada se marca hecho sin verl
 ## Bitácora
 - 20-nov: paso 0 hecho. integ/20nov-C creada en s2 desde main 601dd62.
 - 20-nov: 10 subagentes lanzados (T-1520..T-1529) en wt20/. Compilación base de main en s2 corriendo.
+- T-1522 entregada (93aadb9): ArmeriaT1522.Diagnostico/Aplicar. Racks I18 de la pared a yaw -90 (como antes de T-1503), vitrinas I17 de enfrente 180°, armero GTA_T407/Mercado/Vendedor hacia la pared. Captura: jugador (-24,0.3,26.25) mirando -X.
