@@ -24,9 +24,10 @@ nada de PlayMode completo (pruebas por clase), no correr CreadorTodo, nunca forc
 | T-1497..T-1499 | Nova a escala y W10; drones y naves (T-1498); maletín, parque, V11, NPCs | T-1498 y T-1499 integradas con métodos corridos; T-1497 métodos corriendo |
 | T-1501..T-1503 | Barrido (50 arreglos, 205 a revisar); 52 de 95 edificios de las afueras con modelos; armería y charcos | integradas, fotos en docs/capturas/_20nov |
 | T-1505..T-1507 / Blender | Locomoción de Blender (T-1505), animaciones de NPC/Nova/PJ01 (T-1506, en curso), carros revisados (T-1507) | métodos corriendo |
-| Final | Builds, reporte, cerrar Unity | pendiente |
+| Final | Builds, reporte, cerrar Unity | main e785e2a subida; build Demo hecho en .sesiones/s2/Builds/Demo (sin copiar a la carpeta principal); build Juego sin hacer |
 
 ## Bitácora
 - 20-nov: paso 0 (Unity cerrado, sin lockfile, main f35707b, 11 GB RAM libres, 153 GB disco; Blender abierto).
 - 20-nov: T-1490..T-1496 integradas en integ/20nov (cf6ecc0), métodos de editor corridos, pruebas por clase. Segunda tanda lanzada (T-1497..T-1503, T-1505).
 - 20-nov madrugada: T-1498, T-1499, T-1501, T-1502, T-1503 integradas (b8edbcb). T-1497, T-1505, T-1507 mezcladas; métodos en curso. T-1506 (animaciones de Blender B y C) en curso. No se corre ConfigurarEscaleras de T-1505: los clips de Blender son de escalones y AnimacionEscalera es la escalera de mano.
+- 20-nov: DETENIDO a pedido de Tony. main e785e2a (merge de integ/20nov, push). Build Demo OK (2768 MB) en .sesiones/s2/Builds/Demo. Falta: copiar Demo a Builds/Demo de la carpeta principal, build Juego (ConstruirDemo.ConstruirJuego) y copiarlo a Builds/Juego, y sumar los builds a docs/reporte-20nov.md.
