@@ -1,4 +1,5 @@
 using System.Collections;
+using MechaCyberpunk.Personaje;
 using MechaCyberpunk.Personaje.Combate;
 using NUnit.Framework;
 using UnityEngine;
