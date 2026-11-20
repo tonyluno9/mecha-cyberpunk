@@ -12,6 +12,8 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
     {
         public const string TextoRecoger = "Recoger maletín";
         public const string Nombre = "MaletinAsalto";
+        /// <summary>Prefab del modelo MA01 en Resources (lo crea ImportarMaletinT1499 en Arte/Editor). Sin él se arma con primitivas.</summary>
+        public const string RecursoModelo = "MaletinAsalto";
 
         private static readonly Vector3 Medidas = new Vector3(0.45f, 0.12f, 0.33f);
         private const float AlturaCaida = 0.6f;
@@ -71,6 +73,17 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
 
         private void Armar()
         {
+            GameObject modelo = Resources.Load<GameObject>(RecursoModelo);
+            if (modelo != null)
+            {
+                // T-1499: el maletín MA01 (0.45 m, con su collider). Solo se agrega el brillo para verlo de noche.
+                GameObject instancia = Instantiate(modelo, transform);
+                instancia.name = "Modelo";
+                instancia.transform.localPosition = Vector3.zero;
+                instancia.transform.localRotation = Quaternion.identity;
+                AgregarBrillo();
+                return;
+            }
             Shader sombreador = Shader.Find("Universal Render Pipeline/Lit");
             if (sombreador == null)
             {
@@ -93,6 +106,11 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
             Parte("AsaBarra", new Vector3(0f, yAsa + 0.03f, 0f), new Vector3(0.17f, 0.025f, 0.025f), metal);
             Parte("Broche", new Vector3(0f, Medidas.y, Medidas.z * 0.5f), new Vector3(0.06f, 0.03f, 0.02f), metal);
 
+            AgregarBrillo();
+        }
+
+        private void AgregarBrillo()
+        {
             // Una luz puntual pequeña para que se vea de noche.
             GameObject luzObjeto = new GameObject("Brillo");
             luzObjeto.transform.SetParent(transform, false);
