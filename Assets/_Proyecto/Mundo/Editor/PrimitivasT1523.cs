@@ -451,6 +451,276 @@ namespace MechaCyberpunk.Mundo.Editor
             }
         }
 
+        // ================= Relleno de edificios que no cupieron con un solo modelo =================
+
+        public const string PrefijoRelleno = "T1523_Relleno_";
+        private const float EstiramientoRelleno = 1.6f;
+        private const float EstiramientoRellenoMaximo = 2.4f;
+        private const int MaxColumnasRelleno = 20;
+        private const int MaxPilasRelleno = 16;
+        private const int MaxPiezasRelleno = 200;
+        private const float EscalaMinimaRelleno = 0.4f;
+        private const float EscalaMaximaRelleno = 4f;
+
+        /// <summary>
+        /// Rellena la huella de cada cubo de edificio visible que siga sin modelo con VARIOS modelos (ED, NV01, P11, P12, LO, CC...) del barrio:
+        /// en fila a lo largo del lado largo y apilados si es alto, con el frente hacia el centro del mapa, asentados al piso, con collider y sin
+        /// encimarse con otros renderers que no sean primitivas. Apaga el render del cubo (su collider se queda). Los cubos bajos (menos de
+        /// 6 m: cajas de azotea) solo se apagan. Idempotente: borra y rehace la raíz <c>T1523_Relleno_nombre</c> de cada cubo.
+        /// No abre ni guarda escena: trabaja sobre la escena activa.
+        /// -executeMethod MechaCyberpunk.Mundo.Editor.PrimitivasT1523.RellenarEdificiosRestantes
+        /// </summary>
+        public static void RellenarEdificiosRestantes()
+        {
+            Scene escena = SceneManager.GetActiveScene();
+            Physics.SyncTransforms();
+
+            // 1. Deshacer rellenos anteriores y volver a prender el cubo que cubrían.
+            List<Transform> previos = new List<Transform>();
+            foreach (GameObject raiz in escena.GetRootGameObjects())
+            {
+                foreach (Transform t in raiz.GetComponentsInChildren<Transform>(true))
+                {
+                    if (t.name.StartsWith(PrefijoRelleno))
+                    {
+                        previos.Add(t);
+                    }
+                }
+            }
+            foreach (Transform previo in previos)
+            {
+                Transform padre = previo.parent;
+                if (padre != null)
+                {
+                    foreach (Transform hermano in padre.Cast<Transform>())
+                    {
+                        MeshRenderer mr = hermano.GetComponent<MeshRenderer>();
+                        MeshFilter mf = hermano.GetComponent<MeshFilter>();
+                        if (hermano != previo && mr != null && !mr.enabled && mf != null && mf.sharedMesh != null
+                            && EsIncorporada(AssetDatabase.GetAssetPath(mf.sharedMesh)) && NombreRelleno(hermano) == previo.name)
+                        {
+                            mr.enabled = true;
+                        }
+                    }
+                }
+                Object.DestroyImmediate(previo.gameObject);
+            }
+            Physics.SyncTransforms();
+
+            // 2. Cubos de edificio que siguen visibles.
+            List<Item> todos = Escanear(escena);
+            HashSet<Renderer> primitivas = new HashSet<Renderer>(todos.Select(x => (Renderer)x.Renderer));
+            List<Item> cubos = todos.Where(x => x.Cat == Cat.Edificio || x.Cat == Cat.EdificioConKit).ToList();
+            Dictionary<string, List<ReemplazarEdificiosT1502.Medida>> paletas = CargarPaletas(true);
+            RejillaFijos fijos = RejillaFijos.Crear(escena, primitivas);
+            int rellenados = 0;
+            int apagados = 0;
+            int sinModelo = 0;
+            foreach (Item it in cubos)
+            {
+                Transform cubo = it.Renderer.transform;
+                if (it.Caja.size.y < AltoEdificio)
+                {
+                    it.Renderer.enabled = false;
+                    apagados++;
+                    Debug.Log("[T-1523] Relleno " + it.Ruta + ": 0 modelos (caja baja " + ReemplazarEdificiosT1502.Tam(it.Caja.size) + " apagada)");
+                    continue;
+                }
+                int n = RellenarUno(escena, it, paletas, fijos);
+                if (n > 0)
+                {
+                    rellenados++;
+                }
+                else
+                {
+                    sinModelo++;
+                }
+                Debug.Log("[T-1523] Relleno " + it.Ruta + ": " + n + " modelos");
+            }
+            Physics.SyncTransforms();
+            Debug.Log("[T-1523] Relleno: " + rellenados + " cubos rellenados, " + apagados + " cajas bajas apagadas, " + sinModelo + " sin modelo");
+        }
+
+        /// <summary>Nombre único de la raíz de relleno de un cubo entre sus hermanos (nombre, y _k si hay varios con el mismo nombre).</summary>
+        private static string NombreRelleno(Transform cubo)
+        {
+            int total = 0;
+            int antes = 0;
+            if (cubo.parent != null)
+            {
+                foreach (Transform h in cubo.parent.Cast<Transform>())
+                {
+                    if (h.name == cubo.name)
+                    {
+                        if (h == cubo)
+                        {
+                            antes = total;
+                        }
+                        total++;
+                    }
+                }
+            }
+            return PrefijoRelleno + cubo.name + (total > 1 ? "_" + antes : "");
+        }
+
+        private static int RellenarUno(Scene escena, Item it, Dictionary<string, List<ReemplazarEdificiosT1502.Medida>> paletas, RejillaFijos fijos)
+        {
+            Transform cubo = it.Renderer.transform;
+            Bounds b = HastaElPiso(it);
+            bool largoEnX = b.size.x >= b.size.z;
+            float largo = largoEnX ? b.size.x : b.size.z;
+            float corto = largoEnX ? b.size.z : b.size.x;
+            float alto = b.size.y;
+
+            List<ReemplazarEdificiosT1502.Medida> paleta;
+            if (!paletas.TryGetValue(it.Barrio, out paleta) || paleta.Count == 0)
+            {
+                paletas.TryGetValue("", out paleta);
+            }
+            if (paleta == null || paleta.Count == 0)
+            {
+                return 0;
+            }
+
+            // El mejor ajuste de cada modelo; se elige entre los que no pasan de EstiramientoRelleno (o el mejor si ninguno lo logra).
+            List<(ReemplazarEdificiosT1502.Medida m, int cols, int pilas, Vector3 esc, float r)> ajustes = new List<(ReemplazarEdificiosT1502.Medida, int, int, Vector3, float)>();
+            foreach (ReemplazarEdificiosT1502.Medida m in paleta)
+            {
+                int c, p;
+                Vector3 e;
+                float r;
+                if (AjustarRelleno(m.Tam, largo, corto, alto, out c, out p, out e, out r))
+                {
+                    ajustes.Add((m, c, p, e, r));
+                }
+            }
+            if (ajustes.Count == 0)
+            {
+                Debug.LogWarning("[T-1523] Relleno " + it.Ruta + ": ningún modelo llena " + ReemplazarEdificiosT1502.Tam(b.size) + " con estiramiento hasta " + EstiramientoRellenoMaximo);
+                return 0;
+            }
+            float mejor = ajustes.Min(a => a.r);
+            float tope = Mathf.Max(mejor, EstiramientoRelleno);
+            var buenos = ajustes.Where(a => a.r <= tope + 0.0001f && a.r <= mejor + 0.25f).ToList();
+            var elegido = buenos[Mathf.Abs(Mathf.RoundToInt(b.center.x * AzarPosicionRelleno + b.center.z * 13f)) % buenos.Count];
+            if (elegido.r > EstiramientoRelleno)
+            {
+                Debug.LogWarning("[T-1523] Relleno " + it.Ruta + ": estiramiento " + elegido.r.ToString("F2") + " (más de " + EstiramientoRelleno + ")");
+            }
+
+            // Frente hacia el centro del mapa, perpendicular al lado largo.
+            Vector3 frente;
+            if (largoEnX)
+            {
+                frente = new Vector3(0f, 0f, b.center.z > 0f ? -1f : 1f);
+            }
+            else
+            {
+                frente = new Vector3(b.center.x > 0f ? -1f : 1f, 0f, 0f);
+            }
+            Vector3 eje = largoEnX ? Vector3.right : Vector3.forward;
+            Quaternion rot = Quaternion.LookRotation(frente, Vector3.up);
+            Vector3 ps = cubo.parent != null ? cubo.parent.lossyScale : Vector3.one;
+
+            GameObject contenedor = new GameObject(NombreRelleno(cubo));
+            if (cubo.parent != null)
+            {
+                contenedor.transform.SetParent(cubo.parent, false);
+            }
+            contenedor.transform.localPosition = Vector3.zero;
+            contenedor.transform.localRotation = Quaternion.identity;
+            contenedor.transform.localScale = Vector3.one;
+            contenedor.isStatic = true;
+
+            float anchoCol = largo / elegido.cols;
+            float altoPila = alto / elegido.pilas;
+            int puestos = 0;
+            for (int c = 0; c < elegido.cols; c++)
+            {
+                for (int p = 0; p < elegido.pilas; p++)
+                {
+                    Vector3 baseCentro = new Vector3(b.center.x, b.min.y + p * altoPila, b.center.z) + eje * (((c + 0.5f) / elegido.cols - 0.5f) * largo);
+                    GameObject pieza = (GameObject)PrefabUtility.InstantiatePrefab(elegido.m.Prefab, contenedor.transform);
+                    pieza.name = PrefijoRelleno + elegido.m.Prefab.name + "_" + c + "_" + p;
+                    pieza.transform.SetPositionAndRotation(baseCentro - rot * Vector3.Scale(elegido.m.Desfase, elegido.esc), rot);
+                    pieza.transform.localScale = new Vector3(elegido.esc.x / NoCero(ps.x), elegido.esc.y / NoCero(ps.y), elegido.esc.z / NoCero(ps.z));
+                    pieza.isStatic = true;
+                    if (pieza.GetComponentInChildren<Collider>(true) == null)
+                    {
+                        BoxCollider bc = pieza.AddComponent<BoxCollider>();
+                        bc.size = elegido.m.Tam;
+                        bc.center = new Vector3(elegido.m.Desfase.x, elegido.m.Desfase.y + elegido.m.Tam.y * 0.5f, elegido.m.Desfase.z);
+                    }
+                    Physics.SyncTransforms();
+                    if (fijos.Encima(pieza))
+                    {
+                        Object.DestroyImmediate(pieza);
+                        continue;
+                    }
+                    fijos.Agregar(pieza);
+                    puestos++;
+                }
+            }
+            if (puestos == 0)
+            {
+                Object.DestroyImmediate(contenedor);
+                return 0;
+            }
+            it.Renderer.enabled = false; // el collider del cubo se queda
+            if (puestos < elegido.cols * elegido.pilas)
+            {
+                Debug.Log("[T-1523] Relleno " + it.Ruta + ": " + puestos + " de " + (elegido.cols * elegido.pilas) + " piezas (las demás se encimaban con otro modelo)");
+            }
+            return puestos;
+        }
+
+        private const float AzarPosicionRelleno = 7f;
+
+        /// <summary>Columnas y pilas con que un modelo llena largo x corto x alto con el menor estiramiento entre ejes (máximo EstiramientoRellenoMaximo).</summary>
+        private static bool AjustarRelleno(Vector3 modelo, float largo, float corto, float alto, out int cols, out int pilas, out Vector3 esc, out float razon)
+        {
+            cols = 0;
+            pilas = 0;
+            esc = Vector3.one;
+            razon = float.MaxValue;
+            if (modelo.x <= 0.01f || modelo.y <= 0.01f || modelo.z <= 0.01f || largo <= 0.01f || corto <= 0.01f || alto <= 0.01f)
+            {
+                return false;
+            }
+            float mejorCosto = float.MaxValue;
+            float sz = corto / modelo.z;
+            for (int c = 1; c <= MaxColumnasRelleno; c++)
+            {
+                float sx = largo / c / modelo.x;
+                for (int p = 1; p <= MaxPilasRelleno && c * p <= MaxPiezasRelleno; p++)
+                {
+                    float sy = alto / p / modelo.y;
+                    float menor = Mathf.Min(sx, Mathf.Min(sy, sz));
+                    float mayor = Mathf.Max(sx, Mathf.Max(sy, sz));
+                    if (menor < EscalaMinimaRelleno || mayor > EscalaMaximaRelleno)
+                    {
+                        continue;
+                    }
+                    float r = mayor / menor;
+                    if (r > EstiramientoRellenoMaximo)
+                    {
+                        continue;
+                    }
+                    float costo = r + 0.005f * c * p;
+                    if (costo < mejorCosto)
+                    {
+                        mejorCosto = costo;
+                        cols = c;
+                        pilas = p;
+                        // Con el modelo mirando a +Z, x es el ancho de la fila (a lo largo del lado largo) y z la profundidad.
+                        esc = new Vector3(sx, sy, sz);
+                        razon = r;
+                    }
+                }
+            }
+            return cols > 0;
+        }
+
         // ================= Props =================
 
         private static int CambiarProps(Scene escena, out int apagados)
