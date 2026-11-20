@@ -129,11 +129,11 @@ namespace MechaCyberpunk.Tests.Vehiculos
             {
                 PerfilManejo f = PerfilManejo.Para(tipo);
                 float zeta = CalculoSuspension.RelacionAmortiguamiento(f.Masa, f.Rigidez, f.Amortiguamiento);
-                Assert.AreEqual(f.Zeta, zeta, 1e-3f, tipo);
+                Assert.AreEqual(f.Zeta, zeta, 1e-3f, tipo.ToString());
                 Assert.GreaterOrEqual(zeta, 0.3f, tipo + ": amortiguado de más, no rebota");
                 Assert.LessOrEqual(zeta, 0.6f, tipo + ": amortiguado de menos, oscila mucho");
                 // La rigidez deja el carro hundido lo que ya tienen las ruedas colocadas.
-                Assert.AreEqual(PerfilManejo.CaidaReposo, f.Masa * 9.81f / (4f * f.Rigidez), 1e-3f, tipo);
+                Assert.AreEqual(PerfilManejo.CaidaReposo, f.Masa * 9.81f / (4f * f.Rigidez), 1e-3f, tipo.ToString());
             }
         }
 
