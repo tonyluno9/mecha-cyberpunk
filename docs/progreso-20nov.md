@@ -40,13 +40,14 @@ Fuentes de modelos: `imageassets/modelos-nuevos/nuevos-19nov/` de la carpeta pri
 | Tarea | Qué | Estado |
 | --- | --- | --- |
 | T-1510 | PA01/PA02 patrullas nuevas (puertas, llantas, cristal), V22 nuevo (mejor variante), rines de policía V05/V06/V11, ninguna patrulla hundida | pendiente |
-| T-1511 | CB01-CB04 cobertura: importar, poner en la ciudad, que Nova y SKULLS se agachen detrás | pendiente |
-| T-1512 | Identificar SIN_NOMBRE_01-15 (ED03-ED12, MU01-MU03) y renombrar; ED01-ED12 en vez de edificios de primitivas por barrio | pendiente |
-| T-1513 | Muro de la ciudad con MU01-MU03 (mismo trazo del muro que le gustó) | espera T-1512 (identificación) |
-| T-1514 | Pruebas en rojo de la primera vuelta (maletín 45 cm, dron al borde del muro, SNAKES al inicio), cama/espejo sin cuarto | pendiente |
-| T-1515 | PJ01: cobertura (quieto/asomarse/regresar), daño en 4 direcciones, manejar moto, escalones; velocidades del Animator = tabla | pendiente |
-| T-1516 | NPCs: platicar, sentado en bancas, agacharse; perro E17 con su modelo de escala real y sus clips | pendiente |
+| T-1511 | CB01-CB04 cobertura: importar, poner en la ciudad, que Nova y SKULLS se agachen detrás | integrada y probada (53 CB, EditMode 3/3, PlayMode 2/2) |
+| T-1512 | Identificar SIN_NOMBRE_01-15 (ED03-ED12, MU01-MU03) y renombrar; ED01-ED12 en vez de edificios de primitivas por barrio | integrada; prefabs hechos; métodos de escena corriendo |
+| T-1513 | Muro de la ciudad con MU01-MU03 (mismo trazo del muro que le gustó) | en curso (subagente) |
+| T-1514 | Pruebas en rojo de la primera vuelta (maletín 45 cm, dron al borde del muro, SNAKES al inicio), cama/espejo sin cuarto | integrada; métodos y pruebas corriendo |
+| T-1515 | PJ01: cobertura (quieto/asomarse/regresar), daño en 4 direcciones, manejar moto, escalones; velocidades del Animator = tabla | integrada; métodos y pruebas corriendo |
+| T-1516 | NPCs: platicar, sentado en bancas, agacharse; perro E17 con su modelo de escala real y sus clips | integrada; métodos y pruebas corriendo |
 | Final | Builds Demo y Juego (CyberCity.exe) en la carpeta principal, reporte, cerrar Unity | pendiente |
 
 ## Bitácora (segunda vuelta)
 - 20-nov: paso 0. Unity cerrado, sin lockfile, 10 GB RAM, 119 GB disco. Blender abierto por otra sesión (no se toca; los subagentes usan Blender 5.2 en -b).
+- 20-nov: T-1511, T-1512, T-1514, T-1515, T-1516 hechas por subagentes e integradas en integ/20nov-B. T-1511 aplicada y probada (dc9f6b6). T-1513 (muro) lanzada. T-1510 (patrullas PA) sigue.
