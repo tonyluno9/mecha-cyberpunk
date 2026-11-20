@@ -65,6 +65,16 @@ namespace MechaCyberpunk.Personaje.Vida
         /// <summary>T-1529: la vida máxima que dan solo los implantes instalados (suma de su vida máxima extra).</summary>
         public float VidaMaximaPorImplantes => Mathf.Max(0f, implantes.Efectos.vidaMaximaExtra);
 
+        /// <summary>T-1529: la vida máxima que dan las prótesis de ataque que lleva en el inventario (+15 cada una, dato de DatosProtesisAtaque).</summary>
+        public float VidaMaximaPorProtesis
+        {
+            get
+            {
+                MechaCyberpunk.Economia.ServicioInventario inventario = Registro<MechaCyberpunk.Economia.ServicioInventario>.Actual;
+                return inventario == null ? 0f : ReglaProtesisVida.Sumar(inventario.Todos);
+            }
+        }
+
         private void OnEnable()
         {
             implantes.Cambio += AplicarVidaMaxima;
@@ -84,7 +94,7 @@ namespace MechaCyberpunk.Personaje.Vida
         {
             if (modelo != null && datos != null)
             {
-                modelo.PonerMaxima(datos.VidaMaxima + VidaMaximaPorImplantes);
+                modelo.PonerMaxima(datos.VidaMaxima + VidaMaximaPorImplantes + VidaMaximaPorProtesis);
             }
         }
 
@@ -260,6 +270,7 @@ namespace MechaCyberpunk.Personaje.Vida
 
         private void Update()
         {
+            AplicarVidaMaxima(); // T-1529: las prótesis de ataque se tienen al llevarlas en el inventario (compra, carga): se revisa cada cuadro
             modelo?.Avanzar(Time.deltaTime);
         }
 

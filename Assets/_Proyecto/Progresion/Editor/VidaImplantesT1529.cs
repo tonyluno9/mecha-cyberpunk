@@ -12,6 +12,7 @@ namespace MechaCyberpunk.Progresion.Editor
     public static class VidaImplantesT1529
     {
         private const string Campo = "efectos.vidaMaximaExtra";
+        public const float VidaProtesisAtaque = 15f;
 
         [MenuItem("Mecha Cyberpunk/T-1529/Diagnóstico vida de implantes")]
         public static void Diagnostico() => Recorrer(false);
@@ -46,6 +47,31 @@ namespace MechaCyberpunk.Progresion.Editor
                     p.floatValue = debe;
                     so.ApplyModifiedPropertiesWithoutUndo();
                     EditorUtility.SetDirty(d);
+                    cambiados++;
+                }
+            }
+            // Prótesis de ataque (brazo láser, hombrera de misiles): +15 de vida máxima cada una (DatosProtesisAtaque.vidaMaximaExtra).
+            foreach (string guid in AssetDatabase.FindAssets("t:DatosObjeto", new[] { "Assets/_Proyecto/Personaje/Datos/Protesis" }))
+            {
+                string ruta = AssetDatabase.GUIDToAssetPath(guid);
+                var objeto = AssetDatabase.LoadAssetAtPath<MechaCyberpunk.Economia.DatosObjeto>(ruta);
+                if (objeto == null)
+                {
+                    continue;
+                }
+                var so = new SerializedObject(objeto);
+                SerializedProperty p = so.FindProperty("vidaMaximaExtra");
+                if (p == null)
+                {
+                    continue; // no es una prótesis de ataque
+                }
+                bool igual = Mathf.Abs(p.floatValue - VidaProtesisAtaque) < 1e-4f;
+                Debug.Log("[T-1529] " + objeto.Id + ": vida extra " + p.floatValue + (igual ? " (bien)" : " -> debe ser " + VidaProtesisAtaque));
+                if (!igual && aplicar)
+                {
+                    p.floatValue = VidaProtesisAtaque;
+                    so.ApplyModifiedPropertiesWithoutUndo();
+                    EditorUtility.SetDirty(objeto);
                     cambiados++;
                 }
             }

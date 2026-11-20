@@ -268,6 +268,48 @@ namespace MechaCyberpunk.Tests.UI
             Assert.LessOrEqual(vida.Actual, vida.Maxima);
         }
 
+        // T-1529: las prótesis de ataque que lleva (brazo láser, hombrera de misiles) suman +15 de vida máxima cada una, también tras guardar y cargar el inventario.
+        [UnityTest]
+        public IEnumerator ProtesisDeAtaque_SumanVidaMaxima_YSeConservanAlGuardarYCargar()
+        {
+            yield return CargarCiudad();
+            ServicioInventario inventario = Registro<ServicioInventario>.Actual;
+            VidaAPie vida = Registro<IJugador>.Actual.Raiz.GetComponentInChildren<VidaAPie>();
+            DatosProtesisAtaque laser = null;
+            foreach (DatosObjeto objeto in inventario.Catalogo.Objetos)
+            {
+                if (objeto is DatosProtesisAtaque p && p.Habilidad == MechaCyberpunk.Personaje.Habilidades.HabilidadProtesis.Laser)
+                {
+                    laser = p;
+                }
+            }
+            Assert.IsNotNull(laser, "El catálogo trae el brazo láser");
+            yield return null;
+            float baseMax = vida.Maxima;
+            int tenia = inventario.Cantidad(laser);
+            if (tenia == 0)
+            {
+                inventario.Agregar(laser, 1);
+            }
+            else
+            {
+                baseMax -= laser.VidaMaximaExtra;
+            }
+            yield return null;
+            yield return null;
+            Assert.AreEqual(baseMax + 15f, vida.Maxima, 1e-3f, "Llevar el brazo láser suma 15");
+
+            string guardado = inventario.Guardar();
+            inventario.Quitar(laser, 1);
+            yield return null;
+            yield return null;
+            Assert.AreEqual(baseMax, vida.Maxima, 1e-3f, "Sin la prótesis vuelve la base");
+            inventario.Cargar(guardado);
+            yield return null;
+            yield return null;
+            Assert.AreEqual(baseMax + 15f, vida.Maxima, 1e-3f, "Cargar la partida devuelve la vida máxima");
+        }
+
         [UnityTest]
         public IEnumerator Clinica_ClicElige_YDobleClicInstalaSinEnter()
         {

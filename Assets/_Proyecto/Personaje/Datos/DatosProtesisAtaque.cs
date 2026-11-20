@@ -16,6 +16,10 @@ namespace MechaCyberpunk.Personaje
         [Tooltip("Modelo que se ve en el cuerpo al tenerla (opcional).")]
         [SerializeField] private GameObject modelo;
 
+        [Tooltip("T-1529: vida máxima que suma al llevarla (como un implante).")]
+        [Min(0f)] [SerializeField] private float vidaMaximaExtra = 15f;
+
+        public float VidaMaximaExtra => vidaMaximaExtra;
         public HabilidadProtesis Habilidad => habilidad;
         public GameObject Modelo => modelo;
     }

@@ -142,6 +142,33 @@ namespace MechaCyberpunk.Tests
             }
         }
 
+        // ---- Prótesis de ataque: vida máxima ----
+
+        [Test]
+        public void Protesis_SumarVida_CuentaSoloLasDeAtaqueQueLleva()
+        {
+            var laser = ScriptableObject.CreateInstance<MechaCyberpunk.Personaje.DatosProtesisAtaque>();
+            var misiles = ScriptableObject.CreateInstance<MechaCyberpunk.Personaje.DatosProtesisAtaque>();
+            Assert.AreEqual(15f, laser.VidaMaximaExtra, "Por omisión +15");
+            var lista = new System.Collections.Generic.List<MechaCyberpunk.Economia.DatosObjeto> { laser, misiles };
+            Assert.AreEqual(30f, ReglaProtesisVida.Sumar(lista), 1e-4f);
+            Assert.AreEqual(0f, ReglaProtesisVida.Sumar(null));
+            Object.DestroyImmediate(laser);
+            Object.DestroyImmediate(misiles);
+        }
+
+        [Test]
+        public void Protesis_LosDatosDeAtaqueLlevanQuince()
+        {
+            string[] guids = AssetDatabase.FindAssets("t:DatosProtesisAtaque");
+            Assert.GreaterOrEqual(guids.Length, 2, "Láser y misiles");
+            foreach (string guid in guids)
+            {
+                var d = AssetDatabase.LoadAssetAtPath<MechaCyberpunk.Personaje.DatosProtesisAtaque>(AssetDatabase.GUIDToAssetPath(guid));
+                Assert.AreEqual(15f, d.VidaMaximaExtra, 1e-4f, d.Id + " (VidaImplantesT1529.Aplicar)");
+            }
+        }
+
         [Test]
         public void Modelo_PonerMaxima_SubeLaVidaDeAhoraLoMismo_YAlBajarNoPasaDelMaximo()
         {
