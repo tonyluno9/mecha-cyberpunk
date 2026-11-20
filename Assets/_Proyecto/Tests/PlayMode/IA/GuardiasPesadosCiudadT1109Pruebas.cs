@@ -78,7 +78,7 @@ namespace MechaCyberpunk.Tests
                 Assert.IsNotNull(g, "guardia colocado");
                 Assert.IsTrue(g.gameObject.activeInHierarchy);
                 PandilleroAPie p = g.GetComponent<PandilleroAPie>();
-                Assert.AreEqual(220f, p.Maxima, 0.001f);
+                Assert.AreEqual(308f, p.Maxima, 0.001f);
                 Vector3 pos = g.transform.position;
                 Assert.IsTrue(Physics.Raycast(pos + Vector3.up * 1.5f, Vector3.down, out RaycastHit suelo, 4f, ~0, QueryTriggerInteraction.Ignore), g.name + " tiene piso");
                 Assert.Less(Mathf.Abs(pos.y - suelo.point.y), 0.5f, g.name + " no flota");
