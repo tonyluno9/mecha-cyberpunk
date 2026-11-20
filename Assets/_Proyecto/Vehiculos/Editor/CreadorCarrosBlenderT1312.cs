@@ -134,7 +134,13 @@ namespace MechaCyberpunk.Vehiculos.Editor
             }
 
             Bounds nueva = CreadorCarrosT511.LimitesExactos(visual);
-            if (armado)
+            if (armado && CarrosRevisadosT1507.EnMetros(codigo))
+            {
+                // T-1507: el FBX ya viene en metros; sin escala y con las llantas más bajas justo en el piso.
+                visual.transform.localScale = Vector3.one;
+                visual.transform.localPosition = new Vector3(posicionPrevia.x, -nueva.min.y, posicionPrevia.z);
+            }
+            else if (armado)
             {
                 visual.transform.localScale = Vector3.one * escalaPrevia;
                 visual.transform.localPosition = posicionPrevia;
@@ -215,7 +221,7 @@ namespace MechaCyberpunk.Vehiculos.Editor
             dibujo.sharedMaterial = materialCuerpo;
             filtro.sharedMesh = malla;
             visual.localRotation = Quaternion.Inverse(envoltorio.localRotation) * Quaternion.Euler(0f, 180f, 0f) * deRaiz;
-            visual.localScale = Vector3.one * (LargoMotoMetros / malla.bounds.size.y);
+            visual.localScale = Vector3.one * (CarrosRevisadosT1507.EnMetros(CodigoMoto) ? 1f : LargoMotoMetros / malla.bounds.size.y);
             visual.localPosition = Vector3.zero;
             Vector3 centroD = CentroEnModelo(rd);
             Vector3 centroT = CentroEnModelo(rt);
