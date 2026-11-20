@@ -82,6 +82,8 @@ namespace MechaCyberpunk.Personaje.Visual
         private static readonly int IdGesto = Animator.StringToHash(ReglasAnimacion.Gesto);
         private static readonly int IdGestoTipo = Animator.StringToHash(ReglasAnimacion.GestoTipo);
         private static readonly int IdManejando = Animator.StringToHash(ReglasAnimacion.Manejando);
+        private static readonly int IdEscalones = Animator.StringToHash(ReglasAnimacion.Escalones);
+        private static readonly int IdRapidezEscalones = Animator.StringToHash(ReglasAnimacion.RapidezEscalones);
         private static readonly int IdViendoTelefono = Animator.StringToHash(ReglasAnimacion.ViendoTelefono);
 
         private CharacterController controlador;
@@ -325,6 +327,18 @@ namespace MechaCyberpunk.Personaje.Visual
             }
         }
 
+        private EscalonesVisual escalones;
+
+        /// <summary>T-1515: sube o baja escalones de concreto (clips PJ01_Escaleras_*); solo lo pone el jugador. Arriba de <see cref="ReglasAnimacion.VelocidadMaximaEscalones"/> se queda el trote.</summary>
+        public EscalonesVisual Escalones
+        {
+            get => escalones;
+            set { escalones = value; Aplicar(); }
+        }
+
+        /// <summary>T-1515: con true los golpes por un costado juegan PJ01_Dano_Izquierda o Derecha (solo el jugador; los demás papeles no tienen esos clips en su override).</summary>
+        public bool DanoLateral { get; set; }
+
         /// <summary>Sentado al volante de un carro (T-622): el estado CarroManejar. Quitarlo lo para de nuevo.</summary>
         public bool Manejando
         {
@@ -479,7 +493,7 @@ namespace MechaCyberpunk.Personaje.Visual
             ultimaDireccionGolpe = direccionGolpe;
             if (animador != null && Tiene(IdDanoTipo, AnimatorControllerParameterType.Int))
             {
-                animador.SetInteger(IdDanoTipo, (int)ReglasAnimacion.ElegirDano(direccionGolpe, transform.forward, fuerte));
+                animador.SetInteger(IdDanoTipo, (int)ReglasAnimacion.ElegirDano(direccionGolpe, transform.forward, fuerte, DanoLateral));
             }
             Disparo(IdHerido);
         }
@@ -988,6 +1002,9 @@ namespace MechaCyberpunk.Personaje.Visual
             Poner(IdCubierto, cubierto);
             Poner(IdAgachado, agachado);
             Poner(IdManejando, manejando);
+            bool escalonesActivos = escalones != EscalonesVisual.Ninguno && velocidad <= ReglasAnimacion.VelocidadMaximaEscalones;
+            Poner(IdEscalones, escalonesActivos ? (int)escalones : 0);
+            Poner(IdRapidezEscalones, ReglasAnimacion.RapidezEscalonesPara(velocidad));
             Poner(IdViendoTelefono, viendoTelefono);
             Poner(IdEnGuardia, EnGuardia);
             Poner(IdArmaLargaEquipada, tipoArma == TipoArmaVisual.ArmaLarga);

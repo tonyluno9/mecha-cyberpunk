@@ -15,7 +15,7 @@ namespace MechaCyberpunk.Personaje.Visual
     public class PoseMoto : MonoBehaviour
     {
         public const string ClipSubir = "PJ01_Moto_Subir";
-        public const string ClipManejar = "PJ01_Moto_Manejar";
+        public const string ClipManejar = "PJ01_Manejar_Moto";
         public const string ClipBajar = "PJ01_Moto_Bajar";
         private const int Muestras = 24;
         /// <summary>Parte de subir (y de bajar, al final) en la que el cuerpo pasa de donde estaba parado al camino del clip.</summary>
