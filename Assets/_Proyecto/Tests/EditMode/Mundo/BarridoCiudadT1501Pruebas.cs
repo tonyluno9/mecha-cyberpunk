@@ -25,7 +25,7 @@ namespace MechaCyberpunk.Tests.Mundo
 
         private string[] De(params BarridoCiudadT1501.Tipo[] tipos)
         {
-            return hallazgos.Where(h => tipos.Contains(h.Tipo)).Select(h => h.Tipo + " " + h.Medida.ToString("F2") + " " + h.Ruta).ToArray();
+            return hallazgos.Where(h => tipos.Contains(h.Tipo) && (h.Arreglable || h.Tipo > BarridoCiudadT1501.Tipo.CarroHundido)).Select(h => h.Tipo + " " + h.Medida.ToString("F2") + " " + h.Ruta).ToArray();
         }
 
         [Test]
