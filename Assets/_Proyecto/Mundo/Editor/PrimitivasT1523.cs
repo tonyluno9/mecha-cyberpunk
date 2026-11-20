@@ -219,11 +219,22 @@ namespace MechaCyberpunk.Mundo.Editor
                         Barrio = BarrioDe(caja.center, centros)
                     };
                     it.Cat = Clasificar(it);
+                    if ((it.Cat == Cat.Edificio || it.Cat == Cat.EdificioConKit) && Tiene(it.Ruta, "interior", "lugar_"))
+                    {
+                        it.Cat = Cat.EstructuraInterior; // los ED no van dentro de interiores ni de lugares
+                    }
                     lista.Add(it);
                 }
             }
             return lista;
         }
+
+        private static readonly string[] ClavesEstructura =
+        {
+            "asfalto", "calle", "calzada", "losa", "piso", "autopista", "pilar", "puente", "fachada", "relleno", "dintel",
+            "techo", "grada", "forro", "muro", "banqueta", "acera", "rampa", "escalon", "baranda", "barandal", "jaula",
+            "pilastra", "pano", "paño", "muroliso", "marco", "puerta", "jamba", "cortina", "guia",
+        };
 
         private static bool Tiene(string texto, params string[] claves)
         {
@@ -290,6 +301,12 @@ namespace MechaCyberpunk.Mundo.Editor
             if (s.y >= AltoCasaBaja && Mathf.Min(s.x, s.z) >= LadoMinimoCasaBaja && largoSuelo >= LadoLargoCasaBaja)
             {
                 return Cat.Edificio;
+            }
+            // Integración 20-nov B: piso, calles, autopista, puentes, fachadas y gradas son estructura con collider propio.
+            // Apagar su render deja pisos invisibles: se cuentan aparte y se quedan.
+            if (Tiene(ruta, ClavesEstructura))
+            {
+                return Cat.EstructuraInterior;
             }
             return Cat.Prop;
         }
@@ -457,10 +474,17 @@ namespace MechaCyberpunk.Mundo.Editor
             }
 
             Dictionary<string, Medida> medidas = new Dictionary<string, Medida>();
+            RejillaFijos fijos = RejillaFijos.Crear(escena, primitivas);
+            int encimados = 0;
             foreach (KeyValuePair<Transform, List<Item>> par in grupos)
             {
                 Transform grupo = par.Key;
                 List<Item> miembros = par.Value;
+                if (Tiene(RutaDe(grupo), "/puestos/") || RutaDe(grupo).EndsWith("/Puestos"))
+                {
+                    Debug.Log("[T-1523] Se deja (puestos del tianguis): " + RutaDe(grupo));
+                    continue;
+                }
                 Bounds g = miembros[0].Caja;
                 foreach (Item m in miembros)
                 {
@@ -468,6 +492,11 @@ namespace MechaCyberpunk.Mundo.Editor
                 }
                 bool poste;
                 string ruta = ElegirProp(grupo, miembros, g.size, out poste);
+                if (ruta == null && Mathf.Max(g.size.x, Mathf.Max(g.size.y, g.size.z)) > TamanoMaximoGrupo)
+                {
+                    Debug.Log("[T-1523] Se deja (grande, sin equivalente): " + RutaDe(grupo) + " " + ReemplazarEdificiosT1502.Tam(g.size));
+                    continue;
+                }
                 if (ruta == null)
                 {
                     foreach (Item m in miembros)
@@ -489,10 +518,25 @@ namespace MechaCyberpunk.Mundo.Editor
                     Debug.LogWarning("[T-1523] Falta el prefab " + ruta + ": se deja " + RutaDe(grupo));
                     continue;
                 }
-                ColocarProp(escena, grupo, miembros, g, med, poste);
+                GameObject modelo = ColocarProp(escena, grupo, miembros, g, med, poste);
+                AsentarModelo(modelo, grupo);
+                if (fijos.Encima(modelo))
+                {
+                    Object.DestroyImmediate(modelo);
+                    foreach (Item m in miembros)
+                    {
+                        m.Renderer.enabled = false;
+                    }
+                    apagados += miembros.Count;
+                    encimados++;
+                    Debug.Log("[T-1523] Prop sin modelo (se encimaba con otro o lo duplicaba), primitiva apagada: " + RutaDe(grupo) + " -> " + med.Prefab.name + " " + ReemplazarEdificiosT1502.Tam(g.size));
+                    continue;
+                }
+                fijos.Agregar(modelo);
                 cambiados++;
+                Debug.Log("[T-1523] Prop con modelo: " + RutaDe(grupo) + " -> " + med.Prefab.name + " " + ReemplazarEdificiosT1502.Tam(g.size));
             }
-            Debug.Log("[T-1523] Props: " + grupos.Count + " grupos (" + cambiados + " con modelo, " + apagados + " piezas apagadas)");
+            Debug.Log("[T-1523] Props: " + grupos.Count + " grupos (" + cambiados + " con modelo, " + apagados + " piezas apagadas, " + encimados + " modelos quitados por encimarse)");
             return cambiados;
         }
 
@@ -564,9 +608,18 @@ namespace MechaCyberpunk.Mundo.Editor
             bool cilindros = miembros.All(m => m.Malla == "Cylinder");
             bool esferas = miembros.All(m => m.Malla == "Sphere" || m.Malla == "Capsule");
 
+            // Varillas, cables, tubos y piezas delgadas: se apagan, no se reemplazan.
+            if (Tiene(n, "varilla", "cable", "tubo", "alambre", "cuerda") || (ancho < 0.2f && Mathf.Max(alto, largo) >= 0.6f))
+            {
+                return null;
+            }
             if (Tiene(n, "manta", "toldo"))
             {
                 return PrefabToldo;
+            }
+            if (Tiene(n, "barril", "tambo", "bidon") && alto >= 0.4f && alto <= 1.8f && largo <= 1.4f)
+            {
+                return PrefabTambo;
             }
             if (Tiene(n, "puesto") && largo >= 1.5f)
             {
@@ -589,9 +642,9 @@ namespace MechaCyberpunk.Mundo.Editor
             {
                 return null;
             }
-            if (cilindros && alto >= 0.5f && alto <= 1.8f && largo <= 1.4f)
+            if (cilindros)
             {
-                return PrefabTambo;
+                return null; // un cilindro que no es barril no tiene equivalente: se apaga (C16_Tambo exige BarrilExplosivo)
             }
             if (alto <= 2.2f && Mathf.Max(alto, largo) <= 2.5f)
             {
@@ -604,7 +657,7 @@ namespace MechaCyberpunk.Mundo.Editor
             return null;
         }
 
-        private static void ColocarProp(Scene escena, Transform grupo, List<Item> miembros, Bounds g, Medida m, bool poste)
+        private static GameObject ColocarProp(Scene escena, Transform grupo, List<Item> miembros, Bounds g, Medida m, bool poste)
         {
             int giro = (m.Tam.x >= m.Tam.z) == (g.size.x >= g.size.z) ? 0 : 90;
             float tx = giro == 0 ? g.size.x : g.size.z;
@@ -644,9 +697,181 @@ namespace MechaCyberpunk.Mundo.Editor
                 bc.size = m.Tam;
                 bc.center = new Vector3(m.Desfase.x, m.Desfase.y + m.Tam.y * 0.5f, m.Desfase.z);
             }
+            if (m.Prefab.name == "C16_Tambo")
+            {
+                if (modelo.GetComponentInChildren<Collider>(true) == null)
+                {
+                    BoxCollider bc = modelo.AddComponent<BoxCollider>();
+                    bc.size = m.Tam;
+                    bc.center = new Vector3(m.Desfase.x, m.Desfase.y + m.Tam.y * 0.5f, m.Desfase.z);
+                }
+                System.Type tipoBarril = System.AppDomain.CurrentDomain.GetAssemblies().Select(a => a.GetType("MechaCyberpunk.Vehiculos.Efectos.BarrilExplosivo", false)).FirstOrDefault(t => t != null);
+                if (tipoBarril != null && modelo.GetComponent(tipoBarril) == null)
+                {
+                    modelo.AddComponent(tipoBarril);
+                }
+                else if (tipoBarril == null)
+                {
+                    Debug.LogWarning("[T-1523] No encontré BarrilExplosivo para " + modelo.name);
+                }
+            }
             foreach (Item i in miembros)
             {
                 i.Renderer.enabled = false;
+            }
+            return modelo;
+        }
+
+        /// <summary>Deja la base del modelo sobre el piso: raycast hacia abajo desde arriba de su caja, sin contar su propio collider ni los del grupo original.</summary>
+        private static void AsentarModelo(GameObject modelo, Transform grupo)
+        {
+            Renderer[] rs = modelo.GetComponentsInChildren<Renderer>(true);
+            if (rs.Length == 0)
+            {
+                return;
+            }
+            Bounds b = rs[0].bounds;
+            foreach (Renderer r in rs)
+            {
+                b.Encapsulate(r.bounds);
+            }
+            Physics.SyncTransforms();
+            Vector3 origen = new Vector3(b.center.x, b.max.y + 0.2f, b.center.z);
+            float mejor = float.MaxValue;
+            float yPiso = 0f;
+            foreach (RaycastHit h in Physics.RaycastAll(origen, Vector3.down, b.size.y + 3.5f, ~0, QueryTriggerInteraction.Ignore))
+            {
+                if (h.normal.y < 0.5f || h.collider.transform.IsChildOf(modelo.transform) || h.collider.transform.IsChildOf(grupo))
+                {
+                    continue;
+                }
+                if (h.distance < mejor)
+                {
+                    mejor = h.distance;
+                    yPiso = h.point.y;
+                }
+            }
+            if (mejor == float.MaxValue)
+            {
+                return;
+            }
+            float delta = yPiso - b.min.y;
+            if (Mathf.Abs(delta) > 0.03f && Mathf.Abs(delta) <= 3f)
+            {
+                modelo.transform.position += Vector3.up * delta;
+                Physics.SyncTransforms();
+            }
+        }
+
+        /// <summary>Renderers que no son primitivas (modelos reales), en una rejilla XZ, para saber si un modelo nuevo se encima o duplica a otro.</summary>
+        private class RejillaFijos
+        {
+            private readonly Dictionary<long, List<Renderer>> celdas = new Dictionary<long, List<Renderer>>();
+            private readonly List<Renderer> grandes = new List<Renderer>();
+
+            public static RejillaFijos Crear(Scene escena, HashSet<Renderer> primitivas)
+            {
+                RejillaFijos r = new RejillaFijos();
+                foreach (GameObject raiz in escena.GetRootGameObjects())
+                {
+                    foreach (MeshRenderer mr in raiz.GetComponentsInChildren<MeshRenderer>(false))
+                    {
+                        if (mr.enabled && !primitivas.Contains(mr))
+                        {
+                            r.Insertar(mr);
+                        }
+                    }
+                }
+                return r;
+            }
+
+            public void Agregar(GameObject modelo)
+            {
+                foreach (MeshRenderer mr in modelo.GetComponentsInChildren<MeshRenderer>(false))
+                {
+                    Insertar(mr);
+                }
+            }
+
+            private void Insertar(Renderer r)
+            {
+                Bounds b = r.bounds;
+                int x0 = Mathf.FloorToInt(b.min.x / CeldaRejilla);
+                int x1 = Mathf.FloorToInt(b.max.x / CeldaRejilla);
+                int z0 = Mathf.FloorToInt(b.min.z / CeldaRejilla);
+                int z1 = Mathf.FloorToInt(b.max.z / CeldaRejilla);
+                if ((long)(x1 - x0 + 1) * (z1 - z0 + 1) > CeldasMaximasRejilla)
+                {
+                    grandes.Add(r);
+                    return;
+                }
+                for (int x = x0; x <= x1; x++)
+                {
+                    for (int z = z0; z <= z1; z++)
+                    {
+                        List<Renderer> l;
+                        if (!celdas.TryGetValue(Llave(x, z), out l))
+                        {
+                            l = new List<Renderer>();
+                            celdas[Llave(x, z)] = l;
+                        }
+                        l.Add(r);
+                    }
+                }
+            }
+
+            /// <summary>Verdadero si alguna pieza del modelo se mete más de 0.3 m (en los tres ejes) en otro renderer, o es igual a uno.</summary>
+            public bool Encima(GameObject modelo)
+            {
+                foreach (MeshRenderer mr in modelo.GetComponentsInChildren<MeshRenderer>(false))
+                {
+                    Bounds a = mr.bounds;
+                    int x0 = Mathf.FloorToInt(a.min.x / CeldaRejilla);
+                    int x1 = Mathf.FloorToInt(a.max.x / CeldaRejilla);
+                    int z0 = Mathf.FloorToInt(a.min.z / CeldaRejilla);
+                    int z1 = Mathf.FloorToInt(a.max.z / CeldaRejilla);
+                    for (int x = x0; x <= x1; x++)
+                    {
+                        for (int z = z0; z <= z1; z++)
+                        {
+                            List<Renderer> l;
+                            if (celdas.TryGetValue(Llave(x, z), out l) && Choca(a, mr, l, modelo.transform))
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                    if (Choca(a, mr, grandes, modelo.transform))
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            private static bool Choca(Bounds a, Renderer propio, List<Renderer> otros, Transform raizPropia)
+            {
+                foreach (Renderer o in otros)
+                {
+                    if (o == null || o == propio || o.transform.IsChildOf(raizPropia) || !o.gameObject.activeInHierarchy)
+                    {
+                        continue;
+                    }
+                    Bounds b = o.bounds;
+                    float ix = Mathf.Min(a.max.x, b.max.x) - Mathf.Max(a.min.x, b.min.x);
+                    float iy = Mathf.Min(a.max.y, b.max.y) - Mathf.Max(a.min.y, b.min.y);
+                    float iz = Mathf.Min(a.max.z, b.max.z) - Mathf.Max(a.min.z, b.min.z);
+                    if (ix > 0.3f && iy > 0.3f && iz > 0.3f)
+                    {
+                        return true;
+                    }
+                    bool igual = (a.center - b.center).sqrMagnitude < 0.09f && (a.size - b.size).sqrMagnitude < 0.09f;
+                    if (igual)
+                    {
+                        return true;
+                    }
+                }
+                return false;
             }
         }
 
