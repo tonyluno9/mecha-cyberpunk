@@ -39,18 +39,18 @@ namespace MechaCyberpunk.Mundo.Editor
         private const string Exteriores = "Assets/Arte/Exteriores/Prefabs/";
 
         // Edificios que ya existen, por estilo de barrio. Los que no estén importados se saltan.
-        private static readonly string[] EstiloNeon =
+        internal static readonly string[] EstiloNeon =
         {
             Calle + "NV01_FachadaOficinas.prefab", Exteriores + "P11_Fachada.prefab", Exteriores + "P12_Fachada.prefab",
             Zonas + "LO/LO01_CasaModerna.prefab", Zonas + "LO/LO02_CasaModerna.prefab", Zonas + "LO/LO03_CasaModerna.prefab"
         };
-        private static readonly string[] EstiloSuburbios =
+        internal static readonly string[] EstiloSuburbios =
         {
             Zonas + "CC/CC01_CasaCerro.prefab", Zonas + "CC/CC02_CasaCerro.prefab", Zonas + "CC/CC06_CasaCerro_a.prefab",
             Zonas + "CC/CC06_CasaCerro_b.prefab", Zonas + "CC/CC07_CasaCerro_a.prefab", Zonas + "CC/CC07_CasaCerro_b.prefab",
             Zonas + "LO/LO01_CasaModerna.prefab"
         };
-        private static readonly string[] EstiloMercado =
+        internal static readonly string[] EstiloMercado =
         {
             Zonas + "CH/CH02_EdificioColonial.prefab", Zonas + "ML/ML05_EdificioMalecon_a.prefab", Zonas + "ML/ML05_EdificioMalecon_b.prefab",
             Zonas + "PU/PU03_Bodega.prefab", Zonas + "PU/PU04_Bodega.prefab", Zonas + "CC/CC06_CasaCerro_a.prefab"
