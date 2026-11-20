@@ -67,7 +67,9 @@ namespace MechaCyberpunk.Tests.Personaje
                 string clips = ClipsActivos(a, capa);
                 Assert.IsEmpty(clips, "La capa " + a.GetLayerName(capa) + " (peso " + a.GetLayerWeight(capa) + ") no pone clips encima: " + clips);
             }
-            AnimationClip clip = a.GetCurrentAnimatorClipInfo(0)[0].clip;
+            AnimationClip clip = null;
+            float pesoMax = -1f;
+            foreach (AnimatorClipInfo info in a.GetCurrentAnimatorClipInfo(0)) { if (info.weight > pesoMax) { pesoMax = info.weight; clip = info.clip; } }
             Assert.AreEqual("Assets/Arte/Personajes/PJ01/Clips/" + esperado + ".fbx", AssetDatabase.GetAssetPath(clip), "El clip es el de Blender aplicado a PJ01 (T-749)");
         }
 

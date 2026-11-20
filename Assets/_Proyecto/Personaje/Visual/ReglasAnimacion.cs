@@ -245,7 +245,10 @@ namespace MechaCyberpunk.Personaje.Visual
         public const float VelocidadAterrizajeFuerte = 9f;
 
         /// <summary>T-1505: true si la velocidad vertical más negativa del aire (m/s) pide el aterrizaje fuerte.</summary>
-        public static bool EsAterrizajeFuerte(float velocidadVerticalMinima) => velocidadVerticalMinima <= -VelocidadAterrizajeFuerte;
+        public static bool EsAterrizajeFuerte(float velocidadVerticalMinima, float metrosCaidos) => velocidadVerticalMinima <= -VelocidadAterrizajeFuerte && metrosCaidos >= CaidaMinimaAterrizajeFuerte;
+
+        /// <summary>T-1505: caída mínima (m) para el aterrizaje fuerte: evita dispararlo por una velocidad vertical espuria al arrancar o al teletransportar.</summary>
+        public const float CaidaMinimaAterrizajeFuerte = 2f;
 
         /// <summary>
         /// T-1484: velocidad a la que avanza la mezcla direccional de un árbol 2D (adelante, atrás, lados) para la dirección local
