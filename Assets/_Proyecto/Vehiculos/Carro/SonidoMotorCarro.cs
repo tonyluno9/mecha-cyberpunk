@@ -1,4 +1,5 @@
 using MechaCyberpunk.Core;
+using MechaCyberpunk.Vehiculos.Carro;
 using UnityEngine;
 
 namespace MechaCyberpunk.Vehiculos
