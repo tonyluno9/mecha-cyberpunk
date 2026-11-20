@@ -50,3 +50,5 @@ Pedido completo: el /goal del 20-nov (Tony). Regla: nada se marca hecho sin verl
 - Encontrado en juego y arreglado: tráfico afuera del muro (recorte no corría; T-1526 2a y 3a vuelta), atasco en callejón sin salida, tiendita en medio de la calle, maleantes de la ciudad usaban datos E19E20/E10 sin provocar, 9 edificios de cubo rellenos con ED apilados.
 - NO quedó: 143 casas generadas como caja (S2c_*, CalleDoc) y fachadas de cubo de Clandestino/Bar/MercadoNegro (tienen interior: hace falta modelo con entrada). Civil acostada: no reproducida (hay guarda T-1521).
 - Pendiente: PlayMode tanda C (riñas, jefe, balas ciudad, provocación) corriendo; merge de T-1528 dec558b; EditMode final; main; builds; reporte.
+- EditMode final: 4146/4178 (solo las 8 de main + 1 de T-1526 ya arreglada). PlayMode IA (riñas, jefe) en verde solas. Tráfico PlayMode: línea base con el código de main falla 6 (PersecucionBarrio x4, Cierres, atorón 126 s); el recorte de T-1526 agregaba 4-5 (aparición fuera de vista, carros prendidos). T-1526 cuarta vuelta: mover las calles de afuera adentro de la puerta en vez de desconectarlas.
+- Reporte en borrador: docs/reporte-20nov-B.md.
