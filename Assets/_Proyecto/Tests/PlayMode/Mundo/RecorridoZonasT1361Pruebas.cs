@@ -35,6 +35,7 @@ namespace MechaCyberpunk.Tests.Mundo
     /// Una prueba por parte (cada una carga la ciudad y dura menos de 4 min por su presupuesto de tiempo).
     /// </summary>
     [Category("Zonas")]
+    [Ignore("T-1483: zonas nuevas quitadas del mapa (revertir mapa 19-nov)")]
     public class RecorridoZonasT1361Pruebas : InputTestFixture
     {
         private const string RutaEscena = "Assets/_Proyecto/Escenas/Ciudad_Prologo.unity";

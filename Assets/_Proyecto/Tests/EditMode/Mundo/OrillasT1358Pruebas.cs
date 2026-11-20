@@ -12,6 +12,7 @@ namespace MechaCyberpunk.Tests.Mundo
     /// Aplica el script sobre Ciudad_Prologo (idempotente) y deja la escena abierta en modo único hasta que acaba cada prueba.
     /// </summary>
     [Category("Escena")]
+    [Ignore("T-1483: zonas nuevas quitadas del mapa (revertir mapa 19-nov)")]
     public class OrillasT1358Pruebas
     {
         [OneTimeSetUp]

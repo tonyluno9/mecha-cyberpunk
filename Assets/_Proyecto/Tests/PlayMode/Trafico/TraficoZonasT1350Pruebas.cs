@@ -20,6 +20,7 @@ namespace MechaCyberpunk.Tests.Trafico
     /// No usa al jugador ni la entrada.
     /// </summary>
     [Category("Zonas")]
+    [Ignore("T-1483: zonas nuevas quitadas del mapa (revertir mapa 19-nov)")]
     public class TraficoZonasT1350Pruebas
     {
         private const string RutaEscena = CierresCiudadT986Pruebas.RutaEscena;
