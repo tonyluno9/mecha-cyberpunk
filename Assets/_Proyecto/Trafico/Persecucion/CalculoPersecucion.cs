@@ -54,6 +54,24 @@ namespace MechaCyberpunk.Trafico.Persecucion
 
         public int Drones(int nivel) => nivel <= 0 ? 0 : dronesPorNivel[Math.Min(nivel, NivelMaximo) - 1];
 
+        /// <summary>T-1499: estrellas desde las que sale la camioneta V11 en la persecución.</summary>
+        public const int EstrellasCamioneta = 3;
+        /// <summary>Estrellas del máximo (5): las patrullas que pasan de las del nivel son todas camionetas.</summary>
+        public const int EstrellasMaximas = 5;
+
+        /// <summary>
+        /// T-1499: si la patrulla número <paramref name="indice"/> (0 = la primera) sale como camioneta. Desde <see cref="EstrellasCamioneta"/> estrellas
+        /// una de cada dos (las impares); con <see cref="EstrellasMaximas"/> también todas las que pasan de <paramref name="patrullasDelNivel"/>.
+        /// </summary>
+        public static bool UsaCamioneta(int estrellas, int indice, int patrullasDelNivel)
+        {
+            if (estrellas >= EstrellasMaximas && indice >= patrullasDelNivel)
+            {
+                return true;
+            }
+            return estrellas >= EstrellasCamioneta && indice % 2 == 1;
+        }
+
         public int Patrullas(int nivel) => nivel <= 0 ? 0 : patrullasPorNivel[Math.Min(nivel, NivelMaximo) - 1];
 
         /// <summary>Metros que avanza hacia el jugador en <paramref name="dt"/> s sin pasar de la distancia de seguimiento; 0 si ya está ahí o más cerca.</summary>

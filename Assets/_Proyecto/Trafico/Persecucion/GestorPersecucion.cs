@@ -566,8 +566,8 @@ namespace MechaCyberpunk.Trafico.Persecucion
             {
                 return false; // T-664: ahora no hay por dónde salir sin que se vea; se reintenta en Update
             }
-            // T-1322: con 5 estrellas las que pasan de las del nivel son camionetas (si hay prefab).
-            bool extra = CincoEstrellas && patrullas.Count >= calculo.Patrullas(calor.Nivel);
+            // T-1322: con 5 estrellas las que pasan de las del nivel son camionetas (si hay prefab). T-1499: desde 3 estrellas, una de cada dos.
+            bool extra = CalculoPersecucion.UsaCamioneta(EstrellasBusqueda.De(calor), patrullas.Count, calculo.Patrullas(calor.Nivel));
             PatrullaMundo molde = extra && prefabCamioneta != null ? prefabCamioneta : prefabPatrulla;
             PatrullaMundo patrulla = Instantiate(molde, transform);
             patrulla.Preparar(calculo, config, calles, salida, PosicionDelJugador);

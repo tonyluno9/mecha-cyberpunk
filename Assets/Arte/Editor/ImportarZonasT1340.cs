@@ -228,7 +228,7 @@ namespace MechaCyberpunk.Arte.Editor
             File.WriteAllBytes(rutaMapa, MapaMetalSuave(metalico, rugosidad));
         }
 
-        private static byte[] LeerEntrada(ZipArchiveEntry a)
+        internal static byte[] LeerEntrada(ZipArchiveEntry a)
         {
             using (Stream s = a.Open())
             using (MemoryStream m = new MemoryStream())
@@ -239,7 +239,7 @@ namespace MechaCyberpunk.Arte.Editor
         }
 
         /// <summary>R=G=B=metálico, A=1-rugosidad, a 1024².</summary>
-        private static byte[] MapaMetalSuave(byte[] metalico, byte[] rugosidad)
+        internal static byte[] MapaMetalSuave(byte[] metalico, byte[] rugosidad)
         {
             Texture2D m = new Texture2D(2, 2, TextureFormat.RGBA32, false);
             Texture2D r = new Texture2D(2, 2, TextureFormat.RGBA32, false);

@@ -16,7 +16,7 @@ El código ya está listo con un hueco para cada uno. Cuando llegue el asset se 
 | Más NPCs de distintos tipos | Variedad | No se hizo |
 | Parque con árboles (referencia K09) | Ciudad | 18-nov B: prefabs listos en `Assets/Arte/Zonas/PZ/Plazas/` (T-1341); falta colocarlos en la ciudad (sesión A o Tony) y el piso de adoquín |
 | Texturas de techos y calles | Ciudad | Pedidas al chat de arte |
-| Maletín del dinero (MA01 por Tripo) | Atraco | No se hizo |
+| Maletín del dinero (MA01 por Tripo) | Atraco | T-1499: importado desde imageassets/modelos3d/MA01_Maletin.zip (ImportarMaletinT1499); ya no falta |
 | Lugares nuevos | Ciudad | Pedir referencia a Tony antes de armarlos |
 
 ## T-1337: mira del rifle de plasma (W07)
@@ -133,3 +133,9 @@ No existe aún. `ZonaTrafico_LasLomas` (T-1364) cubre por ahora los corredores n
 | Tramo de tablero elevado en curva (pieza AU) | K18 y A18: la curva que entra al túnel | AU02 es recto; la curva del ramal T-1415 se armó con tramos rectos |
 | Material o shader aditivo de estela de luz | Estelas del tráfico en el tablero (K18, A18) | Las de T-1464 son cintas opacas con degradado |
 | Columna AU04 más gruesa (5 m) con capitel | Primer plano de K18 | Hoy se escalan las de la rampa |
+
+## T-1499 (19-nov): pedidos para Blender y sin modelo
+| Qué | Para qué | Nota |
+| --- | --- | --- |
+| Rig (humanoide, como T-1381) de NP01_Senora, NP02_Trabajador, NP03_Joven, NP04_Senor, NP05_Vendedor y NP06_ChicaPunk | Completar la mezcla de peatones (hoy NP07 a NP14, 14 variantes en Peaton.prefab) | Solo existen los zips de Tripo sin rig en imageassets/modelos-nuevos/nuevos-17nov/; no hay FBX en imageassets/blender/personajes ni en Assets. Al llegar: copiar a imageassets/blender/personajes, agregar a PostprocesadorAssetsT250.PersonajesDeTripo y correr PersonajesNuevosT1389b y PeatonesBarriosT1482 |
+| Modelo 3D de las tragamonedas TR01 y TR02 | Casino (hoy Casino/Prefabs/Tragamonedas.prefab es de primitivas, CreadorTragamonedas) | Solo hay imageassets/modelos-nuevos/TR01_Tragamonedas.png y TR02_Tragamonedas.png; sin zip ni FBX no se pueden meter sin inventarlas |
