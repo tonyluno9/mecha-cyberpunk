@@ -78,6 +78,10 @@ namespace MechaCyberpunk.Tests.Personaje
             Press(teclado.wKey);
             Press(teclado.leftShiftKey);
             yield return Esperar(1.6f);
+            Debug.Log("[T1505] sprint: Velocidad " + controlador.Velocidad + " Bloqueado " + controlador.BloqueadoPorAnimacion + " CaminandoLento " + controlador.CaminandoLento
+                + " PidiendoCorrer " + controlador.PidiendoCorrer + " estado " + Estado(a) + " clip " + ClipDominante(a) + " enabled " + controlador.enabled
+                + " ControlActivo " + controlador.ControlActivo + " Suspendido " + controlador.MovimientoSuspendido + " Derribado " + controlador.Derribado
+                + " W " + teclado.wKey.isPressed + " Shift " + teclado.leftShiftKey.isPressed + " pos " + jugador.transform.position);
             Assert.AreEqual("Correr", Estado(a));
             Assert.AreEqual("PJ01_Sprint", ClipDominante(a));
             Assert.That(a.speed, Is.InRange(ReglasAnimacion.RapidezMinimaJugador, ReglasAnimacion.RapidezMaximaJugador));
