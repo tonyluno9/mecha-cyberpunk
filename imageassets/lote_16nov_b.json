@@ -1,0 +1,343 @@
+{
+ "version": 1,
+ "resolution": "1k",
+ "variantes_por_defecto": 1,
+ "carpeta_salida": "imageassets",
+ "trabajos": [
+  {
+   "id": "MA01",
+   "archivo": "MA01_Maletin",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/MA01_Maletin.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png",
+    "imageassets/personajes/SkullHombre_frente.png"
+   ],
+   "aspect_ratio": "4:3",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image ONLY for the art style, colors and level of detail of our game; do not copy the scene. Stylized game asset with chunky simplified shapes, large clean bevels, soft hand-painted gradients, thin outlines, no photorealistic noise. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people. Nothing thin or dangling. No text, no letters, no numbers, no logos. The second image shows the Skulls gang: use only their skull motif for the sticker. Subject: a closed metal money briefcase of robbers: scratched brushed aluminum with ribbed sides, two chunky latch locks with small number wheels shown as plain blank wheels, a thick handle, rounded corners, dents, and one sticker of a stylized magenta holographic skull (no text) on the lid. View: 3/4 view from the front left, slightly from above.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 8000,
+    "textura": "2K"
+   },
+   "medida": "0.5 × 0.15 × 0.38 m"
+  },
+  {
+   "id": "TR01",
+   "archivo": "TR01_Tragamonedas",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/TR01_Tragamonedas.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png",
+    "imageassets/letreros/L10_LetreroVivaCoin.png"
+   ],
+   "aspect_ratio": "3:4",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image ONLY for the art style, colors and level of detail of our game; do not copy the scene. Stylized game asset with chunky simplified shapes, large clean bevels, soft hand-painted gradients, thin outlines, no photorealistic noise. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people. Nothing thin or dangling. No text, no letters, no numbers, no logos. The second image is the VivaCoin casino sign: use its gold and magenta colors. Subject: a casino slot machine cabinet: tall rounded gold and magenta cabinet, a glowing screen showing three abstract symbols (a star, a coin, a diamond shape), a row of round warm bulbs around the top edge, a chunky lever on the right side with a red ball, a small button panel, a coin tray at the bottom. View: 3/4 view from the front left, slightly from above.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 10000,
+    "textura": "2K"
+   },
+   "medida": "0.7 × 0.6 × 1.8 m"
+  },
+  {
+   "id": "TR02",
+   "archivo": "TR02_Tragamonedas",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/TR02_Tragamonedas.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png",
+    "imageassets/letreros/L10_LetreroVivaCoin.png"
+   ],
+   "aspect_ratio": "3:4",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image ONLY for the art style, colors and level of detail of our game; do not copy the scene. Stylized game asset with chunky simplified shapes, large clean bevels, soft hand-painted gradients, thin outlines, no photorealistic noise. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people. Nothing thin or dangling. No text, no letters, no numbers, no logos. Subject: a modern casino slot machine cabinet variant: a sleek black cabinet with glowing turquoise light strips along its edges, a large CURVED screen showing abstract symbols, a panel with three big round glowing buttons in turquoise, magenta and yellow, a small stool-height footrest. View: 3/4 view from the front left, slightly from above.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 10000,
+    "textura": "2K"
+   },
+   "medida": "0.7 × 0.65 × 1.9 m"
+  },
+  {
+   "id": "L01",
+   "archivo": "L01_Carga_Protagonista",
+   "fase": 2,
+   "salida": "imageassets/ui/carga/L01_Carga_Protagonista.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png",
+    "imageassets/modelos-nuevos/PJ01_Protagonista_v2.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY (thin outlines, painted rendering, blue night with turquoise and magenta neon and orange sodium lights, soft fog, wet reflective ground). The SECOND attached image is our protagonist: keep his face, curly hair with taper fade and the two shaved lines on the right side, silver hoop earring, black sleeveless shirt, black loose cargo pants and white high-top sneakers with a blue side stripe. A large cinematic 16:9 loading-screen illustration, dramatic composition with depth, NO HUD, NO text, NO letters, NO logos anywhere. Scene: a close-up of the protagonist from the waist up on a night street, holding our worn pistol low and ready, turquoise and magenta neon light on one side of his face and orange street light on the other, determined look, blurred street lights and wet reflections behind him."
+  },
+  {
+   "id": "L02",
+   "archivo": "L02_Carga_Persecucion",
+   "fase": 2,
+   "salida": "imageassets/ui/carga/L02_Carga_Persecucion.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png",
+    "imageassets/modelos-nuevos/PJ01_Protagonista_v2.png",
+    "imageassets/V01a_CarroViejito.png",
+    "imageassets/carros/V05_PatrullaSedan.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY (thin outlines, painted rendering, blue night with turquoise and magenta neon and orange sodium lights, soft fog, wet reflective ground). The SECOND attached image is our protagonist: keep his face, curly hair with taper fade and the two shaved lines on the right side, silver hoop earring, black sleeveless shirt, black loose cargo pants and white high-top sneakers with a blue side stripe. A large cinematic 16:9 loading-screen illustration, dramatic composition with depth, NO HUD, NO text, NO letters, NO logos anywhere. Scene: The third image is the player's car and the fourth is the police car. A car chase on a wet night street: in the front a boxy dark van of the Skulls gang with magenta skull-like markings shown as simple shapes (no text), right behind it the player's old orange car with the protagonist driving, sparks flying where they scrape, and further back a police patrol with red and blue lights, motion blur, low dramatic angle."
+  },
+  {
+   "id": "L03",
+   "archivo": "L03_Carga_Doc",
+   "fase": 2,
+   "salida": "imageassets/ui/carga/L03_Carga_Doc.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png",
+    "imageassets/personajes/Doc_frente.png",
+    "docs/referencias-interiores/consultorio-doc.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY (thin outlines, painted rendering, blue night with turquoise and magenta neon and orange sodium lights, soft fog, wet reflective ground). The SECOND attached image is the Doc character (keep his look) and the THIRD is his clinic (use it as the setting). A large cinematic 16:9 loading-screen illustration, dramatic composition with depth, NO HUD, NO text, NO letters, NO logos anywhere. Scene: the Doc inside his underground I+D+I clinic, standing next to the reclining surgery chair, adjusting the big robotic surgery arm that hangs from the ceiling over the chair, monitors with abstract graphs, shelves with implants, cold turquoise light."
+  },
+  {
+   "id": "L04",
+   "archivo": "L04_Carga_Casino",
+   "fase": 2,
+   "salida": "imageassets/ui/carga/L04_Carga_Casino.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png",
+    "imageassets/modelos-nuevos/R01_MeseraRobot.png",
+    "imageassets/letreros/L10_LetreroVivaCoin.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY (thin outlines, painted rendering, blue night with turquoise and magenta neon and orange sodium lights, soft fog, wet reflective ground). The SECOND attached image is the casino waitress robot and the THIRD is the casino sign: include both, redrawn in our style. A large cinematic 16:9 loading-screen illustration, dramatic composition with depth, NO HUD, NO text, NO letters, NO logos anywhere. Scene: the entrance of the VivaCoin casino at night: the big gold and magenta sign glowing above the doors (draw it as a shape with no readable text), two white and gold waitress robots with trays standing by the entrance, red carpet, gold lights, people arriving as silhouettes, light reflecting on the wet street."
+  },
+  {
+   "id": "L05",
+   "archivo": "L05_Carga_Nova",
+   "fase": 2,
+   "salida": "imageassets/ui/carga/L05_Carga_Nova.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png",
+    "imageassets/modelos-nuevos/E12_GuardiaPesadoNova.png",
+    "imageassets/modelos-nuevos/E13_DronAsalto.png",
+    "imageassets/referencias/look/K06_CalleNova.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY (thin outlines, painted rendering, blue night with turquoise and magenta neon and orange sodium lights, soft fog, wet reflective ground). The SECOND image is the heavy Nova guard, the THIRD the Nova assault drone and the FOURTH the Nova district: include them, redrawn in our style. A large cinematic 16:9 loading-screen illustration, dramatic composition with depth, NO HUD, NO text, NO letters, NO logos anywhere. Scene: the huge white Nova tower at night seen from below, its light at the top, cold blue fog, a line of heavy armored Nova guards at its base, and assault drones with red lights flying around the tower, searchlights in the sky."
+  },
+  {
+   "id": "L06",
+   "archivo": "L06_Carga_Techos",
+   "fase": 2,
+   "salida": "imageassets/ui/carga/L06_Carga_Techos.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png",
+    "imageassets/modelos-nuevos/PJ01_Protagonista_v2.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY (thin outlines, painted rendering, blue night with turquoise and magenta neon and orange sodium lights, soft fog, wet reflective ground). The SECOND attached image is our protagonist: keep his face, curly hair with taper fade and the two shaved lines on the right side, silver hoop earring, black sleeveless shirt, black loose cargo pants and white high-top sneakers with a blue side stripe. A large cinematic 16:9 loading-screen illustration, dramatic composition with depth, NO HUD, NO text, NO letters, NO logos anywhere. Scene: the protagonist seen from behind and slightly to the side, sitting on the edge of a rooftop of the poor neighborhood, looking at the city at night: rooftops with water tanks, antennas and cables in the foreground, the glowing districts in the distance with neon colors and the Nova tower far away on the horizon."
+  },
+  {
+   "id": "M33",
+   "archivo": "M33_Arrestado",
+   "fase": 3,
+   "salida": "imageassets/referencias/menus/M33_Arrestado.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png",
+    "imageassets/referencias/look/H10_HUD.png",
+    "imageassets/modelos-nuevos/PJ01_Protagonista_v2.png",
+    "imageassets/carros/V05_PatrullaSedan.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is our game's look and the SECOND is our HUD: match their style EXACTLY. Original design of our own, nothing copied from other games. All text in Spanish, spelled EXACTLY as written, no other words. Full 16:9 game screen. The third image is the protagonist and the fourth the police car. Screen: ARRESTED: the protagonist handcuffed and pushed against the hood of a police car, red and blue police lights washing over the scene, the whole image desaturated with only the red and blue lights in color, the normal HUD hidden. Big thin title in the center: \"ARRESTADO\". Below it, smaller: \"-25 %  $ 3,112\" and under that \"Vuelves a casa\". Thin lines with cut corners framing the text, in the HUD style."
+  },
+  {
+   "id": "M34",
+   "archivo": "M34_HasMuerto",
+   "fase": 3,
+   "salida": "imageassets/referencias/menus/M34_HasMuerto.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png",
+    "imageassets/referencias/look/H10_HUD.png",
+    "imageassets/modelos-nuevos/PJ01_Protagonista_v2.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is our game's look and the SECOND is our HUD: match their style EXACTLY. Original design of our own, nothing copied from other games. All text in Spanish, spelled EXACTLY as written, no other words. Full 16:9 game screen. The third image is the protagonist. Screen: YOU DIED: the protagonist lying fallen on the wet street at night, seen from above at an angle, a red vignette around the edges of the screen, a digital glitch distortion on some horizontal slices, the normal HUD hidden. Big thin title in the center: \"HAS MUERTO\" in red. Below it, smaller: \"Despiertas en la clínica del Doc\". Thin lines with cut corners framing the text, in the HUD style."
+  },
+  {
+   "id": "H42",
+   "archivo": "H42_IconosProtesisAtaque",
+   "fase": 4,
+   "salida": "imageassets/ui/menus/H42_IconosProtesisAtaque.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/ui/menus/H41_IconosProtesis.png",
+    "imageassets/modelos-nuevos/IMP04_BrazoLaser.png",
+    "imageassets/modelos-nuevos/IMP05_HombreraMisiles.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is our prosthetic icon sheet: match its style EXACTLY (single thin turquoise line, same line weight, cells with a very thin dim turquoise outline and one cut corner, subtle glow). The second and third images are the implants to draw. A small icon sheet on a PURE BLACK (#000000) flat background with 2 cells of the same size side by side: 1) the cybernetic forearm opened with the laser cannon sliding out, 2) the shoulder pad with the 4-tube mini missile launcher. Same cell size as the reference, no text, no numbers."
+  },
+  {
+   "id": "K08",
+   "archivo": "K08_CalleSuburbios_Cuadra",
+   "fase": 5,
+   "salida": "imageassets/referencias/look/K08_CalleSuburbios_Cuadra.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png",
+    "imageassets/referencias/look/K05_EsquinaBarrio.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY (thin outlines, painted rendering, blue night with soft fog, turquoise and magenta neon, orange sodium street lights, wet reflective ground with puddles, thick cables between poles). No HUD, no player character, no rain, no readable text, no logos: signs show only abstract shapes. Wide view at eye height. Short city blocks: the next corner is visible. Scene: one complete block of the Suburbios neighborhood seen from the sidewalk across the street: a row of attached two-story houses painted in different faded colors with water tanks on the roofs, a small corner shop with a rolled-up shutter and a glowing fridge, a car repair workshop with an open garage, an empty lot with a low painted wall and weeds, utility poles with orange lamps and cables, parked old cars, the corner at each end of the block visible."
+  },
+  {
+   "id": "K09",
+   "archivo": "K09_Plaza_Barrio",
+   "fase": 5,
+   "salida": "imageassets/referencias/look/K09_Plaza_Barrio.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png",
+    "imageassets/referencias/look/K05_EsquinaBarrio.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY (thin outlines, painted rendering, blue night with soft fog, turquoise and magenta neon, orange sodium street lights, wet reflective ground with puddles, thick cables between poles). No HUD, no player character, no rain, no readable text, no logos: signs show only abstract shapes. Wide view at eye height. Short city blocks: the next corner is visible. Scene: a small neighborhood plaza between blocks: a small round kiosk with a dome roof in the center, benches, a few trees with round crowns, a couple of food stalls with tarp roofs and warm bulbs, a few people as small figures, two-story houses and small shops surrounding the plaza on all sides, streets entering at the corners."
+  },
+  {
+   "id": "K10",
+   "archivo": "K10_CalleMercado",
+   "fase": 5,
+   "salida": "imageassets/referencias/look/K10_CalleMercado.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png",
+    "imageassets/referencias/look/K02_Tianguis.png",
+    "imageassets/referencias/look/K03_NeonAlto.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY (thin outlines, painted rendering, blue night with soft fog, turquoise and magenta neon, orange sodium street lights, wet reflective ground with puddles, thick cables between poles). No HUD, no player character, no rain, no readable text, no logos: signs show only abstract shapes. Wide view at eye height. Short city blocks: the next corner is visible. Scene: The second and third images are the El Mercado and Neon Alto districts: this street is the transition between them. A busy commercial street: ground floor shops with metal shutters, some open with glowing interiors, many projecting signs and neon with abstract shapes, buildings of 3 to 4 floors with balconies, a few screens, more neon toward the far end, people on the sidewalks."
+  },
+  {
+   "id": "LT01",
+   "archivo": "LT01_NeonTaqueria",
+   "fase": 6,
+   "salida": "imageassets/modelos-nuevos/LT01_NeonTaqueria.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image ONLY for the art style and colors. Stylized game asset with chunky simplified shapes, soft hand-painted gradients. A single large neon sign for a building facade, seen straight from the front with a very slight angle, complete, centered, isolated on a plain flat pure white background, no wall, soft even lighting, no shadow, no people. Thick neon tubes on a dark metal backing frame with mounting brackets. The text must be spelled EXACTLY as written, letter by letter, and no other text. Subject: a taco restaurant sign: the word \"TAQUERÍA\" (with the accent on the I) in big warm orange and yellow neon letters, with a neon taco shape and a small chili pepper.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 10000,
+    "textura": "2K"
+   },
+   "medida": "3 × 1 m"
+  },
+  {
+   "id": "LT02",
+   "archivo": "LT02_NeonFarmacia24",
+   "fase": 6,
+   "salida": "imageassets/modelos-nuevos/LT02_NeonFarmacia24.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image ONLY for the art style and colors. Stylized game asset with chunky simplified shapes, soft hand-painted gradients. A single large neon sign for a building facade, seen straight from the front with a very slight angle, complete, centered, isolated on a plain flat pure white background, no wall, soft even lighting, no shadow, no people. Thick neon tubes on a dark metal backing frame with mounting brackets. The text must be spelled EXACTLY as written, letter by letter, and no other text. Subject: a pharmacy sign: the words \"FARMACIA 24 H\" in white and green neon letters with a big green neon cross on the left.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 10000,
+    "textura": "2K"
+   },
+   "medida": "3 × 0.9 m"
+  },
+  {
+   "id": "LT03",
+   "archivo": "LT03_NeonHotel",
+   "fase": 6,
+   "salida": "imageassets/modelos-nuevos/LT03_NeonHotel.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png"
+   ],
+   "aspect_ratio": "9:16",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image ONLY for the art style and colors. Stylized game asset with chunky simplified shapes, soft hand-painted gradients. A single large neon sign for a building facade, seen straight from the front with a very slight angle, complete, centered, isolated on a plain flat pure white background, no wall, soft even lighting, no shadow, no people. Thick neon tubes on a dark metal backing frame with mounting brackets. The text must be spelled EXACTLY as written, letter by letter, and no other text. Subject: a tall vertical hotel sign: the word \"HOTEL\" written vertically, one letter under the other, in magenta neon letters, with turquoise neon stars between the letters.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 10000,
+    "textura": "2K"
+   },
+   "medida": "1.2 × 5 m"
+  },
+  {
+   "id": "LT04",
+   "archivo": "LT04_NeonVivaCoin",
+   "fase": 6,
+   "salida": "imageassets/modelos-nuevos/LT04_NeonVivaCoin.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png",
+    "imageassets/letreros/L10_LetreroVivaCoin.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image ONLY for the art style and colors. Stylized game asset with chunky simplified shapes, soft hand-painted gradients. A single large neon sign for a building facade, seen straight from the front with a very slight angle, complete, centered, isolated on a plain flat pure white background, no wall, soft even lighting, no shadow, no people. Thick neon tubes on a dark metal backing frame with mounting brackets. The text must be spelled EXACTLY as written, letter by letter, and no other text. Subject: an advertising sign for the casino: the word \"VIVACOIN\" in big gold neon letters with a magenta neon outline, a neon gold coin on the left and a magenta arrow pointing right.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 10000,
+    "textura": "2K"
+   },
+   "medida": "4 × 1.5 m"
+  }
+ ]
+}

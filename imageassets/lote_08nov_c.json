@@ -1,0 +1,49 @@
+{
+ "version": 1,
+ "resolution": "1k",
+ "variantes_por_defecto": 1,
+ "carpeta_salida": "imageassets",
+ "trabajos": [
+  {
+   "id": "PS01",
+   "archivo": "PS01_PasarelaNova",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/PS01_PasarelaNova.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K07_PuenteNova.png",
+    "imageassets/referencias/look/K06_CalleNova.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image shows the exact pedestrian bridge we want: copy its design, the straight deck in the middle and the one straight staircase at each end. Use the SECOND attached image ONLY for the art style, materials and colors of the clean corporate district (illustrated painted look, cold grey concrete and brushed metal); do not copy the scene. Stylized game asset with chunky simplified shapes, large clean bevels and soft hand-painted gradients, no photorealistic noise. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no street, no buildings, no bollards, no cameras. Nothing thin or dangling: the railings are thick solid side panels, not bars. No text, no letters, no numbers, no logos. Subject: a freestanding pedestrian footbridge, about 14 m long and 6 m high: one straight flat deck with solid waist-high side panels, a continuous cold white-blue light strip along the top of every side panel, and two thick concrete support columns under the ends of the deck. At each end of the deck one straight staircase descends to the ground, both staircases identical, with chunky wide steps and the same solid side panels with light strips. Both staircases reach the ground fully visible. View: 3/4 view from the front left, slightly from above, showing the deck and both staircases completely.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 8000,
+    "textura": "2K"
+   },
+   "medida": "14 m de largo · 6 m de alto"
+  },
+  {
+   "id": "PC01",
+   "archivo": "PC01_PuertaCristal",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/PC01_PuertaCristal.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K06_CalleNova.png",
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png"
+   ],
+   "aspect_ratio": "4:3",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, materials, colors and level of wear of the game (illustrated painted look, Mexican cyberpunk city); do not copy the scene. Stylized game asset with chunky simplified shapes, large clean bevels and soft hand-painted gradients, no photorealistic noise. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people. Nothing thin or dangling. No text, no letters, no numbers, no logos, no stickers. Subject: an automatic sliding glass shop door, closed, two identical sliding glass leaves side by side meeting in the middle, inside a thick brushed aluminum frame with a header box on top that holds the sliding mechanism. Each leaf has its own chunky aluminum edge and one horizontal turquoise band across the glass at waist height. The glass is dark teal tinted with soft painted diagonal reflections, nothing visible through it. View: straight from the front, centered and symmetrical.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 8000,
+    "textura": "2K"
+   }
+  }
+ ]
+}

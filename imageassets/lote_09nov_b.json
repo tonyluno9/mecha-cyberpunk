@@ -1,0 +1,99 @@
+{
+ "version": 1,
+ "resolution": "1k",
+ "variantes_por_defecto": 1,
+ "carpeta_salida": "imageassets",
+ "trabajos": [
+  {
+   "id": "LG24",
+   "archivo": "LG24_Pintado_Amarillo",
+   "fase": 1,
+   "salida": "imageassets/referencias-privadas/logo/LG24_Pintado_Amarillo.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias-privadas/logo/LG20_Amarillo.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached logo ONLY as a reference for the composition: the word slanted to the right, the fast underline stroke, the small street light pole at the right end of the underline and the faint tower silhouette behind the letters. Redraw the lettering with our OWN letterforms (do not copy the letter shapes of the attached logo or of any existing game logo). The text must read exactly \"CYBERCITY\": one word, nine letters, C-Y-B-E-R-C-I-T-Y, spelled correctly, every letter legible, no other words. Strongly painted street style: thick spray paint and wide brush strokes, visible paint texture as if painted on a wall, rough dry-brush edges, small paint splatters and specks around the letters, \"CYBER\" sharp and aggressive, \"CITY\" even more painted and expressive. The logo alone, centered, filling about 70% of the width, on a PURE BLACK (#000000) flat background, no wall visible, nothing else. Color: electric yellow paint, with paint drips running down from the bottom of the letters of \"CITY\"."
+  },
+  {
+   "id": "LG25",
+   "archivo": "LG25_Pintado_Turquesa",
+   "fase": 1,
+   "salida": "imageassets/referencias-privadas/logo/LG25_Pintado_Turquesa.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias-privadas/logo/LG20_Amarillo.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached logo ONLY as a reference for the composition: the word slanted to the right, the fast underline stroke, the small street light pole at the right end of the underline and the faint tower silhouette behind the letters. Redraw the lettering with our OWN letterforms (do not copy the letter shapes of the attached logo or of any existing game logo). The text must read exactly \"CYBERCITY\": one word, nine letters, C-Y-B-E-R-C-I-T-Y, spelled correctly, every letter legible, no other words. Strongly painted street style: thick spray paint and wide brush strokes, visible paint texture as if painted on a wall, rough dry-brush edges, small paint splatters and specks around the letters, \"CYBER\" sharp and aggressive, \"CITY\" even more painted and expressive. The logo alone, centered, filling about 70% of the width, on a PURE BLACK (#000000) flat background, no wall visible, nothing else. Color: turquoise paint with a coral red (#FF5A4E) outline stroke around the letters."
+  },
+  {
+   "id": "LG26",
+   "archivo": "LG26_Pintado_Blanco",
+   "fase": 1,
+   "salida": "imageassets/referencias-privadas/logo/LG26_Pintado_Blanco.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias-privadas/logo/LG20_Amarillo.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached logo ONLY as a reference for the composition: the word slanted to the right, the fast underline stroke, the small street light pole at the right end of the underline and the faint tower silhouette behind the letters. Redraw the lettering with our OWN letterforms (do not copy the letter shapes of the attached logo or of any existing game logo). The text must read exactly \"CYBERCITY\": one word, nine letters, C-Y-B-E-R-C-I-T-Y, spelled correctly, every letter legible, no other words. Strongly painted street style: thick spray paint and wide brush strokes, visible paint texture as if painted on a wall, rough dry-brush edges, small paint splatters and specks around the letters, \"CYBER\" sharp and aggressive, \"CITY\" even more painted and expressive. The logo alone, centered, filling about 70% of the width, on a PURE BLACK (#000000) flat background, no wall visible, nothing else. Color: white paint with a turquoise shadow copy offset down and to the right, and extra white and turquoise splatters."
+  },
+  {
+   "id": "H33",
+   "archivo": "H33_Implantes_Nivel2",
+   "fase": 2,
+   "salida": "imageassets/ui/menus/H33_Implantes_Nivel2.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/ui/menus/H30_IconosImplantes.png",
+    "imageassets/modelos-nuevos/IMP01_ExoPiernas_v2.png",
+    "imageassets/modelos-nuevos/IMP02_ExoBrazos_v2.png",
+    "imageassets/modelos-nuevos/IMP03_VisorCabeza_v2.png"
+   ],
+   "aspect_ratio": "21:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is our icon sheet: match its icon style EXACTLY (illustrated, slightly glowing, centered in dark square slots with thin rarity-colored borders, same lighting and rendering). PURE BLACK (#000000) flat background, slots the same size with even spacing, no text, no labels, no numbers. Draw 3 implant icons in a single row, all with BLUE rarity borders (level II). Each icon must show EXACTLY the implant in its attached image, with the same shape, parts, colors and details, only simplified into the icon style: 1) the leg exoskeleton from the second attached image, 2) the arm exoskeleton from the third attached image, 3) the head visor from the fourth attached image. Show each one at a 3/4 angle, filling its slot."
+  },
+  {
+   "id": "H34",
+   "archivo": "H34_PiezasArma",
+   "fase": 2,
+   "salida": "imageassets/ui/menus/H34_PiezasArma.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/ui/menus/H30_IconosImplantes.png",
+    "imageassets/armas/W01_Pistola.png"
+   ],
+   "aspect_ratio": "3:2",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is our icon sheet: match its icon style EXACTLY (illustrated, slightly glowing, centered in dark square slots with thin rarity-colored borders, same lighting and rendering). PURE BLACK (#000000) flat background, slots the same size with even spacing, no text, no labels, no numbers. The SECOND attached image is our pistol W01. Draw 6 weapon part icons in a grid of 3 columns by 2 rows, each one a single part of THIS pistol, with exactly the same design, colors (dark gunmetal, sand-beige, burnt orange, red tape) and wear as the pistol: 1) the magazine, 2) the slide (the top dark gunmetal part with its vents), 3) the barrel with its orange muzzle tip, 4) the small rear and front sights, 5) the grip wrapped in red tape, 6) the frame (the sand-beige lower body with the trigger guard). Each part shown alone at a 3/4 angle, filling its slot. Slot borders in rarity colors: green, green, blue, blue, purple, orange."
+  },
+  {
+   "id": "H33b",
+   "archivo": "H33_Implantes_Nivel2_v2",
+   "fase": 3,
+   "salida": "imageassets/ui/menus/H33_Implantes_Nivel2_v2.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/ui/menus/H30_IconosImplantes.png",
+    "imageassets/modelos-nuevos/IMP01_ExoPiernas.png",
+    "imageassets/modelos-nuevos/IMP02_ExoBrazos.png",
+    "imageassets/modelos-nuevos/IMP03_VisorCabeza.png"
+   ],
+   "aspect_ratio": "21:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is our icon sheet: match its icon style EXACTLY (illustrated, slightly glowing, centered in dark square slots with thin rarity-colored borders, same lighting and rendering). PURE BLACK (#000000) flat background, 3 slots the same size in a single row with even spacing, no text, no labels, no numbers. These are LEVEL II implants, all with BLUE rarity borders: they must look clearly BIGGER, HEAVIER and MORE COMPLETE than the level I versions (which are only thin rods), filling most of their slot. Each icon shows EXACTLY the implant in its attached image, same parts, colors and details, simplified into the icon style, at a 3/4 angle: 1) from the second attached image: the FULL leg exoskeleton with a hip belt, armored thigh plates, chunky knee joints, shin plates and foot trays; 2) from the third attached image: the FULL upper-body exoskeleton with a chest and back plate, big shoulder pads, hinged elbow joints and forearm gauntlets; 3) from the fourth attached image: the goggle-style visor that wraps around the head over both eyes with a wide glowing turquoise lens."
+  }
+ ]
+}

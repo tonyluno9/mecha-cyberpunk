@@ -1,0 +1,1318 @@
+{
+ "version": 1,
+ "resolution": "1k",
+ "variantes_por_defecto": 1,
+ "carpeta_salida": "imageassets",
+ "trabajos": [
+  {
+   "id": "ML05a",
+   "archivo": "ML05_EdificioMalecon_a",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/nuevos-18nov/ML05_EdificioMalecon_a.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K11_Malecon.png",
+    "imageassets/referencias/look/K12_Malecon_Muelle.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity; Nova is clean white with cold blue light); do not copy their scenes. Original design, nothing copied from real places, brands or other games. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a three-story seafront building: ground floor shops with rolled metal shutters and colorful awnings, balconies with simple railings on the upper floors, air conditioning units, a small neon sign with an abstract shape (no letters), faded paint and salt stains.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "12 × 10 × 10 m"
+  },
+  {
+   "id": "ML05b",
+   "archivo": "ML05_EdificioMalecon_b",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/nuevos-18nov/ML05_EdificioMalecon_b.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K11_Malecon.png",
+    "imageassets/referencias/look/K12_Malecon_Muelle.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity; Nova is clean white with cold blue light); do not copy their scenes. Original design, nothing copied from real places, brands or other games. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a three-story seafront building: ground floor shops with rolled metal shutters and colorful awnings, balconies with simple railings on the upper floors, air conditioning units, a small neon sign with an abstract shape (no letters), faded paint and salt stains. VARIANT B: make a clearly different design from the most obvious version: different proportions, different placement of colors and details, while keeping the same description.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "12 × 10 × 10 m"
+  },
+  {
+   "id": "ML06a",
+   "archivo": "ML06_EdificioMalecon_a",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/nuevos-18nov/ML06_EdificioMalecon_a.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K11_Malecon.png",
+    "imageassets/referencias/look/K12_Malecon_Muelle.png"
+   ],
+   "aspect_ratio": "3:4",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity; Nova is clean white with cold blue light); do not copy their scenes. Original design, nothing copied from real places, brands or other games. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: an old five-story seafront hotel: rows of windows, some lit with warm light, small balconies, a tall vertical neon sign on the corner made of abstract glowing shapes (no letters), faded pastel paint, salt stains.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "14 × 12 × 17 m"
+  },
+  {
+   "id": "ML06b",
+   "archivo": "ML06_EdificioMalecon_b",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/nuevos-18nov/ML06_EdificioMalecon_b.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K11_Malecon.png",
+    "imageassets/referencias/look/K12_Malecon_Muelle.png"
+   ],
+   "aspect_ratio": "3:4",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity; Nova is clean white with cold blue light); do not copy their scenes. Original design, nothing copied from real places, brands or other games. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: an old five-story seafront hotel: rows of windows, some lit with warm light, small balconies, a tall vertical neon sign on the corner made of abstract glowing shapes (no letters), faded pastel paint, salt stains. VARIANT B: make a clearly different design from the most obvious version: different proportions, different placement of colors and details, while keeping the same description.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "14 × 12 × 17 m"
+  },
+  {
+   "id": "ML07a",
+   "archivo": "ML07_Hielera_a",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/nuevos-18nov/ML07_Hielera_a.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K11_Malecon.png",
+    "imageassets/referencias/look/K12_Malecon_Muelle.png"
+   ],
+   "aspect_ratio": "4:3",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity; Nova is clean white with cold blue light); do not copy their scenes. Original design, nothing copied from real places, brands or other games. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a plastic beach cooler with a hinged lid next to a short stack of colorful plastic stools (red, blue, yellow), touching each other as one group.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 6000,
+    "textura": "2K"
+   },
+   "medida": "0.7 × 0.5 × 0.5 m"
+  },
+  {
+   "id": "ML07b",
+   "archivo": "ML07_Hielera_b",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/nuevos-18nov/ML07_Hielera_b.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K11_Malecon.png",
+    "imageassets/referencias/look/K12_Malecon_Muelle.png"
+   ],
+   "aspect_ratio": "4:3",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity; Nova is clean white with cold blue light); do not copy their scenes. Original design, nothing copied from real places, brands or other games. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a plastic beach cooler with a hinged lid next to a short stack of colorful plastic stools (red, blue, yellow), touching each other as one group. VARIANT B: make a clearly different design from the most obvious version: different proportions, different placement of colors and details, while keeping the same description.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 6000,
+    "textura": "2K"
+   },
+   "medida": "0.7 × 0.5 × 0.5 m"
+  },
+  {
+   "id": "SK01a",
+   "archivo": "SK01_Skyline_a",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/nuevos-18nov/SK01_Skyline_a.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K11_Malecon.png",
+    "imageassets/referencias/look/K06_CalleNova.png"
+   ],
+   "aspect_ratio": "21:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style and colors. A distant city skyline at night seen straight from the front as a flat backdrop: towers and buildings of different heights as dark silhouettes with many small lit windows, glowing neon signs in turquoise and magenta as abstract shapes, the white Nova tower taller than the rest with a light on top, filling the image width edge to edge, the bottom edge of the skyline flat. Everything else is PURE BLACK (#000000): the sky and the background are pure black, no gradient, no stars, no water, no text.",
+   "uso": "Fondo (no va a Tripo)"
+  },
+  {
+   "id": "SK01b",
+   "archivo": "SK01_Skyline_b",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/nuevos-18nov/SK01_Skyline_b.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K11_Malecon.png",
+    "imageassets/referencias/look/K06_CalleNova.png"
+   ],
+   "aspect_ratio": "21:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style and colors. A distant city skyline at night seen straight from the front as a flat backdrop: towers and buildings of different heights as dark silhouettes with many small lit windows, glowing neon signs in turquoise and magenta as abstract shapes, the white Nova tower taller than the rest with a light on top, filling the image width edge to edge, the bottom edge of the skyline flat. Everything else is PURE BLACK (#000000): the sky and the background are pure black, no gradient, no stars, no water, no text. VARIANT B: make a clearly different design from the most obvious version: different proportions, different placement of colors and details, while keeping the same description.",
+   "uso": "Fondo (no va a Tripo)"
+  },
+  {
+   "id": "PU07a",
+   "archivo": "PU07_PlumaCaseta_a",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/nuevos-18nov/PU07_PlumaCaseta_a.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K15_Puerto.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity; Nova is clean white with cold blue light); do not copy their scenes. Original design, nothing copied from real places, brands or other games. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: the entrance booth of a cargo port: a small boxy guard booth with windows and a flat roof, a floodlight, and attached to it a long barrier arm with red and white stripes in the lowered position.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 8000,
+    "textura": "2K"
+   },
+   "medida": "2.5 × 2.5 × 3 m · pluma 5 m"
+  },
+  {
+   "id": "PU07b",
+   "archivo": "PU07_PlumaCaseta_b",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/nuevos-18nov/PU07_PlumaCaseta_b.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K15_Puerto.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity; Nova is clean white with cold blue light); do not copy their scenes. Original design, nothing copied from real places, brands or other games. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: the entrance booth of a cargo port: a small boxy guard booth with windows and a flat roof, a floodlight, and attached to it a long barrier arm with red and white stripes in the lowered position. VARIANT B: make a clearly different design from the most obvious version: different proportions, different placement of colors and details, while keeping the same description.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 8000,
+    "textura": "2K"
+   },
+   "medida": "2.5 × 2.5 × 3 m · pluma 5 m"
+  },
+  {
+   "id": "PU08a",
+   "archivo": "PU08_ContenedorGraffiti_a",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/nuevos-18nov/PU08_ContenedorGraffiti_a.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K15_Puerto.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity; Nova is clean white with cold blue light); do not copy their scenes. Original design, nothing copied from real places, brands or other games. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a 40-foot shipping container with corrugated walls, rust patches and dents, the doors closed with thick locking bars, covered on its long side with colorful graffiti made of abstract shapes and characters (no readable letters).",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 8000,
+    "textura": "2K"
+   },
+   "medida": "12.2 × 2.4 × 2.6 m"
+  },
+  {
+   "id": "PU08b",
+   "archivo": "PU08_ContenedorGraffiti_b",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/nuevos-18nov/PU08_ContenedorGraffiti_b.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K15_Puerto.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity; Nova is clean white with cold blue light); do not copy their scenes. Original design, nothing copied from real places, brands or other games. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a 40-foot shipping container with corrugated walls, rust patches and dents, the doors closed with thick locking bars, covered on its long side with colorful graffiti made of abstract shapes and characters (no readable letters). VARIANT B: make a clearly different design from the most obvious version: different proportions, different placement of colors and details, while keeping the same description.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 8000,
+    "textura": "2K"
+   },
+   "medida": "12.2 × 2.4 × 2.6 m"
+  },
+  {
+   "id": "CC06a",
+   "archivo": "CC06_CasaCerro_a",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/nuevos-18nov/CC06_CasaCerro_a.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K13_ColoniaCerro.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity; Nova is clean white with cold blue light); do not copy their scenes. Original design, nothing copied from real places, brands or other games. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a two-story house half under construction: unpainted grey concrete blocks, steel rebar sticking up from the columns on the roof, an unfinished second floor partly covered with a blue tarp, a simple metal door.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "6 × 6 × 6.5 m"
+  },
+  {
+   "id": "CC06b",
+   "archivo": "CC06_CasaCerro_b",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/nuevos-18nov/CC06_CasaCerro_b.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K13_ColoniaCerro.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity; Nova is clean white with cold blue light); do not copy their scenes. Original design, nothing copied from real places, brands or other games. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a two-story house half under construction: unpainted grey concrete blocks, steel rebar sticking up from the columns on the roof, an unfinished second floor partly covered with a blue tarp, a simple metal door. VARIANT B: make a clearly different design from the most obvious version: different proportions, different placement of colors and details, while keeping the same description.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "6 × 6 × 6.5 m"
+  },
+  {
+   "id": "CC07a",
+   "archivo": "CC07_CasaCerro_a",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/nuevos-18nov/CC07_CasaCerro_a.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K13_ColoniaCerro.png"
+   ],
+   "aspect_ratio": "9:16",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity; Nova is clean white with cold blue light); do not copy their scenes. Original design, nothing copied from real places, brands or other games. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a narrow three-story house painted green and faded, small barred windows, a roof terrace with a metal railing and a clothesline with clothes as chunky shapes, a water tank.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "4 × 7 × 9.5 m"
+  },
+  {
+   "id": "CC07b",
+   "archivo": "CC07_CasaCerro_b",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/nuevos-18nov/CC07_CasaCerro_b.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K13_ColoniaCerro.png"
+   ],
+   "aspect_ratio": "9:16",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity; Nova is clean white with cold blue light); do not copy their scenes. Original design, nothing copied from real places, brands or other games. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a narrow three-story house painted green and faded, small barred windows, a roof terrace with a metal railing and a clothesline with clothes as chunky shapes, a water tank. VARIANT B: make a clearly different design from the most obvious version: different proportions, different placement of colors and details, while keeping the same description.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "4 × 7 × 9.5 m"
+  },
+  {
+   "id": "CC08a",
+   "archivo": "CC08_MuroContencion_a",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/nuevos-18nov/CC08_MuroContencion_a.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K13_ColoniaCerro.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity; Nova is clean white with cold blue light); do not copy their scenes. Original design, nothing copied from real places, brands or other games. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a hillside retaining wall section made of stacked stones and concrete with drainage holes, and a concrete staircase with a simple metal railing attached along its face climbing to the top.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 10000,
+    "textura": "2K"
+   },
+   "medida": "8 m de ancho × 4 m de alto"
+  },
+  {
+   "id": "CC08b",
+   "archivo": "CC08_MuroContencion_b",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/nuevos-18nov/CC08_MuroContencion_b.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K13_ColoniaCerro.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity; Nova is clean white with cold blue light); do not copy their scenes. Original design, nothing copied from real places, brands or other games. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a hillside retaining wall section made of stacked stones and concrete with drainage holes, and a concrete staircase with a simple metal railing attached along its face climbing to the top. VARIANT B: make a clearly different design from the most obvious version: different proportions, different placement of colors and details, while keeping the same description.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 10000,
+    "textura": "2K"
+   },
+   "medida": "8 m de ancho × 4 m de alto"
+  },
+  {
+   "id": "AU02a",
+   "archivo": "AU02_BarreraConcreto_a",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/nuevos-18nov/AU02_BarreraConcreto_a.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K18_AutopistaElevada.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity; Nova is clean white with cold blue light); do not copy their scenes. Original design, nothing copied from real places, brands or other games. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a highway concrete barrier segment (New Jersey profile) with reflective yellow and white stripes, chipped edges and dirt.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 6000,
+    "textura": "2K"
+   },
+   "medida": "3 × 0.6 × 0.8 m"
+  },
+  {
+   "id": "AU02b",
+   "archivo": "AU02_BarreraConcreto_b",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/nuevos-18nov/AU02_BarreraConcreto_b.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K18_AutopistaElevada.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity; Nova is clean white with cold blue light); do not copy their scenes. Original design, nothing copied from real places, brands or other games. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a highway concrete barrier segment (New Jersey profile) with reflective yellow and white stripes, chipped edges and dirt. VARIANT B: make a clearly different design from the most obvious version: different proportions, different placement of colors and details, while keeping the same description.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 6000,
+    "textura": "2K"
+   },
+   "medida": "3 × 0.6 × 0.8 m"
+  },
+  {
+   "id": "AU03a",
+   "archivo": "AU03_ChatarraPuente_a",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/nuevos-18nov/AU03_ChatarraPuente_a.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K18_AutopistaElevada.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity; Nova is clean white with cold blue light); do not copy their scenes. Original design, nothing copied from real places, brands or other games. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a pile of junk that gathers under a highway bridge: two wrecked old cars without wheels, tires, black trash bags, a broken shopping cart, cardboard and planks, all grouped together as one object.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "8 × 5 × 2 m"
+  },
+  {
+   "id": "AU03b",
+   "archivo": "AU03_ChatarraPuente_b",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/nuevos-18nov/AU03_ChatarraPuente_b.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K18_AutopistaElevada.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity; Nova is clean white with cold blue light); do not copy their scenes. Original design, nothing copied from real places, brands or other games. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a pile of junk that gathers under a highway bridge: two wrecked old cars without wheels, tires, black trash bags, a broken shopping cart, cardboard and planks, all grouped together as one object. VARIANT B: make a clearly different design from the most obvious version: different proportions, different placement of colors and details, while keeping the same description.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "8 × 5 × 2 m"
+  },
+  {
+   "id": "T07a",
+   "archivo": "T07_AsfaltoMojado_a",
+   "fase": 2,
+   "salida": "imageassets/calle/T07_AsfaltoMojado_a.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image ONLY for the art style and colors. A seamless tileable texture seen straight from above (orthographic, flat, no perspective), filling the entire square image edge to edge, even flat lighting, no objects, no text. The left and right edges and the top and bottom edges must continue seamlessly. Stylized hand-painted game texture, no photorealistic noise. Subject: dark wet asphalt with irregular puddles that reflect orange and magenta light as soft color patches, small cracks.",
+   "uso": "Textura"
+  },
+  {
+   "id": "T07b",
+   "archivo": "T07_AsfaltoMojado_b",
+   "fase": 2,
+   "salida": "imageassets/calle/T07_AsfaltoMojado_b.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image ONLY for the art style and colors. A seamless tileable texture seen straight from above (orthographic, flat, no perspective), filling the entire square image edge to edge, even flat lighting, no objects, no text. The left and right edges and the top and bottom edges must continue seamlessly. Stylized hand-painted game texture, no photorealistic noise. Subject: dark wet asphalt with irregular puddles that reflect orange and magenta light as soft color patches, small cracks. VARIANT B: make a clearly different design from the most obvious version: different proportions, different placement of colors and details, while keeping the same description.",
+   "uso": "Textura"
+  },
+  {
+   "id": "T08a",
+   "archivo": "T08_LaminaOxidada_a",
+   "fase": 2,
+   "salida": "imageassets/calle/T08_LaminaOxidada_a.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K16_Deshuesadero.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image ONLY for the art style and colors. A seamless tileable texture seen straight from above (orthographic, flat, no perspective), filling the entire square image edge to edge, even flat lighting, no objects, no text. The left and right edges and the top and bottom edges must continue seamlessly. Stylized hand-painted game texture, no photorealistic noise. Subject: corrugated metal sheet seen straight on, vertical ridges, heavy rust and peeling paint in faded blue and white.",
+   "uso": "Textura"
+  },
+  {
+   "id": "T08b",
+   "archivo": "T08_LaminaOxidada_b",
+   "fase": 2,
+   "salida": "imageassets/calle/T08_LaminaOxidada_b.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K16_Deshuesadero.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image ONLY for the art style and colors. A seamless tileable texture seen straight from above (orthographic, flat, no perspective), filling the entire square image edge to edge, even flat lighting, no objects, no text. The left and right edges and the top and bottom edges must continue seamlessly. Stylized hand-painted game texture, no photorealistic noise. Subject: corrugated metal sheet seen straight on, vertical ridges, heavy rust and peeling paint in faded blue and white. VARIANT B: make a clearly different design from the most obvious version: different proportions, different placement of colors and details, while keeping the same description.",
+   "uso": "Textura"
+  },
+  {
+   "id": "T09a",
+   "archivo": "T09_ConcretoManchado_a",
+   "fase": 2,
+   "salida": "imageassets/calle/T09_ConcretoManchado_a.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image ONLY for the art style and colors. A seamless tileable texture seen straight from above (orthographic, flat, no perspective), filling the entire square image edge to edge, even flat lighting, no objects, no text. The left and right edges and the top and bottom edges must continue seamlessly. Stylized hand-painted game texture, no photorealistic noise. Subject: sidewalk concrete slabs with joint lines, dark stains, cracks and flattened chewing gum spots.",
+   "uso": "Textura"
+  },
+  {
+   "id": "T09b",
+   "archivo": "T09_ConcretoManchado_b",
+   "fase": 2,
+   "salida": "imageassets/calle/T09_ConcretoManchado_b.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image ONLY for the art style and colors. A seamless tileable texture seen straight from above (orthographic, flat, no perspective), filling the entire square image edge to edge, even flat lighting, no objects, no text. The left and right edges and the top and bottom edges must continue seamlessly. Stylized hand-painted game texture, no photorealistic noise. Subject: sidewalk concrete slabs with joint lines, dark stains, cracks and flattened chewing gum spots. VARIANT B: make a clearly different design from the most obvious version: different proportions, different placement of colors and details, while keeping the same description.",
+   "uso": "Textura"
+  },
+  {
+   "id": "NP07a",
+   "archivo": "NP07_Pescador_a",
+   "fase": 3,
+   "salida": "imageassets/modelos-nuevos/nuevos-18nov/NP07_Pescador_a.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/modelos-nuevos/PJ01_Protagonista_v2.png",
+    "imageassets/personajes/BaseMujer_frente.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached characters for the art style of our game (rendering, proportions, level of detail) and the T-pose framing; draw a NEW original character of a Mexican cyberpunk megacity. Rig-friendly: everything fitted close to the body, nothing hanging loose, no loose straps or cables. Hands EMPTY. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: a fisherman around 50, a cap, a worn shirt with rolled sleeves, waterproof bib pants, tall rubber boots.",
+   "tripo": {
+    "modo": "Quads",
+    "caras": 20000,
+    "textura": "2K",
+    "rig": "Humanoid (luego Mixamo)"
+   },
+   "medida": "1.70 m"
+  },
+  {
+   "id": "NP07b",
+   "archivo": "NP07_Pescador_b",
+   "fase": 3,
+   "salida": "imageassets/modelos-nuevos/nuevos-18nov/NP07_Pescador_b.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/modelos-nuevos/PJ01_Protagonista_v2.png",
+    "imageassets/personajes/BaseMujer_frente.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached characters for the art style of our game (rendering, proportions, level of detail) and the T-pose framing; draw a NEW original character of a Mexican cyberpunk megacity. Rig-friendly: everything fitted close to the body, nothing hanging loose, no loose straps or cables. Hands EMPTY. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: a fisherman around 50, a cap, a worn shirt with rolled sleeves, waterproof bib pants, tall rubber boots. VARIANT B: make a clearly different design from the most obvious version: different proportions, different placement of colors and details, while keeping the same description.",
+   "tripo": {
+    "modo": "Quads",
+    "caras": 20000,
+    "textura": "2K",
+    "rig": "Humanoid (luego Mixamo)"
+   },
+   "medida": "1.70 m"
+  },
+  {
+   "id": "NP08a",
+   "archivo": "NP08_Turista_a",
+   "fase": 3,
+   "salida": "imageassets/modelos-nuevos/nuevos-18nov/NP08_Turista_a.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/modelos-nuevos/PJ01_Protagonista_v2.png",
+    "imageassets/personajes/BaseMujer_frente.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached characters for the art style of our game (rendering, proportions, level of detail) and the T-pose framing; draw a NEW original character of a Mexican cyberpunk megacity. Rig-friendly: everything fitted close to the body, nothing hanging loose, no loose straps or cables. Hands EMPTY. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: a tourist man, a bright flowery short-sleeve shirt, shorts, sandals, sunglasses on his head, a small camera hanging close on his chest with a short strap.",
+   "tripo": {
+    "modo": "Quads",
+    "caras": 20000,
+    "textura": "2K",
+    "rig": "Humanoid (luego Mixamo)"
+   },
+   "medida": "1.75 m"
+  },
+  {
+   "id": "NP08b",
+   "archivo": "NP08_Turista_b",
+   "fase": 3,
+   "salida": "imageassets/modelos-nuevos/nuevos-18nov/NP08_Turista_b.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/modelos-nuevos/PJ01_Protagonista_v2.png",
+    "imageassets/personajes/BaseMujer_frente.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached characters for the art style of our game (rendering, proportions, level of detail) and the T-pose framing; draw a NEW original character of a Mexican cyberpunk megacity. Rig-friendly: everything fitted close to the body, nothing hanging loose, no loose straps or cables. Hands EMPTY. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: a tourist man, a bright flowery short-sleeve shirt, shorts, sandals, sunglasses on his head, a small camera hanging close on his chest with a short strap. VARIANT B: make a clearly different design from the most obvious version: different proportions, different placement of colors and details, while keeping the same description.",
+   "tripo": {
+    "modo": "Quads",
+    "caras": 20000,
+    "textura": "2K",
+    "rig": "Humanoid (luego Mixamo)"
+   },
+   "medida": "1.75 m"
+  },
+  {
+   "id": "NP09a",
+   "archivo": "NP09_Corredor_a",
+   "fase": 3,
+   "salida": "imageassets/modelos-nuevos/nuevos-18nov/NP09_Corredor_a.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/modelos-nuevos/PJ01_Protagonista_v2.png",
+    "imageassets/personajes/BaseMujer_frente.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached characters for the art style of our game (rendering, proportions, level of detail) and the T-pose framing; draw a NEW original character of a Mexican cyberpunk megacity. Rig-friendly: everything fitted close to the body, nothing hanging loose, no loose straps or cables. Hands EMPTY. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: a young woman runner, fitted sportswear with thin glowing turquoise light strips, a headband, running shoes.",
+   "tripo": {
+    "modo": "Quads",
+    "caras": 20000,
+    "textura": "2K",
+    "rig": "Humanoid (luego Mixamo)"
+   },
+   "medida": "1.65 m"
+  },
+  {
+   "id": "NP09b",
+   "archivo": "NP09_Corredor_b",
+   "fase": 3,
+   "salida": "imageassets/modelos-nuevos/nuevos-18nov/NP09_Corredor_b.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/modelos-nuevos/PJ01_Protagonista_v2.png",
+    "imageassets/personajes/BaseMujer_frente.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached characters for the art style of our game (rendering, proportions, level of detail) and the T-pose framing; draw a NEW original character of a Mexican cyberpunk megacity. Rig-friendly: everything fitted close to the body, nothing hanging loose, no loose straps or cables. Hands EMPTY. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: a young woman runner, fitted sportswear with thin glowing turquoise light strips, a headband, running shoes. VARIANT B: make a clearly different design from the most obvious version: different proportions, different placement of colors and details, while keeping the same description.",
+   "tripo": {
+    "modo": "Quads",
+    "caras": 20000,
+    "textura": "2K",
+    "rig": "Humanoid (luego Mixamo)"
+   },
+   "medida": "1.65 m"
+  },
+  {
+   "id": "NP10a",
+   "archivo": "NP10_Elotero_a",
+   "fase": 3,
+   "salida": "imageassets/modelos-nuevos/nuevos-18nov/NP10_Elotero_a.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/modelos-nuevos/PJ01_Protagonista_v2.png",
+    "imageassets/personajes/BaseMujer_frente.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached characters for the art style of our game (rendering, proportions, level of detail) and the T-pose framing; draw a NEW original character of a Mexican cyberpunk megacity. Rig-friendly: everything fitted close to the body, nothing hanging loose, no loose straps or cables. Hands EMPTY. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: a street corn vendor man (elotero), a fitted apron, a cap, a plain t-shirt, jeans, sneakers.",
+   "tripo": {
+    "modo": "Quads",
+    "caras": 20000,
+    "textura": "2K",
+    "rig": "Humanoid (luego Mixamo)"
+   },
+   "medida": "1.68 m"
+  },
+  {
+   "id": "NP10b",
+   "archivo": "NP10_Elotero_b",
+   "fase": 3,
+   "salida": "imageassets/modelos-nuevos/nuevos-18nov/NP10_Elotero_b.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/modelos-nuevos/PJ01_Protagonista_v2.png",
+    "imageassets/personajes/BaseMujer_frente.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached characters for the art style of our game (rendering, proportions, level of detail) and the T-pose framing; draw a NEW original character of a Mexican cyberpunk megacity. Rig-friendly: everything fitted close to the body, nothing hanging loose, no loose straps or cables. Hands EMPTY. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: a street corn vendor man (elotero), a fitted apron, a cap, a plain t-shirt, jeans, sneakers. VARIANT B: make a clearly different design from the most obvious version: different proportions, different placement of colors and details, while keeping the same description.",
+   "tripo": {
+    "modo": "Quads",
+    "caras": 20000,
+    "textura": "2K",
+    "rig": "Humanoid (luego Mixamo)"
+   },
+   "medida": "1.68 m"
+  },
+  {
+   "id": "NP11a",
+   "archivo": "NP11_Estibador_a",
+   "fase": 3,
+   "salida": "imageassets/modelos-nuevos/nuevos-18nov/NP11_Estibador_a.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/modelos-nuevos/PJ01_Protagonista_v2.png",
+    "imageassets/personajes/BaseMujer_frente.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached characters for the art style of our game (rendering, proportions, level of detail) and the T-pose framing; draw a NEW original character of a Mexican cyberpunk megacity. Rig-friendly: everything fitted close to the body, nothing hanging loose, no loose straps or cables. Hands EMPTY. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: a dock worker, an orange reflective vest, a hard hat, work gloves, work pants, boots.",
+   "tripo": {
+    "modo": "Quads",
+    "caras": 20000,
+    "textura": "2K",
+    "rig": "Humanoid (luego Mixamo)"
+   },
+   "medida": "1.78 m"
+  },
+  {
+   "id": "NP11b",
+   "archivo": "NP11_Estibador_b",
+   "fase": 3,
+   "salida": "imageassets/modelos-nuevos/nuevos-18nov/NP11_Estibador_b.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/modelos-nuevos/PJ01_Protagonista_v2.png",
+    "imageassets/personajes/BaseMujer_frente.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached characters for the art style of our game (rendering, proportions, level of detail) and the T-pose framing; draw a NEW original character of a Mexican cyberpunk megacity. Rig-friendly: everything fitted close to the body, nothing hanging loose, no loose straps or cables. Hands EMPTY. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: a dock worker, an orange reflective vest, a hard hat, work gloves, work pants, boots. VARIANT B: make a clearly different design from the most obvious version: different proportions, different placement of colors and details, while keeping the same description.",
+   "tripo": {
+    "modo": "Quads",
+    "caras": 20000,
+    "textura": "2K",
+    "rig": "Humanoid (luego Mixamo)"
+   },
+   "medida": "1.78 m"
+  },
+  {
+   "id": "NP12a",
+   "archivo": "NP12_Abuela_a",
+   "fase": 3,
+   "salida": "imageassets/modelos-nuevos/nuevos-18nov/NP12_Abuela_a.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/modelos-nuevos/PJ01_Protagonista_v2.png",
+    "imageassets/personajes/BaseMujer_frente.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached characters for the art style of our game (rendering, proportions, level of detail) and the T-pose framing; draw a NEW original character of a Mexican cyberpunk megacity. Rig-friendly: everything fitted close to the body, nothing hanging loose, no loose straps or cables. Hands EMPTY. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: an elderly grandmother, a rebozo shawl wrapped tightly around her shoulders and tucked in, a long skirt, flat shoes, grey hair in a bun; her walking cane is strapped flat along her right forearm so the hands stay empty.",
+   "tripo": {
+    "modo": "Quads",
+    "caras": 20000,
+    "textura": "2K",
+    "rig": "Humanoid (luego Mixamo)"
+   },
+   "medida": "1.52 m"
+  },
+  {
+   "id": "NP12b",
+   "archivo": "NP12_Abuela_b",
+   "fase": 3,
+   "salida": "imageassets/modelos-nuevos/nuevos-18nov/NP12_Abuela_b.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/modelos-nuevos/PJ01_Protagonista_v2.png",
+    "imageassets/personajes/BaseMujer_frente.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached characters for the art style of our game (rendering, proportions, level of detail) and the T-pose framing; draw a NEW original character of a Mexican cyberpunk megacity. Rig-friendly: everything fitted close to the body, nothing hanging loose, no loose straps or cables. Hands EMPTY. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: an elderly grandmother, a rebozo shawl wrapped tightly around her shoulders and tucked in, a long skirt, flat shoes, grey hair in a bun; her walking cane is strapped flat along her right forearm so the hands stay empty. VARIANT B: make a clearly different design from the most obvious version: different proportions, different placement of colors and details, while keeping the same description.",
+   "tripo": {
+    "modo": "Quads",
+    "caras": 20000,
+    "textura": "2K",
+    "rig": "Humanoid (luego Mixamo)"
+   },
+   "medida": "1.52 m"
+  },
+  {
+   "id": "NP13a",
+   "archivo": "NP13_Repartidor_a",
+   "fase": 3,
+   "salida": "imageassets/modelos-nuevos/nuevos-18nov/NP13_Repartidor_a.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/modelos-nuevos/PJ01_Protagonista_v2.png",
+    "imageassets/personajes/BaseMujer_frente.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached characters for the art style of our game (rendering, proportions, level of detail) and the T-pose framing; draw a NEW original character of a Mexican cyberpunk megacity. Rig-friendly: everything fitted close to the body, nothing hanging loose, no loose straps or cables. Hands EMPTY. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: a delivery rider, a jacket, an insulated delivery box worn as a backpack tight on his back, a cap, pants, sneakers.",
+   "tripo": {
+    "modo": "Quads",
+    "caras": 20000,
+    "textura": "2K",
+    "rig": "Humanoid (luego Mixamo)"
+   },
+   "medida": "1.72 m"
+  },
+  {
+   "id": "NP13b",
+   "archivo": "NP13_Repartidor_b",
+   "fase": 3,
+   "salida": "imageassets/modelos-nuevos/nuevos-18nov/NP13_Repartidor_b.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/modelos-nuevos/PJ01_Protagonista_v2.png",
+    "imageassets/personajes/BaseMujer_frente.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached characters for the art style of our game (rendering, proportions, level of detail) and the T-pose framing; draw a NEW original character of a Mexican cyberpunk megacity. Rig-friendly: everything fitted close to the body, nothing hanging loose, no loose straps or cables. Hands EMPTY. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: a delivery rider, a jacket, an insulated delivery box worn as a backpack tight on his back, a cap, pants, sneakers. VARIANT B: make a clearly different design from the most obvious version: different proportions, different placement of colors and details, while keeping the same description.",
+   "tripo": {
+    "modo": "Quads",
+    "caras": 20000,
+    "textura": "2K",
+    "rig": "Humanoid (luego Mixamo)"
+   },
+   "medida": "1.72 m"
+  },
+  {
+   "id": "NP14a",
+   "archivo": "NP14_Oficinista_a",
+   "fase": 3,
+   "salida": "imageassets/modelos-nuevos/nuevos-18nov/NP14_Oficinista_a.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/modelos-nuevos/PJ01_Protagonista_v2.png",
+    "imageassets/personajes/BaseMujer_frente.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached characters for the art style of our game (rendering, proportions, level of detail) and the T-pose framing; draw a NEW original character of a Mexican cyberpunk megacity. Rig-friendly: everything fitted close to the body, nothing hanging loose, no loose straps or cables. Hands EMPTY. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: an office worker, a fitted suit with a thin tie, slim augmented reality glasses with a faint turquoise glow, dress shoes.",
+   "tripo": {
+    "modo": "Quads",
+    "caras": 20000,
+    "textura": "2K",
+    "rig": "Humanoid (luego Mixamo)"
+   },
+   "medida": "1.74 m"
+  },
+  {
+   "id": "NP14b",
+   "archivo": "NP14_Oficinista_b",
+   "fase": 3,
+   "salida": "imageassets/modelos-nuevos/nuevos-18nov/NP14_Oficinista_b.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/modelos-nuevos/PJ01_Protagonista_v2.png",
+    "imageassets/personajes/BaseMujer_frente.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached characters for the art style of our game (rendering, proportions, level of detail) and the T-pose framing; draw a NEW original character of a Mexican cyberpunk megacity. Rig-friendly: everything fitted close to the body, nothing hanging loose, no loose straps or cables. Hands EMPTY. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: an office worker, a fitted suit with a thin tie, slim augmented reality glasses with a faint turquoise glow, dress shoes. VARIANT B: make a clearly different design from the most obvious version: different proportions, different placement of colors and details, while keeping the same description.",
+   "tripo": {
+    "modo": "Quads",
+    "caras": 20000,
+    "textura": "2K",
+    "rig": "Humanoid (luego Mixamo)"
+   },
+   "medida": "1.74 m"
+  },
+  {
+   "id": "E15a",
+   "archivo": "E15_CentinelaNova_a",
+   "fase": 4,
+   "salida": "imageassets/modelos-nuevos/nuevos-18nov/E15_CentinelaNova_a.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/modelos-nuevos/E12_GuardiaPesadoNova.png",
+    "imageassets/referencias/look/K06_CalleNova.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images for the art style of our game and the framing; draw a NEW original design. Nothing copied from other games. Rig-friendly: everything fitted close to the body, nothing hanging loose. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: a humanoid security robot of the Nova corporation: slim clean white armored body with blue stripes, a smooth head with a single horizontal glowing blue visor line, gunmetal joints.",
+   "tripo": {
+    "modo": "Quads",
+    "caras": 20000,
+    "textura": "2K",
+    "rig": "Humanoid (luego Mixamo)"
+   },
+   "medida": "1.90 m"
+  },
+  {
+   "id": "E15b",
+   "archivo": "E15_CentinelaNova_b",
+   "fase": 4,
+   "salida": "imageassets/modelos-nuevos/nuevos-18nov/E15_CentinelaNova_b.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/modelos-nuevos/E12_GuardiaPesadoNova.png",
+    "imageassets/referencias/look/K06_CalleNova.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images for the art style of our game and the framing; draw a NEW original design. Nothing copied from other games. Rig-friendly: everything fitted close to the body, nothing hanging loose. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: a humanoid security robot of the Nova corporation: slim clean white armored body with blue stripes, a smooth head with a single horizontal glowing blue visor line, gunmetal joints. VARIANT B: make a clearly different design from the most obvious version: different proportions, different placement of colors and details, while keeping the same description.",
+   "tripo": {
+    "modo": "Quads",
+    "caras": 20000,
+    "textura": "2K",
+    "rig": "Humanoid (luego Mixamo)"
+   },
+   "medida": "1.90 m"
+  },
+  {
+   "id": "E16a",
+   "archivo": "E16_RobotPesadoNova_a",
+   "fase": 4,
+   "salida": "imageassets/modelos-nuevos/nuevos-18nov/E16_RobotPesadoNova_a.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/modelos-nuevos/E12_GuardiaPesadoNova.png",
+    "imageassets/referencias/look/K06_CalleNova.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images for the art style of our game and the framing; draw a NEW original design. Nothing copied from other games. Rig-friendly: everything fitted close to the body, nothing hanging loose. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: a big heavy bipedal Nova robot about 3 meters tall: massive white and blue armored torso, short thick legs, a large riot shield built into the left forearm, a heavy cannon built into the right forearm, a small sensor head with a blue light.",
+   "tripo": {
+    "modo": "Quads",
+    "caras": 25000,
+    "textura": "2K",
+    "rig": "Humanoid (luego Mixamo)"
+   },
+   "medida": "3.0 m"
+  },
+  {
+   "id": "E16b",
+   "archivo": "E16_RobotPesadoNova_b",
+   "fase": 4,
+   "salida": "imageassets/modelos-nuevos/nuevos-18nov/E16_RobotPesadoNova_b.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/modelos-nuevos/E12_GuardiaPesadoNova.png",
+    "imageassets/referencias/look/K06_CalleNova.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images for the art style of our game and the framing; draw a NEW original design. Nothing copied from other games. Rig-friendly: everything fitted close to the body, nothing hanging loose. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: a big heavy bipedal Nova robot about 3 meters tall: massive white and blue armored torso, short thick legs, a large riot shield built into the left forearm, a heavy cannon built into the right forearm, a small sensor head with a blue light. VARIANT B: make a clearly different design from the most obvious version: different proportions, different placement of colors and details, while keeping the same description.",
+   "tripo": {
+    "modo": "Quads",
+    "caras": 25000,
+    "textura": "2K",
+    "rig": "Humanoid (luego Mixamo)"
+   },
+   "medida": "3.0 m"
+  },
+  {
+   "id": "E17a",
+   "archivo": "E17_PerroRobotNova_a",
+   "fase": 4,
+   "salida": "imageassets/modelos-nuevos/nuevos-18nov/E17_PerroRobotNova_a.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/modelos-nuevos/E12_GuardiaPesadoNova.png",
+    "imageassets/referencias/look/K06_CalleNova.png"
+   ],
+   "aspect_ratio": "4:3",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity; Nova is clean white with cold blue light); do not copy their scenes. Original design, nothing copied from real places, brands or other games. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a four-legged Nova patrol robot dog: white and blue armored body, four jointed legs standing, a head with a bright searchlight, a small compact turret mounted on its back, a blue light strip.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "1.2 m de largo"
+  },
+  {
+   "id": "E17b",
+   "archivo": "E17_PerroRobotNova_b",
+   "fase": 4,
+   "salida": "imageassets/modelos-nuevos/nuevos-18nov/E17_PerroRobotNova_b.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/modelos-nuevos/E12_GuardiaPesadoNova.png",
+    "imageassets/referencias/look/K06_CalleNova.png"
+   ],
+   "aspect_ratio": "4:3",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity; Nova is clean white with cold blue light); do not copy their scenes. Original design, nothing copied from real places, brands or other games. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a four-legged Nova patrol robot dog: white and blue armored body, four jointed legs standing, a head with a bright searchlight, a small compact turret mounted on its back, a blue light strip. VARIANT B: make a clearly different design from the most obvious version: different proportions, different placement of colors and details, while keeping the same description.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "1.2 m de largo"
+  },
+  {
+   "id": "E18a",
+   "archivo": "E18_EliteNova_a",
+   "fase": 4,
+   "salida": "imageassets/modelos-nuevos/nuevos-18nov/E18_EliteNova_a.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/modelos-nuevos/E12_GuardiaPesadoNova.png",
+    "imageassets/referencias/look/K06_CalleNova.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images for the art style of our game and the framing; draw a NEW original design. Nothing copied from other games. Rig-friendly: everything fitted close to the body, nothing hanging loose. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: an elite Nova soldier in full white and blue armor, a closed helmet with a blue visor, armored arms and legs, and a compact jetpack fitted flat on the back with two short thrusters.",
+   "tripo": {
+    "modo": "Quads",
+    "caras": 20000,
+    "textura": "2K",
+    "rig": "Humanoid (luego Mixamo)"
+   },
+   "medida": "1.90 m"
+  },
+  {
+   "id": "E18b",
+   "archivo": "E18_EliteNova_b",
+   "fase": 4,
+   "salida": "imageassets/modelos-nuevos/nuevos-18nov/E18_EliteNova_b.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/modelos-nuevos/E12_GuardiaPesadoNova.png",
+    "imageassets/referencias/look/K06_CalleNova.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images for the art style of our game and the framing; draw a NEW original design. Nothing copied from other games. Rig-friendly: everything fitted close to the body, nothing hanging loose. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: an elite Nova soldier in full white and blue armor, a closed helmet with a blue visor, armored arms and legs, and a compact jetpack fitted flat on the back with two short thrusters. VARIANT B: make a clearly different design from the most obvious version: different proportions, different placement of colors and details, while keeping the same description.",
+   "tripo": {
+    "modo": "Quads",
+    "caras": 20000,
+    "textura": "2K",
+    "rig": "Humanoid (luego Mixamo)"
+   },
+   "medida": "1.90 m"
+  },
+  {
+   "id": "E19a",
+   "archivo": "E19_PandilleroSkulls_a",
+   "fase": 4,
+   "salida": "imageassets/modelos-nuevos/nuevos-18nov/E19_PandilleroSkulls_a.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/personajes/SkullHombre_frente.png",
+    "imageassets/personajes/JefeSkulls_frente.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images for the art style of our game and the framing; draw a NEW original design. Nothing copied from other games. Rig-friendly: everything fitted close to the body, nothing hanging loose. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: a SKULLS gang member: a fitted black leather jacket zipped, a skull mask (a magenta holographic skull face), fitted dark pants, boots, magenta details.",
+   "tripo": {
+    "modo": "Quads",
+    "caras": 20000,
+    "textura": "2K",
+    "rig": "Humanoid (luego Mixamo)"
+   },
+   "medida": "1.78 m"
+  },
+  {
+   "id": "E19b",
+   "archivo": "E19_PandilleroSkulls_b",
+   "fase": 4,
+   "salida": "imageassets/modelos-nuevos/nuevos-18nov/E19_PandilleroSkulls_b.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/personajes/SkullHombre_frente.png",
+    "imageassets/personajes/JefeSkulls_frente.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images for the art style of our game and the framing; draw a NEW original design. Nothing copied from other games. Rig-friendly: everything fitted close to the body, nothing hanging loose. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: a SKULLS gang member: a fitted black leather jacket zipped, a skull mask (a magenta holographic skull face), fitted dark pants, boots, magenta details. VARIANT B: make a clearly different design from the most obvious version: different proportions, different placement of colors and details, while keeping the same description.",
+   "tripo": {
+    "modo": "Quads",
+    "caras": 20000,
+    "textura": "2K",
+    "rig": "Humanoid (luego Mixamo)"
+   },
+   "medida": "1.78 m"
+  },
+  {
+   "id": "E20a",
+   "archivo": "E20_MatonSkulls_a",
+   "fase": 4,
+   "salida": "imageassets/modelos-nuevos/nuevos-18nov/E20_MatonSkulls_a.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/personajes/SkullHombre_frente.png",
+    "imageassets/personajes/JefeSkulls_frente.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images for the art style of our game and the framing; draw a NEW original design. Nothing copied from other games. Rig-friendly: everything fitted close to the body, nothing hanging loose. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: a huge thug of the SKULLS gang: very broad and tall, a sleeveless fitted shirt, a rusty heavy robotic right arm, a skull tattoo on the chest, a bandana over the lower face with a skull print, cargo pants, boots.",
+   "tripo": {
+    "modo": "Quads",
+    "caras": 20000,
+    "textura": "2K",
+    "rig": "Humanoid (luego Mixamo)"
+   },
+   "medida": "2.05 m"
+  },
+  {
+   "id": "E20b",
+   "archivo": "E20_MatonSkulls_b",
+   "fase": 4,
+   "salida": "imageassets/modelos-nuevos/nuevos-18nov/E20_MatonSkulls_b.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/personajes/SkullHombre_frente.png",
+    "imageassets/personajes/JefeSkulls_frente.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images for the art style of our game and the framing; draw a NEW original design. Nothing copied from other games. Rig-friendly: everything fitted close to the body, nothing hanging loose. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: a huge thug of the SKULLS gang: very broad and tall, a sleeveless fitted shirt, a rusty heavy robotic right arm, a skull tattoo on the chest, a bandana over the lower face with a skull print, cargo pants, boots. VARIANT B: make a clearly different design from the most obvious version: different proportions, different placement of colors and details, while keeping the same description.",
+   "tripo": {
+    "modo": "Quads",
+    "caras": 20000,
+    "textura": "2K",
+    "rig": "Humanoid (luego Mixamo)"
+   },
+   "medida": "2.05 m"
+  },
+  {
+   "id": "DR02a",
+   "archivo": "DR02_DronPesado_a",
+   "fase": 5,
+   "salida": "imageassets/modelos-nuevos/nuevos-18nov/DR02_DronPesado_a.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/modelos-nuevos/E13_DronAsalto.png",
+    "imageassets/modelos-nuevos/DR01_Dron.png"
+   ],
+   "aspect_ratio": "4:3",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity; Nova is clean white with cold blue light); do not copy their scenes. Original design, nothing copied from real places, brands or other games. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. Subject: The rotors or propellers are clearly separated from the body by visible gaps so they can be cut off as separate pieces. View: 3/4 view from the front, slightly from above. a large heavy assault drone of Nova: an armored white and blue body, four big rotors in round guards on thick arms, two machine guns mounted under the body, a red eye light.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "1.8 m de ancho"
+  },
+  {
+   "id": "DR02b",
+   "archivo": "DR02_DronPesado_b",
+   "fase": 5,
+   "salida": "imageassets/modelos-nuevos/nuevos-18nov/DR02_DronPesado_b.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/modelos-nuevos/E13_DronAsalto.png",
+    "imageassets/modelos-nuevos/DR01_Dron.png"
+   ],
+   "aspect_ratio": "4:3",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity; Nova is clean white with cold blue light); do not copy their scenes. Original design, nothing copied from real places, brands or other games. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. Subject: The rotors or propellers are clearly separated from the body by visible gaps so they can be cut off as separate pieces. View: 3/4 view from the front, slightly from above. a large heavy assault drone of Nova: an armored white and blue body, four big rotors in round guards on thick arms, two machine guns mounted under the body, a red eye light. VARIANT B: make a clearly different design from the most obvious version: different proportions, different placement of colors and details, while keeping the same description.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "1.8 m de ancho"
+  },
+  {
+   "id": "DR03a",
+   "archivo": "DR03_DronCarga_a",
+   "fase": 5,
+   "salida": "imageassets/modelos-nuevos/nuevos-18nov/DR03_DronCarga_a.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/modelos-nuevos/E13_DronAsalto.png",
+    "imageassets/modelos-nuevos/DR01_Dron.png"
+   ],
+   "aspect_ratio": "4:3",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity; Nova is clean white with cold blue light); do not copy their scenes. Original design, nothing copied from real places, brands or other games. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. Subject: The rotors or propellers are clearly separated from the body by visible gaps so they can be cut off as separate pieces. View: 3/4 view from the front, slightly from above. a large cargo drone of Nova: a long white body with six rotors, carrying under it a closed armored drop capsule hanging from two thick short clamps.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 15000,
+    "textura": "2K"
+   },
+   "medida": "3 m de ancho"
+  },
+  {
+   "id": "DR03b",
+   "archivo": "DR03_DronCarga_b",
+   "fase": 5,
+   "salida": "imageassets/modelos-nuevos/nuevos-18nov/DR03_DronCarga_b.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/modelos-nuevos/E13_DronAsalto.png",
+    "imageassets/modelos-nuevos/DR01_Dron.png"
+   ],
+   "aspect_ratio": "4:3",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity; Nova is clean white with cold blue light); do not copy their scenes. Original design, nothing copied from real places, brands or other games. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. Subject: The rotors or propellers are clearly separated from the body by visible gaps so they can be cut off as separate pieces. View: 3/4 view from the front, slightly from above. a large cargo drone of Nova: a long white body with six rotors, carrying under it a closed armored drop capsule hanging from two thick short clamps. VARIANT B: make a clearly different design from the most obvious version: different proportions, different placement of colors and details, while keeping the same description.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 15000,
+    "textura": "2K"
+   },
+   "medida": "3 m de ancho"
+  },
+  {
+   "id": "DR04a",
+   "archivo": "DR04_DronExplorador_a",
+   "fase": 5,
+   "salida": "imageassets/modelos-nuevos/nuevos-18nov/DR04_DronExplorador_a.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/modelos-nuevos/E13_DronAsalto.png",
+    "imageassets/modelos-nuevos/DR01_Dron.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity; Nova is clean white with cold blue light); do not copy their scenes. Original design, nothing copied from real places, brands or other games. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. Subject: The rotors or propellers are clearly separated from the body by visible gaps so they can be cut off as separate pieces. View: 3/4 view from the front, slightly from above. a small fast scout drone for swarms: a compact rounded body with a single ducted propeller on top, a small camera eye glowing blue, two tiny fins.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 6000,
+    "textura": "2K"
+   },
+   "medida": "0.4 m"
+  },
+  {
+   "id": "DR04b",
+   "archivo": "DR04_DronExplorador_b",
+   "fase": 5,
+   "salida": "imageassets/modelos-nuevos/nuevos-18nov/DR04_DronExplorador_b.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/modelos-nuevos/E13_DronAsalto.png",
+    "imageassets/modelos-nuevos/DR01_Dron.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity; Nova is clean white with cold blue light); do not copy their scenes. Original design, nothing copied from real places, brands or other games. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. Subject: The rotors or propellers are clearly separated from the body by visible gaps so they can be cut off as separate pieces. View: 3/4 view from the front, slightly from above. a small fast scout drone for swarms: a compact rounded body with a single ducted propeller on top, a small camera eye glowing blue, two tiny fins. VARIANT B: make a clearly different design from the most obvious version: different proportions, different placement of colors and details, while keeping the same description.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 6000,
+    "textura": "2K"
+   },
+   "medida": "0.4 m"
+  },
+  {
+   "id": "NV03a",
+   "archivo": "NV03_NaveNova_a",
+   "fase": 5,
+   "salida": "imageassets/modelos-nuevos/nuevos-18nov/NV03_NaveNova_a.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/modelos-nuevos/nuevos-17nov/NV01_NaveTransporte.png",
+    "imageassets/referencias/look/K06_CalleNova.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity; Nova is clean white with cold blue light); do not copy their scenes. Original design, nothing copied from real places, brands or other games. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. Subject: The rotors or propellers are clearly separated from the body by visible gaps so they can be cut off as separate pieces. View: 3/4 view from the front, slightly from above. a Nova combat aircraft: a sleek clean white armored body with NO visible cockpit (smooth armored nose), two ducted rotors on short wings, weapon pods under the wings, cold blue running lights.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 18000,
+    "textura": "2K"
+   },
+   "medida": "10 m de largo"
+  },
+  {
+   "id": "NV03b",
+   "archivo": "NV03_NaveNova_b",
+   "fase": 5,
+   "salida": "imageassets/modelos-nuevos/nuevos-18nov/NV03_NaveNova_b.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/modelos-nuevos/nuevos-17nov/NV01_NaveTransporte.png",
+    "imageassets/referencias/look/K06_CalleNova.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity; Nova is clean white with cold blue light); do not copy their scenes. Original design, nothing copied from real places, brands or other games. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. Subject: The rotors or propellers are clearly separated from the body by visible gaps so they can be cut off as separate pieces. View: 3/4 view from the front, slightly from above. a Nova combat aircraft: a sleek clean white armored body with NO visible cockpit (smooth armored nose), two ducted rotors on short wings, weapon pods under the wings, cold blue running lights. VARIANT B: make a clearly different design from the most obvious version: different proportions, different placement of colors and details, while keeping the same description.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 18000,
+    "textura": "2K"
+   },
+   "medida": "10 m de largo"
+  }
+ ]
+}

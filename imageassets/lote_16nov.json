@@ -1,0 +1,39 @@
+{
+ "version": 1,
+ "resolution": "1k",
+ "variantes_por_defecto": 1,
+ "carpeta_salida": "imageassets/ui/menus",
+ "trabajos": [
+  {
+   "id": "H40",
+   "archivo": "H40_IconosArmasLinea",
+   "fase": 1,
+   "salida": "imageassets/ui/menus/H40_IconosArmasLinea.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/menus/M30_RuedaArmas.png",
+    "imageassets/referencias/menus/M32_TiendaArmas.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The attached images are our approved game menus: match their thin turquoise line icon style EXACTLY (single thin turquoise line, same line weight, clean geometric shapes, subtle glow, corners cut on a diagonal on the cells). Original icons of our own. A clean icon sheet for Unity on a PURE BLACK (#000000) flat background: each icon centered inside its own square cell outlined with a very thin dim turquoise line with one cut corner, all cells exactly the same size in a neat grid with even spacing, every icon the same visual size and line weight, no text, no labels, no numbers, no extra decoration. 9 weapon icons in a 3 by 3 grid, each weapon seen from the side pointing right, drawn as a thin turquoise outline, in this order left to right, top to bottom: 1) a pistol, 2) a pump shotgun, 3) a compact assault rifle with a red dot sight, 4) a bolt-action sniper rifle with a big scope, 5) a clenched fist (for fists), 6) a compact submachine gun with a long magazine, 7) a heavy revolver with a long barrel, 8) a plasma rifle with coils around the barrel and an energy cell, 9) a revolving-drum grenade launcher."
+  },
+  {
+   "id": "H41",
+   "archivo": "H41_IconosProtesis",
+   "fase": 1,
+   "salida": "imageassets/ui/menus/H41_IconosProtesis.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/menus/M31_HabilidadesProtesis.png",
+    "imageassets/ui/menus/H30_IconosImplantes.png",
+    "imageassets/ui/menus/H33_Implantes_Nivel2_v2.png"
+   ],
+   "aspect_ratio": "3:2",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The attached images are our approved game menus: match their thin turquoise line icon style EXACTLY (single thin turquoise line, same line weight, clean geometric shapes, subtle glow, corners cut on a diagonal on the cells). Original icons of our own. A clean icon sheet for Unity on a PURE BLACK (#000000) flat background: each icon centered inside its own square cell outlined with a very thin dim turquoise line with one cut corner, all cells exactly the same size in a neat grid with even spacing, every icon the same visual size and line weight, no text, no labels, no numbers, no extra decoration. The second and third images show the shapes of our implants (level I and level II): use them only for the shapes, redrawn as thin turquoise line icons. 6 prosthetic icons in a grid of 3 columns by 2 rows. Top row = LEVEL I (minimal, thin): 1) legs: a thin hip ring with one rod down the outside of each leg with small knee joints, 2) arms: a spine piece with one rod along each arm, 3) head: a single round cyber monocle lens for one eye. Bottom row = LEVEL II (bigger, heavier, complete), same order: 4) legs: a full leg exoskeleton with hip belt, thigh plates, knee joints, shin plates and foot trays, 5) arms: a full upper-body exoskeleton with chest plate, shoulder pads, elbow hinges and gauntlets, 6) head: a wide goggle visor over both eyes. Level II icons visibly more complete and with thicker lines than level I, but the same cell size. Add one tiny marker in the top-right corner of each cell: one small bar for level I and two small bars for level II."
+  }
+ ]
+}

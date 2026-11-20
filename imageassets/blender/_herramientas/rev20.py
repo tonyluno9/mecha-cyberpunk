@@ -174,3 +174,138 @@ def sheet(rows, out, scale=1, labels=None):
             try: os.remove(p)
             except Exception: pass
     return out
+
+
+GRUPOS = [('PRIORIDAD',['PJ01','Policia']),
+('SKULLS',['SkullHombre','man','E19_PandilleroSkulls_a_2','E19_PandilleroSkulls_b','E20_MatonSkulls_a','E20_MatonSkulls_b']),
+('SNAKES',['E10_PandilleroSnakes','E11_JefeSnakes']),
+('NOVA',['GuardiaNova','E12_GuardiaPesadoNova','E14_JefeFinalNova','E15_CentinelaNova_a','E15_CentinelaNova_b','E16_RobotPesadoNova_a','E16_RobotPesadoNova_b','E18_EliteNova_a','E17_PerroRobotNova_a','E17_PerroRobotNova_esc']),
+('ALIADOS',['Doctor','Inventor','Hacker','Mecanico','AL10','AL11','MeseraRobot','woman']),
+('NPC',['NP07_Pescador_a','NP07_Pescador_b','NP08_Turista_a','NP08_Turista_b','NP09_Corredor_a','NP09_Corredor_b','NP10_Elotero_a','NP11_Estibador_a','NP11_Estibador_b','NP12_Abuela_a','NP13_Repartidor_a','NP13_Repartidor_b','NP14_Oficinista_a','NP14_Oficinista_b','RobotHombre','woman2'])]
+
+def img_ok(i):
+    if i.packed_file: return True
+    try: return os.path.exists(bpy.path.abspath(i.filepath))
+    except Exception: return False
+
+def fix_missing_tex():
+    """solo en el archivo de revision: texturas que no existen en disco -> se desconectan (evita magenta)"""
+    fixed = set()
+    def walk(nt, mn):
+        for n in nt.nodes:
+            if n.type == 'TEX_IMAGE' and n.image and not img_ok(n.image):
+                for o in n.outputs:
+                    for l in list(o.links): nt.links.remove(l); fixed.add(mn)
+            if n.type == 'GROUP' and n.node_tree: walk(n.node_tree, mn)
+    for m in bpy.data.materials:
+        if m.node_tree: walk(m.node_tree, m.name)
+    return sorted(fixed)
+
+def build_personajes():
+    L = json.load(open(os.path.join(REV, '_lista_pj.json')))
+    AJ = json.load(open(os.path.join(REV, '_alturas_juego.json')))
+    scg = {k: v['esc_prefab'] for k, v in AJ.items()}; scg['Inventor'] = 1.67; scg['Mecanico'] = 1.52
+    fps = {os.path.basename(a)[:-4]: (a, b) for a, b in L}
+    ref = ref_figure(); ref.location = (0, 30, 0)
+    refc = bpy.data.collections['_REFERENCIA']; refc.instance_offset = (0, 30, 0)
+    lay = {}
+    for gi, (g, codes) in enumerate(GRUPOS):
+        x = 0.0; y = -gi * 8.0
+        gc = coll('GRUPO_' + g, coll('REVISION_PERSONAJES'))
+        for code in codes:
+            fp, gs = fps[code]
+            new, acts = imp(fp, 'REV_' + code)
+            c = bpy.data.collections['REV_' + code]
+            par = coll('REVISION_PERSONAJES')
+            if c.name in par.children: par.children.unlink(c)
+            if c.name not in gc.children: gc.children.link(c)
+            rts = roots(new); s = gs * scg.get(code, 1.0)
+            for o in rts: o.scale = o.scale * s; o.location = o.location * s
+            for a in new:
+                if a.type == 'ARMATURE': a.data.pose_position = 'REST'
+            bpy.context.view_layer.update()
+            bb = bbox(new); w = float(bb[1][0] - bb[0][0]); cx = float((bb[0][0] + bb[1][0]) / 2); cy = float((bb[0][1] + bb[1][1]) / 2)
+            x0 = x + 1.3 + w / 2
+            for o in rts: o.location.x += x0 - cx; o.location.y += y - cy
+            e = bpy.data.objects.new('ref_' + code, None); e.instance_type = 'COLLECTION'; e.instance_collection = refc; e.location = (x0 - w / 2 - 0.6, y, 0); c.objects.link(e)
+            bpy.context.view_layer.update(); bb = bbox(new)
+            lay[code] = dict(x=x0, y=y, w=w, d=float(bb[1][1] - bb[0][1]), h=float(bb[1][2] - bb[0][2]), grupo=g, escala_total=s, acts=acts)
+            x = x0 + w / 2 + 3.4
+    pjc = bpy.data.collections['REV_PJ01']; pjc.instance_offset = (lay['PJ01']['x'], lay['PJ01']['y'], 0)
+    for code, v in lay.items():
+        if code == 'PJ01': continue
+        e2 = bpy.data.objects.new('pj01_' + code, None); e2.instance_type = 'COLLECTION'; e2.instance_collection = pjc
+        e2.location = (v['x'] + v['w'] / 2 + 1.3, v['y'], 0); bpy.data.collections['REV_' + code].objects.link(e2)
+    json.dump(lay, open(os.path.join(REV, '_layout.json'), 'w'), indent=1)
+    return lay
+
+def solo(codes, extra=()):
+    """deja visibles solo esas colecciones REV_ (y extra)"""
+    keep = set('REV_' + c for c in codes) | set(extra)
+    def rec(lc):
+        for ch in lc.children:
+            n = ch.name
+            if n.startswith('REV_'): ch.exclude = n not in keep
+            elif n.startswith('GRUPO_') or n == 'REVISION_PERSONAJES': ch.exclude = False; rec(ch)
+            elif n == '_REFERENCIA': ch.exclude = False
+    rec(bpy.context.view_layer.layer_collection)
+
+
+def _depth(b):
+    d = 0
+    while b.parent: d += 1; b = b.parent
+    return d
+
+def rot_world(arm, bname, axis, deg):
+    """rota un hueso alrededor de su cabeza, eje del espacio de la armadura"""
+    pb = arm.pose.bones[bname]
+    M = pb.matrix.copy(); h = M.to_translation()
+    R = Matrix.Rotation(math.radians(deg), 4, axis)
+    pb.matrix = Matrix.Translation(h) @ R @ Matrix.Translation(-h) @ M
+    bpy.context.view_layer.update()
+
+POSES = {
+ 'A_brazos_abajo': [('LUpperArm','Y',60),('RUpperArm','Y',-60)],
+ 'B_brazos_arriba_codos': [('LUpperArm','Y',-75),('RUpperArm','Y',75),('LLowerArm','Z',-115),('RLowerArm','Z',115)],
+ 'C_sentadilla': [('LUpperLeg','X',-100),('RUpperLeg','X',-100),('LLowerLeg','X',115),('RLowerLeg','X',115),('LUpperArm','Y',55),('RUpperArm','Y',-55)],
+ 'D_giro_cruzar': [('Spine','Z',25),('Chest','Z',15),('LUpperArm','Z',-75),('LLowerArm','Z',-80),('RUpperArm','Y',-50),('RLowerArm','Z',100)],
+}
+
+def apply_pose(arm, pose):
+    m = hmap(arm)
+    arm.data.pose_position = 'POSE'
+    for pb in arm.pose.bones:
+        pb.location = (0, 0, 0); pb.rotation_quaternion = (1, 0, 0, 0); pb.rotation_euler = (0, 0, 0); pb.scale = (1, 1, 1)
+    bpy.context.view_layer.update()
+    if pose is None: return []
+    miss = []
+    steps = sorted(POSES[pose], key=lambda s: _depth(arm.pose.bones[m[s[0]]]) if s[0] in m else 0)
+    for k, ax, d in steps:
+        if k not in m: miss.append(k); continue
+        rot_world(arm, m[k], ax, d)
+    return miss
+
+
+def deform_sheet(code, lay):
+    v = lay[code]; c = bpy.data.collections['REV_' + code]
+    arms = [o for o in c.all_objects if o.type == 'ARMATURE']
+    if not arms: return None, {}
+    a = arms[0]
+    if a.animation_data: a.animation_data.action = None
+    solo([code])
+    hid = [o for o in c.objects if o.type in ('EMPTY', 'FONT')]
+    for o in hid: o.hide_viewport = True
+    h = v['h']; rows = []; miss = {}
+    for vw, dirv in (('34', Vector((0.75, -0.75, 0.12))), ('lado', Vector((1, 0, 0.05)))):
+        row = []
+        for pz in POSES:
+            miss[pz] = apply_pose(a, pz)
+            tgt = Vector((v['x'], v['y'], h * 0.52)); loc = tgt + dirv.normalized() * h * 1.75
+            p = os.path.join(CAP, '_tmp_%s_%s_%s.png' % (code, vw, pz))
+            snap(p, tuple(loc), tuple(tgt), lens=50, res=(340, 460)); row.append(p)
+        rows.append(row)
+    apply_pose(a, None); a.data.pose_position = 'REST'
+    for o in hid: o.hide_viewport = False
+    out = os.path.join(CAP, 'P01_deformacion_%s.png' % code)
+    sheet(rows, out)
+    return out, miss

@@ -1,0 +1,421 @@
+{
+ "version": 1,
+ "resolution": "1k",
+ "variantes_por_defecto": 1,
+ "carpeta_salida": "imageassets",
+ "trabajos": [
+  {
+   "id": "V11P",
+   "archivo": "V11_CamionetaPolicia",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/nuevos-17nov/V11_CamionetaPolicia.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png",
+    "imageassets/carros/V06_PatrullaCamioneta.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients); do not copy their scenes. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, ropes and bars are thick and chunky. The second image is our police pickup: use its police colors. Subject: an armored SWAT police truck: a big boxy armored vehicle with a tall armored body, small armored windows with dark glass, navy blue paint with turquoise stripes along the sides (no text, no badges), a chunky red and blue light bar on the roof, a heavy push bumper, side steps, a rear door, big off-road tires. The four wheels are clearly separated from the body by visible dark gaps and deep wheel arches, so they can be cut off as separate pieces. View: 3/4 view from the front left, slightly from above.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 18000,
+    "textura": "2K"
+   },
+   "medida": "6 × 2.5 × 2.8 m"
+  },
+  {
+   "id": "NV01T",
+   "archivo": "NV01_NaveTransporte",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/nuevos-17nov/NV01_NaveTransporte.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png",
+    "imageassets/referencias/look/K06_CalleNova.png",
+    "imageassets/modelos-nuevos/E13_DronAsalto.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients); do not copy their scenes. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, ropes and bars are thick and chunky. The second and third images show the Nova corporation look (white and blue, cold lights): use it. Subject: a futuristic troop transport aircraft like a helicopter without exposed blades: a sleek white and blue armored fuselage with a cockpit of dark glass in front, two large ducted rotors (round fans inside thick rings) on short wings on each side, a big side door slid fully OPEN showing the dark cabin with two thick rope-drop bars above the opening and two thick coiled ropes hanging just a little, landing skids, blue running lights and a red light under the nose. View: 3/4 view from the front left, slightly from above.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 18000,
+    "textura": "2K"
+   },
+   "medida": "12 m de largo · 7 m con rotores"
+  },
+  {
+   "id": "W10",
+   "archivo": "W10_ArmaNova",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/nuevos-17nov/W10_ArmaNova.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/armas/W07_RiflePlasma.png",
+    "imageassets/armas/W03_Fusil.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached weapons ONLY for the art style, proportions and level of detail of our weapon set; this weapon is NOT worn: it is clean and corporate. Stylized low-poly 3D game asset: chunky simplified shapes, large clean bevels, soft hand-painted gradients. Single object, the whole weapon fully visible, no hands, no person, no text, no logos, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow. Subject: the special energy rifle of the Nova corporation guards: a sleek glossy white body with smooth rounded panels, light grey and gunmetal details, a long barrel with a cold blue glowing emitter line along it, a glowing blue energy cell in the side, a compact sight, a clean stock. View: 3/4 view from the side, slightly from the front, showing the full length.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "0.95 m"
+  },
+  {
+   "id": "H09",
+   "archivo": "H09_ArmaNova",
+   "fase": 2,
+   "salida": "imageassets/ui/hologramas/H09_ArmaNova.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/modelos-nuevos/nuevos-17nov/W10_ArmaNova.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Turn the weapon in the attached image into a holographic projection for a video game user interface. Keep EXACTLY the same weapon shape, silhouette, parts and proportions, but shown perfectly from the side (pure side profile, orthographic, muzzle pointing to the right), centered and filling about 80% of the width. Translucent cyan-turquoise glowing body, bright glowing outlines on every part, faint inner wireframe lines, thin horizontal scan lines, a slight digital glitch on one or two slices, soft cyan glow. PURE BLACK (#000000) background everywhere, no text, no hands."
+  },
+  {
+   "id": "AR01",
+   "archivo": "AR01_Arbol",
+   "fase": 3,
+   "salida": "imageassets/modelos-nuevos/nuevos-17nov/AR01_Arbol.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K09_Plaza_Barrio.png",
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png"
+   ],
+   "aspect_ratio": "3:4",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients); do not copy their scenes. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, ropes and bars are thick and chunky. Subject: a city sidewalk tree: a slim straight trunk, a medium round crown of leaves made of chunky simplified clumps, planted in a square low concrete planter box with a bit of soil, slightly dusty. View: 3/4 view from the front left, slightly from above.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 8000,
+    "textura": "2K"
+   },
+   "medida": "4.5 m de alto · jardinera 1 × 1 m"
+  },
+  {
+   "id": "AR02",
+   "archivo": "AR02_Arbol",
+   "fase": 3,
+   "salida": "imageassets/modelos-nuevos/nuevos-17nov/AR02_Arbol.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K09_Plaza_Barrio.png",
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients); do not copy their scenes. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, ropes and bars are thick and chunky. Subject: a big plaza tree like an Indian laurel: a thick short trunk with roots showing at the base, a very wide dense rounded crown of leaves made of large chunky clumps, a small round curb ring around the base. View: 3/4 view from the front left, slightly from above.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 10000,
+    "textura": "2K"
+   },
+   "medida": "8 m de alto · copa de 9 m"
+  },
+  {
+   "id": "AR03",
+   "archivo": "AR03_Palmera",
+   "fase": 3,
+   "salida": "imageassets/modelos-nuevos/nuevos-17nov/AR03_Palmera.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K09_Plaza_Barrio.png",
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png"
+   ],
+   "aspect_ratio": "9:16",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients); do not copy their scenes. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, ropes and bars are thick and chunky. Subject: a tall avenue palm tree: a very tall slightly curved trunk with ring textures, a crown of thick chunky palm fronds at the top, a small round soil patch at the base. View: 3/4 view from the front, whole palm visible.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 8000,
+    "textura": "2K"
+   },
+   "medida": "12 m de alto"
+  },
+  {
+   "id": "PZ01",
+   "archivo": "PZ01_Banca",
+   "fase": 3,
+   "salida": "imageassets/modelos-nuevos/nuevos-17nov/PZ01_Banca.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K09_Plaza_Barrio.png",
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients); do not copy their scenes. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, ropes and bars are thick and chunky. Subject: a plaza bench: thick wrought iron side frames with simple curls, wooden slats for the seat and backrest with chipped green paint, worn and weathered. View: 3/4 view from the front left, slightly from above.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 8000,
+    "textura": "2K"
+   },
+   "medida": "1.8 × 0.6 × 0.85 m"
+  },
+  {
+   "id": "PZ02",
+   "archivo": "PZ02_Kiosco",
+   "fase": 3,
+   "salida": "imageassets/modelos-nuevos/nuevos-17nov/PZ02_Kiosco.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K09_Plaza_Barrio.png",
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients); do not copy their scenes. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, ropes and bars are thick and chunky. Subject: a small neighborhood plaza kiosk (bandstand): an octagonal raised concrete platform with three steps, thick metal posts with a simple railing, a pointed octagonal roof of painted corrugated metal sheet, a string of warm bulbs around the roof edge, a light hanging in the center, worn paint. View: 3/4 view from the front left, slightly from above.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "6 m de diámetro · 5 m de alto"
+  },
+  {
+   "id": "PZ03",
+   "archivo": "PZ03_Jardinera",
+   "fase": 3,
+   "salida": "imageassets/modelos-nuevos/nuevos-17nov/PZ03_Jardinera.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K09_Plaza_Barrio.png",
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients); do not copy their scenes. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. Single object, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background, soft even studio lighting, no cast shadow, no people, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, ropes and bars are thick and chunky. Subject: a rectangular concrete planter for a plaza with chipped edges and stains, filled with soil and a few round chunky green bushes. View: 3/4 view from the front left, slightly from above.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 8000,
+    "textura": "2K"
+   },
+   "medida": "2 × 1 × 0.5 m"
+  },
+  {
+   "id": "NP01",
+   "archivo": "NP01_Senora",
+   "fase": 4,
+   "salida": "imageassets/modelos-nuevos/nuevos-17nov/NP01_Senora.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/modelos-nuevos/PJ01_Protagonista_v2.png",
+    "imageassets/personajes/BaseMujer_frente.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached characters for the art style of our game (rendering, proportions, level of detail) and the T-pose framing; draw a NEW original character, a regular citizen of a Mexican cyberpunk neighborhood. Rig-friendly: everything fitted close to the body, nothing hanging loose, no loose straps, no cables. Hands EMPTY. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: a middle-aged woman, short wavy dark hair, a fitted floral blouse, a knee-length skirt, flat shoes, and a woven market shopping bag worn on her shoulder held close to the body by a short strap (hands stay empty).",
+   "tripo": {
+    "modo": "Quads",
+    "caras": 20000,
+    "textura": "2K",
+    "rig": "Humanoid (luego Mixamo)"
+   },
+   "medida": "1.58 m"
+  },
+  {
+   "id": "NP02",
+   "archivo": "NP02_Trabajador",
+   "fase": 4,
+   "salida": "imageassets/modelos-nuevos/nuevos-17nov/NP02_Trabajador.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/modelos-nuevos/PJ01_Protagonista_v2.png",
+    "imageassets/personajes/BaseMujer_frente.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached characters for the art style of our game (rendering, proportions, level of detail) and the T-pose framing; draw a NEW original character, a regular citizen of a Mexican cyberpunk neighborhood. Rig-friendly: everything fitted close to the body, nothing hanging loose, no loose straps, no cables. Hands EMPTY. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: a construction worker man, a hard hat, a reflective vest in orange with silver stripes over a grey t-shirt, work pants, work boots, gloves tucked in a pocket.",
+   "tripo": {
+    "modo": "Quads",
+    "caras": 20000,
+    "textura": "2K",
+    "rig": "Humanoid (luego Mixamo)"
+   },
+   "medida": "1.72 m"
+  },
+  {
+   "id": "NP03",
+   "archivo": "NP03_Joven",
+   "fase": 4,
+   "salida": "imageassets/modelos-nuevos/nuevos-17nov/NP03_Joven.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/modelos-nuevos/PJ01_Protagonista_v2.png",
+    "imageassets/personajes/BaseMujer_frente.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached characters for the art style of our game (rendering, proportions, level of detail) and the T-pose framing; draw a NEW original character, a regular citizen of a Mexican cyberpunk neighborhood. Rig-friendly: everything fitted close to the body, nothing hanging loose, no loose straps, no cables. Hands EMPTY. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: a young man around 18, a fitted hoodie with the hood down, over-ear headphones resting around his neck, slim joggers, sneakers, a small turquoise LED on the headphones.",
+   "tripo": {
+    "modo": "Quads",
+    "caras": 20000,
+    "textura": "2K",
+    "rig": "Humanoid (luego Mixamo)"
+   },
+   "medida": "1.70 m"
+  },
+  {
+   "id": "NP04",
+   "archivo": "NP04_Senor",
+   "fase": 4,
+   "salida": "imageassets/modelos-nuevos/nuevos-17nov/NP04_Senor.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/modelos-nuevos/PJ01_Protagonista_v2.png",
+    "imageassets/personajes/BaseMujer_frente.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached characters for the art style of our game (rendering, proportions, level of detail) and the T-pose framing; draw a NEW original character, a regular citizen of a Mexican cyberpunk neighborhood. Rig-friendly: everything fitted close to the body, nothing hanging loose, no loose straps, no cables. Hands EMPTY. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: an older man around 60, grey moustache, a worn brown suit jacket closed with one button, a plain shirt without a tie, worn trousers, old dress shoes, a flat cap.",
+   "tripo": {
+    "modo": "Quads",
+    "caras": 20000,
+    "textura": "2K",
+    "rig": "Humanoid (luego Mixamo)"
+   },
+   "medida": "1.68 m"
+  },
+  {
+   "id": "NP05",
+   "archivo": "NP05_Vendedor",
+   "fase": 4,
+   "salida": "imageassets/modelos-nuevos/nuevos-17nov/NP05_Vendedor.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/modelos-nuevos/PJ01_Protagonista_v2.png",
+    "imageassets/personajes/BaseMujer_frente.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached characters for the art style of our game (rendering, proportions, level of detail) and the T-pose framing; draw a NEW original character, a regular citizen of a Mexican cyberpunk neighborhood. Rig-friendly: everything fitted close to the body, nothing hanging loose, no loose straps, no cables. Hands EMPTY. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: a street food vendor man around 40, a plain white t-shirt, a fitted striped apron tied close to the body, a cap worn backwards, jeans, sneakers.",
+   "tripo": {
+    "modo": "Quads",
+    "caras": 20000,
+    "textura": "2K",
+    "rig": "Humanoid (luego Mixamo)"
+   },
+   "medida": "1.70 m"
+  },
+  {
+   "id": "NP06",
+   "archivo": "NP06_ChicaPunk",
+   "fase": 4,
+   "salida": "imageassets/modelos-nuevos/nuevos-17nov/NP06_ChicaPunk.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/modelos-nuevos/PJ01_Protagonista_v2.png",
+    "imageassets/personajes/BaseMujer_frente.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached characters for the art style of our game (rendering, proportions, level of detail) and the T-pose framing; draw a NEW original character, a regular citizen of a Mexican cyberpunk neighborhood. Rig-friendly: everything fitted close to the body, nothing hanging loose, no loose straps, no cables. Hands EMPTY. No text, no logos. Pose: strict T-pose, facing the camera directly, arms straight out horizontally at shoulder height, palms down, fingers together, legs straight and slightly apart, full body visible from head to feet. Isolated on a plain flat pure white background, soft even lighting, no shadow. Character: a punk young woman around 20, short spiky hair dyed magenta on one side, a fitted short leather jacket with small metal studs, a band-style t-shirt with an abstract print (no text), ripped fitted jeans, combat boots, a small nose ring.",
+   "tripo": {
+    "modo": "Quads",
+    "caras": 20000,
+    "textura": "2K",
+    "rig": "Humanoid (luego Mixamo)"
+   },
+   "medida": "1.63 m"
+  },
+  {
+   "id": "T02",
+   "archivo": "T02_Techo",
+   "fase": 5,
+   "salida": "imageassets/calle/T02_Techo.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image ONLY for the art style and colors. A seamless tileable texture seen straight from above (orthographic, flat, no perspective), filling the entire square image edge to edge, even flat lighting with no shadows, no objects, no text. The left and right edges and the top and bottom edges must continue seamlessly. Stylized hand-painted game texture, no photorealistic noise. Subject: a flat concrete rooftop covered with worn red waterproofing paint, large faded and peeled patches showing grey concrete, dark water stains, a few cracks and dirt.",
+   "uso": "Textura (no va a Tripo)"
+  },
+  {
+   "id": "T03",
+   "archivo": "T03_Asfalto",
+   "fase": 5,
+   "salida": "imageassets/calle/T03_Asfalto.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image ONLY for the art style and colors. A seamless tileable texture seen straight from above (orthographic, flat, no perspective), filling the entire square image edge to edge, even flat lighting with no shadows, no objects, no text. The left and right edges and the top and bottom edges must continue seamlessly. Stylized hand-painted game texture, no photorealistic noise. Subject: old dark grey asphalt with darker rectangular patches of repairs, a network of thin cracks, a few dark oil stains and small loose gravel. No painted lines.",
+   "uso": "Textura (no va a Tripo)"
+  },
+  {
+   "id": "F02",
+   "archivo": "F02_CaidaNova",
+   "fase": 6,
+   "salida": "imageassets/vfx/F02_CaidaNova.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image ONLY for the color mood. A landing impact effect sprite for a video game: a bright vertical column of blue-white light coming down from the top to the center, and at its base a flat glowing shockwave ring spreading on the ground seen in perspective from slightly above, small sparks and a soft blue glow. Stylized and clean. PURE BLACK (#000000) background everywhere, flat, no ground texture, no text.",
+   "uso": "Sprite aditivo"
+  },
+  {
+   "id": "H43",
+   "archivo": "H43_RuedaEXO",
+   "fase": 7,
+   "salida": "imageassets/ui/menus/H43_RuedaEXO.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/H10_HUD.png",
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png",
+    "imageassets/referencias/menus/M30_RuedaArmas.png",
+    "imageassets/ui/menus/H42_IconosProtesisAtaque.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is our HUD and the SECOND our city look: match their style EXACTLY (thin turquoise lines, cut corners, yellow accent for the selected element, thin text). The THIRD image is our approved weapon wheel: make this one consistent with it. The FOURTH shows our attack implant icons. Original design, all text in Spanish spelled EXACTLY as written. Screen: the EXO ability wheel is open over the darkened, slightly blurred night street: a radial wheel in the center with 4 slots, each with a thin turquoise line icon and its name: \"PIERNAS\" (leg exoskeleton), \"ESCUDO\" (energy shield), \"LÁSER\" (forearm laser cannon), \"MISILES\" (shoulder missile launcher). \"LÁSER\" is selected and highlighted in yellow, and the center of the wheel shows \"LÁSER\" and a thin energy bar. Normal HUD hidden."
+  },
+  {
+   "id": "H44",
+   "archivo": "H44_IconosTecla",
+   "fase": 7,
+   "salida": "imageassets/ui/menus/H44_IconosTecla.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/H10_HUD.png",
+    "imageassets/ui/menus/H41_IconosProtesis.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The attached images are our HUD and icon sheet: match their thin turquoise line style EXACTLY. An icon sheet on a PURE BLACK (#000000) flat background with 4 key prompt icons in a row, evenly spaced, each drawn with a single thin turquoise line and a subtle glow: 1) a square keyboard key with the letter \"E\", 2) a square keyboard key with the letter \"F\", 3) a long wide keyboard key with the word \"ESPACIO\", 4) a computer mouse outline with its LEFT button highlighted in yellow. No other text."
+  }
+ ]
+}
