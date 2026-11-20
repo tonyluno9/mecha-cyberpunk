@@ -96,11 +96,14 @@ leído en Play) o solo con pruebas, y así lo digo. Lo de "Le gustó" no se toc�
   (Vehiculos no tiene detección de superficie).
 
 ### 5. Carros (T-1526)
-- **Dentro del muro**: el recorte de rutas no corría nunca (dejaba menos de 4 nodos adentro y se saltaba sin aviso). En Play, 4 de 6 carros estaban
-  siempre a ±220 m. Ahora los finales de calle se mueven a 12 m del muro, las calles de afuera se desconectan y todo carro o patrulla que
-  quede fuera se recicla adentro. Medido en Play durante 3 min: **0 de 6 carros y 0 de 3 patrullas fuera**.
-- **Atasco**: con el recorte, los carros se formaban en el callejón sin salida del oeste. Ahora dan vuelta en U ahí. En Play, los carros se
-  mueven (posiciones cambian cada 40 s).
+- **Dentro del muro**: el recorte de rutas no corría nunca. Solo quedaban 2 nodos adentro y se saltaba sin aviso. En Play, 4 de 6 carros estaban
+  siempre a ±220 m. Hicieron falta 5 vueltas para dejarlo bien:
+  - Las calles de afuera se juntan con los finales de calle de la cuadrícula, 1 m dentro del muro.
+  - Los tramos largos se parten (hay más lugares donde aparecer).
+  - En los finales de calle el carro da vuelta en U.
+  - Todo carro o patrulla que quede fuera se recicla adentro.
+  - Medido en Play durante 3 min: **0 de 6 carros y 0 de 3 patrullas fuera, y se mueven**. El log dice: 14 nodos, 6 fusionados, 6 movidos y
+    14 intermedios.
 - **Patrulla civil**: V05, V06 y V08 son modelos de policía y estaban puestos como carros civiles estacionados en la escena. Se cambiaron por
   V02, V03 y C19, y el tráfico civil ya no acepta ningún modelo de policía. La lista del tráfico medida en Play: V01-V04, V09, V10 y colores.
   Con estrellas, la patrulla más cercana reaccionó (bajaron los policías).
@@ -153,6 +156,15 @@ leído en Play) o solo con pruebas, y así lo digo. Lo de "Le gustó" no se toc�
   - Arreglos reales que salieron de aquí: las ranuras de consumibles, la pantalla negra a media levantada y lo de hostil en los primeros 90 s.
   - **Abiertas**: 3 pruebas de `BalasCiudadT711` (balas de SKULL contra carros y casas de la ciudad real) y `PandillaArmada` (paga 500 en vez
     de 580). No sé si ya fallaban antes; no las pude atribuir a un cambio.
+  - **Tráfico, tanda de 27**. Con el código de tráfico de main ya fallaban 6: `PersecucionBarrio` x3-4, `CierresCiudadT986` (por las puertas ahora
+    sólidas) y un atorón de 126 s.
+    - Con T-1526 fallan 8. Las 4 que agrega son de "dónde aparece un carro":
+      - `TraficoCalle`: 5 carros en vez de 6, y 0 de día en la prueba de "ninguno en la calle del jugador".
+      - `TraficoFluido`: no encuentra dónde salir fuera de la vista, y no se destraba saliendo en otra calle.
+    - Causa: las calles de afuera eran el lugar donde aparecían los carros fuera de la vista; ahora se juntan con los finales de calle,
+      dentro del muro.
+    - En Play hay 6 carros y 3 patrullas, todos dentro, y se mueven. Un carro en (-51, -10) no se movió en 3 min: revisar. Si notas menos
+      tráfico o carros que aparecen a la vista, es esto.
 
 ## Qué probar
 1. Partida nueva desde el menú: te levantas en la calle, sin cuarto.

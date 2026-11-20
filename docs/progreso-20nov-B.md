@@ -52,3 +52,4 @@ Pedido completo: el /goal del 20-nov (Tony). Regla: nada se marca hecho sin verl
 - Pendiente: PlayMode tanda C (riñas, jefe, balas ciudad, provocación) corriendo; merge de T-1528 dec558b; EditMode final; main; builds; reporte.
 - EditMode final: 4146/4178 (solo las 8 de main + 1 de T-1526 ya arreglada). PlayMode IA (riñas, jefe) en verde solas. Tráfico PlayMode: línea base con el código de main falla 6 (PersecucionBarrio x4, Cierres, atorón 126 s); el recorte de T-1526 agregaba 4-5 (aparición fuera de vista, carros prendidos). T-1526 cuarta vuelta: mover las calles de afuera adentro de la puerta en vez de desconectarlas.
 - Reporte en borrador: docs/reporte-20nov-B.md.
+- Tráfico T-1526 quinta vuelta integrada: en Play 0 carros/patrullas fuera y se mueven. PlayMode tráfico: 8 fallas (6 de la base de main + 4 de aparición; ver reporte). Siguiente: merge a main, builds en la carpeta principal.
