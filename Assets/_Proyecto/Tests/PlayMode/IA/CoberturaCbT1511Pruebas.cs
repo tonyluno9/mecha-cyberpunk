@@ -4,6 +4,7 @@ using MechaCyberpunk.Core;
 using MechaCyberpunk.IA.APie;
 using MechaCyberpunk.IA.Datos;
 using NUnit.Framework;
+using UnityEngine.InputSystem;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.TestTools;
