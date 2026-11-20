@@ -219,7 +219,13 @@ namespace MechaCyberpunk.Arte.Editor
 
         private static void RehacerVisual(string variante, bool obligatorio)
         {
+            // Primera pasada: deja la escala del importador (userData) en su valor final. Luego el esqueleto del avatar se pone al tamaño del modelo
+            // actual y se vuelve a pasar Crear (que mide los clips con el avatar ya bueno).
             GameObject prefab = CreadorVisualTripo.Crear(variante);
+            if (ActualizarEsqueleto(variante))
+            {
+                prefab = CreadorVisualTripo.Crear(variante);
+            }
             if (prefab == null)
             {
                 Informe.AppendLine("  " + variante + ": sin visual (avatar Humanoid no válido)" + (obligatorio ? " ERROR" : ", queda fuera de Nova"));
@@ -231,6 +237,45 @@ namespace MechaCyberpunk.Arte.Editor
             ModelImporter imp = AssetImporter.GetAtPath(CreadorVisualTripo.RutaModelo(variante)) as ModelImporter;
             Informe.AppendLine("  " + variante + ": visual listo, avatar humano válido " + valido + ", userData " + (imp != null ? imp.userData : "?") + ", altura objetivo "
                 + CreadorVisualTripo.AlturaDe(variante) + " m");
+        }
+
+        /// <summary>
+        /// T-1497 (causa de que los agentes animados midieran lo de antes): el .meta guarda el esqueleto del avatar (humanDescription.skeleton) con las posiciones de los
+        /// huesos del FBX viejo y Unity no lo regenera al cambiar el FBX. Con el modelo de escala real (huesos 1.4 veces más largos) el Humanoid animaba un esqueleto del
+        /// tamaño viejo bajo una malla grande. Aquí se vuelve a escribir el esqueleto con las posiciones del modelo actual (a su escala de importación), conservando el
+        /// mapeo de huesos. Devuelve true si el avatar resultante es humanoide válido y se guardó.
+        /// </summary>
+        public static bool ActualizarEsqueleto(string variante)
+        {
+            string ruta = CreadorVisualTripo.RutaModelo(variante);
+            ModelImporter imp = AssetImporter.GetAtPath(ruta) as ModelImporter;
+            GameObject modelo = AssetDatabase.LoadAssetAtPath<GameObject>(ruta);
+            if (imp == null || modelo == null) { return false; }
+            GameObject go = (GameObject)Object.Instantiate(modelo);
+            go.name = modelo.name;
+            try
+            {
+                HumanDescription hd = imp.humanDescription;
+                if (hd.human == null || hd.human.Length == 0) { return false; }
+                var esqueleto = new System.Collections.Generic.List<SkeletonBone>();
+                foreach (Transform t in go.GetComponentsInChildren<Transform>(true))
+                {
+                    esqueleto.Add(new SkeletonBone { name = t.name, position = t.localPosition, rotation = t.localRotation, scale = t.localScale });
+                }
+                hd.skeleton = esqueleto.ToArray();
+                Avatar prueba = AvatarBuilder.BuildHumanAvatar(go, hd);
+                bool valido = prueba != null && prueba.isValid && prueba.isHuman;
+                if (prueba != null) { Object.DestroyImmediate(prueba); }
+                Informe.AppendLine("  " + variante + ": esqueleto del avatar al tamaño del modelo actual, avatar humano válido " + valido);
+                if (!valido) { return false; }
+                imp.humanDescription = hd;
+                imp.SaveAndReimport();
+                return true;
+            }
+            finally
+            {
+                Object.DestroyImmediate(go);
+            }
         }
 
         /// <summary>E17 es Generic y no pasa por Crear: se mide a escala 1 y se guarda la escala en el userData del .meta (la lee PostprocesadorAssetsT250).</summary>
