@@ -212,6 +212,10 @@ namespace MechaCyberpunk.UI.Hud
             {
                 gameObject.AddComponent<IndicadorDanio>();
             }
+            if (GetComponent<VinietaVidaBaja>() == null)
+            {
+                gameObject.AddComponent<VinietaVidaBaja>(); // T-1489
+            }
             if (GetComponent<TutorialLigero>() == null)
             {
                 gameObject.AddComponent<TutorialLigero>();

@@ -1,4 +1,5 @@
 using MechaCyberpunk.Core;
+using MechaCyberpunk.Vehiculos.Carro;
 using UnityEngine;
 
 namespace MechaCyberpunk.Vehiculos
@@ -13,6 +14,8 @@ namespace MechaCyberpunk.Vehiculos
         public const float SegundosArranque = 0.8f;
         public const float TasaSuavizado = 4f;
         public const float CambioMinimoTono = 0.01f;
+        /// <summary>T-1488: con marchas simuladas el tono sigue a las rpm más rápido, para que se oiga el cambio.</summary>
+        public const float TasaSuavizadoMarchas = 10f;
 
         private readonly GrupoSonidoVehiculo grupo;
         private readonly float rapidezMaxima;
@@ -22,9 +25,11 @@ namespace MechaCyberpunk.Vehiculos
         private float tonoEnviado;
         private float pedalAnterior;
         private float segundosDesdeAceleron = ReglasSonidoVehiculoT1475.AceleronSegundosMinimos;
+        private readonly SimuladorMarchas marchas;
 
-        public SonidoMotorCarro(GrupoSonidoVehiculo grupo, float rapidezMaxima)
+        public SonidoMotorCarro(GrupoSonidoVehiculo grupo, float rapidezMaxima, int marchasSimuladas = 0)
         {
+            marchas = marchasSimuladas > 0 ? new SimuladorMarchas(marchasSimuladas) : null;
             this.grupo = grupo;
             this.rapidezMaxima = rapidezMaxima;
             Bucle = Sonidos.SinBucle;
@@ -36,6 +41,12 @@ namespace MechaCyberpunk.Vehiculos
         public int Bucle { get; private set; }
 
         public float TonoActual => tonoActual;
+
+        /// <summary>T-1488: marcha simulada actual (0 si no hay marchas simuladas).</summary>
+        public int Marcha => marchas != null ? marchas.Marcha : 0;
+
+        /// <summary>T-1488: rpm simuladas (0 a 1); 0 si no hay marchas simuladas.</summary>
+        public float Rpm => marchas != null ? marchas.Rpm : 0f;
 
         /// <summary>Enciende el motor (si ya estaba encendido no hace nada). <paramref name="conArranque"/> false: solo el bucle.</summary>
         public void Encender(Transform sigueA, bool conArranque)
@@ -74,8 +85,21 @@ namespace MechaCyberpunk.Vehiculos
                 }
                 Bucle = Sonidos.ReproducirBucle(grupo.Ralenti, sigue);
             }
-            float objetivo = ReglasSonidoVehiculoT1475.TonoObjetivo(rapidez, rapidezMaxima, grupo.FactorTono);
-            tonoActual = ReglasSonidoVehiculoT1475.Suavizar(tonoActual, objetivo, dt, TasaSuavizado);
+            float objetivo;
+            float tasa = TasaSuavizado;
+            if (marchas != null)
+            {
+                // T-1488: el tono sigue a las rpm de la marcha simulada: sube dentro de cada marcha y cae al cambiar.
+                float rpm = marchas.Actualizar(rapidez, rapidezMaxima, dt);
+                objetivo = (ReglasSonidoVehiculoT1475.TonoReposo + (ReglasSonidoVehiculoT1475.TonoMaximo - ReglasSonidoVehiculoT1475.TonoReposo) * rpm)
+                    * grupo.FactorTono;
+                tasa = TasaSuavizadoMarchas;
+            }
+            else
+            {
+                objetivo = ReglasSonidoVehiculoT1475.TonoObjetivo(rapidez, rapidezMaxima, grupo.FactorTono);
+            }
+            tonoActual = ReglasSonidoVehiculoT1475.Suavizar(tonoActual, objetivo, dt, tasa);
             if (Bucle != Sonidos.SinBucle && Mathf.Abs(tonoActual - tonoEnviado) >= CambioMinimoTono)
             {
                 tonoEnviado = tonoActual;

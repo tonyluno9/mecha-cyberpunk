@@ -69,6 +69,18 @@ namespace MechaCyberpunk.Personaje.Combate
         private ArsenalJugador arsenal;
         private ReservaBalas reserva;
         private float inicioRetroceso = -100f;
+        // T-1486: peso por arma (retroceso visual y floración de la dispersión) desde DatosSensacion; sin él, los valores de este componente.
+        private SensacionDisparo sensacion;
+        private readonly ReglaFloracionDispersion floracion = new ReglaFloracionDispersion();
+
+        private AjusteSensacion AjusteDe(ArmaAPie arma)
+        {
+            if (sensacion == null)
+            {
+                sensacion = GetComponent<SensacionDisparo>();
+            }
+            return sensacion != null && sensacion.Datos != null ? sensacion.Datos.Ajuste(arma) : null;
+        }
         private const float PuntaDelArma = 0.5f;
         private const float MaximaIntensidadLuzBoca = 1.2f;
         private const float MaximoAlcanceLuzBoca = 2.5f;
@@ -531,6 +543,11 @@ namespace MechaCyberpunk.Personaje.Combate
             Vector3 haciaPunto = punto - origen;
             float largo = haciaPunto.magnitude;
             Vector3 direccionBase = largo > 0.01f ? haciaPunto / largo : camara.forward;
+            // T-1486: si lo que marca la mira queda detrás del cañón (pegado al arma), la bala sigue la mira y no sale hacia atrás.
+            if (!desdeCarro && Vector3.Dot(direccionBase, camara.forward) <= 0f)
+            {
+                direccionBase = camara.forward;
+            }
             if (desdeCarro)
             {
                 // Desde el carro la bala va horizontal, del asiento hacia el punto que mira la cámara del carro (sin bajar hasta el piso).
@@ -538,6 +555,13 @@ namespace MechaCyberpunk.Personaje.Combate
                 direccionBase = plano.sqrMagnitude > 0.0001f ? plano.normalized : Vector3.ProjectOnPlane(camara.forward, Vector3.up).normalized;
             }
             float cono = controlador.Apuntando ? d.DispersionApuntando : d.Dispersion;
+            AjusteSensacion peso = AjusteDe(arma);
+            if (peso != null && peso.floracion > 0f)
+            {
+                // T-1486: cada tiro seguido abre un poco el cono (la mitad apuntando) y se recupera con el tiempo.
+                cono += ReglaFloracionDispersion.Aplicada(floracion.Actual(Time.time, peso.recuperacionFloracion), controlador.Apuntando);
+                floracion.Disparar(Time.time, peso.floracion, peso.topeFloracion, peso.recuperacionFloracion);
+            }
 
             // T-448: el armero de la guarida da más daño a las armas de fuego.
             IGuarida guarida = Registro<IGuarida>.Actual;
@@ -648,9 +672,13 @@ namespace MechaCyberpunk.Personaje.Combate
                 }
                 if (visuales[i] != null)
                 {
-                    float t = dispara ? Mathf.Clamp01((Time.time - inicioRetroceso) / duracionRetroceso) : 1f;
+                    AjusteSensacion peso = dispara ? AjusteDe((ArmaAPie)i) : null;
+                    float distancia = peso != null && peso.retrocesoArma > 0f ? peso.retrocesoArma : retroceso;
+                    float duracion = peso != null && peso.retrocesoArma > 0f ? peso.duracionRetrocesoArma : duracionRetroceso;
+                    // T-1486: sube rápido y regresa suave (ReglaRetrocesoArma), con el peso de cada arma.
+                    float atras = dispara ? ReglaRetrocesoArma.Desplazamiento(Time.time - inicioRetroceso, duracion) : 0f;
                     // S1: el cañón va por el +Z del arma (en la mano, el arma ya no cuelga en -Y); el retroceso va hacia atrás por ese eje.
-                    visuales[i].localPosition = reposos[i] - visuales[i].localRotation * Vector3.forward * (retroceso * (1f - t));
+                    visuales[i].localPosition = reposos[i] - visuales[i].localRotation * Vector3.forward * (distancia * atras);
                 }
             }
             if (marcas == null)

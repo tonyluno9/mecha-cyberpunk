@@ -24,5 +24,9 @@ namespace MechaCyberpunk.Vehiculos.Carro
         public float EsperaCambioSentido;
         /// <summary>Segundos que tarda el motor en llegar a toda su fuerza al arrancar en reversa o tras cambiar de sentido (s). 0 desactiva la rampa.</summary>
         public float RampaMarcha;
+        /// <summary>T-1488: cuánto se multiplica el giro con el freno de mano a tope (el carro se atraviesa). 0 o 1: sin cambio.</summary>
+        public float GiroFrenoMano;
+        /// <summary>T-1488: ayuda de contravolante (1/s): rapidez con la que el carro se endereza hacia donde va al derrapar. 0 la apaga.</summary>
+        public float GananciaContravolante;
     }
 }

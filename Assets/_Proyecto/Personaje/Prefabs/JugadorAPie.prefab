@@ -2149,6 +2149,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: MechaCyberpunk.Personaje::MechaCyberpunk.Personaje.Combate.GolpeAPie
   datos: {fileID: 11400000, guid: f5488325d33907c48a613e667d152099, type: 2}
   atacar: {fileID: -5751973666824944471, guid: c989656e714a4084491168fccd720455, type: 3}
+  config: {fileID: 11400000, guid: f94c62ec18f00f24db8f5169543e599e, type: 2}
   puno: {fileID: 0}
   avancePuno: 0.6
 --- !u!114 &4550578631163797047

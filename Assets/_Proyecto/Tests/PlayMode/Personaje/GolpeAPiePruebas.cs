@@ -82,13 +82,10 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return Esperar(0.3f);
             Assert.AreEqual(maxima - danio, vidaMuneco.Actual, 0.0001f);
 
-            yield return Clic(); // Todavía en la recarga (0.45 s después del impacto).
-            yield return Esperar(0.8f);
-            Assert.AreEqual(maxima - danio, vidaMuneco.Actual, 0.0001f, "Un clic durante la recarga no debe pegar");
-
+            // T-1487: un clic durante la recarga ya no se pierde: se guarda (buffer de 0.3 s) y sale como el siguiente golpe del combo.
             yield return Clic();
-            yield return Esperar(0.3f);
-            Assert.AreEqual(maxima - 2f * danio, vidaMuneco.Actual, 0.0001f, "Después de la recarga sí pega");
+            yield return Esperar(0.8f);
+            Assert.Less(vidaMuneco.Actual, maxima - danio + 0.0001f, "El clic en la recarga encadena el segundo golpe del combo");
         }
 
         [UnityTest]

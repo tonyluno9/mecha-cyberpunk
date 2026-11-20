@@ -48,7 +48,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Press(teclado.leftShiftKey);
             yield return Esperar(0.9f);
             Assert.AreEqual("Correr", Estado(animador), "Al correr usa Correr");
-            Assert.AreEqual(1f, animador.speed, 0.001f, "T-724: el clip de Tony se reproduce a su rapidez original");
+            AfirmarPiesSinPatinar(visual, animador);
             // Pies en el piso: el hueso del pie derecho a la altura del suelo del CharacterController (piso en y = 0).
             Transform pie = animador.GetBoneTransform(HumanBodyBones.RightFoot);
             Assert.IsNotNull(pie);
@@ -61,15 +61,24 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.AreEqual("Idle", Estado(animador), "Al soltar vuelve a Idle");
         }
 
+        /// <summary>T-1484: el clip avanza (rapidez × velocidad del clip) casi lo mismo que el cuerpo: los pies no patinan más de 15 %.</summary>
+        private static void AfirmarPiesSinPatinar(VisualPersonaje visual, Animator animador)
+        {
+            float clip = ReglasAnimacion.VelocidadPJ01Correr * visual.EscalaClips;
+            float avanceClip = animador.speed * clip;
+            Assert.Less(Mathf.Abs(avanceClip - visual.Velocidad) / Mathf.Max(0.1f, visual.Velocidad), 0.15f,
+                $"Pies sin patinar: clip {avanceClip:F2} m/s, cuerpo {visual.Velocidad:F2} m/s (rapidez {animador.speed:F2})");
+        }
+
         [UnityTest]
-        public IEnumerator Caminar_LaAnimacionNoSeAceleraNiSeFrena_ElClipVaASuRapidezOriginal()
+        public IEnumerator Caminar_LaRapidezDelClipSigueALaVelocidad_PiesSinPatinar()
         {
             yield return Calentar();
             VisualPersonaje visual = Visual();
             Press(teclado.wKey);
             yield return Esperar(1.2f);
             Assert.Greater(controlador.Velocidad.magnitude, 1f);
-            Assert.AreEqual(1f, visual.Animador.speed, 0.001f, "T-724: Loco_Caminar tal como viene, sin ajustar la rapidez a la velocidad real");
+            AfirmarPiesSinPatinar(visual, visual.Animador);
             Release(teclado.wKey);
         }
 

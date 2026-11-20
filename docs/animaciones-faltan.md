@@ -55,3 +55,50 @@ La cinemática del asalto usa Idle y Caminar/Correr de Skull (asaltante) y el Id
 | La víctima levanta las manos al ser asaltada | Hands Up (o Surrender, Being Robbed) | NPC_ManosArriba_Bucle.fbx | NPC |
 | El asaltante apunta o amenaza con el arma | Pistol Aim / Threatening | Skull_Amenazar_Bucle.fbx | Skull |
 | La víctima se asusta y retrocede | Terrified (ya está en la tabla de arriba como NPC_Aterrado_Bucle) | NPC_Aterrado_Bucle.fbx | NPC |
+
+## Disparar con peso, 19-nov (T-1486)
+
+No se inventó nada: el retroceso del arma es posicional y el flinch del enemigo usa lo que ya existe. Si se quiere más calidad, faltan:
+
+| Para qué | Búscalo en Mixamo como | Archivo | Carpeta |
+| --- | --- | --- | --- |
+| Retroceso del cuerpo al disparar escopeta o sniper (hombro y torso) | Rifle Fire Recoil / Shotgun Fire | PJ01_Disparo_Largas.fbx | PJ01 |
+| Recarga distinta por arma larga (cargador, cartucho a cartucho) | Reloading (rifle), Shotgun Reload | PJ01_Recargar_Largas.fbx | PJ01 |
+| El enemigo se tambalea al recibir una bala | Hit Reaction / Standing React Large From Front | Loco_ImpactoBala.fbx | Loco |
+| Caída hacia atrás al morir de un tiro de escopeta | Shot Gun Death / Death From The Front | Loco_MuerteEscopeta.fbx | Loco |
+
+Sonidos sin archivo propio (hoy la marca reusa HUD_NOTIFICACION y HUD_LOGRO): IMP_HITMARKER (tic seco) e IMP_HITMARKER_MUERTE (golpe grave con campanita).
+## T-1487: golpear a pie (19-nov-2026)
+
+Con los clips actuales (GolpeIzq, GolpeDer, GolpeFuerte, Dano*) el combo funciona. Para que se vea mejor, opcionales:
+
+| Para qué | Búscalo en Mixamo como | Archivo | Carpeta |
+| --- | --- | --- | --- |
+| Golpe final del combo distinto al GolpeFuerte (patada o gancho) | Roundhouse Kick / Hook Punch | Punos_GolpeFinal.fbx | Combate |
+| El enemigo sale volando hacia atrás con el golpe final | Standing React Large From Front (o Knocked Back) | Dano_EmpujadoAtras.fbx | Combate |
+| Sonido de golpe final más pesado (audio, no animación) | MEL_GOLPE con graves | MEL_GOLPE.wav | Assets/Arte audio |
+## Manejar, 19-nov (T-1488)
+
+Subir, bajar y robar usan los clips que ya hay (PJ01_Carro_Entrar, Carro_Salir, Carro_SacarConductor, Moto_Subir, Moto_Bajar); ahora el personaje se alinea a la puerta en 0.2 a 0.3 s antes de animar. No se inventó ninguno. Faltan, de Mixamo o Blender, para que se vea más pesado:
+
+| Para qué | Búscalo en Mixamo como | Archivo | Carpeta |
+| --- | --- | --- | --- |
+| Conductor se aferra al volante en un choque fuerte (sacudida del torso) | Car Crash / Flinch (Hit Reaction sentado) | PJ01_Carro_Choque.fbx | PJ01 |
+| Conductor contravolantea en derrape (brazos girando rápido el volante) | Driving Fast (si existe) o animación de volante hecha en Blender | PJ01_Carro_Derrape_Bucle.fbx | PJ01 |
+| Subir a un camión o microbús (escalón alto) | Climb Up Ladder / Get Into Truck | PJ01_Camion_Entrar.fbx | PJ01 |
+| Moto: pie en el piso al parar (apoyar el pie al frenar a cero) | Motorcycle Stop / Foot Down (Blender) | PJ01_Moto_ApoyarPie.fbx | PJ01 |
+## Caminar y correr, 19-nov (T-1484)
+
+Medido con MedirLocomocionT1484: el jugador va a 4.5 m/s (paso normal) y 7.5 m/s (Shift). Los clips de PJ01 avanzan: caminar 1.66, correr 4.25,
+de lado 1.61, atrás 1.04 m/s. Hoy el paso normal usa el clip de correr como trote y el sprint lo acelera a 1.6. Para que nada patine hacen falta,
+de Blender (rig PJ01) o Mixamo, en bucle y sin root motion, a estas velocidades:
+
+| Para qué | Búscalo en Mixamo como | Archivo | Velocidad del clip |
+| --- | --- | --- | --- |
+| Sprint con Shift (hoy el trote a 1.6x) | Fast Run / Sprint | PJ01_Loco_Sprint.fbx | 7 a 7.5 m/s |
+| Trote de lado apuntando (hoy caminar de lado a 1.6x, patina) | Jog Strafe Left / Right (o Pistol Strafe) | PJ01_Loco_TroteDer.fbx, PJ01_Loco_TroteIzq.fbx | 4 a 4.5 m/s |
+| Trote hacia atrás apuntando (hoy caminar atrás a 1.6x) | Jog Backward | PJ01_Loco_TroteAtras.fbx | 4 a 4.5 m/s |
+| Arranque y frenada del trote (opcional) | Start Running / Run To Stop | PJ01_Loco_ArrancarTrote.fbx, PJ01_Loco_FrenarTrote.fbx | sin bucle |
+| Subir y bajar escalones caminando (opcional, hoy lo cubre el IK de desnivel) | Walking Up The Stairs / Descending Stairs | PJ01_Loco_SubirEscalones.fbx | 1.5 a 2 m/s |
+
+Con el sprint propio se cambia `ReglasAnimacion.VelocidadPJ01Correr` por la del sprint en el estado Correr y se devuelve el Caminar del jugador a su clip.

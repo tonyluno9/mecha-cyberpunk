@@ -87,7 +87,8 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.AreEqual(fovQuieto, camara.fieldOfView, 0.01f, "Caminando el zoom no cambia");
             Press(teclado.leftShiftKey);
             yield return Esperar(1.0f);
-            Assert.AreEqual(fovQuieto, camara.fieldOfView, 0.01f, "Corriendo el zoom no cambia");
+            // T-1485: corriendo el FOV se abre un poco (fovExtraCorrer, 7°) para dar sensación de velocidad; no es zoom.
+            Assert.That(camara.fieldOfView, Is.InRange(fovQuieto, fovQuieto + 7.5f), "Corriendo el FOV solo se abre un poco");
             Release(teclado.leftShiftKey);
             Release(teclado.wKey);
             yield return Esperar(0.3f);

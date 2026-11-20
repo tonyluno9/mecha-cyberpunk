@@ -52,7 +52,8 @@ namespace MechaCyberpunk.Tests.Personaje
             for (int i = 1; i < inicios.Count; i++)
             {
                 Assert.GreaterOrEqual(inicios[i], finAnimacion[i - 1] - 0.001f, "El golpe " + i + " no empieza antes de que termine la animación del anterior");
-                Assert.Greater(inicios[i] - inicios[i - 1], 0.35f, "Hay un hueco real entre golpes");
+                // T-1487: el combo encadena el siguiente golpe al 45 % de la recuperación: 0.25 s en vez de 0.35 s.
+                Assert.Greater(inicios[i] - inicios[i - 1], 0.25f, "Hay un hueco real entre golpes");
             }
         }
 

@@ -1,6 +1,7 @@
 using System;
 using MechaCyberpunk.Personaje.Jugador;
 using MechaCyberpunk.Personaje.Movimiento;
+using Unity.Cinemachine;
 using UnityEngine;
 
 namespace MechaCyberpunk.Personaje.Combate
@@ -31,6 +32,21 @@ namespace MechaCyberpunk.Personaje.Combate
         private Texture2D texturaChispa;
         private Material materialDestello;
         private float giroDestello;
+        // T-1486: temblor por impulso (contrato TemblorCamara), duración de la patada del último tiro y casquillos con pool (las partículas del sistema).
+        private CinemachineImpulseSource fuenteImpulso;
+        private float duracionPatadaActual = 0.18f;
+        private ParticleSystem casquillos;
+        private const float AtrasCasquillo = 0.12f;
+        private const float VelocidadCasquilloLateral = 2.2f;
+        private const float VelocidadCasquilloArriba = 1.6f;
+        private const float VidaCasquillo = 0.9f;
+        private const float TamanoCasquillo = 0.03f;
+        private const int MaxCasquillos = 32;
+        private const float FuerzaMinimaGrande = 0.45f;
+        private const float DesvioLateralImpulso = 0.3f;
+        public ParticleSystem Casquillos => casquillos;
+        /// <summary>Última fuerza de impulso lanzada (para las pruebas).</summary>
+        public float UltimoImpulso { get; private set; }
 
         /// <summary>Se dispara cuando un tiro o un golpe pega a una persona; el argumento es si la dejó en KO.</summary>
         public event Action<bool> Conecto;
@@ -47,8 +63,7 @@ namespace MechaCyberpunk.Personaje.Combate
 
         private float Restante()
         {
-            float t = Mathf.Clamp01((Time.time - inicio) / datos.DuracionPatada);
-            return (1f - t) * (1f - t);
+            return ReglaRetrocesoArma.Recuperacion(Time.time - inicio, duracionPatadaActual);
         }
 
         private void Awake()
@@ -61,6 +76,13 @@ namespace MechaCyberpunk.Personaje.Combate
             pistola = GetComponent<PistolaAPie>();
             golpe = GetComponent<GolpeAPie>();
             zoom = GetComponent<ZoomSniper>();
+            duracionPatadaActual = datos.DuracionPatada;
+            fuenteImpulso = GetComponent<CinemachineImpulseSource>();
+            if (fuenteImpulso == null)
+            {
+                fuenteImpulso = gameObject.AddComponent<CinemachineImpulseSource>();
+            }
+            TemblorCamara.Preparar(fuenteImpulso, 0.12f);
             CrearEfectos();
         }
 
@@ -103,6 +125,10 @@ namespace MechaCyberpunk.Personaje.Combate
             if (chispas != null)
             {
                 Destroy(chispas.gameObject);
+            }
+            if (casquillos != null)
+            {
+                Destroy(casquillos.gameObject);
             }
             if (sangre != null)
             {
@@ -148,6 +174,42 @@ namespace MechaCyberpunk.Personaje.Combate
             magnitud = Mathf.Min(datos.TopePatada, Patada + ajuste.patada * EfectosAPie.FactorRetroceso(implantes.Efectos));
             magnitudDesvio = ajuste.desvio * (UnityEngine.Random.value < 0.5f ? -1f : 1f);
             inicio = Time.time;
+            duracionPatadaActual = ajuste.recuperacion > 0f ? ajuste.recuperacion : datos.DuracionPatada;
+        }
+
+        // T-1486: temblor chico por impulso; los tiros fuertes usan la forma más larga de DisparoGrande.
+        private void Temblar(AjusteSensacion ajuste)
+        {
+            if (fuenteImpulso == null || ajuste.impulso <= 0f)
+            {
+                return;
+            }
+            float lado = UnityEngine.Random.Range(-DesvioLateralImpulso, DesvioLateralImpulso);
+            Vector3 direccion = Vector3.down + Vector3.right * lado;
+            UltimoImpulso = ajuste.impulso;
+            TemblorCamara.Preparar(fuenteImpulso, ajuste.impulso >= FuerzaMinimaGrande ? 0.2f : 0.12f);
+            TemblorCamara.Generar(fuenteImpulso, ajuste.impulso, direccion);
+        }
+
+        private void ExpulsarCasquillos(AjusteSensacion ajuste, Vector3 boca)
+        {
+            if (casquillos == null || ajuste.casquillos <= 0)
+            {
+                return;
+            }
+            Camera camara = Camera.main;
+            Vector3 derecha = camara != null ? camara.transform.right : transform.right;
+            Vector3 adelante = camara != null ? camara.transform.forward : transform.forward;
+            for (int i = 0; i < ajuste.casquillos; i++)
+            {
+                var parametros = new ParticleSystem.EmitParams
+                {
+                    position = boca - adelante * AtrasCasquillo,
+                    velocity = derecha * VelocidadCasquilloLateral * UnityEngine.Random.Range(0.7f, 1.2f)
+                        + Vector3.up * VelocidadCasquilloArriba * UnityEngine.Random.Range(0.8f, 1.3f)
+                };
+                casquillos.Emit(parametros, 1);
+            }
         }
 
         private void AlDisparar(ArmaAPie arma, Vector3 boca)
@@ -157,7 +219,9 @@ namespace MechaCyberpunk.Personaje.Combate
             if (!(arma == ArmaAPie.Sniper && zoom != null && zoom.Activo))
             {
                 Patear(ajuste);
+                Temblar(ajuste);
             }
+            ExpulsarCasquillos(ajuste, boca);
             if (destello != null && ajuste.destello > 0f)
             {
                 destello.position = boca;
@@ -239,7 +303,26 @@ namespace MechaCyberpunk.Personaje.Combate
             quad.SetActive(false);
 
             chispas = CrearParticulas("ChispasImpacto", new Color(1f, 0.85f, 0.35f, 1f), 0.05f, 0.6f);
+            casquillos = CrearCasquillos();
             sangre = CrearParticulas("SalpicaduraImpacto", new Color(0.8f, 0.05f, 0.05f, 1f), 0.07f, 1.6f);
+        }
+
+        // T-1486: casquillos dorados con gravedad que rebotan en el piso. Un solo sistema de partículas es el pool: tope MaxCasquillos, sin instanciar por tiro.
+        private ParticleSystem CrearCasquillos()
+        {
+            ParticleSystem sistema = CrearParticulas("CasquillosExpulsados", new Color(1f, 0.78f, 0.25f, 1f), TamanoCasquillo, 2.5f);
+            ParticleSystem.MainModule main = sistema.main;
+            main.startLifetime = VidaCasquillo;
+            main.maxParticles = MaxCasquillos;
+            ParticleSystem.CollisionModule colision = sistema.collision;
+            colision.enabled = true;
+            colision.type = ParticleSystemCollisionType.World;
+            colision.mode = ParticleSystemCollisionMode.Collision3D;
+            colision.bounce = 0.35f;
+            colision.dampen = 0.4f;
+            colision.quality = ParticleSystemCollisionQuality.Low;
+            colision.maxCollisionShapes = 8;
+            return sistema;
         }
 
         // Material sin luz de mezcla aditiva (URP Particles/Unlit); si no existe, el material de efectos normal.

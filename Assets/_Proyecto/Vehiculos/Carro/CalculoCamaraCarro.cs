@@ -59,6 +59,12 @@ namespace MechaCyberpunk.Vehiculos.Carro
             return baseMetros + extra * Mathf.Clamp01(kmh / Mathf.Max(kmhMaximo, 0.01f));
         }
 
+        /// <summary>T-1488: FOV (°) de la cámara: el base más el extra proporcional a la rapidez (km/h), con tope.</summary>
+        public static float FovPorRapidez(float fovBase, float extra, float kmh, float kmhMaximo)
+        {
+            return fovBase + extra * Mathf.Clamp01(kmh / Mathf.Max(kmhMaximo, 0.01f));
+        }
+
         /// <summary>
         /// Distancia (m) a la que poner la cámara sobre el rayo foco-ideal: si hay un muro a <paramref name="distanciaMuro"/>,
         /// se queda <paramref name="margen"/> antes (sin bajar de <paramref name="minima"/>); sin muro, toda la distancia.

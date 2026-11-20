@@ -84,7 +84,8 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.IsNotNull(correr, "Estado Correr");
             Assert.AreEqual("Loco_Caminar", ClipAdelante(caminar), "Caminar hacia delante es Loco_Caminar");
             Assert.AreEqual("Loco_Correr", ClipAdelante(correr), "Correr hacia delante es Loco_Correr");
-            Assert.AreEqual(CarpetaClipsPJ01 + "PJ01_Caminar_SinImplante.fbx", AssetDatabase.GetAssetPath(ClipPorNombre("PJ01_Caminar_SinImplante"))); // T-749: el jugador usa los de Blender
+            // T-749: el jugador usa los de Blender. T-1484: a 4.5 m/s su Caminar es el trote (PJ01_Correr), PJ01_Caminar queda para los NPC.
+            Assert.AreEqual(CarpetaClipsPJ01 + "PJ01_Correr_SinImplante.fbx", AssetDatabase.GetAssetPath(ClipPorNombre("PJ01_Correr_SinImplante")));
             Assert.AreEqual(CarpetaClipsPJ01 + "PJ01_Correr_SinImplante.fbx", AssetDatabase.GetAssetPath(ClipPorNombre("PJ01_Correr_SinImplante")));
         }
 

@@ -28,6 +28,13 @@ MonoBehaviour:
   inclinacionMinOrbita: -10
   inclinacionMaxOrbita: 40
   inclinacionReposo: 15
-  distanciaExtraVelocidad: 2
-  kmhDistanciaExtra: 80
+  distanciaExtraVelocidad: 3.5
+  kmhDistanciaExtra: 90
   tiempoRumbo: 0.2
+  fovExtraVelocidad: 12
+  kmhFov: 100
+  suavidadFov: 4
+  umbralTemblor: 3
+  rapidezTemblorMaximo: 18
+  fuerzaTemblorMaxima: 1.5
+  gananciaTemblor: 1

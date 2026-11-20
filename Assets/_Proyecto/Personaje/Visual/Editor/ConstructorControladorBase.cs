@@ -197,13 +197,47 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             {
                 mapa[papel] = ClipsDeJugadorPJ01;
             }
+            mapa["Jugador"] = ConCambios(ClipsDeJugadorPJ01, ClipsSoloJugadorT1484);
             return mapa;
         }
 
-        private static void AplicarClipsPorPapel()
+        /// <summary>
+        /// T-1484: el jugador camina a 4.5 m/s y el clip de caminar de PJ01 avanza 1.66 m/s (los pies patinaban 2.7 veces). A esa velocidad el paso normal
+        /// es un trote: el estado Caminar del jugador usa el clip de correr (4.25 m/s, rapidez 1.06) y Correr lo acelera hasta 1.6 (MedirLocomocionT1484).
+        /// Los NPC caminan despacio y siguen con el clip de caminar.
+        /// </summary>
+        // Propiedad y no campo: ClipsPorPapel se inicializa antes en el orden de los campos estáticos.
+        public static (string Base, string Papel)[] ClipsSoloJugadorT1484 => new[]
+        {
+            ("Loco_Caminar", "PJ01_Correr_SinImplante"), ("Loco_Caminar_ConImplante", "PJ01_Correr_ConImplante"),
+        };
+
+        private static (string Base, string Papel)[] ConCambios((string Base, string Papel)[] tabla, (string Base, string Papel)[] cambios)
+        {
+            var salida = new List<(string Base, string Papel)>(tabla);
+            foreach ((string b, string p) in cambios)
+            {
+                int i = salida.FindIndex(par => par.Base == b);
+                if (i >= 0) salida[i] = (b, p); else salida.Add((b, p));
+            }
+            return salida.ToArray();
+        }
+
+        /// <summary>T-1484: vuelve a poner los clips del override del jugador sin reconstruir el controlador base.</summary>
+        public static void AplicarClipsDelJugador()
+        {
+            AplicarClipsPorPapel("Jugador");
+            AssetDatabase.SaveAssets();
+        }
+
+        private static void AplicarClipsPorPapel(string solo = null)
         {
             foreach (KeyValuePair<string, (string Base, string Papel)[]> papel in ClipsPorPapel)
             {
+                if (solo != null && papel.Key != solo)
+                {
+                    continue;
+                }
                 AnimatorOverrideController o = AssetDatabase.LoadAssetAtPath<AnimatorOverrideController>(RutaOverride(papel.Key));
                 var pares = new List<KeyValuePair<AnimationClip, AnimationClip>>();
                 o.GetOverrides(pares);

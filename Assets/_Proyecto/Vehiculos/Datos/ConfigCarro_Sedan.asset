@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 711c25d98af48f84b9c708972e754793, type: 3}
+  m_Name: ConfigCarro_Sedan
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.ConfigCarro
+  masa: 1100
+  alturaCentroMasa: 0.5
+  fuerzaAntivuelco: 4000
+  velocidadMaxima: 18
+  velocidadReversa: 5
+  umbralReversa: 0.5
+  fuerzaMotor: 8800
+  fuerzaReversa: 3500
+  fuerzaFreno: 20000
+  fuerzaFrenoMano: 9000
+  resistenciaRodadura: 900
+  gananciaEstacionamiento: 40
+  anguloDireccionParado: 32
+  anguloDireccionMaximo: 10
+  exponenteDireccion: 0.5
+  distanciaEntreEjes: 2.7
+  aceleracionLateralMaxima: 9
+  agarreLateral: 11
+  factorAgarreFrenoMano: 0.25
+  respuestaGiro: 8
+  velocidadVolante: 4
+  velocidadCentradoVolante: 6
+  esperaCambioSentido: 0.25
+  rampaMarcha: 0.5
+  largoReposo: 0.35
+  largoMaximo: 0.5
+  radioRueda: 0.35
+  rigidez: 17985
+  amortiguamiento: 1868.1031
+  tipoManejo: 1
+  factorCabeceo: 0.9
+  factorBalanceo: 0.4
+  factorRebote: 1.3
+  giroFrenoMano: 1.5
+  gananciaContravolante: 2
+  antivuelcoBajaVelocidad: 1
+  amortiguacionInclinacion: 5000
+  marchasSonido: 5
+  rapidezMaximaParaBajar: 0.5
+  radioSalida: 0.4
+  alturaSalida: 1.8
+  holguraSalida: 0.05
