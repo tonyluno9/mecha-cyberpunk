@@ -35,3 +35,6 @@ Pedido completo: el /goal del 20-nov (Tony). Regla: nada se marca hecho sin verl
 - 20-nov: paso 0 hecho. integ/20nov-C creada en s2 desde main 601dd62.
 - 20-nov: 10 subagentes lanzados (T-1520..T-1529) en wt20/. Compilación base de main en s2 corriendo.
 - T-1522 entregada (93aadb9): ArmeriaT1522.Diagnostico/Aplicar. Racks I18 de la pared a yaw -90 (como antes de T-1503), vitrinas I17 de enfrente 180°, armero GTA_T407/Mercado/Vendedor hacia la pared. Captura: jugador (-24,0.3,26.25) mirando -X.
+- Entregadas por subagentes: T-1522 (93aadb9), T-1524 (1c48d4f), T-1525 (84c926a), T-1527 (53832ae), T-1528 (38d603f+1442a5f), T-1529 (bbc1f78+48c3fde). T-1523 en segunda vuelta (fondo del menú Inicio hecho con cajas, maletín/dinero/munición).
+- Lote 1 aplicado y commiteado (3591e79): armería, muro (6 puertas sólidas, colliders de 10 m), costales, ondas. OJO muro: las calles S2_Calles llegan a x±277 z±227 y una Calzada elevada (cima 10.5 m) está junto al muro norte en z=99: revisar en captura si se sale por ahí.
+- Lote 2 (T-1527/T-1528 métodos) corriendo.

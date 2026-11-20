@@ -19,8 +19,8 @@ namespace MechaCyberpunk.Personaje.Editor
         public static readonly string[] CarpetasPrefabs = { "Assets/Arte/Calle", "Assets/Arte/Zonas", "Assets/_Proyecto/Mundo/Prefabs" };
         public const string RutaEscena = "Assets/_Proyecto/Escenas/Ciudad_Prologo.unity";
 
-        private static readonly Regex Props = new Regex("poste|farol|semaforo|senal|se.al|letrero|lampara|bolardo|hidrante|arbol|valla", RegexOptions.IgnoreCase);
-        private static readonly Regex Delgados = new Regex("poste|farol|semaforo|lampara|bolardo", RegexOptions.IgnoreCase);
+        private static readonly Regex Props = new Regex("poste|farol|semaforo|senal|se.al|letrero|lampara|bolardo|hidrante|arbol|valla|transformador", RegexOptions.IgnoreCase);
+        private static readonly Regex Delgados = new Regex("poste|farol|semaforo|lampara|bolardo|transformador", RegexOptions.IgnoreCase);
         private static readonly Regex Arboles = new Regex("arbol", RegexOptions.IgnoreCase);
 
         /// <summary>Un collider cuenta como grande si pasa del render por esta fracción más <see cref="HolguraM"/>.</summary>
@@ -151,6 +151,13 @@ namespace MechaCyberpunk.Personaje.Editor
             c.revisados++;
             BoundsLocales(prop, colliders.ToArray(), out Bounds collider);
             bool grande = Excede(collider.size.x, render.size.x) || Excede(collider.size.y, render.size.y) || Excede(collider.size.z, render.size.z);
+            // Postes, faroles, transformadores y árboles: una caja del tamaño de todo el modelo (con el brazo o la copa) también es
+            // demasiado grande para las balas. Si su forma debe ser cápsula y no es ya una sola cápsula delgada, se cambia.
+            if (!grande && ElegirForma(prop.name, render.size) == Forma.Capsula)
+            {
+                bool yaDelgada = colliders.Count == 1 && colliders[0] is CapsuleCollider capsula && capsula.radius <= RadioMaximoTronco + 0.01f;
+                grande = !yaDelgada;
+            }
             Debug.Log("[T-1527] " + ruta + " / " + prop.name + ": render " + render.size.ToString("F2") + " collider " + collider.size.ToString("F2") + (grande ? " GRANDE" : " ok"));
             if (!grande)
             {
@@ -179,7 +186,11 @@ namespace MechaCyberpunk.Personaje.Editor
                 cap.direction = 1;
                 cap.radius = radio;
                 cap.height = Mathf.Max(alto, radio * 2f);
-                cap.center = new Vector3(render.center.x, render.min.y + cap.height * 0.5f, render.center.z);
+                // El poste o tronco suele estar en el pivote del prop; el centro de los bounds se corre hacia el brazo o la copa.
+                bool pivoteDentro = render.min.x <= 0f && render.max.x >= 0f && render.min.z <= 0f && render.max.z >= 0f;
+                cap.center = pivoteDentro
+                    ? new Vector3(0f, render.min.y + cap.height * 0.5f, 0f)
+                    : new Vector3(render.center.x, render.min.y + cap.height * 0.5f, render.center.z);
             }
             else
             {
