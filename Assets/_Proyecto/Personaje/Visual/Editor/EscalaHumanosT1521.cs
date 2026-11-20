@@ -30,6 +30,7 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
         private const string RutaModelo = "Giro/Modelo";
         private const string NombreIdle = "Idle";
         private const string ClipIdleRespaldo = "PJ01_Loco_Idle";
+        private const string ClipDePieAlterno = "NPC_Esperar";
         private const string VisualJugador = "Visual_PJ01";
         /// <summary>Punto del ciclo del idle en que se mide (fracción de su duración).</summary>
         private const float FraccionIdle = 0.25f;
@@ -259,7 +260,7 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
 
         /// <summary>
         /// Altura de la malla horneada con el Animator muestreado en su clip de Idle: de la planta del pie al punto más alto de las mallas con piel,
-        /// igual que EscalaJugadorT670Pruebas. <c>Cabeza</c> es el hueso de la cabeza sobre la planta (control cruzado, no depende del BakeMesh).
+        /// igual que EscalaJugadorT670Pruebas, pero siempre con un clip de pie (<see cref="ClipDePie"/>). <c>Cabeza</c> es el hueso de la cabeza sobre la planta (control cruzado, no depende del BakeMesh).
         /// </summary>
         public static Medida Medir(GameObject instancia)
         {
@@ -268,7 +269,7 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             {
                 return new Medida(false, 0f, 0f, "-", "sin Animator");
             }
-            AnimationClip clip = ClipIdle(animador);
+            AnimationClip clip = ClipDePie();
             if (clip == null)
             {
                 return new Medida(false, 0f, 0f, "-", "sin clip de Idle");
@@ -306,6 +307,16 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             Transform cabeza = animador.avatar != null && animador.isHuman ? animador.GetBoneTransform(HumanBodyBones.Head) : null;
             float alturaCabeza = cabeza != null ? cabeza.position.y - bajo : 0f;
             return new Medida(true, alto - bajo, alturaCabeza, clip.name, cabeza == null ? "sin hueso de cabeza (avatar no humanoide o inválido)" : null);
+        }
+
+        /// <summary>
+        /// Clip de pie con el que se mide a todos (PJ01_Loco_Idle, o NPC_Esperar si falta). El Idle propio del visual no sirve: el del Hacker es sentado tecleando y el del
+        /// Mecánico agachado, y medirlos así los dejaba a 2.4 m de pie. Los clips Humanoid se reproducen en cualquier avatar humanoide.
+        /// </summary>
+        public static AnimationClip ClipDePie()
+        {
+            AnimationClip clip = ConstructorControladorBase.Clip(ClipIdleRespaldo);
+            return clip != null ? clip : ConstructorControladorBase.Clip(ClipDePieAlterno);
         }
 
         /// <summary>El clip del estado Idle de la capa 0 (con la sustitución del override si lo hay).</summary>
