@@ -103,7 +103,7 @@ namespace MechaCyberpunk.Tests.UI
             yield return null;
             yield return null;
             Assert.IsTrue(mapa.Abierto, "M abre el mapa grande");
-            Assert.AreEqual(BarriosMapa.Todos.Length, mapa.NombresBarrios.Count, "Todos los barrios y zonas con su nombre");
+            Assert.AreEqual(4, mapa.NombresBarrios.Count, "Los cuatro barrios con su nombre");
             yield return Pulsar(teclado.mKey);
             yield return null;
             Assert.IsFalse(mapa.Abierto, "M lo cierra");
@@ -146,7 +146,7 @@ namespace MechaCyberpunk.Tests.UI
 
             yield return Pulsar(teclado.mKey);
             Assert.IsTrue(mapa.Abierto, "M abre el mapa grande");
-            Assert.AreEqual(BarriosMapa.Todos.Length, mapa.NombresBarrios.Count, "Todos los barrios y zonas con su nombre");
+            Assert.AreEqual(4, mapa.NombresBarrios.Count, "Los cuatro barrios con su nombre");
 
             // La flecha del jugador cae exactamente donde la imagen tiene ese punto del mundo.
             Vector2 flecha = mapa.PuntoJugador.position;

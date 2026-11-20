@@ -19,10 +19,7 @@ namespace MechaCyberpunk.UI.Editor
         private const int PasosSombra = 16;
         private const int SaltoSombra = 3;
 
-        // El mapa de alturas pone -2 donde no hay malla y el agua (y -3) y la playa quedan por debajo de -1.5.
-        private const float AlturaMar = -1.5f;
-        private static readonly Color Mar = new Color(0.02f, 0.06f, 0.14f);
-        private static readonly Color Calle =new Color(0.06f, 0.075f, 0.11f);
+        private static readonly Color Calle = new Color(0.06f, 0.075f, 0.11f);
         private static readonly Color Banqueta = new Color(0.15f, 0.17f, 0.22f);
         private static readonly Color Contorno = new Color(0.015f, 0.02f, 0.04f);
 
@@ -38,13 +35,6 @@ namespace MechaCyberpunk.UI.Editor
                     Vector2 mundo = MapaImagen.PixelAMundo(new Vector2(i + 0.5f, j + 0.5f));
                     Color tinte = BarriosMapa.ColorEn(mundo);
                     Color color;
-                    if (h < AlturaMar)
-                    {
-                        // T-1352: sin tierra (el mar y la playa, o el vacío fuera de la ciudad): azul oscuro, con un poco de grano.
-                        float onda = Hash(i, j) * 0.04f;
-                        salida[k] = new Color(Mar.r + onda * 0.5f, Mar.g + onda, Mar.b + onda * 1.5f, 1f);
-                        continue;
-                    }
                     if (h < AlturaCalle)
                     {
                         color = Color.Lerp(Calle, tinte * 0.35f, 0.14f);
