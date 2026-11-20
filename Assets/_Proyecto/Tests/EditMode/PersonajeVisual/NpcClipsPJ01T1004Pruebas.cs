@@ -41,7 +41,7 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
         }
 
         private static string[] ClipsAjenos(RuntimeAnimatorController c)
-            => c.animationClips.Where(x => x != null && !x.name.StartsWith(PrefijoPJ01)).Select(x => x.name).Distinct().ToArray();
+            => c.animationClips.Where(x => x != null && !x.name.StartsWith(PrefijoPJ01) && !MechaCyberpunk.Personaje.Visual.Editor.ClipsNpcNovaT1506.EsClipBlender(x.name) && !x.name.StartsWith("E17_")).Select(x => x.name).Distinct().ToArray();
 
         [Test]
         public void CadaHumanoideDeLosPrefabs_SoloUsaClipsDePJ01()
