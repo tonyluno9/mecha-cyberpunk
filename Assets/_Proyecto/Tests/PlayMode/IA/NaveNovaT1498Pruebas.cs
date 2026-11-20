@@ -141,7 +141,7 @@ namespace MechaCyberpunk.Tests
                 yield return null;
             }
             Assert.IsTrue(vioCuerda, "los soldados bajan colgados de una cuerda");
-            Assert.IsNull(respuesta.Nave, "la nave se fue");
+            Assert.IsTrue(respuesta.Nave == null, "la nave se fue");
             Assert.AreEqual(Soldados, respuesta.DeNaveVivos, "dejó a los soldados de Nova");
             foreach (PandilleroAPie p in respuesta.DeNave)
             {
