@@ -196,9 +196,9 @@ namespace MechaCyberpunk.Trafico.Peatones
         public const string MensajeHerido = "AlHerirCivil";
         public const string MensajeMuerte = "AlMorirCivil";
         public const string MensajeRevivir = "AlRevivirCivil";
-        public const string ParametroCaer = "Caer";
+        public const string ParametroCaer = "KO"; // ReglasVisual.Caer: el parámetro Bool que tumba al personaje
 
-        /// <summary>True si algún Animator del peatón tiene el parámetro Caer (controlador base o propio, con clip de muerte).</summary>
+        /// <summary>True si algún Animator del peatón tiene el parámetro de caer, "KO" (controlador base o propio, con clip de muerte).</summary>
         public bool TieneMuerteAnimada()
         {
             foreach (Animator animador in GetComponentsInChildren<Animator>(false))
