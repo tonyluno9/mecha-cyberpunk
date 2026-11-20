@@ -59,6 +59,8 @@ namespace MechaCyberpunk.Progresion
                 DatosReputacion d = reputacion is ServicioReputacion servicio ? servicio.Datos : null;
                 cantidad *= ReglaReputacion.MultiplicadorCalor(d, reputacion.Nivel(TipoReputacion.Corporaciones));
             }
+            // T-1528: las estrellas subían muy rápido: lo que sube por acciones se escala; lo de misión/guion (estrellas exigidas) queda entero.
+            if (motivo != MotivoCalor.Mision && datos != null) cantidad *= datos.FactorSuma;
             modelo.Sumar(cantidad, motivo);
         }
 

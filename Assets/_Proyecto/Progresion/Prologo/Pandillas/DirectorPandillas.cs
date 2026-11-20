@@ -146,6 +146,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
                     PandillaAPie pandilla = grupo.GetComponent<PandillaAPie>();
                     if (pandilla != null)
                     {
+                        pandilla.EsDeGuion = true; // T-1528
                         pandilla.ModoMision = true; // T-713: salen todos a la vez, no reaparecen
                     }
                 }

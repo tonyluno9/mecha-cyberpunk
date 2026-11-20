@@ -157,7 +157,7 @@ namespace MechaCyberpunk.Tests.Mecha
 
             yield return Tecla(teclado.mKey);
 
-            Assert.AreEqual(10f, calor.Valor, 0.5f, "Llamar suma 10 al instante");
+            Assert.AreEqual(5f, calor.Valor, 0.5f, "Llamar suma 10 al instante, con el factor 0.5 de T-1528");
             Assert.AreEqual(0, calor.Nivel);
         }
 

@@ -396,6 +396,11 @@ namespace MechaCyberpunk.IA.APie
             {
                 EventosRuido.Disparo += AlOirDisparo;
             }
+            if (datos != null && datos.ProvocaAntesDeAtacar)
+            {
+                EventosRuido.Disparo += AlRespuestaDelJugador; // T-1528
+                EventosRuido.ArmaSacada += AlRespuestaDelJugador;
+            }
         }
 
         /// <summary>
@@ -414,6 +419,7 @@ namespace MechaCyberpunk.IA.APie
                 return;
             }
             alerta = siempreAlerta;
+            hostilDesde = -1f; // T-1528
             provocadoHasta = -1f;
             regla?.Reiniciar();
             reglaJefe?.Reiniciar();
@@ -432,6 +438,8 @@ namespace MechaCyberpunk.IA.APie
         {
             EventosJugador.Desperto -= AlDespertarElJugador;
             EventosRuido.Disparo -= AlOirDisparo;
+            EventosRuido.Disparo -= AlRespuestaDelJugador;
+            EventosRuido.ArmaSacada -= AlRespuestaDelJugador;
             Registro<ICriminalCalle>.Quitar(this);
             Registro<ILecturaRival>.Quitar(this);
             Registro<IMarcaMapa>.Quitar(this);
@@ -444,6 +452,8 @@ namespace MechaCyberpunk.IA.APie
         {
             EventosJugador.Desperto -= AlDespertarElJugador;
             EventosRuido.Disparo -= AlOirDisparo;
+            EventosRuido.Disparo -= AlRespuestaDelJugador;
+            EventosRuido.ArmaSacada -= AlRespuestaDelJugador;
             Registro<ILecturaRival>.Quitar(this);
             Registro<IMarcaMapa>.Quitar(this);
             Activos.Remove(this);
@@ -523,6 +533,10 @@ namespace MechaCyberpunk.IA.APie
                 }
             }
             float aplicado = modelo.Aplicar(cantidad);
+            if (EsMaleanteDeCalle && !ConductaRina.GolpeDeRinaEnCurso && !DanioDeLaPolicia)
+            {
+                VolverseHostil(); // T-1528: el jugador respondió
+            }
             if (datos.SeDefiende)
             {
                 // T-1009: si lo golpean o le disparan, pelea contra el jugador un buen rato.
@@ -609,6 +623,11 @@ namespace MechaCyberpunk.IA.APie
             }
             if (datos.UsaPistola)
             {
+                if (EnProvocacion())
+                {
+                    ActualizarProvocando();
+                    return;
+                }
                 ActualizarArmado();
                 return;
             }
@@ -646,6 +665,128 @@ namespace MechaCyberpunk.IA.APie
             ObjetivoActual = null;
             velocidadVertical = controlador.isGrounded ? -1f : velocidadVertical + Gravedad * Time.deltaTime;
             controlador.Move(Vector3.up * velocidadVertical * Time.deltaTime);
+        }
+
+        // ---- Maleante de calle (T-1528): provoca primero, ataca solo si el jugador responde ----
+
+        private float hostilDesde = -1f;
+        private float ultimaAlertaHostil;
+        private float proximoEmpujon = -1f;
+        private float proximoTiroLimitado;
+
+        /// <summary>T-1528: true si es un maleante de calle: SKULLS/SNAKES con el dato activo, de un grupo que no es de guion de misión (ni jefe, policía ni Nova).</summary>
+        public bool EsMaleanteDeCalle => datos != null && datos.ProvocaAntesDeAtacar && datos.UsaPistola && !datos.EsPolicia && !datos.JefeCuerpoACuerpo
+            && !datos.ReaccionaADisparos && !datos.PerroRobot && !esJefe && !siempreAlerta && Grupo != null && !Grupo.EsDeGuion
+            && (Grupo.Pandilla == IdPandilla.Calaveras || Grupo.Pandilla == IdPandilla.Viboras);
+
+        /// <summary>T-1528: true si el jugador ya respondió (le pegó, sacó el arma o disparó cerca) y este maleante ataca de verdad.</summary>
+        public bool EsHostil => hostilDesde >= 0f;
+
+        /// <summary>T-1528: segundos que lleva atacando (0 si no es hostil).</summary>
+        public float SegundosHostil => EsHostil ? Time.time - hostilDesde : 0f;
+
+        /// <summary>T-1528: el jugador respondió: este maleante y los de su grupo atacan desde ya.</summary>
+        public void VolverseHostil()
+        {
+            if (!EsMaleanteDeCalle)
+            {
+                return;
+            }
+            Grupo.HacerHostiles();
+            PonerHostil();
+        }
+
+        internal void PonerHostil()
+        {
+            if (EsHostil || EstaKO)
+            {
+                return;
+            }
+            hostilDesde = Time.time;
+            ultimaAlertaHostil = Time.time;
+            proximoTiroLimitado = Time.time + ReglaProvocacionCalle.RecargaExtraInicial;
+        }
+
+        private void AlRespuestaDelJugador(Vector3 punto)
+        {
+            if (raizJugador == null || EsHostil || EstaKO || !EsMaleanteDeCalle)
+            {
+                return;
+            }
+            if (ReglaProvocacionCalle.EsRespuesta(punto, raizJugador.position, transform.position))
+            {
+                VolverseHostil();
+            }
+        }
+
+        // Alerta contra el jugador pero sin respuesta de su parte: provoca en vez de atacar. Si ya era hostil, se calma tras un rato sin alerta.
+        private bool EnProvocacion()
+        {
+            if (!EsMaleanteDeCalle)
+            {
+                return false;
+            }
+            if (EsHostil)
+            {
+                if (Alerta)
+                {
+                    ultimaAlertaHostil = Time.time;
+                }
+                else if (Time.time - ultimaAlertaHostil > ReglaProvocacionCalle.SegundosCalma)
+                {
+                    hostilDesde = -1f;
+                }
+                return false;
+            }
+            return Alerta && EsAtacable();
+        }
+
+        private void ActualizarProvocando()
+        {
+            ObjetivoActual = null; // no apunta a nadie: la policía no lo toma por criminal
+            turnos?.Soltar(this);
+            pistola?.QuitarAviso();
+            Vector3 hacia = (raizJugador != null ? raizJugador.position : hogar) - transform.position;
+            hacia.y = 0f;
+            float distancia = hacia.magnitude;
+            Vector3 adelante = distancia > 0.0001f ? hacia / distancia : transform.forward;
+            Vector3 deseada = distancia > ReglaProvocacionCalle.DistanciaProvocar
+                ? adelante * Mathf.Min(datos.Velocidad, ReglaProvocacionCalle.VelocidadAcercamiento) : Vector3.zero;
+            if (distancia <= ReglaProvocacionCalle.DistanciaEmpujon + 4f && Time.time >= proximoGrito)
+            {
+                Gritar(ReglaProvocacionCalle.Gritos[UnityEngine.Random.Range(0, ReglaProvocacionCalle.Gritos.Length)]);
+                visual?.Burlar();
+            }
+            if (distancia <= ReglaProvocacionCalle.DistanciaEmpujon && Time.time >= proximoEmpujon)
+            {
+                proximoEmpujon = Time.time + UnityEngine.Random.Range(ReglaProvocacionCalle.EmpujonMinimo, ReglaProvocacionCalle.EmpujonMaximo);
+                AnimarGolpe(false); // no hay clip de empujón: se usa el golpe suave
+                DaniarJugador(ReglaProvocacionCalle.DanioEmpujon, adelante);
+            }
+            if (adelante.sqrMagnitude > 0.0001f)
+            {
+                Quaternion meta = Quaternion.LookRotation(adelante, Vector3.up);
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, meta, datos.VelocidadGiro * Time.deltaTime);
+            }
+            velocidadVertical = controlador.isGrounded ? -1f : velocidadVertical + Gravedad * Time.deltaTime;
+            Vector3 mover = deseada;
+            mover.y = velocidadVertical;
+            controlador.Move(mover * Time.deltaTime);
+            if (animador != null)
+            {
+                animador.SetFloat(IdVelocidad, deseada.magnitude);
+                PonerEnPiso();
+                if (visual != null)
+                {
+                    visual.Agachado = false;
+                    visual.Apuntando = false;
+                    visual.TipoArma = TipoArmaVisual.Pistola;
+                }
+                else
+                {
+                    animador.SetBool(IdApuntando, false);
+                }
+            }
         }
 
         // ---- Pandillero armado (T-402) ----
@@ -781,7 +922,10 @@ namespace MechaCyberpunk.IA.APie
                 DistanciaAlPunto = DistanciaPlana(transform.position, hogar),
                 JugadorAtacable = atacable && !huyendo
             };
-            entrada.TieneTurno = regla.Atacando || (puedeTirar && tactica.PuedeDisparar && (turnos == null || turnos.Pedir(this)));
+            bool limitado = EsMaleanteDeCalle; // T-1528: daño, precisión y cadencia limitados al empezar a atacar (suben con el tiempo)
+            float segundosAtacando = SegundosHostil;
+            entrada.TieneTurno = regla.Atacando || (puedeTirar && tactica.PuedeDisparar && (!limitado || Time.time >= proximoTiroLimitado)
+                && (turnos == null || turnos.Pedir(this)));
             ReglaPandilleroAPie.Salida salida = regla.Avanzar(Time.deltaTime, entrada);
             if (!regla.Atacando)
             {
@@ -803,11 +947,18 @@ namespace MechaCyberpunk.IA.APie
                 disparoReciente = true;
                 float probabilidad = PistolaPandillero.ProbabilidadAcierto(distancia, datos.DistanciaAciertoCerca,
                     datos.DistanciaAciertoLejos, datos.AciertoCerca, datos.AciertoLejos);
+                float danioTiro = datos.DanioDisparo;
+                if (limitado)
+                {
+                    probabilidad *= ReglaProvocacionCalle.EscalaPrecision(segundosAtacando);
+                    danioTiro *= ReglaProvocacionCalle.EscalaDanio(segundosAtacando);
+                    proximoTiroLimitado = Time.time + ReglaProvocacionCalle.RecargaExtra(segundosAtacando);
+                }
                 DanioDeLaPolicia = datos.EsPolicia; // T-729: lo que caiga por este disparo no suma búsqueda al jugador
                 Sonidos.ReproducirEn(MechaCyberpunk.Personaje.Combate.SonidosArmasT1472.IdDisparoEnemigo(datos.Perdigones), boca); // T-1472: el disparo enemigo, en 3D
                 for (int perdigon = 0; perdigon < datos.Perdigones; perdigon++)
                 {
-                    pistola.Disparar(boca, pecho, recibe, datos.DanioDisparo, probabilidad);
+                    pistola.Disparar(boca, pecho, recibe, danioTiro, probabilidad);
                 }
                 DanioDeLaPolicia = false;
                 if (visual != null)

@@ -95,11 +95,32 @@ namespace MechaCyberpunk.UI.Hud
             }
         }
 
-        private void OnEnable() => EventosPelea.ImpactoRecibido += AlImpacto;
+        private void OnEnable()
+        {
+            EventosPelea.ImpactoRecibido += AlImpacto;
+            EventosIndicadorDanio.FuenteMarcada += AlMarcarFuente;
+        }
+
+        // T-1528: una fuente señalada sin daño (los drones, con el visor): la misma marca del daño, hacia ese punto.
+        private void AlMarcarFuente(Vector3 posicion)
+        {
+            IJugador jugador = Registro<IJugador>.Actual;
+            if (jugador == null || jugador.Raiz == null)
+            {
+                return;
+            }
+            Transform referencia = jugador.Camara != null ? jugador.Camara.transform : jugador.Raiz;
+            Vector3 viaja = jugador.Raiz.position - posicion; // hacia donde viajaría el golpe: de la fuente al jugador
+            if (ReglaIndicadorDanio.Angulo(referencia.forward, viaja, out float grados))
+            {
+                Mostrar(grados);
+            }
+        }
 
         private void OnDisable()
         {
             EventosPelea.ImpactoRecibido -= AlImpacto;
+            EventosIndicadorDanio.FuenteMarcada -= AlMarcarFuente;
             foreach (Marca m in marcas)
             {
                 m.nacio = -1f;

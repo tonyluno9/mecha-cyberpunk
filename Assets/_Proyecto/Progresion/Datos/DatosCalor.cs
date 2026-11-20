@@ -18,6 +18,10 @@ namespace MechaCyberpunk.Progresion
         [Tooltip("Cuánto baja el calor por segundo una vez que empieza a enfriarse (puntos/s).")]
         [Min(0f)] [SerializeField] private float enfriamientoPorSegundo = 5f;
 
+        [Tooltip("T-1528: factor con que se multiplica el calor que suben las acciones (disparos, golpes, choques...). 0.5 = el doble de acciones por estrella. No afecta al calor de misión (MotivoCalor.Mision).")]
+        [Range(0.05f, 1f)] [SerializeField] private float factorSuma = 0.5f;
+
+        public float FactorSuma => factorSuma;
         public float Maximo => maximo;
         public float[] UmbralesNivel => umbralesNivel;
         public float RetrasoEnfriamiento => retrasoEnfriamiento;

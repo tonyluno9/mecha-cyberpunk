@@ -45,6 +45,9 @@ namespace MechaCyberpunk.IA.APie
         /// </summary>
         public bool ModoMision { get; set; }
 
+        /// <summary>T-1528: true si el grupo es de un guion de misión (prólogo, jefe SNAKES): sus pandilleros no provocan antes de atacar.</summary>
+        public bool EsDeGuion { get; set; }
+
         /// <summary>T-713: cuántos de este grupo ya cayeron en modo misión (no vuelven).</summary>
         public int Vencidos => vencidos.Count;
 
@@ -52,6 +55,22 @@ namespace MechaCyberpunk.IA.APie
         public bool TodosVencidos => pandilleros != null && pandilleros.Length > 0 && vencidos.Count >= pandilleros.Length;
 
         private readonly System.Collections.Generic.HashSet<PandilleroAPie> vencidos = new System.Collections.Generic.HashSet<PandilleroAPie>();
+
+        /// <summary>T-1528: el jugador respondió a la provocación: todos los de este grupo atacan.</summary>
+        public void HacerHostiles()
+        {
+            if (pandilleros == null)
+            {
+                return;
+            }
+            foreach (PandilleroAPie p in pandilleros)
+            {
+                if (p != null && p.isActiveAndEnabled)
+                {
+                    p.PonerHostil();
+                }
+            }
+        }
 
         /// <summary>Cuántos pandilleros hay en pie ahora.</summary>
         public int Presentes

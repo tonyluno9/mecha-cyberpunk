@@ -72,7 +72,7 @@ namespace MechaCyberpunk.Tests.Progresion
             calor.NivelCambio += n => nivelAvisado = n;
             calor.ValorCambio += v => valorAvisado = v;
 
-            calor.Sumar(30f, MotivoCalor.Otro);
+            calor.Sumar(30f, MotivoCalor.Mision);
 
             Assert.AreEqual(30f, calor.Valor, 0.01f);
             Assert.AreEqual(1, calor.Nivel);
@@ -85,7 +85,7 @@ namespace MechaCyberpunk.Tests.Progresion
         {
             yield return Crear(RutaServicios);
             ICalor calor = Registro<ICalor>.Actual;
-            calor.Sumar(50f, MotivoCalor.Otro);
+            calor.Sumar(50f, MotivoCalor.Mision);
 
             yield return Esperar(9f);
             Assert.AreEqual(50f, calor.Valor, 0.01f, "Dentro del retraso no baja");
@@ -101,7 +101,7 @@ namespace MechaCyberpunk.Tests.Progresion
         {
             yield return Crear(RutaServicios);
             ICalor calor = Registro<ICalor>.Actual;
-            calor.Sumar(80f, MotivoCalor.Otro);
+            calor.Sumar(80f, MotivoCalor.Mision);
             Assert.AreEqual(3, calor.Nivel);
 
             calor.Borrar();
