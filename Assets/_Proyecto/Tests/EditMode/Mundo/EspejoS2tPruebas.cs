@@ -12,6 +12,7 @@ namespace MechaCyberpunk.Tests.Mundo
     public class EspejoS2tPruebas
     {
         [Test]
+        [Ignore("T-1520: el cuarto y su espejo (S2t_Espejo) se borraron de Ciudad_Prologo")]
         public void Cuarto_TieneElEspejoQueReflejaYElViejoApagado()
         {
             Scene escena = EditorSceneManager.OpenScene(ColocarS2.RutaEscena, OpenSceneMode.Additive);

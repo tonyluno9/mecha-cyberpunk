@@ -40,6 +40,7 @@ namespace MechaCyberpunk.Tests.Mundo
         }
 
         [Test]
+        [Ignore("T-1520: el cuarto se borró de Ciudad_Prologo (T550_Cuartos); sin cuarto no hay nada que medir")]
         public void Habitacion_ViveEnSuCuartoAparte_SinPosteresYFocoCalido()
         {
             Assert.IsNull(raiz.Find("Habitacion"), "T-550: la habitación ya es un cuarto aparte (T550_Cuartos)");

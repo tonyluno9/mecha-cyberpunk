@@ -4,6 +4,8 @@ using MechaCyberpunk.IA.APie;
 using MechaCyberpunk.Personaje;
 using MechaCyberpunk.Personaje.Combate;
 using MechaCyberpunk.Personaje.Jugador;
+using MechaCyberpunk.Personaje.Movimiento;
+using MechaCyberpunk.Personaje.Visual;
 using MechaCyberpunk.Personaje.Vida;
 using MechaCyberpunk.Progresion.Apoyo;
 using MechaCyberpunk.UI.Historia;
@@ -38,6 +40,11 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
         public const string SubtituloInventor = "—Esa pistola está de museo. Ya quedó.";
         public const string FinAyudaInventor = ": MÁS DAÑO Y MÁS BALAS";
         public const string SubtituloTianguis = "—Los SKULLS se creen dueños del Tianguis";
+        public const string IdInicioRespaldo = "Casa_Cama";
+        /// <summary>T-1520: segundos en negro con el personaje tumbado antes de abrir el fundido al empezar.</summary>
+        public const float SegundosEnNegroAlInicio = 1f;
+        /// <summary>T-1520: segundos de la animación de levantarse (2.5x más rápida que el clip) con el control todavía bloqueado.</summary>
+        public const float SegundosLevantandoseAlInicio = 1.8f;
         public const string AyudaTianguis = "EN EL MERCADO VENDEN ARMAS · EL CIC LAS MEJORA";
         public const string PrefijoTianguisTuyo = "EL TIANGUIS ES DE ";
         public const string IdDoc = "doc";
@@ -69,12 +76,14 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
         [SerializeField] private PersonajeApoyo doc;
         [SerializeField] private PersonajeApoyo inventor;
         [SerializeField] private PersonajeApoyo hacker;
-        [SerializeField] private string idCama = "Casa_Cama";
+        [Tooltip("T-1520: aparición donde empieza la partida nueva (en la calle, sin cuarto). Si falta, cae a Casa_Cama (frente a la puerta).")]
+        [SerializeField] private string idInicio = "Inicio_Calle";
         [SerializeField] private string zona = "tianguis";
         [Min(1)] [SerializeField] private int respetoJefe = 70;
         [Min(0.5f)] [SerializeField] private float radioSalida = 2.5f;
         [Min(0f)] [SerializeField] private float segundosContinuara = 4f;
 
+        private bool levantarseAlEmpezar;
         private readonly MaquinaHistoriaPandillas maquina = new MaquinaHistoriaPandillas();
         private PantallaHistoriaPandillas pantalla;
         private ArmaEnPiso arma;
@@ -133,6 +142,9 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
 
         private void Awake()
         {
+            // T-1520: solo una partida nueva pedida desde el menú o la creación (FlujoPartida) arranca con el personaje levantándose;
+            // abrir la escena directo (pruebas, Play en el editor) lo coloca en Inicio_Calle y le da el control enseguida.
+            levantarseAlEmpezar = FlujoPartida.Pendiente == AccionPartida.Nueva;
             pantalla = gameObject.AddComponent<PantallaHistoriaPandillas>();
             pantalla.ContinuaraCerrada += AlCerrarContinuara;
             asalto = gameObject.AddComponent<AsaltoDinero>(); // T-717: la historia del dinero
@@ -241,10 +253,14 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
             bool partidaNueva = !cargadoAntes && maquina.Paso == PasoHistoria.Despierta;
             if (partidaNueva)
             {
-                // T-1496: sin cuarto. El jugador empieza afuera (Casa_Cama está frente a la puerta de la calle), así que el paso
+                // T-1496/T-1520: sin cuarto. El jugador empieza levantándose en la calle (Inicio_Calle), así que el paso
                 // "SAL A LA CALLE" ya está cumplido: se salta y la historia abre con el primer objetivo de la calle.
-                ColocarEnLaCama();
+                ColocarEnElInicio();
                 maquina.Avisar(AvisoHistoria.SalioDeCasa);
+                if (levantarseAlEmpezar)
+                {
+                    StartCoroutine(LevantarseEnLaCalle());
+                }
             }
             Aplicar();
             if (partidaNueva || maquina.Paso == PasoHistoria.Despierta)
@@ -255,22 +271,67 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
 
         private PersonajeApoyo[] Profes => new[] { doc, inventor, hacker };
 
-        private void ColocarEnLaCama()
+        private void ColocarEnElInicio()
         {
             IJugador jugador = Registro<IJugador>.Actual;
             if (jugador == null)
             {
                 return;
             }
+            IPuntoAparicion punto = BuscarAparicion(idInicio) ?? BuscarAparicion(IdInicioRespaldo);
+            if (punto == null)
+            {
+                Debug.LogWarning("[Progresion] DirectorPandillas no encontró el punto " + idInicio + "; el jugador empieza donde está.", this);
+                return;
+            }
+            jugador.Colocar(punto.Pose);
+        }
+
+        private static IPuntoAparicion BuscarAparicion(string id)
+        {
             foreach (IPuntoAparicion punto in Registro<IPuntoAparicion>.Todos)
             {
-                if (punto != null && punto.Id == idCama)
+                if (punto != null && punto.Id == id)
                 {
-                    jugador.Colocar(punto.Pose);
-                    return;
+                    return punto;
                 }
             }
-            Debug.LogWarning("[Progresion] DirectorPandillas no encontró el punto " + idCama + "; el jugador empieza donde está.", this);
+            return null;
+        }
+
+        // T-1520: el personaje empieza tumbado en la calle, en negro; al abrirse el fundido se levanta con la animación de levantarse del
+        // Animator (la misma de despertar en la clínica) y solo entonces se le da el control.
+        private IEnumerator LevantarseEnLaCalle()
+        {
+            JugadorAPie jugador = Registro<IJugador>.Actual as JugadorAPie;
+            VisualPersonaje visual = jugador != null ? jugador.GetComponentInChildren<VisualPersonaje>(true) : null;
+            if (visual == null)
+            {
+                yield break;
+            }
+            ControladorAPie control = jugador.GetComponent<ControladorAPie>();
+            if (control != null)
+            {
+                control.ActivarControl(false);
+            }
+            visual.Caido = true;
+            PantallaFundido fundido = PantallaFundido.Actual;
+            if (fundido != null)
+            {
+                fundido.Fijar(1f);
+            }
+            yield return new WaitForSecondsRealtime(SegundosEnNegroAlInicio);
+            if (fundido != null)
+            {
+                yield return fundido.Fundir(0f, fundido.Config != null ? fundido.Config.SegundosEntrada : 1f);
+            }
+            yield return new WaitForSecondsRealtime(ReglasAnimacion.RetardoLevantarse);
+            visual.Caido = false;
+            yield return new WaitForSecondsRealtime(SegundosLevantandoseAlInicio);
+            if (control != null)
+            {
+                control.ActivarControl(true);
+            }
         }
 
         // ---------- Cada cuadro ----------

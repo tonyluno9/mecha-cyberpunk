@@ -36,6 +36,7 @@ namespace MechaCyberpunk.Tests.Mundo
         }
 
         [Test]
+        [Ignore("T-1520: el cuarto se borró de Ciudad_Prologo (T550_Cuartos); sin cuarto no hay nada que medir")]
         public void Muebles_DentroYComoR10_ElEspejoNoSeMovio()
         {
             Bounds dentro = new Bounds();
