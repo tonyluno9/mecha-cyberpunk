@@ -229,7 +229,7 @@ namespace MechaCyberpunk.Personaje.Jugador
             {
                 if (visual != null)
                 {
-                    visual.Golpear(false);
+                    visual.Golpear(golpe.EsGolpeFinal); // T-1487: el último golpe del combo usa GolpeFuerte
                 }
                 else
                 {

@@ -25,6 +25,8 @@ namespace MechaCyberpunk.Personaje.Combate
 
         [SerializeField] private DatosPersonaje datos;
         [SerializeField] private InputActionReference atacar;
+        [Tooltip("T-1487: asistencia, combo, hitstop, temblor y empuje del golpe. Vacío: valores de código (ConfigGolpeAPie.PorDefecto).")]
+        [SerializeField] private ConfigGolpeAPie config;
         [Tooltip("Cubo que hace de puño, hijo de Manos. Avanza durante la preparación y regresa en la recarga.")]
         [SerializeField] private Transform puno;
         [Tooltip("Cuánto avanza el puño hacia adelante en el impacto (m).")]
@@ -46,11 +48,18 @@ namespace MechaCyberpunk.Personaje.Combate
         private bool girando;
         private float anguloAutoGiro;
         // T-1327: el golpe dirigido también acerca un poco al jugador al blanco.
-        private const float DistanciaParadaGolpe = 1f;
-        private const float RapidezAcercamiento = 6f;
         private float acercamientoPendiente;
         private Vector3 direccionAcercamiento;
         private CharacterController cuerpo;
+        // T-1487: combo con buffer, y feedback al conectar.
+        private ReglaComboGolpe combo;
+        private SensacionGolpe sensacion;
+
+        /// <summary>T-1487: el golpe en curso es el último del combo (la animación usa GolpeFuerte).</summary>
+        public bool EsGolpeFinal => combo != null && combo.EsGolpeFinal;
+        /// <summary>T-1487: índice del golpe del combo en curso (-1 si no hay).</summary>
+        public int PasoCombo => combo != null ? combo.Paso : -1;
+        public ConfigGolpeAPie Config => config;
 
         public DatosPersonaje Datos => datos;
         public FaseGolpe Fase => ciclo != null ? ciclo.Fase : FaseGolpe.Listo;
@@ -74,6 +83,17 @@ namespace MechaCyberpunk.Personaje.Combate
                 enabled = false;
                 return;
             }
+            if (config == null)
+            {
+                config = ConfigGolpeAPie.PorDefecto;
+            }
+            combo = new ReglaComboGolpe(config.GolpesCombo, config.SegundosBuffer, config.VentanaCombo, config.SegundosReinicioCombo);
+            sensacion = GetComponent<SensacionGolpe>();
+            if (sensacion == null)
+            {
+                sensacion = gameObject.AddComponent<SensacionGolpe>();
+            }
+            sensacion.Configurar(config);
             recargaActual = datos.RecargaGolpe;
             ciclo = new CicloGolpe(datos.PreparacionGolpe, recargaActual);
             if (puno != null)
@@ -102,27 +122,46 @@ namespace MechaCyberpunk.Personaje.Combate
                 girando = false;
                 acercamientoPendiente = 0f;
                 ciclo.Reiniciar();
+                combo.Reiniciar(); // T-1487: cancelación limpia: sin buffer ni combo en KO o derribo
                 MoverPuno();
                 return;
+            }
+            if (ArmaActiva != ArmaAPie.Punos)
+            {
+                combo.Reiniciar();
             }
             if (ciclo.Fase == FaseGolpe.Listo)
             {
                 AjustarRecarga();
             }
-            // T-675: sin spam; el siguiente golpe espera a que termine la animación del anterior.
-            if (atacar.action.WasPressedThisFrame() && ArmaActiva == ArmaAPie.Punos && !AnimacionOcupada() && !controlador.EntradaBloqueada)
+            // T-1487: el clic se recuerda (buffer); el combo encadena el siguiente golpe sin volver a Listo.
+            // Entre golpes de un combo no se espera a que acabe la animación; fuera del combo sí (T-675, sin spam).
+            if (atacar.action.WasPressedThisFrame() && ArmaActiva == ArmaAPie.Punos && !controlador.EntradaBloqueada)
             {
-                if (ciclo.IntentarGolpear())
-                {
-                    IniciarAutoGiro();
-                }
+                combo.RegistrarEntrada();
+            }
+            float dt = Time.deltaTime;
+            if (sensacion.EnHitstop)
+            {
+                // Hitstop: la animación está congelada y la lógica espera con ella (el buffer queda pausado).
+                combo.Avanzar(0f, ciclo.Fase, ciclo.Progreso, false);
+                MoverPuno();
+                return;
+            }
+            bool enCombo = combo.Paso >= 0 && combo.Paso < combo.Golpes - 1;
+            bool animacionLibre = enCombo || !AnimacionOcupada();
+            if (combo.Avanzar(dt, ciclo.Fase, ciclo.Progreso, animacionLibre))
+            {
+                ciclo.Reiniciar();
+                ciclo.IntentarGolpear();
+                IniciarAutoGiro();
             }
             if (girando)
             {
-                AvanzarAutoGiro(Time.deltaTime);
+                AvanzarAutoGiro(dt);
             }
-            Acercar(Time.deltaTime);
-            if (ciclo.Avanzar(Time.deltaTime))
+            Acercar(dt);
+            if (ciclo.Avanzar(dt))
             {
                 if (girando)
                 {
@@ -140,7 +179,7 @@ namespace MechaCyberpunk.Personaje.Combate
         {
             girando = false;
             acercamientoPendiente = 0f;
-            if (controlador.Apuntando || datos.RadioAutoGiro <= 0f)
+            if (controlador.Apuntando || config.AlcanceAsistencia <= 0f)
             {
                 return;
             }
@@ -154,7 +193,7 @@ namespace MechaCyberpunk.Personaje.Combate
             }
             blancos.Clear();
             posicionesBlancos.Clear();
-            int cantidad = Physics.OverlapSphereNonAlloc(centro, datos.RadioAutoGiro, cercanos, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore);
+            int cantidad = Physics.OverlapSphereNonAlloc(centro, config.AlcanceAsistencia, cercanos, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore);
             for (int i = 0; i < cantidad; i++)
             {
                 Collider c = cercanos[i];
@@ -177,7 +216,7 @@ namespace MechaCyberpunk.Personaje.Combate
                 posicionesBlancos.Add(new Vector2(p.x, p.z));
             }
             Vector2 yo = new Vector2(centro.x, centro.z);
-            int elegido = SelectorAutoGiro.Elegir(yo, frente, posicionesBlancos, datos.RadioAutoGiro, datos.AnguloAutoGiro);
+            int elegido = SelectorAutoGiro.Elegir(yo, frente, posicionesBlancos, config.AlcanceAsistencia, config.AnguloAsistencia);
             if (elegido < 0)
             {
                 return;
@@ -185,7 +224,7 @@ namespace MechaCyberpunk.Personaje.Combate
             Vector2 haciaBlanco = posicionesBlancos[elegido] - yo;
             anguloAutoGiro = SelectorAutoGiro.AnguloYaw(haciaBlanco);
             girando = true;
-            acercamientoPendiente = SelectorAutoGiro.Acercamiento(haciaBlanco.magnitude, DistanciaParadaGolpe, datos.AvanceAutoGiro);
+            acercamientoPendiente = SelectorAutoGiro.Acercamiento(haciaBlanco.magnitude, config.DistanciaParada, config.AcercamientoMaximo);
             direccionAcercamiento = new Vector3(haciaBlanco.x, 0f, haciaBlanco.y).normalized;
         }
 
@@ -198,7 +237,7 @@ namespace MechaCyberpunk.Personaje.Combate
             {
                 return;
             }
-            float paso = Mathf.Min(acercamientoPendiente, RapidezAcercamiento * dt);
+            float paso = Mathf.Min(acercamientoPendiente, config.RapidezAcercamiento * dt);
             acercamientoPendiente -= paso;
             cuerpo.Move(direccionAcercamiento * paso);
         }
@@ -225,7 +264,7 @@ namespace MechaCyberpunk.Personaje.Combate
 
         private void AvanzarAutoGiro(float dt)
         {
-            float angulo = Mathf.MoveTowardsAngle(transform.eulerAngles.y, anguloAutoGiro, datos.VelocidadAutoGiro * dt);
+            float angulo = Mathf.MoveTowardsAngle(transform.eulerAngles.y, anguloAutoGiro, config.VelocidadGiro * dt);
             transform.rotation = Quaternion.Euler(0f, angulo, 0f);
             if (Mathf.Approximately(Mathf.DeltaAngle(angulo, anguloAutoGiro), 0f))
             {
@@ -282,6 +321,7 @@ namespace MechaCyberpunk.Personaje.Combate
             {
                 ResultadoDanio resultado = objetivo.RecibirDanio(new InfoDanio(DanioDelGolpe(), TipoDanio.Golpe, punto, direccion, null));
                 Conecto?.Invoke(resultado.CausoKO);
+                sensacion.Conectar(objetivo as Component, direccion, combo.EsGolpeFinal);
                 // T-992: con BRAZOS activa el golpe empuja a lo que tenga cuerpo con física.
                 float empuje = Habilidades != null ? Habilidades.EmpujeGolpe : 0f;
                 Rigidbody cuerpo = empuje > 0f && objetivo is Component componente ? componente.GetComponentInParent<Rigidbody>() : null;
@@ -290,7 +330,10 @@ namespace MechaCyberpunk.Personaje.Combate
                     cuerpo.AddForce(direccion.normalized * empuje, ForceMode.VelocityChange);
                 }
             }
-            Sonidos.ReproducirEn(ReglaSonidosJugador.IdGolpe(objetivo != null),objetivo != null ? punto : origen);
+            if (objetivo == null)
+            {
+                Sonidos.ReproducirEn(ReglaSonidosJugador.IdGolpe(false), origen); // al conectar suena SensacionGolpe
+            }
             Impacto?.Invoke();
         }
 

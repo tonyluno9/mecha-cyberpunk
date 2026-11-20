@@ -68,3 +68,12 @@ No se inventó nada: el retroceso del arma es posicional y el flinch del enemigo
 | Caída hacia atrás al morir de un tiro de escopeta | Shot Gun Death / Death From The Front | Loco_MuerteEscopeta.fbx | Loco |
 
 Sonidos sin archivo propio (hoy la marca reusa HUD_NOTIFICACION y HUD_LOGRO): IMP_HITMARKER (tic seco) e IMP_HITMARKER_MUERTE (golpe grave con campanita).
+## T-1487: golpear a pie (19-nov-2026)
+
+Con los clips actuales (GolpeIzq, GolpeDer, GolpeFuerte, Dano*) el combo funciona. Para que se vea mejor, opcionales:
+
+| Para qué | Búscalo en Mixamo como | Archivo | Carpeta |
+| --- | --- | --- | --- |
+| Golpe final del combo distinto al GolpeFuerte (patada o gancho) | Roundhouse Kick / Hook Punch | Punos_GolpeFinal.fbx | Combate |
+| El enemigo sale volando hacia atrás con el golpe final | Standing React Large From Front (o Knocked Back) | Dano_EmpujadoAtras.fbx | Combate |
+| Sonido de golpe final más pesado (audio, no animación) | MEL_GOLPE con graves | MEL_GOLPE.wav | Assets/Arte audio |
