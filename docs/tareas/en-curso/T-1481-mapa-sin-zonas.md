@@ -22,4 +22,4 @@ Los cambios de sonido de UI (T-1474) en Inventario, Teléfono, Pausa y Tienda no
 
 ## Para comprobar en Unity
 - Compilar y correr `MapaCiudadT747Pruebas` (EditMode) y `MapaPlayT747Pruebas` (PlayMode).
-- La imagen restaurada es la de antes de las zonas y no hace falta regenerarla. Solo si la escena de la ciudad cambió respecto a esa base, correr el capturador desde el menú del editor (clase `CapturadorMapaCiudad`, en `UI/Editor`; revisa el nombre exacto del `[MenuItem]` en el archivo). Sobrescribe MapaCiudad.png; es seguro con la escena ya revertida y con Unity cerrado a otras sesiones.
+- La imagen restaurada es la de antes de las zonas y no hace falta regenerarla. Solo si la escena de la ciudad cambió respecto a esa base, correr el capturador con el método estático `MechaCyberpunk.UI.Editor.CapturadorMapaCiudad.Generar` (ver el archivo para el namespace y cómo se invoca). Sobrescribe MapaCiudad.png; es seguro con la escena ya revertida y con Unity cerrado a otras sesiones.
