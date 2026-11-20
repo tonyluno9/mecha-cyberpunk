@@ -52,6 +52,8 @@ MonoBehaviour:
   velocidadClipCorrer: 2.51
   rapidezMinima: 0.6
   rapidezMaxima: 3
+  velocidadClipAtras: 0
+  velocidadClipLado: 0
   rapidezCapaArriba: 8
   suavizadoDireccion: 14
   segundosTumbarse: 0.35
@@ -129,15 +131,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: c0609873d5aa0c440859a3e382fa5500, type: 3}
       propertyPath: m_LocalScale.x
-      value: 1.2765957
+      value: 1.245438
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c0609873d5aa0c440859a3e382fa5500, type: 3}
       propertyPath: m_LocalScale.y
-      value: 1.2765957
+      value: 1.245438
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c0609873d5aa0c440859a3e382fa5500, type: 3}
       propertyPath: m_LocalScale.z
-      value: 1.2765957
+      value: 1.245438
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c0609873d5aa0c440859a3e382fa5500, type: 3}
       propertyPath: m_LocalPosition.x
@@ -243,6 +245,7 @@ MonoBehaviour:
   socketArma: {fileID: 3411651565987644706}
   inclinacionBajada: 60
   manosPorIK: 0
+  clipPuro: 0
   maximoCorreccionCanon: 45
   inclinacionArmaLarga: -5
   maximoCorreccionArmaLarga: 120
@@ -263,6 +266,9 @@ MonoBehaviour:
   alturaRayo: 0.6
   alcanceRayo: 1.1
   rapidezPies: 10
+  soloDesnivel: 0
+  desnivelMaximo: 0.35
+  inclinarEnGiros: 0
   objetivo: {fileID: 0}
   mirarAlJugador: 0
   distanciaMirada: 7

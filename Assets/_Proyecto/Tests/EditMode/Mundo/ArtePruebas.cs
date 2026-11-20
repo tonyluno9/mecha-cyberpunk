@@ -245,9 +245,10 @@ namespace MechaCyberpunk.Tests.Mundo
                 bool haySolido = false;
                 foreach (Collider collider in colliders)
                 {
-                    haySolido |= collider is BoxCollider && !collider.isTrigger;
+                    // T-1527: postes y transformadores llevan cápsula delgada para que las balas no choquen con su caja entera.
+                    haySolido |= (collider is BoxCollider || collider is CapsuleCollider) && !collider.isTrigger;
                 }
-                Assert.IsTrue(haySolido, pieza.prefab + " necesita un BoxCollider que no sea trigger");
+                Assert.IsTrue(haySolido, pieza.prefab + " necesita un BoxCollider o CapsuleCollider que no sea trigger");
             }
         }
     }

@@ -37,6 +37,12 @@ namespace MechaCyberpunk.Personaje
         [Header("Zoom del sniper (T-416)")]
         [Tooltip("Campo de visión con el zoom del sniper (°).")]
         [Range(5f, 60f)] [SerializeField] private float fovSniper = 15f;
+        [Tooltip("T-1527: FOV más cerrado que se alcanza con la rueda del ratón apuntando con el francotirador (°).")]
+        [Range(2f, 60f)] [SerializeField] private float fovSniperMinimo = 3f;
+        [Tooltip("T-1527: FOV más abierto con la rueda apuntando con el francotirador (°).")]
+        [Range(5f, 60f)] [SerializeField] private float fovSniperMaximo = 24f;
+        [Tooltip("T-1527: cada muesca de la rueda multiplica o divide el FOV del zoom por este factor.")]
+        [Range(1.05f, 2f)] [SerializeField] private float factorPasoZoom = 1.3f;
         [Tooltip("Cuánto tarda el zoom en entrar o salir (s).")]
         [Min(0.01f)] [SerializeField] private float duracionZoom = 0.15f;
         [Tooltip("Factor de la sensibilidad del ratón mientras dura el zoom.")]
@@ -111,6 +117,9 @@ namespace MechaCyberpunk.Personaje
         public float RapidezCambioHombro => rapidezCambioHombro;
         public float MargenHombro => margenHombro;
         public float FovSniper => fovSniper;
+        public float FovSniperMinimo => fovSniperMinimo;
+        public float FovSniperMaximo => fovSniperMaximo;
+        public float FactorPasoZoom => factorPasoZoom;
         public float DuracionZoom => duracionZoom;
         public float SensibilidadZoom => sensibilidadZoom;
         public float SacudidaZoom => sacudidaZoom;

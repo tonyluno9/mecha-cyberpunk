@@ -28,6 +28,11 @@ namespace MechaCyberpunk.Trafico.Calle
         [Tooltip("Opcional: el padre de las manzanas (hijos Manzana_). Sin él se usa el del GestorPersecucion del barrio.")]
         [SerializeField] private Transform barrio;
 
+        [Tooltip("T-1526: interior del muro a mano (x, y = esquina mínima en x, z; ancho y alto en m). Vacío (0): se detecta de las piezas MU01/MU02/MU03 o del muro viejo.")]
+        [SerializeField] private Rect areaMuro;
+        [Tooltip("T-1526: cuánto (m) se mete el área hacia adentro del trazo del muro al detectarla.")]
+        [SerializeField, Min(0f)] private float margenAlMuro = AreaMuro.MargenPorOmision;
+
         private readonly List<CarroTrafico> carros = new List<CarroTrafico>();
         private GrafoCalles calles;
         private bool listo;
@@ -74,7 +79,7 @@ namespace MechaCyberpunk.Trafico.Calle
                 Vector3 nodo = calles.Nodo(i);
                 Vector3 d = nodo - destino;
                 d.y = 0f;
-                bool vale = d.magnitude >= distanciaMinima && !CarroTrafico.PuntoEnVista(camara, nodo) && !HayCarroEn(nodo) && EspacioLibre.Libre(nodo, carro.transform);
+                bool vale = calles.Dentro(i) && d.magnitude >= distanciaMinima && !CarroTrafico.PuntoEnVista(camara, nodo) && !HayCarroEn(nodo) && EspacioLibre.Libre(nodo, carro.transform);
                 permitido.Add(vale);
                 metros.Add(vale ? CalculoLlegadaPatrulla.MetrosDeRuta(calles, i, llegada) : float.MaxValue);
             }
@@ -167,16 +172,25 @@ namespace MechaCyberpunk.Trafico.Calle
                 return;
             }
             AlargarHaciaLasAfueras(calles);
+            AreaMuro.Definir(areaMuro); // T-1526: vacío = detectar en esta escena
+            RecortarAlMuro(); // T-1526: los carros solo ciclan dentro del muro
             if (configZonas == null)
             {
                 configZonas = Resources.Load<ConfigCarrosZonas>("ConfigCarrosZonas");
             }
-            List<CarroTrafico> general = new List<CarroTrafico>(prefabsCarro);
+            List<CarroTrafico> general = new List<CarroTrafico>();
+            foreach (CarroTrafico prefab in prefabsCarro)
+            {
+                if (EsCivil(prefab, true))
+                {
+                    general.Add(prefab);
+                }
+            }
             if (configZonas != null && prefabsCarro.Count > 0)
             {
                 foreach (CarroTrafico extra in configZonas.ExtrasGenerales)
                 {
-                    if (extra != null && !general.Contains(extra))
+                    if (EsCivil(extra, true) && !general.Contains(extra))
                     {
                         general.Add(extra);
                     }
@@ -187,6 +201,11 @@ namespace MechaCyberpunk.Trafico.Calle
             {
                 int nodo = ElegirNodo(azar);
                 CarroTrafico molde = general.Count > 0 ? ElegirParaPunto(general, calles.Nodo(nodo), azar, i) : prefabCarro;
+                if (!EsCivil(molde, false))
+                {
+                    Debug.LogError("[Trafico] T-1526: no hay un modelo de carro civil para el tráfico (los de policía no cuentan).", this);
+                    break;
+                }
                 CarroTrafico carro = Instantiate(molde, transform);
                 carro.name = "CarroTrafico_" + (i + 1);
                 carro.Preparar(config, calles, nodo, new System.Random(azar.Next()), PosicionDelJugador);
@@ -194,6 +213,27 @@ namespace MechaCyberpunk.Trafico.Calle
                 carros.Add(carro);
             }
             listo = true;
+        }
+
+        /// <summary>
+        /// T-1526: true si el carro es un modelo civil (no V05, V06, V08, V11, PA01 ni PA02, ver <see cref="ReglaModeloDePolicia"/>). Un modelo de patrulla en la lista del tráfico
+        /// saldría con el componente de un carro civil y no reaccionaría a la policía. <paramref name="avisar"/>: avisa en la consola si lo descarta.
+        /// </summary>
+        private static bool EsCivil(CarroTrafico carro, bool avisar)
+        {
+            if (carro == null)
+            {
+                return false;
+            }
+            if (!ReglaModeloDePolicia.EsDePolicia(carro.name))
+            {
+                return true;
+            }
+            if (avisar)
+            {
+                Debug.LogWarning("[Trafico] T-1526: " + carro.name + " es un modelo de policía; no sale en el tráfico civil.");
+            }
+            return false;
         }
 
         // T-1345: con una zona que contiene el punto y está en la config, mezcla con los carros de la zona; si no, igual que siempre (general[i % Count]).
@@ -205,7 +245,8 @@ namespace MechaCyberpunk.Trafico.Calle
             {
                 return Elegir(general, null, 0f, 0f, indice);
             }
-            return Elegir(general, datos.carros, datos.mezcla, (float)azar.NextDouble(), indice);
+            CarroTrafico elegido = Elegir(general, datos.carros, datos.mezcla, (float)azar.NextDouble(), indice);
+            return EsCivil(elegido, false) ? elegido : Elegir(general, null, 0f, 0f, indice); // T-1526: un modelo de patrulla en la lista de la zona no sale
         }
 
         /// <summary>
@@ -221,12 +262,55 @@ namespace MechaCyberpunk.Trafico.Calle
             return general != null && general.Count > 0 ? general[indice % general.Count] : null;
         }
 
+        // T-1526: recorta el grafo al interior del muro. Si en Start aún no hay muro en la escena, reintenta unos segundos (hasta MaximoIntentosDeMuro).
+        private const float SegundosEntreIntentosDeMuro = 2f;
+        private const int MaximoIntentosDeMuro = 8;
+        private const float SegundosEntreBarridosDeMuro = 1f;
+        private bool muroAplicado;
+        private int intentosDeMuro;
+        private float proximoIntentoDeMuro;
+        private float proximoBarridoDeMuro;
+
+        // El campo serializado margenAlMuro ya no se usa (un valor viejo guardado en la escena, 4 m, recortaba la cuadrícula): siempre el margen por omisión.
+        private float MargenEfectivo => AreaMuro.MargenPorOmision;
+
+        private void RecortarAlMuro()
+        {
+            intentosDeMuro++;
+            AreaMuro.Definir(areaMuro); // vacío = detectar en esta escena
+            muroAplicado = AreaMuro.Actual(MargenEfectivo).HasValue;
+            AreaMuro.Recortar(calles, MargenEfectivo);
+            proximoIntentoDeMuro = Time.time + SegundosEntreIntentosDeMuro;
+        }
+
+        // T-1526: cada segundo revisa el muro (aunque un carro esté parado o sin ruta): el que esté fuera se recicla dentro o se apaga.
+        private void RevisarMuro()
+        {
+            if (!muroAplicado && intentosDeMuro < MaximoIntentosDeMuro && Time.time >= proximoIntentoDeMuro)
+            {
+                RecortarAlMuro();
+            }
+            if (Time.time < proximoBarridoDeMuro)
+            {
+                return;
+            }
+            proximoBarridoDeMuro = Time.time + SegundosEntreBarridosDeMuro;
+            foreach (CarroTrafico c in carros)
+            {
+                if (c != null && c.gameObject.activeSelf)
+                {
+                    c.ReciclarSiEstaFueraDelMuro();
+                }
+            }
+        }
+
         private void Update()
         {
             if (!listo)
             {
                 return;
             }
+            RevisarMuro();
             IRelojMundo reloj = Registro<IRelojMundo>.Actual;
             int objetivo = config.Cantidad(reloj != null && reloj.EsDeNoche);
             int lugares = objetivo;
@@ -290,7 +374,7 @@ namespace MechaCyberpunk.Trafico.Calle
         private int ElegirNodo(System.Random azar)
         {
             Vector3? jugador = PosicionDelJugador();
-            int nodo = azar.Next(calles.Cantidad);
+            int nodo = NodoDentro(azar);
             for (int i = 0; i < IntentosDeNodo && jugador.HasValue; i++)
             {
                 Vector3 d = calles.Nodo(nodo) - jugador.Value;
@@ -299,6 +383,17 @@ namespace MechaCyberpunk.Trafico.Calle
                 {
                     break;
                 }
+                nodo = NodoDentro(azar);
+            }
+            return nodo;
+        }
+
+        // T-1526: un nodo al azar de los que quedaron dentro del muro.
+        private int NodoDentro(System.Random azar)
+        {
+            int nodo = azar.Next(calles.Cantidad);
+            for (int i = 0; i < calles.Cantidad * 3 && !calles.Dentro(nodo); i++)
+            {
                 nodo = azar.Next(calles.Cantidad);
             }
             return nodo;

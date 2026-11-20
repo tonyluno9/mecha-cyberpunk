@@ -20,6 +20,8 @@ namespace MechaCyberpunk.Trafico.Persecucion
         // T-1350: nodos y tramos de las calles de zona (CalleZona): los de zona no se alargan hacia las afueras; los tramos rápidos son de autopista.
         private readonly HashSet<int> nodosDeZona = new HashSet<int>();
         private readonly HashSet<long> tramosRapidos = new HashSet<long>();
+        // T-1526: nodos fuera del muro de la ciudad: sin vecinos y nunca se eligen para salir, llegar o retirarse.
+        private readonly HashSet<int> nodosFuera = new HashSet<int>();
         private float alturaMinima = float.MaxValue;
         private float alturaMaxima = float.MinValue;
 
@@ -110,6 +112,179 @@ namespace MechaCyberpunk.Trafico.Persecucion
             }
         }
 
+        /// <summary>T-1526: false si el nodo quedó fuera del muro (<see cref="Recortar"/>): no sirve para aparecer ni para ir.</summary>
+        public bool Dentro(int indice) => nodosFuera.Count == 0 || !nodosFuera.Contains(indice);
+
+        /// <summary>T-1526: cuántos nodos quedaron fuera del muro.</summary>
+        public int NodosFuera => nodosFuera.Count;
+
+        /// <summary>T-1526: cuántos nodos se movieron al borde del área (ver <see cref="Recortar"/>).</summary>
+        public int NodosAjustados { get; private set; }
+
+        /// <summary>T-1526: true si el grafo ya se recortó a un área (el muro). Solo entonces un carro fuera del área cuenta como "fuera del muro".</summary>
+        public bool Recortado { get; private set; }
+
+        /// <summary>
+        /// T-1526: deja el grafo dentro de <paramref name="area"/> (el interior del muro, plano x, z) sin cambiar su topología: cada nodo que cae fuera se MUEVE al punto de su calle
+        /// donde entra al área (hacia su vecino de adentro). Si queda a menos de <paramref name="separacionMinima"/> m de ese vecino (los finales de calle de la cuadrícula están pegados
+        /// al muro y las calles de las afueras llegan al mismo punto) se fusiona con él: el nodo se quita y sus otros vecinos pasan al vecino. Un nodo fuera sin camino hacia adentro
+        /// se desconecta. Devuelve cuántos nodos quitó (fusionados o desconectados). Solo no hace nada si no hay ni <paramref name="minimoDentro"/> nodo dentro del área (el área estaría mal detectada): contar los nodos de adentro ANTES de mover no sirve, el grafo real tiene 2 dentro y 12 que se mueven o fusionan.
+        /// </summary>
+        public int Recortar(Rect area, float separacionMinima = 3f, int minimoDentro = 1)
+        {
+            List<int> fuera = new List<int>();
+            for (int i = 0; i < nodos.Count; i++)
+            {
+                if (nodosFuera.Contains(i))
+                {
+                    continue;
+                }
+                if (!EnArea(area, nodos[i]))
+                {
+                    fuera.Add(i);
+                }
+            }
+            if (nodos.Count - nodosFuera.Count - fuera.Count < minimoDentro)
+            {
+                return 0;
+            }
+            Recortado = true;
+            // De los más cercanos al área a los más lejanos: el final de calle de la cuadrícula se mueve antes que la calle de las afueras que cuelga de él.
+            fuera.Sort((a, b) => DistanciaAlArea(area, nodos[a]).CompareTo(DistanciaAlArea(area, nodos[b])));
+            int quitados = 0;
+            bool avanzo = true;
+            while (fuera.Count > 0 && avanzo)
+            {
+                avanzo = false;
+                for (int k = 0; k < fuera.Count; k++)
+                {
+                    int i = fuera[k];
+                    int dentro = -1;
+                    foreach (int v in vecinos[i])
+                    {
+                        if (!nodosFuera.Contains(v) && EnArea(area, nodos[v]))
+                        {
+                            dentro = v;
+                            break;
+                        }
+                    }
+                    if (dentro < 0)
+                    {
+                        continue;
+                    }
+                    Vector3 entra = PuntoDeEntrada(area, nodos[dentro], nodos[i]);
+                    fuera.RemoveAt(k);
+                    k--;
+                    avanzo = true;
+                    Vector3 d = entra - nodos[dentro];
+                    d.y = 0f;
+                    if (d.magnitude < separacionMinima)
+                    {
+                        Fusionar(i, dentro);
+                        quitados++;
+                    }
+                    else
+                    {
+                        nodos[i] = entra;
+                        NodosAjustados++;
+                    }
+                }
+            }
+            foreach (int i in fuera) // sin camino hacia adentro
+            {
+                Desconectar(i);
+                quitados++;
+            }
+            return quitados;
+        }
+
+        private void Fusionar(int quitado, int destino)
+        {
+            foreach (int v in new List<int>(vecinos[quitado]))
+            {
+                if (v != destino && !nodosFuera.Contains(v))
+                {
+                    Enlazar(destino, v);
+                }
+            }
+            Desconectar(quitado);
+        }
+
+        private void Desconectar(int i)
+        {
+            foreach (int v in vecinos[i])
+            {
+                vecinos[v].Remove(i);
+            }
+            vecinos[i].Clear();
+            nodosFuera.Add(i);
+        }
+
+        // El borde de arriba (xMax, yMax) cuenta como dentro: Rect.Contains lo excluye.
+        private static bool EnArea(Rect area, Vector3 p) => p.x >= area.xMin && p.x <= area.xMax && p.z >= area.yMin && p.z <= area.yMax;
+
+        private static float DistanciaAlArea(Rect area, Vector3 p)
+        {
+            return Mathf.Max(area.xMin - p.x, 0f, p.x - area.xMax, area.yMin - p.z, 0f, p.z - area.yMax);
+        }
+
+        // Dónde el segmento de un punto de adentro a uno de afuera cruza el borde del área.
+        private static Vector3 PuntoDeEntrada(Rect area, Vector3 dentro, Vector3 fuera)
+        {
+            float t = 1f;
+            float dx = fuera.x - dentro.x;
+            float dz = fuera.z - dentro.z;
+            if (dx > 0f) { t = Mathf.Min(t, (area.xMax - dentro.x) / dx); }
+            if (dx < 0f) { t = Mathf.Min(t, (area.xMin - dentro.x) / dx); }
+            if (dz > 0f) { t = Mathf.Min(t, (area.yMax - dentro.z) / dz); }
+            if (dz < 0f) { t = Mathf.Min(t, (area.yMin - dentro.z) / dz); }
+            t = Mathf.Clamp01(t);
+            Vector3 p = Vector3.Lerp(dentro, fuera, t);
+            return new Vector3(Mathf.Clamp(p.x, area.xMin, area.xMax), p.y, Mathf.Clamp(p.z, area.yMin, area.yMax)); // sin error de redondeo: queda dentro
+        }
+
+        /// <summary>
+        /// T-1526: parte en tramos más cortos que <paramref name="largoMaximo"/> m los tramos más largos (nodos intermedios en línea recta, misma topología), para que el tráfico tenga
+        /// sitios de sobra donde aparecer fuera de la vista ahora que las calles de las afueras ya no existen. Devuelve cuántos nodos agregó. 0 o menos: no hace nada.
+        /// </summary>
+        public int Subdividir(float largoMaximo)
+        {
+            if (largoMaximo <= 0f)
+            {
+                return 0;
+            }
+            List<(int a, int b)> largos = new List<(int a, int b)>();
+            for (int a = 0; a < nodos.Count; a++)
+            {
+                foreach (int b in vecinos[a])
+                {
+                    if (b > a && Plano(nodos[a], nodos[b]) > largoMaximo && !EsRapido(a, b))
+                    {
+                        largos.Add((a, b));
+                    }
+                }
+            }
+            int agregados = 0;
+            foreach ((int a, int b) in largos)
+            {
+                int partes = Mathf.CeilToInt(Plano(nodos[a], nodos[b]) / largoMaximo);
+                Vector3 desde = nodos[a];
+                Vector3 hasta = nodos[b];
+                vecinos[a].Remove(b);
+                vecinos[b].Remove(a);
+                int anterior = a;
+                for (int p = 1; p < partes; p++)
+                {
+                    int nuevo = AgregarNodo(Vector3.Lerp(desde, hasta, p / (float)partes));
+                    Enlazar(anterior, nuevo);
+                    anterior = nuevo;
+                    agregados++;
+                }
+                Enlazar(anterior, b);
+            }
+            return agregados;
+        }
+
         /// <summary>T-1350: true si el nodo es de una calle de zona.</summary>
         public bool EsDeZona(int indice) => nodosDeZona.Contains(indice);
 
@@ -141,7 +316,11 @@ namespace MechaCyberpunk.Trafico.Persecucion
             bool tridimensional = TieneAlturas;
             for (int i = 0; i < nodos.Count; i++)
             {
-                float d = tridimensional ? Vector3.Distance(nodos[i], punto) : Plano(nodos[i], punto);
+                if (!Dentro(i))
+                {
+                    continue;
+                }
+                float d = tridimensional ?Vector3.Distance(nodos[i], punto) : Plano(nodos[i], punto);
                 if (d < menor)
                 {
                     menor = d;
@@ -158,6 +337,10 @@ namespace MechaCyberpunk.Trafico.Persecucion
             float mayor = -1f;
             for (int i = 0; i < nodos.Count; i++)
             {
+                if (!Dentro(i))
+                {
+                    continue;
+                }
                 float d = Plano(nodos[i], punto);
                 if (d > mayor)
                 {

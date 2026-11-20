@@ -12,6 +12,8 @@ namespace MechaCyberpunk.Personaje.Combate
     /// </summary>
     public class MunicionEnPiso : MonoBehaviour
     {
+        /// <summary>Prefab en Resources (lo crea ModelosPickupsT1523 en Personaje/Editor).</summary>
+        public const string RecursoModelo = "MunicionEnPiso_Modelo";
         private const float RadioRecoger = 1.3f;
         private const float AlturaFlotar = 0.3f;
         private const float AmplitudFlotar = 0.05f;
@@ -63,13 +65,41 @@ namespace MechaCyberpunk.Personaje.Combate
 
         private void Armar()
         {
-            var material = new Material(Shader.Find("Universal Render Pipeline/Lit")) { name = "MunicionEnPiso" };
             Color naranja = new Color(1f, 0.65f, 0.15f);
+            modelo = new GameObject("Caja").transform;
+            modelo.SetParent(transform, false);
+            GameObject prefab = Resources.Load<GameObject>(RecursoModelo);
+            if (prefab != null)
+            {
+                // T-1523: modelo real (la caja de metal CB03 a escala de pickup; no hay un modelo de cargador o caja de balas en Assets/Arte).
+                GameObject instancia = Instantiate(prefab, modelo, false);
+                instancia.name = "CajaMunicion";
+                foreach (Collider c in instancia.GetComponentsInChildren<Collider>(true))
+                {
+                    Destroy(c);
+                }
+            }
+            else
+            {
+                ArmarRespaldo(naranja);
+            }
+            Light luz = new GameObject("Luz").AddComponent<Light>();
+            luz.transform.SetParent(transform, false);
+            luz.transform.localPosition = Vector3.up * AlturaFlotar;
+            luz.type = LightType.Point;
+            luz.color = naranja;
+            luz.intensity = 0.5f;
+            luz.range = 1.2f;
+            luz.shadows = LightShadows.None;
+        }
+
+        /// <summary>Respaldo si falta el prefab en Resources: tres cápsulas (solo debería verse si alguien borró el recurso).</summary>
+        private void ArmarRespaldo(Color naranja)
+        {
+            var material = new Material(Shader.Find("Universal Render Pipeline/Lit")) { name = "MunicionEnPiso" };
             material.SetColor("_BaseColor", naranja * 0.5f);
             material.EnableKeyword("_EMISSION");
             material.SetColor("_EmissionColor", naranja * 1.2f);
-            modelo = new GameObject("Caja").transform;
-            modelo.SetParent(transform, false);
             for (int i = 0; i < 3; i++)
             {
                 GameObject bala = GameObject.CreatePrimitive(PrimitiveType.Capsule);
@@ -81,14 +111,6 @@ namespace MechaCyberpunk.Personaje.Combate
                 bala.transform.localScale = new Vector3(0.06f, 0.09f, 0.06f);
                 bala.GetComponent<Renderer>().sharedMaterial = material;
             }
-            Light luz = new GameObject("Luz").AddComponent<Light>();
-            luz.transform.SetParent(transform, false);
-            luz.transform.localPosition = Vector3.up * AlturaFlotar;
-            luz.type = LightType.Point;
-            luz.color = naranja;
-            luz.intensity = 0.5f;
-            luz.range = 1.2f;
-            luz.shadows = LightShadows.None;
         }
 
         private void Update()

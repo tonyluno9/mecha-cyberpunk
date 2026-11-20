@@ -708,6 +708,10 @@ namespace MechaCyberpunk.Trafico.Persecucion
             for (int i = 0; i < calles.Cantidad; i++)
             {
                 Vector3 nodo = calles.Nodo(i);
+                if (!calles.Dentro(i))
+                {
+                    continue; // T-1526: nunca se recoloca fuera del muro
+                }
                 float d = DistanciaPlano(posicion, nodo);
                 if (d < config.DistanciaMinimaRecolocar || d > config.DistanciaMaximaRecolocar || d >= mejorDistancia
                     || ReglaVistaPolicia.LoVe(camara, nodo, AlcanceCamara) || Calle.CarroTrafico.PuntoEnVista(camara, nodo)
@@ -793,7 +797,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
             }
             float dt = Time.fixedDeltaTime;
             posicion = cuerpo.position;
-            if (QuitarSiVolcada(dt))
+            if (QuitarSiVolcada(dt) || QuitarSiSalioDelMuro(dt))
             {
                 return;
             }
@@ -804,6 +808,38 @@ namespace MechaCyberpunk.Trafico.Persecucion
             AplicarCarril(dt);
             FrenarPorObstaculo(dt);
             RevisarAtasco(dt);
+        }
+
+        // T-1526: una patrulla (ronda, búsqueda o persecución) que acabe fuera del muro se quita en cuanto nadie la ve; el gestor saca otra adentro. Revisa cada segundo.
+        private const float SegundosEntreRevisionesDeMuro = 1f;
+        private float segundosParaRevisarMuro;
+
+        private bool QuitarSiSalioDelMuro(float dt)
+        {
+            segundosParaRevisarMuro -= dt;
+            if (segundosParaRevisarMuro > 0f)
+            {
+                return false;
+            }
+            segundosParaRevisarMuro = SegundosEntreRevisionesDeMuro;
+            if (Robada || ConJugador || calles == null || !calles.Recortado || !Calle.AreaMuro.Fuera(posicion) || ReglaVistaPolicia.LoVe(Camera.main, posicion, AlcanceCamara))
+            {
+                return false;
+            }
+            Debug.Log("[Trafico] T-1526: patrulla fuera del muro en " + posicion + ", se quita.");
+            Destroy(gameObject);
+            return true;
+        }
+
+        // T-1526: un nodo de calle al azar de los que están dentro del muro (para la siguiente meta de la ronda).
+        private int NodoDentroAlAzar()
+        {
+            int nodo = azarRonda.Next(calles.Cantidad);
+            for (int i = 0; i < calles.Cantidad * 3 && !calles.Dentro(nodo); i++)
+            {
+                nodo = azarRonda.Next(calles.Cantidad);
+            }
+            return nodo;
         }
 
         // Boca abajo o de lado por unos segundos y sin que nadie la vea: se quita como la que se retira; a la vista se endereza (T-1006).
@@ -935,7 +971,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
             // Elige el siguiente destino al llegar al último cruce, sin detenerse.
             if (indiceEnCamino >= camino.Count - 1)
             {
-                Replanear(azarRonda.Next(calles.Cantidad));
+                Replanear(NodoDentroAlAzar());
             }
             Avanzar(float.MaxValue, factor);
         }

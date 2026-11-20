@@ -220,6 +220,10 @@ namespace MechaCyberpunk.Tests.UI
         // CharacterController del jugador y abre cada puerta con IntentarAbrir, que es lo que hace la E.
         private static IEnumerator SalirDeLaCasa(IJugador jugador, System.Func<bool> listo)
         {
+            if (GameObject.Find("Cuarto_Habitacion") == null)
+            {
+                yield break; // T-1496/T-1520: sin cuarto el juego empieza afuera
+            }
             Vector3 cuarto = GameObject.Find("Cuarto_Habitacion").transform.position;
             IPuerta[] puertas = System.Linq.Enumerable.ToArray(System.Linq.Enumerable.OrderBy(
                 System.Linq.Enumerable.Where(Registro<IPuerta>.Todos, p => p.Lugar == IdLugar.Casa), p => Vector3.Distance(p.Posicion, cuarto)));

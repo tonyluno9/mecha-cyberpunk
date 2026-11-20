@@ -60,6 +60,44 @@ namespace MechaCyberpunk.Personaje.Vida
             quemadura.Iniciar(this);
         }
 
+        private readonly SeguidorImplantes implantes = new SeguidorImplantes();
+
+        /// <summary>T-1529: la vida máxima que dan solo los implantes instalados (suma de su vida máxima extra).</summary>
+        public float VidaMaximaPorImplantes => Mathf.Max(0f, implantes.Efectos.vidaMaximaExtra);
+
+        /// <summary>T-1529: la vida máxima que dan las prótesis de ataque que lleva en el inventario (+15 cada una, dato de DatosProtesisAtaque).</summary>
+        public float VidaMaximaPorProtesis
+        {
+            get
+            {
+                MechaCyberpunk.Economia.ServicioInventario inventario = Registro<MechaCyberpunk.Economia.ServicioInventario>.Actual;
+                return inventario == null ? 0f : ReglaProtesisVida.Sumar(inventario.Todos);
+            }
+        }
+
+        private void OnEnable()
+        {
+            implantes.Cambio += AplicarVidaMaxima;
+            implantes.Activar();
+            AplicarVidaMaxima();
+        }
+
+        private void OnDisable()
+        {
+            implantes.Cambio -= AplicarVidaMaxima;
+            implantes.Desactivar();
+        }
+
+        // T-1529: cada implante instalado suma vida máxima (+10 a +25 según el nivel). Se recalcula al instalar, al cargar la partida y al llegar el servicio,
+        // así lo guardado (los ids de implantes) basta: no se guarda la vida máxima aparte.
+        private void AplicarVidaMaxima()
+        {
+            if (modelo != null && datos != null)
+            {
+                modelo.PonerMaxima(datos.VidaMaxima + VidaMaximaPorImplantes + VidaMaximaPorProtesis);
+            }
+        }
+
         public QuemaduraJugador Quemadura => quemadura;
 
         /// <summary>Daño del fuego (T-691): lo absorbe el escudo primero, como cualquier daño; devuelve lo que bajó la vida. Sin sonido de golpe.</summary>
@@ -232,6 +270,7 @@ namespace MechaCyberpunk.Personaje.Vida
 
         private void Update()
         {
+            AplicarVidaMaxima(); // T-1529: las prótesis de ataque se tienen al llevarlas en el inventario (compra, carga): se revisa cada cuadro
             modelo?.Avanzar(Time.deltaTime);
         }
 

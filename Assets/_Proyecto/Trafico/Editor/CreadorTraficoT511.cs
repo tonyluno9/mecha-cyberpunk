@@ -26,6 +26,10 @@ namespace MechaCyberpunk.Trafico.Editor
             List<CarroTrafico> lista = new List<CarroTrafico>();
             foreach (string codigo in Codigos)
             {
+                if (ReglaModeloDePolicia.EsDePolicia(codigo))
+                {
+                    continue; // T-1526: V05, V06 y V08 son modelos de policía: no van en la lista del tráfico civil
+                }
                 GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(RutaPrefab(codigo));
                 if (prefab != null)
                 {

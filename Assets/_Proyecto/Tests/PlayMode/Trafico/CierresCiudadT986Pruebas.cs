@@ -47,6 +47,7 @@ namespace MechaCyberpunk.Tests.Trafico
             if (grafo != null)
             {
                 TraficoCalle.AlargarHaciaLasAfueras(grafo);
+                AreaMuro.Recortar(grafo); // T-1526: el muro es sólido: los tramos de las afueras que lo cruzan no cuentan como cierres de la persecución
             }
             return grafo;
         }

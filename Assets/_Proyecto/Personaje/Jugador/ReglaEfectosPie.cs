@@ -17,8 +17,6 @@ namespace MechaCyberpunk.Personaje.Jugador
         public const float RadioCharco = 0.4f;
         /// <summary>Distancia vertical máxima (m) entre el pie y el charco para contar como pisarlo.</summary>
         public const float AlturaMaximaCharco = 0.6f;
-        public const int GotasPorPaso = 18;
-        public const int GotasPorPasoCorriendo = 30;
 
         /// <summary>Daño que produce el temblor mínimo y el máximo; la fuerza se escala entre los dos extremos.</summary>
         public const float DanioTemblorMinimo = 1f;
@@ -59,7 +57,21 @@ namespace MechaCyberpunk.Personaje.Jugador
             return localX * localX + localY * localY <= RadioCharco * RadioCharco;
         }
 
-        public static int GotasSalpicadura(bool corriendo) => corriendo ? GotasPorPasoCorriendo : GotasPorPaso;
+        /// <summary>
+        /// T-1525: lo mismo para un decal plano de agua que no es un quad unitario: diferencias en x y z al centro de su caja y sus semiejes; se cuenta como pisarlo
+        /// dentro de la elipse inscrita (RadioCharco / 0.5 del semieje, como en los charcos del kit).
+        /// </summary>
+        public static bool PisaAreaPlana(float dx, float dz, float semiX, float semiZ, float diferenciaAltura)
+        {
+            if (Math.Abs(diferenciaAltura) > AlturaMaximaCharco || semiX <= 0.0001f || semiZ <= 0.0001f)
+            {
+                return false;
+            }
+            float f = RadioCharco / 0.5f;
+            float nx = dx / (semiX * f);
+            float nz = dz / (semiZ * f);
+            return nx * nx + nz * nz <= 1f;
+        }
 
         /// <summary>Fuerza del temblor de cámara (0.4 a 1.5) según el daño recibido; 0 si no hubo daño.</summary>
         public static float FuerzaTemblorDanio(float danio)

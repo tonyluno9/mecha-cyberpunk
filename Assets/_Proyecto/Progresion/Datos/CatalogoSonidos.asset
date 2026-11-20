@@ -1117,6 +1117,10 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 851663d10a9f98e4483091a5cffb3ea2, type: 3}
     provisionales:
     - {fileID: 8300000, guid: 1ad537206dbcb4148bba664150b55ce0, type: 3}
+  - id: UI_CAMARA_LENTA
+    finales:
+    - {fileID: 8300000, guid: ae90bd185e0a53e409ff61c1385f0a69, type: 3}
+    provisionales: []
   interruptores:
   - id: AMB_BAR
     encendido: 0
@@ -1459,6 +1463,8 @@ MonoBehaviour:
   - id: UI_ACEPTAR
     encendido: 1
   - id: UI_ATRAS
+    encendido: 1
+  - id: UI_CAMARA_LENTA
     encendido: 1
   - id: UI_CANCELAR
     encendido: 1

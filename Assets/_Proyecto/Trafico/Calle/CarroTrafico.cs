@@ -468,6 +468,10 @@ namespace MechaCyberpunk.Trafico.Calle
 
         private void Update()
         {
+            if (SalioDelMuro(Time.deltaTime)) // T-1526: se revisa aunque el carro no tenga ruta (calculo)
+            {
+                return;
+            }
             if (calculo == null)
             {
                 return;
@@ -500,6 +504,10 @@ namespace MechaCyberpunk.Trafico.Calle
                 // T-714: frena suave al acercarse al último nodo (no se clava de golpe).
                 velocidad = Mathf.Min(velocidad, Mathf.Max(FrenadoMinimoRefuerzo, MetrosPorRecorrer * FactorFrenadoRefuerzo));
             }
+            if (!EnRefuerzo && ReglaCallejon.DebeDarVuelta(Causa, calculo.SegundosBloqueado, calles.Vecinos(nodoDestino).Count, Distancia(eje, calles.Nodo(nodoDestino))))
+            {
+                DarVuelta(); // T-1526: parado contra el muro al final de una calle sin salida: vuelta en U por el carril contrario
+            }
             if (!EnRefuerzo && calculo.SegundosBloqueado > 0f && Causa != "jugador" && Destrabar())
             {
                 return;
@@ -521,6 +529,37 @@ namespace MechaCyberpunk.Trafico.Calle
                 proximoPasaCerca = Time.time + SegundosEntrePasaCerca;
                 Sonidos.ReproducirEn("VEH_PASA_CERCA", transform.position);
             }
+        }
+
+        // T-1526: defensa: un carro del tráfico que acabe fuera del muro (un hueco, un empujón, una salida vieja) se recicla dentro del muro; si no hay dónde, se apaga y el pool lo vuelve a sacar.
+        // Nunca toca uno robado o que se está robando (es del jugador) ni uno de refuerzo. Revisa cada segundo.
+        private const float SegundosEntreRevisionesDeMuro = 1f;
+        private float segundosParaRevisarMuro;
+
+        /// <summary>T-1526: si el carro está fuera del muro lo recicla dentro (o lo apaga si no hay dónde). Devuelve true si estaba fuera. No toca robados, en robo ni de refuerzo.</summary>
+        public bool ReciclarSiEstaFueraDelMuro()
+        {
+            if (calles == null || !calles.Recortado || Robado || EstaSiendoRobado || EnRefuerzo || !AreaMuro.Fuera(transform.position))
+            {
+                return false;
+            }
+            Debug.Log("[Trafico] T-1526: " + name + " fuera del muro en " + transform.position + ", se recicla dentro.");
+            if (!Reaparecer(false, true))
+            {
+                gameObject.SetActive(false);
+            }
+            return true;
+        }
+
+        private bool SalioDelMuro(float dt)
+        {
+            segundosParaRevisarMuro -= dt;
+            if (segundosParaRevisarMuro > 0f)
+            {
+                return false;
+            }
+            segundosParaRevisarMuro = SegundosEntreRevisionesDeMuro;
+            return ReciclarSiEstaFueraDelMuro();
         }
 
         // T-1475: VEH_CLAXON_CAMION para los pesados, VEH_CLAXON_NORMAL para el resto.
@@ -945,6 +984,10 @@ namespace MechaCyberpunk.Trafico.Calle
             for (int i = 0; i < intentos && elegido < 0; i++)
             {
                 int nodo = azar.Next(calles.Cantidad);
+                if (!calles.Dentro(nodo))
+                {
+                    continue; // T-1526: nunca sale fuera del muro
+                }
                 if (soloFinales && calles.Vecinos(nodo).Count != 1)
                 {
                     continue;

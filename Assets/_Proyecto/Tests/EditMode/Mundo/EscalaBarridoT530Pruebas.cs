@@ -67,10 +67,11 @@ namespace MechaCyberpunk.Tests.Mundo
         }
 
         [Test]
-        public void Afueras_LasSalidasNoTienenMuro()
+        public void Afueras_LasSalidasLasCierraLaPuertaSolida()
         {
             Physics.SyncTransforms();
-            // Del borde de la ciudad hacia afuera, a 1 m del piso, por el centro de cada salida: nada sólido en 90 m.
+            // T-1524 (playtest 20-nov): el muro cierra todo el mapa y las puertas MU03 ya no se atraviesan.
+            // Del borde de la ciudad hacia afuera, a 1 m del piso, por el centro de cada salida: lo primero sólido es su puerta.
             foreach ((Vector3 p, Vector3 d) in new[]
             {
                 (new Vector3(120f, 1f, 0f), Vector3.right), (new Vector3(-120f, 1f, 0f), Vector3.left),
@@ -79,8 +80,8 @@ namespace MechaCyberpunk.Tests.Mundo
             })
             {
                 bool choca = Physics.Raycast(p, d, out RaycastHit h, 90f, ~0, QueryTriggerInteraction.Ignore);
-                Assert.IsFalse(choca && h.collider.gameObject.scene == escena && h.collider.GetComponentInParent<Rigidbody>() == null,
-                    "Muro en la salida " + p + ": " + (choca ? h.collider.name : ""));
+                Assert.IsTrue(choca && h.collider.name.StartsWith("PuertaSolida"),
+                    "Salida " + p + " sin puerta sólida: " + (choca ? h.collider.name : "nada"));
             }
         }
 

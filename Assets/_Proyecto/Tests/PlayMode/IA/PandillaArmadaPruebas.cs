@@ -78,6 +78,7 @@ namespace MechaCyberpunk.Tests.IA
             so.FindProperty("idPandilla").enumValueIndex = (int)IdPandilla.Calaveras;
             so.ApplyModifiedPropertiesWithoutUndo();
             grupo.SetActive(true);
+            pandilla.HacerHostiles(true); // T-1528: estos maleantes atacan desde el inicio (sin provocar antes)
         }
 
         public override void TearDown()

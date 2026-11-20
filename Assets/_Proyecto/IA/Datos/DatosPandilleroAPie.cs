@@ -59,6 +59,9 @@ namespace MechaCyberpunk.IA.Datos
         [Min(0f)] [Tooltip("Calor que suma matar a un policía (puntos).")]
         [SerializeField] private float calorAlMatar = 30f;
 
+        [Header("Maleante de calle (T-1528)")]
+        [Tooltip("Si es true (solo SKULLS y SNAKES de calle, riña o acoso; nunca guion de misión ni Nova), primero provoca (se acerca, grita, empuja casi sin daño) y solo ataca si el jugador responde. Ya atacando, el daño, la precisión y la cadencia suben poco a poco.")]
+        [SerializeField] private bool provocaAntesDeAtacar;
         [Header("Pandilla")]
         [Tooltip("Cuántos pandilleros trae el grupo (el prefab arma tantos).")]
         [Min(1)] [SerializeField] private int tamanoPandilla = 3;
@@ -189,6 +192,7 @@ namespace MechaCyberpunk.IA.Datos
         [SerializeField] private Color colorKO = new Color(0.2f, 0.2f, 0.2f);
         [SerializeField] private Color colorAviso = new Color(1f, 0.55f, 0.1f);
 
+        public bool ProvocaAntesDeAtacar => provocaAntesDeAtacar;
         public bool ReaccionaADisparos => reaccionaADisparos;
         public float RadioOido => radioOido;
         public float DistanciaVision => distanciaVision;

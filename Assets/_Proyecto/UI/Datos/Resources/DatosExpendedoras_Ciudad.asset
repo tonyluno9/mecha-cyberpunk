@@ -38,3 +38,37 @@ MonoBehaviour:
     desplazamiento: {x: 64, y: 0, z: -0.01}
     posicion: {x: 0, y: 0, z: 0}
     giro: 180
+  maquinasVenden: 0
+  tiendita: {fileID: 247157428880323945, guid: 3578884cb63bdf641bbb66bbad69647c, type: 3}
+  mostrador: {fileID: 691790339282670411, guid: 5dfae71a5cb4da340ad38402e18344b2, type: 3}
+  tendero: {fileID: 3208828358405521055, guid: 7ec339ae5ce12f54f944cb449559b2cc, type: 3}
+  tiendaTiendita: {fileID: 11400000, guid: d6bd141a08a2a674a8ab4a675ec9b59f, type: 2}
+  sitiosTiendita:
+  - escena: Ciudad_Prologo
+    nota: "lote bald\xEDo de la esquina, calle del Doc (suroeste)"
+    marcador: Marcador_Tiendita
+    lugar: 4
+    desplazamiento: {x: -48, y: 0, z: -6}
+    posicion: {x: 0, y: 0, z: 0}
+    giro: 270
+  - escena: Ciudad_Prologo
+    nota: esquina del tianguis, hacia el este
+    marcador: Marcador_Tiendita
+    lugar: 4
+    desplazamiento: {x: -24, y: 0, z: -6}
+    posicion: {x: 0, y: 0, z: 0}
+    giro: 270
+  - escena: Ciudad_Prologo
+    nota: calle de Nova, hacia el oeste
+    marcador: Marcador_Tiendita
+    lugar: 4
+    desplazamiento: {x: 52, y: 0, z: -6}
+    posicion: {x: 0, y: 0, z: 0}
+    giro: 270
+  - escena: Ciudad_Prologo
+    nota: calle de Nova, hacia el este
+    marcador: Marcador_Tiendita
+    lugar: 4
+    desplazamiento: {x: 76, y: 0, z: -6}
+    posicion: {x: 0, y: 0, z: 0}
+    giro: 270

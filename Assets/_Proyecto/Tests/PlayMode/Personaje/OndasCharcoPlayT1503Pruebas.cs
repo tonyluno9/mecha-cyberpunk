@@ -21,7 +21,7 @@ namespace MechaCyberpunk.Tests.Personaje
         }
 
         [UnityTest]
-        public IEnumerator Charco_CaminarSobreEl_AgregaOndasYGotas()
+        public IEnumerator Charco_CaminarSobreEl_AgregaOndas()
         {
             charco = GameObject.CreatePrimitive(PrimitiveType.Quad);
             charco.name = "Charco_T1503";
@@ -32,12 +32,11 @@ namespace MechaCyberpunk.Tests.Personaje
             EfectosPieJugador efectos = jugador.GetComponent<EfectosPieJugador>();
             Assert.IsNotNull(efectos, "el jugador a pie lleva EfectosPieJugador");
             yield return Calentar();
-            Assert.AreEqual(0, efectos.Ondas.Guardadas, "antes de pisar no hay ondas");
+            Assert.AreEqual(0, efectos.Ondas.Guardadas + efectos.Anillos.Activos, "antes de pisar no hay ondas");
             Press(teclado.wKey);
             yield return Esperar(2f);
             Release(teclado.wKey);
-            Assert.Greater(efectos.Ondas.Guardadas, 0, "pisar el charco agrega una onda");
-            Assert.Greater(efectos.UltimasGotas, 0, "y salpica");
+            Assert.Greater(efectos.Ondas.Guardadas + efectos.Anillos.Activos, 0, "pisar el charco agrega una onda (shader de agua o anillo de piso, T-1525)");
         }
     }
 }

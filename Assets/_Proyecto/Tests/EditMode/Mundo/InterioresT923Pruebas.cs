@@ -16,6 +16,7 @@ namespace MechaCyberpunk.Tests.Mundo
         }
 
         [Test]
+        [Ignore("T-1520: el cuarto se quitó de la ciudad (playtest 20-nov)")]
         public void Cuarto_SinPosters()
         {
             Transform cuarto = ColocarS2.Buscar(ColocarT923.RutaCuarto);
@@ -24,6 +25,7 @@ namespace MechaCyberpunk.Tests.Mundo
         }
 
         [Test]
+        [Ignore("T-1520: el cuarto se quitó de la ciudad (playtest 20-nov)")]
         public void PuertaDelCuarto_EsLaP10_ConSuHojaYSuCollider()
         {
             Transform hoja = ColocarS2.Buscar(ColocarT923.RutaCuarto + "/Puerta_Cuarto/Hoja");
