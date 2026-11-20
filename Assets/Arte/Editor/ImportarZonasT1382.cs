@@ -49,7 +49,7 @@ namespace MechaCyberpunk.Arte.Editor
         public const string RutaInforme = "Logs/t1382-importar.txt";
         public const string CarpetaFotos = "docs/capturas/t-1382";
 
-        private static readonly string[] Variantes = { "a", "b" };
+        public static readonly string[] Variantes = { "a", "b" };
 
         private const int TriangulosParaLod = 5000;
         private const float MedidaTexturaGrande = 4f;
@@ -237,7 +237,7 @@ namespace MechaCyberpunk.Arte.Editor
             return png;
         }
 
-        private static void ConfigurarImportadores(EntradaZonaT1382 e, string v)
+        public static void ConfigurarImportadores(EntradaZonaT1382 e, string v)
         {
             int tamano = e.Medida >= MedidaTexturaGrande ? TamanoTexturaGrande : TamanoTexturaChica;
             foreach (string sufijo in new[] { "_basecolor.jpg", "_normal.jpg", "_metalsuave.png" })
@@ -319,7 +319,7 @@ namespace MechaCyberpunk.Arte.Editor
             return total;
         }
 
-        private static Material CrearMaterial(EntradaZonaT1382 e, string v)
+        public static Material CrearMaterial(EntradaZonaT1382 e, string v)
         {
             string ruta = RutaArchivo(e, v, ".mat");
             Material material = AssetDatabase.LoadAssetAtPath<Material>(ruta);
@@ -351,7 +351,7 @@ namespace MechaCyberpunk.Arte.Editor
             return material;
         }
 
-        private static string CrearPrefab(EntradaZonaT1382 e, string v, Material material)
+        public static string CrearPrefab(EntradaZonaT1382 e, string v, Material material)
         {
             string nombre = e.Nombre(v);
             GameObject fbx = AssetDatabase.LoadAssetAtPath<GameObject>(RutaArchivo(e, v, ".fbx"));
