@@ -237,12 +237,16 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
                 yield return null;
             }
             arrancado = true;
-            if (!cargadoAntes && maquina.Paso == PasoHistoria.Despierta)
+            bool partidaNueva = !cargadoAntes && maquina.Paso == PasoHistoria.Despierta;
+            if (partidaNueva)
             {
+                // T-1496: sin cuarto. El jugador empieza afuera (Casa_Cama está frente a la puerta de la calle), así que el paso
+                // "SAL A LA CALLE" ya está cumplido: se salta y la historia abre con el primer objetivo de la calle.
                 ColocarEnLaCama();
+                maquina.Avisar(AvisoHistoria.SalioDeCasa);
             }
             Aplicar();
-            if (maquina.Paso == PasoHistoria.Despierta)
+            if (partidaNueva || maquina.Paso == PasoHistoria.Despierta)
             {
                 pantalla.MostrarAyuda(AyudaInicio, SegundosAyudaInicio);
             }

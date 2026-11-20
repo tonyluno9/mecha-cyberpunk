@@ -175,7 +175,7 @@ namespace MechaCyberpunk.Tests.Progresion
             }, "el director arrancó", 20f);
             IJugador jugador = Registro<IJugador>.Actual;
             ITerritorio territorio = Registro<ITerritorio>.Actual;
-            Assert.AreEqual(PasoHistoria.Despierta, director.Paso);
+            Assert.AreEqual(PasoHistoria.Asalto, director.Paso, "T-1496: sin cuarto, la historia abre ya afuera, en el asalto.");
             ArsenalJugador arsenal = Registro<ArsenalJugador>.Actual;
             Assert.IsNotNull(arsenal);
             Assert.IsFalse(arsenal.Tiene(ArmaAPie.Pistola), "Al inicio solo tienes los puños.");

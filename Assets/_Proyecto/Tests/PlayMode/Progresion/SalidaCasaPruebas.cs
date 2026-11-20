@@ -27,6 +27,10 @@ namespace MechaCyberpunk.Tests.Progresion
         /// <summary>Del cuarto a la banqueta: puerta del cuarto, pasillo, puerta de la calle.</summary>
         public static IEnumerator Salir(Func<bool> hasta = null)
         {
+            if (GameObject.Find("Cuarto_Habitacion") == null)
+            {
+                yield break; // T-1496: sin cuarto el juego empieza afuera, no hay nada que salir
+            }
             IJugador jugador = Registro<IJugador>.Actual;
             IPuerta cuarto = PuertaDeLaCasa(true);
             IPuerta calle = PuertaDeLaCasa(false);

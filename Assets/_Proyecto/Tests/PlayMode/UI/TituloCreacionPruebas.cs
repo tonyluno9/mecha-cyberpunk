@@ -315,7 +315,7 @@ namespace MechaCyberpunk.Tests.UI
             yield return EsperarCiudad(director, d => director = d);
             yield return new WaitForSecondsRealtime(0.5f);
             Assert.IsFalse(FlujoPartida.EnTitulo, "EMPEZAR sale del título");
-            Assert.AreEqual(PasoHistoria.Despierta, director.Paso, "La historia empieza en DESPIERTA");
+            Assert.AreEqual(PasoHistoria.Asalto, director.Paso, "T-1496: la historia abre afuera (el paso DESPIERTA ya no se juega)");
             Assert.AreEqual(0, FlujoPartida.PiezasPorEntregar, "El perfil llegó a la escena nueva");
             IPerfilJugador perfil = Registro<IPerfilJugador>.Actual;
             Assert.AreEqual(Nombre, perfil.Nombre);
