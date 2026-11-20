@@ -822,7 +822,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
                 return false;
             }
             segundosParaRevisarMuro = SegundosEntreRevisionesDeMuro;
-            if (Robada || ConJugador || !Calle.AreaMuro.Fuera(posicion) || ReglaVistaPolicia.LoVe(Camera.main, posicion, AlcanceCamara))
+            if (Robada || ConJugador || calles == null || !calles.Recortado || !Calle.AreaMuro.Fuera(posicion) || ReglaVistaPolicia.LoVe(Camera.main, posicion, AlcanceCamara))
             {
                 return false;
             }

@@ -370,7 +370,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Time.timeScale = 1f;
             Assert.LessOrEqual(objetivo.Impactos, 3, "Sin zoom, de 10 tiros a 80 m pegan 3 o menos (pegaron " + objetivo.Impactos + ")");
             objetivo.Impactos = 0;
-            objetivo.Vida = VidaBlanco;
+            objetivo.Vida = 30f; // T-1527: el sniper ya no mata de un tiro al cuerpo a 60 de vida; a un blanco de 30 sí
             if (armas.Balas < 1)
             {
                 yield return Pulsar(teclado.rKey);
@@ -394,7 +394,7 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return new WaitForSecondsRealtime(0.2f);
             Assert.AreEqual(balasAntes - 1, armas.Balas);
             Assert.AreEqual(1, objetivo.Impactos, "Un tiro con zoom le pega al blanco a 80 m");
-            Assert.IsTrue(objetivo.KO, "Un tiro con zoom tumba a un blanco de 60 de vida");
+            Assert.IsTrue(objetivo.KO, "Un tiro con zoom tumba a un blanco de 30 de vida");
             yield return new WaitForSecondsRealtime(0.4f);
             Assert.AreEqual(0f, zoom.Sacudida, 0.01f, "La sacudida vuelve en 0.3 s");
 

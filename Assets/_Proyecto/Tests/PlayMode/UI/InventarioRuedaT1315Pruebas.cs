@@ -252,8 +252,7 @@ namespace MechaCyberpunk.Tests.UI
             string tecla = TeclasHud.Texto(AccionConsumirEquipado.Accion, "?").ToUpperInvariant();
             Assert.AreEqual("E", tecla);
             Assert.IsNotNull(hud.ObjetoEquipado, "Hay un objeto equipado para consumir");
-            StringAssert.StartsWith("[" + tecla + "] ", hud.TextoConsumo.text);
-            StringAssert.Contains(hud.ObjetoEquipado.Nombre.ToUpperInvariant(), hud.TextoConsumo.text);
+            Assert.AreEqual(string.Empty, hud.TextoConsumo.text, "T-1529: ya no hay línea de texto repetida");
             Foto("hud-consumir");
 
             DatosConsumible antes = hud.ObjetoEquipado;
@@ -269,32 +268,29 @@ namespace MechaCyberpunk.Tests.UI
         }
 
         [UnityTest]
-        public IEnumerator Ciudad_TodaMaquinaExpendedora_DejaComprar()
+        public IEnumerator Ciudad_LaTiendita_DejaComprar_YLasMaquinasYaNoVenden()
         {
             yield return CargarCiudad();
             yield return new WaitForSecondsRealtime(1f);
-            Expendedora[] maquinas = Object.FindObjectsByType<Expendedora>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
-            Assert.GreaterOrEqual(maquinas.Length, 3, "Las tres del colocador, más las de adorno");
-            foreach (Expendedora m in maquinas)
-            {
-                Assert.IsNotNull(m.Tienda, m.name + " tiene su tienda");
-                Assert.Greater(m.EnVenta.Count, 0, m.name + " tiene algo que vender");
-                Assert.IsTrue(m.PuedeUsar, m.name + " se puede usar");
-                Assert.IsNotNull(m.GetComponentInChildren<Collider>(), m.name + " tiene collider para apuntarle");
-            }
-            // Ninguna máquina de la escena (por nombre) se quedó de adorno.
-            int sinComponente = 0;
+            Expendedora[] puestos = Object.FindObjectsByType<Expendedora>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+            Assert.AreEqual(1, puestos.Length, "T-1529: solo el mostrador de la tiendita vende consumibles");
+            Expendedora tiendita = puestos[0];
+            Assert.AreEqual("Tiendita", tiendita.Texto);
+            Assert.IsNotNull(tiendita.Tienda);
+            Assert.AreEqual(5, tiendita.EnVenta.Count, "Vende los cinco consumibles");
+            Assert.IsTrue(tiendita.PuedeUsar);
+            Assert.IsNotNull(tiendita.GetComponentInChildren<Collider>(), "Tiene collider para apuntarle");
+            Assert.IsNotNull(tiendita.transform.parent.Find("Tendero"), "El tendero está tras el mostrador");
+            Assert.IsNotNull(tiendita.transform.parent.Find("Edificio"), "Está el edificio ED02");
+            // Ninguna máquina CY06 de la escena vende: son de decorado.
             foreach (Transform t in Object.FindObjectsByType<Transform>(FindObjectsInactive.Include, FindObjectsSortMode.None))
             {
-                if (t.name.StartsWith(ColocadorExpendedoras.PrefijoDecorada, StringComparison.Ordinal) && t.GetComponentInParent<Expendedora>(true) == null
-                    && t.GetComponentInChildren<Expendedora>(true) == null)
+                if (t.name.StartsWith(ColocadorExpendedoras.PrefijoDecorada, StringComparison.Ordinal))
                 {
-                    sinComponente++;
-                    Debug.LogWarning("Expendedora de adorno: " + t.name);
+                    Assert.IsNull(t.GetComponentInParent<Expendedora>(true), t.name + " es de decorado");
                 }
             }
-            Assert.AreEqual(0, sinComponente, "Toda CY06_Expendedora de la escena vende");
-            Debug.Log("[UI] T-1315 expendedoras vivas: " + maquinas.Length);
+            Debug.Log("[T-1529] tiendita en " + tiendita.transform.position);
         }
     }
 }

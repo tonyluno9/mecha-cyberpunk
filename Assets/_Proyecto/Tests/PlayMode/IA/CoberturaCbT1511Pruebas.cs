@@ -90,6 +90,7 @@ namespace MechaCyberpunk.Tests.IA
             so.ApplyModifiedPropertiesWithoutUndo();
             Physics.SyncTransforms();
             grupo.SetActive(true);
+            pandilla.HacerHostiles(true); // T-1528: estos maleantes atacan desde el inicio (sin provocar antes)
             return p.GetComponent<PandilleroAPie>();
         }
 

@@ -539,7 +539,7 @@ namespace MechaCyberpunk.Trafico.Calle
         /// <summary>T-1526: si el carro está fuera del muro lo recicla dentro (o lo apaga si no hay dónde). Devuelve true si estaba fuera. No toca robados, en robo ni de refuerzo.</summary>
         public bool ReciclarSiEstaFueraDelMuro()
         {
-            if (calles == null || Robado || EstaSiendoRobado || EnRefuerzo || !AreaMuro.Fuera(transform.position))
+            if (calles == null || !calles.Recortado || Robado || EstaSiendoRobado || EnRefuerzo || !AreaMuro.Fuera(transform.position))
             {
                 return false;
             }

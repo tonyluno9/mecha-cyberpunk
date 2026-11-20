@@ -1,3 +1,4 @@
+using MechaCyberpunk.Personaje.Visual;
 using MechaCyberpunk.Personaje.Visual.Editor;
 using NUnit.Framework;
 using UnityEditor;
@@ -39,10 +40,19 @@ namespace MechaCyberpunk.Tests
         }
 
         [Test]
-        public void LaAlturaDeBoundsEstaDentroDeMasMenos10PorCientoDeLaObjetivo()
+        public void LaAlturaEstaDentroDeLaObjetiva()
         {
             foreach (string n in Nombres)
             {
+                // T-1521: los humanos de la tabla (E10) se escalan por altura animada, no por bounds de reposo: se mide animado.
+                float animada = EscalasHumanos.Objetivo("Visual_" + n);
+                if (animada > 0f)
+                {
+                    EscalaHumanosT1521.Medida m = EscalaHumanosT1521.MedirPrefab(RutaPrefab(n));
+                    Assert.IsTrue(m.Valida, n + ": " + m.Problema);
+                    Assert.AreEqual(animada, m.Malla, EscalasHumanos.ToleranciaPrueba, n + ": altura animada");
+                    continue;
+                }
                 GameObject inst = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(RutaPrefab(n)));
                 try
                 {

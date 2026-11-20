@@ -47,12 +47,15 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.AreEqual(AlturaEsperada, AlturaAnimada(visual.gameObject), Tolerancia, "El jugador animado mide 1.80 m");
         }
 
-        // Excepcion documentada (T-688): el Doc (Visual_Doctor) mide 1.10 veces al jugador a proposito (T-812, sesion 2).
-        // Alturas relativas al jugador de cada personaje que comparte escala con él (ColocarS2.Personajes): nadie enano ni gigante.
+        // T-1521: la altura de los humanos sale de EscalasHumanos (el Doc ya no es 1.09 veces el jugador). Los que no están en esa tabla (el jugador, AL10, AL11 y los
+        // guardias de Nova, que son más altos a propósito) llevan aquí su altura relativa al jugador: nadie enano ni gigante.
         private static readonly (string prefab, float relativa)[] Personajes =
         {
-            ("Visual_man", 1.00f), ("Visual_woman", 1.00f), ("Visual_PJ01", 1.00f), ("Visual_Doctor", 1.10f), ("Visual_Inventor", 0.98f), ("Visual_Hacker", 1.00f),
-            ("Visual_RobotHombre", 1.00f), ("Visual_SkullHombre", 1.00f), ("Visual_woman2", 0.97f), ("Visual_AL10", 1.00f), ("Visual_AL11", 1.00f), ("Visual_GuardiaNova", 1.25f),
+            ("Visual_man", EscalasHumanos.Relativa("Visual_man")), ("Visual_woman", EscalasHumanos.Relativa("Visual_woman")), ("Visual_PJ01", 1.00f),
+            // El Hacker no va: su idle es sentado tecleando (su altura de pie la mide EscalaHumanosT1521Pruebas en EditMode).
+            ("Visual_Doctor", EscalasHumanos.Relativa("Visual_Doctor")), ("Visual_Inventor", EscalasHumanos.Relativa("Visual_Inventor")),
+            ("Visual_RobotHombre", EscalasHumanos.Relativa("Visual_RobotHombre")), ("Visual_SkullHombre", EscalasHumanos.Relativa("Visual_SkullHombre")),
+            ("Visual_woman2", EscalasHumanos.Relativa("Visual_woman2")), ("Visual_AL10", 1.00f), ("Visual_AL11", 1.00f), ("Visual_GuardiaNova", 1.34f),
         };
 
         [UnityTest]
@@ -60,6 +63,20 @@ namespace MechaCyberpunk.Tests.Personaje
         {
             yield return Calentar();
             string fallos = "";
+            // Se compara contra el prefab del jugador medido igual (la pose de estas instancias sueltas da unos centímetros más que en la escena).
+            float referencia = AlturaEsperada;
+            for (int i = 0; i < Personajes.Length; i++)
+            {
+                if (Personajes[i].prefab == "Visual_PJ01")
+                {
+                    GameObject pj = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Proyecto/Personaje/Visual/Prefabs/Visual_PJ01.prefab"), new Vector3(-3f, 0.05f, 0f), Quaternion.identity);
+                    pj.GetComponentInChildren<Animator>(true).cullingMode = AnimatorCullingMode.AlwaysAnimate;
+                    yield return Esperar(0.8f);
+                    referencia = AlturaAnimada(pj);
+                    Object.Destroy(pj);
+                }
+            }
+            Assert.AreEqual(AlturaEsperada, referencia, 0.1f, "El prefab del jugador mide cerca de 1.80 m");
             for (int i = 0; i < Personajes.Length; i++)
             {
                 GameObject go = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Proyecto/Personaje/Visual/Prefabs/" + Personajes[i].prefab + ".prefab"), new Vector3(3f + i * 2f, 0.05f, 0f), Quaternion.identity);
@@ -68,7 +85,7 @@ namespace MechaCyberpunk.Tests.Personaje
                 float altura = AlturaAnimada(go);
                 Debug.Log("T670 altura " + Personajes[i].prefab + " " + altura.ToString("F3"));
                 Object.Destroy(go);
-                if (Mathf.Abs(altura - AlturaEsperada * Personajes[i].relativa) > Tolerancia) { fallos += Personajes[i].prefab + " " + altura.ToString("F2") + "; "; }
+                if (Mathf.Abs(altura - referencia * Personajes[i].relativa) > Tolerancia) { fallos += Personajes[i].prefab + " " + altura.ToString("F2") + "; "; }
             }
             Assert.AreEqual("", fallos, "Personajes fuera de escala contra los 1.80 m del jugador");
         }
