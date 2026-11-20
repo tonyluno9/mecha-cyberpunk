@@ -17,8 +17,8 @@ namespace MechaCyberpunk.Personaje.Jugador
         public const float RadioCharco = 0.4f;
         /// <summary>Distancia vertical máxima (m) entre el pie y el charco para contar como pisarlo.</summary>
         public const float AlturaMaximaCharco = 0.6f;
-        public const int GotasPorPaso = 10;
-        public const int GotasPorPasoCorriendo = 16;
+        public const int GotasPorPaso = 18;
+        public const int GotasPorPasoCorriendo = 30;
 
         /// <summary>Daño que produce el temblor mínimo y el máximo; la fuerza se escala entre los dos extremos.</summary>
         public const float DanioTemblorMinimo = 1f;
