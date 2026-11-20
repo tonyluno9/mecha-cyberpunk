@@ -127,7 +127,7 @@ namespace MechaCyberpunk.Arte.Editor
             }
 
             log.AppendLine("== ZonaTrafico destruidas");
-            GameObject zonas = escena.GetRootGameObjects().FirstOrDefault(g => g.name == "Zonas");
+            GameObject zonas = escena.GetRootGameObjects().Where(g => g.name == "T1364_ZonasTrafico").Select(g => g.transform.Find("Zonas")).Where(t => t != null).Select(t => t.gameObject).FirstOrDefault();
             if (zonas == null)
             {
                 log.AppendLine("  NO ENCONTRADA la raíz Zonas");
@@ -202,7 +202,7 @@ namespace MechaCyberpunk.Arte.Editor
             }
 
             log.AppendLine("== ZonaTrafico que quedan");
-            GameObject zonas = escena.GetRootGameObjects().FirstOrDefault(g => g.name == "Zonas");
+            GameObject zonas = escena.GetRootGameObjects().Where(g => g.name == "T1364_ZonasTrafico").Select(g => g.transform.Find("Zonas")).Where(t => t != null).Select(t => t.gameObject).FirstOrDefault();
             if (zonas != null)
             {
                 foreach (Transform t in zonas.transform)

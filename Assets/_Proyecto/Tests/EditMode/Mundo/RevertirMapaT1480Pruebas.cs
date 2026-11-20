@@ -67,7 +67,7 @@ namespace MechaCyberpunk.Tests.Mundo
         [Test]
         public void Zonas_SoloQuedanLasDeLosBarrios()
         {
-            GameObject zonas = Raiz("Zonas");
+            GameObject zonas = Raiz("T1364_ZonasTrafico")?.transform.Find("Zonas")?.gameObject;
             Assert.IsNotNull(zonas);
             string[] hijos = zonas.transform.Cast<Transform>().Select(t => t.name).ToArray();
             foreach (string nombre in ZonasQuitadas)
