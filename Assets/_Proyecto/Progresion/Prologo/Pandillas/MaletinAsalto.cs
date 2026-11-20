@@ -5,17 +5,16 @@ using UnityEngine;
 namespace MechaCyberpunk.Progresion.Prologo.Pandillas
 {
     /// <summary>
-    /// T-987: el maletín que sueltan los asaltantes al detenerse su carro. Un modelo simple hecho con primitivas (caja café oscura con asa y un brillo tenue para verlo de noche)
+    /// T-987: el maletín que sueltan los asaltantes al detenerse su carro. El modelo es el MA01 (Resources) con un brillo tenue para verlo de noche;
     /// que cae un momento hasta el piso. Es un <see cref="IInteractuable"/>: el jugador a pie lo recoge con E. <see cref="AsaltoDinero"/> lo crea, lo vigila y paga.
     /// </summary>
     public class MaletinAsalto : MonoBehaviour, IInteractuable
     {
         public const string TextoRecoger = "Recoger maletín";
         public const string Nombre = "MaletinAsalto";
-        /// <summary>Prefab del modelo MA01 en Resources (lo crea ImportarMaletinT1499 en Arte/Editor). Sin él se arma con primitivas.</summary>
+        /// <summary>Prefab del modelo MA01 en Resources (lo crea ImportarMaletinT1499 en Arte/Editor). Sin él no hay modelo (T-1523 quitó el respaldo de cubos).</summary>
         public const string RecursoModelo = "MaletinAsalto";
 
-        private static readonly Vector3 Medidas = new Vector3(0.45f, 0.12f, 0.33f);
         private const float AlturaCaida = 0.6f;
         private const float SegundosCaida = 0.45f;
         private const float DistanciaMaximaBajoElPiso = 30f;
@@ -84,28 +83,8 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
                 AgregarBrillo();
                 return;
             }
-            Shader sombreador = Shader.Find("Universal Render Pipeline/Lit");
-            if (sombreador == null)
-            {
-                sombreador = Shader.Find("Standard");
-            }
-            Material cafe = new Material(sombreador) { name = "MaletinAsalto_Cafe" };
-            Color color = new Color(0.22f, 0.11f, 0.05f);
-            cafe.SetColor("_BaseColor", color);
-            cafe.EnableKeyword("_EMISSION");
-            cafe.SetColor("_EmissionColor", new Color(0.55f, 0.25f, 0.04f));
-            Material metal = new Material(sombreador) { name = "MaletinAsalto_Metal" };
-            metal.SetColor("_BaseColor", new Color(0.6f, 0.55f, 0.4f));
-            metal.EnableKeyword("_EMISSION");
-            metal.SetColor("_EmissionColor", new Color(0.5f, 0.4f, 0.1f));
-
-            Parte("Caja", new Vector3(0f, Medidas.y * 0.5f, 0f), Medidas, cafe);
-            float yAsa = Medidas.y + 0.02f;
-            Parte("AsaIzquierda", new Vector3(-0.07f, yAsa, 0f), new Vector3(0.025f, 0.05f, 0.025f), metal);
-            Parte("AsaDerecha", new Vector3(0.07f, yAsa, 0f), new Vector3(0.025f, 0.05f, 0.025f), metal);
-            Parte("AsaBarra", new Vector3(0f, yAsa + 0.03f, 0f), new Vector3(0.17f, 0.025f, 0.025f), metal);
-            Parte("Broche", new Vector3(0f, Medidas.y, Medidas.z * 0.5f), new Vector3(0.06f, 0.03f, 0.02f), metal);
-
+            // Sin el prefab no se inventa un cubo (T-1523): solo queda el brillo y un aviso, y el maletín se puede recoger igual.
+            Debug.LogError("[Progresion] Falta Resources/" + RecursoModelo + " (MA01): el maletín no tiene modelo.", this);
             AgregarBrillo();
         }
 
@@ -120,21 +99,6 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
             luz.color = new Color(1f, 0.7f, 0.3f);
             luz.range = 3.5f;
             luz.intensity = 1.2f;
-        }
-
-        private void Parte(string nombre, Vector3 local, Vector3 escala, Material material)
-        {
-            GameObject cubo = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            cubo.name = nombre;
-            Collider c = cubo.GetComponent<Collider>();
-            if (c != null)
-            {
-                Destroy(c); // sin collider: no estorba ni se interpone al disparar
-            }
-            cubo.transform.SetParent(transform, false);
-            cubo.transform.localPosition = local;
-            cubo.transform.localScale = escala;
-            cubo.GetComponent<Renderer>().sharedMaterial = material;
         }
 
         private void OnEnable()
