@@ -20,10 +20,12 @@ namespace MechaCyberpunk.Trafico.Calle
         public const int MinimoDePuntos = 4;
         /// <summary>Cuánto (m) puede pasarse un carro del área antes de contar como fuera (un carro dando vuelta pegado al muro).</summary>
         public const float ToleranciaFuera = 3f;
+        /// <summary>Los tramos del grafo recortado más largos que esto (m) se parten con nodos intermedios: más sitios donde aparecer fuera de la vista. 0: no se parte nada.</summary>
+        public const float LargoMaximoDeTramo = 35f;
         /// <summary>Lado mínimo (m) del área para darla por buena.</summary>
         public const float LadoMinimo = 100f;
-        /// <summary>Cuánto (m) se mete el área hacia adentro del trazo del muro. 0: los finales de calle de la cuadrícula (a ~1 m del muro) siguen dentro; el carro da vuelta antes por ReglaCallejon.</summary>
-        public const float MargenPorOmision = 0f;
+        /// <summary>Cuánto (m) se mete el área hacia adentro del trazo del muro: el final de calle queda frente a la puerta cerrada, y el carro da vuelta antes por ReglaCallejon.</summary>
+        public const float MargenPorOmision = 2f;
 
         private static Rect? cache;
         private static bool buscada;
@@ -103,7 +105,8 @@ namespace MechaCyberpunk.Trafico.Calle
                 return 0;
             }
             int quitados = grafo.Recortar(area.Value);
-            Debug.Log("[Trafico] T-1526: área del muro " + area.Value + "; grafo de " + grafo.Cantidad + " nodos: " + quitados + " desconectados, " + grafo.NodosAjustados + " movidos al borde"
+            int agregados = grafo.Recortado ? grafo.Subdividir(LargoMaximoDeTramo) : 0;
+            Debug.Log("[Trafico] T-1526: área del muro " + area.Value + "; grafo de " + grafo.Cantidad + " nodos: " + quitados + " fusionados o desconectados, " + grafo.NodosAjustados + " movidos al borde, " + agregados + " intermedios agregados"
                 + (quitados == 0 && grafo.NodosAjustados == 0 ? " (nada fuera del área, o el área dejaba muy pocos nodos)" : "") + ".");
             return quitados;
         }

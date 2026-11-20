@@ -59,9 +59,9 @@ namespace MechaCyberpunk.Tests.Trafico
         [Test]
         public void Recortar_ConElAreaRealDelMuro_ConservaLaCuadriculaYNingunRecorridoSale()
         {
-            // El muro de la ciudad: área de 270 x 176 m (x de -135 a 135, z de -88 a 88); los extremos de la cuadrícula (+-134, +-87) quedan dentro, a 1 m del muro, y no se mueven.
+            // El muro de la ciudad está a x +-135 y z +-88; el área son 2 m adentro. Los finales de la cuadrícula (+-134, +-87) quedan 1 m fuera y se mueven al borde; las calles de las afueras se funden con ellos.
             GrafoCalles grafo = GrafoConAfueras();
-            Rect area = Rect.MinMaxRect(-135f, -88f, 135f, 88f);
+            Rect area = Rect.MinMaxRect(-133f, -86f, 133f, 86f); // el muro a +-135 / +-88, 2 m adentro
             Vector3[] antes = new Vector3[grafo.Cantidad];
             for (int i = 0; i < antes.Length; i++)
             {
@@ -69,7 +69,7 @@ namespace MechaCyberpunk.Tests.Trafico
             }
             int quitados = grafo.Recortar(area);
             Assert.Greater(quitados, 0, "las calles de las afueras se desconectan");
-            Assert.AreEqual(0, grafo.NodosAjustados, "los nodos de la cuadrícula no se mueven");
+            Assert.Greater(grafo.NodosAjustados, 0, "los finales de la cuadrícula se mueven al borde del área");
             int dentro = 0;
             for (int i = 0; i < grafo.Cantidad; i++)
             {
@@ -85,7 +85,7 @@ namespace MechaCyberpunk.Tests.Trafico
             {
                 if (grafo.Dentro(i))
                 {
-                    Assert.AreEqual(antes[i], grafo.Nodo(i), "la cuadrícula queda donde estaba");
+                    Assert.Less(Vector3.Distance(antes[i], grafo.Nodo(i)), 3f, "la cuadrícula queda donde estaba (a lo más 1-2 m)");
                 }
             }
             // Un recorrido al azar (como el de los carros, que no regresan salvo en un callejón) nunca llega a un nodo de afuera.
@@ -106,6 +106,61 @@ namespace MechaCyberpunk.Tests.Trafico
                     Assert.IsTrue(area.Contains(new Vector2(grafo.Nodo(actual).x, grafo.Nodo(actual).z)));
                 }
             }
+        }
+
+        [Test]
+        public void Recortar_NoCambiaLaTopologia_SeFusionaLaCalleDeAfueraConElFinalDeLaCuadricula()
+        {
+            GrafoCalles grafo = GrafoConAfueras();
+            int finalesAntes = 0;
+            for (int i = 0; i < grafo.Cantidad; i++)
+            {
+                finalesAntes += grafo.Vecinos(i).Count == 1 && !IsAfuera(grafo, i) ? 1 : 0;
+            }
+            Assert.IsFalse(grafo.Recortado);
+            grafo.Recortar(Rect.MinMaxRect(-133f, -86f, 133f, 86f));
+            Assert.IsTrue(grafo.Recortado);
+            int finalesDespues = 0;
+            for (int i = 0; i < grafo.Cantidad; i++)
+            {
+                finalesDespues += grafo.Dentro(i) && grafo.Vecinos(i).Count == 1 ? 1 : 0;
+            }
+            Assert.AreEqual(6, finalesDespues, "los 6 finales de calle de la cuadrícula siguen siendo finales (la vuelta en U es ahí)");
+            Assert.Greater(finalesAntes, 0);
+        }
+
+        private static bool IsAfuera(GrafoCalles grafo, int i) => Mathf.Abs(grafo.Nodo(i).x) > 200f || Mathf.Abs(grafo.Nodo(i).z) > 140f;
+
+        [Test]
+        public void Subdividir_PartePorLosTramosLargos_YDejaMasSitiosDondeAparecer()
+        {
+            GrafoCalles grafo = GrafoConAfueras();
+            grafo.Recortar(Rect.MinMaxRect(-133f, -86f, 133f, 86f));
+            int dentroAntes = 0;
+            for (int i = 0; i < grafo.Cantidad; i++)
+            {
+                dentroAntes += grafo.Dentro(i) ? 1 : 0;
+            }
+            int agregados = grafo.Subdividir(AreaMuro.LargoMaximoDeTramo);
+            Assert.Greater(agregados, 0);
+            int dentro = 0;
+            for (int i = 0; i < grafo.Cantidad; i++)
+            {
+                if (!grafo.Dentro(i))
+                {
+                    continue;
+                }
+                dentro++;
+                foreach (int v in grafo.Vecinos(i))
+                {
+                    Vector3 d = grafo.Nodo(v) - grafo.Nodo(i);
+                    d.y = 0f;
+                    Assert.LessOrEqual(d.magnitude, AreaMuro.LargoMaximoDeTramo + 0.5f, "ningún tramo pasa del largo máximo");
+                }
+            }
+            Assert.AreEqual(dentroAntes + agregados, dentro);
+            Assert.AreEqual(0, grafo.Subdividir(AreaMuro.LargoMaximoDeTramo), "una segunda vez no agrega nada");
+            Assert.AreEqual(0, grafo.Subdividir(0f), "0 apaga la subdivisión");
         }
 
         [Test]
@@ -138,7 +193,7 @@ namespace MechaCyberpunk.Tests.Trafico
         public void Callejon_LosFinalesDeCalleSiguenSiendoNodosDeAdentroConSalidaDeRegreso()
         {
             GrafoCalles grafo = GrafoConAfueras();
-            Rect area = Rect.MinMaxRect(-135f, -88f, 135f, 88f);
+            Rect area = Rect.MinMaxRect(-133f, -86f, 133f, 86f); // el muro a +-135 / +-88, 2 m adentro
             grafo.Recortar(area);
             int finales = 0;
             for (int i = 0; i < grafo.Cantidad; i++)
@@ -146,8 +201,8 @@ namespace MechaCyberpunk.Tests.Trafico
                 if (grafo.Dentro(i) && grafo.Vecinos(i).Count == 1)
                 {
                     finales++;
-                    Assert.LessOrEqual(Mathf.Abs(grafo.Nodo(i).x), 135f);
-                    Assert.LessOrEqual(Mathf.Abs(grafo.Nodo(i).z), 88f);
+                    Assert.LessOrEqual(Mathf.Abs(grafo.Nodo(i).x), 133f);
+                    Assert.LessOrEqual(Mathf.Abs(grafo.Nodo(i).z), 86f);
                 }
             }
             Assert.Greater(finales, 0, "hay finales de calle");
