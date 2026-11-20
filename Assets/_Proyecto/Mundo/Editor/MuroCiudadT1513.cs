@@ -182,7 +182,7 @@ namespace MechaCyberpunk.Mundo.Editor
             return new CalculoMuroT1513.Segmento { A = c - f * mitad, B = c + f * mitad };
         }
 
-        private static GameObject Cargar(string ruta)
+        internal static GameObject Cargar(string ruta)
         {
             GameObject g = AssetDatabase.LoadAssetAtPath<GameObject>(ruta);
             if (g == null)
@@ -193,7 +193,7 @@ namespace MechaCyberpunk.Mundo.Editor
         }
 
         /// <summary>Tamaño de los renderers del prefab tal como viene (instancia temporal en el origen).</summary>
-        private static Vector3 Medir(GameObject prefab)
+        internal static Vector3 Medir(GameObject prefab)
         {
             GameObject tmp = (GameObject)PrefabUtility.InstantiatePrefab(prefab);
             tmp.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
@@ -217,7 +217,7 @@ namespace MechaCyberpunk.Mundo.Editor
         /// Instancia una pieza con su largo a lo largo de dir (el eje horizontal más largo del modelo), con la escala uniforme
         /// de altura y el factor de largo, centrada en centro (xz) y con su base en el piso.
         /// </summary>
-        private static GameObject Colocar(GameObject prefab, Transform padre, string nombre, Vector3 centro, Vector3 dir,
+        internal static GameObject Colocar(GameObject prefab, Transform padre, string nombre, Vector3 centro, Vector3 dir,
             float escalaUniforme, float factorLargo, bool alinear, float giroExtra)
         {
             GameObject g = (GameObject)PrefabUtility.InstantiatePrefab(prefab, padre);
