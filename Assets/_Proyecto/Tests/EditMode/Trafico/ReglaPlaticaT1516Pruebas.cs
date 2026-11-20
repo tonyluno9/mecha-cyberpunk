@@ -24,7 +24,8 @@ namespace MechaCyberpunk.Tests.Trafico
         public void CuantosPlatican_PocaGente_NoPasaDeLosQueHay()
         {
             Assert.AreEqual(0, ReglaPlatica.CuantosPlatican(4, 8), "no hay lugar para un corro");
-            Assert.AreEqual(2, ReglaPlatica.CuantosPlatican(6, 2), "nunca más de los que quedan desde el índice inicial");
+            Assert.AreEqual(3, ReglaPlatica.CuantosPlatican(6, 2), "nunca más de los que quedan desde el índice inicial (3, 4 y 5)");
+            Assert.AreEqual(3, ReglaPlatica.CuantosPlatican(6, 1), "con todos platicando sigue sin pasar de los 3 que hay");
         }
 
         [TestCase(24, 8, 1)]

@@ -18,6 +18,8 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
     {
         public const string Variante = "E17_PerroRobotNova_esc";
         public const string VarianteVieja = "E17_PerroRobotNova_a";
+        /// <summary>El controlador va junto al modelo, en la carpeta del perro (no hay carpeta propia para la variante _esc).</summary>
+        public const string RutaControladorPerro = "Assets/Arte/Personajes/E17_PerroRobotNova/E17_PerroRobotNova_esc.controller";
         public const string RutaEnemigo = "Assets/_Proyecto/IA/Prefabs/PerroNova_E17_PerroRobotNova_a.prefab";
         private const string NombreFuente = "E17_PerroRobotNova.fbx";
         private const string CarpetaFuente = "imageassets/blender/personajes/escala_real/";
@@ -118,7 +120,7 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
                     clips.Remove(par.Key);
                 }
             }
-            AnimatorController controlador = ConstructorControladorVisual.Construir(CreadorVisualPersonaje.RutaControlador(Variante), clips, out _);
+            AnimatorController controlador = ConstructorControladorVisual.Construir(RutaControladorPerro, clips, out _);
             string rutaVisual = CreadorVisualPersonaje.RutaPrefab(Variante);
             if (AssetDatabase.LoadAssetAtPath<GameObject>(rutaVisual) != null)
             {

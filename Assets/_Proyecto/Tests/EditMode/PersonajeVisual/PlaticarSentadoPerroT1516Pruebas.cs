@@ -107,7 +107,7 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
         [Test]
         public void Perro_Controlador_UsaLosClipsE17()
         {
-            var controlador = AssetDatabase.LoadAssetAtPath<AnimatorController>(CreadorVisualPersonaje.RutaControlador(PerroEscalaRealT1516.Variante));
+            var controlador = AssetDatabase.LoadAssetAtPath<AnimatorController>(PerroEscalaRealT1516.RutaControladorPerro);
             Assert.IsNotNull(controlador, "falta el controlador del perro nuevo");
             var nombres = controlador.animationClips.Select(c => c.name).ToList();
             foreach (string esperado in new[] { "E17_Caminar", "E17_Correr", "E17_Morder", "E17_Muerte" })

@@ -23,3 +23,14 @@ MonoBehaviour:
   radioOirDisparo: 45
   segundosHuida: 6
   multiplicadorHuida: 2.6
+  vidaPeaton: 40
+  probabilidadRevancha: 0.3
+  alcanceRevancha: 1.5
+  danioRevancha: 5
+  golpesRevancha: 2
+  segundosEntreGolpesRevancha: 0.7
+  segundosMaximosRevancha: 3
+  calorPorMuerte: 25
+  unoDeCadaPlatica: 8
+  probabilidadAgacharse: 0.4
+  segundosAgachado: 3

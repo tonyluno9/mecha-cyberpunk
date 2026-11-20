@@ -242,6 +242,9 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             importador.avatarSetup = ModelImporterAvatarSetup.NoAvatar;
             importador.useFileScale = modelo.useFileScale;
             importador.globalScale = modelo.globalScale;
+            // T-1516: el modelo a escala real tiene la malla y el rig como hermanos (el nodo del rig queda en la ruta); el clip solo trae el rig y Unity lo colapsaría.
+            importador.preserveHierarchy = true;
+            importador.userData = modelo.userData; // el postprocesador de escala lee userData: sin esto el clip vuelve a escala 1
             importador.materialImportMode = ModelImporterMaterialImportMode.None;
             importador.SaveAndReimport();
             importador = AssetImporter.GetAtPath(ruta) as ModelImporter;

@@ -64,10 +64,85 @@ namespace MechaCyberpunk.Mundo.Editor
             {
                 ReemplazarEdificiosT1502.LimiteDistorsion = original;
             }
+            int apagados = QuitarEncimados(escena);
             EditorSceneManager.MarkSceneDirty(escena);
             EditorSceneManager.SaveScene(escena);
-            Debug.Log("[Mundo] T-1512: " + cambiados + " edificios cambiados por ED");
+            Debug.Log("[Mundo] T-1512: " + cambiados + " edificios cambiados por ED; " + apagados + " apagados por caer encima de otro modelo");
             Diagnostico();
+        }
+
+
+        /// <summary>Margen con que se mide el encime (igual que la prueba: cajas encogidas 1 m por lado).</summary>
+        private const float HolguraEncime = -2f;
+
+        /// <summary>En las afueras hay cubos de primitivas encimados entre sí (dos salidas que ponían edificio en el mismo lugar), así que
+        /// su modelo ED cae encima de otro modelo. Ese hueco ya lo ocupa el otro: el ED se apaga (no se borra) y se anota. Los ED se revisan
+        /// en orden y uno ya apagado no cuenta. Devuelve cuántos se apagaron.</summary>
+        internal static int QuitarEncimados(Scene escena)
+        {
+            var modelos = new List<Transform>();
+            foreach (GameObject raiz in escena.GetRootGameObjects())
+            {
+                foreach (Transform t in raiz.GetComponentsInChildren<Transform>(true))
+                {
+                    if (t.name.StartsWith("T1502_Modelo_") && t.gameObject.activeInHierarchy)
+                    {
+                        modelos.Add(t);
+                    }
+                }
+            }
+            int apagados = 0;
+            foreach (Transform m in modelos.Where(x => x.name.Contains("_ED")).ToList())
+            {
+                Transform otro = ConQuien(m, modelos);
+                if (otro != null)
+                {
+                    Debug.Log("[Mundo] T-1512: se apaga " + Ruta(m) + ", encimado con " + Ruta(otro));
+                    m.gameObject.SetActive(false);
+                    modelos.Remove(m);
+                    apagados++;
+                }
+            }
+            return apagados;
+        }
+
+        private static string Ruta(Transform t) => (t.parent != null ? t.parent.name + "/" : "") + t.name + " " + Caja(t).center.ToString("F0") + " " + Caja(t).size.ToString("F0");
+
+        private static bool Encima(Transform m, List<Transform> todos) => ConQuien(m, todos) != null;
+
+        private static Transform ConQuien(Transform m, List<Transform> todos)
+        {
+            Bounds a = Caja(m);
+            a.Expand(HolguraEncime);
+            foreach (Transform o in todos)
+            {
+                if (o == m || o.IsChildOf(m) || m.IsChildOf(o))
+                {
+                    continue;
+                }
+                Bounds b = Caja(o);
+                b.Expand(HolguraEncime);
+                if (a.Intersects(b))
+                {
+                    return o;
+                }
+            }
+            return null;
+        }
+
+        private static Bounds Caja(Transform t)
+        {
+            Renderer[] rs = t.GetComponentsInChildren<Renderer>(false);
+            if (rs.Length == 0)
+            {
+                return new Bounds(t.position, Vector3.zero);
+            }
+            Bounds b = rs[0].bounds;
+            foreach (Renderer r in rs)
+            {
+                b.Encapsulate(r.bounds);
+            }
+            return b;
         }
 
         [MenuItem("Mecha Cyberpunk/T-1512 Diagnostico de primitivas")]
