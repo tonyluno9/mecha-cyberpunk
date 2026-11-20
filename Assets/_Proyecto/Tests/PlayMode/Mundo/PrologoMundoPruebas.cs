@@ -166,7 +166,7 @@ namespace MechaCyberpunk.Tests.Mundo
             yield return EscenaLugares.CargarCiudad();
             IPuntoAparicion cama = Aparicion("Casa_Cama");
             Assert.AreEqual(ModoJugador.APie, cama.Modo);
-            Assert.Less(Vector3.Distance(cama.Pose.position, Aparicion("Casa_Puerta").Pose.position), 0.1f, "T-1496: sin cuarto, Casa_Cama (donde empieza el jugador) está frente a la puerta de la calle");
+            Assert.IsTrue(Zona(IdLugar.Casa).Contains(cama.Pose.position + Vector3.up), "Casa_Cama está dentro de la casa");
             IPuntoAparicion salida = Aparicion("Clandestino_Salida");
             Assert.AreEqual(ModoJugador.APie, salida.Modo);
             Assert.Less(Vector3.Distance(salida.Pose.position, EscenaLugares.Lugar(IdLugar.Clandestino).PosicionEntrada), 0.1f, "Clandestino_Salida está en la Entrada");
