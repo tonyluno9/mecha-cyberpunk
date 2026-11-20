@@ -27,7 +27,7 @@ MonoBehaviour:
   fovSniper: 8
   duracionZoom: 0.15
   sensibilidadZoom: 0.35
-  sacudidaZoom: 1.5
+  sacudidaZoom: 0.3
   duracionSacudida: 0.3
   inclinacionMinima: -40
   inclinacionMaxima: 60
@@ -35,3 +35,15 @@ MonoBehaviour:
   radioColision: 0.2
   giroCuerpo: 720
   segundosGiroAlDisparar: 0.6
+  fovExtraCorrer: 7
+  velocidadInicioFovCorrer: 5
+  velocidadFinFovCorrer: 7.5
+  suavizadoFov: 5
+  suavizadoApuntar: 10
+  balanceoVertical: 0.0175
+  balanceoLateral: 0.01
+  balanceoCiclosPorMetro: 0.25
+  balanceoVelocidadReferencia: 7.5
+  balanceoSuavizado: 6
+  recuperacionColision: 0.35
+  gananciaTemblor: 0.18

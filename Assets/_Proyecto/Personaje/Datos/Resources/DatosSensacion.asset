@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: DatosSensacion
   m_EditorClassIdentifier: MechaCyberpunk.Personaje::MechaCyberpunk.Personaje.DatosSensacion
   armas:
-  - patada: 0.9
-    desvio: 0.5
+  - patada: 0.18
+    desvio: 0.1
     destello: 0
     particulas: 0
     retrocesoArma: 0
@@ -25,8 +25,8 @@ MonoBehaviour:
     floracion: 0
     topeFloracion: 0
     recuperacionFloracion: 8
-  - patada: 1
-    desvio: 0.25
+  - patada: 0.2
+    desvio: 0.05
     destello: 0.26
     particulas: 6
     retrocesoArma: 0.07
@@ -37,8 +37,8 @@ MonoBehaviour:
     floracion: 0.3
     topeFloracion: 1.5
     recuperacionFloracion: 6
-  - patada: 3.2
-    desvio: 0.5
+  - patada: 0.64
+    desvio: 0.1
     destello: 0.5
     particulas: 4
     retrocesoArma: 0.16
@@ -49,8 +49,8 @@ MonoBehaviour:
     floracion: 0
     topeFloracion: 0
     recuperacionFloracion: 8
-  - patada: 0.6
-    desvio: 0.35
+  - patada: 0.12
+    desvio: 0.07
     destello: 0.3
     particulas: 5
     retrocesoArma: 0.045
@@ -61,8 +61,8 @@ MonoBehaviour:
     floracion: 0.15
     topeFloracion: 2.5
     recuperacionFloracion: 5
-  - patada: 4.5
-    desvio: 0.3
+  - patada: 0.9
+    desvio: 0.06
     destello: 0.4
     particulas: 10
     retrocesoArma: 0.2
@@ -73,8 +73,8 @@ MonoBehaviour:
     floracion: 0
     topeFloracion: 0
     recuperacionFloracion: 8
-  - patada: 0.5
-    desvio: 0.3
+  - patada: 0.1
+    desvio: 0.06
     destello: 0.22
     particulas: 4
     retrocesoArma: 0.035
@@ -85,8 +85,8 @@ MonoBehaviour:
     floracion: 0.12
     topeFloracion: 2
     recuperacionFloracion: 5
-  - patada: 2.6
-    desvio: 0.4
+  - patada: 0.52
+    desvio: 0.08
     destello: 0.4
     particulas: 8
     retrocesoArma: 0.14
@@ -97,8 +97,8 @@ MonoBehaviour:
     floracion: 0
     topeFloracion: 0
     recuperacionFloracion: 8
-  - patada: 3
-    desvio: 0.3
+  - patada: 0.6
+    desvio: 0.06
     destello: 0.3
     particulas: 0
     retrocesoArma: 0.15
@@ -121,8 +121,8 @@ MonoBehaviour:
     floracion: 0
     topeFloracion: 0
     recuperacionFloracion: 8
-  - patada: 0.7
-    desvio: 0.2
+  - patada: 0.14
+    desvio: 0.04
     destello: 0.3
     particulas: 5
     retrocesoArma: 0.05

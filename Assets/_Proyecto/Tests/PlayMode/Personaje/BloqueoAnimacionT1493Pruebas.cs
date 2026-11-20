@@ -39,18 +39,18 @@ namespace MechaCyberpunk.Tests.Personaje
 
             Vector3 inicio = jugador.transform.position;
             float giroInicio = jugador.transform.eulerAngles.y;
-            int cuadros = 0;
-            while (EnMotoBajar() && cuadros < 600)
+            // Por tiempo y no por cuadros: en batchmode los cuadros duran décimas de milisegundo.
+            float fin = Time.time + 6f;
+            while (EnMotoBajar() && Time.time < fin)
             {
                 yield return null;
-                cuadros++;
                 if (!EnMotoBajar()) { break; }
                 Assert.IsTrue(controlador.BloqueadoPorAnimacion, "bloqueado mientras dura MotoBajar");
                 Vector3 d = jugador.transform.position - inicio;
                 d.y = 0f;
                 Assert.Less(d.magnitude, 0.05f, "no se movió durante MotoBajar");
             }
-            Assert.Less(cuadros, 600, "MotoBajar terminó");
+            Assert.Less(Time.time, fin, "MotoBajar terminó");
             Assert.AreEqual(giroInicio, jugador.transform.eulerAngles.y, 1f, "el cuerpo no giró");
 
             Vector3 trasTerminar = jugador.transform.position;
