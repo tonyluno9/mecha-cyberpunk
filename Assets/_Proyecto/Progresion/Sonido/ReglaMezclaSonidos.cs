@@ -92,7 +92,7 @@ namespace MechaCyberpunk.Progresion.Sonido
                 case ReglaAmbienteZona.CalleNoche: return 1f;
                 case ReglaAmbienteZona.Casino: return 0.55f;
                 case ReglaAmbienteZona.Clinica: return 0.13f;
-                default: return 0.5f;
+                default: return MapaSonidos20nov.TryFila(id, out TablaMezcla20nov.Fila fila) ? fila.Volumen : 0.5f; // T-1531: los de 20-nov traen su nivel (ya compensado por su archivo)
             }
         }
 
@@ -109,7 +109,7 @@ namespace MechaCyberpunk.Progresion.Sonido
             if (EsSinPolitica(p) && MapaSonidos19nov.Nuevo(id) != null)
             {
                 // T-1471: un ID viejo sin regla propia usa la del ID nuevo con el que suena.
-                PoliticaSonido n = ParaNuevo(MapaSonidos19nov.Nuevo(id));
+                PoliticaSonido n = ParaDelNuevo(MapaSonidos19nov.Nuevo(id));
                 p = new PoliticaSonido(n.Grupo, n.MaxVoces, n.Volumen, n.VariacionTono, n.SegundosMinimos, n.DistanciaMaxima, MapaSonidos19nov.TonoBase(id), n.VariacionVolumen);
             }
             if (Array.IndexOf(IdsEncendidos, id) < 0 || TieneVolumenPropio(id)) return p;
@@ -122,11 +122,16 @@ namespace MechaCyberpunk.Progresion.Sonido
         public static int Prioridad(string id)
         {
             if (string.IsNullOrEmpty(id)) return 128;
-            if (id.StartsWith("AMB_", StringComparison.Ordinal) || id == "FUE_LOOP_CHICO") return 200;
-            if (id.StartsWith("ARM_", StringComparison.Ordinal) && id.Contains("_DISPARO")) return 32;
-            if (id.StartsWith("PAN_", StringComparison.Ordinal) || id.StartsWith("JUG_", StringComparison.Ordinal) || id.StartsWith("POL_", StringComparison.Ordinal)) return 48;
-            if (id.StartsWith("EXP_", StringComparison.Ordinal) || id.StartsWith("IMP_", StringComparison.Ordinal) || id.StartsWith("MEL_", StringComparison.Ordinal)) return 64;
-            if (id.StartsWith("PAS_", StringComparison.Ordinal) || id.StartsWith(PrefijoPaso, StringComparison.Ordinal)) return 160;
+            // T-1531: ambiente, clima, interiores y objetos abajo; disparos, avisos de HUD y voces arriba.
+            if (id.StartsWith("AMB_", StringComparison.Ordinal) || id.StartsWith("CLI_", StringComparison.Ordinal) || id.StartsWith("OBJ_", StringComparison.Ordinal)
+                || id == "FUE_LOOP_CHICO" || id == "FUE_LOOP_GRANDE" || MapaSonidos20nov.EsInteriorAmbiente(id)) return 200;
+            if ((id.StartsWith("ARM_", StringComparison.Ordinal) && id.Contains("_DISPARO")) || id == "DRN_PES_AMETRALLADORA") return 32;
+            if (id.StartsWith("HUD_", StringComparison.Ordinal) || id.StartsWith("MIS_", StringComparison.Ordinal)) return 40;
+            if (id.StartsWith("PAN_", StringComparison.Ordinal) || id.StartsWith("JUG_", StringComparison.Ordinal) || id.StartsWith("POL_", StringComparison.Ordinal)
+                || id.StartsWith("NPC_", StringComparison.Ordinal) || id.StartsWith("ROB_VOZ", StringComparison.Ordinal) || id == "NOV_CAIDA_Y_ENCENDIDO") return 48;
+            if (id.StartsWith("PAS_", StringComparison.Ordinal) || id.StartsWith(PrefijoPaso, StringComparison.Ordinal) || id == "NOV_PASOS_CAMINAR" || id == "NOV_PASOS_CORRER") return 160;
+            if (id.StartsWith("EXP_", StringComparison.Ordinal) || id.StartsWith("IMP_", StringComparison.Ordinal) || id.StartsWith("MEL_", StringComparison.Ordinal)
+                || id.StartsWith("NOV_", StringComparison.Ordinal) || id.StartsWith("ROB_", StringComparison.Ordinal) || id.StartsWith("EXO_", StringComparison.Ordinal)) return 64;
             return 100;
         }
 
@@ -147,7 +152,7 @@ namespace MechaCyberpunk.Progresion.Sonido
                 case "VEH_ELECTRICO_MOVER":
                 case "FUE_LOOP_CHICO": return 3;
                 case "VEH_ALARMA": return 2;
-                default: return 1;
+                default: return Math.Max(1, MapaSonidos20nov.Bucles(id)); // T-1531: ambulancia, rotores, fuego grande y objetos que zumban admiten varios
             }
         }
 
@@ -166,6 +171,7 @@ namespace MechaCyberpunk.Progresion.Sonido
         private static PoliticaSonido ParaBase(string id)
         {
             if (string.IsNullOrEmpty(id)) return SinPolitica;
+            if (MapaSonidos20nov.TryFila(id, out TablaMezcla20nov.Fila fila)) return Politica20nov(fila); // T-1531
             if (MapaSonidos19nov.EsNuevo(id)) return ParaNuevo(id);
             if (id.StartsWith("ARM_", StringComparison.Ordinal))
             {
@@ -187,6 +193,8 @@ namespace MechaCyberpunk.Progresion.Sonido
                 case "UI_OBJETIVO_NUEVO":
                 case "UI_OBJETIVO_CUMPLIDO": return new PoliticaSonido("objetivo", 1, 0.6f, 0f, 1f);
                 case "CAL_SUBE_NIVEL": return new PoliticaSonido("calor", 1, 0.65f, 0f, 3f);
+                // T-1531: el altavoz de la patrulla sale de las voces "Mexican Police" (POL_RADIO_AVISO) pero se oye más lejos.
+                case "CAL_PATRULLA_MEGAFONO": return new PoliticaSonido("megafono", 1, 0.7f, 0.03f, 3f, 45f, 1f, 0.06f);
                 case "ECO_DINERO_RECOGER": return new PoliticaSonido("dinero", 1, 0.55f, 0.05f, 0.25f, 20f);
                 case "MUN_PUERTA_CASA_ABRIR":
                 case "MUN_PUERTA_CASA_CERRAR": return new PoliticaSonido("puerta-casa", 1, 0.6f, 0.04f, 0.5f, 20f);
@@ -267,6 +275,14 @@ namespace MechaCyberpunk.Progresion.Sonido
             return new PoliticaSonido(grupo, voces, vol, tono, minimo, distancia, 1f, vvol);
         }
 
+        private static PoliticaSonido ParaDelNuevo(string nuevo) => MapaSonidos20nov.TryFila(nuevo, out TablaMezcla20nov.Fila f) ? Politica20nov(f) : ParaNuevo(nuevo);
+
+        /// <summary>T-1531: la política de un ID nuevo del 20-nov desde su fila de <see cref="TablaMezcla20nov"/>.</summary>
+        private static PoliticaSonido Politica20nov(TablaMezcla20nov.Fila f)
+        {
+            return new PoliticaSonido(f.Grupo, f.Voces, f.Volumen, f.Tono, f.Minimo, f.Distancia, 1f, f.VariacionVolumen);
+        }
+
         /// <summary>T-1471: política de cada ID nuevo (por ID y por prefijo). Todos varían tono o volumen; los del mundo traen distancia máxima.</summary>
         public static PoliticaSonido ParaNuevo(string id)
         {
@@ -279,14 +295,11 @@ namespace MechaCyberpunk.Progresion.Sonido
                 case "ARM_W04_DISPARO": return new PoliticaSonido(GrupoArma, 1, 0.9f, VariacionDisparo, 0f, 150f, 1f, VariacionVolumenDisparo);
                 case "ARM_W06_DISPARO": return new PoliticaSonido(GrupoArma, 1, 0.85f, VariacionDisparo, 0f, 110f, 1f, VariacionVolumenDisparo);
                 case "ARM_W07_DISPARO": return new PoliticaSonido(GrupoArma, 1, 0.8f, VariacionDisparo, 0f, 100f, 1f, VariacionVolumenDisparo);
-                case "ARM_NOVA_DISPARO": return new PoliticaSonido("arma-nova", 1, 0.85f, VariacionDisparo, 0f, 100f, 1f, VariacionVolumenDisparo);
-                case "ARM_NOVA_CARGA_DISPARO": return new PoliticaSonido("arma-nova", 1, 0.8f, VariacionDisparo, 0f, 100f, 1f, VariacionVolumenDisparo);
                 case "ARM_W03_RECARGA_CARGADOR": return P(GrupoArma, 1, 0.7f, 0.02f, 0f, 0f, 0.05f);
                 case "ARM_W06_SACAR": return P(GrupoArma, 1, 0.6f, 0.03f, 0f, 0f, 0.05f);
                 case "ARM_W02_BOMBA":
                 case "ARM_W04_CERROJO": return P(GrupoArmaAccesorio, 2, 0.7f, 0.02f, 0f, 0f, 0.05f);
                 case "ARM_W07_CARGA": return P(GrupoArmaAccesorio, 1, 0.5f, 0.03f, 0f, 0f, 0.05f);
-                case "ARM_W07_RAYO": return P(GrupoArmaAccesorio, 1, 0.7f, 0.03f, 0.1f, 80f, 0.05f);
                 case "ARM_GRANADA_SEGURO": return P(GrupoArmaAccesorio, 2, 0.6f, 0.04f, 0.1f, 40f);
                 case "ARM_GRANADA_REBOTE": return P("granada-rebote", 2, 0.55f, 0.06f, 0.1f, 40f);
                 case "ARM_COLA_CALLE": return P("arma-cola", 1, 0.5f, 0.03f, 0.1f, 150f);
@@ -352,14 +365,11 @@ namespace MechaCyberpunk.Progresion.Sonido
                 // Policía.
                 case "POL_SIRENA_LOOP": return P("sirena", 3, 0.7f, 0f, 0.5f, 120f, 0.05f);
                 case "POL_SIRENA_CORTA": return P("sirena-corta", 1, 0.7f, 0.03f, 1f, 100f);
-                case "POL_NOVA_AVISO": return P("nova-voz", 1, 0.85f, 0.03f, 3f, 40f, 0.05f);
                 case "POL_RADIO_AVISO": return P("radio-policia", 1, 0.6f, 0.03f, 2f, 25f);
-                case "POL_RADIO_DESPACHO": return P("radio-policia", 1, 0.6f, 0.03f, 3f, 25f);
                 // Interfaz y HUD (2D, sin distancia).
                 case "UI_LOGO_INTRO": return P("ui-logo", 1, 0.6f, 0f, 1f, 0f, 0.03f);
                 case "UI_MENU_ABRIR":
                 case "UI_MENU_CERRAR": return P("ui-menu", 1, 0.55f, 0.02f, 0.1f, 0f, 0.05f);
-                case "UI_CAMARA_LENTA": return P("ui-camara-lenta", 1, 0.6f, 0f, 0.3f, 0f, 0.05f); // T-1527
                 case "UI_ERROR": return P("ui", 2, 0.6f, 0.03f, 0.1f, 0f, 0.05f);
                 case "HUD_LOGRO":
                 case "HUD_NOTIFICACION": return P("objetivo", 1, 0.6f, 0.02f, 1f, 0f, 0.05f);

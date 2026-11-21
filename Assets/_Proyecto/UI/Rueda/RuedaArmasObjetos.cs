@@ -296,8 +296,11 @@ namespace MechaCyberpunk.UI.Rueda
                 && vida != null && !vida.EstaKO && !Pausa.Activa && PilaPantallas.Vacia && MenuCyberfix.Abiertos == 0;
         }
 
-        /// <summary>T-1527: sonido al entrar en cámara lenta: un whoosh grave que baja de tono (antes sonaba un golpe, PUN_GOLPE_AIRE). Al salir no suena nada.</summary>
-        public const string IdCamaraLenta = "UI_CAMARA_LENTA";
+        /// <summary>T-1531: sonido al entrar en cámara lenta (abrir la rueda): el recorte de entrada de la grabación EXO_RUEDA_CAMARA_LENTA (antes un whoosh sintetizado, UI_CAMARA_LENTA).</summary>
+        public const string IdCamaraLenta = "EXO_RUEDA_CAMARA_LENTA_ENTRAR";
+
+        /// <summary>T-1531: sonido al salir de la cámara lenta (cerrar la rueda).</summary>
+        public const string IdCamaraLentaSalir = "EXO_RUEDA_CAMARA_LENTA_SALIR";
 
         private void Abrir()
         {
@@ -329,6 +332,7 @@ namespace MechaCyberpunk.UI.Rueda
                 return;
             }
             abierta = false;
+            Sonidos.Reproducir(IdCamaraLentaSalir);
             // La pausa dueña del tiempo (timeScale en 0): la rueda no la pisa; solo devuelve el paso de la física.
             if (!Pausa.Activa)
             {

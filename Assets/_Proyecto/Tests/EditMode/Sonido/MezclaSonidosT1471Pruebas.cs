@@ -72,7 +72,7 @@ namespace MechaCyberpunk.Tests.Sonido
         [Test]
         public void LosDisparos_VanArriba_MismoClipPeroVariacionChica()
         {
-            foreach (string id in new[] { "ARM_W01_DISPARO", "ARM_W02_DISPARO", "ARM_W03_DISPARO", "ARM_W04_DISPARO", "ARM_W06_DISPARO", "ARM_W07_DISPARO", "ARM_NOVA_DISPARO",
+            foreach (string id in new[] { "ARM_W01_DISPARO", "ARM_W02_DISPARO", "ARM_W03_DISPARO", "ARM_W04_DISPARO", "ARM_W06_DISPARO", "ARM_W07_DISPARO",
                 "ARM_PIS_DISPARO", "ARM_SUB_DISPARO", "ARM_ESC_DISPARO", "ARM_FUS_DISPARO", "ARM_SNI_DISPARO", "ARM_REV_DISPARO", "ARM_PLA_DISPARO" })
             {
                 PoliticaSonido p = ReglaMezclaSonidos.Para(id);
@@ -126,7 +126,7 @@ namespace MechaCyberpunk.Tests.Sonido
         [Test]
         public void LosViejosMapeadosSinReglaPropia_HeredanLaPoliticaDelNuevo()
         {
-            PoliticaSonido nuevo = ReglaMezclaSonidos.Para("EXP_ONDA");
+            PoliticaSonido nuevo = ReglaMezclaSonidos.Para("EXP_CARRO"); // T-1531: VEH_EXPLOSION suena con EXP_CARRO
             PoliticaSonido viejo = ReglaMezclaSonidos.Para(ReglaMezclaSonidos.IdExplosion);
             Assert.AreEqual(nuevo.DistanciaMaxima, viejo.DistanciaMaxima);
             Assert.AreEqual(nuevo.Volumen, viejo.Volumen, 1e-5f);

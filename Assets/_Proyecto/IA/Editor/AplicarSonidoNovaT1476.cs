@@ -5,7 +5,7 @@ using UnityEngine;
 namespace MechaCyberpunk.IA.Editor
 {
     /// <summary>
-    /// T-1476: pone POL_NOVA_AVISO como sonido de llegada de Nova en ConfigRespuestaNova. Se puede correr varias veces.
+    /// T-1476: pone NOV_CAIDA_Y_ENCENDIDO (T-1531; antes POL_NOVA_AVISO) como sonido de llegada de Nova en ConfigRespuestaNova. Se puede correr varias veces.
     /// Uso: Unity -batchmode -quit -executeMethod MechaCyberpunk.IA.Editor.AplicarSonidoNovaT1476.Aplicar
     /// </summary>
     public static class AplicarSonidoNovaT1476
@@ -20,11 +20,11 @@ namespace MechaCyberpunk.IA.Editor
                 return;
             }
             SerializedObject so = new SerializedObject(config);
-            so.FindProperty("sonidoLlegada").stringValue = "POL_NOVA_AVISO";
+            so.FindProperty("sonidoLlegada").stringValue = "NOV_CAIDA_Y_ENCENDIDO";
             so.ApplyModifiedPropertiesWithoutUndo();
             EditorUtility.SetDirty(config);
             AssetDatabase.SaveAssets();
-            Debug.Log("[T-1476] ConfigRespuestaNova: sonido de llegada POL_NOVA_AVISO");
+            Debug.Log("[T-1476] ConfigRespuestaNova: sonido de llegada NOV_CAIDA_Y_ENCENDIDO");
         }
     }
 }
