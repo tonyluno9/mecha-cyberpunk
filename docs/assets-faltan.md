@@ -158,3 +158,16 @@ Ya cubierto: ED01 a ED12 (13 de 24 variantes importadas, ver docs/identificacion
 | Qué | Para qué | Nota |
 | --- | --- | --- |
 | Variantes sin modelo: ED01_b, ED02_b, ED03_a, ED04_a, ED05_b, ED06_b, ED07_b, ED09_a, ED10_b, ED11_b, ED12_b, MU02_b, MU03_b | Más variedad por barrio | Solo hay PNG en nuevos-19nov |
+
+## T-1541 (21-nov): modelos nuevos
+
+Barrido de nuevos-17nov, 18nov y 19nov contra Assets (por código, prefab y referencias en escenas y prefabs):
+
+| Qué | Estado |
+| --- | --- |
+| W11 granada, EM01 portón, EM02 puesto (nuevos-21nov) | Importados por T-1541 (`ImportarModelosT1541`): W11 en la mano, al volar y en el piso; EM01/EM02 en la entrada del mercado de armas |
+| Carros V12-V24, MT01/MT02, V11, PA01/PA02, drones DR02-DR04, NV03, ED/MU/CB/PU/ML/CC/PZ/AR/AU | Ya estaban en Assets con prefab. Los de zonas que se sacaron del mapa (CH, IN, LO, Cerro, Puerto, Malecón, Autopista) quedan sin colocar a propósito (mapa de 4 barrios) |
+| ED01_CasaSuburbios_a, ED12_Estacionamiento_a | En Assets, sin ninguna referencia: quedan para T-1544 (casas caja a modelos reales) |
+| NP01-NP06 (Tripo, nuevos-17nov) | Solo el zip sin rig; sin FBX en Assets. Esperan el rig de Blender (NP07-NP14 ya llegaron). No se importan estáticos |
+| Sin 3D, solo PNG | CC03_CasaCerro, CH03_EdificioColonial, NV01_NaveTransporte, V11 (ya hay Carro_V11 de Blender), W10 (ya hay), ED01_b, ED02_b, ED03_a, ED04_a, ED05_b, ED06_b, ED07_b, ED09_a, ED10_b, ED11_b, ED12_b, MU02_b, MU03_b, CB04_b, PA01_b, PA02_b, DR03_b, DR04_b, E17_b, E18_b, ML06, NP10_b, NP12_b, SK01 |
+| Enemigo que lanza granadas | No existe en IA/: solo el jugador usa la granada |

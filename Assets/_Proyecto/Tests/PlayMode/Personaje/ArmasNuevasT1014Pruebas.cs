@@ -32,7 +32,7 @@ namespace MechaCyberpunk.Tests.Personaje
             ("W05", "subfusil", "Subfusil", ArmaAPie.Subfusil, "Assets/Arte/Armas/W05_Subfusil/W05_Subfusil_Piso.prefab", 0.6f, 0.4f, false),
             ("W06", "revolver", "Revolver", ArmaAPie.Revolver, "Assets/Arte/Armas/W06_Revolver/W06_Revolver_Piso.prefab", 0.35f, 0.25f, true),
             ("W08", "lanzagranadas", "Lanzagranadas", ArmaAPie.Lanzagranadas, "Assets/Arte/Armas/W08_Lanzagranadas/W08_Lanzagranadas_Piso.prefab", 0.8f, 0.45f, false),
-            ("W09", "granada", "Granada", ArmaAPie.Granada, "Assets/Arte/Armas/W09_Granada/W09_Granada_Piso.prefab", 0.1f, 0.1f, true),
+            ("W11", "granada", "Granada", ArmaAPie.Granada, "Assets/Arte/Armas/W11_Granada/W11_Granada_Piso.prefab", 0.1f, 0.1f, true),
             ("W07", "rifle", "RiflePlasma", ArmaAPie.RiflePlasma, "Assets/Arte/Armas/W07_RiflePlasma/W07_RiflePlasma_Piso.prefab", 1.0f, 0.55f, false),
         };
 

@@ -53,7 +53,7 @@ namespace MechaCyberpunk.UI.Editor
         /// <summary>T-1014: las armas nuevas (subfusil, revólver, lanzagranadas, granada y rifle de plasma) no tienen otro icono que su holograma: armas queda del tamaño del enum.</summary>
         private static void PonerIconosArmasNuevas(SerializedObject so)
         {
-            string[] hologramas = { "H05_Subfusil", "H06_Revolver", "H07_Lanzagranadas", "H08_Granada", "H09_RiflePlasma" };
+            string[] hologramas = { "H05_Subfusil", "H06_Revolver", "H07_Lanzagranadas", "H11_Granada", "H09_RiflePlasma" };
             SerializedProperty lista = so.FindProperty("armas");
             int primera = lista.arraySize;
             lista.arraySize = primera + hologramas.Length;

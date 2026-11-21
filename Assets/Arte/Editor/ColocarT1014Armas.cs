@@ -36,9 +36,9 @@ namespace MechaCyberpunk.Arte.Editor
         private const float IntensidadLuzBoca = 8f;
         private const float AlcanceLuzBoca = 12f;
         // Altura (arriba) y avance (adelante) de la luz de la boca de la granada respecto a la palma (m): de ahí sale al lanzarla.
-        private static readonly Vector3 BocaGranada = new Vector3(0f, 0.04f, 0.15f);
+        internal static readonly Vector3 BocaGranada = new Vector3(0f, 0.04f, 0.15f);
         // La granada se agarra con la palma por abajo: sube y avanza para quedar sobre el puño y verse (m, respecto a la palma).
-        private static readonly Vector3 PosicionGranadaEnMano = new Vector3(0f, 0.09f, 0.04f);
+        internal static readonly Vector3 PosicionGranadaEnMano = new Vector3(0f, 0.09f, 0.04f);
         private const float MetalicoPorOmision = 1f;
         private const float SuavidadPorOmision = 1f;
         private const float EscalaPisoGranada = 1.6f;
