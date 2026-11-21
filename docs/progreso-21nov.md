@@ -33,3 +33,5 @@ Si algo no avanza en 15 min: se mata, se anota y se sigue.
 
 ## Bitácora
 - 21-nov: paso 0 hecho; integ/21nov en s2; compilando lo nuevo de Blender.
+- Aérea actual (docs/capturas/_21nov/00-actual-aerea.png, render en modo edición sin niebla): la ciudad es una cruz (centro 3x2 dentro del muro + 4 alas de afueras fuera del muro + piso gris enorme). M13 es un rectángulo denso de 4 barrios con glorieta. En Play hay niebla y algo que oculta lo lejano (para capturas aéreas usar `scratchpad/aerea.sh`, render en modo edición).
+- Lanzadas: T-1540 animaciones, T-1541 modelos, T-1542 NPCs, T-1543 muro/nada detrás/huecos, T-1544 casas caja. T-1545 (luz y fps) espera su worktree.
