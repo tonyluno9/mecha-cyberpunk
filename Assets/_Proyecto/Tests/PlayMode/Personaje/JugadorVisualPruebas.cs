@@ -47,7 +47,8 @@ namespace MechaCyberpunk.Tests.Personaje
 
             Press(teclado.leftShiftKey);
             yield return Esperar(0.9f);
-            Assert.AreEqual("Correr", Estado(animador), "Al correr usa Correr");
+            // T-1550 (decisión de Tony del 20-nov (T-1550)): Shift trota a 4.53 y el trote es la mezcla del estado Caminar; "Correr" es la velocidad rápida (6.25).
+            Assert.AreEqual("Caminar", Estado(animador), "Con Shift trota (mezcla de Caminar)");
             AfirmarPiesSinPatinar(visual, animador);
             // Pies en el piso: el hueso del pie derecho a la altura del suelo del CharacterController (piso en y = 0).
             Transform pie = animador.GetBoneTransform(HumanBodyBones.RightFoot);
@@ -64,7 +65,9 @@ namespace MechaCyberpunk.Tests.Personaje
         /// <summary>T-1484: el clip avanza (rapidez × velocidad del clip) casi lo mismo que el cuerpo: los pies no patinan más de 15 %.</summary>
         private static void AfirmarPiesSinPatinar(VisualPersonaje visual, Animator animador)
         {
-            float clip = (Estado(animador) == "Correr" ? ReglasAnimacion.VelocidadPJ01Sprint : ReglasAnimacion.VelocidadPJ01Trote) * visual.EscalaClips;
+            // T-1550: en Caminar la velocidad del clip es la de la mezcla caminar (1.62) -> trote (4.53); en Correr, la de PJ01_CorrerRapido (6.25).
+            float clip = (Estado(animador) == "Correr" ? ReglasAnimacion.VelocidadPJ01CorrerRapido
+                : ReglasAnimacion.VelocidadClipMezcla(visual.Velocidad, ReglasAnimacion.VelocidadPJ01Caminar, ReglasAnimacion.VelocidadPJ01Trote, ReglasAnimacion.VelocidadPJ01Caminar, ReglasAnimacion.VelocidadPJ01Trote)) * visual.EscalaClips;
             float avanceClip = animador.speed * clip;
             Assert.Less(Mathf.Abs(avanceClip - visual.Velocidad) / Mathf.Max(0.1f, visual.Velocidad), 0.15f,
                 $"Pies sin patinar: clip {avanceClip:F2} m/s, cuerpo {visual.Velocidad:F2} m/s (rapidez {animador.speed:F2})");

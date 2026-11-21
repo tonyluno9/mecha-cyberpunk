@@ -3,8 +3,8 @@ using UnityEngine;
 namespace MechaCyberpunk.Personaje.Movimiento
 {
     /// <summary>
-    /// T-1505: caminar de verdad. El paso normal del jugador es un trote (4.5 m/s); con la tecla de caminar (Bloq Mayús, alterna) baja a 1.6 m/s y se ve PJ01_Caminar.
-    /// Shift (correr) manda mientras se mantiene. Lógica pura.
+    /// T-1505: caminar de verdad. El paso normal del jugador era un trote (4.5 m/s); con la tecla de caminar (Bloq Mayús, alterna) bajaba a 1.6 m/s y se veía PJ01_Caminar.
+    /// T-1550 (decisión de Tony del 20-nov): WASD ya camina a 1.62 m/s (DatosPersonaje) y Shift trota a 4.53, así que la tecla no cambia nada (el tope es el mínimo de las dos velocidades). Shift (correr) manda mientras se mantiene. Lógica pura.
     /// </summary>
     public static class ReglaCaminarLento
     {
@@ -12,7 +12,7 @@ namespace MechaCyberpunk.Personaje.Movimiento
         public const string TeclaCaminar = "<Keyboard>/capsLock";
 
         /// <summary>Velocidad (m/s) de caminar de verdad (la del clip PJ01_Caminar).</summary>
-        public const float Velocidad = 1.6f;
+        public const float Velocidad = MechaCyberpunk.Personaje.Visual.ReglasAnimacion.VelocidadPJ01Caminar;
 
         /// <summary>El estado nuevo del alternador: cambia con cada pulsación.</summary>
         public static bool Alternar(bool actual, bool pulsado) => pulsado ? !actual : actual;

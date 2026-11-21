@@ -103,7 +103,8 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
             Assert.IsTrue(ReglaCaminarLento.Alternar(false, true));
             Assert.IsFalse(ReglaCaminarLento.Alternar(true, true));
             Assert.IsTrue(ReglaCaminarLento.Alternar(true, false), "Sin pulsar se queda como estaba");
-            Assert.AreEqual(1.6f, ReglaCaminarLento.VelocidadCaminar(true, 4.5f), 1e-4f);
+            // T-1550 (decisión de Tony del 20-nov (T-1550)): la velocidad de caminar de verdad es la del clip PJ01_Caminar (1.62, antes 1.6).
+            Assert.AreEqual(ReglaCaminarLento.Velocidad, ReglaCaminarLento.VelocidadCaminar(true, 4.5f), 1e-4f);
             Assert.AreEqual(4.5f, ReglaCaminarLento.VelocidadCaminar(false, 4.5f), 1e-4f);
             Assert.AreEqual(1.2f, ReglaCaminarLento.VelocidadCaminar(true, 1.2f), 1e-4f, "Nunca más rápido que caminar normal");
             Assert.AreEqual(ReglasAnimacion.VelocidadPJ01Caminar, ReglaCaminarLento.Velocidad, 1e-4f, "Es la velocidad del clip PJ01_Caminar");
@@ -122,6 +123,7 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
         [TestCase("PJ01_Trote", "AlPasoPJ01")]
         [TestCase("PJ01_Sprint", "AlPasoPJ01")]
         [TestCase("PJ01_Caminar", "AlPasoPJ01")]
+        [TestCase("PJ01_CorrerRapido", "AlPasoPJ01")] // T-1550 (decisión de Tony del 20-nov (T-1550))
         public void ClipImportado_LlevaLosEventosDePisada(string nombre, string funcion)
         {
             AnimationClip clip = MechaCyberpunk.Personaje.Visual.Editor.ConstructorControladorBase.Clip(nombre);

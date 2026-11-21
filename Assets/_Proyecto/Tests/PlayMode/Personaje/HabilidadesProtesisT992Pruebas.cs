@@ -127,7 +127,8 @@ namespace MechaCyberpunk.Tests.Personaje
             float segundos = Time.time - t0;
             Release(teclado.wKey);
             Release(teclado.leftShiftKey);
-            float esperada = datos.VelocidadCorrer * falsos.Efectos.multiplicadorCorrer * habilidades.Config.FactorCorrer * segundos;
+            // T-1550 (decisión de Tony del 20-nov (T-1550)): la velocidad rápida nunca baja de 6.25 m/s; con el implante y la habilidad de piernas son base x multiplicadores (4.53 x 1.2 x 1.5 = 8.15 m/s), arriba de lo que PJ01_CorrerRapido alcanza sin patinar (7.19 m/s).
+            float esperada = MechaCyberpunk.Personaje.Movimiento.ReglaVelocidadRapida.VelocidadCorrer(datos.VelocidadCorrer, falsos.Efectos.multiplicadorCorrer, habilidades.Config.FactorCorrer, 1f) * segundos;
             Debug.Log("[Prueba] T-992 correr con PIERNAS I: medido " + distancia + " m, esperado " + esperada + " m");
             Assert.AreEqual(esperada, distancia, esperada * Tolerancia);
 

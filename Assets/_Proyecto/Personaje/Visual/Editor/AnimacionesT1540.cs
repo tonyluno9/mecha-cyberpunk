@@ -22,6 +22,13 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
         private const string Etiqueta = "[T-1540] ";
         private const float Mezcla = 0.12f;
         private const float MezclaCorta = 0.06f;
+        /// <summary>T-1550: mezcla (s) al entrar a la agachada del salto: corta, para no comerse los 3 cuadros (0.1 s) antes del despegue.</summary>
+        private const float MezclaPreparar = 0.03f;
+        /// <summary>T-1550: estados de piso desde los que se pasa a la agachada del salto al pedirlo.</summary>
+        private static readonly string[] EstadosDePiso =
+        {
+            "Idle", "Caminar", "Correr", "GirarDer", "GirarIzq", "GirarApuntarDer", "GirarApuntarIzq", "Frenar", "EscalonesSubir", "EscalonesBajar",
+        };
         private const float SalidaUnaVez = 0.88f;
 
         /// <summary>Los clips que se importan en el paso 1 (nombre de archivo sin .fbx).</summary>
@@ -146,27 +153,68 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             AnimatorState caer = Estado(m, "Caida");
             AnimatorState correr = Estado(m, "Correr");
             AnimatorState caminar = Estado(m, "Caminar");
+            AnimatorState saltoInicio = Estado(m, "SaltoInicio");
+            AnimatorState saltoAterriza = Estado(m, "SaltoAterrizaje");
             float umbralCorrer = ReglasAnimacion.UmbralCorrer * ReglasAnimacion.HisteresisCorrer;
             float umbralCaminar = ReglasVisual.UmbralCaminar;
             float caidaLibre = -ReglasAnimacion.VelocidadCaidaLibre;
+            // T-1550: corriendo es ir a ~3 m/s o mas hacia adelante (el trote de Shift, 4.5, vive en el estado Caminar: ya no hace falta pasar de Correr).
+            float rapidezSalto = ReglasAnimacion.VelocidadSaltoCorriendo;
+            float adelanteSalto = ReglasAnimacion.AdelanteMinimoSaltoCorriendo;
+            // El impulso del salto sale 0.1 s despues de pedirlo (PreparandoSalto): ningun estado del salto aterriza mientras siga pidiendolo.
+            AnimatorCondition prepara = Bool(ReglasAnimacion.PreparandoSalto, true), noPrepara = Bool(ReglasAnimacion.PreparandoSalto, false);
             Unir(inicio, caer, false, 0f, Mezcla, Bool(ReglasVisual.EnSuelo, false), Menor(ReglasAnimacion.VelY, caidaLibre));
-            Unir(inicio, aterriza, false, 0f, MezclaCorta, Bool(ReglasVisual.EnSuelo, true));
             Unir(inicio, aire, true, 0.8f, Mezcla);
             Unir(aire, caer, false, 0f, Mezcla, Menor(ReglasAnimacion.VelY, caidaLibre));
-            Unir(aire, aterriza, false, 0f, MezclaCorta, Bool(ReglasVisual.EnSuelo, true));
             Unir(aterriza, caer, false, 0f, Mezcla, Bool(ReglasVisual.EnSuelo, false), Menor(ReglasAnimacion.VelY, caidaLibre));
+            // Al tocar el piso: corriendo sigue el aterrizaje corriendo (sin bloquear); sin avance (sin input) es PJ01_Salto_Aterrizaje.
+            foreach (AnimatorState enAire in new[] { inicio, aire })
+            {
+                Unir(enAire, aterriza, false, 0f, MezclaCorta, Bool(ReglasVisual.EnSuelo, true), noPrepara, Mayor(ReglasVisual.Velocidad, rapidezSalto));
+                Unir(enAire, saltoAterriza, false, 0f, MezclaCorta, Bool(ReglasVisual.EnSuelo, true), noPrepara);
+            }
             foreach (AnimatorState fin in new[] { aterriza, rodada })
             {
-                // Termina corriendo (los clips acaban en la zancada); si ya paró, camina o se queda quieto.
+                // Termina corriendo (los clips acaban en la zancada: el trote de Shift es la mezcla de Caminar); si ya paro, camina o se queda quieto.
                 Unir(fin, correr, true, SalidaUnaVez, Mezcla, Mayor(ReglasVisual.Velocidad, umbralCorrer));
                 Unir(fin, caminar, true, SalidaUnaVez, Mezcla, Mayor(ReglasVisual.Velocidad, umbralCaminar));
                 Unir(fin, idle, true, SalidaUnaVez, Mezcla);
             }
-            // Del Correr al aire (sin caída libre) sale el salto corriendo; va antes que SaltoInicio (gana la primera transición cierta).
-            PonerPrimero(correr, correr.AddTransition(inicio), MezclaCorta, Bool(ReglasVisual.EnSuelo, false), Mayor(ReglasAnimacion.VelY, caidaLibre), Mayor(ReglasVisual.Velocidad, umbralCorrer));
-            // Aterrizaje fuerte corriendo = la rodada (antes de AterrizajeFuerte: es una transición Any State).
+            // Saltar otra vez al caer (sin esperar a que acabe el aterrizaje): vuelve al despegue que toque.
+            Unir(aterriza, inicio, false, 0f, MezclaPreparar, prepara, Mayor(ReglasVisual.Velocidad, rapidezSalto), Mayor(ReglasAnimacion.VelZ, adelanteSalto));
+            Unir(aterriza, saltoInicio, false, 0f, MezclaPreparar, prepara);
+
+            // SaltoInicio (parado): no aterriza mientras el salto sigue en la agachada (en el piso, PreparandoSalto).
+            foreach (AnimatorStateTransition t in saltoInicio.transitions.Where(x => x.destinationState == saltoAterriza && !x.hasExitTime))
+            {
+                if (!t.conditions.Any(c => c.parameter == ReglasAnimacion.PreparandoSalto))
+                {
+                    t.AddCondition(noPrepara.mode, 0f, noPrepara.parameter);
+                }
+            }
+            // Saltar parado otra vez al caer: SaltoAterrizaje -> SaltoInicio.
+            QuitarHacia(saltoAterriza, saltoInicio);
+            Unir(saltoAterriza, saltoInicio, false, 0f, MezclaPreparar, prepara);
+            // Todo estado de piso pasa a la agachada del salto al pedirlo (antes esperaba a dejar el piso). Parado: SaltoInicio; corriendo (solo Caminar y Correr): SaltoCorrerInicio.
+            foreach (string nombre in EstadosDePiso)
+            {
+                AnimatorState origen = Estado(m, nombre);
+                if (origen == null) { continue; }
+                QuitarHacia(origen, saltoInicio, ReglasAnimacion.PreparandoSalto);
+                InsertarAlPrincipio(origen, origen.AddTransition(saltoInicio), MezclaPreparar, prepara, Bool(ReglasVisual.EnSuelo, true));
+            }
+            foreach (AnimatorState origen in new[] { caminar, correr })
+            {
+                QuitarHacia(origen, inicio);
+                // En el aire (sin caida libre) y corriendo (p. ej. al salir de una cornisa corriendo), y al pedir el salto en el piso: salto corriendo. Va antes que SaltoInicio (gana la primera transicion cierta).
+                InsertarAlPrincipio(origen, origen.AddTransition(inicio), MezclaCorta, Bool(ReglasVisual.EnSuelo, false), Mayor(ReglasAnimacion.VelY, caidaLibre),
+                    Mayor(ReglasVisual.Velocidad, rapidezSalto), Mayor(ReglasAnimacion.VelZ, adelanteSalto));
+                InsertarAlPrincipio(origen, origen.AddTransition(inicio), MezclaPreparar, prepara, Bool(ReglasVisual.EnSuelo, true),
+                    Mayor(ReglasVisual.Velocidad, rapidezSalto), Mayor(ReglasAnimacion.VelZ, adelanteSalto));
+            }
+            // Caer corriendo desde alto = la rodada (trigger AterrizajeRodada de VisualPersonaje; ya decidio con TipoAterrizaje). Va antes que AterrizajeFuerte: es una transicion Any State.
             AnimatorStateTransition rod = m.AddAnyStateTransition(rodada);
-            Configurar(rod, false, 0f, MezclaCorta, false, Disparador(ReglasAnimacion.AterrizajeFuerte), Bool(ReglasVisual.EnSuelo, true), Bool(ReglasVisual.Caer, false), Mayor(ReglasVisual.Velocidad, umbralCorrer));
+            Configurar(rod, false, 0f, MezclaCorta, false, Disparador(ReglasAnimacion.AterrizajeRodada), Bool(ReglasVisual.EnSuelo, true), Bool(ReglasVisual.Caer, false));
             PonerPrimeroAny(m, rod);
 
             // La rapidez de SaltoInicio y SaltoAterrizaje se multiplica por un parámetro (1 = como siempre; el jugador lo baja).
@@ -192,6 +240,49 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
                     c.AddParameter(new AnimatorControllerParameter { name = p, type = AnimatorControllerParameterType.Float, defaultFloat = 1f });
                 }
             }
+            // T-1550: la agachada del salto (bool) y el trigger de la rodada.
+            if (!c.parameters.Any(x => x.name == ReglasAnimacion.PreparandoSalto))
+            {
+                c.AddParameter(ReglasAnimacion.PreparandoSalto, AnimatorControllerParameterType.Bool);
+            }
+            if (!c.parameters.Any(x => x.name == ReglasAnimacion.AterrizajeRodada))
+            {
+                c.AddParameter(ReglasAnimacion.AterrizajeRodada, AnimatorControllerParameterType.Trigger);
+            }
+            // Tras un rearmado completo los dos parametros de rapidez quedan en 0 (AddParameter sin valor): se dejan en 1, que es "como siempre".
+            AnimatorControllerParameter[] lista = c.parameters;
+            bool cambio = false;
+            foreach (AnimatorControllerParameter p in lista)
+            {
+                if ((p.name == ReglasAnimacion.RapidezSaltoInicio || p.name == ReglasAnimacion.RapidezSaltoAterrizaje) && !Mathf.Approximately(p.defaultFloat, 1f))
+                {
+                    p.defaultFloat = 1f;
+                    cambio = true;
+                }
+            }
+            if (cambio)
+            {
+                c.parameters = lista;
+            }
+        }
+
+        // Quita las transiciones de "desde" a "hacia" (todas, o solo las que tienen una condicion sobre el parametro dado): repetir no las duplica.
+        private static void QuitarHacia(AnimatorState desde, AnimatorState hacia, string parametro = null)
+        {
+            foreach (AnimatorStateTransition t in desde.transitions.Where(x => x.destinationState == hacia && (parametro == null || x.conditions.Any(c => c.parameter == parametro))).ToArray())
+            {
+                desde.RemoveTransition(t);
+            }
+        }
+
+        // La transicion se crea al final de la lista del estado; se configura y se sube al primer lugar (la ultima que se sube queda primera).
+        private static void InsertarAlPrincipio(AnimatorState desde, AnimatorStateTransition nueva, float mezcla, params AnimatorCondition[] condiciones)
+        {
+            Configurar(nueva, false, 0f, mezcla, false, condiciones);
+            var lista = new List<AnimatorStateTransition>(desde.transitions);
+            lista.Remove(nueva);
+            lista.Insert(0, nueva);
+            desde.transitions = lista.ToArray();
         }
 
         private static AnimatorState Estado(AnimatorStateMachine m, string nombre)
@@ -247,21 +338,6 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             {
                 t.AddCondition(cond.mode, cond.threshold, cond.parameter);
             }
-        }
-
-        // La transición del salto corriendo se crea al final de la lista de Correr; se configura y se sube al primer lugar. Se borra una anterior (repetir no duplica).
-        private static void PonerPrimero(AnimatorState desde, AnimatorStateTransition nueva, float mezcla, params AnimatorCondition[] condiciones)
-        {
-            AnimatorState destino = nueva.destinationState;
-            foreach (AnimatorStateTransition vieja in desde.transitions.Where(x => x != nueva && x.destinationState == destino).ToArray())
-            {
-                desde.RemoveTransition(vieja);
-            }
-            Configurar(nueva, false, 0f, mezcla, false, condiciones);
-            var lista = new List<AnimatorStateTransition>(desde.transitions);
-            lista.Remove(nueva);
-            lista.Insert(0, nueva);
-            desde.transitions = lista.ToArray();
         }
 
         private static void PonerPrimeroAny(AnimatorStateMachine m, AnimatorStateTransition nueva)

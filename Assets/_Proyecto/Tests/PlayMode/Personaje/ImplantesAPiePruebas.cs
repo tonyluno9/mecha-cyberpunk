@@ -90,7 +90,8 @@ namespace MechaCyberpunk.Tests.Personaje
             var r = new float[2];
             yield return MedirCarrera(r);
             float mult = falsos.Efectos.multiplicadorCorrer;
-            float esperada = datos.VelocidadCorrer * mult * r[1];
+            // T-1550 (decisión de Tony del 20-nov (T-1550)): con el implante la velocidad es la rápida: base x multiplicador, pero nunca menos de 6.25 m/s (PJ01_CorrerRapido).
+            float esperada = MechaCyberpunk.Personaje.Movimiento.ReglaVelocidadRapida.VelocidadCorrer(datos.VelocidadCorrer, mult, 1f, 1f) * r[1];
             Debug.Log("[Prueba] T-192 correr piernas " + nivel + " (x" + mult + "): medido " + r[0] + " m, esperado " + esperada + " m");
             Assert.AreEqual(esperada, r[0], esperada * TolerRel);
         }
@@ -134,7 +135,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Release(teclado.wKey);
             yield return null;
             Release(teclado.leftShiftKey);
-            float esperada = datos.VelocidadCorrer * falsos.Efectos.multiplicadorCorrer;
+            float esperada = MechaCyberpunk.Personaje.Movimiento.ReglaVelocidadRapida.VelocidadCorrer(datos.VelocidadCorrer, falsos.Efectos.multiplicadorCorrer, 1f, 1f); // T-1550: velocidad rápida
             Debug.Log("[Prueba] T-192 cambio a media carrera: " + vBase + " -> " + vNueva + " m/s (esperada " + esperada + "), paso max " + maximoPaso + " m/s");
             Assert.AreEqual(esperada, vNueva, esperada * TolerRel);
             Assert.LessOrEqual(maximoPaso, esperada * 1.2f, "Sin saltos de posición");

@@ -42,9 +42,14 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return null;
             int antes = controlador.PasosDados;
             Vector3 inicio = jugador.transform.position;
+            // T-1550 (decisión de Tony del 20-nov (T-1550)): W camina a 1.62 (PJ01_Caminar); para seguir midiendo el trote (1.575 m por pisada) se corre con Shift (4.53 m/s).
             Press(teclado.wKey);
+            yield return null; // dos Press en el mismo cuadro: el segundo estado del teclado tapaba la W
+            Press(teclado.leftShiftKey);
             yield return Esperar(2f);
             Release(teclado.wKey);
+            yield return null;
+            Release(teclado.leftShiftKey);
             float avance = (jugador.transform.position - inicio).magnitude;
             int pasos = controlador.PasosDados - antes;
             // T-1534: los pasos salen de las pisadas del clip (uno por pie). W es el trote de la bitácora de Blender: 21 cuadros a 30 fps para dos

@@ -78,6 +78,8 @@ namespace MechaCyberpunk.Personaje.Visual
         private static readonly int IdDisparoCobertura = Animator.StringToHash(ReglasAnimacion.DisparoCobertura);
         private static readonly int IdFrenar = Animator.StringToHash(ReglasAnimacion.Frenar);
         private static readonly int IdAterrizajeFuerte = Animator.StringToHash(ReglasAnimacion.AterrizajeFuerte);
+        private static readonly int IdAterrizajeRodada = Animator.StringToHash(ReglasAnimacion.AterrizajeRodada);
+        private static readonly int IdPreparandoSalto = Animator.StringToHash(ReglasAnimacion.PreparandoSalto);
         private static readonly int IdEnGuardia = Animator.StringToHash(ReglasAnimacion.EnGuardia);
         private static readonly int IdGesto = Animator.StringToHash(ReglasAnimacion.Gesto);
         private static readonly int IdGestoTipo = Animator.StringToHash(ReglasAnimacion.GestoTipo);
@@ -103,6 +105,11 @@ namespace MechaCyberpunk.Personaje.Visual
 
         /// <summary>T-1505: con true, al tocar el piso tras una caída de <see cref="ReglasAnimacion.VelocidadAterrizajeFuerte"/> dispara el aterrizaje fuerte (solo el jugador).</summary>
         public bool AterrizajeFuerteActivo { get; set; }
+
+        /// <summary>
+        /// T-1550: true entre pedir el salto y el despegue (la agachada de 0.1 s): el salto empieza en el piso. Lo pone ControladorAPie del jugador; los demás lo dejan en false.
+        /// </summary>
+        public bool PreparandoSalto { get; set; }
         public bool LeerDelPadre
         {
             get => leerDelPadre;
@@ -1017,9 +1024,14 @@ namespace MechaCyberpunk.Personaje.Visual
             }
             else
             {
-                if (!estabaEnSuelo && AterrizajeFuerteActivo && ReglasAnimacion.EsAterrizajeFuerte(velYMinimaAire, yInicioAire - padre.position.y))
+                if (!estabaEnSuelo && AterrizajeFuerteActivo)
                 {
-                    Disparo(IdAterrizajeFuerte);
+                    // T-1550: caer corriendo desde alto es la rodada (no bloquea); desde muy alto sin correr, el aterrizaje fuerte de tres puntos.
+                    switch (ReglasAnimacion.TipoAterrizaje(velYMinimaAire, yInicioAire - padre.position.y, objetivo))
+                    {
+                        case ReglasAnimacion.AterrizajeVisual.Rodada: Disparo(IdAterrizajeRodada); break;
+                        case ReglasAnimacion.AterrizajeVisual.Fuerte: Disparo(IdAterrizajeFuerte); break;
+                    }
                 }
                 velYMinimaAire = 0f;
             }
@@ -1106,6 +1118,7 @@ namespace MechaCyberpunk.Personaje.Visual
             Poner(IdEnGuardia, EnGuardia);
             Poner(IdArmaLargaEquipada, tipoArma == TipoArmaVisual.ArmaLarga);
             Poner(IdRapidezGolpe, rapidezGolpes);
+            Poner(IdPreparandoSalto, PreparandoSalto);
             Poner(IdRapidezSaltoInicio, RapidezSaltoInicio);
             Poner(IdRapidezSaltoAterrizaje, RapidezSaltoAterrizaje);
             if (leerDelPadre)
