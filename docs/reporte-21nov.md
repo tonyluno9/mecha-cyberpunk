@@ -63,7 +63,11 @@ Build de medición, 1920×1080, en 13 puntos (`docs/capturas/_21nov/fps/medicion
 Las columnas de llamadas y triángulos no sirven en un build que no es de desarrollo.
 
 ## Builds
-Ver al final (se llenan al terminar).
+Hechos uno por uno en la carpeta principal desde main f1b7c38, los dos con "Build Finished, Result: Success":
+- `Builds/Demo/CyberCity.exe` (datos de las 05:07)
+- `Builds/Juego/CyberCity.exe` (datos de las 05:09)
+
+El .exe conserva su fecha vieja; lo que cambia es `CyberCity_Data`. No los abrí para jugarlos: la comprobación en juego se hizo en el editor y con el build de medición.
 
 ## Qué probar (Tony)
 1. Recorrer los 4 barrios hasta el muro: que nada se vea detrás y que no haya calles cortadas por los rellenos.

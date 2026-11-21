@@ -40,3 +40,4 @@ Si algo no avanza en 15 min: se mata, se anota y se sigue.
 - T-1540 (animaciones) sigue corriendo.
 - Lote mapa1 aplicado y T-1540 aplicada. Fondos T513 apagados; 5 lotes de relleno que tapaban cruces, callejón y recinto apagados; 6 líneas de afuera apagadas.
 - Capturas K20–K34 lado a lado (de noche); fps 13/13 >= 50. Reporte en docs/reporte-21nov.md. Sigue: merge a main y builds.
+- Builds Demo y Juego hechos (05:07 y 05:09) desde main f1b7c38. Unity cerrado. Fin de la noche.
