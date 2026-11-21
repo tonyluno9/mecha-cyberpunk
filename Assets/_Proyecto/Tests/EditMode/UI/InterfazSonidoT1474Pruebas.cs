@@ -21,7 +21,7 @@ namespace MechaCyberpunk.Tests
         [TestCase("Assets/_Proyecto/UI/Misiones/PantallaTelefono.cs", "UI_MENU_ABRIR")]
         [TestCase("Assets/_Proyecto/UI/Tiendas/PantallaTienda.cs", "UI_ERROR")]
         [TestCase("Assets/_Proyecto/Personaje/Vida/VidaAPie.cs", "HUD_VIDA_BAJA")]
-        [TestCase("Assets/_Proyecto/Personaje/Combate/DineroEnPiso.cs", "INT_RECOGER_OBJETO")]
+        [TestCase("Assets/_Proyecto/Personaje/Combate/DineroEnPiso.cs", "INT_RECOGER_DINERO")] // sonidos 20-nov: el dinero tiene su sonido propio
         [TestCase("Assets/_Proyecto/Progresion/Prologo/Pandillas/MaletinAsalto.cs", "INT_MALETIN_CERRAR")]
         [TestCase("Assets/_Proyecto/Progresion/Prologo/Cuartos/PuertaCuarto.cs", "INT_PUERTA_MADERA")]
         public void Codigo_PideElIdNuevo(string ruta, string id)

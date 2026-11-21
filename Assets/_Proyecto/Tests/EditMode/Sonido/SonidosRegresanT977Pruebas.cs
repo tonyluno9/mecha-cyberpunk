@@ -123,7 +123,8 @@ namespace MechaCyberpunk.Tests.Sonido
                 string texto = File.ReadAllText(f);
                 if (texto.Contains("\"JUG_PASO_") || texto.Contains("\"PAS_") || texto.Contains("ReglaSuperficiePaso.IdPaso(")) donde.Add(n);
             }
-            CollectionAssert.AreEquivalent(new[] { "Assets/_Proyecto/Personaje/Movimiento/ReglaSuperficiePaso.cs", "Assets/_Proyecto/Personaje/Movimiento/ControladorAPie.cs" }, donde);
+            // T-1533: el centinela de Nova pisa con PAS_METAL (LEEME 20-nov); ningún NPC ni peatón pide pasos del jugador.
+            CollectionAssert.AreEquivalent(new[] { "Assets/_Proyecto/Personaje/Movimiento/ReglaSuperficiePaso.cs", "Assets/_Proyecto/Personaje/Movimiento/ControladorAPie.cs", "Assets/_Proyecto/IA/APie/ReglaSonidoEnemigo.cs" }, donde);
         }
     }
 }

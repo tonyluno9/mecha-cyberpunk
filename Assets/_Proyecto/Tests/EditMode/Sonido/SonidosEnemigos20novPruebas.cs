@@ -64,8 +64,8 @@ namespace MechaCyberpunk.Tests.Sonido
         [TestCase(TipoSonoroEnemigo.Centinela, false, "PAS_METAL")]
         [TestCase(TipoSonoroEnemigo.Centinela, true, "PAS_METAL")]
         [TestCase(TipoSonoroEnemigo.Perro, true, "ROB_PERRO_MOVER")]
-        [TestCase(TipoSonoroEnemigo.RobotPesado, false, "NOV_PASOS_CAMINAR")]
-        [TestCase(TipoSonoroEnemigo.GuardiaPesado, false, "NOV_PASOS_CAMINAR")]
+        [TestCase(TipoSonoroEnemigo.RobotPesado, false, "ROB_PES_PASO")]
+        [TestCase(TipoSonoroEnemigo.GuardiaPesado, false, "ROB_PES_PASO")]
         [TestCase(TipoSonoroEnemigo.Ninguno, false, "")]
         public void IdPaso_CadaTipo_SuSonido(TipoSonoroEnemigo tipo, bool corre, string esperado)
         {
@@ -130,8 +130,8 @@ namespace MechaCyberpunk.Tests.Sonido
         {
             Assert.AreEqual("ROB_PES_PLACA_CAE", ReglaSonidoEnemigo.IdApagado(TipoSonoroEnemigo.RobotPesado));
             Assert.AreEqual("ROB_PES_PLACA_CAE", ReglaSonidoEnemigo.IdApagado(TipoSonoroEnemigo.JefeFinal));
-            Assert.AreEqual("ROB_SERVOS", ReglaSonidoEnemigo.IdApagado(TipoSonoroEnemigo.Centinela));
-            Assert.AreEqual("ROB_SERVOS", ReglaSonidoEnemigo.IdApagado(TipoSonoroEnemigo.Perro));
+            Assert.AreEqual("ROB_APAGADO", ReglaSonidoEnemigo.IdApagado(TipoSonoroEnemigo.Centinela));
+            Assert.AreEqual("ROB_APAGADO", ReglaSonidoEnemigo.IdApagado(TipoSonoroEnemigo.Perro));
             Assert.AreEqual(string.Empty, ReglaSonidoEnemigo.IdApagado(TipoSonoroEnemigo.GuardiaNova), "las personas no se apagan");
             Assert.Greater(ReglaSonidoEnemigo.SegundosHastaApagado(TipoSonoroEnemigo.RobotPesado), ReglaSonidoEnemigo.SegundosHastaApagado(TipoSonoroEnemigo.Centinela));
         }
@@ -363,7 +363,9 @@ namespace MechaCyberpunk.Tests.Sonido
         public void TodosLosIdsQueSePiden_TienenArchivo()
         {
             SortedSet<string> conArchivo = IdsConArchivo();
-            List<string> sin = TodosLosIds().Where(id => !conArchivo.Contains(id)).ToList();
+            // Los alias con tono bajo (ROB_PES_PASO, ROB_APAGADO) suenan con el archivo de su ID nuevo.
+            List<string> sin = TodosLosIds().Where(id => !conArchivo.Contains(id)
+                && !(MapaSonidos19nov.EstaMapeado(id) && conArchivo.Contains(MapaSonidos19nov.Nuevo(id)))).ToList();
             Assert.IsEmpty(sin, "IDs sin archivo en Assets/Arte/Audio: " + string.Join(", ", sin));
             Assert.Greater(TodosLosIds().Count(), 25, "la lista no debe quedar vacía por un error de reflexión");
         }

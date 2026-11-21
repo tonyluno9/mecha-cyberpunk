@@ -129,7 +129,7 @@ namespace MechaCyberpunk.Tests.Sonido
         [Test]
         public void ReglaAmbienteZona_PorLugarZonaYHora()
         {
-            Assert.AreEqual("AMB_CALLE_NOCHE", ReglaAmbienteZona.Elegir(IdLugar.Calle, "fosa", true));
+            Assert.AreEqual("AMB_SUBURBIOS_NOCHE", ReglaAmbienteZona.Elegir(IdLugar.Calle, "fosa", true)); // T-1535: los suburbios de noche tienen su ambiente
             Assert.AreEqual("AMB_CALLE_DIA", ReglaAmbienteZona.Elegir(IdLugar.Calle, "", false));
             Assert.AreEqual("AMB_TIANGUIS", ReglaAmbienteZona.Elegir(IdLugar.Calle, "tianguis", true));
             Assert.AreEqual("AMB_NEON_ALTO", ReglaAmbienteZona.Elegir(IdLugar.Calle, "neon", false));
