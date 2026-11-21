@@ -13,14 +13,18 @@ MonoBehaviour:
   m_Name: DatosPersonaje_Base
   m_EditorClassIdentifier: MechaCyberpunk.Personaje::MechaCyberpunk.Personaje.DatosPersonaje
   vidaMaxima: 150
-  velocidadCaminar: 4.5
-  velocidadCorrer: 7.5
+  velocidadCaminar: 1.62
+  velocidadCorrer: 4.53
   alturaSalto: 0.45
   danioGolpe: 15
   alcanceGolpe: 1.6
   radioGolpe: 0.3
   preparacionGolpe: 0.12
   recargaGolpe: 0.45
+  radioAutoGiro: 2.5
+  anguloAutoGiro: 70
+  velocidadAutoGiro: 1440
+  avanceAutoGiro: 0.8
   regeneracionPorSegundo: 3
   segundosParaRegenerar: 8
   escudoMaximo: 30
