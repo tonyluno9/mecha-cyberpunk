@@ -103,14 +103,16 @@ namespace MechaCyberpunk.Mundo.Editor
             return Mathf.Sqrt(dx * dx + dz * dz);
         }
 
-        /// <summary>Barrio por cuadrante (mapa final M13): Nova arriba-izquierda, Neón Alto arriba-derecha, Suburbios abajo-izquierda, Mercado abajo-derecha.</summary>
+        /// <summary>
+        /// Barrio de un punto con los territorios reales de Ciudad_Prologo, medidos en Play el 21-nov con ITerritorio.ZonaEn:
+        /// Suburbios (fosa) x &lt; -40; El Mercado (tianguis) -40..40; Neón Alto (neon) x &gt; 40 y z &gt; -10; Nova (refineria) x &gt; 40 y z &lt; -10.
+        /// (M13 los acomoda distinto; mover los barrios es otra tarea.)
+        /// </summary>
         public static string Barrio(Vector2 p)
         {
-            if (p.y >= 0f)
-            {
-                return p.x < 0f ? "Nova" : "NeonAlto";
-            }
-            return p.x < 0f ? "Suburbios" : "Mercado";
+            if (p.x < -40f) return "Suburbios";
+            if (p.x <= 40f) return "Mercado";
+            return p.y > -10f ? "NeonAlto" : "Nova";
         }
 
         /// <summary>La clave de paleta de edificios (CalculoEdificiosT1512) que usa un barrio. Nova comparte la de Neón Alto (ED08, ED09, NV01...).</summary>

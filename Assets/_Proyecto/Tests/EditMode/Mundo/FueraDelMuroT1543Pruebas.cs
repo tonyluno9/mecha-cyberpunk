@@ -106,10 +106,11 @@ namespace MechaCyberpunk.Tests
         [Test]
         public void Barrio_PorCuadrante_SigueElMapaFinal()
         {
-            Assert.AreEqual("Nova", CalculoMuroT1543.Barrio(new Vector2(-50f, 40f)));
+            Assert.AreEqual("Suburbios", CalculoMuroT1543.Barrio(new Vector2(-50f, 40f)));
             Assert.AreEqual("NeonAlto", CalculoMuroT1543.Barrio(new Vector2(50f, 40f)));
             Assert.AreEqual("Suburbios", CalculoMuroT1543.Barrio(new Vector2(-50f, -40f)));
-            Assert.AreEqual("Mercado", CalculoMuroT1543.Barrio(new Vector2(50f, -40f)));
+            Assert.AreEqual("Nova", CalculoMuroT1543.Barrio(new Vector2(50f, -40f)));
+            Assert.AreEqual("Mercado", CalculoMuroT1543.Barrio(new Vector2(0f, 22f)));
             Assert.AreEqual("NeonAlto", CalculoMuroT1543.ClavePaleta("Nova"));
         }
 
