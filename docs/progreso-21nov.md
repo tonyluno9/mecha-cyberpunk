@@ -35,3 +35,6 @@ Si algo no avanza en 15 min: se mata, se anota y se sigue.
 - 21-nov: paso 0 hecho; integ/21nov en s2; compilando lo nuevo de Blender.
 - Aérea actual (docs/capturas/_21nov/00-actual-aerea.png, render en modo edición sin niebla): la ciudad es una cruz (centro 3x2 dentro del muro + 4 alas de afueras fuera del muro + piso gris enorme). M13 es un rectángulo denso de 4 barrios con glorieta. En Play hay niebla y algo que oculta lo lejano (para capturas aéreas usar `scratchpad/aerea.sh`, render en modo edición).
 - Lanzadas: T-1540 animaciones, T-1541 modelos, T-1542 NPCs, T-1543 muro/nada detrás/huecos, T-1544 casas caja. T-1545 (luz y fps) espera su worktree.
+- Barrios reales medidos en Play (ITerritorio.ZonaEn, rejilla 20 m): Suburbios x<-40; Mercado -40..40; Neón Alto x>40 z>-10; Nova x>40 z<-10. M13 los quiere distinto (Nova arriba-izq, Neón arriba-der, Suburbios abajo-izq, Mercado abajo-der, glorieta al centro): mover barrios enteros = rehacer el mapa (misiones, apariciones, lugares, tráfico). NO se hace hoy: queda en el reporte como lo principal que no quedó, con propuesta.
+- T-1541 aplicada (2c5a0ea). T-1542..T-1545 integradas; T-1543 corregida a los barrios reales. Lote "mapa1" corriendo (afuera del muro, casas, luz, NPCs).
+- T-1540 (animaciones) sigue corriendo.
