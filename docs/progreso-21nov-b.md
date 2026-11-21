@@ -35,3 +35,4 @@ Regla: nada hecho sin verlo en Play, captura en docs/capturas/_21nov-b/. No edit
 - Capturas en docs/capturas/_21nov-b/: 01 alturas, 02 robots, 03 locomoción, 04 cofres, 05 grandes y dron. PlayMode por clase corriendo.
 - PlayMode por clase: SaltoLocomocionT1550 5/5, PuertasCarroT1344 4/4, LocomocionBlenderT1505 pasa; fallan SaltoMedidaT944 (no vuelve a <2 cm del piso tras aterrizar), RobotsNovaT1553 cañón (el clip E16_Disparar_Canon no entra al Animator), ClipsNpcNovaT1506 escudo (arreglada: la prueba esperaba poco), EnemigosAnim2 Guardia_Muerte (igual que anoche). Mandados a T-1550 y T-1553.
 - Arreglos de PlayMode: RobotsNovaT1553 6/6, ClipsNpcNovaT1506 10/10, SaltoMedidaT944 + T1505 8/8. Reporte en docs/reporte-21nov-b.md. Sigue: merge a main y builds.
+- Builds Demo (14:49) y Juego (14:51) desde main 1cb11a6, en s2 con Builds enlazado (la carpeta principal tenía FBX sin commit del chat de Blender). Unity cerrado. Fin.

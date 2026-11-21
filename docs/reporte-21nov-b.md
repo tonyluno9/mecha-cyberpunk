@@ -95,7 +95,11 @@ No se editó ningún clip ni FBX de Blender (solo su importación). No se tocaro
 - **T739** (Loco_Correr_ConImplante mide 3.155 contra 3.052 ± 0.1): no se tocó. El clip es del 8-nov y nadie lo cambió hoy.
 
 ## Builds
-Ver abajo.
+Los dos dieron "Build Finished, Result: Success" y salieron de main 1cb11a6, uno por uno:
+- `Builds/Demo/CyberCity.exe`: datos de las 14:49.
+- `Builds/Juego/CyberCity.exe`: datos de las 14:51.
+
+Se construyeron desde `.sesiones/s2`, con `Builds` enlazado a la carpeta principal. En la carpeta principal había 29 FBX de clips modificados sin commit por el chat de Blender (E15_Muerte, PJ01_Muerte_* y otros), y no entraron al build. Cuando el chat de Blender los suba, hay que volver a construir.
 
 ## Qué probar (Tony)
 1. **WASD, Shift y café:** caminar, trotar y correr rápido sin patinar, con las pisadas a tiempo.
