@@ -47,8 +47,10 @@ namespace MechaCyberpunk.Tests.Personaje
             Release(teclado.wKey);
             float avance = (jugador.transform.position - inicio).magnitude;
             int pasos = controlador.PasosDados - antes;
-            float esperados = (avance + 0.7f) / 1.4f;
-            Assert.That(pasos, Is.InRange(esperados - 1.01f, esperados + 1.01f), "Un paso por cada zancada de " + avance + " m");
+            // T-1534: los pasos salen de las pisadas del clip (uno por pie). W es el trote de la bitácora de Blender: 21 cuadros a 30 fps para dos
+            // pisadas a 4.5 m/s = 1.575 m por pisada (antes era un paso cada 1.4 m por distancia).
+            float esperados = avance / 1.575f;
+            Assert.That(pasos, Is.InRange(esperados - 1.5f, esperados + 1.5f), "Una pisada por cada 1.575 m del trote en " + avance + " m");
             Assert.AreEqual(pasos, g.Pedidos("PAS_CONCRETO"), "Cada paso pide el sonido de asfalto.");
         }
 
