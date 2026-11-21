@@ -91,10 +91,12 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
             var usados = new HashSet<string>(tabla.Select(t => t.Clip));
             // T-1484: el paso normal del jugador es el trote; los clips de caminar de PJ01 los usan los NPC.
             var soloNpc = new HashSet<string> { "PJ01_CaminarApuntando_Adelante", "PJ01_Cobertura_Quieto", "PJ01_Cobertura_Asomarse", "PJ01_Cobertura_Regresar", "PJ01_Dano_Izquierda", "PJ01_Dano_Derecha", "PJ01_Manejar_Moto", "PJ01_Punos_GolpeDer", "PJ01_Punos_GolpeIzq", "PJ01_Muerte_Adelante", "PJ01_Muerte_Atras", "PJ01_Carro_Manejar", "PJ01_Pistola_Dano_Frente", "PJ01_Pistola_Dano_Espalda", "PJ01_Pistola_ApuntarAtras", "PJ01_Pistola_ApuntarLateral_Derecha", "PJ01_Pistola_ApuntarLateral_Izquierda", "PJ01_Caminar_SinImplante", "PJ01_Correr_SinImplante", "PJ01_Loco_SaltoInicio", "PJ01_Loco_SaltoAire", "PJ01_Loco_SaltoAterrizaje" };
-            string[] sinUsar = todos.Where(n => !usados.Contains(n) && !soloNpc.Contains(n)).ToArray();
+            // T-1506: PJ01_Moto_Manejar quedó reemplazado por PJ01_Manejar_Moto (estado MotoManejar); solo queda como fila vieja en los overrides.
+            var reemplazados = new HashSet<string> { "PJ01_Moto_Manejar" };
+            string[] sinUsar = todos.Where(n => !usados.Contains(n) && !soloNpc.Contains(n) && !reemplazados.Contains(n)).ToArray();
             Debug.Log("[T-985] clips no PJ01: " + noPJ01.Length + "; PJ01 sin usar: " + sinUsar.Length + " de " + todos.Length);
 
-            Assert.AreEqual(110, todos.Length, "La carpeta de clips debe tener los 110 PJ01_* (T-1505 y T-1506: +17 de Blender del 19-nov)");
+            Assert.AreEqual(120, todos.Length, "La carpeta de clips debe tener los 120 PJ01_* (T-1505 y T-1506: +17 de Blender del 19-nov; Blender 21-nov: +4 Salto_Correr; T-1540: +6 borradores del 21-nov)");
             Assert.IsEmpty(noPJ01, "Clips que no son PJ01 en el jugador:\n" + string.Join("\n", noPJ01));
             Assert.IsEmpty(sinUsar, "PJ01 sin ningún estado:\n" + string.Join("\n", sinUsar));
         }

@@ -25,6 +25,23 @@ namespace MechaCyberpunk.Mundo.Reloj
         private float intensidadPrendida;
         private float factor = -1f;
 
+        /// <summary>T-1545: la luz que esta pieza prende y apaga (null si solo maneja emisión).</summary>
+        public Light Luz => luz;
+
+        /// <summary>
+        /// T-1545: multiplica la intensidad de noche de la luz (y la de ahora). Hay que usarlo en vez de tocar <c>Light.intensity</c>,
+        /// porque este componente la reescribe con la intensidad que guardó al despertar.
+        /// </summary>
+        public void EscalarIntensidad(float multiplo)
+        {
+            if (luz == null || multiplo <= 0f)
+            {
+                return;
+            }
+            intensidadPrendida *= multiplo;
+            luz.intensity *= multiplo;
+        }
+
         /// <summary>T-535: brillo actual de 0 (apagada) a 1 (prendida); entre los dos al amanecer y al anochecer.</summary>
         public float Factor => Mathf.Max(0f, factor);
 

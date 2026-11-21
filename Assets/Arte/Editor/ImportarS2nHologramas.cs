@@ -29,7 +29,7 @@ namespace MechaCyberpunk.Arte.Editor
         public static readonly string[] Archivos =
         {
             "H01_Pistola.png", "H02_Escopeta.png", "H03_Fusil.png", "H04_Francotirador.png",
-            "H05_Subfusil.png", "H06_Revolver.png", "H07_Lanzagranadas.png", "H08_Granada.png", "H09_RiflePlasma.png"
+            "H05_Subfusil.png", "H06_Revolver.png", "H07_Lanzagranadas.png", "H11_Granada.png", "H09_RiflePlasma.png"
         };
         /// <summary>T-1014: cuántas armas del enum hay (puños incluidos): los arrays de PiezasUI (armas y armasHolograma) quedan de este tamaño.</summary>
         public const int ArmasEnElEnum = 10;
@@ -197,7 +197,7 @@ namespace MechaCyberpunk.Arte.Editor
             return indice >= 0 && indice < Archivos.Length ? AssetDatabase.LoadAssetAtPath<Texture2D>(CarpetaDestino + Archivos[indice]) : null;
         }
 
-        private static void Configurar(string ruta)
+        internal static void Configurar(string ruta)
         {
             TextureImporter importador = AssetImporter.GetAtPath(ruta) as TextureImporter;
             if (importador == null)

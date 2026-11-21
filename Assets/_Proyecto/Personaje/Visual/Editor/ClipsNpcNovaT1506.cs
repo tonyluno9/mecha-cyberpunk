@@ -103,6 +103,10 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
                 ("Loco_Caminar", "E15_Caminar"), ("Loco_Caminar_ConImplante", "E15_Caminar"), ("Loco_Correr", "E15_Correr"), ("Loco_Correr_ConImplante", "E15_Correr"), (ConstructorControladorBase.RolTrote, "E15_Correr"),
                 ("Pistola_Disparo", "E15_Disparar"), ("Rifle_DisparoCaminar", "E15_Disparar"),
                 ("Pistola_Dano_Frente", "E15_Impacto"), ("Pistola_Dano_Espalda", "E15_Impacto"), ("Pistola_Dano_Fuerte", "E15_Impacto"),
+                // T-1540: E15_Muerte (aprobado, estaba sin usar) en toda muerte; el empujón, el tambaleo y el derribo de una explosión son su sacudida mecánica.
+                ("Muerte_Adelante", "E15_Muerte"), ("Muerte_Atras", "E15_Muerte"), ("Muerte_Desmayo", "E15_Muerte"),
+                ("PJ01_Muerte_Explosion", "E15_Muerte"), ("PJ01_Muerte_Atropello", "E15_Muerte"), ("PJ01_Muerte_CaidaAltura", "E15_Muerte"),
+                ("PJ01_Derribo_Explosion", "E15_Impacto"), ("PJ01_Dano_Empujon", "E15_Impacto"), ("PJ01_Dano_ExplosionCercana", "E15_Impacto"),
             }),
             ("E16", "Guardias", new[]
             {
@@ -111,6 +115,10 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
                 ("Pistola_Disparo", "E16_Disparar_Canon"), ("Rifle_DisparoCaminar", "E16_Disparar_Canon"),
                 ("Punos_GolpeDer", "E16_Golpe_Escudo"), ("Punos_GolpeIzq", "E16_Golpe_Escudo"), ("Punos_Fuerte", "E16_Golpe_Escudo"),
                 ("Pistola_Dano_Frente", "E16_Impacto"), ("Pistola_Dano_Espalda", "E16_Impacto"), ("Pistola_Dano_Fuerte", "E16_Impacto"),
+                // T-1540: E16_Muerte (aprobado, estaba sin usar) en toda muerte; empujón, tambaleo y derribo = su E16_Impacto (se tambalea hacia atrás).
+                ("Muerte_Adelante", "E16_Muerte"), ("Muerte_Atras", "E16_Muerte"), ("Muerte_Desmayo", "E16_Muerte"),
+                ("PJ01_Muerte_Explosion", "E16_Muerte"), ("PJ01_Muerte_Atropello", "E16_Muerte"), ("PJ01_Muerte_CaidaAltura", "E16_Muerte"),
+                ("PJ01_Derribo_Explosion", "E16_Impacto"), ("PJ01_Dano_Empujon", "E16_Impacto"), ("PJ01_Dano_ExplosionCercana", "E16_Impacto"),
             }),
             ("E18", "Guardias", new[]
             {
@@ -119,6 +127,13 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
                 ("Loco_SaltoAterrizaje", "E18_Caida_Aterrizaje"),
             }),
             ("Hacker", "SNAKES", new[] { ("Loco_Idle", "NPC_Hacker_Tecleando") }),
+        };
+
+        /// <summary>T-1540: claves del controlador base (aparte de las de ConstructorControladorBase.ClavesNoJugador) que AnimacionesT1540.AplicarOverrides recalcula con las tablas de E15 y E16.</summary>
+        public static readonly string[] ClavesDeRobotT1540 =
+        {
+            "Muerte_Adelante", "Muerte_Atras", "Muerte_Desmayo", "PJ01_Muerte_Explosion", "PJ01_Muerte_Atropello", "PJ01_Muerte_CaidaAltura",
+            "PJ01_Derribo_Explosion", "PJ01_Dano_Empujon", "PJ01_Dano_ExplosionCercana",
         };
 
         /// <summary>Visual (sin "Visual_") -> override y velocidades de los clips de caminar y correr (m/s de la bitácora). Override null = conserva el que tiene.</summary>

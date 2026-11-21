@@ -87,7 +87,10 @@ namespace MechaCyberpunk.IA.APie
                 direccion = transform.forward;
             }
             direccion.Normalize();
-            visual.Herir(direccion);
+            if (tira || !visual.Empujar()) // T-1540: PJ01_Dano_Empujon; si el controlador no lo tiene, la reacción de herido de siempre
+            {
+                visual.Herir(direccion);
+            }
             velocidadRetroceso = direccion * (datos.RetrocesoEmpujon / datos.SegundosRetroceso);
             fase = Fase.Retrocediendo;
             restante = datos.SegundosRetroceso;

@@ -92,6 +92,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b8e1d47a9c24f6d8a05e2c7f1d96b30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.APie.AnimacionCivilMundo
+  alturaMinimaCabeza: 0.5
+  segundosBajo: 2.5
+  segundosTumbado: 8
+  segundosEntreRevisiones: 0.5
+  minimoRaizDerecha: 0.9
 --- !u!1001 &1373700004045835116
 PrefabInstance:
   m_ObjectHideFlags: 0

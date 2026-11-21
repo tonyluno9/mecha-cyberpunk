@@ -9,8 +9,9 @@ namespace MechaCyberpunk.Mundo.Editor
 {
     /// <summary>
     /// Build de medición de la ambientación de noche: le agrega a Ciudad_Prologo (en una copia de respaldo del archivo)
-    /// <see cref="MedicionAmbiente"/> con los tres puntos (calle, callejón y entrada del clandestino), construye
+    /// <see cref="MedicionAmbiente"/> con los puntos de medición (calle, callejón, entrada del clandestino y, T-1545, ocho más por los cuatro barrios y el muro), construye
     /// Builds/Medicion/MechaCyberpunk.exe y devuelve el archivo de la escena como estaba (así conserva sus datos de APV).
+    /// Escribe medicion.csv (fps promedio, mínimo y 1 % por punto) y medicion.txt junto a las capturas.
     /// Uso: Builds/Medicion/MechaCyberpunk.exe -screen-fullscreen 0 -screen-width 1920 -screen-height 1080 -medicionSalida &lt;carpeta&gt;
     /// Batchmode: -executeMethod MechaCyberpunk.Mundo.Editor.ConstruirMedicionAmbiente.Construir
     /// </summary>
@@ -26,6 +27,17 @@ namespace MechaCyberpunk.Mundo.Editor
             ("calle", new Vector3(-30f, 0.2f, -2f), new Vector3(1f, -0.04f, 0.12f)),
             ("callejon", new Vector3(-53f, 0.2f, -59f), new Vector3(-1f, -0.02f, 0f)),
             ("clandestino", new Vector3(0f, 0.2f, -1.5f), new Vector3(0f, 0.08f, 1f)),
+            // T-1545 (corregido 21-nov con los barrios medidos: Suburbios x<-40, Mercado -40..40, Neón Alto x>40 z>-10, Nova x>40 z<-10): puntos repartidos por los cuatro barrios y el muro (centro x -135..135, z -88..88; calles N-S en x = -47 y 47, E-O en z = 0).
+            ("suburbios_calle", new Vector3(-120f, 0.2f, -2f), new Vector3(1f, -0.03f, 0.05f)),
+            ("suburbios_casa", new Vector3(-100f, 0.2f, -45f), new Vector3(0f, 0f, 1f)),
+            ("mercado_calle", new Vector3(-47f, 0.2f, 40f), new Vector3(0f, -0.03f, 1f)),
+            ("mercado_puerta", new Vector3(10f, 0.2f, -45f), new Vector3(0f, 0f, -1f)),
+            ("nova_calle", new Vector3(47f, 0.2f, -30f), new Vector3(0f, -0.03f, 1f)),
+            ("neonalto_calle", new Vector3(47f, 0.2f, 45f), new Vector3(0f, -0.03f, 1f)),
+            ("tianguis_avenida", new Vector3(-20f, 0.2f, -1f), new Vector3(1f, -0.03f, 0f)),
+            ("casino_avenida", new Vector3(110f, 0.2f, 45f), new Vector3(-1f, -0.02f, 0.1f)),
+            ("muro_este", new Vector3(118f, 0.2f, 0f), new Vector3(1f, 0.05f, 0f)),
+            ("cruce_central", new Vector3(47f, 0.2f, 0f), new Vector3(-1f, 0f, 0f)),
         };
 
         [MenuItem("Mecha Cyberpunk/Ambiente/Construir build de medición")]

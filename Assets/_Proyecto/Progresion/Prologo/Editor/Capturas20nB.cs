@@ -43,6 +43,31 @@ namespace MechaCyberpunk.Progresion.Prologo.Editor
             return "jugador en " + c.transform.position.ToString("F2") + " yaw " + yaw;
         }
 
+        /// <summary>Como <see cref="Poner"/>, pero busca el punto libre de suelo más cercano (hasta 14 m) para no quedar dentro de un edificio.</summary>
+        public static string PonerLibre(float x, float z, float yaw, float inclinacion)
+        {
+            for (float r = 0f; r <= 14f; r += 1f)
+            {
+                int pasos = r == 0f ? 1 : Mathf.CeilToInt(r * 6f);
+                for (int i = 0; i < pasos; i++)
+                {
+                    float a = i * Mathf.PI * 2f / pasos;
+                    Vector3 q = new Vector3(x + Mathf.Cos(a) * r, 60f, z + Mathf.Sin(a) * r);
+                    if (!Physics.Raycast(q, Vector3.down, out RaycastHit h, 80f, ~0, QueryTriggerInteraction.Ignore) || h.point.y > 1.5f)
+                    {
+                        continue;
+                    }
+                    Vector3 p = h.point;
+                    if (Physics.CheckCapsule(p + Vector3.up * 0.9f, p + Vector3.up * 1.8f, 0.45f, ~0, QueryTriggerInteraction.Ignore))
+                    {
+                        continue;
+                    }
+                    return Poner(p.x, p.y + 0.1f, p.z, yaw, inclinacion);
+                }
+            }
+            return Poner(x, 0.3f, z, yaw, inclinacion) + " (sin punto libre)";
+        }
+
         /// <summary>Mueve al jugador con su CharacterController hacia (dx, dz) en pasos de 0.1 m y dice dónde quedó (para probar muros).</summary>
         public static string Empujar(float dx, float dz, int pasos)
         {

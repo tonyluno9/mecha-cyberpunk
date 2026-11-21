@@ -19,6 +19,16 @@ namespace MechaCyberpunk.Mundo.Ambiente
             return Mathf.Clamp01(tamanio / (2f * distancia * mitad));
         }
 
+        /// <summary>T-1545: distancia (m) de corte de un objeto: de <paramref name="distanciaMinima"/> (el más chico) a <paramref name="distanciaMaxima"/> (el del tamaño máximo).</summary>
+        public static float DistanciaPorTamanio(float tamanio, float tamanioMaximo, float distanciaMinima, float distanciaMaxima)
+        {
+            if (tamanioMaximo <= 0f)
+            {
+                return distanciaMinima;
+            }
+            return Mathf.Lerp(distanciaMinima, distanciaMaxima, Mathf.Clamp01(tamanio / tamanioMaximo));
+        }
+
         /// <summary>True si el objeto es lo bastante chico para cortarse por distancia.</summary>
         public static bool EsChico(float tamanioMayor, float tamanioMaximo)
         {
