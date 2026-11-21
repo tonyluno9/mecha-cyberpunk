@@ -176,19 +176,22 @@ namespace MechaCyberpunk.Tests.Vehiculos
         [TestCase("DR04_a")]
         [TestCase("E13")]
         [TestCase("NV01")]
-        public void Drones_RotoresConElPivoteCentradoYElEjeYDelDisco(string codigo)
+        public void Drones_RotoresConElPivoteCentradoYGiroSobreElEjeDelDisco(string codigo)
         {
             GameObject raiz = PrefabUtility.LoadPrefabContents(VehiculosT1554.CarpetaDrones + "Prefabs/Dron_" + codigo + ".prefab");
             try
             {
+                MechaCyberpunk.Trafico.Drones.GiroRotores giro = raiz.GetComponent<MechaCyberpunk.Trafico.Drones.GiroRotores>();
+                Assert.IsNotNull(giro, codigo + ": GiroRotores");
+                giro.Buscar();
                 List<Transform> rotores = VehiculosT1554.RotoresDe(raiz);
                 Assert.IsNotEmpty(rotores, codigo + ": rotores Rotor_*");
                 foreach (Transform rotor in rotores)
                 {
-                    Assert.IsTrue(VehiculosT1554.DescentradoDelRotor(rotor, out float descentrado, out float radio, out bool ejeY), codigo + " " + rotor.name + ": sin malla");
+                    Assert.IsTrue(VehiculosT1554.DescentradoDelRotor(rotor, out float descentrado, out float radio, out Vector3 eje), codigo + " " + rotor.name + ": sin malla");
                     Assert.Greater(radio, 0f, codigo + " " + rotor.name);
                     Assert.LessOrEqual(descentrado / radio, 0.06f, codigo + " " + rotor.name + ": el centro de la malla está lejos del eje de giro (tiembla)");
-                    Assert.IsTrue(ejeY, codigo + " " + rotor.name + ": el eje Y local no es el del disco");
+                    Assert.AreEqual(eje, giro.EjeDe(rotores.IndexOf(rotor)), codigo + " " + rotor.name + ": GiroRotores gira sobre el eje del disco");
                 }
             }
             finally
