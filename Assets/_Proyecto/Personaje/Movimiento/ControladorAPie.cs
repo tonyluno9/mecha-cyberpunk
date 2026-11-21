@@ -391,6 +391,13 @@ namespace MechaCyberpunk.Personaje.Movimiento
             {
                 Sonidos.ReproducirEn(ReglaSonidosJugador.Aterrizaje, transform.position);
             }
+            else if (enPiso && tiempoAire > SegundosMinimosAire && limitadorPasosAnimados.Permitir(Time.time))
+            {
+                // T-1534: un salto corto (sin caída) también pisa: un solo sonido de paso del piso, en el cuadro en que toca (Salto_Aterrizaje: toca en 3).
+                UltimoIdPaso = IdPasoDelPiso();
+                Sonidos.ReproducirEn(UltimoIdPaso, transform.position);
+                PasoDado?.Invoke(transform.position, UltimoIdPaso, corriendoAhora);
+            }
             tiempoAire = enPiso ? 0f : tiempoAire + dt;
             bool corriendo = enPiso && velocidad.sqrMagnitude > UmbralPaso * UmbralPaso && quiereCorrer;
             tiempoCorriendo = corriendo ? tiempoCorriendo + dt : 0f;

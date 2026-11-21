@@ -183,15 +183,30 @@ namespace MechaCyberpunk.Vehiculos.Carro
                 carro.TemblarPorChoque(rapidez); // T-1488
             }
             LanzarAlConductorDeLaMoto(rapidez);
+            // T-1534: roce de costado (pared o carro al lado): suena un VEH_CHOQUE suave, no el fuerte ni el cristal, aunque la velocidad relativa sea alta.
+            bool raspon = EsRaspon(colision);
             if (rapidez <= config.UmbralChoque)
             {
+                if (raspon)
+                {
+                    proximoRaspon = Time.time + ReglaSueloCarro.SegundosEntreRaspon;
+                    Sonidos.ReproducirEn(ReglaSueloCarro.IdRaspon, transform.position);
+                }
                 return;
             }
             proximoChoque = Time.time + config.SegundosEntreChoques;
-            // T-1475: choque leve, fuerte y, si es muy fuerte, también cristal roto.
-            foreach (string idChoque in ReglasSonidoVehiculoT1475.IdsChoque(rapidez, config.UmbralChoque, config.UmbralChoqueFuerte))
+            if (raspon)
             {
-                Sonidos.ReproducirEn(idChoque, transform.position);
+                proximoRaspon = Time.time + ReglaSueloCarro.SegundosEntreRaspon;
+                Sonidos.ReproducirEn(ReglaSueloCarro.IdRaspon, transform.position);
+            }
+            else
+            {
+                // T-1475: choque leve, fuerte y, si es muy fuerte, también cristal roto.
+                foreach (string idChoque in ReglasSonidoVehiculoT1475.IdsChoque(rapidez, config.UmbralChoque, config.UmbralChoqueFuerte))
+                {
+                    Sonidos.ReproducirEn(idChoque, transform.position);
+                }
             }
             float danio = DanioDeChoque(rapidez, config.UmbralChoque, config.DanioPorChoque, calculo.Maxima, config.DanioMaximoPorChoque);
             if (danio <= 0f)
@@ -201,6 +216,22 @@ namespace MechaCyberpunk.Vehiculos.Carro
             EstadoCarro antes = calculo.Estado;
             calculo.Aplicar(danio);
             Revisar(antes);
+        }
+
+        private float proximoRaspon;
+
+        // T-1534: la normal del primer contacto cae sobre el costado del carro y casi no se mete contra él.
+        private bool EsRaspon(Collision colision)
+        {
+            if (carro == null || colision.contactCount == 0)
+            {
+                return false;
+            }
+            Vector3 normal = colision.GetContact(0).normal;
+            float lateral = Vector3.Dot(normal, transform.right);
+            float velocidadNormal = Vector3.Dot(colision.relativeVelocity, normal);
+            float segundosDesdeUltimo = Time.time >= proximoRaspon ? ReglaSueloCarro.SegundosEntreRaspon : 0f;
+            return ReglaSueloCarro.EsRaspon(carro.Rapidez, lateral, velocidadNormal, segundosDesdeUltimo);
         }
 
         // T-696: un choque fuerte en moto avienta al conductor: sale de golpe (el jugador lo recoge con SalidaForzada y cae).
