@@ -118,6 +118,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a6c5d4e152246042a51e18d6dc61192, type: 3}
   m_Name: 
   m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.APie.ConductaGuardiaPesado
+  disparaCanon: 1
+  caminaConEscudo: 1
 --- !u!1001 &6597890333070545826
 PrefabInstance:
   m_ObjectHideFlags: 0

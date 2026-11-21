@@ -69,11 +69,9 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
             Assert.AreEqual(ModelImporterMaterialImportMode.None, importador.materialImportMode, nombre + ": sin materiales");
             var modelo = (ModelImporter)AssetImporter.GetAtPath(ClipsRobotsNovaT1553.RutaModeloDe(nombre));
             Assert.AreEqual(modelo.globalScale, importador.globalScale, 1e-4f, nombre + ": la escala de su personaje");
-            // "Humanoid con el Avatar del personaje" (Tony, 20-nov): Copy From Other Avatar con el del modelo.
-            Assert.AreEqual(ModelImporterAvatarSetup.CopyFromOther, importador.avatarSetup, nombre + ": avatar copiado del personaje (corre RobotsNovaT1553.Aplicar)");
-            Assert.IsNotNull(importador.sourceAvatar, nombre);
-            Assert.AreEqual(ClipsRobotsNovaT1553.RutaModeloDe(nombre), AssetDatabase.GetAssetPath(importador.sourceAvatar), nombre + ": el avatar es el de su personaje");
-            Assert.IsTrue(importador.sourceAvatar.isValid && importador.sourceAvatar.isHuman, nombre + ": avatar Humanoid válido");
+            // 21-nov B: Copy From Other Avatar no sacaba el clip (jerarquía distinta); cada clip lleva su avatar Humanoid propio y se retargetea al personaje.
+            Assert.AreEqual(ModelImporterAvatarSetup.CreateFromThisModel, importador.avatarSetup, nombre + ": avatar propio del clip (corre RobotsNovaT1553.Aplicar)");
+            Assert.IsTrue(AssetDatabase.LoadAllAssetsAtPath(AssetDatabase.GetAssetPath(importador)).OfType<AnimationClip>().Any(c => c.name == nombre), nombre + ": el clip se importa");
             Assert.AreEqual(1, importador.clipAnimations.Length, nombre);
             Assert.AreEqual(nombre, importador.clipAnimations[0].name, nombre);
         }

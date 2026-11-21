@@ -65,6 +65,51 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
         // ------------------------------------------------------------------ Importación
 
         /// <summary>
+        /// 21-nov B: los clips con rig propio (E18_Caminar/Correr/Golpe_Der, E16_CaminarEscudo) traen 39 huesos mixamorig y ninguno es Head;
+        /// Unity no arma un Humanoid sin cabeza. Se parte del mapeo del modelo del personaje, se quitan los huesos que el clip no tiene
+        /// y la cabeza se mapea al cuello (el cuello queda sin mapear).
+        /// </summary>
+        public static HumanDescription DescripcionSinCabeza(HumanDescription actual, ModelImporter modelo, string rutaClip)
+        {
+            if (modelo == null || modelo.humanDescription.human == null || modelo.humanDescription.human.Length == 0)
+            {
+                return actual;
+            }
+            HumanDescription d = modelo.humanDescription;
+            // Huesos que de verdad trae el clip: se leen los nombres mixamorig del archivo FBX (si falla el avatar, Unity no deja un modelo que leer).
+            var enClip = new HashSet<string>();
+            if (!string.IsNullOrEmpty(rutaClip) && File.Exists(rutaClip))
+            {
+                string texto = System.Text.Encoding.GetEncoding(28591).GetString(File.ReadAllBytes(rutaClip));
+                foreach (System.Text.RegularExpressions.Match m in System.Text.RegularExpressions.Regex.Matches(texto, "mixamorig:[A-Za-z0-9_]+"))
+                {
+                    enClip.Add(m.Value);
+                }
+            }
+            GameObject raiz = enClip.Count == 0 ? AssetDatabase.LoadAssetAtPath<GameObject>(rutaClip) : null;
+            if (raiz != null)
+            {
+                foreach (Transform t in raiz.GetComponentsInChildren<Transform>(true)) { enClip.Add(t.name); }
+            }
+            var lista = new System.Collections.Generic.List<HumanBone>();
+            string cuello = null;
+            foreach (HumanBone h in d.human)
+            {
+                if (h.humanName == "Neck") { cuello = h.boneName; }
+            }
+            foreach (HumanBone h in d.human)
+            {
+                if (h.humanName == "Neck" && (enClip.Count == 0 || !enClip.Contains("mixamorig:Head"))) { continue; }
+                HumanBone b = h;
+                if (h.humanName == "Head" && cuello != null && (enClip.Count == 0 || !enClip.Contains(h.boneName))) { b.boneName = cuello; }
+                if (enClip.Count > 0 && !enClip.Contains(b.boneName)) { continue; }
+                lista.Add(b);
+            }
+            d.human = lista.ToArray();
+            return d;
+        }
+
+        /// <summary>
         /// Ajustes del importador de un clip de <see cref="ClipsConRigPropio"/>: Humanoid (Copy From Other Avatar con el del personaje), escala y userData del personaje, sin materiales
         /// ni malla útil, un clip con el nombre del archivo y bucle según <see cref="ClipsEnBucle"/>. Lo llama el postprocesador en cada importación y <see cref="ImportarRigPropio"/>.
         /// </summary>
@@ -74,16 +119,10 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             importador.animationType = ModelImporterAnimationType.Human;
             // "Humanoid con el Avatar del personaje" (Tony, 20-nov): Copy From Other Avatar con el del modelo, que ya está en pose T. Si todavía no existe (primera importación),
             // queda con avatar propio y RobotsNovaT1553.Aplicar vuelve a configurarlo cuando el del personaje ya está listo.
-            Avatar fuente = AvatarDelPersonaje(nombre);
-            if (fuente != null)
-            {
-                importador.avatarSetup = ModelImporterAvatarSetup.CopyFromOther;
-                importador.sourceAvatar = fuente;
-            }
-            else
-            {
-                importador.avatarSetup = ModelImporterAvatarSetup.CreateFromThisModel;
-            }
+            // 21-nov B: con Copy From Other Avatar Unity no sacaba el clip (la jerarquía mixamorig del clip no coincide con la del modelo): avatar propio del clip.
+            // El retargeting Humanoid lo pasa al esqueleto del personaje igual.
+            importador.avatarSetup = ModelImporterAvatarSetup.CreateFromThisModel;
+            importador.humanDescription = DescripcionSinCabeza(importador.humanDescription, modelo, importador.assetPath);
             importador.materialImportMode = ModelImporterMaterialImportMode.None;
             importador.importAnimation = true;
             importador.useFileScale = true;

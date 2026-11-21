@@ -112,8 +112,8 @@ MonoBehaviour:
   animador: {fileID: 4447282441192798333}
   leerDelPadre: 1
   suavizadoVelocidad: 12
-  velocidadClipCaminar: 1.293
-  velocidadClipCorrer: 3.19
+  velocidadClipCaminar: 0.8
+  velocidadClipCorrer: 0.8
   rapidezMinima: 0.6
   rapidezMaxima: 3
   velocidadClipAtras: 0
