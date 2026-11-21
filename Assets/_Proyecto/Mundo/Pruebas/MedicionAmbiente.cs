@@ -53,7 +53,11 @@ namespace MechaCyberpunk.Mundo.Pruebas
         [SerializeField] private GameObject prefabCarro;
         [SerializeField] private Punto[] puntos;
 
+        /// <summary>T-1545: objetivo de cuadros por segundo; la columna "cumple" del CSV compara el promedio y el mínimo contra esto.</summary>
+        public const float ObjetivoFps = 50f;
+
         private readonly StringBuilder informe = new StringBuilder();
+        private readonly StringBuilder csv = new StringBuilder("punto,fps_promedio,fps_minimo,fps_1pct_bajo,ms_promedio,ms_peor,cpu_ms,gpu_ms,llamadas,lotes,setpass,triangulos,luces_prendidas,cumple_50" + System.Environment.NewLine);
 
         private IEnumerator Start()
         {
@@ -160,6 +164,8 @@ namespace MechaCyberpunk.Mundo.Pruebas
                 }
                 float promedio = suma / tiempos.Count;
                 float peor1 = tiempos[Mathf.Clamp(Mathf.FloorToInt(tiempos.Count * 0.99f), 0, tiempos.Count - 1)];
+                float peor = tiempos[tiempos.Count - 1];
+                int lucesPrendidas = ContarLucesPrendidas();
                 yield return new WaitForEndOfFrame();
                 Capturar(camara, Path.Combine(salida, punto.nombre + ".png"));
                 informe.AppendLine(punto.nombre + ": fps_promedio=" + (1f / promedio).ToString("F1") + " ms_promedio=" + (promedio * 1000f).ToString("F2")
@@ -167,11 +173,39 @@ namespace MechaCyberpunk.Mundo.Pruebas
                     + " cpu_ms=" + (muestrasCuadro > 0 ? (sumaCpu / muestrasCuadro).ToString("F2") : "n/d")
                     + " gpu_ms=" + (muestrasCuadro > 0 ? (sumaGpu / muestrasCuadro).ToString("F2") : "n/d")
                     + " llamadas=" + sumaLlamadas / n + " lotes=" + sumaLotes / n + " setpass=" + sumaCambios / n + " triangulos=" + sumaTriangulos / n
-                    + " jugador=" + PosicionJugador() + " hora=" + HoraActual());
+                    + " luces_prendidas=" + lucesPrendidas + " jugador=" + PosicionJugador() + " hora=" + HoraActual());
+                // El mínimo es el peor cuadro; el 1 % bajo es el percentil 99 del tiempo de cuadro. "cumple" exige promedio y 1 % bajo sobre el objetivo.
+                bool cumple = 1f / promedio >= ObjetivoFps && 1f / peor1 >= ObjetivoFps;
+                csv.AppendLine(string.Join(",", punto.nombre,
+                    Num(1f / promedio), Num(1f / peor), Num(1f / peor1), Num(promedio * 1000f), Num(peor * 1000f),
+                    muestrasCuadro > 0 ? Num((float)(sumaCpu / muestrasCuadro)) : "",
+                    muestrasCuadro > 0 ? Num((float)(sumaGpu / muestrasCuadro)) : "",
+                    (sumaLlamadas / n).ToString(), (sumaLotes / n).ToString(), (sumaCambios / n).ToString(), (sumaTriangulos / n).ToString(),
+                    lucesPrendidas.ToString(), cumple ? "si" : "NO"));
             }
+            File.WriteAllText(Path.Combine(salida, "medicion.csv"), csv.ToString());
             File.WriteAllText(Path.Combine(salida, "medicion.txt"), informe.ToString());
             Debug.Log("[Mundo] MedicionAmbiente:\n" + informe);
             Application.Quit(0);
+        }
+
+        private static string Num(float valor)
+        {
+            return valor.ToString("F1", System.Globalization.CultureInfo.InvariantCulture);
+        }
+
+        // T-1545: luces de punto y de cono prendidas en el mundo ahora (las que paga la GPU).
+        private static int ContarLucesPrendidas()
+        {
+            int cuenta = 0;
+            foreach (Light luz in FindObjectsByType<Light>(FindObjectsSortMode.None))
+            {
+                if (luz.enabled && luz.gameObject.activeInHierarchy && luz.type != LightType.Directional)
+                {
+                    cuenta++;
+                }
+            }
+            return cuenta;
         }
 
         // T-425: carros en movimiento cruzando el punto (copias del prefab; se les fija la velocidad en cada FixedUpdate de la corrutina).

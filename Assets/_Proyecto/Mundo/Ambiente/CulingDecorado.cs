@@ -14,8 +14,10 @@ namespace MechaCyberpunk.Mundo.Ambiente
 
         [Tooltip("Objetos cuyo lado mayor es menor o igual a esto (m) se cortan por distancia.")]
         [SerializeField, Min(0.1f)] private float tamanioMaximo = 2.5f;
-        [Tooltip("Distancia (m) a la que desaparece el decorado chico.")]
-        [SerializeField, Min(10f)] private float distanciaCorte = 70f;
+        [Tooltip("Distancia (m) a la que desaparece el decorado más chico.")]
+        [SerializeField, Min(10f)] private float distanciaCorte = 55f;
+        [Tooltip("T-1545: distancia (m) a la que desaparece el decorado del tamaño máximo. Los de en medio, entre las dos: no desaparece todo a la misma distancia.")]
+        [SerializeField, Min(10f)] private float distanciaCorteMaxima = 110f;
         [Tooltip("Campo de visión vertical de referencia (°).")]
         [SerializeField, Range(20f, 110f)] private float campoVision = 60f;
 
@@ -55,7 +57,7 @@ namespace MechaCyberpunk.Mundo.Ambiente
                     continue;
                 }
                 LODGroup grupo = r.gameObject.AddComponent<LODGroup>();
-                grupo.SetLODs(new[] { new LOD(CalculoCortePorDistancia.AlturaDeCorte(mayor, distanciaCorte, campoVision), new Renderer[] { r }) });
+                grupo.SetLODs(new[] { new LOD(CalculoCortePorDistancia.AlturaDeCorte(mayor, CalculoCortePorDistancia.DistanciaPorTamanio(mayor, tamanioMaximo, distanciaCorte, distanciaCorteMaxima), campoVision), new Renderer[] { r }) });
                 grupo.RecalculateBounds();
                 Cortados++;
             }
