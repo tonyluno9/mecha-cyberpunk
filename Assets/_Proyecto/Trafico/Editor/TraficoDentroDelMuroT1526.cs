@@ -15,7 +15,7 @@ namespace MechaCyberpunk.Trafico.Editor
     /// T-1526: herramientas de editor del tráfico dentro del muro y de los modelos de policía en la ciudad.
     /// <c>Diagnostico</c> no cambia nada: escribe Logs/t1526-trafico.txt con el área del muro, cuántos nodos de calle caen fuera (las salidas que se cortan), las calles que terminan
     /// en una salida y los carros de la escena que son modelos de policía con componentes de carro civil (CarroEstacionado o CarroTrafico).
-    /// <c>Aplicar</c> (idempotente) cambia cada modelo de policía suelto de la escena por un civil equivalente (V05 por V02, V06 por V03, V08 por C19, V11 por V10, PA01 por V02,
+    /// <c>Aplicar</c> (idempotente) cambia cada modelo de policía suelto de la escena por un civil equivalente (V05 por V02, V06 por V03, V08 por C19, V11 por V12 (T-1554: V10 se descartó), PA01 por V02,
     /// PA02 por V03) en el mismo lugar, y guarda la escena. Las patrullas de verdad (Patrulla.prefab y PatrullaCamioneta.prefab con PatrullaMundo) no se tocan.
     /// Batchmode: -executeMethod MechaCyberpunk.Trafico.Editor.TraficoDentroDelMuroT1526.Diagnostico   y   ...Aplicar
     /// </summary>
@@ -28,7 +28,7 @@ namespace MechaCyberpunk.Trafico.Editor
         /// <summary>Modelo de policía suelto -> civil que lo reemplaza.</summary>
         public static readonly Dictionary<string, string> Reemplazos = new Dictionary<string, string>
         {
-            { "V05", "V02" }, { "V06", "V03" }, { "V08", "C19" }, { "V11", "V10" }, { "PA01", "V02" }, { "PA02", "V03" },
+            { "V05", "V02" }, { "V06", "V03" }, { "V08", "C19" }, { "V11", "V12" }, { "PA01", "V02" }, { "PA02", "V03" },
         };
 
         [MenuItem("Mecha Cyberpunk/T-1526/Diagnóstico del tráfico dentro del muro")]

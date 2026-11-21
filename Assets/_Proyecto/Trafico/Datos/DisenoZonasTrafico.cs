@@ -15,7 +15,7 @@ namespace MechaCyberpunk.Trafico.Datos
             ("Deshuesadero", new[] { "V20", "V21" }, 0.7f),
             ("NeonAlto", new[] { "V22", "V23", "V24", "V12" }, 0.5f),
             ("LasLomas", new[] { "V15", "V13" }, 0.7f),
-            ("Avenida", new[] { "V16", "V17", "V18", "V13", "V14", "V09", "V10" }, 0.4f),
+            ("Avenida", new[] { "V16", "V17", "V18", "V13", "V14", "V09" }, 0.4f),
             // T-1482: se quitaron del mapa Malecón, Puerto, Autopista y Cerro (revertir mapa 19-nov). Sus carros (V03, V04, V01a, V01b, V02 ya salen en la lista general;
             // las motos MT01 y MT02 pasan a los Extras) siguen en los 4 barrios.
         };
@@ -26,7 +26,7 @@ namespace MechaCyberpunk.Trafico.Datos
         /// </summary>
         public static readonly string[] Extras = { "V12", "V13", "V14", "V19", "V20", "V21", "MT01", "MT02" };
 
-        /// <summary>Carros nuevos de T-1342/T-1343 que tienen que aparecer en el tráfico (V11 es solo de la policía).</summary>
+        /// <summary>Carros nuevos de T-1342/T-1343 que tienen que aparecer en el tráfico (T-1554: V10 y V11 se descartaron).</summary>
         public static readonly string[] CarrosNuevos =
         {
             "V12", "V13", "V14", "V15", "V16", "V17", "V18", "V19", "V20", "V21", "V22", "V23", "V24", "MT01", "MT02",
