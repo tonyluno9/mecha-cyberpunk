@@ -25,3 +25,5 @@ Fuente: `3d sonidos/` en la carpeta principal (ignorada por git; 229 sonidos út
 - T-1530 integrada (b6a9569): 122 WAV nuevos, 5 renombrados, 0 reemplazos. Importador viejo ImportadorAudio pisaba TODAS las carpetas numeradas (todo CompressedInMemory y mono, también lo del 19-nov): ya no; reimportado 01..18. T-1531 (catálogo y mezcla) corriendo.
 - T-1531 integrada (a85697f): catálogo 01..18 creado en Unity (5954b9f), alias de renombrados, TablaMezcla20nov (96 IDs). EditMode de sonido 251/251 (IdsSonidoPruebas al día).
 - T-1532..T-1535 lanzadas en paralelo (wt21/). Reglas: no tocan tablas de mezcla/catálogo/mapa (me piden lo que falte) ni los .meta de clips de PJ01 (el chat de Blender los re-exporta en la carpeta principal).
+- T-1532..T-1535 integradas (cad696e, bbb804f, a968667, d494460). EditMode de sonido/armas/vehículos/pasos 384/384 antes de T-1533/35.
+- Hecho por mí (622f165): T-1536 Core ClimaMundo (la lluvia de Mundo llega al sonido y al carro; hoy la lluvia está apagada en el juego), alias ROB_PES_PASO/ROB_APAGADO/ROB_CAIDA con tono bajo, ROB_VOZ_ALERTA en 5 frases, fuera UI_CAMARA_LENTA sintetizado, catálogo regenerado. EditMode completo corriendo.
