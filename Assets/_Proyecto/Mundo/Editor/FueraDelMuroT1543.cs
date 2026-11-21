@@ -212,6 +212,36 @@ namespace MechaCyberpunk.Mundo.Editor
         }
 
         [MenuItem("Mecha Cyberpunk/T-1543 Muro: aplicar")]
+        /// <summary>
+        /// Apaga lo que <see cref="ActivosAfuera"/> todavía encuentra (líneas de calle giradas que cruzan el muro y no se pueden recortar).
+        /// Se corre después de <see cref="Aplicar"/>; guarda la escena.
+        /// </summary>
+        public static void ApagarRestosAfuera()
+        {
+            Scene escena = ReemplazarEdificiosT1502.Abrir();
+            Rect linea = LineaDelMuro();
+            float margen = GrosorDelMuro() + 1f;
+            int apagados = 0;
+            foreach (GameObject raiz in escena.GetRootGameObjects())
+            {
+                foreach (Renderer r in raiz.GetComponentsInChildren<Renderer>(false))
+                {
+                    if (!r.enabled || !r.gameObject.activeInHierarchy || EsEfecto(r) || EnProtegido(r.transform))
+                    {
+                        continue;
+                    }
+                    if (CalculoMuroT1543.CentroFuera(linea, margen, r.bounds.center))
+                    {
+                        r.gameObject.SetActive(false);
+                        apagados++;
+                    }
+                }
+            }
+            EditorSceneManager.MarkSceneDirty(escena);
+            EditorSceneManager.SaveScene(escena);
+            Debug.Log("[T-1543] ApagarRestosAfuera: " + apagados + " objetos apagados; quedan afuera " + ActivosAfuera(escena, linea, margen).Count);
+        }
+
         public static void Aplicar()
         {
             Scene escena = ReemplazarEdificiosT1502.Abrir();
