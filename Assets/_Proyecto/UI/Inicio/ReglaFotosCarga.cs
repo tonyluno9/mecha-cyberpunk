@@ -58,6 +58,18 @@ namespace MechaCyberpunk.UI.Inicio
                 : new Vector2(altoPantalla * aspecto, altoPantalla);
         }
 
+        /// <summary>
+        /// Carga minimalista (Tony): tamaño de una foto de <paramref name="ancho"/> x <paramref name="alto"/> px que llena la pantalla
+        /// conservando la proporción (Envelope: lo que sobra se recorta por el lado más corto, lo mínimo posible). Nunca estira.
+        /// </summary>
+        public static Vector2 TamanoCubierto(float ancho, float alto, float anchoPantalla, float altoPantalla)
+        {
+            float aspecto = ancho / alto;
+            return aspecto > anchoPantalla / altoPantalla
+                ? new Vector2(altoPantalla * aspecto, altoPantalla)
+                : new Vector2(anchoPantalla, anchoPantalla / aspecto);
+        }
+
         public static float Escala(float t) => Mathf.Lerp(EscalaInicial, EscalaFinal, Progreso(t));
 
         /// <summary>Desplazamiento (px) de la foto <paramref name="indice"/> a los <paramref name="t"/> segundos: cruza de un lado al otro en una dirección propia.</summary>
