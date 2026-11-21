@@ -1,0 +1,345 @@
+{
+ "version": 1,
+ "resolution": "1k",
+ "variantes_por_defecto": 1,
+ "carpeta_salida": "imageassets/referencias/look/mapa-final/",
+ "trabajos": [
+  {
+   "id": "K20",
+   "archivo": "K20_Suburbios_CallePrincipal",
+   "fase": 1,
+   "salida": "imageassets/referencias/look/mapa-final/K20_Suburbios_CallePrincipal.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png",
+    "imageassets/referencias/look/K05_EsquinaBarrio.png",
+    "imageassets/referencias/look/K08_CalleSuburbios_Cuadra.png",
+    "imageassets/modelos-nuevos/L15_LetreroCanepa.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY, as if it were another screenshot of the same game: thin outlines, painted rendering, blue night with light fog, orange sodium street lights, magenta and turquoise neon, wet ground with reflections, thick cables between utility poles, a worn Mexican cyberpunk megacity. Any other attached images are our existing places: keep them consistent. Our city has only 4 districts inside a tall wall that surrounds it completely; there are no empty lots or gaps between districts: blocks touch each other and the style changes gradually. 16:9, NO HUD, NO interface, no readable text, no letters, no logos: signs and screens show only abstract shapes. Original design, nothing copied from real places. Street-level view at the height of the player (camera about 2 meters high), as it would look in the game. Scene: the main street of the Suburbios district (warm orange light, attached colorful two-story houses), the street where the player's house is, and right across the street the neighborhood car workshop El Canepa with its open garage, a car lifted inside, tools and a hand-painted sign shown as colorful shapes."
+  },
+  {
+   "id": "K21",
+   "archivo": "K21_Suburbios_Callejon",
+   "fase": 1,
+   "salida": "imageassets/referencias/look/mapa-final/K21_Suburbios_Callejon.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png",
+    "imageassets/referencias/look/K05_EsquinaBarrio.png",
+    "imageassets/personajes/SkullHombre_frente.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY, as if it were another screenshot of the same game: thin outlines, painted rendering, blue night with light fog, orange sodium street lights, magenta and turquoise neon, wet ground with reflections, thick cables between utility poles, a worn Mexican cyberpunk megacity. Any other attached images are our existing places: keep them consistent. Our city has only 4 districts inside a tall wall that surrounds it completely; there are no empty lots or gaps between districts: blocks touch each other and the style changes gradually. 16:9, NO HUD, NO interface, no readable text, no letters, no logos: signs and screens show only abstract shapes. Original design, nothing copied from real places. Street-level view at the height of the player (camera about 2 meters high), as it would look in the game. Scene: the narrow alley of the SKULLS gang in Suburbios: high walls with magenta skull-themed graffiti as abstract shapes, trash bags and metal barrels, a fire glowing in one barrel, metal fire escape stairs on the walls, puddles, a few gang members as distant silhouettes."
+  },
+  {
+   "id": "K22",
+   "archivo": "K22_Suburbios_ClinicaTaller",
+   "fase": 1,
+   "salida": "imageassets/referencias/look/mapa-final/K22_Suburbios_ClinicaTaller.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png",
+    "imageassets/referencias/look/K05_EsquinaBarrio.png",
+    "imageassets/referencias/look/K08_CalleSuburbios_Cuadra.png",
+    "imageassets/modelos-nuevos/P12_FachadaConsultorio.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY, as if it were another screenshot of the same game: thin outlines, painted rendering, blue night with light fog, orange sodium street lights, magenta and turquoise neon, wet ground with reflections, thick cables between utility poles, a worn Mexican cyberpunk megacity. Any other attached images are our existing places: keep them consistent. Our city has only 4 districts inside a tall wall that surrounds it completely; there are no empty lots or gaps between districts: blocks touch each other and the style changes gradually. 16:9, NO HUD, NO interface, no readable text, no letters, no logos: signs and screens show only abstract shapes. Original design, nothing copied from real places. Street-level view at the height of the player (camera about 2 meters high), as it would look in the game. Scene: a block of Suburbios with the underground clinic of the Doc (a reinforced metal door, a covered window, a turquoise light and a medical cross shape over the door) and, a few doors down, the inventor's workshop of Tino (a wide open garage with workbenches, drones and parts inside, warm light)."
+  },
+  {
+   "id": "K23",
+   "archivo": "K23_Mercado_Tianguis",
+   "fase": 1,
+   "salida": "imageassets/referencias/look/mapa-final/K23_Mercado_Tianguis.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png",
+    "imageassets/referencias/look/K02_Tianguis.png",
+    "imageassets/referencias/look/K10_CalleMercado.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY, as if it were another screenshot of the same game: thin outlines, painted rendering, blue night with light fog, orange sodium street lights, magenta and turquoise neon, wet ground with reflections, thick cables between utility poles, a worn Mexican cyberpunk megacity. Any other attached images are our existing places: keep them consistent. Our city has only 4 districts inside a tall wall that surrounds it completely; there are no empty lots or gaps between districts: blocks touch each other and the style changes gradually. 16:9, NO HUD, NO interface, no readable text, no letters, no logos: signs and screens show only abstract shapes. Original design, nothing copied from real places. Street-level view at the height of the player (camera about 2 meters high), as it would look in the game. Scene: the closed street of the tianguis in El Mercado: rows of stalls with colorful tarp roofs on both sides, piles of goods, people shopping; NO hanging bulb strings over the street, the light comes from the stalls and the street lamps."
+  },
+  {
+   "id": "K24",
+   "archivo": "K24_Mercado_Plaza",
+   "fase": 1,
+   "salida": "imageassets/referencias/look/mapa-final/K24_Mercado_Plaza.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png",
+    "imageassets/referencias/look/K09_Plaza_Barrio.png",
+    "imageassets/referencias/look/K02_Tianguis.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY, as if it were another screenshot of the same game: thin outlines, painted rendering, blue night with light fog, orange sodium street lights, magenta and turquoise neon, wet ground with reflections, thick cables between utility poles, a worn Mexican cyberpunk megacity. Any other attached images are our existing places: keep them consistent. Our city has only 4 districts inside a tall wall that surrounds it completely; there are no empty lots or gaps between districts: blocks touch each other and the style changes gradually. 16:9, NO HUD, NO interface, no readable text, no letters, no logos: signs and screens show only abstract shapes. Original design, nothing copied from real places. Street-level view at the height of the player (camera about 2 meters high), as it would look in the game. Scene: the plaza of El Mercado: a small kiosk in the center, benches, round trees, food stalls around it, and on the corner the little corner shop (tiendita) with a metal awning and a glowing soda fridge outside."
+  },
+  {
+   "id": "K25",
+   "archivo": "K25_Mercado_Armas",
+   "fase": 1,
+   "salida": "imageassets/referencias/look/mapa-final/K25_Mercado_Armas.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png",
+    "imageassets/referencias/look/K10_CalleMercado.png",
+    "imageassets/letreros/L12_LetreroElMercado.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY, as if it were another screenshot of the same game: thin outlines, painted rendering, blue night with light fog, orange sodium street lights, magenta and turquoise neon, wet ground with reflections, thick cables between utility poles, a worn Mexican cyberpunk megacity. Any other attached images are our existing places: keep them consistent. Our city has only 4 districts inside a tall wall that surrounds it completely; there are no empty lots or gaps between districts: blocks touch each other and the style changes gradually. 16:9, NO HUD, NO interface, no readable text, no letters, no logos: signs and screens show only abstract shapes. Original design, nothing copied from real places. Street-level view at the height of the player (camera about 2 meters high), as it would look in the game. Scene: the gun market street of El Mercado: a shop front behind a heavy metal grille with display cases of weapons glowing amber inside, crates of ammunition stacked outside, a rough rusty sign shown as a plate with a pistol silhouette, a couple of armed guards as silhouettes."
+  },
+  {
+   "id": "K26",
+   "archivo": "K26_NeonAlto_Casino",
+   "fase": 1,
+   "salida": "imageassets/referencias/look/mapa-final/K26_NeonAlto_Casino.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png",
+    "imageassets/referencias/look/K03_NeonAlto.png",
+    "imageassets/letreros/L10_LetreroVivaCoin.png",
+    "imageassets/letreros/L11_LetreroHotel.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY, as if it were another screenshot of the same game: thin outlines, painted rendering, blue night with light fog, orange sodium street lights, magenta and turquoise neon, wet ground with reflections, thick cables between utility poles, a worn Mexican cyberpunk megacity. Any other attached images are our existing places: keep them consistent. Our city has only 4 districts inside a tall wall that surrounds it completely; there are no empty lots or gaps between districts: blocks touch each other and the style changes gradually. 16:9, NO HUD, NO interface, no readable text, no letters, no logos: signs and screens show only abstract shapes. Original design, nothing copied from real places. Street-level view at the height of the player (camera about 2 meters high), as it would look in the game. Scene: the intersection of Neon Alto with the VivaCoin casino on the corner (a big gold and magenta sign as a glowing shape with no readable letters) and a hotel next to it with a tall vertical neon sign, buildings of 4 to 6 floors, lots of magenta and turquoise neon."
+  },
+  {
+   "id": "K27",
+   "archivo": "K27_NeonAlto_Calle",
+   "fase": 1,
+   "salida": "imageassets/referencias/look/mapa-final/K27_NeonAlto_Calle.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png",
+    "imageassets/referencias/look/K03_NeonAlto.png",
+    "imageassets/carros/V09_Taxi.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY, as if it were another screenshot of the same game: thin outlines, painted rendering, blue night with light fog, orange sodium street lights, magenta and turquoise neon, wet ground with reflections, thick cables between utility poles, a worn Mexican cyberpunk megacity. Any other attached images are our existing places: keep them consistent. Our city has only 4 districts inside a tall wall that surrounds it completely; there are no empty lots or gaps between districts: blocks touch each other and the style changes gradually. 16:9, NO HUD, NO interface, no readable text, no letters, no logos: signs and screens show only abstract shapes. Original design, nothing copied from real places. Street-level view at the height of the player (camera about 2 meters high), as it would look in the game. Scene: a street of Neon Alto: tall buildings of 4 to 6 floors with big glowing screens showing abstract images, projecting neon signs, pink and white taxis driving and parked, people on the sidewalks."
+  },
+  {
+   "id": "K28",
+   "archivo": "K28_Nova_Avenida",
+   "fase": 1,
+   "salida": "imageassets/referencias/look/mapa-final/K28_Nova_Avenida.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png",
+    "imageassets/referencias/look/K06_CalleNova.png",
+    "imageassets/referencias/look/K07_PuenteNova.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY, as if it were another screenshot of the same game: thin outlines, painted rendering, blue night with light fog, orange sodium street lights, magenta and turquoise neon, wet ground with reflections, thick cables between utility poles, a worn Mexican cyberpunk megacity. Any other attached images are our existing places: keep them consistent. Our city has only 4 districts inside a tall wall that surrounds it completely; there are no empty lots or gaps between districts: blocks touch each other and the style changes gradually. 16:9, NO HUD, NO interface, no readable text, no letters, no logos: signs and screens show only abstract shapes. Original design, nothing copied from real places. Street-level view at the height of the player (camera about 2 meters high), as it would look in the game. Scene: the wide clean avenue of the Nova district right in front of the huge white Nova tower, office towers with white panels and cold blue light strips, bollards, cameras, almost no neon, white and blue light."
+  },
+  {
+   "id": "K29",
+   "archivo": "K29_Nova_Refineria",
+   "fase": 1,
+   "salida": "imageassets/referencias/look/mapa-final/K29_Nova_Refineria.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png",
+    "imageassets/referencias/look/K06_CalleNova.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY, as if it were another screenshot of the same game: thin outlines, painted rendering, blue night with light fog, orange sodium street lights, magenta and turquoise neon, wet ground with reflections, thick cables between utility poles, a worn Mexican cyberpunk megacity. Any other attached images are our existing places: keep them consistent. Our city has only 4 districts inside a tall wall that surrounds it completely; there are no empty lots or gaps between districts: blocks touch each other and the style changes gradually. 16:9, NO HUD, NO interface, no readable text, no letters, no logos: signs and screens show only abstract shapes. Original design, nothing copied from real places. Street-level view at the height of the player (camera about 2 meters high), as it would look in the game. Scene: the Nova refinery inside the Nova district: large clean white industrial structures, big storage tanks, thick pipes running along racks, catwalks with solid railings, steam rising and glowing in the cold blue light, red warning lights on the tops."
+  },
+  {
+   "id": "K30",
+   "archivo": "K30_Cruce_Suburbios_Mercado",
+   "fase": 1,
+   "salida": "imageassets/referencias/look/mapa-final/K30_Cruce_Suburbios_Mercado.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png",
+    "imageassets/referencias/look/K05_EsquinaBarrio.png",
+    "imageassets/referencias/look/K02_Tianguis.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY, as if it were another screenshot of the same game: thin outlines, painted rendering, blue night with light fog, orange sodium street lights, magenta and turquoise neon, wet ground with reflections, thick cables between utility poles, a worn Mexican cyberpunk megacity. Any other attached images are our existing places: keep them consistent. Our city has only 4 districts inside a tall wall that surrounds it completely; there are no empty lots or gaps between districts: blocks touch each other and the style changes gradually. 16:9, NO HUD, NO interface, no readable text, no letters, no logos: signs and screens show only abstract shapes. Original design, nothing copied from real places. Street-level view at the height of the player (camera about 2 meters high), as it would look in the game. Scene: the corner where Suburbios becomes El Mercado: on one side attached colorful two-story houses with warm orange light, on the other side shops with colorful tarps and stalls starting, the styles mixing gradually along the block."
+  },
+  {
+   "id": "K31",
+   "archivo": "K31_Cruce_NeonAlto_Nova",
+   "fase": 1,
+   "salida": "imageassets/referencias/look/mapa-final/K31_Cruce_NeonAlto_Nova.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png",
+    "imageassets/referencias/look/K03_NeonAlto.png",
+    "imageassets/referencias/look/K06_CalleNova.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY, as if it were another screenshot of the same game: thin outlines, painted rendering, blue night with light fog, orange sodium street lights, magenta and turquoise neon, wet ground with reflections, thick cables between utility poles, a worn Mexican cyberpunk megacity. Any other attached images are our existing places: keep them consistent. Our city has only 4 districts inside a tall wall that surrounds it completely; there are no empty lots or gaps between districts: blocks touch each other and the style changes gradually. 16:9, NO HUD, NO interface, no readable text, no letters, no logos: signs and screens show only abstract shapes. Original design, nothing copied from real places. Street-level view at the height of the player (camera about 2 meters high), as it would look in the game. Scene: the corner where Neon Alto becomes Nova: on one side buildings covered in magenta and turquoise neon and screens, on the other side clean white office towers with cold blue light, the transition gradual across the intersection."
+  },
+  {
+   "id": "K32",
+   "archivo": "K32_Muro_Calle",
+   "fase": 2,
+   "salida": "imageassets/referencias/look/mapa-final/K32_Muro_Calle.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png",
+    "imageassets/modelos-nuevos/nuevos-19nov/MU01_MuroPerimetral_a.png",
+    "imageassets/referencias/look/K05_EsquinaBarrio.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY, as if it were another screenshot of the same game: thin outlines, painted rendering, blue night with light fog, orange sodium street lights, magenta and turquoise neon, wet ground with reflections, thick cables between utility poles, a worn Mexican cyberpunk megacity. Any other attached images are our existing places: keep them consistent. Our city has only 4 districts inside a tall wall that surrounds it completely; there are no empty lots or gaps between districts: blocks touch each other and the style changes gradually. 16:9, NO HUD, NO interface, no readable text, no letters, no logos: signs and screens show only abstract shapes. Original design, nothing copied from real places. Street-level view at the height of the player (camera about 2 meters high), as it would look in the game. Scene: The wall is 8 meters tall, made of concrete panels and metal beams, with thick pipes, amber warning lights, yellow and black hazard stripes and coils of razor wire on top. Behind the wall there is NOTHING: only the night sky, at most a few very distant tiny lights. a neighborhood street that ends against the wall, with houses built right up against the wall (no empty land between the houses and the wall)."
+  },
+  {
+   "id": "K33",
+   "archivo": "K33_Muro_Puerta",
+   "fase": 2,
+   "salida": "imageassets/referencias/look/mapa-final/K33_Muro_Puerta.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png",
+    "imageassets/modelos-nuevos/nuevos-19nov/MU03_PuertaMuro_a.png",
+    "imageassets/modelos-nuevos/nuevos-19nov/MU02_TorreControl_a.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY, as if it were another screenshot of the same game: thin outlines, painted rendering, blue night with light fog, orange sodium street lights, magenta and turquoise neon, wet ground with reflections, thick cables between utility poles, a worn Mexican cyberpunk megacity. Any other attached images are our existing places: keep them consistent. Our city has only 4 districts inside a tall wall that surrounds it completely; there are no empty lots or gaps between districts: blocks touch each other and the style changes gradually. 16:9, NO HUD, NO interface, no readable text, no letters, no logos: signs and screens show only abstract shapes. Original design, nothing copied from real places. Street-level view at the height of the player (camera about 2 meters high), as it would look in the game. Scene: The wall is 8 meters tall, made of concrete panels and metal beams, with thick pipes, amber warning lights, yellow and black hazard stripes and coils of razor wire on top. Behind the wall there is NOTHING: only the night sky, at most a few very distant tiny lights. one of the giant gates of the wall, closed, with a watchtower next to it with a sweeping searchlight, and the street leading straight to it."
+  },
+  {
+   "id": "K34",
+   "archivo": "K34_Muro_Esquina",
+   "fase": 2,
+   "salida": "imageassets/referencias/look/mapa-final/K34_Muro_Esquina.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png",
+    "imageassets/modelos-nuevos/nuevos-19nov/MU02_TorreControl_a.png",
+    "imageassets/modelos-nuevos/nuevos-19nov/MU01_MuroPerimetral_a.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY, as if it were another screenshot of the same game: thin outlines, painted rendering, blue night with light fog, orange sodium street lights, magenta and turquoise neon, wet ground with reflections, thick cables between utility poles, a worn Mexican cyberpunk megacity. Any other attached images are our existing places: keep them consistent. Our city has only 4 districts inside a tall wall that surrounds it completely; there are no empty lots or gaps between districts: blocks touch each other and the style changes gradually. 16:9, NO HUD, NO interface, no readable text, no letters, no logos: signs and screens show only abstract shapes. Original design, nothing copied from real places. Street-level view at the height of the player (camera about 2 meters high), as it would look in the game. Scene: The wall is 8 meters tall, made of concrete panels and metal beams, with thick pipes, amber warning lights, yellow and black hazard stripes and coils of razor wire on top. Behind the wall there is NOTHING: only the night sky, at most a few very distant tiny lights. a corner of the wall where two sections meet at a watchtower, with the city buildings pressed right against the wall on the inside."
+  },
+  {
+   "id": "A20",
+   "archivo": "A20_Suburbios_Aerea",
+   "fase": 3,
+   "salida": "imageassets/referencias/look/mapa-final/A20_Suburbios_Aerea.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png",
+    "imageassets/referencias/look/K08_CalleSuburbios_Cuadra.png",
+    "imageassets/referencias/look/K05_EsquinaBarrio.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY, as if it were another screenshot of the same game: thin outlines, painted rendering, blue night with light fog, orange sodium street lights, magenta and turquoise neon, wet ground with reflections, thick cables between utility poles, a worn Mexican cyberpunk megacity. Any other attached images are our existing places: keep them consistent. Our city has only 4 districts inside a tall wall that surrounds it completely; there are no empty lots or gaps between districts: blocks touch each other and the style changes gradually. 16:9, NO HUD, NO interface, no readable text, no letters, no logos: signs and screens show only abstract shapes. Original design, nothing copied from real places. AERIAL ISOMETRIC view at 45 degrees from about 60 meters high, showing clearly how everything is laid out: streets, blocks, alleys and plazas, with no gaps or empty lots, as a layout guide. No people. Scene: the whole Suburbios district: attached colorful two-story houses in short blocks, narrow alleys, one small plaza, the player's house street with the El Canepa workshop, the clinic and Tino's workshop, warm orange light."
+  },
+  {
+   "id": "A21",
+   "archivo": "A21_Mercado_Aerea",
+   "fase": 3,
+   "salida": "imageassets/referencias/look/mapa-final/A21_Mercado_Aerea.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png",
+    "imageassets/referencias/look/K02_Tianguis.png",
+    "imageassets/referencias/look/K09_Plaza_Barrio.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY, as if it were another screenshot of the same game: thin outlines, painted rendering, blue night with light fog, orange sodium street lights, magenta and turquoise neon, wet ground with reflections, thick cables between utility poles, a worn Mexican cyberpunk megacity. Any other attached images are our existing places: keep them consistent. Our city has only 4 districts inside a tall wall that surrounds it completely; there are no empty lots or gaps between districts: blocks touch each other and the style changes gradually. 16:9, NO HUD, NO interface, no readable text, no letters, no logos: signs and screens show only abstract shapes. Original design, nothing copied from real places. AERIAL ISOMETRIC view at 45 degrees from about 60 meters high, showing clearly how everything is laid out: streets, blocks, alleys and plazas, with no gaps or empty lots, as a layout guide. No people. Scene: the whole El Mercado district: the closed tianguis street with rows of colorful tarp stalls, the market plaza with its kiosk, the gun market street, the corner shop, shops with tarps on every block."
+  },
+  {
+   "id": "A22",
+   "archivo": "A22_NeonAlto_Aerea",
+   "fase": 3,
+   "salida": "imageassets/referencias/look/mapa-final/A22_NeonAlto_Aerea.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png",
+    "imageassets/referencias/look/K03_NeonAlto.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY, as if it were another screenshot of the same game: thin outlines, painted rendering, blue night with light fog, orange sodium street lights, magenta and turquoise neon, wet ground with reflections, thick cables between utility poles, a worn Mexican cyberpunk megacity. Any other attached images are our existing places: keep them consistent. Our city has only 4 districts inside a tall wall that surrounds it completely; there are no empty lots or gaps between districts: blocks touch each other and the style changes gradually. 16:9, NO HUD, NO interface, no readable text, no letters, no logos: signs and screens show only abstract shapes. Original design, nothing copied from real places. AERIAL ISOMETRIC view at 45 degrees from about 60 meters high, showing clearly how everything is laid out: streets, blocks, alleys and plazas, with no gaps or empty lots, as a layout guide. No people. Scene: the whole Neon Alto district: buildings of 4 to 6 floors in dense blocks, rooftops with neon signs and screens, the casino on a corner intersection, the hotel, magenta and turquoise light everywhere."
+  },
+  {
+   "id": "A23",
+   "archivo": "A23_Nova_Aerea",
+   "fase": 3,
+   "salida": "imageassets/referencias/look/mapa-final/A23_Nova_Aerea.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png",
+    "imageassets/referencias/look/K06_CalleNova.png",
+    "imageassets/referencias/look/K07_PuenteNova.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY, as if it were another screenshot of the same game: thin outlines, painted rendering, blue night with light fog, orange sodium street lights, magenta and turquoise neon, wet ground with reflections, thick cables between utility poles, a worn Mexican cyberpunk megacity. Any other attached images are our existing places: keep them consistent. Our city has only 4 districts inside a tall wall that surrounds it completely; there are no empty lots or gaps between districts: blocks touch each other and the style changes gradually. 16:9, NO HUD, NO interface, no readable text, no letters, no logos: signs and screens show only abstract shapes. Original design, nothing copied from real places. AERIAL ISOMETRIC view at 45 degrees from about 60 meters high, showing clearly how everything is laid out: streets, blocks, alleys and plazas, with no gaps or empty lots, as a layout guide. No people. Scene: the whole Nova district: clean white office towers on wide streets, the huge Nova tower in a plaza, the refinery with tanks and pipes in one corner of the district, cold white and blue light."
+  },
+  {
+   "id": "A24",
+   "archivo": "A24_Muro_Aerea",
+   "fase": 3,
+   "salida": "imageassets/referencias/look/mapa-final/A24_Muro_Aerea.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png",
+    "imageassets/modelos-nuevos/nuevos-19nov/MU01_MuroPerimetral_a.png",
+    "imageassets/modelos-nuevos/nuevos-19nov/MU02_TorreControl_a.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY, as if it were another screenshot of the same game: thin outlines, painted rendering, blue night with light fog, orange sodium street lights, magenta and turquoise neon, wet ground with reflections, thick cables between utility poles, a worn Mexican cyberpunk megacity. Any other attached images are our existing places: keep them consistent. Our city has only 4 districts inside a tall wall that surrounds it completely; there are no empty lots or gaps between districts: blocks touch each other and the style changes gradually. 16:9, NO HUD, NO interface, no readable text, no letters, no logos: signs and screens show only abstract shapes. Original design, nothing copied from real places. AERIAL ISOMETRIC view at 45 degrees from about 60 meters high, showing clearly how everything is laid out: streets, blocks, alleys and plazas, with no gaps or empty lots, as a layout guide. No people. Scene: The wall is 8 meters tall, made of concrete panels and metal beams, with thick pipes, amber warning lights, yellow and black hazard stripes and coils of razor wire on top. Behind the wall there is NOTHING: only the night sky, at most a few very distant tiny lights. a section of the edge of the city: the dense blocks of the city pressed right against the inside of the wall, a watchtower on the wall, and on the outside of the wall absolutely nothing, only darkness."
+  },
+  {
+   "id": "M13",
+   "archivo": "M13_MapaFinal",
+   "fase": 4,
+   "salida": "imageassets/referencias/look/mapa-final/M13_MapaFinal.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png",
+    "imageassets/referencias/look/M11_MapaCiudad.png",
+    "imageassets/referencias/look/M10_MapaCiudad.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the FIRST attached image for the art style and color mood of our game, and the other images (our previous city maps) for the illustrated top-down map style. Our city has only 4 districts inside a tall wall that surrounds it completely; there are no empty lots or gaps between districts: blocks touch each other and the style changes gradually. Draw the final full-screen city map seen from directly above, like the pause-menu map of an open-world game, at night colors. Layout: NOVA top-left (cold blue, white towers, the big tower and a small refinery), NEÓN ALTO top-right (magenta, dense tall buildings and the casino), SUBURBIOS bottom-left (warm orange, small attached houses), EL MERCADO bottom-right (yellow, the tianguis street and a plaza). Short blocks touching each other everywhere with no gaps, streets, alleys and a few plazas. A thick wall surrounds the whole city with 6 gates spread along it and watchtowers at the four corners. OUTSIDE the wall there is nothing: plain dark. The ONLY text on the map, in thin capital letters for the districts and small thin labels with small round icons for the places, spelled exactly: \"NOVA\", \"NEÓN ALTO\", \"SUBURBIOS\", \"EL MERCADO\", \"Casa\", \"Doc\", \"Tino\", \"El Canepa\", \"Tianguis\", \"Mercado de armas\", \"Casino VivaCoin\", \"Torre Nova\". Casa, Doc, Tino and El Canepa are close to each other inside Suburbios (El Canepa across the street from Casa). No legend, no compass text, no other words."
+  }
+ ]
+}

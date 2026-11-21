@@ -759,3 +759,82 @@ Los NPC (NP01-NP14), la mesera robot R01 (65 huesos mixamorig) y el hacker usan 
 - B) NPCs: npc_clips\ (17 clips).
 - Los clips son hechos por codigo (generador de caminado con IK y animacion por poses con retraso de brazos/cabeza). Revisar en juego: velocidades del Animator deben coincidir con las de las tablas para que los pies no patinen.
 
+
+## 20-nov — Revisión con Tony (solo diagnóstico)
+- Todo está en `imageassets/blender/_REVISION_TONY/`: `REVISION.md`, `revision_PJ01_animaciones.blend` (colección REV_PJ01), `revision_personajes.blend` (44 personajes en REV_<código>), `revision_vehiculos.blend` (50 vehículos en REV_<código>) y `capturas/` (177 hojas).
+- No se modificó ningún FBX ni animación del juego. Los arreglos técnicos quedaron propuestos con su número exacto en REVISION.md.
+- Hallazgos principales:
+  - Trote y Sprint nuevos con cadera hundida, torso derecho y manos altas; el Loco_Correr viejo se ve más natural.
+  - Alturas: Doc y Tino miden 1.96 m, GuardiaNova 2.46 m y los NPC entre 1.51 y 1.59 m; los robots siguen sin la escala real.
+  - E16_b usa Override_Guardias.
+  - Siguen 95 carros viejos de una sola malla en las escenas.
+  - PA01, PA02 y V22 tienen las ventanas tapadas.
+  - V16 a V19 están sobredimensionados.
+  - El salto Aire "pedalea" y no hay salto corriendo.
+- Herramientas nuevas: `_herramientas/rev20.py` (personajes y clips) y `rev20v.py` (vehículos).
+
+## 20-nov (tarde) — Revisión con Tony: trote
+- Tony eligió el correr viejo. `PJ01_Trote.fbx` (pj01_clips y Unity Assets/Arte/Personajes/PJ01/Clips) ahora es `Loco_Correr` reajustado de 22 a 21 frames (misma pose, 4.53 m/s, toma "Trote").
+- En el .meta de Unity se movieron los eventos AlPasoPJ01: pie izquierdo de 0.005 a 0.381 y pie derecho de 0.5 a 0.857, para que coincidan con las pisadas del clip viejo.
+- Respaldos del trote nuevo en `_REVISION_TONY/respaldos/`.
+
+## 20-nov (tarde) — Revisión con Tony: caminar y correr rápido
+- `PJ01_Caminar.fbx` (pj01_clips y Unity) ahora es `Loco_Caminar` viejo con los hombros abiertos 10° (acción `Caminar_BrazosAbiertos`), aprobado por Tony.
+- En el .meta: lastFrame cambió de 31 a 32 y los eventos AlPasoPJ01 pasaron de 0.005/0.5 a 0.29 (pie izquierdo) y 0.806 (pie derecho). Respaldos en `_REVISION_TONY/respaldos/`.
+- Tony aprobó `K_CorrerRapido` (Loco_Correr con zancada larga "sin gravedad": vuelo ×2, 2.8 m por zancada, +22 cm, 6.25 m/s) para la velocidad rápida. Todavía no se exporta.
+- Plan de Tony: WASD = caminar, Shift = sprint con Loco_Correr, velocidad rápida = K_CorrerRapido. Falta cambiar en Unity las velocidades (DatosPersonaje y ReglasAnimacion) y los slots del Override_Jugador.
+
+## 2026-11-20 — PJ01 Idle: pies derechos (aprobado por Tony)
+- Loco_Idle: solo se giraron los pies sobre el tobillo hacia adentro (izq 22°, der 33°), punta a la misma altura; piernas, ancho, cadera y torso sin cambio.
+- Accion en Blender: Idle_PiesNaturales. Exportado como PJ01_Loco_Idle.fbx en pj01_clips y en Assets/Arte/Personajes/PJ01/Clips (meta sin cambios, 1-301).
+- Respaldo del original: _REVISION_TONY/respaldos/PJ01_Loco_Idle_ORIGINAL_*.
+
+## 2026-11-20 — PJ01 Salto estático "Callejero" (aprobado por Tony)
+- Nuevo salto armado del Loco_Salto* viejo: empieza y termina en el idle nuevo (pies fijos), agachada de 3 frames, cima sin pedalear, 14 frames de aire.
+- Acción J_Callejero (31 f) partida en JC_Salto_Despegue (1-8), JC_Salto_Aire (8-17) y JC_Salto_Aterrizaje (18-31).
+- Exportados encima de PJ01_Salto_Despegue/Aire/Aterrizaje.fbx (pj01_clips y Unity). Metas: lastFrame 8 / 10 / 14; Salto_Aire loopTime 1→0 (sostiene la bajada).
+- Respaldo de los K_ anteriores: _REVISION_TONY/respaldos/PJ01_Salto_*_K_*.
+- FALTA en Unity: velocidades del Animator (SaltoInicio 2.5→1, SaltoAterrizaje 2→1) y retrasar el impulso 3 frames (0.1 s).
+
+## 2026-11-20 — PJ01 Salto corriendo, rodada y tres puntos (aprobados por Tony)
+- J_Corriendo (31 f): despega con el pie derecho tras bajar la cadera, rodilla izq. arriba y brazos al frente; cae con el izq. y sigue corriendo.
+  Partido en PJ01_Salto_Correr_Despegue (1-8), _Aire (8-17) y _Aterrizaje (18-31).
+- J_CorriendoRodada: aterrizaje con rodada que termina corriendo -> PJ01_Salto_Correr_Rodada (58 f).
+- J_TresPuntos (23 f): cae en tres puntos, pose corta, se para directo al idle nuevo -> reemplaza PJ01_Aterrizaje_Fuerte (45->23 f). Respaldo: respaldos/PJ01_Aterrizaje_Fuerte_K_*.
+- Los 4 Salto_Correr_* son nuevos: copiados a Assets/Arte/Personajes/PJ01/Clips con .meta clonado de PJ01_Salto_Despegue (Humanoid, avatar PJ01, guid nuevo). Falta conectarlos en el Animator.
+
+## 2026-11-20 — Robots Nova
+- Arreglo técnico: Visual_E16_RobotPesadoNova_b usaba Override_Guardias; ahora usa Override_E16 (cañón, escudo, giros y golpe con escudo). Respaldo: respaldos/Visual_E16_RobotPesadoNova_b_ANTES.prefab.
+- Corregido: los .meta que edité hoy quedaron con saltos de línea CRLF; regresados a LF como el resto del proyecto.
+- Caminar lateral de los Nova: propuesta en revisión (A actual / B G_ApuntarDer / C torso al frente).
+- E16_a: torreta del antebrazo derecho girada ~31° respecto al brazo (defecto del modelo). Separada por color (caja azul marino + collar + 2 cañones, 1384 vértices) y girada rígida sobre su centro; borde de unión suavizado en 2 anillos. Huesos, pesos, UV y material sin cambio (verificado reimportando).
+  Reemplaza Assets/Arte/Personajes/E16_RobotPesadoNova/E16_RobotPesadoNova_a.fbx y imageassets/blender/personajes/E16_RobotPesadoNova_a.fbx. Respaldo: respaldos/E16_RobotPesadoNova_a_ANTES_*.fbx. El E16_b (gatling) está bien.
+- ClipsNpcNovaT1506.cs: agregada la fila E16_RobotPesadoNova_b -> Override E16 para que el menú T-1506/2 no le quite el override. Respaldo en respaldos/.
+- Caminar lateral Nova: Tony aprueba el actual (A). E15/E18 apuntando: piernas del actual + brazos de G_Apuntar (a dos manos), pendiente de aplicar. E16 NO camina apuntando: se detiene, apunta con el brazo del cañón y dispara.
+- Ojo: ConductaGuardiaPesado (la IA del E16) hoy no dispara el cañón; solo empujón y mazazo con el escudo. E16_Disparar_Canon existe pero nadie lo usa.
+- Tony: E16 y E18 (robots grandes y el azul) NO caminan al disparar: se detienen, apuntan y disparan. Sus caminatas se revisan después.
+- PJ01 caminar lateral apuntando: prototipo S_LatDer_Pistola / S_LatIzq_Pistola = Loco_CaminarDer/Izq exacto + brazos de Pistola_Apuntar (orientación de mundo, el arma apunta al frente). Hoy el juego usa PJ01_CaminarApuntando_Derecha/Izquierda (= G_ApuntarDer/Izq).
+- PJ01 caminar de lado apuntando (derecha) APROBADO: S_LatDer_Pistola = Loco_CaminarDer exacto + brazos con pistola (agarre de G_ApuntarDer, codo izq. fijo hacia afuera/abajo). Exportado sobre PJ01_CaminarApuntando_Derecha.fbx (pj01_clips y Unity), meta lastFrame 23->32, loop igual. Respaldo: respaldos/PJ01_CaminarApuntando_Derecha_ANTES_*. Versión izquierda descartada por Tony; el juego conserva PJ01_CaminarApuntando_Izquierda actual.
+- Robots, revisión de locomoción: E16_Caminar aprobado ("perfecto"). Nuevo prototipo S_E16_CaminarEscudo (E16_Caminar + brazo izq. con el escudo al frente). E15 (blanco): le gustan sus clips E15_Caminar/E15_Correr; prototipo con el arma W10_ArmaNova en las manos. E18 (azul): necesita animaciones propias, pendiente.
+- E18 (azul): Tony decide que camina pesado como el E16 (usa E16_Caminar) y NO lleva arma; ataca con la mano tipo repulsor (Iron Man). Prototipo E18ret_S_E18_Repulsor (40 f): levanta el brazo der. recto al frente con la palma abierta (f1-7), carga (f8-14), disparo con retroceso (f15-21), baja (f26-40).
+- E18: caminar más ligero (E18_CaminarLigero: E16_Caminar a 36 f en vez de 45, rebote de cadera al 55 %, pies fijos con IK, hombros abiertos 4° y brazos 14°). Repulsor corregido: la muñeca completa se orienta (palma al frente, dedos arriba, pulgar hacia adentro) y el antebrazo hace la pronación (~34°), no solo la mano.
+- E18 (azul) CAMBIO de Tony: descartados el caminar pesado y el repulsor. Sin arma; vuela (jetpack) y busca pelear cuerpo a cuerpo. Locomoción atlética humanoide: propuesta = Caminar_BrazosAbiertos (PJ01_Caminar actual), Trote_LocoCorrer (PJ01_Trote actual) y puños de PJ01.
+- E18_a: ARREGLO TÉCNICO de rig: la mochila/jetpack (3949 vértices) tenía pesos en hombros, brazos y piernas y se deformaba al caminar. Ahora va 100 % a Spine2 (rígida con la espalda). Exportado sobre Assets/Arte/Personajes/E18_EliteNova/E18_EliteNova_a.fbx y personajes/E18_EliteNova_a.fbx (huesos, vértices y UV iguales, verificado). Respaldo respaldos/E18_EliteNova_a_ANTES_*.
+- E18: los brazos atraviesan el cuerpo (es más ancho que PJ01). Prototipo con brazos abiertos 14° (E18_*_Hombros). En Unity: ampliar en el Avatar del E18 el rango "Arm Down-Up" para que todas sus animaciones lleven los brazos más abiertos.
+- E18_a: ARREGLO DE RIG en los brazos: los huesos del brazo estaban ~6-7 cm detrás del centro de la malla (y +0.03 en vez de -0.04) y el codo 2.6 cm alto; el codo giraba en el borde trasero del brazo y la armadura se metía al doblar. Hombro, codo, muñeca y mano (con dedos) movidos al centro de la malla; pesos y malla sin cambio. Con el codo a ~55° las partes que se atraviesan bajan ~55 %. Incluye el arreglo de la mochila. Exportado sobre Assets/Arte/Personajes/E18_EliteNova/E18_EliteNova_a.fbx y personajes/. Respaldo del original: respaldos/E18_EliteNova_a_ANTES_*.
+- Vehículos: Tony aprueba ruedas y puertas de V12, V20, V24, V13, V15, V14, V21, V03, V06, PA01, PA02, V22, V19, V16, V17, V18. V10 y V11 tenían ruedas gigantes (1.09 y 1.17 m de diámetro): en la revisión se redujeron a 0.86 y 0.90 m (×0.793 y ×0.769) y se bajó la carrocería 11 y 13.5 cm. Pendiente pasarlo a sus FBX/prefabs.
+- V10 y V11: Tony decide DESCARTARLOS (los eliminó él). No se usan más; revisar en Unity que ninguna escena/spawner los pida.
+
+## 2026-11-20 — Vehículos (aprobado por Tony: todo menos destapar vidrios)
+- Puertas que chocaban: recortado el hueco en la carrocería (caras detrás de la puerta que chocaban al abrir 5-70°) en V01a, V01b, V02, V04, V05, V09, V23. Choque restante 6-34 caras (solo en la bisagra). Piezas/Vxx/Vxx.fbx.
+- Cofre + motor nuevos (cc_veh.cut_hood2) en PA01, PA02 y V22. Piezas/Vxx/Vxx.fbx ahora traen "Cofre" (pivote en la bisagra) y "Motor".
+- Vidrios: todos tapados. CristalCarro.mat pasó de transparente (alfa 0.35) a opaco oscuro (0.05,0.07,0.09). Lo usan los 27 prefabs de carros y patrullas.
+- Tamaños: escala de la raíz del prefab Carro_V19 0.78, V16 0.70, V17 0.80, V18 0.70.
+- Rotores: pivote centrado (XY local) en DR01, DR02_a/b, DR03_a, DR04_a, E13, NV01 (Drones/xx/xx.fbx). Corrección 0.2-7.5 cm.
+- Respaldos: _REVISION_TONY/respaldos/vehiculos/. Vista previa: _REVISION_TONY/revision_vehiculos_arreglados.blend.
+- CORRECCIÓN: Tony no quería tapar los vidrios; CristalCarro.mat regresado al original (transparente). Los vidrios quedan como venían en cada modelo.
+- V01a, V01b, V05: Tony pide los modelos ORIGINALES completos (V01a_CarroViejito, V01b_CarroPro, V05/V05.fbx), sin abrir puertas, vidrios ni cofre. Piezas/V01a|V01b|V05.fbx regresados a como estaban antes del recorte de hoy. En revision_vehiculos_arreglados.blend se muestran los originales (escala ~4.5 al largo de la versión por piezas).
+
+- 2026-11-20: Tony aprobó E16 caminar con escudo. Exportado Assets/Arte/Personajes/PJ01/Clips/E16_CaminarEscudo.fbx (45 frames, loop) + copia en nova_clips.
+
+- 2026-11-20: E18 aprobado por Tony. Brazos ya no atraviesan el torso (brazos más abiertos + antebrazos ajustados), golpe con puños cerrados. Exportados en Assets/Arte/Personajes/PJ01/Clips/: E18_Caminar.fbx (32f), E18_Correr.fbx (21f), E18_Golpe_Der.fbx (49f) + copias en nova_clips.
