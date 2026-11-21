@@ -313,6 +313,8 @@ namespace MechaCyberpunk.IA.APie
             }
             if (salida.EmpezoClip && p.Visual != null)
             {
+                // El estado PistolaDisparo del controlador solo se entra con TipoArma = Pistola (Any State con trigger Disparar + TipoArma 1): sin esto E16_Disparar_Canon no juega.
+                p.Visual.TipoArma = TipoArmaVisual.Pistola;
                 p.Visual.Disparar();
             }
             if (salida.Disparo)

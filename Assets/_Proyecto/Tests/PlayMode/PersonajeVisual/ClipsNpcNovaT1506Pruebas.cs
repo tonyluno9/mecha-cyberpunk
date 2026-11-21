@@ -134,7 +134,7 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
             yield return Hasta(() => Reproduce(e16.Animador, 0, "E16_Caminar"), "E16_Caminar sin escudo");
             Assert.IsFalse(Reproduce(e16.Animador, 0, "E16_CaminarEscudo"));
             e16.EscudoArriba = true;
-            yield return Hasta(() => Reproduce(e16.Animador, 0, "E16_CaminarEscudo"), "E16_CaminarEscudo con el escudo arriba");
+            yield return Hasta(() => e16.PesoEscudo >= 0.99f && Reproduce(e16.Animador, 0, "E16_CaminarEscudo"), "E16_CaminarEscudo con el escudo arriba");
             Assert.AreEqual(1f, e16.PesoEscudo, 0.01f);
             e16.EscudoArriba = false;
             yield return Hasta(() => e16.PesoEscudo < 0.01f && !Reproduce(e16.Animador, 0, "E16_CaminarEscudo"), "vuelve a E16_Caminar");
