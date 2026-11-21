@@ -63,8 +63,8 @@ namespace MechaCyberpunk.Arte.Editor
         public const float CuadroTelefonoEnOreja = 195f;
         /// <summary>T-964: función del evento (la recibe ReceptorEventosArma en Personaje.Visual).</summary>
         public const string FuncionTelefonoEnOreja = "AlTelefonoEnOreja";
-        // T-1505: locomoción, escaleras y salto en el aire de Blender (el último cuadro es el primero: bucle perfecto).
-        public static readonly string[] ConBucle = { "Caminar", "Trote", "Sprint", "Trote_Izquierda", "Trote_Derecha", "Trote_Atras", "Escaleras_Subir", "Escaleras_Bajar", "Salto_Aire", "Carro_Manejar", "Moto_Manejar", "Inter_VerTelefono", "Escalera_Subir", "Escalera_Bajar", "CoberturaRifle_Idle" };
+        // T-1505: locomoción, escaleras y salto en el aire de Blender (el último cuadro es el primero: bucle perfecto). Decisión de Tony 20-nov (T-1550): PJ01_Salto_Aire ya no es ciclo y PJ01_CorrerRapido sí.
+        public static readonly string[] ConBucle = { "Caminar", "Trote", "Sprint", "CorrerRapido", "Trote_Izquierda", "Trote_Derecha", "Trote_Atras", "Escaleras_Subir", "Escaleras_Bajar", "Carro_Manejar", "Moto_Manejar", "Inter_VerTelefono", "Escalera_Subir", "Escalera_Bajar", "CoberturaRifle_Idle" };
 
         /// <summary>T-1505: evento de pisada (lo recibe ReceptorPasosPJ01 en Personaje.Visual; la prueba EditMode compara el nombre con ReglaPasosAnimados.FuncionPaso).</summary>
         public const string FuncionPasoPJ01 = "AlPasoPJ01";
