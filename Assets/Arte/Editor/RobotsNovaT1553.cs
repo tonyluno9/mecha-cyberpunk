@@ -337,7 +337,7 @@ namespace MechaCyberpunk.Arte.Editor
                 var imp = AssetImporter.GetAtPath(ruta) as ModelImporter;
                 if (imp == null)
                 {
-                    sb.AppendLine("  " + nombre + ": NO ESTÁ en " + ruta + (File.Exists(ImportadorClipsPJ01.Carpeta + nombre + ".fbx") ? " (sigue en PJ01/Clips)" : ""));
+                    sb.AppendLine("  " + nombre + ": NO ESTÁ en " + ruta + (File.Exists("Assets/Arte/Personajes/PJ01/Clips/" + nombre + ".fbx") ? " (sigue en PJ01/Clips)" : ""));
                     continue;
                 }
                 Avatar avatar = AssetDatabase.LoadAllAssetsAtPath(ruta).OfType<Avatar>().FirstOrDefault();
