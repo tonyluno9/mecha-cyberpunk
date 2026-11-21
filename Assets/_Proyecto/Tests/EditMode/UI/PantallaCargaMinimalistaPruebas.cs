@@ -29,6 +29,19 @@ namespace MechaCyberpunk.Tests.UI
         }
 
         [Test]
+        public void EnPantalla_16a9y16a10_Llena_4a3y5a4_ConBordesNegros()
+        {
+            Vector2 a = ReglaFotosCarga.TamanoEnPantalla(1376f, 768f, 1920f, 1080f);
+            Assert.GreaterOrEqual(a.x, 1920f - 1e-3f); Assert.GreaterOrEqual(a.y, 1080f - 1e-3f);
+            Vector2 b = ReglaFotosCarga.TamanoEnPantalla(1376f, 768f, 1728f, 1080f);
+            Assert.GreaterOrEqual(b.x, 1728f - 1e-3f); Assert.GreaterOrEqual(b.y, 1080f - 1e-3f);
+            Vector2 c = ReglaFotosCarga.TamanoEnPantalla(1376f, 768f, 1350f, 1080f);
+            Assert.AreEqual(1350f, c.x, 1e-3f, "4:3: entera por el ancho");
+            Assert.Less(c.y, 1080f, "con bordes negros arriba y abajo");
+            Assert.AreEqual(1376f / 768f, c.x / c.y, 1e-3f, "sin deformar");
+        }
+
+        [Test]
         public void Fotos_SeImportanSinEscalarAPotenciaDe2_NiMipmaps_NiCompresion([Values("L01_Carga_Protagonista", "L03_Carga_Doc", "L06_Carga_Techos")] string nombre)
         {
             var imp = (TextureImporter)AssetImporter.GetAtPath(Carpeta + nombre + ".png");

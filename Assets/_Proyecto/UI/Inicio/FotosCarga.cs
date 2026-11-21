@@ -80,11 +80,11 @@ namespace MechaCyberpunk.UI.Inicio
             capa.color = new Color(1f, 1f, 1f, alfa);
             RectTransform r = capa.rectTransform;
             // Carga minimalista (Tony): llena la pantalla real (el rect del canvas, no 1920x1080 fijo) conservando la proporción y
-            // recortando lo mínimo. La proporción sale del tamaño de la textura, que se importa sin escalar a potencia de 2.
+            // recortando lo mínimo (o con bordes negros si habría que recortar más de ReglaFotosCarga.RecorteMaximo). La proporción sale del tamaño de la textura, que se importa sin escalar a potencia de 2.
             Rect pantalla = ((RectTransform)transform).rect;
             float anchoPantalla = pantalla.width > 1f ? pantalla.width : AnchoPantalla;
             float altoPantalla = pantalla.height > 1f ? pantalla.height : AltoPantalla;
-            Vector2 tamano = ReglaFotosCarga.TamanoCubierto(fotos[indice].width, fotos[indice].height, anchoPantalla, altoPantalla);
+            Vector2 tamano = ReglaFotosCarga.TamanoEnPantalla(fotos[indice].width, fotos[indice].height, anchoPantalla, altoPantalla);
             UIInicio.Punto(r, new Vector2(0.5f, 0.5f), ReglaFotosCarga.Paneo(indice, t), tamano);
             float escala = ReglaFotosCarga.Escala(t);
             r.localScale = new Vector3(escala, escala, 1f);
