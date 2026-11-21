@@ -42,6 +42,11 @@ namespace MechaCyberpunk.Personaje.Visual
         }
 
         public bool EsRobot { get; private set; }
+
+        private string nombreVariante;
+
+        /// <summary>T-1533: el nombre del visual que se ve ahora (Visual_NP12_Abuela_a, el de la persona o "robot"); decide la voz de dolor.</summary>
+        public string NombreVisual => EsRobot ? "robot" : (VarianteElegida != null ? nombreVariante : (persona != null ? persona.name : string.Empty));
         public GameObject Persona => persona;
         public GameObject Robot => robot;
         public float ProbabilidadRobot => probabilidadRobot;
@@ -117,6 +122,7 @@ namespace MechaCyberpunk.Personaje.Visual
 
         private void CrearVariante(GameObject visual)
         {
+            nombreVariante = visual.name;
             VarianteElegida = Instantiate(visual, transform);
             VarianteElegida.name = "VisualVariante";
             if (persona != null) { persona.SetActive(false); }

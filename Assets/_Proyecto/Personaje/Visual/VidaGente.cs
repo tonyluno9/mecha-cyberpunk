@@ -73,6 +73,7 @@ namespace MechaCyberpunk.Personaje.Visual
             }
             float antes = vida;
             vida = Mathf.Max(0f, vida - info.Cantidad);
+            Sonidos.ReproducirEn(ReglaSonidoNpc.IdDolor(name, GetInstanceID()), transform.position + Vector3.up); // T-1533: NPC_H_DOLOR o NPC_M_DOLOR
             bool mato = vida <= 0f;
             if (mato)
             {

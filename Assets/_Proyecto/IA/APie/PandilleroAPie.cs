@@ -50,6 +50,7 @@ namespace MechaCyberpunk.IA.APie
         // T-1106: ganchos de conducta y filtro de daño
         private IConductaAPie conducta;
         private IFiltroDanioAPie filtroDanio;
+        private SonidosEnemigoAPie sonidoNova; // T-1533: null si no es de Nova
         private bool castigableExtra;
         [Tooltip("Pandilla de este pandillero si no tiene Grupo (T-1106). Ninguna = sin pandilla.")]
         [SerializeField] private IdPandilla pandillaPropia = IdPandilla.Ninguna;
@@ -185,7 +186,7 @@ namespace MechaCyberpunk.IA.APie
                 }
                 if (value && !alerta)
                 {
-                    Sonidos.ReproducirEn(VozPandillero("PAN_RIVAL_ALERTA"), transform.position);
+                    GritarPandillero("PAN_RIVAL_ALERTA");
                     // T-624: se burla al verte (Skull_Burla; el jefe, Jefe_Burla).
                     if (visual != null)
                     {
@@ -324,6 +325,7 @@ namespace MechaCyberpunk.IA.APie
                 conducta = gameObject.AddComponent<ConductaPerroNova>(); // T-1494: el perro robot de Nova patrulla, te detecta y muerde
             }
             filtroDanio = GetComponent<IFiltroDanioAPie>();
+            sonidoNova = SonidosEnemigoAPie.Preparar(this); // T-1533: pasos, servos, escudo, jetpack y muerte de Nova y los robots
         }
 
         /// <summary>T-1494: el paso de patrulla (m/s) alrededor de su punto, para las conductas que lo reusan.</summary>
@@ -1124,7 +1126,7 @@ namespace MechaCyberpunk.IA.APie
                 cargaGolpeo = true;
                 Vector3 puntoCarga = posicionJugador + Vector3.up * AlturaCentroImpacto;
                 recibeJugador.RecibirDanio(new InfoDanio(datos.DanioCarga, TipoDanio.Golpe, puntoCarga, direccionCarga, null));
-                Sonidos.ReproducirEn(VozPandillero("PAN_RIVAL_ALERTA"), transform.position);
+                GritarPandillero("PAN_RIVAL_ALERTA");
             }
             MostrarBrillo(reglaJefe.ProgresoAviso, reglaJefe.Actual == ReglaJefeNova.Fase.TelegrafiaCarga);
             velocidadVertical = controlador.isGrounded ? -1f : velocidadVertical + Gravedad * Time.deltaTime;
@@ -1145,7 +1147,7 @@ namespace MechaCyberpunk.IA.APie
             {
                 visual.Golpear(true);
             }
-            Sonidos.ReproducirEn(VozPandillero("PAN_RIVAL_ALERTA"), transform.position);
+            GritarPandillero("PAN_RIVAL_ALERTA");
             if (!EsAtacable())
             {
                 return;
@@ -1688,6 +1690,16 @@ namespace MechaCyberpunk.IA.APie
 
         private string VozPandillero(string id) => EtiquetaVoz.De(id, Voz);
 
+        // T-1533: un robot de Nova no grita con voz humana (su voz y su muerte suenan por SonidosEnemigoAPie).
+        private void GritarPandillero(string id)
+        {
+            if (sonidoNova != null && sonidoNova.EsRobot)
+            {
+                return;
+            }
+            Sonidos.ReproducirEn(VozPandillero(id), transform.position);
+        }
+
         /// <summary>T-746: cuántos cuerpos caídos se quedan tirados a la vez; al pasar el tope se retira el más viejo (de preferencia fuera de cámara).</summary>
         public const int MaximoCuerpos = 12;
 
@@ -1758,7 +1770,7 @@ namespace MechaCyberpunk.IA.APie
             PonerBrazo(0f);
             PintarBrazo(datos.ColorKO);
             pintadoAviso = false;
-            Sonidos.ReproducirEn(VozPandillero("PAN_RIVAL_CAE"), transform.position);
+            GritarPandillero("PAN_RIVAL_CAE");
             KO?.Invoke();
             Vencido?.Invoke(this);
             // T-686: suelta su dinero y su arma (el jefe, una escopeta); el jugador los recoge.

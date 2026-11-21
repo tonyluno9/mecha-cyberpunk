@@ -74,7 +74,7 @@ namespace MechaCyberpunk.Progresion
         {
             if (nivel > nivelAnterior)
             {
-                Sonidos.Reproducir("CAL_SUBE_NIVEL");
+                Sonidos.Reproducir("POL_ESTRELLA_SUBE"); // T-1533: antes CAL_SUBE_NIVEL (sigue como alias)
             }
             else if (nivel < nivelAnterior)
             {

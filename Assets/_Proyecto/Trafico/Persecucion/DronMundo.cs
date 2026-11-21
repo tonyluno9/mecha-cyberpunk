@@ -23,7 +23,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
 
         private const float AlturaPecho = 1.2f;
         // T-710: trazo de la bala (hilo finísimo y cortísimo, como el del pandillero) y silbido de la bala que pasa cerca.
-        public const string IdDisparo = "ARM_PIS_DISPARO";
+        public const string IdDisparo = "DRN_PES_AMETRALLADORA"; // T-1533: un tiro de la ametralladora; cada disparo suena como una ráfaga (ReglaRafagaDron)
         public const string IdRoce = "ARM_BALA_ROZA";
         public const string IdZumbido = "IMP_BALA_ZUMBIDO";
         private const float BajoElDron = 0.2f;
@@ -32,6 +32,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
         private Color[] coloresLuces;
         private float proximoTiro;
         private float finAviso = -1f;
+        private readonly ReglaRafagaDron rafaga = new ReglaRafagaDron(); // T-1533
         private CalculoPersecucion calculo;
         private ConfigPersecucion config;
         private Func<Vector3?> posicionJugador;
@@ -246,6 +247,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
             PonerLuces(false);
             velocidadCaida = 0f;
             segundosCayendo = 0f;
+            Sonidos.ReproducirEn(IdCaida, transform.position); // T-1533: nave dañada, cae
             Derribado?.Invoke(this);
         }
 
@@ -336,6 +338,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
             Vector3 direccion = (pecho - origen).normalized;
             EventosRuido.PublicarDisparo(origen);
             Sonidos.ReproducirEn(IdDisparo, origen);
+            rafaga.Iniciar(Time.time);
             bool acierta = Azar() <= Acierto;
             // T-421: si el jugador está agachado tras una cubierta, la bala pega en ella y no le llega.
             if (acierta && objetivo is IProtegeDeBalas protegido && protegido.ProtegeDe(origen, out Vector3 puntoCubierta))
@@ -438,9 +441,31 @@ namespace MechaCyberpunk.Trafico.Persecucion
 
         private const float RetiroAlcanceCamara = 400f;
 
+        /// <summary>T-1533: IDs del dron dañado que cae (la nave policial dañada).</summary>
+        public const string IdCaida = "NAV_DANIADA";
+
+        // T-1533: los tiros que faltan de la ráfaga; si el dron cae, se cortan.
+        private void SonarRafaga()
+        {
+            if (rafaga.Restantes <= 0)
+            {
+                return;
+            }
+            if (EstaCayendo)
+            {
+                rafaga.Cancelar();
+                return;
+            }
+            if (rafaga.Avanzar(Time.time))
+            {
+                Sonidos.ReproducirEn(IdDisparo, transform.position + Vector3.down * BajoElDron);
+            }
+        }
+
         private void Update()
         {
             MantenerMotor(); // T-1309b
+            SonarRafaga();
             Vector3? jugador = posicionJugador?.Invoke();
             if (calculo == null)
             {

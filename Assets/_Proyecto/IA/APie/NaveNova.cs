@@ -1,4 +1,5 @@
 using System;
+using MechaCyberpunk.Core;
 using UnityEngine;
 
 namespace MechaCyberpunk.IA.APie
@@ -31,6 +32,29 @@ namespace MechaCyberpunk.IA.APie
         private float proximaSuelta;
         private float velocidadSalida;
         private Vector3 baseFlote;
+        private int bucleRotores = Sonidos.SinBucle;
+
+        /// <summary>T-1533: rotores de la nave en bucle mientras vuela.</summary>
+        public const string IdRotores = "NAV_ROTORES_LOOP";
+        /// <summary>T-1533: el reflector se enciende al llegar a flotar sobre el jugador.</summary>
+        public const string IdReflector = "NAV_REFLECTOR";
+
+        private void OnEnable()
+        {
+            if (bucleRotores == Sonidos.SinBucle)
+            {
+                bucleRotores = Sonidos.ReproducirBucle(IdRotores, transform);
+            }
+        }
+
+        private void OnDisable()
+        {
+            if (bucleRotores != Sonidos.SinBucle)
+            {
+                Sonidos.DetenerBucle(bucleRotores);
+                bucleRotores = Sonidos.SinBucle;
+            }
+        }
 
         /// <summary>Se avisa por cada soldado que hay que bajar: (nave, número de soldado empezando en 0).</summary>
         public event Action<NaveNova, int> Soltar;
@@ -90,6 +114,7 @@ namespace MechaCyberpunk.IA.APie
             {
                 transform.position = flote;
                 Cambiar(Fase.Descargando);
+                Sonidos.ReproducirEn(IdReflector, transform.position); // T-1533
                 proximaSuelta = 0f;
                 return;
             }

@@ -75,6 +75,7 @@ namespace MechaCyberpunk.Trafico.Peatones
             }
             float antes = vida;
             vida -= info.Cantidad;
+            SendMessage(MensajeDolor, info.Punto, SendMessageOptions.DontRequireReceiver); // T-1533
             bool mato = vida <= 0f;
             Vector3? jugador = posicionJugador?.Invoke();
             if (mato)
@@ -203,6 +204,8 @@ namespace MechaCyberpunk.Trafico.Peatones
 
         /// <summary>Mensajes (SendMessage) que recibe el puente de animación del visual; Trafico no referencia a Personaje.</summary>
         public const string MensajeHerido = "AlHerirCivil";
+        /// <summary>T-1533: recibe daño (herido o muerto): el puente suena su voz de dolor según su visual. Parámetro: el punto del golpe.</summary>
+        public const string MensajeDolor = "AlDolerCivil";
         public const string MensajeMuerte = "AlMorirCivil";
         public const string MensajeRevivir = "AlRevivirCivil";
         /// <summary>T-1506: empieza a huir (el puente juega NPC_Asustarse una vez).</summary>

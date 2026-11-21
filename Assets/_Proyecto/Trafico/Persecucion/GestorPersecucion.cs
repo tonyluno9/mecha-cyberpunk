@@ -33,6 +33,13 @@ namespace MechaCyberpunk.Trafico.Persecucion
         [Tooltip("T-1322: la camioneta de los 5 estrellas. Vacío: no hay modelo todavía y salen patrullas normales.")]
         [SerializeField] private PatrullaMundo prefabCamioneta;
         private int estrellasPublicadas;
+        private int bucleSirenaMuro = Sonidos.SinBucle; // T-1533
+
+        private void PararSirenaMuro()
+        {
+            SonidosPolicia.DetenerSirena(bucleSirenaMuro);
+            bucleSirenaMuro = Sonidos.SinBucle;
+        }
         [Tooltip("T-1498: variantes de dron de combate por estrellas. Vacío: se busca en Resources; sin él todos los drones son el DR01.")]
         [SerializeField] private ConfigDronesCombate variantesDron;
         private bool variantesBuscadas;
@@ -103,6 +110,10 @@ namespace MechaCyberpunk.Trafico.Persecucion
             }
             bool eraMaximo = EstrellasBusqueda.EnMaximo(estrellasPublicadas);
             bool sera = EstrellasBusqueda.EnMaximo(estrellas);
+            if (eraMaximo && !sera)
+            {
+                PararSirenaMuro(); // T-1533
+            }
             bool sube = estrellas > estrellasPublicadas;
             estrellasPublicadas = estrellas;
             EstrellasBusqueda.PublicarCambio(estrellas);
@@ -112,6 +123,8 @@ namespace MechaCyberpunk.Trafico.Persecucion
                 if (sera && sube)
                 {
                     RadioPolicia.Sonar(PosicionDelJugador() ?? transform.position, config); // llegan los refuerzos
+                    PararSirenaMuro();
+                    bucleSirenaMuro = SonidosPolicia.IniciarSirenaMuro(PosicionDelJugador() ?? transform.position); // T-1533: la torre del muro
                 }
             }
         }
@@ -181,6 +194,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
         {
             Registro<ICalor>.Agregado -= Enlazar;
             Registro<ICalor>.Quitado -= Desenlazar;
+            PararSirenaMuro(); // T-1533
             EventosLugares.JugadorEntro -= AlEntrarALugar;
             DronMundo.Derribado -= AlDerribarDron;
             if (zona != null)
