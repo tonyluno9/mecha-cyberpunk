@@ -19,6 +19,10 @@ namespace MechaCyberpunk.Progresion.Sonido
         /// </summary>
         public static readonly MapaSonidos19nov.Par[] Pares =
         {
+            // Integración: tono bajo para los robots pesados y el apagado (LEEME: "reciclar con el pitch más bajo").
+            new MapaSonidos19nov.Par("ROB_PES_PASO", "NOV_PASOS_CAMINAR", 0.7f),
+            new MapaSonidos19nov.Par("ROB_APAGADO", "ROB_SERVOS", 0.6f),
+            new MapaSonidos19nov.Par("ROB_CAIDA", "ROB_MUERTE", 0.7f),
             new MapaSonidos19nov.Par("ARM_W07_RAYO", "ARM_W07_RAYO_LOOP"),
             new MapaSonidos19nov.Par("ARM_NOVA_DISPARO", "ARM_W07_GATILLO"),
             new MapaSonidos19nov.Par("ARM_NOVA_CARGA_DISPARO", "ARM_W07_SIN_ENERGIA"),

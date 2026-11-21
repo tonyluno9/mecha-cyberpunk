@@ -10,7 +10,9 @@ namespace MechaCyberpunk.Progresion.Sonido
     public static class ClimaSonoro
     {
         /// <summary>Qué tanta lluvia cae (0 a 1); 0 = no llueve.</summary>
-        public static float Lluvia { get; private set; }
+        public static float Lluvia => Mathf.Max(lluviaFijada, MechaCyberpunk.Core.ClimaMundo.Lluvia); // T-1536: también la lluvia del mundo (Core)
+
+        private static float lluviaFijada;
 
         /// <summary>True si la lluvia es tormenta con truenos (suena CLI_TORMENTA_TRUENOS en vez de la lluvia fuerte).</summary>
         public static bool Tormenta { get; private set; }
@@ -22,7 +24,7 @@ namespace MechaCyberpunk.Progresion.Sonido
 
         public static void Fijar(float lluvia, bool tormenta, float viento)
         {
-            Lluvia = Mathf.Clamp01(lluvia);
+            lluviaFijada = Mathf.Clamp01(lluvia);
             Tormenta = tormenta && Lluvia > 0f;
             Viento = Mathf.Clamp01(viento);
         }

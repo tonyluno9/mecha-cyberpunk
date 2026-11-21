@@ -1226,6 +1226,10 @@ MonoBehaviour:
   - id: ROB_VOZ_ALERTA
     finales:
     - {fileID: 8300000, guid: f13969dd293ed28210e3c2341c702f83, type: 3}
+    - {fileID: 8300000, guid: 6609f4c0afc998b4ea8916a7b4161876, type: 3}
+    - {fileID: 8300000, guid: 390ad6100d1c5bc41ae30f43f34118d3, type: 3}
+    - {fileID: 8300000, guid: 86f2d566449606b48b9a6b27260a00d9, type: 3}
+    - {fileID: 8300000, guid: 6439eb1e491a0b94eacb7529ff5bd6a8, type: 3}
     provisionales: []
   - id: TIE_COMPRAR
     finales:
@@ -1247,10 +1251,6 @@ MonoBehaviour:
   - id: UI_ATRAS
     finales:
     - {fileID: 8300000, guid: de72fceec4d67a547bcbc8591d88f698, type: 3}
-    provisionales: []
-  - id: UI_CAMARA_LENTA
-    finales:
-    - {fileID: 8300000, guid: ae90bd185e0a53e409ff61c1385f0a69, type: 3}
     provisionales: []
   - id: UI_CANCELAR
     finales:
@@ -2019,6 +2019,10 @@ MonoBehaviour:
     encendido: 1
   - id: RAD_EST1_CUMBIA_PERCUSION
     encendido: 1
+  - id: ROB_APAGADO
+    encendido: 1
+  - id: ROB_CAIDA
+    encendido: 1
   - id: ROB_CHISPAS_DANIO
     encendido: 1
   - id: ROB_ENCENDER
@@ -2032,6 +2036,8 @@ MonoBehaviour:
   - id: ROB_PES_HIDRAULICA
     encendido: 1
   - id: ROB_PES_LLEGADA
+    encendido: 1
+  - id: ROB_PES_PASO
     encendido: 1
   - id: ROB_PES_PLACA_CAE
     encendido: 1

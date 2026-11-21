@@ -38,6 +38,10 @@ namespace MechaCyberpunk.IA.APie
         public const string IdServos = "ROB_SERVOS";
         public const string IdMuerteRobot = "ROB_MUERTE";
         public const string IdPlacaCae = "ROB_PES_PLACA_CAE";
+        /// <summary>Pasos de los pesados: alias de NOV_PASOS_CAMINAR con tono 0.7 (MapaSonidos20nov).</summary>
+        public const string IdPasoPesado = "ROB_PES_PASO";
+        /// <summary>Apagado del centinela y el perro: alias de ROB_SERVOS con tono 0.6 (MapaSonidos20nov).</summary>
+        public const string IdApagadoServos = "ROB_APAGADO";
         public const string IdHidraulica = "ROB_PES_HIDRAULICA";
         public const string IdLlegadaPesado = "ROB_PES_LLEGADA";
         public const string IdVozAlerta = "ROB_VOZ_ALERTA";
@@ -147,7 +151,7 @@ namespace MechaCyberpunk.IA.APie
                 case TipoSonoroEnemigo.Elite: return corriendo ? IdPasosCorrer : IdPasosCaminar;
                 case TipoSonoroEnemigo.GuardiaPesado:
                 case TipoSonoroEnemigo.RobotPesado:
-                case TipoSonoroEnemigo.JefeFinal: return IdPasosCaminar; // sin variante de tono bajo: ver el reporte
+                case TipoSonoroEnemigo.JefeFinal: return IdPasoPesado; // NOV_PASOS_CAMINAR con tono bajo
                 default: return string.Empty;
             }
         }
@@ -180,7 +184,7 @@ namespace MechaCyberpunk.IA.APie
                 case TipoSonoroEnemigo.RobotPesado:
                 case TipoSonoroEnemigo.JefeFinal: return IdPlacaCae;
                 case TipoSonoroEnemigo.Centinela:
-                case TipoSonoroEnemigo.Perro: return IdServos;
+                case TipoSonoroEnemigo.Perro: return IdApagadoServos; // ROB_SERVOS con tono bajo
                 default: return string.Empty;
             }
         }

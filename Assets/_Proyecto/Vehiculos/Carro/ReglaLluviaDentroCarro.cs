@@ -18,7 +18,7 @@ namespace MechaCyberpunk.Vehiculos
         [UnityEngine.RuntimeInitializeOnLoadMethod(UnityEngine.RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void Limpiar() => FuenteLluvia = null;
 
-        public static bool Llueve => FuenteLluvia != null && FuenteLluvia();
+        public static bool Llueve => (FuenteLluvia != null && FuenteLluvia()) || MechaCyberpunk.Core.ClimaMundo.Llueve; // T-1536: el clima del mundo (Core)
 
         /// <summary>Suena con el jugador manejando un carro cerrado (no una moto) y lloviendo.</summary>
         public static bool Suena(bool jugadorDentro, bool esMoto, bool llueve) => jugadorDentro && !esMoto && llueve;
