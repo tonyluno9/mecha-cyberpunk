@@ -1,3 +1,4 @@
+using MechaCyberpunk.Core;
 using MechaCyberpunk.Personaje.Visual;
 using UnityEngine;
 
@@ -32,6 +33,18 @@ namespace MechaCyberpunk.IA.APie
         public bool MuerteAvisada => muerto;
 
         public VisualPersonaje Visual => visual != null ? visual : (visual = GetComponentInChildren<VisualPersonaje>(false));
+
+        /// <summary>
+        /// T-1533: recibe daño (de bala, golpe o atropello, herido o muerto): suena su voz de dolor, de hombre o de mujer según el visual que trae el peatón
+        /// (<see cref="ReglaSonidoNpc"/>); los robots sueltan chispas.
+        /// </summary>
+        public void AlDolerCivil(Vector3 punto)
+        {
+            PeatonVariado peaton = GetComponent<PeatonVariado>();
+            string nombre = peaton != null ? peaton.NombreVisual : name;
+            Vector3 donde = punto != Vector3.zero ? punto : transform.position + Vector3.up;
+            Sonidos.ReproducirEn(ReglaSonidoNpc.IdDolor(nombre, GetInstanceID()), donde);
+        }
 
         /// <summary>Recibe un golpe sin morir: reacción de daño según la dirección (del atacante al personaje).</summary>
         public void AlHerirCivil(Vector3 direccion)

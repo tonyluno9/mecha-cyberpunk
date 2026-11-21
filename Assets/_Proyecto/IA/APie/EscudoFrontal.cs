@@ -12,7 +12,7 @@ namespace MechaCyberpunk.IA.APie
     /// </summary>
     public class EscudoFrontal : MonoBehaviour, IFiltroDanioAPie
     {
-        private const string SonidoMetal = "ARM_BALA_IMPACTO_METAL";
+        private const string SonidoMetal = "NOV_ESCUDO_IMPACTO"; // T-1533: balas contra el escudo de Nova (antes ARM_BALA_IMPACTO_METAL)
         private const float SegundosChispa = 0.15f;
         private const int ChispasPorGolpe = 24;
         private const float AdelanteEscudo = 0.25f;
