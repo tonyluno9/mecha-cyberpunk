@@ -44,13 +44,13 @@ namespace MechaCyberpunk.Tests
         {
             foreach (string n in Nombres)
             {
-                // T-1521: los humanos de la tabla (E10) se escalan por altura animada, no por bounds de reposo: se mide animado.
-                float animada = EscalasHumanos.Objetivo("Visual_" + n);
+                // T-1521/T-1552: los de la tabla (E10, E11, E12, E14) se escalan por altura animada, no por bounds de reposo: se mide animado.
+                float animada = EscalasHumanos.Objetivo("Visual_" + n) * EscalasHumanos.AlturaJugadorAnimada / EscalasHumanos.AlturaJugador; // T-1552: tabla de Blender (PJ01 1.84), animado PJ01 mide 1.80
                 if (animada > 0f)
                 {
                     EscalaHumanosT1521.Medida m = EscalaHumanosT1521.MedirPrefab(RutaPrefab(n));
                     Assert.IsTrue(m.Valida, n + ": " + m.Problema);
-                    Assert.AreEqual(animada, m.Malla, EscalasHumanos.ToleranciaPrueba, n + ": altura animada");
+                    Assert.AreEqual(animada, m.Malla, EscalasHumanos.TolerarPrueba("Visual_" + n), n + ": altura animada");
                     continue;
                 }
                 GameObject inst = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(RutaPrefab(n)));

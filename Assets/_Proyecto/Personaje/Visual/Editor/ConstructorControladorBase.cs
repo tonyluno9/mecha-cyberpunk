@@ -43,7 +43,9 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
                 return limpio;
             }
             string carpeta = nombre.StartsWith(PrefijoClipPJ01) || ClipsNpcNovaT1506.EsClipBlender(nombre) ? CarpetaClipsPJ01 : Carpeta;
-            foreach (string guid in AssetDatabase.FindAssets(nombre + " t:Model", new[] { carpeta }))
+            // T-1553: E16_CaminarEscudo y los E18_* viven en la carpeta Clips de su personaje (siguen siendo clips Blender de Nova).
+            string[] carpetas = ClipsNpcNovaT1506.EsClipBlender(nombre) ? ClipsRobotsNovaT1553.CarpetasDeClips() : new[] { carpeta };
+            foreach (string guid in AssetDatabase.FindAssets(nombre + " t:Model", carpetas))
             {
                 string ruta = AssetDatabase.GUIDToAssetPath(guid);
                 if (Path.GetFileNameWithoutExtension(ruta) != nombre)
@@ -215,13 +217,16 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
 
         /// <summary>
         /// T-1505: clips solo del jugador (los NPC no cambian). Caminar de verdad 1.6 m/s (PJ01_Caminar) mezcla por Velocidad con el trote 4.5 (PJ01_Trote, y de lado y
-        /// atrás PJ01_Trote_*); Correr es PJ01_Sprint 7.25; el salto y el aterrizaje son los de Blender. Con implante el trote sigue siendo PJ01_Correr_ConImplante
+        /// atrás PJ01_Trote_*); Correr es la velocidad rápida (PJ01_CorrerRapido 6.25; T-1550, decisión de Tony del 20-nov: PJ01_Sprint ya no se usa); el salto y el aterrizaje son los de Blender. Con implante el trote sigue siendo PJ01_Correr_ConImplante
         /// (no hay trote con implante). Reemplaza el provisional de T-1484 (el clip de correr en Caminar).
         /// </summary>
+        /// <summary>T-1550: el clip de la carrera rápida del jugador (implante o consumible), a 6.25 m/s; reemplaza a PJ01_Sprint.</summary>
+        public const string ClipCorrerRapido = "PJ01_CorrerRapido";
+
         // Propiedad y no campo: ClipsPorPapel se inicializa antes en el orden de los campos estáticos.
         public static (string Base, string Papel)[] ClipsSoloJugador => new[]
         {
-            ("Loco_Caminar", "PJ01_Caminar"), (RolTrote, "PJ01_Trote"), ("Loco_Correr", "PJ01_Sprint"),
+            ("Loco_Caminar", "PJ01_Caminar"), (RolTrote, "PJ01_Trote"), ("Loco_Correr", ClipCorrerRapido),
             (RolTroteConImplante, "PJ01_Correr_ConImplante"),
             (RolTroteAtras, "PJ01_Trote_Atras"), (RolTroteDer, "PJ01_Trote_Derecha"), (RolTroteIzq, "PJ01_Trote_Izquierda"),
             ("Loco_SaltoInicio", "PJ01_Salto_Despegue"), ("Loco_SaltoAire", "PJ01_Salto_Aire"), ("Loco_SaltoAterrizaje", "PJ01_Salto_Aterrizaje"),

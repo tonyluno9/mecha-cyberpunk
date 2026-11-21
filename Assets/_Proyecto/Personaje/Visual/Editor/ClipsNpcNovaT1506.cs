@@ -41,6 +41,8 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             "E15_Caminar", "E15_Correr", "E15_Cubrirse", "E15_Disparar", "E15_Impacto", "E15_Muerte",
             "E16_Caminar", "E16_Disparar_Canon", "E16_Girar_Derecha", "E16_Girar_Izquierda", "E16_Golpe_Escudo", "E16_Impacto", "E16_Muerte",
             "E18_Caida_Aire", "E18_Caida_Aterrizaje", "E18_Caida_Levantarse", "E18_Disparar", "E18_Jetpack_Volar", "E18_Muerte",
+            // T-1553: caminar con escudo del E16 y los clips propios del E18 (están en la carpeta Clips de su personaje, ver ClipsRobotsNovaT1553).
+            "E16_CaminarEscudo", "E18_Caminar", "E18_Correr", "E18_Golpe_Der",
             "Guardia_Caida_Aire", "Guardia_Caida_Aterrizaje", "Guardia_Caida_Levantarse", "Guardia_Caminar", "Guardia_Disparar", "Guardia_Muerte",
         };
 
@@ -107,10 +109,15 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
                 ("Muerte_Adelante", "E15_Muerte"), ("Muerte_Atras", "E15_Muerte"), ("Muerte_Desmayo", "E15_Muerte"),
                 ("PJ01_Muerte_Explosion", "E15_Muerte"), ("PJ01_Muerte_Atropello", "E15_Muerte"), ("PJ01_Muerte_CaidaAltura", "E15_Muerte"),
                 ("PJ01_Derribo_Explosion", "E15_Impacto"), ("PJ01_Dano_Empujon", "E15_Impacto"), ("PJ01_Dano_ExplosionCercana", "E15_Impacto"),
+                // T-1551: E15_Cubrirse (aprobado 19-nov, agachado vigilando, 91 cuadros en bucle) agachado y en cobertura.
+                ("Loco_AgachadoIdle", "E15_Cubrirse"), ("PJ01_Cobertura_Quieto", "E15_Cubrirse"),
             }),
             ("E16", "Guardias", new[]
             {
-                ("Loco_Caminar", "E16_Caminar"), ("Loco_Caminar_ConImplante", "E16_Caminar"), ("Loco_Correr", "E16_Caminar"), ("Loco_Correr_ConImplante", "E16_Caminar"), (ConstructorControladorBase.RolTrote, "E16_Caminar"),
+                // T-1553 (decisión de Tony 20-nov: "su E16_Caminar está perfecto; además camina protegiéndose con el escudo"): el canal ConImplante del controlador base es aquí
+                // "escudo arriba" (VisualPersonaje.EscudoArriba): en 0 camina con E16_Caminar y en 1 con E16_CaminarEscudo, al acercarse al jugador o al recibir disparos.
+                ("Loco_Caminar", "E16_Caminar"), ("Loco_Caminar_ConImplante", "E16_CaminarEscudo"), ("Loco_Correr", "E16_Caminar"), ("Loco_Correr_ConImplante", "E16_CaminarEscudo"),
+                (ConstructorControladorBase.RolTrote, "E16_Caminar"), (ConstructorControladorBase.RolTroteConImplante, "E16_CaminarEscudo"),
                 ("Loco_GirarDer", "E16_Girar_Derecha"), ("Loco_GirarIzq", "E16_Girar_Izquierda"),
                 ("Pistola_Disparo", "E16_Disparar_Canon"), ("Rifle_DisparoCaminar", "E16_Disparar_Canon"),
                 ("Punos_GolpeDer", "E16_Golpe_Escudo"), ("Punos_GolpeIzq", "E16_Golpe_Escudo"), ("Punos_Fuerte", "E16_Golpe_Escudo"),
@@ -125,6 +132,10 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
                 ("Pistola_Disparo", "E18_Disparar"), ("Rifle_DisparoCaminar", "E18_Disparar"),
                 ("Loco_Caida", "E18_Jetpack_Volar"), ("Loco_SaltoAire", "E18_Jetpack_Volar"),
                 ("Loco_SaltoAterrizaje", "E18_Caida_Aterrizaje"),
+                // T-1553: el E18 no lleva arma y pelea a puñetazos: sus propios clips de caminar, correr y golpe (el golpe es de derecha: se usa en los tres estados de golpe).
+                ("Loco_Caminar", "E18_Caminar"), ("Loco_Caminar_ConImplante", "E18_Caminar"),
+                ("Loco_Correr", "E18_Correr"), ("Loco_Correr_ConImplante", "E18_Correr"), (ConstructorControladorBase.RolTrote, "E18_Correr"),
+                ("Punos_GolpeDer", "E18_Golpe_Der"), ("Punos_GolpeIzq", "E18_Golpe_Der"), ("Punos_Fuerte", "E18_Golpe_Der"),
             }),
             ("Hacker", "SNAKES", new[] { ("Loco_Idle", "NPC_Hacker_Tecleando") }),
         };
@@ -153,7 +164,7 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             ("GuardiaNova", "Guardias", 1.10f, ReglasAnimacion.VelocidadClipCorrerSinImplante), ("E12_GuardiaPesadoNova", "Guardias", 1.10f, ReglasAnimacion.VelocidadClipCorrerSinImplante),
             ("E15_CentinelaNova_a", "E15", 1.10f, 3.60f), ("E15_CentinelaNova_b", "E15", 1.10f, 3.60f),
             ("E16_RobotPesadoNova_a", "E16", 0.80f, 0.80f), ("E16_RobotPesadoNova_b", "E16", 0.80f, 0.80f),
-            ("E18_EliteNova_a", "E18", ReglasAnimacion.VelocidadClipCaminarSinImplante, ReglasAnimacion.VelocidadClipCorrerSinImplante),
+            ("E18_EliteNova_a", "E18", ClipsRobotsNovaT1553.VelocidadCaminarE18, ClipsRobotsNovaT1553.VelocidadCorrerE18),
             ("Hacker", "Hacker", 0f, 0f),
             ("MeseraRobot", null, 1.20f, 1.20f),
             ("E17_PerroRobotNova_a", null, 0.90f, 5.00f),
@@ -173,6 +184,7 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             mapa["Jugador"] = Combinar(mapa["Jugador"], ClipsSoloJugador);
             mapa["NPC"] = Combinar(mapa["NPC"], ClipsNpcComun);
             mapa["Guardias"] = Combinar(mapa["Guardias"], ClipsGuardias);
+            AnimacionesT1551.AgregarATabla(mapa); // T-1551: muertes aprobadas PJ01_Muerte_Frente/Espaldas en los papeles que seguían con las viejas
         }
 
         public static (string Base, string Papel)[] Combinar((string Base, string Papel)[] tabla, (string Base, string Papel)[] cambios)
@@ -213,9 +225,18 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             }
         }
 
-        private static void ImportarHumanoide(string nombre)
+        /// <summary>
+        /// Importa un clip Humanoid. T-1553: los E16_CaminarEscudo y E18_* están en la carpeta Clips de su personaje (<see cref="ClipsRobotsNovaT1553.RutaClip"/>) y los cuatro que traen
+        /// el rig del personaje se importan con su pose T y su escala (<see cref="ClipsRobotsNovaT1553.ImportarRigPropio"/>).
+        /// </summary>
+        public static void ImportarHumanoide(string nombre)
         {
-            string ruta = ImportadorClipsPJ01.Carpeta + nombre + ".fbx";
+            string ruta = ClipsRobotsNovaT1553.RutaClip(nombre);
+            if (ClipsRobotsNovaT1553.TieneRigPropio(nombre))
+            {
+                ClipsRobotsNovaT1553.ImportarRigPropio(nombre);
+                return;
+            }
             if (AssetDatabase.LoadAssetAtPath<Object>(ruta) == null)
             {
                 Debug.LogError("[Personaje] T-1506: falta " + ruta);
@@ -385,6 +406,7 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
                 AssetDatabase.CreateAsset(config, RutaConfig);
             }
             config.Configurar(CargarClip("E18_Caida_Aire"), CargarClip("E18_Caida_Aterrizaje"), CargarClip("E18_Caida_Levantarse"), CargarClip("NPC_Asustarse"));
+            config.ConfigurarVueloElite(CargarClip("E18_Jetpack_Volar")); // T-1553
             EditorUtility.SetDirty(config);
         }
 

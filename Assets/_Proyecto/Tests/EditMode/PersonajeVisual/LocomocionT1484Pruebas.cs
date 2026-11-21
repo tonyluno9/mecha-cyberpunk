@@ -33,14 +33,16 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
         }
 
         [Test]
-        public void RapidezJugador_TroteYSprint_ConLosClipsNuevos_EntreLosLimites()
+        public void RapidezJugador_TroteYCorrerRapido_ConLosClipsNuevos_EntreLosLimites()
         {
-            float trote = ReglasAnimacion.EscalaVelocidad(ReglasAnimacion.VelocidadAndar, ReglasAnimacion.VelocidadPJ01Trote, ReglasAnimacion.RapidezMinimaJugador, ReglasAnimacion.RapidezMaximaJugador);
-            Assert.AreEqual(1f, trote, 1e-3f, "A 4.5 m/s el trote va a su velocidad");
-            float sprint = ReglasAnimacion.EscalaVelocidad(ReglasAnimacion.VelocidadCarrera, ReglasAnimacion.VelocidadPJ01Sprint, ReglasAnimacion.RapidezMinimaJugador, ReglasAnimacion.RapidezMaximaJugador);
-            Assert.AreEqual(7.5f / 7.25f, sprint, 1e-3f);
-            Assert.That(sprint, Is.InRange(ReglasAnimacion.RapidezMinimaJugador, ReglasAnimacion.RapidezMaximaJugador));
-            float lado = ReglasAnimacion.EscalaVelocidad(ReglasAnimacion.VelocidadAndar, ReglasAnimacion.VelocidadPJ01TroteLado, ReglasAnimacion.RapidezMinimaJugador, ReglasAnimacion.RapidezMaximaJugador);
+            // T-1550 (decisión de Tony del 20-nov (T-1550)): Shift trota a 4.53 (PJ01_Trote) y la velocidad rápida corre a 6.25 (PJ01_CorrerRapido, antes PJ01_Sprint a 7.25 con el sprint a 7.5).
+            float trote = ReglasAnimacion.EscalaVelocidad(ReglasAnimacion.VelocidadPJ01Trote, ReglasAnimacion.VelocidadPJ01Trote, ReglasAnimacion.RapidezMinimaJugador, ReglasAnimacion.RapidezMaximaJugador);
+            Assert.AreEqual(1f, trote, 1e-3f, "A 4.53 m/s el trote va a su velocidad");
+            float rapido = ReglasAnimacion.EscalaVelocidad(ReglasAnimacion.VelocidadRapida, ReglasAnimacion.VelocidadPJ01CorrerRapido, ReglasAnimacion.RapidezMinimaJugador, ReglasAnimacion.RapidezMaximaJugador);
+            Assert.AreEqual(1f, rapido, 1e-3f, "A 6.25 m/s la carrera rápida va a su velocidad");
+            float sprint = ReglasAnimacion.EscalaVelocidad(ReglasAnimacion.VelocidadRapida * 1.08f, ReglasAnimacion.VelocidadPJ01CorrerRapido, ReglasAnimacion.RapidezMinimaJugador, ReglasAnimacion.RapidezMaximaJugador);
+            Assert.That(sprint, Is.InRange(ReglasAnimacion.RapidezMinimaJugador, ReglasAnimacion.RapidezMaximaJugador), "Un poco más rápido (8 %) aún cabe en los límites");
+            float lado = ReglasAnimacion.EscalaVelocidad(ReglasAnimacion.VelocidadPJ01Trote, ReglasAnimacion.VelocidadPJ01TroteLado, ReglasAnimacion.RapidezMinimaJugador, ReglasAnimacion.RapidezMaximaJugador);
             Assert.That(lado, Is.InRange(ReglasAnimacion.RapidezMinimaJugador, ReglasAnimacion.RapidezMaximaJugador), "De lado a 4.5 m/s el clip de 4.0 va a 1.125");
         }
 
@@ -112,7 +114,7 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
         {
             Assert.AreEqual("PJ01_Caminar", Override(RutaOverrideJugador, "Loco_Caminar"));
             Assert.AreEqual("PJ01_Trote", Override(RutaOverrideJugador, ConstructorControladorBase.RolTrote));
-            Assert.AreEqual("PJ01_Sprint", Override(RutaOverrideJugador, "Loco_Correr"));
+            Assert.AreEqual("PJ01_CorrerRapido", Override(RutaOverrideJugador, "Loco_Correr")); // T-1550, decisión de Tony del 20-nov (T-1550)
             Assert.AreEqual("PJ01_Trote_Atras", Override(RutaOverrideJugador, ConstructorControladorBase.RolTroteAtras));
             Assert.AreEqual("PJ01_Trote_Derecha", Override(RutaOverrideJugador, ConstructorControladorBase.RolTroteDer));
             Assert.AreEqual("PJ01_Trote_Izquierda", Override(RutaOverrideJugador, ConstructorControladorBase.RolTroteIzq));

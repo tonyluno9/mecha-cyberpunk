@@ -88,7 +88,7 @@ namespace MechaCyberpunk.Tests.Mundo
                 string[] nombres = Enumerable.Range(0, lista.arraySize).Select(i => lista.GetArrayElementAtIndex(i).objectReferenceValue)
                     .Where(o => o != null).Select(o => o.name).ToArray();
                 CollectionAssert.Contains(nombres, "CarroTrafico_V09");
-                CollectionAssert.Contains(nombres, "CarroTrafico_V10");
+                CollectionAssert.DoesNotContain(nombres, "CarroTrafico_V10"); // T-1554: V10 se descartó
             }
             finally
             {

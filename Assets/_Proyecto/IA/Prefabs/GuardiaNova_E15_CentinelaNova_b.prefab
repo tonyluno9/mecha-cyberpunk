@@ -53,13 +53,13 @@ CharacterController:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Height: 2.522
-  m_Radius: 0.4216216
+  m_Height: 1.8818
+  m_Radius: 0.31459463
   m_SlopeLimit: 45
-  m_StepOffset: 0.4216216
+  m_StepOffset: 0.31459463
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 1.261, z: 0}
+  m_Center: {x: 0, y: 0.9409, z: 0}
 --- !u!114 &7659834898968740767
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -86,7 +86,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.APie.PandilleroAPie
   datos: {fileID: 11400000, guid: bbbb3294f9efcdb4bb4d9206917f9f8a, type: 2}
   siempreAlerta: 0
-  escalaCuerpo: 1.4054053
+  escalaCuerpo: 1.0486487
   cuerpo: {fileID: 0}
   brazo: {fileID: 0}
   piezasBrazo: []
@@ -148,7 +148,7 @@ PrefabInstance:
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 2742983576650251381, guid: f5925c8f4217e6f4a92521bd21bb8821, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 789931391811825931}
+      addedObject: {fileID: 1369586019229338092}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f5925c8f4217e6f4a92521bd21bb8821, type: 3}
 --- !u!4 &629352825719792667 stripped
@@ -161,7 +161,7 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2742983576650251381, guid: f5925c8f4217e6f4a92521bd21bb8821, type: 3}
   m_PrefabInstance: {fileID: 1393393526749624378}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &6200790416654089623
+--- !u!1001 &5763054290508580208
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -175,15 +175,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6700164846204193948, guid: 9cb78e96245cb8547a468d42172b2c9b, type: 3}
       propertyPath: m_LocalScale.x
-      value: 1.4054053
+      value: 1.0486487
       objectReference: {fileID: 0}
     - target: {fileID: 6700164846204193948, guid: 9cb78e96245cb8547a468d42172b2c9b, type: 3}
       propertyPath: m_LocalScale.y
-      value: 1.4054053
+      value: 1.0486487
       objectReference: {fileID: 0}
     - target: {fileID: 6700164846204193948, guid: 9cb78e96245cb8547a468d42172b2c9b, type: 3}
       propertyPath: m_LocalScale.z
-      value: 1.4054053
+      value: 1.0486487
       objectReference: {fileID: 0}
     - target: {fileID: 6700164846204193948, guid: 9cb78e96245cb8547a468d42172b2c9b, type: 3}
       propertyPath: m_LocalPosition.x
@@ -199,19 +199,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6700164846204193948, guid: 9cb78e96245cb8547a468d42172b2c9b, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.7071068
+      value: 0.85844356
       objectReference: {fileID: 0}
     - target: {fileID: 6700164846204193948, guid: 9cb78e96245cb8547a468d42172b2c9b, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.7071068
+      value: -0.14184952
       objectReference: {fileID: 0}
     - target: {fileID: 6700164846204193948, guid: 9cb78e96245cb8547a468d42172b2c9b, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: 0.39237517
       objectReference: {fileID: 0}
     - target: {fileID: 6700164846204193948, guid: 9cb78e96245cb8547a468d42172b2c9b, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: 0.2983206
       objectReference: {fileID: 0}
     - target: {fileID: 6700164846204193948, guid: 9cb78e96245cb8547a468d42172b2c9b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -230,8 +230,8 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9cb78e96245cb8547a468d42172b2c9b, type: 3}
---- !u!4 &789931391811825931 stripped
+--- !u!4 &1369586019229338092 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6700164846204193948, guid: 9cb78e96245cb8547a468d42172b2c9b, type: 3}
-  m_PrefabInstance: {fileID: 6200790416654089623}
+  m_PrefabInstance: {fileID: 5763054290508580208}
   m_PrefabAsset: {fileID: 0}

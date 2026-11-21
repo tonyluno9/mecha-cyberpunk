@@ -876,8 +876,8 @@ MonoBehaviour:
   - {fileID: 973019654779722845}
   - {fileID: 4910088977852989603}
   - {fileID: 4354481529593730684}
-  radio: 0.48333332
-  distanciaEjes: 2.9875
+  radio: 0.37699997
+  distanciaEjes: 2.3302498
   anguloParado: 32
   anguloRapido: 12
   velocidadRapida: 16
@@ -1032,7 +1032,7 @@ Transform:
   m_GameObject: {fileID: 3339255216520397601}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.578608, y: 1.2308396, z: -0.14999999}
+  m_LocalPosition: {x: -0.578608, y: 0.9064806, z: -0.14999999}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1063,7 +1063,7 @@ Transform:
   m_GameObject: {fileID: 3378190292545314902}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.13333338, z: 0}
+  m_LocalPosition: {x: 0, y: 0.034615338, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1217,7 +1217,7 @@ Transform:
   m_GameObject: {fileID: 4328375872302162887}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.9931314, y: 0.35, z: 1.5083334}
+  m_LocalPosition: {x: -0.9931314, y: 0.44871837, z: 1.5083334}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1451,7 +1451,7 @@ Transform:
   m_GameObject: {fileID: 4783950316170912751}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.9531153, y: 0.35, z: -1.4791667}
+  m_LocalPosition: {x: 0.9531153, y: 0.44871804, z: -1.4791667}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1695,7 +1695,7 @@ Transform:
   m_GameObject: {fileID: 5263517956013053116}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.9885664, y: 0.35, z: -1.4791665}
+  m_LocalPosition: {x: -0.9885664, y: 0.44871804, z: -1.4791665}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1727,7 +1727,7 @@ Transform:
   m_GameObject: {fileID: 6377456304864198559}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.13333338, z: 0}
+  m_LocalPosition: {x: 0, y: 0.034615338, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1971,7 +1971,7 @@ Transform:
   m_GameObject: {fileID: 6976066823173414257}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.13333374, z: 0}
+  m_LocalPosition: {x: 0, y: 0.034615368, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2003,7 +2003,7 @@ Transform:
   m_GameObject: {fileID: 6982098182597674574}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.9576808, y: 0.35, z: 1.5083332}
+  m_LocalPosition: {x: 0.9576808, y: 0.44871837, z: 1.5083332}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2109,8 +2109,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Carro.CamaraCarro
   config: {fileID: 11400000, guid: aa68fc6c12cf1a74daa79d83d8f49f5d, type: 2}
-  alturaFocoPropia: 1.8924624
-  distanciaAtrasPropia: 7.1428576
+  alturaFocoPropia: 1.4761206
+  distanciaAtrasPropia: 5.5714283
 --- !u!81 &485862140655477918
 AudioListener:
   m_ObjectHideFlags: 0
@@ -2342,7 +2342,7 @@ Transform:
   m_GameObject: {fileID: 8402985725606951878}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.3150182, y: 0, z: -0.14999999}
+  m_LocalPosition: {x: -2.6245449, y: 0, z: -0.14999999}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2373,7 +2373,7 @@ Transform:
   m_GameObject: {fileID: 8548327537183053502}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.13333374, z: 0}
+  m_LocalPosition: {x: 0, y: 0.034615368, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

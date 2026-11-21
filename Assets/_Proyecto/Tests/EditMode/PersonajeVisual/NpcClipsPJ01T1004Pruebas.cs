@@ -40,8 +40,11 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
             }
         }
 
+        // T-1540/T-1551: decisión de Tony 20-nov (revisión de Blender): la burla de los pandilleros y demás papeles es el Skull_Burla original de Mixamo (Humanoid), no un clip de PJ01.
+        private const string ClipPermitidoBurla = "Skull_Burla";
+
         private static string[] ClipsAjenos(RuntimeAnimatorController c)
-            => c.animationClips.Where(x => x != null && !x.name.StartsWith(PrefijoPJ01) && !MechaCyberpunk.Personaje.Visual.Editor.ClipsNpcNovaT1506.EsClipBlender(x.name) && !x.name.StartsWith("E17_")).Select(x => x.name).Distinct().ToArray();
+            => c.animationClips.Where(x => x != null && !x.name.StartsWith(PrefijoPJ01) && !MechaCyberpunk.Personaje.Visual.Editor.ClipsNpcNovaT1506.EsClipBlender(x.name) && !x.name.StartsWith("E17_") && x.name != ClipPermitidoBurla).Select(x => x.name).Distinct().ToArray();
 
         [Test]
         public void CadaHumanoideDeLosPrefabs_SoloUsaClipsDePJ01()

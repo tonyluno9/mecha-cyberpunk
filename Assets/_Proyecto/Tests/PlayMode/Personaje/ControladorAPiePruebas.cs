@@ -20,8 +20,9 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return Esperar(2f);
             Release(teclado.wKey);
             float avance = jugador.transform.position.z - inicio.z;
-            Assert.GreaterOrEqual(avance, 7.5f);
-            Assert.LessOrEqual(avance, 9.5f);
+            // T-1550 (decisión de Tony del 20-nov (T-1550)): WASD camina a 1.62 m/s (antes 4.5): en 2 s son ~3.2 m (el rango sigue siendo 83 % a 106 % de velocidad x 2 s).
+            Assert.GreaterOrEqual(avance, datos.VelocidadCaminar * 2f * 0.83f);
+            Assert.LessOrEqual(avance, datos.VelocidadCaminar * 2f * 1.06f);
             Assert.Less(Mathf.Abs(jugador.transform.position.x - inicio.x), 0.01f);
         }
 
@@ -37,8 +38,9 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return null; // Soltar dos teclas en el mismo frame deja la primera pulsada en el teclado simulado.
             Release(teclado.leftShiftKey);
             float avance = jugador.transform.position.z - inicio.z;
-            Assert.GreaterOrEqual(avance, 12.5f);
-            Assert.LessOrEqual(avance, 15.5f);
+            // T-1550 (decisión de Tony del 20-nov (T-1550)): Shift trota a 4.53 m/s (antes 7.5): en 2 s son ~9 m (83 % a 103 % de velocidad x 2 s, como antes con 12.5 a 15.5 de 15).
+            Assert.GreaterOrEqual(avance, datos.VelocidadCorrer * 2f * 0.83f);
+            Assert.LessOrEqual(avance, datos.VelocidadCorrer * 2f * 1.03f);
         }
 
         [UnityTest]

@@ -116,7 +116,7 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return Esperar(1.3f);
             Debug.Log("[T724] caminando: " + Volcado(a));
             Assert.AreEqual("Caminar", Estado(a));
-            AfirmarSoloLocomocionDeTony(a, "PJ01_Trote"); // T-1505: a 4.5 m/s el paso normal del jugador es el trote
+            AfirmarSoloLocomocionDeTony(a, "PJ01_Caminar"); // T-1550 (decisión de Tony del 20-nov (T-1550)): con WASD (1.62 m/s) se ve PJ01_Caminar
             AfirmarSinProcedurales(visual);
             Capturar("s1d-T-724-caminar");
             Release(teclado.wKey);
@@ -134,8 +134,8 @@ namespace MechaCyberpunk.Tests.Personaje
             Press(teclado.leftShiftKey);
             yield return Esperar(1.6f);
             Debug.Log("[T724] corriendo: " + Volcado(a));
-            Assert.AreEqual("Correr", Estado(a));
-            AfirmarSoloLocomocionDeTony(a, "PJ01_Sprint");
+            Assert.AreEqual("Caminar", Estado(a)); // T-1550: Shift trota a 4.53 y el trote es la mezcla del estado Caminar
+            AfirmarSoloLocomocionDeTony(a, "PJ01_Trote");
             AfirmarSinProcedurales(visual);
             Capturar("s1d-T-724-correr");
             Release(teclado.leftShiftKey);

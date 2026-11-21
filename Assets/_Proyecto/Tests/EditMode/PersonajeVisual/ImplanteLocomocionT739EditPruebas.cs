@@ -73,7 +73,7 @@ namespace MechaCyberpunk.Tests
             o.GetOverrides(pares);
             string Valor(string clipBase) => pares.Find(p => p.Key != null && p.Key.name == clipBase).Value.name;
             Assert.AreEqual("PJ01_Caminar", Valor("Loco_Caminar")); // T-749 / T-1505: clips de Blender aplicados a PJ01
-            Assert.AreEqual("PJ01_Sprint", Valor("Loco_Correr"));
+            Assert.AreEqual("PJ01_CorrerRapido", Valor("Loco_Correr")); // T-1550, decisión de Tony del 20-nov (T-1550): la velocidad rápida reemplaza al PJ01_Sprint
             Assert.AreEqual("PJ01_Caminar_ConImplante", Valor("Loco_Caminar_ConImplante"));
             var npc = AssetDatabase.LoadAssetAtPath<AnimatorOverrideController>(ConstructorControladorBase.RutaOverride("NPC"));
             pares.Clear();

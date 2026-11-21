@@ -10,7 +10,7 @@ using UnityEngine;
 namespace MechaCyberpunk.Tests
 {
     /// <summary>
-    /// T-1497: los agentes de Nova a escala real (E15 2.6 m, E16 3.5 m, E18 2.2 m, perro E17 1.2 m), su cápsula y el arma W10_ArmaNova en la mano.
+    /// T-1497: los agentes de Nova a escala real, su cápsula y el arma W10_ArmaNova en la mano. T-1552 (decisión de Tony, 20-nov): E15 1.94 m, E16 y E14 3.14 m, E18 2.14 m (antes 2.6, 3.5 y 2.2); perro E17 1.2 m.
     /// Leen los prefabs y datos ya generados con EscalaNovaT1497 (ImportarArma, Visuales y Enemigos, en ese orden).
     /// </summary>
     public class EscalaNovaT1497Pruebas
@@ -20,7 +20,8 @@ namespace MechaCyberpunk.Tests
         private const string RutaConfig = "Assets/_Proyecto/IA/Resources/ConfigRespuestaNova.asset";
 
         private static readonly string[] Humanoides = { "E15_CentinelaNova_a", "E15_CentinelaNova_b", "E16_RobotPesadoNova_a", "E18_EliteNova_a" };
-        private static readonly string[] ConArma = { "E15_CentinelaNova_a", "E15_CentinelaNova_b", "E16_RobotPesadoNova_a", "E18_EliteNova_a" };
+        // T-1553 (decisión de Tony 20-nov): el E18 (soldado azul) ya no lleva arma; vuela con el jetpack y pelea a puñetazos.
+        private static readonly string[] ConArma = { "E15_CentinelaNova_a", "E15_CentinelaNova_b", "E16_RobotPesadoNova_a" };
 
         private static float AlturaRenderers(GameObject prefab)
         {
@@ -45,9 +46,11 @@ namespace MechaCyberpunk.Tests
         [Test]
         public void Tabla_AlturasDeNova_SonLasPedidas()
         {
-            Assert.AreEqual(2.6f, EscalasNova.AlturaCentinelaE15, 0.0001f);
-            Assert.AreEqual(3.5f, EscalasNova.AlturaRobotPesadoE16, 0.0001f);
-            Assert.AreEqual(2.2f, EscalasNova.AlturaEliteE18, 0.0001f);
+            Assert.AreEqual(1.94f, EscalasNova.AlturaCentinelaE15, 0.0001f);
+            Assert.AreEqual(3.14f, EscalasNova.AlturaRobotPesadoE16, 0.0001f);
+            Assert.AreEqual(3.14f, EscalasNova.AlturaJefeFinalE14, 0.0001f);
+            Assert.AreEqual(3.14f, EscalasNova.Altura("E14_JefeFinalNova"), 0.0001f);
+            Assert.AreEqual(2.14f, EscalasNova.AlturaEliteE18, 0.0001f);
             Assert.AreEqual(1.2f, EscalasNova.AlturaPerroE17, 0.0001f);
             Assert.AreEqual(0f, EscalasNova.Altura("NP07_Pescador_a"), "los demás personajes no se reescalan");
         }
@@ -56,28 +59,45 @@ namespace MechaCyberpunk.Tests
         public void Tabla_Capsula_CrecenConLaAltura()
         {
             Assert.AreEqual(1.8f, EscalasNova.AlturaCapsula(1.85f), 0.06f, "a 1.85 m queda la cápsula original");
-            Assert.AreEqual(EscalasNova.RadioMaximo, EscalasNova.RadioCapsula(3.5f), 0.0001f, "el gigante no pasa del radio máximo");
-            Assert.Greater(EscalasNova.RadioCapsula(2.6f), EscalasNova.RadioCapsula(2.2f));
-            Assert.AreEqual(2.6f / 1.85f, EscalasNova.Factor(2.6f), 0.0001f);
+            Assert.AreEqual(EscalasNova.RadioMaximo, EscalasNova.RadioCapsula(3.14f), 0.0001f, "el gigante no pasa del radio máximo");
+            Assert.Greater(EscalasNova.RadioCapsula(2.14f), EscalasNova.RadioCapsula(1.94f));
+            Assert.AreEqual(3.14f / 1.85f, EscalasNova.Factor(3.14f), 0.0001f);
         }
 
-        [TestCase("E15_CentinelaNova_a", 2.6f)]
-        [TestCase("E15_CentinelaNova_b", 2.6f)]
-        [TestCase("E16_RobotPesadoNova_a", 3.5f)]
-        [TestCase("E16_RobotPesadoNova_b", 3.5f)]
-        [TestCase("E18_EliteNova_a", 2.2f)]
+        [TestCase("E15_CentinelaNova_a", 1.94f)]
+        [TestCase("E15_CentinelaNova_b", 1.94f)]
+        [TestCase("E16_RobotPesadoNova_a", 3.14f)]
+        [TestCase("E16_RobotPesadoNova_b", 3.14f)]
+        [TestCase("E18_EliteNova_a", 2.14f)]
         public void CreadorVisual_AlturaDe_ViveDeLaTabla(string variante, float esperada)
         {
             Assert.AreEqual(esperada, CreadorVisualTripo.AlturaDe(variante), 0.0001f, variante);
         }
 
+        /// <summary>
+        /// T-1552: los bounds en reposo (que mienten unos centímetros contra la altura de Blender) ya no son la altura nueva: AlturasT1552.Aplicar multiplica el Modelo por el factor de la tabla,
+        /// así que quedan en (bounds de T-1497) x factor. Si el visual se rehízo con CreadorVisualTripo (que ya usa la altura nueva), quedan en la altura nueva: se acepta cualquiera de las dos.
+        /// </summary>
         [TestCaseSource(nameof(Humanoides))]
         public void Visual_DeCadaAgente_MideSuAlturaReal(string variante)
         {
             GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(PersonajesNuevosT1389b.RutaVisual(variante));
             Assert.IsNotNull(prefab, "Visual_" + variante);
             float objetivo = EscalasNova.Altura(variante);
-            Assert.AreEqual(objetivo, AlturaRenderers(prefab), objetivo * Tolerancia, variante + " (bounds en reposo)");
+            float porFactor = BoundsDeT1497(variante) * EscalasHumanos.Factor("Visual_" + variante);
+            float medida = AlturaRenderers(prefab);
+            bool ok = Mathf.Abs(medida - objetivo) <= objetivo * ToleranciaT1552 || Mathf.Abs(medida - porFactor) <= porFactor * ToleranciaT1552;
+            Assert.IsTrue(ok, variante + ": bounds en reposo " + medida.ToString("F2") + " m; esperado " + objetivo.ToString("F2") + " (altura nueva) o " + porFactor.ToString("F2") + " (bounds viejos x factor)");
+        }
+
+        private const float ToleranciaT1552 = 0.10f;
+
+        /// <summary>Los bounds en reposo con los que T-1497 dejó a cada agente (E15 2.6 m, E16 3.5 m, E18 2.2 m): el punto de partida del factor de T-1552.</summary>
+        private static float BoundsDeT1497(string variante)
+        {
+            if (variante.StartsWith("E15")) { return 2.6f; }
+            if (variante.StartsWith("E16")) { return 3.5f; }
+            return 2.2f;
         }
 
         [Test]
@@ -146,6 +166,19 @@ namespace MechaCyberpunk.Tests
         {
             GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(PersonajesNuevosT1389b.RutaPrefabEnemigo(variante));
             AsegurarW10(prefab, variante);
+        }
+
+        [Test]
+        public void Enemigo_E18_NoLlevaArma_YEscalaNovaNoSeLaVuelveAPoner()
+        {
+            Assert.IsFalse(EscalaNovaT1497.LlevaArma("E18_EliteNova_a"), "decisión de Tony 20-nov");
+            Assert.IsTrue(EscalaNovaT1497.LlevaArma("E15_CentinelaNova_a"));
+            Assert.IsTrue(EscalaNovaT1497.LlevaArma("E16_RobotPesadoNova_a"));
+            Assert.IsTrue(EscalaNovaT1497.LlevaArma(null), "la guardia base de Nova conserva su arma");
+            GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(PersonajesNuevosT1389b.RutaPrefabEnemigo("E18_EliteNova_a"));
+            Assert.IsNotNull(prefab);
+            Transform mano = prefab.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == CreadorVisualTripo.NombreSocket);
+            Assert.IsTrue(mano == null || mano.Find(EscalaNovaT1497.NombreArma) == null, "el E18 no tiene W10 en la mano (corre RobotsNovaT1553.Aplicar)");
         }
 
         [Test]

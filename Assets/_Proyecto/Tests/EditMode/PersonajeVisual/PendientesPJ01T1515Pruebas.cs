@@ -216,9 +216,11 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
         [Test]
         public void Velocidades_IgualanLaTablaDeBlender()
         {
-            Assert.AreEqual(1.6f, ReglasAnimacion.VelocidadPJ01Caminar, 0.001f);
-            Assert.AreEqual(4.5f, ReglasAnimacion.VelocidadPJ01Trote, 0.001f);
-            Assert.AreEqual(7.25f, ReglasAnimacion.VelocidadPJ01Sprint, 0.001f);
+            // T-1550 (decisión de Tony del 20-nov (T-1550)): caminar 1.62, trote 4.53 y la carrera rápida 6.25 (reemplaza al sprint de 7.25).
+            Assert.AreEqual(1.62f, ReglasAnimacion.VelocidadPJ01Caminar, 0.001f);
+            Assert.AreEqual(4.53f, ReglasAnimacion.VelocidadPJ01Trote, 0.001f);
+            Assert.AreEqual(6.25f, ReglasAnimacion.VelocidadPJ01CorrerRapido, 0.001f);
+            Assert.AreEqual(1.57f, ReglasAnimacion.VelocidadPJ01CaminarApuntandoDerecha, 0.001f);
             Assert.AreEqual(4f, ReglasAnimacion.VelocidadPJ01TroteLado, 0.001f);
             Assert.AreEqual(4f, ReglasAnimacion.VelocidadPJ01TroteAtras, 0.001f);
         }
@@ -230,14 +232,14 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
             string Clip(string baseNombre) => pares.First(p => p.Key.name == baseNombre).Value.name;
             Assert.AreEqual("PJ01_Caminar", Clip("Loco_Caminar"));
             Assert.AreEqual("PJ01_Trote", Clip(ConstructorControladorBase.RolTrote));
-            Assert.AreEqual("PJ01_Sprint", Clip("Loco_Correr"));
+            Assert.AreEqual("PJ01_CorrerRapido", Clip("Loco_Correr")); // T-1550, decisión de Tony del 20-nov (T-1550)
             Assert.AreEqual("PJ01_Trote_Atras", Clip(ConstructorControladorBase.RolTroteAtras));
             Assert.AreEqual("PJ01_Trote_Derecha", Clip(ConstructorControladorBase.RolTroteDer));
             Assert.AreEqual("PJ01_Trote_Izquierda", Clip(ConstructorControladorBase.RolTroteIzq));
         }
 
         [Test]
-        public void Velocidades_LosUmbralesDelArbolDeCaminarSon1_6y4_5()
+        public void Velocidades_LosUmbralesDelArbolDeCaminarSon1_62y4_53()
         {
             var umbrales = new List<float>();
             void Recorrer(BlendTree a)

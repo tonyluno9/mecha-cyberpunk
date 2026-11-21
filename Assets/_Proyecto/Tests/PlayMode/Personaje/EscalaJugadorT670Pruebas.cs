@@ -47,15 +47,15 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.AreEqual(AlturaEsperada, AlturaAnimada(visual.gameObject), Tolerancia, "El jugador animado mide 1.80 m");
         }
 
-        // T-1521: la altura de los humanos sale de EscalasHumanos (el Doc ya no es 1.09 veces el jugador). Los que no están en esa tabla (el jugador, AL10, AL11 y los
-        // guardias de Nova, que son más altos a propósito) llevan aquí su altura relativa al jugador: nadie enano ni gigante.
+        // T-1552: la altura de todos sale de EscalasHumanos (tabla de Tony, 20-nov; PJ01 1.84 de Blender = 1.80 animado). Fuera de la tabla solo queda el jugador (antes AL10, AL11 y los
+        // guardias de Nova se pasaban a mano; ahora todos van contra la altura relativa al jugador de la tabla: nadie enano ni gigante).
         private static readonly (string prefab, float relativa)[] Personajes =
         {
             ("Visual_man", EscalasHumanos.Relativa("Visual_man")), ("Visual_woman", EscalasHumanos.Relativa("Visual_woman")), ("Visual_PJ01", 1.00f),
             // El Hacker no va: su idle es sentado tecleando (su altura de pie la mide EscalaHumanosT1521Pruebas en EditMode).
             ("Visual_Doctor", EscalasHumanos.Relativa("Visual_Doctor")), ("Visual_Inventor", EscalasHumanos.Relativa("Visual_Inventor")),
             ("Visual_RobotHombre", EscalasHumanos.Relativa("Visual_RobotHombre")), ("Visual_SkullHombre", EscalasHumanos.Relativa("Visual_SkullHombre")),
-            ("Visual_woman2", EscalasHumanos.Relativa("Visual_woman2")), ("Visual_AL10", 1.00f), ("Visual_AL11", 1.00f), ("Visual_GuardiaNova", 1.34f),
+            ("Visual_woman2", EscalasHumanos.Relativa("Visual_woman2")), ("Visual_AL10", EscalasHumanos.Relativa("Visual_AL10")), ("Visual_AL11", EscalasHumanos.Relativa("Visual_AL11")), ("Visual_GuardiaNova", EscalasHumanos.Relativa("Visual_GuardiaNova")),
         };
 
         [UnityTest]

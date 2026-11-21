@@ -19,6 +19,7 @@ namespace MechaCyberpunk.Trafico.Drones
         private const float SegundosEntreControles = 0.5f;
 
         private Transform[] rotores;
+        private Vector3[] ejes;
         private Camera camara;
         private float proximoControl;
         private bool enAlcance = true;
@@ -44,7 +45,17 @@ namespace MechaCyberpunk.Trafico.Drones
                 }
             }
             rotores = lista.ToArray();
+            // T-1554: los rotores vienen de Blender (Z arriba): el eje del disco no siempre es la Y local. Se gira sobre el eje más delgado de su malla.
+            ejes = new Vector3[rotores.Length];
+            for (int i = 0; i < rotores.Length; i++)
+            {
+                MeshFilter mf = rotores[i].GetComponent<MeshFilter>();
+                ejes[i] = mf != null && mf.sharedMesh != null ? CalculoGiroRotores.EjeDelDisco(mf.sharedMesh.bounds.size) : Vector3.up;
+            }
         }
+
+        /// <summary>El eje local (unitario) sobre el que gira el rotor <paramref name="i"/>.</summary>
+        public Vector3 EjeDe(int i) => ejes != null && i < ejes.Length ? ejes[i] : Vector3.up;
 
         private void Update()
         {
@@ -72,7 +83,7 @@ namespace MechaCyberpunk.Trafico.Drones
             }
             for (int i = 0; i < rotores.Length; i++)
             {
-                rotores[i].Rotate(0f, CalculoGiroRotores.GradosEnPaso(velocidad, dt, i, alternarSentido), 0f, Space.Self);
+                rotores[i].Rotate(EjeDe(i), CalculoGiroRotores.GradosEnPaso(velocidad, dt, i, alternarSentido), Space.Self);
             }
         }
     }

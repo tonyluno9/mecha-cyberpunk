@@ -179,7 +179,9 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
         {
             foreach (string clip in TablaImpactosPJ01.Todos.Select(i => i.Clip).Distinct())
             {
-                Assert.IsTrue(System.IO.File.Exists(ImportadorClipsPJ01.Carpeta + clip + ".fbx"), "la tabla de impactos nombra un clip que no existe: " + clip);
+                // T-1553 movió los clips E16_*/E18_* a la carpeta de su personaje: se buscan en las tres carpetas.
+                bool existe = ClipsRobotsNovaT1553.CarpetasDeClips().Any(c => System.IO.File.Exists(c + "/" + clip + ".fbx"));
+                Assert.IsTrue(existe, "la tabla de impactos nombra un clip que no existe: " + clip);
             }
         }
 
@@ -295,8 +297,11 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
         public void SaltoCorriendo_ConectadoDesdeCorrer_ConAterrizajeYRodada()
         {
             AnimatorState correr = EstadoBase("Correr");
+            // T-1550 (decisión de Tony del 20-nov (T-1550)): el salto corriendo entra de dos formas, al pedir el salto en el piso (PreparandoSalto, 0.1 s antes del despegue) y ya en el aire; las dos van antes que SaltoInicio.
             Assert.AreEqual("SaltoCorrerInicio", correr.transitions[0].destinationState.name, "va antes que SaltoInicio");
-            Assert.IsTrue(correr.transitions[0].conditions.Any(c => c.parameter == ReglasVisual.EnSuelo && c.mode == AnimatorConditionMode.IfNot));
+            Assert.AreEqual("SaltoCorrerInicio", correr.transitions[1].destinationState.name, "va antes que SaltoInicio");
+            Assert.IsTrue(correr.transitions.Take(2).Any(t => t.conditions.Any(c => c.parameter == ReglasVisual.EnSuelo && c.mode == AnimatorConditionMode.IfNot)));
+            Assert.IsTrue(correr.transitions.Take(2).Any(t => t.conditions.Any(c => c.parameter == ReglasAnimacion.PreparandoSalto && c.mode == AnimatorConditionMode.If)));
             foreach ((string estado, string clip) in ReglasAnimacion.EstadosSaltoCorrerT1540)
             {
                 Assert.AreEqual(clip, EstadoBase(estado).motion.name, estado);
@@ -304,7 +309,7 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
             Assert.AreEqual("SaltoCorrerAire", EstadoBase("SaltoCorrerInicio").transitions.First(t => t.hasExitTime).destinationState.name);
             Assert.IsTrue(EstadoBase("SaltoCorrerAire").transitions.Any(t => t.destinationState.name == "SaltoCorrerAterrizaje"));
             AnimatorStateTransition rodada = Base().layers[0].stateMachine.anyStateTransitions.First(t => t.destinationState != null && t.destinationState.name == "SaltoCorrerRodada");
-            Assert.IsTrue(rodada.conditions.Any(c => c.parameter == ReglasAnimacion.AterrizajeFuerte), "la rodada es el aterrizaje fuerte corriendo");
+            Assert.IsTrue(rodada.conditions.Any(c => c.parameter == ReglasAnimacion.AterrizajeRodada), "T-1550: la rodada tiene su propio trigger (caer corriendo desde ~6 m/s de caída, sin bloquear)");
             AnimatorStateTransition[] cualquiera = Base().layers[0].stateMachine.anyStateTransitions;
             Assert.Less(System.Array.IndexOf(cualquiera, rodada), System.Array.FindIndex(cualquiera, t => t.destinationState != null && t.destinationState.name == "AterrizajeFuerte"), "va antes que AterrizajeFuerte");
         }

@@ -8,7 +8,24 @@ namespace MechaCyberpunk.Personaje.Movimiento
         /// <summary>Velocidad vertical que se mantiene en el piso para que el CharacterController siga detectándolo (m/s).</summary>
         public const float VelocidadVerticalEnPiso = -2f;
 
+        /// <summary>
+        /// T-1550 (decisión de Tony del 20-nov): segundos entre pedir el salto y el impulso: 3 cuadros a 30 fps (0.1 s), la agachada de PJ01_Salto_Despegue y PJ01_Salto_Correr_Despegue.
+        /// El clip despega en el cuadro 4, así que el cuerpo sale del piso justo ahí.
+        /// </summary>
+        public const float SegundosRetardoSalto = 0.1f;
+
         private const float DuracionPasoMinima = 0.0001f;
+        private float segundosParaSaltar;
+        private bool saltoPendiente;
+
+        /// <summary>T-1550: segundos que faltan para el impulso (la agachada del salto). Con 0 el salto sale en el mismo cuadro en que se pide.</summary>
+        public float RetardoSalto { get; set; } = SegundosRetardoSalto;
+
+        /// <summary>T-1550: true entre pedir el salto y el impulso (el personaje se agacha en el piso).</summary>
+        public bool PreparandoSalto => saltoPendiente;
+
+        /// <summary>T-1550: true solo en el cuadro en que sale el impulso del salto (el sonido y la animación del despegue cuelgan de él).</summary>
+        public bool DespegoEsteFrame { get; private set; }
 
         /// <summary>Velocidad horizontal en el espacio del jugador (x lateral, y adelante, m/s).</summary>
         public Vector2 VelocidadHorizontal { get; private set; }
@@ -32,16 +49,32 @@ namespace MechaCyberpunk.Personaje.Movimiento
         }
 
         /// <summary>
-        /// Calcula cuánto se mueve en vertical este frame (m). Salta solo si está en el piso y se pidió saltar.
-        /// La integración es exacta para gravedad constante, así que el salto llega a la altura pedida.
+        /// Calcula cuánto se mueve en vertical este frame (m). Pide saltar solo si está en el piso; el impulso sale <see cref="RetardoSalto"/> segundos después (T-1550: 0.1 s, para
+        /// que despegue en el cuadro 4 del clip) y se cancela si deja el piso antes. La integración es exacta para gravedad constante, así que el salto llega a la altura pedida.
         /// </summary>
         public float ActualizarVertical(bool enPiso, bool saltar, float dt, float alturaSalto, float gravedad)
         {
-            if (enPiso && saltar)
+            DespegoEsteFrame = false;
+            if (!enPiso)
             {
-                VelocidadVertical = VelocidadInicialSalto(alturaSalto, gravedad);
+                saltoPendiente = false;
             }
-            else if (enPiso && VelocidadVertical <= 0f)
+            else if (saltar && !saltoPendiente && VelocidadVertical <= 0f)
+            {
+                saltoPendiente = true;
+                segundosParaSaltar = RetardoSalto;
+            }
+            if (enPiso && saltoPendiente)
+            {
+                segundosParaSaltar -= dt;
+                if (segundosParaSaltar <= 0f)
+                {
+                    saltoPendiente = false;
+                    DespegoEsteFrame = true;
+                    VelocidadVertical = VelocidadInicialSalto(alturaSalto, gravedad);
+                }
+            }
+            if (!DespegoEsteFrame && enPiso && VelocidadVertical <= 0f)
             {
                 VelocidadVertical = VelocidadVerticalEnPiso;
                 return VelocidadVertical * dt;
@@ -63,6 +96,8 @@ namespace MechaCyberpunk.Personaje.Movimiento
         {
             VelocidadHorizontal = Vector2.zero;
             VelocidadVertical = 0f;
+            saltoPendiente = false;
+            DespegoEsteFrame = false;
         }
     }
 }

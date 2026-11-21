@@ -107,6 +107,13 @@ namespace MechaCyberpunk.Personaje.Visual
         public const string RapidezEscalones = "RapidezEscalones";
         /// <summary>T-1505: trigger del aterrizaje fuerte (PJ01_Aterrizaje_Fuerte); lo dispara VisualPersonaje del jugador al tocar el piso tras una caída de <see cref="VelocidadAterrizajeFuerte"/>.</summary>
         public const string AterrizajeFuerte = "AterrizajeFuerte";
+        /// <summary>T-1550: trigger de la rodada al caer corriendo (PJ01_Salto_Correr_Rodada, sin bloquear el movimiento); lo dispara VisualPersonaje del jugador al tocar el piso según <see cref="TipoAterrizaje"/>.</summary>
+        public const string AterrizajeRodada = "AterrizajeRodada";
+        /// <summary>
+        /// T-1550: true mientras el jugador pidió saltar y aún no despega (los 3 cuadros, 0.1 s, de la agachada de PJ01_Salto_Despegue: el impulso sale en el cuadro 4). Lo pone ControladorAPie en VisualPersonaje;
+        /// con él el salto empieza en el piso (SaltoInicio o SaltoCorrerInicio) y no espera a dejar el suelo.
+        /// </summary>
+        public const string PreparandoSalto = "PreparandoSalto";
         /// <summary>T-985: puños en guardia (estado PunosGuardia de la capa de arriba, PJ01_Punos_Guardia). Lo pone VisualPersonaje unos segundos después de cada golpe de puños, solo en quien tiene <c>GuardiaTrasGolpe</c> (el jugador).</summary>
         public const string EnGuardia = "EnGuardia";
         /// <summary>T-1310: el jugador lleva un arma larga (aunque no apunte). Con ella, cubrirse usa PJ01_CoberturaRifle_* en vez de los de pistola.</summary>
@@ -346,22 +353,27 @@ namespace MechaCyberpunk.Personaje.Visual
         };
 
         public static readonly string[] ParametrosFloat = { ReglasVisual.Velocidad, VelX, VelZ, VelY, Giro, PoseCobertura, RapidezGolpe, RapidezEscalones, ApuntarX, ApuntarZ, ConImplante, RapidezSaltoInicio, RapidezSaltoAterrizaje };
-        public static readonly string[] ParametrosBool = { ReglasVisual.EnSuelo, ReglasVisual.Apuntando, ReglasVisual.Caer, ReglasVisual.Cubierto, Agachado, Manejando, ViendoTelefono, EnGuardia, ArmaLargaEquipada };
+        public static readonly string[] ParametrosBool = { ReglasVisual.EnSuelo, ReglasVisual.Apuntando, ReglasVisual.Caer, ReglasVisual.Cubierto, Agachado, Manejando, ViendoTelefono, EnGuardia, ArmaLargaEquipada, PreparandoSalto };
         public static readonly string[] ParametrosInt = { ReglasVisual.TipoArma, DanoTipo, MuerteTipo, GolpeTipo, CoberturaTipo, GestoTipo, Escalones };
         public static readonly string[] ParametrosTrigger =
         {
-            ReglasVisual.Disparar, ReglasVisual.Recargar, ReglasVisual.Golpe, ReglasVisual.Herido, DisparoCobertura, Frenar, Gesto, Rodar, AterrizajeFuerte,
+            ReglasVisual.Disparar, ReglasVisual.Recargar, ReglasVisual.Golpe, ReglasVisual.Herido, DisparoCobertura, Frenar, Gesto, Rodar, AterrizajeFuerte, AterrizajeRodada,
         };
 
         /// <summary>
         /// Velocidad del Animator para que los pies no patinen: real / la del clip, limitada. Sin velocidad de clip (0) no se ajusta (1).
         /// </summary>
         /// <summary>
-        /// T-1505: velocidad (m/s) a la que avanzan los clips de Blender del jugador (BITACORA, pedido 19-nov noche). Caminar de verdad 1.60, trote (paso normal)
-        /// 4.50, sprint (Shift) 7.25, trote de lado y hacia atrás 4.00; los de caminar de lado (1.61) y atrás (1.04) quedan en el extremo lento de la mezcla.
+        /// T-1505: velocidad (m/s) a la que avanzan los clips de Blender del jugador (BITACORA, pedido 19-nov noche). T-1550 (decisión de Tony del 20-nov): WASD = caminar
+        /// (PJ01_Caminar 1.62), Shift = trote con el correr viejo (PJ01_Trote 4.53) y la velocidad rápida (implante o consumible) = PJ01_CorrerRapido 6.25, que reemplaza al
+        /// PJ01_Sprint de 7.25 (el archivo se queda, ya no se usa). Trote de lado y hacia atrás 4.00; los de caminar de lado (1.61) y atrás (1.04) quedan en el extremo lento de la mezcla.
         /// </summary>
-        public const float VelocidadPJ01Caminar = 1.60f, VelocidadPJ01Trote = 4.5f, VelocidadPJ01Sprint = 7.25f, VelocidadPJ01TroteLado = 4.0f, VelocidadPJ01TroteAtras = 4.0f;
+        public const float VelocidadPJ01Caminar = 1.62f, VelocidadPJ01Trote = 4.53f, VelocidadPJ01CorrerRapido = 6.25f, VelocidadPJ01TroteLado = 4.0f, VelocidadPJ01TroteAtras = 4.0f;
         public const float VelocidadPJ01CaminarLado = 1.61f, VelocidadPJ01CaminarAtras = 1.04f;
+        /// <summary>T-1550: velocidad (m/s) a la que avanza PJ01_CaminarApuntando_Derecha (antes 2.0): el caminar de lado de siempre con los brazos sujetando la pistola. El de la izquierda se queda como estaba.</summary>
+        public const float VelocidadPJ01CaminarApuntandoDerecha = 1.57f;
+        /// <summary>T-1550: velocidad (m/s) real del jugador con la velocidad rápida activa (implante de piernas, habilidad de piernas o consumible): la del clip PJ01_CorrerRapido, para que los pies no patinen.</summary>
+        public const float VelocidadRapida = VelocidadPJ01CorrerRapido;
         /// <summary>T-1505: rango de Animator.speed del jugador al igualar los pies con el cuerpo.</summary>
         public const float RapidezMinimaJugador = 0.85f, RapidezMaximaJugador = 1.15f;
 
@@ -394,6 +406,44 @@ namespace MechaCyberpunk.Personaje.Visual
 
         /// <summary>T-1505: true si la velocidad vertical más negativa del aire (m/s) pide el aterrizaje fuerte.</summary>
         public static bool EsAterrizajeFuerte(float velocidadVerticalMinima, float metrosCaidos) => velocidadVerticalMinima <= -VelocidadAterrizajeFuerte && metrosCaidos >= CaidaMinimaAterrizajeFuerte;
+
+        /// <summary>T-1550: qué aterrizaje se muestra al tocar el piso (<see cref="TipoAterrizaje"/>).</summary>
+        public enum AterrizajeVisual
+        {
+            /// <summary>El de siempre: SaltoAterrizaje, SaltoCorrerAterrizaje o la caída en bucle.</summary>
+            Normal = 0,
+            /// <summary>Cayó corriendo desde alto: PJ01_Salto_Correr_Rodada, rueda y se levanta corriendo (no bloquea).</summary>
+            Rodada = 1,
+            /// <summary>Cayó desde muy alto sin correr: PJ01_Aterrizaje_Fuerte, tres puntos (bloquea hasta terminar).</summary>
+            Fuerte = 2,
+        }
+
+        /// <summary>T-1550: velocidad horizontal (m/s) desde la que un salto o una caída son "corriendo" (PJ01_Salto_Correr_*): ~3 m/s, entre el caminar (1.6) y el trote (4.5).</summary>
+        public const float VelocidadSaltoCorriendo = 3f;
+
+        /// <summary>T-1550: VelZ mínimo (dirección local hacia adelante, 0 a 1) para el salto corriendo: de lado o hacia atrás se usa el salto parado (el clip de correr solo mira adelante).</summary>
+        public const float AdelanteMinimoSaltoCorriendo = 0.5f;
+
+        /// <summary>T-1550: velocidad vertical de llegada (m/s hacia abajo) desde la que caer corriendo es una rodada (~1.1 m con gravedad 16); abajo de ella el aterrizaje corriendo es el normal.</summary>
+        public const float VelocidadAterrizajeRodada = 6f;
+
+        /// <summary>T-1550: caída mínima (m) de la rodada (evita dispararla por una velocidad vertical espuria al arrancar o teletransportar).</summary>
+        public const float CaidaMinimaRodada = 1f;
+
+        /// <summary>
+        /// T-1550: el aterrizaje que toca para una caída de <paramref name="velocidadVerticalMinima"/> m/s (negativa, la más baja del aire) y <paramref name="metrosCaidos"/> m, con la
+        /// <paramref name="velocidadHorizontal"/> (m/s) con que toca el piso. Corriendo (&gt;= <see cref="VelocidadSaltoCorriendo"/>) desde ~6 m/s de caída es la rodada (también por arriba de 9: rueda en vez de
+        /// quedarse en los tres puntos); sin correr, desde 9 m/s y 2 m es el aterrizaje fuerte; lo demás es normal.
+        /// </summary>
+        public static AterrizajeVisual TipoAterrizaje(float velocidadVerticalMinima, float metrosCaidos, float velocidadHorizontal)
+        {
+            bool corriendo = velocidadHorizontal >= VelocidadSaltoCorriendo;
+            if (corriendo && velocidadVerticalMinima <= -VelocidadAterrizajeRodada && metrosCaidos >= CaidaMinimaRodada)
+            {
+                return AterrizajeVisual.Rodada;
+            }
+            return EsAterrizajeFuerte(velocidadVerticalMinima, metrosCaidos) ? AterrizajeVisual.Fuerte : AterrizajeVisual.Normal;
+        }
 
         /// <summary>T-1505: caída mínima (m) para el aterrizaje fuerte: evita dispararlo por una velocidad vertical espuria al arrancar o al teletransportar.</summary>
         public const float CaidaMinimaAterrizajeFuerte = 2f;

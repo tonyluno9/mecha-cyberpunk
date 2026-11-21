@@ -118,11 +118,11 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return Esperar(1.0f);
             Vector3 mov = Mundo();
             mov.y = 0f;
-            Assert.Greater(mov.magnitude, 3f, "Se mueve");
+            Assert.Greater(mov.magnitude, 1.2f, "Se mueve (T-1550: WASD camina a 1.62 m/s, antes 4.5)");
             Assert.Greater(Vector3.Dot(FrenteHuesos(a), mov.normalized), 0.7f, "El cuerpo (huesos) mira hacia donde camina");
             Assert.Greater(Vector3.Dot(visual.transform.forward, mov.normalized), 0.7f, "El visual mira hacia donde camina");
             Assert.AreEqual("Caminar", Estado(a), "Caminar normal usa Caminar");
-            Assert.AreEqual("PJ01_Trote", ClipDominante(a)); // T-1505: el paso normal del jugador es el trote (PJ01_Trote)
+            Assert.AreEqual("PJ01_Caminar", ClipDominante(a)); // T-1550 (decisión de Tony del 20-nov (T-1550)): WASD es PJ01_Caminar; el trote (PJ01_Trote) es con Shift
 
             // El clip no gira el cuerpo: el frente se queda estable mientras camina recto.
             Vector3 f0 = FrenteHuesos(a);
@@ -139,8 +139,8 @@ namespace MechaCyberpunk.Tests.Personaje
 
             Press(teclado.leftShiftKey);
             yield return Esperar(1.2f);
-            Assert.AreEqual("Correr", Estado(a), "Con Shift usa Correr");
-            Assert.AreEqual("PJ01_Sprint", ClipDominante(a));
+            Assert.AreEqual("Caminar", Estado(a), "Con Shift trota (mezcla de Caminar; T-1550)");
+            Assert.AreEqual("PJ01_Trote", ClipDominante(a));
             Assert.Greater(Vector3.Dot(FrenteHuesos(a), Mundo().normalized), 0.7f, "Corriendo también mira al frente");
             Release(teclado.leftShiftKey);
             yield return Esperar(1.2f);
