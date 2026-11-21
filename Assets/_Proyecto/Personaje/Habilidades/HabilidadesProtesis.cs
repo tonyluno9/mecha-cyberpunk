@@ -25,6 +25,7 @@ namespace MechaCyberpunk.Personaje.Habilidades
         private readonly Jugador.SeguidorImplantes implantes = new Jugador.SeguidorImplantes();
 
         private ConfigHabilidadesProtesis config;
+        private float ultimoPulso = float.NegativeInfinity; // T-1535: el último golpe del exo puesto
         private Jugador.JugadorAPie jugador;
         private ControladorAPie controlador;
         private VidaAPie vida;
@@ -194,11 +195,18 @@ namespace MechaCyberpunk.Personaje.Habilidades
             if (nivel <= 0)
             {
                 SinImplante?.Invoke(h);
+                Sonidos.Reproducir(ReglaSonidoExo.Error); // T-1535: sin el implante
                 return false;
             }
             if (!reglas[(int)h].Activar(nivel))
             {
+                Sonidos.Reproducir(ReglaSonidoExo.Error); // T-1535: sin energía (recargando o ya activa)
                 return false;
+            }
+            string sonido = ReglaSonidoExo.AlActivar(h);
+            if (sonido != null)
+            {
+                Sonidos.ReproducirEn(sonido, transform.position); // T-1535: servos del exo
             }
             Activada?.Invoke(h);
             Sincronizar();
@@ -216,6 +224,11 @@ namespace MechaCyberpunk.Personaje.Habilidades
                     reglas[i].Cortar();
                 }
                 reglas[i].Avanzar(dt);
+            }
+            if (ReglaSonidoExo.TocaPulso(Activa(HabilidadProtesis.Piernas), Activa(HabilidadProtesis.Brazos), Time.time, ultimoPulso))
+            {
+                ultimoPulso = Time.time;
+                Sonidos.ReproducirEn(ReglaSonidoExo.Puesto, transform.position); // T-1535: la prótesis puesta (reemplaza el golpe del brazo robótico)
             }
             Sincronizar();
         }

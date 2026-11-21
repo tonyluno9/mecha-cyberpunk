@@ -15,8 +15,6 @@ namespace MechaCyberpunk.Personaje.Editor
         public const string PrefijoSniper = "Assets/_Proyecto/Personaje/Datos/Armas/DatosArma_sniper_";
         public const string RutaCamara = "Assets/_Proyecto/Personaje/Datos/ConfigCamaraHombro_Base.asset";
         public const string RutaCatalogoSonidos = "Assets/_Proyecto/Progresion/Datos/CatalogoSonidos.asset";
-        public const string RutaSonidoCamaraLenta = "Assets/Arte/Audio/UI/UI_CAMARA_LENTA.wav";
-        public const string IdCamaraLenta = "UI_CAMARA_LENTA";
 
         /// <summary>Daño por bala del francotirador en los niveles 0 a 3 (antes 70, 85, 100 y 120). Todos por debajo de los 60 de vida de un pandillero.</summary>
         public static readonly float[] DanioSniper = { 40f, 44f, 48f, 52f };
@@ -31,16 +29,6 @@ namespace MechaCyberpunk.Personaje.Editor
             }
             SerializedObject cam = Cargar(RutaCamara);
             Debug.Log("[T-1527] camara: fovSniper " + Valor(cam, "fovSniper") + ", fovSniperMinimo " + Valor(cam, "fovSniperMinimo") + ", fovSniperMaximo " + Valor(cam, "fovSniperMaximo") + ", factorPasoZoom " + Valor(cam, "factorPasoZoom"));
-            CatalogoSonidos catalogo = AssetDatabase.LoadAssetAtPath<CatalogoSonidos>(RutaCatalogoSonidos);
-            bool esta = false;
-            if (catalogo != null)
-            {
-                foreach (CatalogoSonidos.Entrada e in catalogo.Entradas)
-                {
-                    esta |= e != null && e.id == IdCamaraLenta && e.finales != null && e.finales.Length > 0;
-                }
-            }
-            Debug.Log("[T-1527] catalogo de sonidos: " + IdCamaraLenta + (esta ? " ya tiene clip" : " falta") + "; wav " + (AssetDatabase.LoadAssetAtPath<AudioClip>(RutaSonidoCamaraLenta) != null ? "importado" : "no importado"));
         }
 
         [MenuItem("Mecha Cyberpunk/T-1527/Aplicar armas")]
@@ -67,33 +55,8 @@ namespace MechaCyberpunk.Personaje.Editor
                 Poner(cam, "factorPasoZoom", 1.3f);
                 cam.ApplyModifiedPropertiesWithoutUndo();
             }
-            AgregarSonidoCamaraLenta();
+            // Sonidos 20-nov: la rueda usa EXO_RUEDA_CAMARA_LENTA_ENTRAR/SALIR (real); el wav sintetizado UI_CAMARA_LENTA se borró.
             AssetDatabase.SaveAssets();
-        }
-
-        private static void AgregarSonidoCamaraLenta()
-        {
-            AssetDatabase.ImportAsset(RutaSonidoCamaraLenta);
-            AudioClip clip = AssetDatabase.LoadAssetAtPath<AudioClip>(RutaSonidoCamaraLenta);
-            CatalogoSonidos catalogo = AssetDatabase.LoadAssetAtPath<CatalogoSonidos>(RutaCatalogoSonidos);
-            if (clip == null || catalogo == null)
-            {
-                Debug.LogError("[T-1527] falta el wav " + RutaSonidoCamaraLenta + " o el catalogo de sonidos.");
-                return;
-            }
-            List<CatalogoSonidos.Entrada> entradas = new List<CatalogoSonidos.Entrada>(catalogo.Entradas);
-            CatalogoSonidos.Entrada existente = entradas.Find(e => e != null && e.id == IdCamaraLenta);
-            if (existente == null)
-            {
-                existente = new CatalogoSonidos.Entrada { id = IdCamaraLenta };
-                entradas.Add(existente);
-            }
-            existente.finales = new[] { clip };
-            catalogo.Fijar(entradas);
-            catalogo.SincronizarInterruptores();
-            catalogo.FijarEncendido(IdCamaraLenta, true);
-            EditorUtility.SetDirty(catalogo);
-            Debug.Log("[T-1527] catalogo: " + IdCamaraLenta + " -> " + clip.name + " (encendido).");
         }
 
         private static SerializedObject Cargar(string ruta)

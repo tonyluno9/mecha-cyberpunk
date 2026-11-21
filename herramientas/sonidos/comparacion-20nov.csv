@@ -1,0 +1,237 @@
+carpeta_fuente,archivo_fuente,id,carpeta_destino,estado,existente,frecuencia,canales,formato,duracion_s,nota
+00_Sin_nombre_ponselo_tu,percusion_cumbia.wav,RAD_EST1_CUMBIA_PERCUSION,18_Radio_Musica,NUEVO,,44100,2,PCM 24bit,10.00,
+00_Sin_nombre_ponselo_tu,tele_reiniciando.mp3,OBJ_TELE_REINICIO,14_Ambiente,NUEVO,,24000,2,mp3,7.22,MP3 -> WAV PCM16
+00_Sin_nombre_ponselo_tu,zumbido_refrigerador.wav,OBJ_REFRIGERADOR,14_Ambiente,NUEVO,,44100,2,PCM 24bit,52.79,
+01_UI,HUD_LOGRO.wav,HUD_LOGRO,01_UI,IGUAL,01_UI/HUD_LOGRO.wav,96000,2,PCM 24bit,4.36,"mismo contenido (frecuencia, largo y muestras)"
+01_UI,HUD_NOTIFICACION.wav,HUD_NOTIFICACION,01_UI,IGUAL,01_UI/HUD_NOTIFICACION.wav,96000,2,PCM 24bit,1.61,"mismo contenido (frecuencia, largo y muestras)"
+01_UI,HUD_VIDA_BAJA.wav,HUD_VIDA_BAJA,01_UI,IGUAL,01_UI/HUD_VIDA_BAJA.wav,44100,2,PCM 24bit,3.16,"mismo contenido (frecuencia, largo y muestras)"
+01_UI,TIE_COMPRAR.wav,TIE_COMPRAR,01_UI,IGUAL,01_UI/TIE_COMPRAR.wav,96000,2,PCM 24bit,0.37,"mismo contenido (frecuencia, largo y muestras)"
+01_UI,TIE_DESEQUIPAR.wav,TIE_DESEQUIPAR,01_UI,IGUAL,01_UI/TIE_DESEQUIPAR.wav,96000,2,PCM 24bit,1.37,"mismo contenido (frecuencia, largo y muestras)"
+01_UI,TIE_EQUIPAR.wav,TIE_EQUIPAR,01_UI,IGUAL,01_UI/TIE_EQUIPAR.wav,96000,2,extensible 24bit,1.63,"mismo contenido (frecuencia, largo y muestras)"
+01_UI,UI_ATRAS.wav,UI_ATRAS,01_UI,IGUAL,01_UI/UI_ATRAS.wav,44100,2,PCM 16bit,0.85,"mismo contenido (frecuencia, largo y muestras)"
+01_UI,UI_ERROR.wav,UI_ERROR,01_UI,IGUAL,01_UI/UI_ERROR.wav,44100,2,PCM 24bit,0.25,"mismo contenido (frecuencia, largo y muestras)"
+01_UI,UI_LOGO_INTRO.wav,UI_LOGO_INTRO,01_UI,IGUAL,01_UI/UI_LOGO_INTRO.wav,44100,2,PCM 16bit,3.50,"mismo contenido (frecuencia, largo y muestras)"
+01_UI,UI_MENU_ABRIR.wav,UI_MENU_ABRIR,01_UI,IGUAL,01_UI/UI_MENU_ABRIR.wav,44100,2,PCM 16bit,4.00,"mismo contenido (frecuencia, largo y muestras)"
+01_UI,UI_MENU_CERRAR.wav,UI_MENU_CERRAR,01_UI,IGUAL,01_UI/UI_MENU_CERRAR.wav,44100,2,PCM 16bit,1.50,"mismo contenido (frecuencia, largo y muestras)"
+01_UI,UI_MOVER.wav,UI_MOVER,01_UI,IGUAL,01_UI/UI_MOVER.wav,44100,2,PCM 16bit,0.38,"mismo contenido (frecuencia, largo y muestras)"
+01_UI,UI_PESTANA.wav,UI_PESTANA,01_UI,IGUAL,01_UI/UI_PESTANA.wav,44100,2,PCM 16bit,0.50,"mismo contenido (frecuencia, largo y muestras)"
+01_UI,UI_SELECCIONAR.wav,UI_SELECCIONAR,01_UI,IGUAL,01_UI/UI_SELECCIONAR.wav,44100,2,PCM 16bit,2.29,"mismo contenido (frecuencia, largo y muestras)"
+02_Armas,ARM_COLA_CALLE.wav,ARM_COLA_CALLE,02_Armas,IGUAL,02_Armas/ARM_COLA_CALLE.wav,44100,2,PCM 24bit,4.40,"mismo contenido (frecuencia, largo y muestras)"
+02_Armas,ARM_GRANADA_REBOTE.wav,ARM_GRANADA_REBOTE,02_Armas,IGUAL,02_Armas/ARM_GRANADA_REBOTE.wav,96000,2,extensible 24bit,1.19,"mismo contenido (frecuencia, largo y muestras)"
+02_Armas,ARM_GRANADA_SEGURO.wav,ARM_GRANADA_SEGURO,02_Armas,IGUAL,02_Armas/ARM_GRANADA_SEGURO.wav,96000,2,PCM 24bit,0.37,"mismo contenido (frecuencia, largo y muestras)"
+02_Armas,ARM_SIN_BALAS.wav,ARM_SIN_BALAS,02_Armas,NUEVO,,44100,2,PCM 24bit,0.19,
+02_Armas,ARM_W01_DISPARO_01.wav,ARM_W01_DISPARO_01,02_Armas,IGUAL,02_Armas/ARM_W01_DISPARO_01.wav,96000,2,PCM 24bit,1.61,"mismo contenido (frecuencia, largo y muestras)"
+02_Armas,ARM_W02_BOMBA.wav,ARM_W02_BOMBA,02_Armas,IGUAL,02_Armas/ARM_W02_BOMBA.wav,96000,2,PCM 24bit,0.71,"mismo contenido (frecuencia, largo y muestras)"
+02_Armas,ARM_W02_DISPARO_01.wav,ARM_W02_DISPARO_01,02_Armas,IGUAL,02_Armas/ARM_W02_DISPARO_01.wav,96000,2,PCM 24bit,1.88,"mismo contenido (frecuencia, largo y muestras)"
+02_Armas,ARM_W03_DISPARO_01.wav,ARM_W03_DISPARO_01,02_Armas,IGUAL,02_Armas/ARM_W03_DISPARO_01.wav,96000,2,PCM 24bit,0.80,"mismo contenido (frecuencia, largo y muestras)"
+02_Armas,ARM_W03_RECARGA_CARGADOR.wav,ARM_W03_RECARGA_CARGADOR,02_Armas,IGUAL,02_Armas/ARM_W03_RECARGA_CARGADOR.wav,96000,2,PCM 24bit,0.38,"mismo contenido (frecuencia, largo y muestras)"
+02_Armas,ARM_W04_CERROJO.wav,ARM_W04_CERROJO,02_Armas,IGUAL,02_Armas/ARM_W04_CERROJO.wav,96000,2,PCM 24bit,0.63,"mismo contenido (frecuencia, largo y muestras)"
+02_Armas,ARM_W04_DISPARO_01.wav,ARM_W04_DISPARO_01,02_Armas,IGUAL,02_Armas/ARM_W04_DISPARO_01.wav,96000,2,PCM 24bit,1.50,"mismo contenido (frecuencia, largo y muestras)"
+02_Armas,ARM_W06_DISPARO_01.wav,ARM_W06_DISPARO_01,02_Armas,IGUAL,02_Armas/ARM_W06_DISPARO_01.wav,96000,2,PCM 24bit,1.46,"mismo contenido (frecuencia, largo y muestras)"
+02_Armas,ARM_W06_MECANICA_01.wav,ARM_W06_MECANICA_01,02_Armas,NUEVO,,96000,2,PCM 24bit,0.33,audio identico a 02_Armas/ARM_W06_SACAR.wav (es otro ID: se importa igual)
+02_Armas,ARM_W06_MECANICA_02.wav,ARM_W06_MECANICA_02,02_Armas,NUEVO,,96000,2,PCM 24bit,0.20,
+02_Armas,ARM_W06_MECANICA_03.wav,ARM_W06_MECANICA_03,02_Armas,NUEVO,,96000,2,PCM 24bit,0.15,
+02_Armas,ARM_W06_MECANICA_04.wav,ARM_W06_MECANICA_04,02_Armas,NUEVO,,96000,2,PCM 24bit,0.57,
+02_Armas,ARM_W06_MECANICA_05.wav,ARM_W06_MECANICA_05,02_Armas,NUEVO,,96000,2,PCM 24bit,0.22,
+02_Armas,ARM_W06_SACAR.wav,ARM_W06_SACAR,02_Armas,IGUAL,02_Armas/ARM_W06_SACAR.wav,96000,2,PCM 24bit,0.33,"mismo contenido (frecuencia, largo y muestras)"
+02_Armas,ARM_W07_CARGA.wav,ARM_W07_CARGA,02_Armas,IGUAL,02_Armas/ARM_W07_CARGA.wav,96000,2,extensible 24bit,3.40,"mismo contenido (frecuencia, largo y muestras)"
+02_Armas,ARM_W07_DISPARO.wav,ARM_W07_DISPARO,02_Armas,RENOMBRADO,02_Armas/ARM_W07_DISPARO_01.wav,96000,2,PCM 24bit,1.42,mismo audio que 02_Armas/ARM_W07_DISPARO_01.wav (verificado)
+02_Armas,ARM_W07_ENFRIAR.wav,ARM_W07_ENFRIAR,02_Armas,NUEVO,,48000,2,PCM 24bit,1.50,
+02_Armas,ARM_W07_GATILLO.wav,ARM_W07_GATILLO,02_Armas,RENOMBRADO,02_Armas/ARM_NOVA_DISPARO_01.wav,96000,2,PCM 24bit,1.21,mismo audio que 02_Armas/ARM_NOVA_DISPARO_01.wav (verificado)
+02_Armas,ARM_W07_RAYO_CAPA_EXTRA.wav,ARM_W07_RAYO_CAPA_EXTRA,02_Armas,NUEVO,,96000,2,PCM 24bit,10.55,
+02_Armas,ARM_W07_RAYO_LOOP.wav,ARM_W07_RAYO_LOOP,02_Armas,RENOMBRADO,02_Armas/ARM_W07_RAYO.wav,96000,2,PCM 24bit,3.64,mismo audio que 02_Armas/ARM_W07_RAYO.wav (verificado)
+02_Armas,ARM_W07_SIN_ENERGIA.wav,ARM_W07_SIN_ENERGIA,02_Armas,RENOMBRADO,02_Armas/ARM_NOVA_CARGA_DISPARO.wav,96000,2,PCM 24bit,1.02,mismo audio que 02_Armas/ARM_NOVA_CARGA_DISPARO.wav (verificado)
+02_Armas,ARM_W08_DISPARO.wav,ARM_W08_DISPARO,02_Armas,NUEVO,,96000,2,extensible 24bit,1.19,audio identico a 02_Armas/ARM_GRANADA_REBOTE.wav (es otro ID: se importa igual)
+02_Armas,CAS_CHICO_01.wav,CAS_CHICO_01,02_Armas,NUEVO,,96000,2,PCM 24bit,0.90,
+02_Armas,CAS_CHICO_02.wav,CAS_CHICO_02,02_Armas,NUEVO,,96000,2,PCM 24bit,0.67,
+02_Armas,CAS_GRANDE_01.wav,CAS_GRANDE_01,02_Armas,NUEVO,,96000,2,PCM 24bit,0.78,
+02_Armas,IMP_LASER_DISPARO.wav,IMP_LASER_DISPARO,02_Armas,IGUAL,02_Armas/IMP_LASER_DISPARO.wav,96000,2,PCM 24bit,0.40,"mismo contenido (frecuencia, largo y muestras)"
+02_Armas,IMP_MISILES_FIJAR.wav,IMP_MISILES_FIJAR,02_Armas,IGUAL,02_Armas/IMP_MISILES_FIJAR.wav,44100,2,PCM 16bit,1.00,"mismo contenido (frecuencia, largo y muestras)"
+02_Armas,IMP_MISILES_LANZAR.wav,IMP_MISILES_LANZAR,02_Armas,NUEVO,,96000,2,PCM 24bit,2.46,
+03_Impactos,IMP_BALA_CABEZA_01.wav,IMP_BALA_CABEZA_01,03_Impactos,IGUAL,03_Impactos/IMP_BALA_CABEZA_01.wav,96000,2,PCM 24bit,0.99,"mismo contenido (frecuencia, largo y muestras)"
+03_Impactos,IMP_BALA_CARNE_01.wav,IMP_BALA_CARNE_01,03_Impactos,IGUAL,03_Impactos/IMP_BALA_CARNE_01.wav,48000,2,PCM 24bit,0.23,"mismo contenido (frecuencia, largo y muestras)"
+03_Impactos,IMP_BALA_CONCRETO_01.wav,IMP_BALA_CONCRETO_01,03_Impactos,IGUAL,03_Impactos/IMP_BALA_CONCRETO_01.wav,96000,2,PCM 24bit,0.58,"mismo contenido (frecuencia, largo y muestras)"
+03_Impactos,IMP_BALA_CRISTAL_01.wav,IMP_BALA_CRISTAL_01,03_Impactos,IGUAL,03_Impactos/IMP_BALA_CRISTAL_01.wav,96000,2,PCM 24bit,0.66,"mismo contenido (frecuencia, largo y muestras)"
+03_Impactos,IMP_BALA_METAL_01.wav,IMP_BALA_METAL_01,03_Impactos,IGUAL,03_Impactos/IMP_BALA_METAL_01.wav,96000,2,PCM 24bit,1.50,"mismo contenido (frecuencia, largo y muestras)"
+03_Impactos,IMP_BALA_ROBOT_01.wav,IMP_BALA_ROBOT_01,03_Impactos,IGUAL,03_Impactos/IMP_BALA_ROBOT_01.wav,96000,2,PCM 24bit,1.03,"mismo contenido (frecuencia, largo y muestras)"
+03_Impactos,IMP_BALA_ZUMBIDO_01.wav,IMP_BALA_ZUMBIDO_01,03_Impactos,IGUAL,03_Impactos/IMP_BALA_ZUMBIDO_01.wav,96000,2,PCM 24bit,0.22,"mismo contenido (frecuencia, largo y muestras)"
+04_Explosiones,DES_CRISTAL_VENTANA.wav,DES_CRISTAL_VENTANA,04_Explosiones,NUEVO,,192000,2,PCM 24bit,2.42,
+04_Explosiones,EXP_BARRIL.wav,EXP_BARRIL,04_Explosiones,NUEVO,,48000,2,PCM 16bit,7.05,
+04_Explosiones,EXP_CARRO.wav,EXP_CARRO,04_Explosiones,NUEVO,,96000,2,PCM 24bit,7.97,
+04_Explosiones,EXP_CRISTALES.wav,EXP_CRISTALES,04_Explosiones,NUEVO,,96000,2,PCM 24bit,3.89,
+04_Explosiones,EXP_DRON_ROBOT.wav,EXP_DRON_ROBOT,04_Explosiones,NUEVO,,44100,2,PCM 24bit,1.89,
+04_Explosiones,EXP_ESCOMBROS.wav,EXP_ESCOMBROS,04_Explosiones,NUEVO,,96000,2,PCM 24bit,1.53,
+04_Explosiones,EXP_GRANADA_01.wav,EXP_GRANADA_01,04_Explosiones,IGUAL,04_Explosiones/EXP_GRANADA_01.wav,96000,2,PCM 24bit,1.55,"mismo contenido (frecuencia, largo y muestras)"
+04_Explosiones,EXP_NAVE.wav,EXP_NAVE,04_Explosiones,NUEVO,,44100,2,PCM 24bit,5.55,
+04_Explosiones,EXP_ONDA.wav,EXP_ONDA,04_Explosiones,IGUAL,04_Explosiones/EXP_ONDA.wav,96000,2,PCM 24bit,4.54,"mismo contenido (frecuencia, largo y muestras)"
+04_Explosiones,FUE_ENCENDER.wav,FUE_ENCENDER,04_Explosiones,NUEVO,,96000,2,PCM 24bit,1.99,
+04_Explosiones,FUE_LOOP_CHICO.wav,FUE_LOOP_CHICO,04_Explosiones,IGUAL,04_Explosiones/FUE_LOOP_CHICO.wav,48000,2,PCM 24bit,11.25,"mismo contenido (frecuencia, largo y muestras)"
+04_Explosiones,FUE_LOOP_GRANDE.wav,FUE_LOOP_GRANDE,04_Explosiones,NUEVO,,44100,2,PCM 24bit,145.66,
+05_Pasos,PAS_CONCRETO_01.wav,PAS_CONCRETO_01,05_Pasos,IGUAL,05_Pasos/PAS_CONCRETO_01.wav,96000,2,PCM 24bit,0.83,"mismo contenido (frecuencia, largo y muestras)"
+05_Pasos,PAS_GRAVA_SECUENCIA.wav,PAS_GRAVA_SECUENCIA,05_Pasos,IGUAL,,96000,2,PCM 24bit,8.89,grabacion larga: el 19-nov la recorto en varios archivos (regenerados desde la fuente: identicos a Assets)
+05_Pasos,PAS_MADERA_01.wav,PAS_MADERA_01,05_Pasos,IGUAL,05_Pasos/PAS_MADERA_01.wav,96000,2,PCM 24bit,0.37,"mismo contenido (frecuencia, largo y muestras)"
+05_Pasos,PAS_MADERA_02.wav,PAS_MADERA_02,05_Pasos,IGUAL,05_Pasos/PAS_MADERA_02.wav,96000,2,PCM 24bit,0.39,"mismo contenido (frecuencia, largo y muestras)"
+05_Pasos,PAS_METAL_01.wav,PAS_METAL_01,05_Pasos,IGUAL,05_Pasos/PAS_METAL_01.wav,96000,2,PCM 24bit,0.61,"mismo contenido (frecuencia, largo y muestras)"
+05_Pasos,PAS_MOJADO_01.wav,PAS_MOJADO_01,05_Pasos,IGUAL,05_Pasos/PAS_MOJADO_01.wav,48000,2,PCM 24bit,0.74,"mismo contenido (frecuencia, largo y muestras)"
+05_Pasos,PAS_TIERRA_SECUENCIA.wav,PAS_TIERRA_SECUENCIA,05_Pasos,IGUAL,,96000,2,PCM 24bit,7.88,grabacion larga: el 19-nov la recorto en varios archivos (regenerados desde la fuente: identicos a Assets)
+06_Jugador,JUG_ATERRIZAJE.wav,JUG_ATERRIZAJE,06_Jugador,IGUAL,06_Jugador/JUG_ATERRIZAJE.wav,96000,2,PCM 24bit,0.50,"mismo contenido (frecuencia, largo y muestras)"
+06_Jugador,JUG_LATIDO_VIDA_BAJA.wav,JUG_LATIDO_VIDA_BAJA,06_Jugador,NUEVO,,44100,2,PCM 24bit,4.25,
+06_Jugador,JUG_RODADA.wav,JUG_RODADA,06_Jugador,IGUAL,06_Jugador/JUG_RODADA.wav,44100,2,PCM 24bit,1.09,"mismo contenido (frecuencia, largo y muestras)"
+06_Jugador,JUG_ROPA_ROCE.wav,JUG_ROPA_ROCE,06_Jugador,NUEVO,,192000,2,PCM 24bit,1.36,
+06_Jugador,JUG_TREPAR.wav,JUG_TREPAR,06_Jugador,IGUAL,06_Jugador/JUG_TREPAR.wav,44100,2,PCM 24bit,1.26,"mismo contenido (frecuencia, largo y muestras)"
+06_Jugador,JUG_ZUMBIDO_EXPLOSION.wav,JUG_ZUMBIDO_EXPLOSION,06_Jugador,NUEVO,,44100,1,PCM 24bit,8.09,
+06_Jugador,MEL_BLOQUEO.wav,MEL_BLOQUEO,06_Jugador,NUEVO,,44100,1,PCM 24bit,0.26,
+06_Jugador,MEL_GOLPE_01.wav,MEL_GOLPE_01,06_Jugador,IGUAL,06_Jugador/MEL_GOLPE_01.wav,44100,2,PCM 24bit,0.73,"mismo contenido (frecuencia, largo y muestras)"
+06_Jugador,MEL_GOLPE_02.wav,MEL_GOLPE_02,06_Jugador,IGUAL,06_Jugador/MEL_GOLPE_02.wav,44100,2,PCM 24bit,0.72,"mismo contenido (frecuencia, largo y muestras)"
+06_Jugador,MEL_GOLPE_AIRE.wav,MEL_GOLPE_AIRE,06_Jugador,IGUAL,06_Jugador/MEL_GOLPE_AIRE.wav,96000,2,PCM 24bit,0.32,"mismo contenido (frecuencia, largo y muestras)"
+06_Jugador,MEL_GOLPE_CARNE.wav,MEL_GOLPE_CARNE,06_Jugador,IGUAL,06_Jugador/MEL_GOLPE_CARNE.wav,96000,2,PCM 24bit,0.36,"mismo contenido (frecuencia, largo y muestras)"
+06_Jugador,MEL_GOLPE_METAL.wav,MEL_GOLPE_METAL,06_Jugador,NUEVO,,96000,2,PCM 24bit,0.52,
+07_Interaccion,INT_HACKEO_EXITO.wav,INT_HACKEO_EXITO,07_Interaccion,IGUAL,07_Interaccion/INT_HACKEO_EXITO.wav,96000,2,PCM 24bit,0.54,"mismo contenido (frecuencia, largo y muestras)"
+07_Interaccion,INT_HACKEO_FALLO.wav,INT_HACKEO_FALLO,07_Interaccion,IGUAL,07_Interaccion/INT_HACKEO_FALLO.wav,44100,2,PCM 24bit,0.20,"mismo contenido (frecuencia, largo y muestras)"
+07_Interaccion,INT_INTERRUPTOR_LUZ.wav,INT_INTERRUPTOR_LUZ,07_Interaccion,IGUAL,07_Interaccion/INT_INTERRUPTOR_LUZ.wav,96000,2,PCM 24bit,1.23,"mismo contenido (frecuencia, largo y muestras)"
+07_Interaccion,INT_MALETIN_CERRAR.wav,INT_MALETIN_CERRAR,07_Interaccion,IGUAL,07_Interaccion/INT_MALETIN_CERRAR.wav,96000,2,PCM 24bit,0.99,"mismo contenido (frecuencia, largo y muestras)"
+07_Interaccion,INT_PUERTA_CRISTAL.wav,INT_PUERTA_CRISTAL,07_Interaccion,IGUAL,07_Interaccion/INT_PUERTA_CRISTAL.wav,96000,2,PCM 24bit,3.99,"mismo contenido (frecuencia, largo y muestras)"
+07_Interaccion,INT_PUERTA_MADERA.wav,INT_PUERTA_MADERA,07_Interaccion,IGUAL,07_Interaccion/INT_PUERTA_MADERA.wav,44100,2,PCM 24bit,1.02,"mismo contenido (frecuencia, largo y muestras)"
+07_Interaccion,INT_PUERTA_METAL.wav,INT_PUERTA_METAL,07_Interaccion,IGUAL,07_Interaccion/INT_PUERTA_METAL.wav,44100,2,PCM 24bit,0.96,"mismo contenido (frecuencia, largo y muestras)"
+07_Interaccion,INT_PUERTA_REJA.wav,INT_PUERTA_REJA,07_Interaccion,IGUAL,07_Interaccion/INT_PUERTA_REJA.wav,44100,2,PCM 24bit,5.22,"mismo contenido (frecuencia, largo y muestras)"
+07_Interaccion,INT_RECOGER_DINERO.wav,INT_RECOGER_DINERO,07_Interaccion,NUEVO,,96000,2,extensible 24bit,0.75,
+07_Interaccion,INT_RECOGER_OBJETO.wav,INT_RECOGER_OBJETO,07_Interaccion,IGUAL,07_Interaccion/INT_RECOGER_OBJETO.wav,44100,2,PCM 16bit,0.47,"mismo contenido (frecuencia, largo y muestras)"
+07_Interaccion,INT_TECLEO_HACKEO.wav,INT_TECLEO_HACKEO,07_Interaccion,IGUAL,07_Interaccion/INT_TECLEO_HACKEO.wav,44100,2,PCM 16bit,5.13,"mismo contenido (frecuencia, largo y muestras)"
+08_Consumibles,CON_BEBER.wav,CON_BEBER,08_Consumibles,IGUAL,08_Consumibles/CON_BEBER.wav,96000,2,PCM 24bit,3.24,"mismo contenido (frecuencia, largo y muestras)"
+08_Consumibles,CON_CURACION.wav,CON_CURACION,08_Consumibles,IGUAL,08_Consumibles/CON_CURACION.wav,96000,2,PCM 24bit,3.00,"mismo contenido (frecuencia, largo y muestras)"
+08_Consumibles,CON_LATA_ABRIR.wav,CON_LATA_ABRIR,08_Consumibles,IGUAL,08_Consumibles/CON_LATA_ABRIR.wav,96000,2,PCM 24bit,6.46,"mismo contenido (frecuencia, largo y muestras)"
+08_Consumibles,CON_PAPITAS_ABRIR.wav,CON_PAPITAS_ABRIR,08_Consumibles,NUEVO,,96000,2,PCM 24bit,0.98,
+08_Consumibles,CON_PAPITAS_COMER.wav,CON_PAPITAS_COMER,08_Consumibles,IGUAL,08_Consumibles/CON_PAPITAS_COMER.wav,96000,2,PCM 24bit,1.07,"mismo contenido (frecuencia, largo y muestras)"
+08_Consumibles,CON_VENDA.wav,CON_VENDA,08_Consumibles,IGUAL,08_Consumibles/CON_VENDA.wav,96000,2,PCM 24bit,1.81,"mismo contenido (frecuencia, largo y muestras)"
+09_Vehiculos,MOTO_ARRANQUE_01.wav,MOTO_ARRANQUE_01,09_Vehiculos,IGUAL,,96000,2,PCM 24bit,77.63,grabacion larga: el 19-nov la recorto en varios archivos (regenerados desde la fuente: identicos a Assets)
+09_Vehiculos,MOTO_ARRANQUE_02.wav,MOTO_ARRANQUE_02,09_Vehiculos,IGUAL,,96000,2,PCM 24bit,70.15,grabacion larga: el 19-nov la recorto en varios archivos (regenerados desde la fuente: identicos a Assets)
+09_Vehiculos,MOTO_ARRANQUE_RALENTI_APAGAR.wav,MOTO_ARRANQUE_RALENTI_APAGAR,09_Vehiculos,IGUAL,,96000,2,PCM 24bit,63.73,grabacion larga: el 19-nov la recorto en varios archivos (regenerados desde la fuente: identicos a Assets)
+09_Vehiculos,RAD_CAMBIAR_ESTACION.wav,RAD_CAMBIAR_ESTACION,09_Vehiculos,NUEVO,,96000,2,PCM 24bit,0.61,
+09_Vehiculos,VEH_ACELERON_01.wav,VEH_ACELERON_01,09_Vehiculos,IGUAL,09_Vehiculos/VEH_ACELERON_01.wav,96000,2,PCM 24bit,3.11,"mismo contenido (frecuencia, largo y muestras)"
+09_Vehiculos,VEH_ACELERON_02.wav,VEH_ACELERON_02,09_Vehiculos,IGUAL,09_Vehiculos/VEH_ACELERON_02.wav,96000,2,PCM 24bit,3.35,"mismo contenido (frecuencia, largo y muestras)"
+09_Vehiculos,VEH_ALARMA.wav,VEH_ALARMA,09_Vehiculos,IGUAL,,48000,2,PCM 16bit,50.25,grabacion larga: el 19-nov la recorto en varios archivos (regenerados desde la fuente: identicos a Assets)
+09_Vehiculos,VEH_CHOQUE_01.wav,VEH_CHOQUE_01,09_Vehiculos,IGUAL,09_Vehiculos/VEH_CHOQUE_01.wav,48000,2,PCM 24bit,1.47,"mismo contenido (frecuencia, largo y muestras)"
+09_Vehiculos,VEH_CHOQUE_02.wav,VEH_CHOQUE_02,09_Vehiculos,IGUAL,09_Vehiculos/VEH_CHOQUE_02.wav,48000,2,PCM 24bit,1.65,"mismo contenido (frecuencia, largo y muestras)"
+09_Vehiculos,VEH_CHOQUE_FUERTE_01.wav,VEH_CHOQUE_FUERTE_01,09_Vehiculos,IGUAL,09_Vehiculos/VEH_CHOQUE_FUERTE_01.wav,48000,2,PCM 24bit,2.12,"mismo contenido (frecuencia, largo y muestras)"
+09_Vehiculos,VEH_CHOQUE_FUERTE_02.wav,VEH_CHOQUE_FUERTE_02,09_Vehiculos,IGUAL,09_Vehiculos/VEH_CHOQUE_FUERTE_02.wav,48000,2,PCM 24bit,3.39,"mismo contenido (frecuencia, largo y muestras)"
+09_Vehiculos,VEH_CLAXON_CAMION.wav,VEH_CLAXON_CAMION,09_Vehiculos,IGUAL,09_Vehiculos/VEH_CLAXON_CAMION.wav,44100,1,PCM 24bit,3.01,"mismo contenido (frecuencia, largo y muestras)"
+09_Vehiculos,VEH_CLAXON_NORMAL_01.wav,VEH_CLAXON_NORMAL_01,09_Vehiculos,IGUAL,09_Vehiculos/VEH_CLAXON_NORMAL_01.wav,96000,2,PCM 24bit,1.59,"mismo contenido (frecuencia, largo y muestras)"
+09_Vehiculos,VEH_CLAXON_NORMAL_02.wav,VEH_CLAXON_NORMAL_02,09_Vehiculos,IGUAL,09_Vehiculos/VEH_CLAXON_NORMAL_02.wav,96000,2,PCM 24bit,0.60,"mismo contenido (frecuencia, largo y muestras)"
+09_Vehiculos,VEH_CRISTAL_ROMPER.wav,VEH_CRISTAL_ROMPER,09_Vehiculos,IGUAL,09_Vehiculos/VEH_CRISTAL_ROMPER.wav,96000,2,PCM 24bit,1.16,"mismo contenido (frecuencia, largo y muestras)"
+09_Vehiculos,VEH_ELECTRICO_ACELERAR_01.wav,VEH_ELECTRICO_ACELERAR_01,09_Vehiculos,IGUAL,09_Vehiculos/VEH_ELECTRICO_ACELERAR_01.wav,44100,2,PCM 24bit,10.58,"mismo contenido (frecuencia, largo y muestras)"
+09_Vehiculos,VEH_ELECTRICO_ACELERAR_02.wav,VEH_ELECTRICO_ACELERAR_02,09_Vehiculos,IGUAL,09_Vehiculos/VEH_ELECTRICO_ACELERAR_02.wav,44100,2,PCM 24bit,6.86,"mismo contenido (frecuencia, largo y muestras)"
+09_Vehiculos,VEH_ELECTRICO_ARRANQUE.wav,VEH_ELECTRICO_ARRANQUE,09_Vehiculos,IGUAL,09_Vehiculos/VEH_ELECTRICO_ARRANQUE.wav,48000,2,PCM 24bit,2.56,"mismo contenido (frecuencia, largo y muestras)"
+09_Vehiculos,VEH_ELECTRICO_MOVER.wav,VEH_ELECTRICO_MOVER,09_Vehiculos,IGUAL,09_Vehiculos/VEH_ELECTRICO_MOVER.wav,44100,2,PCM 16bit,3.22,"mismo contenido (frecuencia, largo y muestras)"
+09_Vehiculos,VEH_ELECTRICO_PASAR.wav,VEH_ELECTRICO_PASAR,09_Vehiculos,IGUAL,09_Vehiculos/VEH_ELECTRICO_PASAR.wav,96000,2,PCM 24bit,3.26,"mismo contenido (frecuencia, largo y muestras)"
+09_Vehiculos,VEH_FRENO_FUERTE.wav,VEH_FRENO_FUERTE,09_Vehiculos,IGUAL,09_Vehiculos/VEH_FRENO_FUERTE.wav,96000,2,PCM 24bit,1.38,"mismo contenido (frecuencia, largo y muestras)"
+09_Vehiculos,VEH_LLANTAS_GRAVA.wav,VEH_LLANTAS_GRAVA,09_Vehiculos,IGUAL,,44100,2,PCM 24bit,47.44,grabacion larga: el 19-nov la recorto en varios archivos (regenerados desde la fuente: identicos a Assets)
+09_Vehiculos,VEH_NORMAL_ARRANQUE_RALENTI_APAGAR_01.wav,VEH_NORMAL_ARRANQUE_RALENTI_APAGAR_01,09_Vehiculos,IGUAL,,96000,2,PCM 24bit,22.33,grabacion larga: el 19-nov la recorto en varios archivos (regenerados desde la fuente: identicos a Assets)
+09_Vehiculos,VEH_NORMAL_ARRANQUE_RALENTI_APAGAR_02.wav,VEH_NORMAL_ARRANQUE_RALENTI_APAGAR_02,09_Vehiculos,IGUAL,,96000,2,PCM 24bit,59.09,grabacion larga: el 19-nov la recorto en varios archivos (regenerados desde la fuente: identicos a Assets)
+09_Vehiculos,VEH_NORMAL_ARRANQUE_RALENTI_APAGAR_03.wav,VEH_NORMAL_ARRANQUE_RALENTI_APAGAR_03,09_Vehiculos,IGUAL,,96000,2,PCM 24bit,70.96,grabacion larga: el 19-nov la recorto en varios archivos (regenerados desde la fuente: identicos a Assets)
+09_Vehiculos,VEH_PESADO_ARRANQUE.wav,VEH_PESADO_ARRANQUE,09_Vehiculos,IGUAL,09_Vehiculos/VEH_PESADO_ARRANQUE.wav,96000,2,PCM 24bit,2.79,"mismo contenido (frecuencia, largo y muestras)"
+09_Vehiculos,VEH_PESADO_RALENTI.wav,VEH_PESADO_RALENTI,09_Vehiculos,IGUAL,,96000,2,PCM 24bit,72.71,grabacion larga: el 19-nov la recorto en varios archivos (regenerados desde la fuente: identicos a Assets)
+09_Vehiculos,VEH_PUENTE.wav,VEH_PUENTE,09_Vehiculos,IGUAL,09_Vehiculos/VEH_PUENTE.wav,44100,2,PCM 24bit,2.19,"mismo contenido (frecuencia, largo y muestras)"
+09_Vehiculos,VEH_PUERTA_ABRIR.wav,VEH_PUERTA_ABRIR,09_Vehiculos,IGUAL,09_Vehiculos/VEH_PUERTA_ABRIR.wav,96000,2,PCM 24bit,0.90,"mismo contenido (frecuencia, largo y muestras)"
+09_Vehiculos,VEH_PUERTA_CERRAR.wav,VEH_PUERTA_CERRAR,09_Vehiculos,IGUAL,09_Vehiculos/VEH_PUERTA_CERRAR.wav,96000,2,PCM 24bit,0.55,"mismo contenido (frecuencia, largo y muestras)"
+09_Vehiculos,VEH_TOPE.wav,VEH_TOPE,09_Vehiculos,IGUAL,09_Vehiculos/VEH_TOPE.wav,48000,2,PCM 24bit,2.09,"mismo contenido (frecuencia, largo y muestras)"
+10_Policia,AMB_SIRENA_LOOP.wav,AMB_SIRENA_LOOP,10_Policia,NUEVO,,96000,2,PCM 24bit,60.76,
+10_Policia,NAV_DANIADA.wav,NAV_DANIADA,10_Policia,NUEVO,,48000,2,PCM 24bit,3.17,
+10_Policia,NAV_REFLECTOR.mp3,NAV_REFLECTOR,10_Policia,NUEVO,,24000,2,mp3,3.89,MP3 -> WAV PCM16
+10_Policia,NAV_ROTORES_LOOP.wav,NAV_ROTORES_LOOP,10_Policia,NUEVO,,48000,1,PCM 16bit,59.61,
+10_Policia,POL_ESTRELLA_SUBE.wav,POL_ESTRELLA_SUBE,10_Policia,NUEVO,,96000,2,PCM 24bit,0.87,
+10_Policia,POL_RADIO_AVISO_01.wav,POL_RADIO_AVISO_01,10_Policia,IGUAL,10_Policia/POL_RADIO_AVISO_01.wav,48000,1,PCM 24bit,4.10,"mismo contenido (frecuencia, largo y muestras)"
+10_Policia,POL_RADIO_AVISO_02.wav,POL_RADIO_AVISO_02,10_Policia,IGUAL,10_Policia/POL_RADIO_AVISO_02.wav,48000,1,PCM 24bit,5.92,"mismo contenido (frecuencia, largo y muestras)"
+10_Policia,POL_RADIO_AVISO_03.wav,POL_RADIO_AVISO_03,10_Policia,IGUAL,10_Policia/POL_RADIO_AVISO_03.wav,48000,1,PCM 24bit,6.84,"mismo contenido (frecuencia, largo y muestras)"
+10_Policia,POL_RADIO_AVISO_04.wav,POL_RADIO_AVISO_04,10_Policia,IGUAL,10_Policia/POL_RADIO_AVISO_04.wav,48000,1,PCM 24bit,12.32,"mismo contenido (frecuencia, largo y muestras)"
+10_Policia,POL_RADIO_AVISO_05.wav,POL_RADIO_AVISO_05,10_Policia,NUEVO,,48000,1,PCM 24bit,4.90,
+10_Policia,POL_RADIO_ESTATICA.wav,POL_RADIO_ESTATICA,10_Policia,NUEVO,,96000,2,PCM 24bit,8.04,
+10_Policia,POL_SIRENA_CORTA.wav,POL_SIRENA_CORTA,10_Policia,IGUAL,10_Policia/POL_SIRENA_CORTA.wav,96000,2,PCM 24bit,1.83,"mismo contenido (frecuencia, largo y muestras)"
+10_Policia,POL_SIRENA_LOOP.wav,POL_SIRENA_LOOP,10_Policia,IGUAL,10_Policia/POL_SIRENA_LOOP.wav,44100,1,PCM 24bit,11.05,"mismo contenido (frecuencia, largo y muestras)"
+10_Policia,POL_SIRENA_MURO.wav,POL_SIRENA_MURO,10_Policia,NUEVO,,44100,2,PCM 24bit,14.96,
+11_Nova,NOV_ARMADURA_MOVER.wav,NOV_ARMADURA_MOVER,11_Nova,NUEVO,,96000,2,PCM 24bit,0.52,
+11_Nova,NOV_CAIDA_Y_ENCENDIDO.wav,NOV_CAIDA_Y_ENCENDIDO,11_Nova,RENOMBRADO,10_Policia/POL_NOVA_AVISO.wav,44100,2,PCM 24bit,2.13,mismo audio que 10_Policia/POL_NOVA_AVISO.wav (verificado)
+11_Nova,NOV_ESCUDO_ACTIVAR.wav,NOV_ESCUDO_ACTIVAR,11_Nova,NUEVO,,96000,2,extensible 24bit,0.99,
+11_Nova,NOV_ESCUDO_IMPACTO.wav,NOV_ESCUDO_IMPACTO,11_Nova,NUEVO,,96000,2,PCM 24bit,0.60,
+11_Nova,NOV_JETPACK_LOOP.wav,NOV_JETPACK_LOOP,11_Nova,NUEVO,,96000,2,PCM 24bit,52.46,
+11_Nova,NOV_PASOS_CAMINAR_01.wav,NOV_PASOS_CAMINAR_01,11_Nova,NUEVO,,48000,2,PCM 24bit,0.31,
+11_Nova,NOV_PASOS_CAMINAR_02.wav,NOV_PASOS_CAMINAR_02,11_Nova,NUEVO,,48000,2,PCM 24bit,0.31,
+11_Nova,NOV_PASOS_CAMINAR_03.wav,NOV_PASOS_CAMINAR_03,11_Nova,NUEVO,,48000,2,PCM 24bit,0.31,
+11_Nova,NOV_PASOS_CAMINAR_04.wav,NOV_PASOS_CAMINAR_04,11_Nova,NUEVO,,48000,2,PCM 24bit,0.31,
+11_Nova,NOV_PASOS_CAMINAR_05.wav,NOV_PASOS_CAMINAR_05,11_Nova,NUEVO,,48000,2,PCM 24bit,0.31,
+11_Nova,NOV_PASOS_CAMINAR_06.wav,NOV_PASOS_CAMINAR_06,11_Nova,NUEVO,,48000,2,PCM 24bit,0.31,
+11_Nova,NOV_PASOS_CAMINAR_07.wav,NOV_PASOS_CAMINAR_07,11_Nova,NUEVO,,48000,2,PCM 24bit,0.31,
+11_Nova,NOV_PASOS_CAMINAR_08.wav,NOV_PASOS_CAMINAR_08,11_Nova,NUEVO,,48000,2,PCM 24bit,0.31,
+11_Nova,NOV_PASOS_CAMINAR_09.wav,NOV_PASOS_CAMINAR_09,11_Nova,NUEVO,,48000,2,PCM 24bit,0.31,
+11_Nova,NOV_PASOS_CAMINAR_10.wav,NOV_PASOS_CAMINAR_10,11_Nova,NUEVO,,48000,2,PCM 24bit,0.58,
+11_Nova,NOV_PASOS_CAMINAR_11.wav,NOV_PASOS_CAMINAR_11,11_Nova,NUEVO,,48000,2,PCM 24bit,0.58,
+11_Nova,NOV_PASOS_CAMINAR_12.wav,NOV_PASOS_CAMINAR_12,11_Nova,NUEVO,,48000,2,PCM 24bit,0.56,
+11_Nova,NOV_PASOS_CORRER_01.wav,NOV_PASOS_CORRER_01,11_Nova,NUEVO,,48000,2,PCM 24bit,0.30,
+11_Nova,NOV_PASOS_CORRER_02.wav,NOV_PASOS_CORRER_02,11_Nova,NUEVO,,48000,2,PCM 24bit,0.30,
+11_Nova,NOV_PASOS_CORRER_03.wav,NOV_PASOS_CORRER_03,11_Nova,NUEVO,,48000,2,PCM 24bit,0.30,
+11_Nova,NOV_PASOS_CORRER_04.wav,NOV_PASOS_CORRER_04,11_Nova,NUEVO,,48000,2,PCM 24bit,0.30,
+11_Nova,NOV_PASOS_CORRER_05.wav,NOV_PASOS_CORRER_05,11_Nova,NUEVO,,48000,2,PCM 24bit,0.30,
+11_Nova,NOV_PASOS_CORRER_06.wav,NOV_PASOS_CORRER_06,11_Nova,NUEVO,,48000,2,PCM 24bit,0.30,
+11_Nova,NOV_PASOS_CORRER_07.wav,NOV_PASOS_CORRER_07,11_Nova,NUEVO,,48000,2,PCM 24bit,0.30,
+11_Nova,NOV_PASOS_CORRER_08.wav,NOV_PASOS_CORRER_08,11_Nova,NUEVO,,48000,2,PCM 24bit,0.30,
+11_Nova,NOV_PASOS_CORRER_09.wav,NOV_PASOS_CORRER_09,11_Nova,NUEVO,,48000,2,PCM 24bit,0.34,
+11_Nova,NOV_PASOS_CORRER_10.wav,NOV_PASOS_CORRER_10,11_Nova,NUEVO,,48000,2,PCM 24bit,0.34,
+12_NPCs,NPC_H_DOLOR.wav,NPC_H_DOLOR,12_NPCs,NUEVO,,96000,2,PCM 24bit,0.38,
+12_NPCs,NPC_M_DOLOR.wav,NPC_M_DOLOR,12_NPCs,NUEVO,,44100,2,PCM 24bit,0.33,
+13_Robots,DRN_PES_AMETRALLADORA.wav,DRN_PES_AMETRALLADORA,13_Robots,NUEVO,,44100,2,PCM 16bit,0.45,
+13_Robots,ROB_CHISPAS_DANIO.wav,ROB_CHISPAS_DANIO,13_Robots,NUEVO,,96000,2,PCM 24bit,3.10,
+13_Robots,ROB_ENCENDER.wav,ROB_ENCENDER,13_Robots,NUEVO,,44100,2,PCM 16bit,2.50,
+13_Robots,ROB_MUERTE.wav,ROB_MUERTE,13_Robots,NUEVO,,96000,2,PCM 24bit,5.12,
+13_Robots,ROB_PERRO_GRUNIDO.wav,ROB_PERRO_GRUNIDO,13_Robots,NUEVO,,44100,2,PCM 24bit,2.00,
+13_Robots,ROB_PERRO_MOVER.wav,ROB_PERRO_MOVER,13_Robots,NUEVO,,44100,2,PCM 24bit,1.77,
+13_Robots,ROB_PES_HIDRAULICA.wav,ROB_PES_HIDRAULICA,13_Robots,NUEVO,,44100,2,PCM 24bit,4.62,
+13_Robots,ROB_PES_LLEGADA_01.wav,ROB_PES_LLEGADA_01,13_Robots,NUEVO,,44100,2,PCM 24bit,7.66,
+13_Robots,ROB_PES_LLEGADA_02.wav,ROB_PES_LLEGADA_02,13_Robots,NUEVO,,44100,2,PCM 24bit,2.43,
+13_Robots,ROB_PES_PLACA_CAE.wav,ROB_PES_PLACA_CAE,13_Robots,NUEVO,,96000,2,PCM 24bit,5.11,
+13_Robots,ROB_SERVOS.wav,ROB_SERVOS,13_Robots,NUEVO,,44100,2,PCM 16bit,0.75,
+13_Robots,ROB_VOZ_ALERTA.wav,ROB_VOZ_ALERTA,13_Robots,NUEVO,,44100,2,PCM 24bit,7.68,
+14_Ambiente,AMB_AZOTEA_CIUDAD.wav,AMB_AZOTEA_CIUDAD,14_Ambiente,NUEVO,,44100,2,PCM 24bit,152.00,
+14_Ambiente,AMB_LOMAS.mp3,AMB_LOMAS,14_Ambiente,NUEVO,,24000,2,mp3,54.98,MP3 -> WAV PCM16
+14_Ambiente,AMB_NOVA.wav,AMB_NOVA,14_Ambiente,NUEVO,,96000,2,PCM 24bit,102.70,
+14_Ambiente,AMB_SUBURBIOS_NOCHE.wav,AMB_SUBURBIOS_NOCHE,14_Ambiente,NUEVO,,44100,2,PCM 24bit,70.24,
+14_Ambiente,CLI_LLUVIA_DENTRO_CARRO.wav,CLI_LLUVIA_DENTRO_CARRO,14_Ambiente,NUEVO,,48000,2,extensible 24bit,15.43,
+14_Ambiente,CLI_LLUVIA_FUERTE.wav,CLI_LLUVIA_FUERTE,14_Ambiente,NUEVO,,96000,2,PCM 24bit,120.48,
+14_Ambiente,CLI_LLUVIA_SOBRE_LAMINA.wav,CLI_LLUVIA_SOBRE_LAMINA,14_Ambiente,NUEVO,,48000,2,PCM 24bit,30.00,
+14_Ambiente,CLI_TORMENTA_TRUENOS.wav,CLI_TORMENTA_TRUENOS,14_Ambiente,NUEVO,,44100,2,PCM 16bit,51.75,
+14_Ambiente,CLI_VIENTO.wav,CLI_VIENTO,14_Ambiente,NUEVO,,44100,2,PCM 24bit,45.17,
+14_Ambiente,INT_ARMERIA_VENTILADOR.wav,INT_ARMERIA_VENTILADOR,14_Ambiente,NUEVO,,44100,2,PCM 24bit,18.11,
+14_Ambiente,INT_BODEGA_GOTERAS.wav,INT_BODEGA_GOTERAS,14_Ambiente,NUEVO,,96000,2,PCM 24bit,30.36,
+14_Ambiente,INT_TALLER_CANEPA.mp3,INT_TALLER_CANEPA,14_Ambiente,NUEVO,,48000,2,mp3,165.07,MP3 -> WAV PCM16
+14_Ambiente,INT_TIENDA_TINO_RADIO.wav,INT_TIENDA_TINO_RADIO,14_Ambiente,NUEVO,,48000,2,PCM 24bit,6.48,
+14_Ambiente,INT_TIENDA_TINO_VENTILADOR.wav,INT_TIENDA_TINO_VENTILADOR,14_Ambiente,NUEVO,,48000,2,PCM 24bit,4.02,
+14_Ambiente,OBJ_AIRE_ACONDICIONADO.wav,OBJ_AIRE_ACONDICIONADO,14_Ambiente,NUEVO,,44100,2,PCM 24bit,26.00,
+14_Ambiente,OBJ_CAMARA_SEGURIDAD.wav,OBJ_CAMARA_SEGURIDAD,14_Ambiente,NUEVO,,44100,1,PCM 24bit,1.29,
+14_Ambiente,OBJ_MAQUINA_EXPENDEDORA.wav,OBJ_MAQUINA_EXPENDEDORA,14_Ambiente,NUEVO,,96000,2,PCM 24bit,1.16,
+14_Ambiente,OBJ_TRANSFORMADOR.wav,OBJ_TRANSFORMADOR,14_Ambiente,NUEVO,,44100,1,PCM 24bit,50.37,
+15_Exo_Implantes,EXO_ESCUDO_GOLPE.wav,EXO_ESCUDO_GOLPE,15_Exo_Implantes,NUEVO,,44100,2,PCM 24bit,0.55,
+15_Exo_Implantes,EXO_PIERNAS_SALTO_SUPER.wav,EXO_PIERNAS_SALTO_SUPER,15_Exo_Implantes,NUEVO,,44100,2,PCM 16bit,0.22,
+15_Exo_Implantes,EXO_PUESTO_LOOP_01.wav,EXO_PUESTO_LOOP_01,15_Exo_Implantes,NUEVO,,44100,2,PCM 24bit,2.12,
+15_Exo_Implantes,EXO_PUESTO_LOOP_02.wav,EXO_PUESTO_LOOP_02,15_Exo_Implantes,NUEVO,,44100,2,PCM 24bit,0.84,
+15_Exo_Implantes,EXO_RUEDA_CAMARA_LENTA.wav,EXO_RUEDA_CAMARA_LENTA,15_Exo_Implantes,NUEVO,,96000,2,extensible 24bit,3.49,
+15_Exo_Implantes,EXO_SERVOS_CAMINAR.wav,EXO_SERVOS_CAMINAR,15_Exo_Implantes,NUEVO,,44100,1,PCM 24bit,1.59,
+15_Exo_Implantes,EXO_VISOR_ACTIVAR.wav,EXO_VISOR_ACTIVAR,15_Exo_Implantes,NUEVO,,96000,2,PCM 24bit,0.90,
+15_Exo_Implantes,IMP_INSTALAR_TALADRO.mp3,IMP_INSTALAR_TALADRO,15_Exo_Implantes,NUEVO,,44100,1,mp3,6.90,MP3 -> WAV PCM16
+15_Exo_Implantes,IMP_SINAPSIS_01.wav,IMP_SINAPSIS_01,15_Exo_Implantes,NUEVO,,44100,2,PCM 24bit,0.46,
+15_Exo_Implantes,IMP_SINAPSIS_02.wav,IMP_SINAPSIS_02,15_Exo_Implantes,NUEVO,,44100,2,PCM 24bit,0.23,
+16_Casino,CAS_CARTAS_BARAJAR_01.wav,CAS_CARTAS_BARAJAR_01,16_Casino,NUEVO,,96000,2,PCM 24bit,0.72,
+16_Casino,CAS_CARTAS_BARAJAR_02.wav,CAS_CARTAS_BARAJAR_02,16_Casino,NUEVO,,96000,2,PCM 24bit,0.55,
+16_Casino,CAS_CARTAS_REPARTIR.wav,CAS_CARTAS_REPARTIR,16_Casino,NUEVO,,44100,1,PCM 16bit,2.90,
+16_Casino,CAS_FICHAS.wav,CAS_FICHAS,16_Casino,NUEVO,,44100,2,PCM 24bit,0.60,
+16_Casino,CAS_PREMIO_CHICO.wav,CAS_PREMIO_CHICO,16_Casino,NUEVO,,44100,2,PCM 24bit,0.89,
+16_Casino,CAS_PREMIO_GRANDE.wav,CAS_PREMIO_GRANDE,16_Casino,NUEVO,,44100,2,PCM 24bit,2.76,
+16_Casino,CAS_RULETA_GIRA.wav,CAS_RULETA_GIRA,16_Casino,NUEVO,,44100,2,PCM 24bit,27.97,
+16_Casino,CAS_TRAGAMONEDAS.wav,CAS_TRAGAMONEDAS,16_Casino,NUEVO,,96000,2,PCM 24bit,5.14,
+17_Misiones_HUD,HUD_MENSAJE_CELULAR.wav,HUD_MENSAJE_CELULAR,17_Misiones_HUD,NUEVO,,44100,2,PCM 16bit,1.46,
+17_Misiones_HUD,MIS_TEMPORIZADOR.wav,MIS_TEMPORIZADOR,17_Misiones_HUD,NUEVO,,96000,2,PCM 24bit,1.82,
+17_Misiones_HUD,PAN_ARRESTADO_ESPOSAS.wav,PAN_ARRESTADO_ESPOSAS,17_Misiones_HUD,NUEVO,,96000,2,PCM 24bit,0.73,
+17_Misiones_HUD,PAN_HAS_MUERTO.wav,PAN_HAS_MUERTO,17_Misiones_HUD,NUEVO,,44100,2,PCM 24bit,4.25,
+(Assets),10_Policia/POL_RADIO_DESPACHO_01.wav,POL_RADIO_DESPACHO_01,10_Policia,SE QUITO,10_Policia/POL_RADIO_DESPACHO_01.wav,,,,,LEEME: cambiarlos por POL_RADIO_AVISO_* (no se borra de Assets: el codigo puede usarlo)
+(Assets),10_Policia/POL_RADIO_DESPACHO_02.wav,POL_RADIO_DESPACHO_02,10_Policia,SE QUITO,10_Policia/POL_RADIO_DESPACHO_02.wav,,,,,LEEME: cambiarlos por POL_RADIO_AVISO_* (no se borra de Assets: el codigo puede usarlo)
+98_Descartados,CLI_LLUVIA_FUERTE_duplicado.wav,CLI_LLUVIA_FUERTE_duplicado,,IGNORADO,,,,,,98_Descartados/99_No_es_sonido: no se importa
+98_Descartados,POL_RADIO_DESPACHO_01.wav,POL_RADIO_DESPACHO_01,,IGNORADO,,,,,,98_Descartados/99_No_es_sonido: no se importa
+98_Descartados,POL_RADIO_DESPACHO_02.wav,POL_RADIO_DESPACHO_02,,IGNORADO,,,,,,98_Descartados/99_No_es_sonido: no se importa
+98_Descartados,POL_RADIO_ESTATICA_duplicado.wav,POL_RADIO_ESTATICA_duplicado,,IGNORADO,,,,,,98_Descartados/99_No_es_sonido: no se importa

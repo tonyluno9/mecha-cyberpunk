@@ -8,6 +8,8 @@ namespace MechaCyberpunk.Personaje.Movimiento
         public const string Trepar = "JUG_TREPAR";
         public const string GolpeCarne = "MEL_GOLPE_CARNE";
         public const string GolpeAire = "MEL_GOLPE_AIRE";
+        /// <summary>T-1532: golpe a metal, armadura o robot.</summary>
+        public const string GolpeMetal = "MEL_GOLPE_METAL";
 
         /// <summary>Caída mínima (m) para que suene el aterrizaje.</summary>
         public const float CaidaMinimaAterrizaje = 1.2f;
@@ -18,6 +20,25 @@ namespace MechaCyberpunk.Personaje.Movimiento
         public static bool DebeSonarAterrizaje(float metrosCaida) => metrosCaida > CaidaMinimaAterrizaje;
 
         public static string IdGolpe(bool conecto) => conecto ? GolpeCarne : GolpeAire;
+
+        private static readonly string[] PalabrasMetal = { "dron", "robot", "mecha", "guardianova", "guardia_nova", "metal", "contenedor", "acero", "armadura" };
+
+        /// <summary>T-1532: el golpe que conecta con algo cuyos nombres (objeto, raíz) se pasan juntos: metal si es robot, armadura o metal; carne si no.</summary>
+        public static string IdGolpeConectado(string nombres)
+        {
+            if (!string.IsNullOrEmpty(nombres))
+            {
+                string n = nombres.ToLowerInvariant();
+                for (int i = 0; i < PalabrasMetal.Length; i++)
+                {
+                    if (n.Contains(PalabrasMetal[i]))
+                    {
+                        return GolpeMetal;
+                    }
+                }
+            }
+            return GolpeCarne;
+        }
     }
 
     /// <summary>No deja pedir un paso antes de pasado el tiempo mínimo desde el último que sí sonó.</summary>

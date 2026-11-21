@@ -29,10 +29,10 @@ namespace MechaCyberpunk.Progresion.Sonido
         /// <summary>Los IDs nuevos del brief (docs de T-1470..T-1476).</summary>
         public static readonly string[] IdsNuevos =
         {
-            "UI_MOVER", "UI_SELECCIONAR", "UI_ATRAS", "UI_ERROR", "UI_PESTANA", "UI_MENU_ABRIR", "UI_MENU_CERRAR", "UI_CAMARA_LENTA", "UI_LOGO_INTRO", "HUD_LOGRO", "HUD_NOTIFICACION", "HUD_VIDA_BAJA",
+            "UI_MOVER", "UI_SELECCIONAR", "UI_ATRAS", "UI_ERROR", "UI_PESTANA", "UI_MENU_ABRIR", "UI_MENU_CERRAR", "UI_LOGO_INTRO", "HUD_LOGRO", "HUD_NOTIFICACION", "HUD_VIDA_BAJA",
             "TIE_COMPRAR", "TIE_EQUIPAR", "TIE_DESEQUIPAR",
             "ARM_W01_DISPARO", "ARM_W02_DISPARO", "ARM_W02_BOMBA", "ARM_W03_DISPARO", "ARM_W03_RECARGA_CARGADOR", "ARM_W04_DISPARO", "ARM_W04_CERROJO",
-            "ARM_W06_DISPARO", "ARM_W06_SACAR", "ARM_W07_DISPARO", "ARM_W07_CARGA", "ARM_W07_RAYO", "ARM_NOVA_DISPARO", "ARM_NOVA_CARGA_DISPARO",
+            "ARM_W06_DISPARO", "ARM_W06_SACAR", "ARM_W07_DISPARO", "ARM_W07_CARGA",
             "ARM_GRANADA_SEGURO", "ARM_GRANADA_REBOTE", "ARM_COLA_CALLE", "IMP_LASER_DISPARO", "IMP_MISILES_FIJAR",
             "IMP_BALA_CABEZA", "IMP_BALA_CARNE", "IMP_BALA_CONCRETO", "IMP_BALA_CRISTAL", "IMP_BALA_METAL", "IMP_BALA_ROBOT", "IMP_BALA_ZUMBIDO",
             "EXP_GRANADA", "EXP_ONDA", "FUE_LOOP_CHICO",
@@ -44,7 +44,7 @@ namespace MechaCyberpunk.Progresion.Sonido
             "VEH_NORMAL_ARRANQUE", "VEH_NORMAL_RALENTI", "VEH_NORMAL_APAGAR", "MOTO_ARRANQUE", "MOTO_RALENTI", "MOTO_APAGAR", "VEH_PESADO_ARRANQUE", "VEH_PESADO_RALENTI", "VEH_PESADO_APAGAR",
             "VEH_ACELERON", "VEH_ALARMA", "VEH_CHOQUE", "VEH_CHOQUE_FUERTE", "VEH_CLAXON_CAMION", "VEH_CLAXON_NORMAL", "VEH_CRISTAL_ROMPER", "VEH_FRENO_FUERTE", "VEH_LLANTAS_GRAVA",
             "VEH_PUENTE", "VEH_PUERTA_ABRIR", "VEH_PUERTA_CERRAR", "VEH_TOPE", "VEH_ELECTRICO_ACELERAR", "VEH_ELECTRICO_ARRANQUE", "VEH_ELECTRICO_MOVER", "VEH_ELECTRICO_PASAR",
-            "POL_NOVA_AVISO", "POL_RADIO_AVISO", "POL_RADIO_DESPACHO", "POL_SIRENA_CORTA", "POL_SIRENA_LOOP",
+            "POL_RADIO_AVISO", "POL_SIRENA_CORTA", "POL_SIRENA_LOOP",
         };
 
         /// <summary>
@@ -70,7 +70,6 @@ namespace MechaCyberpunk.Progresion.Sonido
             new Par("ARM_BALA_IMPACTO_METAL", "IMP_BALA_METAL"),
             new Par("ARM_BALA_ZUMBIDO", "IMP_BALA_ZUMBIDO"),
             new Par("ARM_BALA_ROZA", "IMP_BALA_ZUMBIDO", 1f, false),
-            new Par("VEH_EXPLOSION", "EXP_ONDA"),
             new Par("UI_ACEPTAR", "UI_SELECCIONAR"),
             new Par("UI_CANCELAR", "UI_ATRAS"),
             new Par("UI_MAPA_ABRIR", "UI_MENU_ABRIR"),
@@ -82,7 +81,6 @@ namespace MechaCyberpunk.Progresion.Sonido
             new Par("ECO_COMPRA", "TIE_COMPRAR"),
             new Par("ECO_SIN_DINERO", "UI_ERROR"),
             new Par("ECO_ARMA_RECOGER", "INT_RECOGER_OBJETO"),
-            new Par("ECO_DINERO_RECOGER", "INT_RECOGER_OBJETO"),
             new Par("JUG_PASO_ASFALTO", "PAS_CONCRETO"),
             new Par("JUG_PASO_METAL", "PAS_METAL"),
             new Par("JUG_PASO_ASFALTO_MOJADO", "PAS_MOJADO"),
@@ -127,19 +125,19 @@ namespace MechaCyberpunk.Progresion.Sonido
             }
         }
 
-        /// <summary>Si el ID es uno de los nuevos del brief.</summary>
-        public static bool EsNuevo(string id) => id != null && Nuevos.Contains(id);
+        /// <summary>Si el ID es uno de los nuevos del brief (19-nov, o 20-nov: T-1531).</summary>
+        public static bool EsNuevo(string id) => id != null && (Nuevos.Contains(id) || MapaSonidos20nov.EsNuevo(id));
 
         /// <summary>El ID nuevo con el que suena un ID viejo; null si no está mapeado.</summary>
-        public static string Nuevo(string viejo) => viejo != null && PorViejo.TryGetValue(viejo, out Par p) ? p.Nuevo : null;
+        public static string Nuevo(string viejo) => MapaSonidos20nov.Nuevo(viejo) ?? (viejo != null && PorViejo.TryGetValue(viejo, out Par p) ? p.Nuevo : null);
 
         /// <summary>Tono base del ID viejo mapeado (1 si no está mapeado).</summary>
-        public static float TonoBase(string viejo) => viejo != null && PorViejo.TryGetValue(viejo, out Par p) ? p.TonoBase : 1f;
+        public static float TonoBase(string viejo) => MapaSonidos20nov.EstaMapeado(viejo) ? MapaSonidos20nov.TonoBase(viejo) : viejo != null && PorViejo.TryGetValue(viejo, out Par p) ? p.TonoBase : 1f;
 
         /// <summary>Si el ID viejo mapeado queda encendido por defecto.</summary>
-        public static bool Enciende(string viejo) => viejo != null && PorViejo.TryGetValue(viejo, out Par p) && p.Encender;
+        public static bool Enciende(string viejo) => MapaSonidos20nov.EstaMapeado(viejo) ? MapaSonidos20nov.Enciende(viejo) : viejo != null && PorViejo.TryGetValue(viejo, out Par p) && p.Encender;
 
         /// <summary>Si el ID está en el mapa (como viejo).</summary>
-        public static bool EstaMapeado(string viejo) => viejo != null && PorViejo.ContainsKey(viejo);
+        public static bool EstaMapeado(string viejo) => MapaSonidos20nov.EstaMapeado(viejo) || (viejo != null && PorViejo.ContainsKey(viejo));
     }
 }

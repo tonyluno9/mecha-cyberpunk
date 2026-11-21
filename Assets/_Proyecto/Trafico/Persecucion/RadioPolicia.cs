@@ -24,6 +24,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
                 return false;
             }
             proximoDespacho = Time.time + SegundosEntreRadios;
+            Sonidos.ReproducirEn(SonidosPolicia.IdRadioEstatica, posicion); // T-1533: la estática de la radio bajo la voz
             Sonidos.ReproducirEn(id, posicion);
             return true;
         }
@@ -47,6 +48,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
                 return false;
             }
             proxima = Time.time + SegundosEntreRadios;
+            Sonidos.ReproducirEn(SonidosPolicia.IdRadioEstatica, posicion); // T-1533: la estática de la radio bajo la voz
             Sonidos.ReproducirEn(id, posicion);
             return true;
         }

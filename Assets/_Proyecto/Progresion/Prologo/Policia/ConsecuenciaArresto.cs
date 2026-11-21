@@ -2,6 +2,7 @@ using System.Collections;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Personaje.Jugador;
 using MechaCyberpunk.Personaje.Movimiento;
+using MechaCyberpunk.Progresion.Sonido;
 using MechaCyberpunk.UI.Historia;
 using MechaCyberpunk.UI.Inicio;
 using UnityEngine;
@@ -70,8 +71,18 @@ namespace MechaCyberpunk.Progresion.Prologo.Policia
             ocupado = false;
         }
 
+        // T-1535: arrestado = un golpe, las esposas un instante después y la sirena que se aleja (LEEME_SONIDOS 20-nov).
+        private IEnumerator SonarArresto()
+        {
+            Sonidos.ReproducirEn(ReglaSonidoEventos.GolpeArresto, transform.position);
+            SirenaQueSeAleja.Iniciar(transform.position, -transform.forward, ReglaSonidoEventos.VelocidadSirenaArresto, ReglaSonidoEventos.SegundosSirenaArresto);
+            yield return new WaitForSecondsRealtime(ReglaSonidoEventos.SegundosEsposas);
+            Sonidos.Reproducir(ReglaSonidoEventos.Esposas);
+        }
+
         private IEnumerator Secuencia()
         {
+            StartCoroutine(SonarArresto());
             ControladorAPie control = GetComponent<ControladorAPie>();
             if (control != null)
             {

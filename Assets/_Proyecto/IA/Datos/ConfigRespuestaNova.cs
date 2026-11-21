@@ -47,8 +47,8 @@ namespace MechaCyberpunk.IA.Datos
         [SerializeField] private Color colorDestello = new Color(0.3f, 0.65f, 1f, 1f);
         [Tooltip("Material aditivo de las chispas del destello (opcional: sin él solo hay luz). Lo pone AplicarNovaT1323.")]
         [SerializeField] private Material materialDestello;
-        [Tooltip("ID del sonido que suena cuando llega Nova con 5 estrellas. Hueco: falta un sonido propio (por ahora la entrada de un jefe).")]
-        [SerializeField] private string sonidoLlegada = "POL_NOVA_AVISO";
+        [Tooltip("ID del sonido que suena cuando llega Nova con 5 estrellas. T-1531: NOV_CAIDA_Y_ENCENDIDO, el agente cae del cielo y se enciende.")]
+        [SerializeField] private string sonidoLlegada = "NOV_CAIDA_Y_ENCENDIDO"; // T-1531: antes POL_NOVA_AVISO (sigue como alias)
         [Tooltip("Cuánto se agranda el modelo del guardia pesado para igualar a los otros agentes de Nova (x).")]
         [Min(0.5f)] [SerializeField] private float escalaPesado = 1.43f; // T-1334: medido con BakeMesh, así mide lo mismo que el guardia (2.62 m)
         [Tooltip("Un agente de Nova que estuvo a esta distancia del jugador ya lo vio: lo persigue aunque baje la búsqueda (m).")]

@@ -26,6 +26,8 @@ namespace MechaCyberpunk.Vehiculos
         private float pedalAnterior;
         private float segundosDesdeAceleron = ReglasSonidoVehiculoT1475.AceleronSegundosMinimos;
         private readonly SimuladorMarchas marchas;
+        // T-1534: eléctrico (sin ralentí): un bucle MOVER solo en movimiento.
+        private readonly ReglaMotorElectrico electrico = new ReglaMotorElectrico();
 
         public SonidoMotorCarro(GrupoSonidoVehiculo grupo, float rapidezMaxima, int marchasSimuladas = 0)
         {
@@ -61,6 +63,7 @@ namespace MechaCyberpunk.Vehiculos
             tonoActual = ReglasSonidoVehiculoT1475.TonoObjetivo(0f, rapidezMaxima, grupo.FactorTono);
             tonoEnviado = -1f;
             pedalAnterior = 0f;
+            electrico.Reiniciar();
             if (conArranque && sigue != null)
             {
                 Sonidos.ReproducirEn(grupo.Arranque, sigue.position);
@@ -76,6 +79,11 @@ namespace MechaCyberpunk.Vehiculos
             }
             segundosEncendido += dt;
             segundosDesdeAceleron += dt;
+            if (grupo.EsElectrico)
+            {
+                ActualizarElectrico(rapidez, pedal, dt);
+                return;
+            }
             if (Bucle == Sonidos.SinBucle)
             {
                 if (segundosEncendido < SegundosArranque)
@@ -113,6 +121,45 @@ namespace MechaCyberpunk.Vehiculos
             pedalAnterior = pedal;
         }
 
+        // T-1534: parado, silencio; en movimiento, el bucle MOVER con el tono subiendo con la rapidez; ACELERAR al pisar y PASAR al llegar a buena velocidad.
+        private void ActualizarElectrico(float rapidez, float pedal, float dt)
+        {
+            if (segundosEncendido < SegundosArranque)
+            {
+                return; // suena el arranque
+            }
+            ReglaMotorElectrico.Resultado r = electrico.Actualizar(rapidez, rapidezMaxima, pedal, dt);
+            if (r.IniciarMover && Bucle == Sonidos.SinBucle)
+            {
+                Bucle = Sonidos.ReproducirBucle(grupo.Mover, sigue);
+                tonoEnviado = -1f;
+            }
+            else if (r.DetenerMover && Bucle != Sonidos.SinBucle)
+            {
+                Sonidos.DetenerBucle(Bucle);
+                Bucle = Sonidos.SinBucle;
+            }
+            float objetivo = ReglasSonidoVehiculoT1475.TonoObjetivo(rapidez, rapidezMaxima, grupo.FactorTono);
+            tonoActual = ReglasSonidoVehiculoT1475.Suavizar(tonoActual, objetivo, dt, TasaSuavizado);
+            if (Bucle != Sonidos.SinBucle && Mathf.Abs(tonoActual - tonoEnviado) >= CambioMinimoTono)
+            {
+                tonoEnviado = tonoActual;
+                Sonidos.FijarTono(Bucle, tonoActual);
+            }
+            if (sigue == null)
+            {
+                return;
+            }
+            if (r.Acelerar)
+            {
+                Sonidos.ReproducirEn(grupo.Acelerar, sigue.position);
+            }
+            if (r.Pasar)
+            {
+                Sonidos.ReproducirEn(grupo.Pasar, sigue.position);
+            }
+        }
+
         /// <summary>Apaga el motor: detiene el bucle y suena el APAGAR una vez (si <paramref name="conSonido"/>).</summary>
         public void Apagar(bool conSonido)
         {
@@ -126,7 +173,7 @@ namespace MechaCyberpunk.Vehiculos
                 Sonidos.DetenerBucle(Bucle);
                 Bucle = Sonidos.SinBucle;
             }
-            if (conSonido && sigue != null)
+            if (conSonido && sigue != null && !string.IsNullOrEmpty(grupo.Apagar)) // el eléctrico no tiene apagado propio
             {
                 Sonidos.ReproducirEn(grupo.Apagar, sigue.position);
             }

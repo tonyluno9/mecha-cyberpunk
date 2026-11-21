@@ -127,7 +127,7 @@ namespace MechaCyberpunk.Personaje.Combate
             }
             tomado = true;
             cartera.Abonar(cantidad, MotivoDinero.Otro);
-            Sonidos.ReproducirEn("INT_RECOGER_OBJETO", transform.position); // T-1474: sonido nuevo de recoger (antes ECO_DINERO_RECOGER)
+            Sonidos.ReproducirEn("INT_RECOGER_DINERO", transform.position); // T-1535: el sonido propio de recoger dinero (T-1474 usaba el de recoger objeto)
             Destroy(gameObject);
         }
     }

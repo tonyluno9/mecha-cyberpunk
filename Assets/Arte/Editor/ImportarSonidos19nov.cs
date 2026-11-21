@@ -30,7 +30,9 @@ namespace MechaCyberpunk.Arte.Editor
 
         static readonly string[] NombresLoop =
         {
-            "FUE_LOOP_CHICO", "POL_SIRENA_LOOP", "VEH_ALARMA", "VEH_LLANTAS_GRAVA", "VEH_ELECTRICO_MOVER"
+            "FUE_LOOP_CHICO", "POL_SIRENA_LOOP", "VEH_ALARMA", "VEH_LLANTAS_GRAVA", "VEH_ELECTRICO_MOVER",
+            // T-1530 (20-nov): loops nuevos en las carpetas 01..10. Los de 11..18 están en ImportarSonidos20nov.
+            "FUE_LOOP_GRANDE", "ARM_W07_RAYO_LOOP", "ARM_W07_RAYO_CAPA_EXTRA", "NAV_ROTORES_LOOP", "AMB_SIRENA_LOOP", "POL_SIRENA_MURO"
         };
 
         const float LimiteCorto = 2f;

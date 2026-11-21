@@ -13,11 +13,19 @@ namespace MechaCyberpunk.Progresion.Sonido
         public static SeccionSonido SeccionDe(string id)
         {
             string prefijo = id != null && id.Length >= LargoPrefijo ? id.Substring(0, LargoPrefijo) : string.Empty;
+            // T-1531: las voces de NPC y de robot, el clima y los objetos que zumban (ambiente), la radio (música) y los avisos de misión (interfaz).
+            if (id != null && id.StartsWith("ROB_VOZ", StringComparison.Ordinal)) return SeccionSonido.Voces;
+            if (MapaSonidos20nov.EsInteriorAmbiente(id)) return SeccionSonido.Ambiente;
             switch (prefijo)
             {
                 case "PAN": return SeccionSonido.Voces;
+                case "NPC": return SeccionSonido.Voces; // T-1531
                 case "AMB": return SeccionSonido.Ambiente;
+                case "CLI": return SeccionSonido.Ambiente; // T-1531
+                case "OBJ": return SeccionSonido.Ambiente; // T-1531
                 case "MUS": return SeccionSonido.Musica;
+                case "RAD": return SeccionSonido.Musica; // T-1531
+                case "MIS": return SeccionSonido.Interfaz; // T-1531
                 case "UI_": return SeccionSonido.Interfaz;
                 case "HUD": return SeccionSonido.Interfaz; // T-1471
                 case "TIE": return SeccionSonido.Interfaz; // T-1471

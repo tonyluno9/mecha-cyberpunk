@@ -23,6 +23,14 @@ namespace MechaCyberpunk.Progresion.Editor
             "01_UI", "02_Armas", "03_Impactos", "04_Explosiones", "05_Pasos", "06_Jugador", "07_Interaccion", "08_Consumibles", "09_Vehiculos", "10_Policia",
         };
 
+        /// <summary>T-1531: las 18 carpetas numeradas (01 a 18).</summary>
+        public static string[] TodasLasCarpetasNuevas()
+        {
+            List<string> todas = new List<string>(CarpetasNuevas);
+            todas.AddRange(MapaSonidos20nov.Carpetas);
+            return todas.ToArray();
+        }
+
         private static readonly Regex Variante = new Regex(@"^(.+?)(_\d\d)?$");
 
         [MenuItem("Mecha Cyberpunk/Sonido/Crear catalogo")]
@@ -40,6 +48,17 @@ namespace MechaCyberpunk.Progresion.Editor
             foreach (string carpeta in CarpetasNuevas)
             {
                 Leer(CarpetaAudio + "/" + carpeta, nuevas, false);
+            }
+            // T-1531: las carpetas 11_Nova a 18_Radio_Musica (20-nov).
+            foreach (string carpeta in MapaSonidos20nov.Carpetas)
+            {
+                Leer(CarpetaAudio + "/" + carpeta, nuevas, false);
+            }
+            // Los archivos que ya no se usan (POL_RADIO_DESPACHO_01/02) siguen en Assets pero no entran al catalogo: el ID suena con su alias.
+            foreach (string id in MapaSonidos20nov.IdsDescartados)
+            {
+                nuevas.Remove(id);
+                entradas.Remove(id);
             }
             MapaSonidos19nov.Reemplazar(entradas, nuevas.Values);
             CatalogoSonidos catalogo = AssetDatabase.LoadAssetAtPath<CatalogoSonidos>(RutaCatalogo);

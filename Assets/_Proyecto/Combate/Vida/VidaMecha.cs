@@ -11,6 +11,9 @@ namespace MechaCyberpunk.Combate.Vida
     /// </summary>
     public class VidaMecha : MonoBehaviour, IVida, IRecibeDanio
     {
+        /// <summary>T-1532: el sonido de un golpe bloqueado.</summary>
+        public const string IdSonidoBloqueo = "MEL_BLOQUEO";
+
         [SerializeField] private DatosMecha datos;
 
         private ModeloVida modelo;
@@ -179,6 +182,7 @@ namespace MechaCyberpunk.Combate.Vida
                 if (bloqueo != TipoBloqueo.Ninguno)
                 {
                     Debug.Log(bloqueo == TipoBloqueo.Perfecto ? "[Combate] Bloqueo perfecto" : "[Combate] Bloqueo normal");
+                    Sonidos.ReproducirEn(IdSonidoBloqueo, transform.position); // T-1532: MEL_BLOQUEO
                 }
             }
 

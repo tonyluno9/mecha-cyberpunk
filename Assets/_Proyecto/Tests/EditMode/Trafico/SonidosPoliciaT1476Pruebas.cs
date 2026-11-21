@@ -48,7 +48,7 @@ namespace MechaCyberpunk.Tests
         {
             Assert.IsTrue(RadioPolicia.Sonar(Vector3.zero, config));
             Assert.IsFalse(RadioPolicia.Sonar(Vector3.zero, config), "el segundo aviso seguido no suena");
-            CollectionAssert.AreEqual(new[] { "POL_RADIO_AVISO" }, falso.Pedidos);
+            CollectionAssert.AreEqual(new[] { "POL_RADIO_ESTATICA", "POL_RADIO_AVISO" }, falso.Pedidos); // T-1533: estática y luego la voz
         }
 
         [Test]
@@ -56,7 +56,7 @@ namespace MechaCyberpunk.Tests
         {
             Assert.IsTrue(RadioPolicia.SonarDespacho(Vector3.zero, config));
             Assert.IsFalse(RadioPolicia.SonarDespacho(Vector3.zero, config));
-            CollectionAssert.AreEqual(new[] { "POL_RADIO_DESPACHO" }, falso.Pedidos);
+            CollectionAssert.AreEqual(new[] { "POL_RADIO_ESTATICA", "POL_RADIO_AVISO" }, falso.Pedidos); // T-1533: estática y luego la voz
         }
 
         [Test]

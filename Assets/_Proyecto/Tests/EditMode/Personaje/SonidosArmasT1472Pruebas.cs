@@ -27,6 +27,7 @@ namespace MechaCyberpunk.Tests.Personaje
         [TestCase(ArmaAPie.Sniper, "ARM_W04_DISPARO")]
         [TestCase(ArmaAPie.Subfusil, "ARM_SUB_DISPARO")]
         [TestCase(ArmaAPie.Revolver, "ARM_W06_DISPARO")]
+        [TestCase(ArmaAPie.Lanzagranadas, "ARM_W08_DISPARO")]
         [TestCase(ArmaAPie.RiflePlasma, "ARM_W07_DISPARO")]
         public void IdDisparo_CadaArma_PideSuId(ArmaAPie arma, string esperado)
         {
@@ -39,22 +40,24 @@ namespace MechaCyberpunk.Tests.Personaje
         [TestCase(ArmaAPie.Escopeta, "ARM_ESC_RECARGA_CARTUCHO")]
         [TestCase(ArmaAPie.Sniper, "ARM_SNI_RECARGA")]
         [TestCase(ArmaAPie.Pistola, "ARM_PIS_RECARGA")]
+        [TestCase(ArmaAPie.Revolver, "ARM_W06_MECANICA")]
         public void IdRecarga_CadaArma_PideSuId(ArmaAPie arma, string esperado)
         {
             Assert.AreEqual(esperado, SonidosArmasT1472.IdRecarga(arma));
         }
 
-        [TestCase(ArmaAPie.Pistola)]
-        [TestCase(ArmaAPie.Escopeta)]
-        [TestCase(ArmaAPie.Fusil)]
-        [TestCase(ArmaAPie.Sniper)]
-        [TestCase(ArmaAPie.Subfusil)]
-        [TestCase(ArmaAPie.Revolver)]
-        [TestCase(ArmaAPie.RiflePlasma)]
-        [TestCase(ArmaAPie.Granada)]
-        public void IdSacar_ArmasDeMano_PidenElSacarDelRevolver(ArmaAPie arma)
+        // T-1532 (LEEME 20-nov): sacar y guardar usa la recarga de cada arma; solo el revolver y la granada usan ARM_W06_SACAR.
+        [TestCase(ArmaAPie.Pistola, "ARM_PIS_RECARGA")]
+        [TestCase(ArmaAPie.Escopeta, "ARM_ESC_RECARGA_CARTUCHO")]
+        [TestCase(ArmaAPie.Fusil, "ARM_W03_RECARGA_CARGADOR")]
+        [TestCase(ArmaAPie.Sniper, "ARM_SNI_RECARGA")]
+        [TestCase(ArmaAPie.Subfusil, "ARM_W03_RECARGA_CARGADOR")]
+        [TestCase(ArmaAPie.RiflePlasma, "ARM_W03_RECARGA_CARGADOR")]
+        [TestCase(ArmaAPie.Revolver, "ARM_W06_SACAR")]
+        [TestCase(ArmaAPie.Granada, "ARM_W06_SACAR")]
+        public void IdSacar_ArmasDeMano_UsanSuRecargaOElSacarDelRevolver(ArmaAPie arma, string esperado)
         {
-            Assert.AreEqual("ARM_W06_SACAR", SonidosArmasT1472.IdSacar(arma));
+            Assert.AreEqual(esperado, SonidosArmasT1472.IdSacar(arma));
         }
 
         [Test]
@@ -64,10 +67,11 @@ namespace MechaCyberpunk.Tests.Personaje
         }
 
         [Test]
-        public void IdTrasDisparo_SoloEscopetaYFrancotirador()
+        public void IdTrasDisparo_EscopetaFrancotiradorYRevolver()
         {
             Assert.AreEqual("ARM_W02_BOMBA", SonidosArmasT1472.IdTrasDisparo(ArmaAPie.Escopeta));
             Assert.AreEqual("ARM_W04_CERROJO", SonidosArmasT1472.IdTrasDisparo(ArmaAPie.Sniper));
+            Assert.AreEqual("ARM_W06_MECANICA", SonidosArmasT1472.IdTrasDisparo(ArmaAPie.Revolver));
             Assert.IsNull(SonidosArmasT1472.IdTrasDisparo(ArmaAPie.Pistola));
             Assert.IsNull(SonidosArmasT1472.IdTrasDisparo(ArmaAPie.Fusil));
         }

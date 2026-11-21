@@ -527,7 +527,8 @@ namespace MechaCyberpunk.Trafico.Calle
                 && Distancia(jugador.Value, transform.position) <= config.DistanciaPasaCerca)
             {
                 proximoPasaCerca = Time.time + SegundosEntrePasaCerca;
-                Sonidos.ReproducirEn("VEH_PASA_CERCA", transform.position);
+                MechaCyberpunk.Vehiculos.Carro.CarroViejo viejoPasa = GetComponent<MechaCyberpunk.Vehiculos.Carro.CarroViejo>();
+                Sonidos.ReproducirEn(viejoPasa != null ? viejoPasa.IdPasaCerca : "VEH_PASA_CERCA", transform.position); // T-1534: eléctrico → VEH_ELECTRICO_PASAR
             }
         }
 

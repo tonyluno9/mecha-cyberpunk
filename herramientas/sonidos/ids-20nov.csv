@@ -1,0 +1,265 @@
+id,archivo,carpeta,duracion_s,loop(s/n),2D/3D,estado,reemplaza_a,uso_previsto,notas
+HUD_LOGRO,Assets/Arte/Audio/01_UI/HUD_LOGRO.wav,01_UI,4.36,n,2D,igual,,Mision completada,
+HUD_NOTIFICACION,Assets/Arte/Audio/01_UI/HUD_NOTIFICACION.wav,01_UI,1.61,n,2D,igual,,"Mision nueva, objetivo actualizado y guardado de partida (UI_GUARDADO)",
+HUD_VIDA_BAJA,Assets/Arte/Audio/01_UI/HUD_VIDA_BAJA.wav,01_UI,3.16,n,2D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+TIE_COMPRAR,Assets/Arte/Audio/01_UI/TIE_COMPRAR.wav,01_UI,0.37,n,2D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+TIE_DESEQUIPAR,Assets/Arte/Audio/01_UI/TIE_DESEQUIPAR.wav,01_UI,1.37,n,2D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+TIE_EQUIPAR,Assets/Arte/Audio/01_UI/TIE_EQUIPAR.wav,01_UI,1.63,n,2D,igual,,Equipar; clics al instalar un implante con el Doc,
+UI_ATRAS,Assets/Arte/Audio/01_UI/UI_ATRAS.wav,01_UI,0.85,n,2D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+UI_ERROR,Assets/Arte/Audio/01_UI/UI_ERROR.wav,01_UI,0.25,n,2D,igual,,Error / sin dinero; mision fallida; exo sin energia (alternativa),
+UI_LOGO_INTRO,Assets/Arte/Audio/01_UI/UI_LOGO_INTRO.wav,01_UI,3.50,n,2D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+UI_MENU_ABRIR,Assets/Arte/Audio/01_UI/UI_MENU_ABRIR.wav,01_UI,4.00,n,2D,igual,,"Abrir pausa, telefono y mapa",
+UI_MENU_CERRAR,Assets/Arte/Audio/01_UI/UI_MENU_CERRAR.wav,01_UI,1.50,n,2D,igual,,"Cerrar pausa, telefono y mapa",
+UI_MOVER,Assets/Arte/Audio/01_UI/UI_MOVER.wav,01_UI,0.38,n,2D,igual,,Mover el cursor; rueda de armas/habilidades: mover,
+UI_PESTANA,Assets/Arte/Audio/01_UI/UI_PESTANA.wav,01_UI,0.50,n,2D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+UI_SELECCIONAR,Assets/Arte/Audio/01_UI/UI_SELECCIONAR.wav,01_UI,2.29,n,2D,igual,,Aceptar; rueda: elegir habilidad; checkpoint y marcador (LEEME),
+ARM_COLA_CALLE,Assets/Arte/Audio/02_Armas/ARM_COLA_CALLE.wav,02_Armas,4.40,n,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+ARM_GRANADA_REBOTE,Assets/Arte/Audio/02_Armas/ARM_GRANADA_REBOTE.wav,02_Armas,1.19,n,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+ARM_GRANADA_SEGURO,Assets/Arte/Audio/02_Armas/ARM_GRANADA_SEGURO.wav,02_Armas,0.37,n,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+ARM_SIN_BALAS,Assets/Arte/Audio/02_Armas/ARM_SIN_BALAS.wav,02_Armas,0.19,n,3D,nuevo,,Clic vacio al disparar sin balas,24 -> 16 bits; estereo -> mono
+ARM_W01_DISPARO_01,Assets/Arte/Audio/02_Armas/ARM_W01_DISPARO_01.wav,02_Armas,1.61,n,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+ARM_W02_BOMBA,Assets/Arte/Audio/02_Armas/ARM_W02_BOMBA.wav,02_Armas,0.71,n,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+ARM_W02_DISPARO_01,Assets/Arte/Audio/02_Armas/ARM_W02_DISPARO_01.wav,02_Armas,1.88,n,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+ARM_W03_DISPARO_01,Assets/Arte/Audio/02_Armas/ARM_W03_DISPARO_01.wav,02_Armas,0.80,n,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+ARM_W03_RECARGA_CARGADOR,Assets/Arte/Audio/02_Armas/ARM_W03_RECARGA_CARGADOR.wav,02_Armas,0.38,n,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+ARM_W04_CERROJO,Assets/Arte/Audio/02_Armas/ARM_W04_CERROJO.wav,02_Armas,0.63,n,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+ARM_W04_DISPARO_01,Assets/Arte/Audio/02_Armas/ARM_W04_DISPARO_01.wav,02_Armas,1.50,n,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+ARM_W06_DISPARO_01,Assets/Arte/Audio/02_Armas/ARM_W06_DISPARO_01.wav,02_Armas,1.46,n,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+ARM_W06_MECANICA_01,Assets/Arte/Audio/02_Armas/ARM_W06_MECANICA_01.wav,02_Armas,0.33,n,3D,nuevo,,Revolver: mecanica (tambor/martillo); audio igual a ARM_W06_SACAR,24 -> 16 bits; estereo -> mono; 96000 -> 48000 Hz
+ARM_W06_MECANICA_02,Assets/Arte/Audio/02_Armas/ARM_W06_MECANICA_02.wav,02_Armas,0.20,n,3D,nuevo,,Revolver: mecanica (tambor/martillo),24 -> 16 bits; estereo -> mono; 96000 -> 48000 Hz
+ARM_W06_MECANICA_03,Assets/Arte/Audio/02_Armas/ARM_W06_MECANICA_03.wav,02_Armas,0.15,n,3D,nuevo,,Revolver: mecanica (tambor/martillo),24 -> 16 bits; estereo -> mono; 96000 -> 48000 Hz
+ARM_W06_MECANICA_04,Assets/Arte/Audio/02_Armas/ARM_W06_MECANICA_04.wav,02_Armas,0.57,n,3D,nuevo,,Revolver: mecanica (tambor/martillo),24 -> 16 bits; estereo -> mono; 96000 -> 48000 Hz
+ARM_W06_MECANICA_05,Assets/Arte/Audio/02_Armas/ARM_W06_MECANICA_05.wav,02_Armas,0.22,n,3D,nuevo,,Revolver: mecanica (tambor/martillo),24 -> 16 bits; estereo -> mono; 96000 -> 48000 Hz
+ARM_W06_SACAR,Assets/Arte/Audio/02_Armas/ARM_W06_SACAR.wav,02_Armas,0.33,n,3D,igual,,Sacar revolver (sacar/guardar demas armas: se usa la recarga de cada arma),
+ARM_W07_CARGA,Assets/Arte/Audio/02_Armas/ARM_W07_CARGA.wav,02_Armas,3.40,n,3D,igual,,Plasma W07: mientras carga,
+ARM_W07_DISPARO,Assets/Arte/Audio/02_Armas/ARM_W07_DISPARO.wav,02_Armas,1.42,n,3D,renombrado,02_Armas/ARM_W07_DISPARO_01.wav,Plasma W07: justo al terminar la carga (antes ARM_W07_DISPARO_01),movido con git mv (mismo GUID); mismo audio que 02_Armas/ARM_W07_DISPARO_01.wav (verificado)
+ARM_W07_ENFRIAR,Assets/Arte/Audio/02_Armas/ARM_W07_ENFRIAR.wav,02_Armas,1.50,n,3D,nuevo,,Plasma W07: al soltar (enfriar),"24 -> 16 bits; estereo -> mono; encaja: siseo de vapor que decae (centroide 9513 Hz, -18 a -56 dB): sirve para enfriar"
+ARM_W07_GATILLO,Assets/Arte/Audio/02_Armas/ARM_W07_GATILLO.wav,02_Armas,1.21,n,3D,renombrado,02_Armas/ARM_NOVA_DISPARO_01.wav,Plasma W07: al apretar el gatillo (antes ARM_NOVA_DISPARO_01),movido con git mv (mismo GUID); mismo audio que 02_Armas/ARM_NOVA_DISPARO_01.wav (verificado)
+ARM_W07_RAYO_CAPA_EXTRA,Assets/Arte/Audio/02_Armas/ARM_W07_RAYO_CAPA_EXTRA.wav,02_Armas,10.50,s,3D,nuevo,,Plasma W07: capa extra sobre el rayo,"24 -> 16 bits; estereo -> mono; 96000 -> 48000 Hz; bordes flojos recortados (inicio 0.00 s, final 0.05 s); empalme ya limpio (salto 0.0 sigma, nivel +0.8 dB): sin cambios; encaja: capa estable y larga (10.5 s, 6383 Hz de centroide, muy brillante): capa extra del rayo"
+ARM_W07_RAYO_LOOP,Assets/Arte/Audio/02_Armas/ARM_W07_RAYO_LOOP.wav,02_Armas,3.10,s,3D,renombrado,02_Armas/ARM_W07_RAYO.wav,Plasma W07: mientras dura el rayo (antes ARM_W07_RAYO),"renombrado de ARM_W07_RAYO (git mv, mismo GUID) y reescrito como loop limpio: crossfade 120 ms (potencia constante, parecido 0.36), largo 3.55 s -> 3.10 s | empalme antes: salto 0.0 sigma, nivel +4.6 dB; despues: salto 0.2 sigma, nivel +1.2 dB"
+ARM_W07_SIN_ENERGIA,Assets/Arte/Audio/02_Armas/ARM_W07_SIN_ENERGIA.wav,02_Armas,1.02,n,3D,renombrado,02_Armas/ARM_NOVA_CARGA_DISPARO.wav,Plasma W07: sin energia/balas (antes ARM_NOVA_CARGA_DISPARO); el arma de Nova recicla el plasma con otro pitch; tambien exo sin energia,movido con git mv (mismo GUID); mismo audio que 02_Armas/ARM_NOVA_CARGA_DISPARO.wav (verificado)
+ARM_W08_DISPARO,Assets/Arte/Audio/02_Armas/ARM_W08_DISPARO.wav,02_Armas,1.19,n,3D,nuevo,,"Lanzagranadas: disparo (bloop); audio igual a ARM_GRANADA_REBOTE, a revisar",WAV extensible -> PCM16; estereo -> mono; 96000 -> 48000 Hz
+CAS_CHICO_01,Assets/Arte/Audio/02_Armas/CAS_CHICO_01.wav,02_Armas,0.90,n,3D,nuevo,,Casquillo chico cayendo,24 -> 16 bits; estereo -> mono; 96000 -> 48000 Hz
+CAS_CHICO_02,Assets/Arte/Audio/02_Armas/CAS_CHICO_02.wav,02_Armas,0.67,n,3D,nuevo,,Casquillo chico cayendo,24 -> 16 bits; estereo -> mono; 96000 -> 48000 Hz
+CAS_GRANDE_01,Assets/Arte/Audio/02_Armas/CAS_GRANDE_01.wav,02_Armas,0.78,n,3D,nuevo,,Casquillo grande cayendo,24 -> 16 bits; estereo -> mono; 96000 -> 48000 Hz
+IMP_LASER_DISPARO,Assets/Arte/Audio/02_Armas/IMP_LASER_DISPARO.wav,02_Armas,0.40,n,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+IMP_MISILES_FIJAR,Assets/Arte/Audio/02_Armas/IMP_MISILES_FIJAR.wav,02_Armas,1.00,n,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+IMP_MISILES_LANZAR,Assets/Arte/Audio/02_Armas/IMP_MISILES_LANZAR.wav,02_Armas,2.46,n,3D,nuevo,,Lanzamiento de misiles,24 -> 16 bits; estereo -> mono; 96000 -> 48000 Hz
+IMP_BALA_CABEZA_01,Assets/Arte/Audio/03_Impactos/IMP_BALA_CABEZA_01.wav,03_Impactos,0.99,n,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+IMP_BALA_CARNE_01,Assets/Arte/Audio/03_Impactos/IMP_BALA_CARNE_01.wav,03_Impactos,0.23,n,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+IMP_BALA_CONCRETO_01,Assets/Arte/Audio/03_Impactos/IMP_BALA_CONCRETO_01.wav,03_Impactos,0.58,n,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+IMP_BALA_CRISTAL_01,Assets/Arte/Audio/03_Impactos/IMP_BALA_CRISTAL_01.wav,03_Impactos,0.66,n,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+IMP_BALA_METAL_01,Assets/Arte/Audio/03_Impactos/IMP_BALA_METAL_01.wav,03_Impactos,1.50,n,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+IMP_BALA_ROBOT_01,Assets/Arte/Audio/03_Impactos/IMP_BALA_ROBOT_01.wav,03_Impactos,1.03,n,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+IMP_BALA_ZUMBIDO_01,Assets/Arte/Audio/03_Impactos/IMP_BALA_ZUMBIDO_01.wav,03_Impactos,0.22,n,3D,igual,,Bala que pasa cerca; indicador de dano,
+DES_CRISTAL_VENTANA,Assets/Arte/Audio/04_Explosiones/DES_CRISTAL_VENTANA.wav,04_Explosiones,2.42,n,3D,nuevo,,Ventana que se rompe,24 -> 16 bits; estereo -> mono; 192000 -> 48000 Hz
+EXP_BARRIL,Assets/Arte/Audio/04_Explosiones/EXP_BARRIL.wav,04_Explosiones,7.05,n,3D,nuevo,,Explosion de barril,estereo -> mono
+EXP_CARRO,Assets/Arte/Audio/04_Explosiones/EXP_CARRO.wav,04_Explosiones,7.97,n,3D,nuevo,,Explosion de carro (reemplaza VEH_EXPLOSION / EXP_ONDA en el carro),24 -> 16 bits; estereo -> mono; 96000 -> 48000 Hz
+EXP_CRISTALES,Assets/Arte/Audio/04_Explosiones/EXP_CRISTALES.wav,04_Explosiones,3.89,n,3D,nuevo,,Cristales justo despues de una explosion grande,24 -> 16 bits; estereo -> mono; 96000 -> 48000 Hz
+EXP_DRON_ROBOT,Assets/Arte/Audio/04_Explosiones/EXP_DRON_ROBOT.wav,04_Explosiones,1.89,n,3D,nuevo,,Explosion de dron o robot,24 -> 16 bits; estereo -> mono
+EXP_ESCOMBROS,Assets/Arte/Audio/04_Explosiones/EXP_ESCOMBROS.wav,04_Explosiones,1.53,n,3D,nuevo,,Escombros justo despues de una explosion grande,24 -> 16 bits; estereo -> mono; 96000 -> 48000 Hz
+EXP_GRANADA_01,Assets/Arte/Audio/04_Explosiones/EXP_GRANADA_01.wav,04_Explosiones,1.55,n,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+EXP_NAVE,Assets/Arte/Audio/04_Explosiones/EXP_NAVE.wav,04_Explosiones,5.55,n,3D,nuevo,,Explosion de la patrulla voladora que cae,24 -> 16 bits; estereo -> mono
+EXP_ONDA,Assets/Arte/Audio/04_Explosiones/EXP_ONDA.wav,04_Explosiones,4.54,n,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+FUE_ENCENDER,Assets/Arte/Audio/04_Explosiones/FUE_ENCENDER.wav,04_Explosiones,1.99,n,3D,nuevo,,Fwoosh al prenderse algo; sigue FUE_LOOP_GRANDE,24 -> 16 bits; estereo -> mono; 96000 -> 48000 Hz
+FUE_LOOP_CHICO,Assets/Arte/Audio/04_Explosiones/FUE_LOOP_CHICO.wav,04_Explosiones,11.25,s,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+FUE_LOOP_GRANDE,Assets/Arte/Audio/04_Explosiones/FUE_LOOP_GRANDE.wav,04_Explosiones,27.91,s,3D,nuevo,,Fuego grande en loop (recortado de 145 s),"24 -> 16 bits; estereo -> mono; ventana mas estable de 28.0 s tomada de 51.2 s; crossfade 120 ms (lineal, parecido 0.66), largo 28.20 s -> 27.91 s | empalme antes: salto 13.0 sigma, nivel -0.4 dB; despues: salto 0.7 sigma, nivel +0.3 dB"
+PAS_CONCRETO_01,Assets/Arte/Audio/05_Pasos/PAS_CONCRETO_01.wav,05_Pasos,0.83,n,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+PAS_GRAVA_01,Assets/Arte/Audio/05_Pasos/PAS_GRAVA_01.wav,05_Pasos,0.40,n,3D,igual,,Pisadas sueltas en grava,
+PAS_GRAVA_02,Assets/Arte/Audio/05_Pasos/PAS_GRAVA_02.wav,05_Pasos,0.40,n,3D,igual,,Pisadas sueltas en grava,
+PAS_GRAVA_03,Assets/Arte/Audio/05_Pasos/PAS_GRAVA_03.wav,05_Pasos,0.40,n,3D,igual,,Pisadas sueltas en grava,
+PAS_GRAVA_04,Assets/Arte/Audio/05_Pasos/PAS_GRAVA_04.wav,05_Pasos,0.40,n,3D,igual,,Pisadas sueltas en grava,
+PAS_GRAVA_05,Assets/Arte/Audio/05_Pasos/PAS_GRAVA_05.wav,05_Pasos,0.40,n,3D,igual,,Pisadas sueltas en grava,
+PAS_GRAVA_06,Assets/Arte/Audio/05_Pasos/PAS_GRAVA_06.wav,05_Pasos,0.40,n,3D,igual,,Pisadas sueltas en grava,
+PAS_GRAVA_07,Assets/Arte/Audio/05_Pasos/PAS_GRAVA_07.wav,05_Pasos,0.40,n,3D,igual,,Pisadas sueltas en grava,
+PAS_GRAVA_08,Assets/Arte/Audio/05_Pasos/PAS_GRAVA_08.wav,05_Pasos,0.40,n,3D,igual,,Pisadas sueltas en grava,
+PAS_MADERA_01,Assets/Arte/Audio/05_Pasos/PAS_MADERA_01.wav,05_Pasos,0.37,n,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+PAS_MADERA_02,Assets/Arte/Audio/05_Pasos/PAS_MADERA_02.wav,05_Pasos,0.39,n,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+PAS_METAL_01,Assets/Arte/Audio/05_Pasos/PAS_METAL_01.wav,05_Pasos,0.61,n,3D,igual,,Pasos en metal; pasos del centinela robot,
+PAS_MOJADO_01,Assets/Arte/Audio/05_Pasos/PAS_MOJADO_01.wav,05_Pasos,0.74,n,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+PAS_TIERRA_01,Assets/Arte/Audio/05_Pasos/PAS_TIERRA_01.wav,05_Pasos,0.40,n,3D,igual,,Pisadas sueltas en tierra,
+PAS_TIERRA_02,Assets/Arte/Audio/05_Pasos/PAS_TIERRA_02.wav,05_Pasos,0.40,n,3D,igual,,Pisadas sueltas en tierra,
+PAS_TIERRA_03,Assets/Arte/Audio/05_Pasos/PAS_TIERRA_03.wav,05_Pasos,0.40,n,3D,igual,,Pisadas sueltas en tierra,
+PAS_TIERRA_04,Assets/Arte/Audio/05_Pasos/PAS_TIERRA_04.wav,05_Pasos,0.40,n,3D,igual,,Pisadas sueltas en tierra,
+PAS_TIERRA_05,Assets/Arte/Audio/05_Pasos/PAS_TIERRA_05.wav,05_Pasos,0.40,n,3D,igual,,Pisadas sueltas en tierra,
+PAS_TIERRA_06,Assets/Arte/Audio/05_Pasos/PAS_TIERRA_06.wav,05_Pasos,0.40,n,3D,igual,,Pisadas sueltas en tierra,
+PAS_TIERRA_07,Assets/Arte/Audio/05_Pasos/PAS_TIERRA_07.wav,05_Pasos,0.40,n,3D,igual,,Pisadas sueltas en tierra,
+PAS_TIERRA_08,Assets/Arte/Audio/05_Pasos/PAS_TIERRA_08.wav,05_Pasos,0.40,n,3D,igual,,Pisadas sueltas en tierra,
+JUG_ATERRIZAJE,Assets/Arte/Audio/06_Jugador/JUG_ATERRIZAJE.wav,06_Jugador,0.50,n,3D,igual,,Caida del jugador; aterrizaje del super salto (+ EXP_ONDA bajito),
+JUG_LATIDO_VIDA_BAJA,Assets/Arte/Audio/06_Jugador/JUG_LATIDO_VIDA_BAJA.wav,06_Jugador,4.25,n,2D,nuevo,,Latido con vida baja,24 -> 16 bits; estereo -> mono
+JUG_RODADA,Assets/Arte/Audio/06_Jugador/JUG_RODADA.wav,06_Jugador,1.09,n,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+JUG_ROPA_ROCE,Assets/Arte/Audio/06_Jugador/JUG_ROPA_ROCE.wav,06_Jugador,1.36,n,3D,nuevo,,Roce de ropa del jugador,24 -> 16 bits; estereo -> mono; 192000 -> 48000 Hz
+JUG_TREPAR,Assets/Arte/Audio/06_Jugador/JUG_TREPAR.wav,06_Jugador,1.26,n,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+JUG_ZUMBIDO_EXPLOSION,Assets/Arte/Audio/06_Jugador/JUG_ZUMBIDO_EXPLOSION.wav,06_Jugador,8.09,n,2D,nuevo,,Pitido de oido tras explosion cercana,24 -> 16 bits
+MEL_BLOQUEO,Assets/Arte/Audio/06_Jugador/MEL_BLOQUEO.wav,06_Jugador,0.26,n,3D,nuevo,,Bloqueo de golpe,24 -> 16 bits
+MEL_GOLPE_01,Assets/Arte/Audio/06_Jugador/MEL_GOLPE_01.wav,06_Jugador,0.73,n,3D,igual,,Golpe cuerpo a cuerpo; arrestado (MEL_GOLPE + sirena alejandose + esposas),
+MEL_GOLPE_02,Assets/Arte/Audio/06_Jugador/MEL_GOLPE_02.wav,06_Jugador,0.72,n,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+MEL_GOLPE_AIRE,Assets/Arte/Audio/06_Jugador/MEL_GOLPE_AIRE.wav,06_Jugador,0.32,n,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+MEL_GOLPE_CARNE,Assets/Arte/Audio/06_Jugador/MEL_GOLPE_CARNE.wav,06_Jugador,0.36,n,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+MEL_GOLPE_METAL,Assets/Arte/Audio/06_Jugador/MEL_GOLPE_METAL.wav,06_Jugador,0.52,n,3D,nuevo,,Golpe a metal/armadura/robot,24 -> 16 bits; estereo -> mono; 96000 -> 48000 Hz
+INT_HACKEO_EXITO,Assets/Arte/Audio/07_Interaccion/INT_HACKEO_EXITO.wav,07_Interaccion,0.54,n,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+INT_HACKEO_FALLO,Assets/Arte/Audio/07_Interaccion/INT_HACKEO_FALLO.wav,07_Interaccion,0.20,n,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+INT_INTERRUPTOR_LUZ,Assets/Arte/Audio/07_Interaccion/INT_INTERRUPTOR_LUZ.wav,07_Interaccion,1.23,n,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+INT_MALETIN_CERRAR,Assets/Arte/Audio/07_Interaccion/INT_MALETIN_CERRAR.wav,07_Interaccion,0.99,n,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+INT_PUERTA_CRISTAL,Assets/Arte/Audio/07_Interaccion/INT_PUERTA_CRISTAL.wav,07_Interaccion,3.99,n,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+INT_PUERTA_MADERA,Assets/Arte/Audio/07_Interaccion/INT_PUERTA_MADERA.wav,07_Interaccion,1.02,n,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+INT_PUERTA_METAL,Assets/Arte/Audio/07_Interaccion/INT_PUERTA_METAL.wav,07_Interaccion,0.96,n,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+INT_PUERTA_REJA,Assets/Arte/Audio/07_Interaccion/INT_PUERTA_REJA.wav,07_Interaccion,5.22,n,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+INT_RECOGER_DINERO,Assets/Arte/Audio/07_Interaccion/INT_RECOGER_DINERO.wav,07_Interaccion,0.75,n,3D,nuevo,,Recoger dinero,WAV extensible -> PCM16; estereo -> mono; 96000 -> 48000 Hz
+INT_RECOGER_OBJETO,Assets/Arte/Audio/07_Interaccion/INT_RECOGER_OBJETO.wav,07_Interaccion,0.47,n,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+INT_TECLEO_HACKEO,Assets/Arte/Audio/07_Interaccion/INT_TECLEO_HACKEO.wav,07_Interaccion,5.13,n,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+CON_BEBER,Assets/Arte/Audio/08_Consumibles/CON_BEBER.wav,08_Consumibles,3.24,n,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+CON_CURACION,Assets/Arte/Audio/08_Consumibles/CON_CURACION.wav,08_Consumibles,3.00,n,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+CON_LATA_ABRIR,Assets/Arte/Audio/08_Consumibles/CON_LATA_ABRIR.wav,08_Consumibles,6.46,n,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+CON_PAPITAS_ABRIR,Assets/Arte/Audio/08_Consumibles/CON_PAPITAS_ABRIR.wav,08_Consumibles,0.98,n,3D,nuevo,,Abrir bolsa de papitas,24 -> 16 bits; estereo -> mono; 96000 -> 48000 Hz
+CON_PAPITAS_COMER,Assets/Arte/Audio/08_Consumibles/CON_PAPITAS_COMER.wav,08_Consumibles,1.07,n,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+CON_VENDA,Assets/Arte/Audio/08_Consumibles/CON_VENDA.wav,08_Consumibles,1.81,n,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+MOTO_APAGAR_01,Assets/Arte/Audio/09_Vehiculos/MOTO_APAGAR_01.wav,09_Vehiculos,1.75,n,3D,igual,,Moto: arranque/ralenti (loop)/apagar; la moto grande con otro pitch,
+MOTO_APAGAR_02,Assets/Arte/Audio/09_Vehiculos/MOTO_APAGAR_02.wav,09_Vehiculos,0.80,n,3D,igual,,Moto: arranque/ralenti (loop)/apagar; la moto grande con otro pitch,
+MOTO_APAGAR_03,Assets/Arte/Audio/09_Vehiculos/MOTO_APAGAR_03.wav,09_Vehiculos,1.60,n,3D,igual,,Moto: arranque/ralenti (loop)/apagar; la moto grande con otro pitch,
+MOTO_ARRANQUE_01,Assets/Arte/Audio/09_Vehiculos/MOTO_ARRANQUE_01.wav,09_Vehiculos,1.00,n,3D,igual,,Moto: arranque/ralenti (loop)/apagar; la moto grande con otro pitch,
+MOTO_ARRANQUE_02,Assets/Arte/Audio/09_Vehiculos/MOTO_ARRANQUE_02.wav,09_Vehiculos,1.00,n,3D,igual,,Moto: arranque/ralenti (loop)/apagar; la moto grande con otro pitch,
+MOTO_ARRANQUE_03,Assets/Arte/Audio/09_Vehiculos/MOTO_ARRANQUE_03.wav,09_Vehiculos,1.00,n,3D,igual,,Moto: arranque/ralenti (loop)/apagar; la moto grande con otro pitch,
+MOTO_RALENTI_01,Assets/Arte/Audio/09_Vehiculos/MOTO_RALENTI_01.wav,09_Vehiculos,5.00,s,3D,igual,,Moto: arranque/ralenti (loop)/apagar; la moto grande con otro pitch,
+MOTO_RALENTI_02,Assets/Arte/Audio/09_Vehiculos/MOTO_RALENTI_02.wav,09_Vehiculos,5.00,s,3D,igual,,Moto: arranque/ralenti (loop)/apagar; la moto grande con otro pitch,
+MOTO_RALENTI_03,Assets/Arte/Audio/09_Vehiculos/MOTO_RALENTI_03.wav,09_Vehiculos,5.00,s,3D,igual,,Moto: arranque/ralenti (loop)/apagar; la moto grande con otro pitch,
+RAD_CAMBIAR_ESTACION,Assets/Arte/Audio/09_Vehiculos/RAD_CAMBIAR_ESTACION.wav,09_Vehiculos,0.61,n,2D,nuevo,,Estatica al cambiar de estacion de radio,24 -> 16 bits; estereo -> mono; 96000 -> 48000 Hz
+VEH_ACELERON_01,Assets/Arte/Audio/09_Vehiculos/VEH_ACELERON_01.wav,09_Vehiculos,3.11,n,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+VEH_ACELERON_02,Assets/Arte/Audio/09_Vehiculos/VEH_ACELERON_02.wav,09_Vehiculos,3.35,n,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+VEH_ALARMA,Assets/Arte/Audio/09_Vehiculos/VEH_ALARMA.wav,09_Vehiculos,8.75,s,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+VEH_CHOQUE_01,Assets/Arte/Audio/09_Vehiculos/VEH_CHOQUE_01.wav,09_Vehiculos,1.47,n,3D,igual,,"Choque; tambien contacto con el carro (charco, rin, cajuela, llaves, direccionales, tijera, raspon, atropello)",
+VEH_CHOQUE_02,Assets/Arte/Audio/09_Vehiculos/VEH_CHOQUE_02.wav,09_Vehiculos,1.65,n,3D,igual,,Choque; tambien contacto con el carro,
+VEH_CHOQUE_FUERTE_01,Assets/Arte/Audio/09_Vehiculos/VEH_CHOQUE_FUERTE_01.wav,09_Vehiculos,2.12,n,3D,igual,,Choque fuerte; tambien contacto con el carro,
+VEH_CHOQUE_FUERTE_02,Assets/Arte/Audio/09_Vehiculos/VEH_CHOQUE_FUERTE_02.wav,09_Vehiculos,3.39,n,3D,igual,,Choque fuerte; tambien contacto con el carro,
+VEH_CLAXON_CAMION,Assets/Arte/Audio/09_Vehiculos/VEH_CLAXON_CAMION.wav,09_Vehiculos,3.01,n,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+VEH_CLAXON_NORMAL_01,Assets/Arte/Audio/09_Vehiculos/VEH_CLAXON_NORMAL_01.wav,09_Vehiculos,1.59,n,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+VEH_CLAXON_NORMAL_02,Assets/Arte/Audio/09_Vehiculos/VEH_CLAXON_NORMAL_02.wav,09_Vehiculos,0.60,n,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+VEH_CRISTAL_ROMPER,Assets/Arte/Audio/09_Vehiculos/VEH_CRISTAL_ROMPER.wav,09_Vehiculos,1.16,n,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+VEH_ELECTRICO_ACELERAR_01,Assets/Arte/Audio/09_Vehiculos/VEH_ELECTRICO_ACELERAR_01.wav,09_Vehiculos,10.58,n,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+VEH_ELECTRICO_ACELERAR_02,Assets/Arte/Audio/09_Vehiculos/VEH_ELECTRICO_ACELERAR_02.wav,09_Vehiculos,6.86,n,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+VEH_ELECTRICO_ARRANQUE,Assets/Arte/Audio/09_Vehiculos/VEH_ELECTRICO_ARRANQUE.wav,09_Vehiculos,2.56,n,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+VEH_ELECTRICO_MOVER,Assets/Arte/Audio/09_Vehiculos/VEH_ELECTRICO_MOVER.wav,09_Vehiculos,3.22,n,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+VEH_ELECTRICO_PASAR,Assets/Arte/Audio/09_Vehiculos/VEH_ELECTRICO_PASAR.wav,09_Vehiculos,3.26,n,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+VEH_FRENO_FUERTE,Assets/Arte/Audio/09_Vehiculos/VEH_FRENO_FUERTE.wav,09_Vehiculos,1.38,n,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+VEH_LLANTAS_GRAVA,Assets/Arte/Audio/09_Vehiculos/VEH_LLANTAS_GRAVA.wav,09_Vehiculos,9.00,s,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+VEH_NORMAL_APAGAR_01,Assets/Arte/Audio/09_Vehiculos/VEH_NORMAL_APAGAR_01.wav,09_Vehiculos,8.45,n,3D,igual,,Carro normal: arranque/ralenti (loop)/apagar,
+VEH_NORMAL_APAGAR_02,Assets/Arte/Audio/09_Vehiculos/VEH_NORMAL_APAGAR_02.wav,09_Vehiculos,1.70,n,3D,igual,,Carro normal: arranque/ralenti (loop)/apagar,
+VEH_NORMAL_APAGAR_03,Assets/Arte/Audio/09_Vehiculos/VEH_NORMAL_APAGAR_03.wav,09_Vehiculos,0.75,n,3D,igual,,Carro normal: arranque/ralenti (loop)/apagar,
+VEH_NORMAL_ARRANQUE_01,Assets/Arte/Audio/09_Vehiculos/VEH_NORMAL_ARRANQUE_01.wav,09_Vehiculos,3.00,n,3D,igual,,Carro normal: arranque/ralenti (loop)/apagar,
+VEH_NORMAL_ARRANQUE_02,Assets/Arte/Audio/09_Vehiculos/VEH_NORMAL_ARRANQUE_02.wav,09_Vehiculos,2.45,n,3D,igual,,Carro normal: arranque/ralenti (loop)/apagar,
+VEH_NORMAL_ARRANQUE_03,Assets/Arte/Audio/09_Vehiculos/VEH_NORMAL_ARRANQUE_03.wav,09_Vehiculos,1.20,n,3D,igual,,Carro normal: arranque/ralenti (loop)/apagar,
+VEH_NORMAL_RALENTI_01,Assets/Arte/Audio/09_Vehiculos/VEH_NORMAL_RALENTI_01.wav,09_Vehiculos,5.00,s,3D,igual,,Carro normal: arranque/ralenti (loop)/apagar,
+VEH_NORMAL_RALENTI_02,Assets/Arte/Audio/09_Vehiculos/VEH_NORMAL_RALENTI_02.wav,09_Vehiculos,5.00,s,3D,igual,,Carro normal: arranque/ralenti (loop)/apagar,
+VEH_NORMAL_RALENTI_03,Assets/Arte/Audio/09_Vehiculos/VEH_NORMAL_RALENTI_03.wav,09_Vehiculos,5.00,s,3D,igual,,Carro normal: arranque/ralenti (loop)/apagar,
+VEH_PESADO_APAGAR_01,Assets/Arte/Audio/09_Vehiculos/VEH_PESADO_APAGAR_01.wav,09_Vehiculos,3.51,n,3D,igual,,Camion/pesado,
+VEH_PESADO_ARRANQUE,Assets/Arte/Audio/09_Vehiculos/VEH_PESADO_ARRANQUE.wav,09_Vehiculos,2.79,n,3D,igual,,Camion/pesado,
+VEH_PESADO_RALENTI_01,Assets/Arte/Audio/09_Vehiculos/VEH_PESADO_RALENTI_01.wav,09_Vehiculos,5.00,s,3D,igual,,Camion/pesado,
+VEH_PUENTE,Assets/Arte/Audio/09_Vehiculos/VEH_PUENTE.wav,09_Vehiculos,2.19,n,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+VEH_PUERTA_ABRIR,Assets/Arte/Audio/09_Vehiculos/VEH_PUERTA_ABRIR.wav,09_Vehiculos,0.90,n,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+VEH_PUERTA_CERRAR,Assets/Arte/Audio/09_Vehiculos/VEH_PUERTA_CERRAR.wav,09_Vehiculos,0.55,n,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+VEH_TOPE,Assets/Arte/Audio/09_Vehiculos/VEH_TOPE.wav,09_Vehiculos,2.09,n,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+AMB_SIRENA_LOOP,Assets/Arte/Audio/10_Policia/AMB_SIRENA_LOOP.wav,10_Policia,55.25,s,3D,nuevo,,Sirena de ambulancia en loop,"24 -> 16 bits; estereo -> mono; 96000 -> 48000 Hz; bordes flojos recortados (inicio 0.00 s, final 0.16 s); crossfade 120 ms (lineal, parecido 1.00), largo 60.60 s -> 55.25 s | empalme antes: salto 0.1 sigma, nivel -9.2 dB; despues: salto 0.1 sigma, nivel -13.0 dB"
+NAV_DANIADA,Assets/Arte/Audio/10_Policia/NAV_DANIADA.wav,10_Policia,3.17,n,3D,nuevo,,Nave policial danada,24 -> 16 bits; estereo -> mono
+NAV_REFLECTOR,Assets/Arte/Audio/10_Policia/NAV_REFLECTOR.wav,10_Policia,3.89,n,3D,nuevo,,Reflector de la nave,MP3 -> WAV PCM16; estereo -> mono
+NAV_ROTORES_LOOP,Assets/Arte/Audio/10_Policia/NAV_ROTORES_LOOP.wav,10_Policia,59.60,s,3D,nuevo,,Rotores de la nave policial en loop,"bordes flojos recortados (inicio 0.00 s, final 0.00 s); empalme ya limpio (salto 3.3 sigma, nivel +2.9 dB): sin cambios"
+POL_ESTRELLA_SUBE,Assets/Arte/Audio/10_Policia/POL_ESTRELLA_SUBE.wav,10_Policia,0.87,n,3D,nuevo,,Sube una estrella de busqueda,24 -> 16 bits; estereo -> mono; 96000 -> 48000 Hz
+POL_RADIO_AVISO_01,Assets/Arte/Audio/10_Policia/POL_RADIO_AVISO_01.wav,10_Policia,4.10,n,3D,igual,,Voz Mexican Police (aviso); el altavoz tambien sale de estas voces,
+POL_RADIO_AVISO_02,Assets/Arte/Audio/10_Policia/POL_RADIO_AVISO_02.wav,10_Policia,5.92,n,3D,igual,,Voz Mexican Police (aviso),
+POL_RADIO_AVISO_03,Assets/Arte/Audio/10_Policia/POL_RADIO_AVISO_03.wav,10_Policia,6.84,n,3D,igual,,Voz Mexican Police (aviso),
+POL_RADIO_AVISO_04,Assets/Arte/Audio/10_Policia/POL_RADIO_AVISO_04.wav,10_Policia,12.32,n,3D,igual,,Voz Mexican Police (aviso),
+POL_RADIO_AVISO_05,Assets/Arte/Audio/10_Policia/POL_RADIO_AVISO_05.wav,10_Policia,4.90,n,3D,nuevo,,Voz Mexican Police (aviso); el altavoz tambien sale de estas voces,24 -> 16 bits
+POL_RADIO_ESTATICA,Assets/Arte/Audio/10_Policia/POL_RADIO_ESTATICA.wav,10_Policia,8.04,n,3D,nuevo,,Estatica sola para la radio de la patrulla,24 -> 16 bits; estereo -> mono; 96000 -> 48000 Hz; fade-out 8 ms
+POL_SIRENA_CORTA,Assets/Arte/Audio/10_Policia/POL_SIRENA_CORTA.wav,10_Policia,1.83,n,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+POL_SIRENA_LOOP,Assets/Arte/Audio/10_Policia/POL_SIRENA_LOOP.wav,10_Policia,11.05,s,3D,igual,,Ya conectado el 19-nov (ver docs/reporte-sonidos-19nov.md),
+POL_SIRENA_MURO,Assets/Arte/Audio/10_Policia/POL_SIRENA_MURO.wav,10_Policia,14.20,s,3D,nuevo,,Sirena de la torre del muro cuando sube mucho la busqueda (opcional),"24 -> 16 bits; estereo -> mono; bordes flojos recortados (inicio 0.25 s, final 0.51 s); empalme ya limpio (salto 0.2 sigma, nivel -1.8 dB): sin cambios"
+NOV_ARMADURA_MOVER,Assets/Arte/Audio/11_Nova/NOV_ARMADURA_MOVER.wav,11_Nova,0.52,n,3D,nuevo,,Roce de armadura de Nova al moverse,24 -> 16 bits; estereo -> mono; 96000 -> 48000 Hz
+NOV_CAIDA_Y_ENCENDIDO,Assets/Arte/Audio/11_Nova/NOV_CAIDA_Y_ENCENDIDO.wav,11_Nova,2.13,n,3D,renombrado,10_Policia/POL_NOVA_AVISO.wav,El agente de Nova cae del cielo y se enciende (antes POL_NOVA_AVISO: aviso de llegada de Nova),movido con git mv (mismo GUID); mismo audio que 10_Policia/POL_NOVA_AVISO.wav (verificado)
+NOV_ESCUDO_ACTIVAR,Assets/Arte/Audio/11_Nova/NOV_ESCUDO_ACTIVAR.wav,11_Nova,0.99,n,3D,nuevo,,Enemigo Nova se cubre con el escudo; el jugador reutiliza activar/recargar escudo (pitch),WAV extensible -> PCM16; estereo -> mono; 96000 -> 48000 Hz
+NOV_ESCUDO_IMPACTO,Assets/Arte/Audio/11_Nova/NOV_ESCUDO_IMPACTO.wav,11_Nova,0.60,n,3D,nuevo,,Balas contra el escudo de Nova (el escudo no se rompe),24 -> 16 bits; estereo -> mono; 96000 -> 48000 Hz
+NOV_JETPACK_LOOP,Assets/Arte/Audio/11_Nova/NOV_JETPACK_LOOP.wav,11_Nova,14.93,s,3D,nuevo,,Jetpack de Nova en vuelo; encendido y apagado con fade de volumen,"24 -> 16 bits; estereo -> mono; 96000 -> 48000 Hz; ventana mas estable de 16.0 s tomada de 0.0 s; crossfade 120 ms (potencia constante, parecido 0.39), largo 16.20 s -> 14.93 s | empalme antes: salto 4.0 sigma, nivel -1.2 dB; despues: salto 2.2 sigma, nivel -0.8 dB"
+NOV_PASOS_CAMINAR_01,Assets/Arte/Audio/11_Nova/NOV_PASOS_CAMINAR_01.wav,11_Nova,0.31,n,3D,nuevo,,Nova camina con armadura (12 pasos; el pesado los reutiliza con pitch bajo),24 -> 16 bits; estereo -> mono
+NOV_PASOS_CAMINAR_02,Assets/Arte/Audio/11_Nova/NOV_PASOS_CAMINAR_02.wav,11_Nova,0.31,n,3D,nuevo,,Nova camina con armadura (12 pasos; el pesado los reutiliza con pitch bajo),24 -> 16 bits; estereo -> mono
+NOV_PASOS_CAMINAR_03,Assets/Arte/Audio/11_Nova/NOV_PASOS_CAMINAR_03.wav,11_Nova,0.31,n,3D,nuevo,,Nova camina con armadura (12 pasos; el pesado los reutiliza con pitch bajo),24 -> 16 bits; estereo -> mono
+NOV_PASOS_CAMINAR_04,Assets/Arte/Audio/11_Nova/NOV_PASOS_CAMINAR_04.wav,11_Nova,0.31,n,3D,nuevo,,Nova camina con armadura (12 pasos; el pesado los reutiliza con pitch bajo),24 -> 16 bits; estereo -> mono
+NOV_PASOS_CAMINAR_05,Assets/Arte/Audio/11_Nova/NOV_PASOS_CAMINAR_05.wav,11_Nova,0.31,n,3D,nuevo,,Nova camina con armadura (12 pasos; el pesado los reutiliza con pitch bajo),24 -> 16 bits; estereo -> mono
+NOV_PASOS_CAMINAR_06,Assets/Arte/Audio/11_Nova/NOV_PASOS_CAMINAR_06.wav,11_Nova,0.31,n,3D,nuevo,,Nova camina con armadura (12 pasos; el pesado los reutiliza con pitch bajo),24 -> 16 bits; estereo -> mono
+NOV_PASOS_CAMINAR_07,Assets/Arte/Audio/11_Nova/NOV_PASOS_CAMINAR_07.wav,11_Nova,0.31,n,3D,nuevo,,Nova camina con armadura (12 pasos; el pesado los reutiliza con pitch bajo),24 -> 16 bits; estereo -> mono
+NOV_PASOS_CAMINAR_08,Assets/Arte/Audio/11_Nova/NOV_PASOS_CAMINAR_08.wav,11_Nova,0.31,n,3D,nuevo,,Nova camina con armadura (12 pasos; el pesado los reutiliza con pitch bajo),24 -> 16 bits; estereo -> mono
+NOV_PASOS_CAMINAR_09,Assets/Arte/Audio/11_Nova/NOV_PASOS_CAMINAR_09.wav,11_Nova,0.31,n,3D,nuevo,,Nova camina con armadura (12 pasos; el pesado los reutiliza con pitch bajo),24 -> 16 bits; estereo -> mono
+NOV_PASOS_CAMINAR_10,Assets/Arte/Audio/11_Nova/NOV_PASOS_CAMINAR_10.wav,11_Nova,0.58,n,3D,nuevo,,Nova camina con armadura (12 pasos; el pesado los reutiliza con pitch bajo),24 -> 16 bits; estereo -> mono
+NOV_PASOS_CAMINAR_11,Assets/Arte/Audio/11_Nova/NOV_PASOS_CAMINAR_11.wav,11_Nova,0.58,n,3D,nuevo,,Nova camina con armadura (12 pasos; el pesado los reutiliza con pitch bajo),24 -> 16 bits; estereo -> mono
+NOV_PASOS_CAMINAR_12,Assets/Arte/Audio/11_Nova/NOV_PASOS_CAMINAR_12.wav,11_Nova,0.56,n,3D,nuevo,,Nova camina con armadura (12 pasos; el pesado los reutiliza con pitch bajo),24 -> 16 bits; estereo -> mono
+NOV_PASOS_CORRER_01,Assets/Arte/Audio/11_Nova/NOV_PASOS_CORRER_01.wav,11_Nova,0.30,n,3D,nuevo,,Nova corre con armadura (10 pasos),24 -> 16 bits; estereo -> mono
+NOV_PASOS_CORRER_02,Assets/Arte/Audio/11_Nova/NOV_PASOS_CORRER_02.wav,11_Nova,0.30,n,3D,nuevo,,Nova corre con armadura (10 pasos),24 -> 16 bits; estereo -> mono
+NOV_PASOS_CORRER_03,Assets/Arte/Audio/11_Nova/NOV_PASOS_CORRER_03.wav,11_Nova,0.30,n,3D,nuevo,,Nova corre con armadura (10 pasos),24 -> 16 bits; estereo -> mono
+NOV_PASOS_CORRER_04,Assets/Arte/Audio/11_Nova/NOV_PASOS_CORRER_04.wav,11_Nova,0.30,n,3D,nuevo,,Nova corre con armadura (10 pasos),24 -> 16 bits; estereo -> mono
+NOV_PASOS_CORRER_05,Assets/Arte/Audio/11_Nova/NOV_PASOS_CORRER_05.wav,11_Nova,0.30,n,3D,nuevo,,Nova corre con armadura (10 pasos),24 -> 16 bits; estereo -> mono
+NOV_PASOS_CORRER_06,Assets/Arte/Audio/11_Nova/NOV_PASOS_CORRER_06.wav,11_Nova,0.30,n,3D,nuevo,,Nova corre con armadura (10 pasos),24 -> 16 bits; estereo -> mono
+NOV_PASOS_CORRER_07,Assets/Arte/Audio/11_Nova/NOV_PASOS_CORRER_07.wav,11_Nova,0.30,n,3D,nuevo,,Nova corre con armadura (10 pasos),24 -> 16 bits; estereo -> mono
+NOV_PASOS_CORRER_08,Assets/Arte/Audio/11_Nova/NOV_PASOS_CORRER_08.wav,11_Nova,0.30,n,3D,nuevo,,Nova corre con armadura (10 pasos),24 -> 16 bits; estereo -> mono
+NOV_PASOS_CORRER_09,Assets/Arte/Audio/11_Nova/NOV_PASOS_CORRER_09.wav,11_Nova,0.34,n,3D,nuevo,,Nova corre con armadura (10 pasos),24 -> 16 bits; estereo -> mono
+NOV_PASOS_CORRER_10,Assets/Arte/Audio/11_Nova/NOV_PASOS_CORRER_10.wav,11_Nova,0.34,n,3D,nuevo,,Nova corre con armadura (10 pasos),24 -> 16 bits; estereo -> mono
+NPC_H_DOLOR,Assets/Arte/Audio/12_NPCs/NPC_H_DOLOR.wav,12_NPCs,0.38,n,3D,nuevo,,Atropello y dano a NPC hombre,24 -> 16 bits; estereo -> mono; 96000 -> 48000 Hz
+NPC_M_DOLOR,Assets/Arte/Audio/12_NPCs/NPC_M_DOLOR.wav,12_NPCs,0.33,n,3D,nuevo,,Atropello y dano a NPC mujer,24 -> 16 bits; estereo -> mono
+DRN_PES_AMETRALLADORA,Assets/Arte/Audio/13_Robots/DRN_PES_AMETRALLADORA.wav,13_Robots,0.45,n,3D,nuevo,,Un tiro de la ametralladora del dron pesado; se repite para la rafaga,estereo -> mono
+ROB_CHISPAS_DANIO,Assets/Arte/Audio/13_Robots/ROB_CHISPAS_DANIO.wav,13_Robots,3.10,n,3D,nuevo,,Chispas al dano de robot,24 -> 16 bits; estereo -> mono; 96000 -> 48000 Hz
+ROB_ENCENDER,Assets/Arte/Audio/13_Robots/ROB_ENCENDER.wav,13_Robots,2.50,n,3D,nuevo,,Robot se enciende / despierta,estereo -> mono
+ROB_MUERTE,Assets/Arte/Audio/13_Robots/ROB_MUERTE.wav,13_Robots,1.00,n,3D,nuevo,,Muerte de robot (solo el primer segundo); caida/apagado reciclan este con pitch bajo,"24 -> 16 bits; estereo -> mono; 96000 -> 48000 Hz; solo el primer segundo (1.00 s), fade-out 60 ms (LEEME)"
+ROB_PERRO_GRUNIDO,Assets/Arte/Audio/13_Robots/ROB_PERRO_GRUNIDO.wav,13_Robots,2.00,n,3D,nuevo,,Gruñido del perro robot,24 -> 16 bits; estereo -> mono
+ROB_PERRO_MOVER,Assets/Arte/Audio/13_Robots/ROB_PERRO_MOVER.wav,13_Robots,1.77,n,3D,nuevo,,Pasos/movimiento del perro robot,24 -> 16 bits; estereo -> mono
+ROB_PES_HIDRAULICA,Assets/Arte/Audio/13_Robots/ROB_PES_HIDRAULICA.wav,13_Robots,4.62,n,3D,nuevo,,Hidraulica del robot pesado,24 -> 16 bits; estereo -> mono
+ROB_PES_LLEGADA_01,Assets/Arte/Audio/13_Robots/ROB_PES_LLEGADA_01.wav,13_Robots,7.66,n,3D,nuevo,,Aparecen los robots gigantes; tambien pasos del pesado con pitch bajo,24 -> 16 bits; estereo -> mono
+ROB_PES_LLEGADA_02,Assets/Arte/Audio/13_Robots/ROB_PES_LLEGADA_02.wav,13_Robots,2.43,n,3D,nuevo,,Aparecen los robots gigantes (variante),24 -> 16 bits; estereo -> mono
+ROB_PES_PLACA_CAE,Assets/Arte/Audio/13_Robots/ROB_PES_PLACA_CAE.wav,13_Robots,5.11,n,3D,nuevo,,Placa del robot pesado cae; caida con pitch bajo,24 -> 16 bits; estereo -> mono; 96000 -> 48000 Hz
+ROB_SERVOS,Assets/Arte/Audio/13_Robots/ROB_SERVOS.wav,13_Robots,0.75,n,3D,nuevo,,Servos al moverse; tambien brazos/fuerza y activar exo (pitch); apagado y caida con pitch bajo,estereo -> mono
+ROB_VOZ_ALERTA,Assets/Arte/Audio/13_Robots/ROB_VOZ_ALERTA_01.wav,13_Robots,0.5,n,3D,nuevo,,"Voz de robot al detectar al jugador (frase 1 de 5; el original traía las 5 juntas)",partido por silencios en la integración
+ROB_VOZ_ALERTA,Assets/Arte/Audio/13_Robots/ROB_VOZ_ALERTA_02.wav,13_Robots,1.53,n,3D,nuevo,,"Voz de robot al detectar al jugador (frase 2 de 5; el original traía las 5 juntas)",partido por silencios en la integración
+ROB_VOZ_ALERTA,Assets/Arte/Audio/13_Robots/ROB_VOZ_ALERTA_03.wav,13_Robots,0.55,n,3D,nuevo,,"Voz de robot al detectar al jugador (frase 3 de 5; el original traía las 5 juntas)",partido por silencios en la integración
+ROB_VOZ_ALERTA,Assets/Arte/Audio/13_Robots/ROB_VOZ_ALERTA_04.wav,13_Robots,1.53,n,3D,nuevo,,"Voz de robot al detectar al jugador (frase 4 de 5; el original traía las 5 juntas)",partido por silencios en la integración
+ROB_VOZ_ALERTA,Assets/Arte/Audio/13_Robots/ROB_VOZ_ALERTA_05.wav,13_Robots,0.51,n,3D,nuevo,,"Voz de robot al detectar al jugador (frase 5 de 5; el original traía las 5 juntas)",partido por silencios en la integración
+AMB_AZOTEA_CIUDAD,Assets/Arte/Audio/14_Ambiente/AMB_AZOTEA_CIUDAD.wav,14_Ambiente,152.00,s,3D,nuevo,,Ambiente en azoteas de la ciudad,"24 -> 16 bits; estereo -> mono; bordes flojos recortados (inicio 0.00 s, final 0.00 s); empalme ya limpio (salto 0.1 sigma, nivel +1.0 dB): sin cambios"
+AMB_LOMAS,Assets/Arte/Audio/14_Ambiente/AMB_LOMAS.wav,14_Ambiente,52.85,s,3D,nuevo,,Ambiente de Las Lomas,"MP3 -> WAV PCM16; estereo -> mono; bordes flojos recortados (inicio 0.05 s, final 0.03 s); crossfade 120 ms (potencia constante, parecido 0.55), largo 54.90 s -> 52.85 s | empalme antes: salto 0.1 sigma, nivel +15.1 dB; despues: salto 0.9 sigma, nivel +2.0 dB"
+AMB_NOVA,Assets/Arte/Audio/14_Ambiente/AMB_NOVA.wav,14_Ambiente,100.59,s,3D,nuevo,,Fondo cerca de las calles de Nova (loop),"24 -> 16 bits; estereo -> mono; 96000 -> 48000 Hz; bordes flojos recortados (inicio 0.20 s, final 1.50 s); crossfade 120 ms (lineal, parecido 0.92), largo 101.00 s -> 100.59 s | empalme antes: salto 16.4 sigma, nivel -3.7 dB; despues: salto 0.0 sigma, nivel -4.2 dB"
+AMB_SUBURBIOS_NOCHE,Assets/Arte/Audio/14_Ambiente/AMB_SUBURBIOS_NOCHE.wav,14_Ambiente,70.20,s,3D,nuevo,,Ambiente de los suburbios de noche,"24 -> 16 bits; estereo -> mono; bordes flojos recortados (inicio 0.00 s, final 0.04 s); empalme ya limpio (salto 0.3 sigma, nivel -1.5 dB): sin cambios"
+CLI_LLUVIA_DENTRO_CARRO,Assets/Arte/Audio/14_Ambiente/CLI_LLUVIA_DENTRO_CARRO.wav,14_Ambiente,15.40,s,3D,nuevo,,Lluvia oida desde dentro del carro,"WAV extensible -> PCM16; estereo -> mono; bordes flojos recortados (inicio 0.00 s, final 0.03 s); empalme ya limpio (salto 0.3 sigma, nivel +1.6 dB): sin cambios"
+CLI_LLUVIA_FUERTE,Assets/Arte/Audio/14_Ambiente/CLI_LLUVIA_FUERTE.wav,14_Ambiente,119.20,s,3D,nuevo,,Lluvia fuerte (clima),"24 -> 16 bits; estereo -> mono; 96000 -> 48000 Hz; bordes flojos recortados (inicio 0.25 s, final 1.03 s); empalme ya limpio (salto 0.2 sigma, nivel -0.6 dB): sin cambios"
+CLI_LLUVIA_SOBRE_LAMINA,Assets/Arte/Audio/14_Ambiente/CLI_LLUVIA_SOBRE_LAMINA.wav,14_Ambiente,27.05,s,3D,nuevo,,"Lluvia sobre lamina (techos, bodegas)","24 -> 16 bits; estereo -> mono; bordes flojos recortados (inicio 0.00 s, final 0.05 s); crossfade 120 ms (potencia constante, parecido 0.18), largo 29.95 s -> 27.05 s | empalme antes: salto 0.1 sigma, nivel +5.3 dB; despues: salto 0.3 sigma, nivel +2.0 dB"
+CLI_TORMENTA_TRUENOS,Assets/Arte/Audio/14_Ambiente/CLI_TORMENTA_TRUENOS.wav,14_Ambiente,46.87,s,3D,nuevo,,Tormenta con truenos incluidos,"estereo -> mono; bordes flojos recortados (inicio 0.15 s, final 1.00 s); crossfade 120 ms (potencia constante, parecido 0.23), largo 50.60 s -> 46.87 s | empalme antes: salto 0.1 sigma, nivel -9.3 dB; despues: salto 0.6 sigma, nivel +0.1 dB"
+CLI_VIENTO,Assets/Arte/Audio/14_Ambiente/CLI_VIENTO.wav,14_Ambiente,45.15,s,3D,nuevo,,Viento (clima),"24 -> 16 bits; estereo -> mono; bordes flojos recortados (inicio 0.00 s, final 0.02 s); empalme ya limpio (salto 0.2 sigma, nivel -1.6 dB): sin cambios"
+INT_ARMERIA_VENTILADOR,Assets/Arte/Audio/14_Ambiente/INT_ARMERIA_VENTILADOR.wav,14_Ambiente,17.98,s,3D,nuevo,,Interior de la armeria: ventilador,"24 -> 16 bits; estereo -> mono; bordes flojos recortados (inicio 0.00 s, final 0.01 s); crossfade 120 ms (lineal, parecido 0.96), largo 18.10 s -> 17.98 s | empalme antes: salto 90.1 sigma, nivel +1.0 dB; despues: salto 0.7 sigma, nivel +0.8 dB"
+INT_BODEGA_GOTERAS,Assets/Arte/Audio/14_Ambiente/INT_BODEGA_GOTERAS.wav,14_Ambiente,24.43,s,3D,nuevo,,Interior de bodega: goteras,"24 -> 16 bits; estereo -> mono; 96000 -> 48000 Hz; bordes flojos recortados (inicio 0.60 s, final 1.50 s); crossfade 120 ms (potencia constante, parecido 0.45), largo 28.26 s -> 24.43 s | empalme antes: salto 0.1 sigma, nivel -10.2 dB; despues: salto 0.5 sigma, nivel +0.1 dB"
+INT_TALLER_CANEPA,Assets/Arte/Audio/14_Ambiente/INT_TALLER_CANEPA.wav,14_Ambiente,163.45,s,3D,nuevo,,Interior del taller de Canepa,"MP3 -> WAV PCM16; estereo -> mono; bordes flojos recortados (inicio 0.35 s, final 0.97 s); crossfade 120 ms (potencia constante, parecido 0.11), largo 163.75 s -> 163.45 s | empalme antes: salto 0.1 sigma, nivel -14.9 dB; despues: salto 0.1 sigma, nivel -6.6 dB"
+INT_TIENDA_TINO_RADIO,Assets/Arte/Audio/14_Ambiente/INT_TIENDA_TINO_RADIO.wav,14_Ambiente,4.74,s,3D,nuevo,,Interior tienda de Tino: radio (suena junto al ventilador),"24 -> 16 bits; estereo -> mono; bordes flojos recortados (inicio 0.00 s, final 0.28 s); crossfade 120 ms (potencia constante, parecido 0.23), largo 6.20 s -> 4.74 s | empalme antes: salto 2.1 sigma, nivel -7.1 dB; despues: salto 0.1 sigma, nivel +5.3 dB"
+INT_TIENDA_TINO_VENTILADOR,Assets/Arte/Audio/14_Ambiente/INT_TIENDA_TINO_VENTILADOR.wav,14_Ambiente,4.00,s,3D,nuevo,,Interior tienda de Tino: ventilador (suena junto a la radio),"24 -> 16 bits; estereo -> mono; bordes flojos recortados (inicio 0.00 s, final 0.02 s); empalme ya limpio (salto 0.2 sigma, nivel -0.6 dB): sin cambios"
+OBJ_AIRE_ACONDICIONADO,Assets/Arte/Audio/14_Ambiente/OBJ_AIRE_ACONDICIONADO.wav,14_Ambiente,25.95,s,3D,nuevo,,Aire acondicionado en la pared,"24 -> 16 bits; estereo -> mono; bordes flojos recortados (inicio 0.00 s, final 0.05 s); empalme ya limpio (salto 0.4 sigma, nivel +0.5 dB): sin cambios"
+OBJ_CAMARA_SEGURIDAD,Assets/Arte/Audio/14_Ambiente/OBJ_CAMARA_SEGURIDAD.wav,14_Ambiente,1.25,s,3D,nuevo,,"Camara de seguridad (Lomas, Nova)","24 -> 16 bits; bordes flojos recortados (inicio 0.00 s, final 0.04 s); empalme ya limpio (salto 0.8 sigma, nivel -1.2 dB): sin cambios"
+OBJ_MAQUINA_EXPENDEDORA,Assets/Arte/Audio/14_Ambiente/OBJ_MAQUINA_EXPENDEDORA.wav,14_Ambiente,1.16,n,3D,nuevo,,"Maquina expendedora (zumbido y golpe de la lata/moneda; evento de 1.2 s que decae, no loop)","24 -> 16 bits; estereo -> mono; 96000 -> 48000 Hz; el audio decae a silencio (no tiene cuerpo estable): se deja como evento, loop=n"
+OBJ_REFRIGERADOR,Assets/Arte/Audio/14_Ambiente/OBJ_REFRIGERADOR.wav,14_Ambiente,52.75,s,3D,nuevo,,Zumbido de refrigerador para la tiendita y la clinica (idea de Tony),"24 -> 16 bits; estereo -> mono; bordes flojos recortados (inicio 0.00 s, final 0.04 s); empalme ya limpio (salto 0.0 sigma, nivel -1.3 dB): sin cambios"
+OBJ_TELE_REINICIO,Assets/Arte/Audio/14_Ambiente/OBJ_TELE_REINICIO.wav,14_Ambiente,7.22,n,3D,nuevo,,Tele de casa o del hacker que se reinicia (idea de Tony),MP3 -> WAV PCM16; estereo -> mono
+OBJ_TRANSFORMADOR,Assets/Arte/Audio/14_Ambiente/OBJ_TRANSFORMADOR.wav,14_Ambiente,50.35,s,3D,nuevo,,"Zumbido de transformador de poste (a volumen bajo, como pidio el usuario)","24 -> 16 bits; bordes flojos recortados (inicio 0.00 s, final 0.02 s); empalme ya limpio (salto 0.2 sigma, nivel +0.3 dB): sin cambios"
+EXO_ESCUDO_GOLPE,Assets/Arte/Audio/15_Exo_Implantes/EXO_ESCUDO_GOLPE.wav,15_Exo_Implantes,0.55,n,3D,nuevo,,Golpe al escudo del jugador,24 -> 16 bits; estereo -> mono
+EXO_PIERNAS_SALTO_SUPER,Assets/Arte/Audio/15_Exo_Implantes/EXO_PIERNAS_SALTO_SUPER.wav,15_Exo_Implantes,0.22,n,3D,nuevo,,Super salto del exo (aterrizaje = JUG_ATERRIZAJE + EXP_ONDA bajito),estereo -> mono
+EXO_PUESTO_LOOP_01,Assets/Arte/Audio/15_Exo_Implantes/EXO_PUESTO_LOOP_01.wav,15_Exo_Implantes,2.12,n,3D,nuevo,,Llevar puesta la protesis o el exo (reemplaza el golpe del brazo robotico); evento que decae a silencio,"24 -> 16 bits; estereo -> mono; el audio decae a silencio (no tiene cuerpo estable): se deja como evento, loop=n"
+EXO_PUESTO_LOOP_02,Assets/Arte/Audio/15_Exo_Implantes/EXO_PUESTO_LOOP_02.wav,15_Exo_Implantes,0.84,n,3D,nuevo,,Llevar puesta la protesis o el exo (variante); evento que decae a silencio,"24 -> 16 bits; estereo -> mono; el audio decae a silencio (no tiene cuerpo estable): se deja como evento, loop=n"
+EXO_RUEDA_CAMARA_LENTA_ENTRAR,Assets/Arte/Audio/15_Exo_Implantes/EXO_RUEDA_CAMARA_LENTA_ENTRAR.wav,15_Exo_Implantes,2.00,n,2D,nuevo,EXO_RUEDA_CAMARA_LENTA (recorte de la grabacion fuente),Abrir la rueda de armas/habilidades: entrada a camara lenta (2D),WAV extensible -> PCM16; 96000 -> 48000 Hz; primeros 2.00 s (entrada a camara lenta)
+EXO_RUEDA_CAMARA_LENTA_SALIR,Assets/Arte/Audio/15_Exo_Implantes/EXO_RUEDA_CAMARA_LENTA_SALIR.wav,15_Exo_Implantes,1.49,n,2D,nuevo,EXO_RUEDA_CAMARA_LENTA (recorte de la grabacion fuente),Cerrar la rueda: salida de camara lenta (2D),"WAV extensible -> PCM16; 96000 -> 48000 Hz; de 2.00 s hasta que baja de -60 dB (1.49 s). El ultimo segundo literal (2.49-3.49 s) ya esta casi en silencio (-41 a -57 dB) y perderia la caida, por eso se parte en 2.0 s"
+EXO_SERVOS_CAMINAR,Assets/Arte/Audio/15_Exo_Implantes/EXO_SERVOS_CAMINAR.wav,15_Exo_Implantes,1.59,n,3D,nuevo,,Servos del exo al caminar; tambien brazos/fuerza y activar exo,24 -> 16 bits
+EXO_VISOR_ACTIVAR,Assets/Arte/Audio/15_Exo_Implantes/EXO_VISOR_ACTIVAR.wav,15_Exo_Implantes,0.90,n,3D,nuevo,,Activar el visor (loop y apagado: el mismo bajito o en reversa),24 -> 16 bits; estereo -> mono; 96000 -> 48000 Hz; fade-out 8 ms
+IMP_INSTALAR_TALADRO,Assets/Arte/Audio/15_Exo_Implantes/IMP_INSTALAR_TALADRO.wav,15_Exo_Implantes,6.90,n,3D,nuevo,,Instalar implante con el Doc: taladro,MP3 -> WAV PCM16
+IMP_SINAPSIS_01,Assets/Arte/Audio/15_Exo_Implantes/IMP_SINAPSIS_01.wav,15_Exo_Implantes,0.46,n,3D,nuevo,,Instalar implante: pitido de sinapsis,24 -> 16 bits; estereo -> mono
+IMP_SINAPSIS_02,Assets/Arte/Audio/15_Exo_Implantes/IMP_SINAPSIS_02.wav,15_Exo_Implantes,0.23,n,3D,nuevo,,Instalar implante: pitido de sinapsis (variante),24 -> 16 bits; estereo -> mono
+CAS_CARTAS_BARAJAR_01,Assets/Arte/Audio/16_Casino/CAS_CARTAS_BARAJAR_01.wav,16_Casino,0.72,n,3D,nuevo,,Barajar cartas,24 -> 16 bits; estereo -> mono; 96000 -> 48000 Hz
+CAS_CARTAS_BARAJAR_02,Assets/Arte/Audio/16_Casino/CAS_CARTAS_BARAJAR_02.wav,16_Casino,0.55,n,3D,nuevo,,Barajar cartas (variante),24 -> 16 bits; estereo -> mono; 96000 -> 48000 Hz
+CAS_CARTAS_REPARTIR,Assets/Arte/Audio/16_Casino/CAS_CARTAS_REPARTIR.wav,16_Casino,2.90,n,3D,nuevo,,Repartir cartas,
+CAS_FICHAS,Assets/Arte/Audio/16_Casino/CAS_FICHAS.wav,16_Casino,0.60,n,3D,nuevo,,Fichas del casino,24 -> 16 bits; estereo -> mono
+CAS_PREMIO_CHICO,Assets/Arte/Audio/16_Casino/CAS_PREMIO_CHICO.wav,16_Casino,0.89,n,3D,nuevo,,Tragamonedas: premio chico,24 -> 16 bits; estereo -> mono
+CAS_PREMIO_GRANDE,Assets/Arte/Audio/16_Casino/CAS_PREMIO_GRANDE.wav,16_Casino,2.76,n,3D,nuevo,,Tragamonedas: premio grande,24 -> 16 bits; estereo -> mono
+CAS_RULETA_GIRA,Assets/Arte/Audio/16_Casino/CAS_RULETA_GIRA.wav,16_Casino,27.97,n,3D,nuevo,,"Ruleta girando con la bolita (28 s; se completa sola, no es loop)","24 -> 16 bits; estereo -> mono; el audio decae a silencio (no tiene cuerpo estable): se deja como evento, loop=n"
+CAS_TRAGAMONEDAS,Assets/Arte/Audio/16_Casino/CAS_TRAGAMONEDAS.wav,16_Casino,5.14,n,3D,nuevo,,Tragamonedas: palanca + giro + paro (5 s),24 -> 16 bits; estereo -> mono; 96000 -> 48000 Hz; fade-out 8 ms
+HUD_MENSAJE_CELULAR,Assets/Arte/Audio/17_Misiones_HUD/HUD_MENSAJE_CELULAR.wav,17_Misiones_HUD,1.46,n,2D,nuevo,,Mensaje de celular; sirve tambien para UI_TELEFONO,
+MIS_TEMPORIZADOR,Assets/Arte/Audio/17_Misiones_HUD/MIS_TEMPORIZADOR.wav,17_Misiones_HUD,1.82,n,2D,nuevo,,Temporizador de mision,24 -> 16 bits; 96000 -> 48000 Hz
+PAN_ARRESTADO_ESPOSAS,Assets/Arte/Audio/17_Misiones_HUD/PAN_ARRESTADO_ESPOSAS.wav,17_Misiones_HUD,0.73,n,2D,nuevo,,Arrestado: esposas (junto a MEL_GOLPE + POL_SIRENA_LOOP alejandose),24 -> 16 bits; 96000 -> 48000 Hz
+PAN_HAS_MUERTO,Assets/Arte/Audio/17_Misiones_HUD/PAN_HAS_MUERTO.wav,17_Misiones_HUD,4.25,n,2D,nuevo,,Pantalla de muerte: ultimos latidos,24 -> 16 bits
+RAD_EST1_CUMBIA_PERCUSION,Assets/Arte/Audio/18_Radio_Musica/RAD_EST1_CUMBIA_PERCUSION.wav,18_Radio_Musica,10.00,s,2D,nuevo,,Estacion 1 (cumbia) de la radio y bocina de casa en fiesta (OBJ_BOCINA_FIESTA); percusion en loop (idea de Tony),"24 -> 16 bits; loop ritmico: sin crossfade; empalme medido (salto 0.0 sigma, nivel -4.7 dB)"
+POL_RADIO_DESPACHO_01,Assets/Arte/Audio/10_Policia/POL_RADIO_DESPACHO_01.wav,10_Policia,3.98,n,3D,quitado,,LEEME: cambiarlos por POL_RADIO_AVISO_* (sigue en Assets; el codigo la usa),
+POL_RADIO_DESPACHO_02,Assets/Arte/Audio/10_Policia/POL_RADIO_DESPACHO_02.wav,10_Policia,6.46,n,3D,quitado,,LEEME: cambiarlos por POL_RADIO_AVISO_* (sigue en Assets; el codigo la usa),

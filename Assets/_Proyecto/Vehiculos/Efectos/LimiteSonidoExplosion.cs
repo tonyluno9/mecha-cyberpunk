@@ -44,21 +44,86 @@ namespace MechaCyberpunk.Vehiculos.Efectos
 
         public void Reiniciar() => cuantos = 0;
 
-        /// <summary>El sonido de la onda de una explosión de vehículo.</summary>
+        /// <summary>El sonido de la onda de una explosión genérica (EXP_ONDA: aterrizajes del super salto, etc.).</summary>
         public const string IdOnda = "EXP_ONDA";
 
-        /// <summary>El fuego chico en bucle de un carro que arde.</summary>
+        /// <summary>El fuego chico en bucle de un carro que arde antes de explotar.</summary>
         public const string IdFuegoChico = "FUE_LOOP_CHICO";
 
-        /// <summary>Suena la explosión en 3D si el tope lo permite. Devuelve true si sonó.</summary>
-        public static bool Sonar(UnityEngine.Vector3 donde)
+        /// <summary>T-1532: el fuego grande en bucle de lo que ya explotó.</summary>
+        public const string IdFuegoGrande = "FUE_LOOP_GRANDE";
+
+        /// <summary>T-1532: el fwoosh al prenderse algo; sigue el fuego en bucle.</summary>
+        public const string IdFuegoEncender = "FUE_ENCENDER";
+
+        public const string IdCarro = "EXP_CARRO";
+        public const string IdBarril = "EXP_BARRIL";
+        public const string IdDronRobot = "EXP_DRON_ROBOT";
+        public const string IdNave = "EXP_NAVE";
+        public const string IdEscombros = "EXP_ESCOMBROS";
+        public const string IdCristales = "EXP_CRISTALES";
+
+        /// <summary>Segundos entre el estruendo y los escombros o cristales que lo siguen.</summary>
+        public const float RetrasoDetalle = 0.3f;
+
+        /// <summary>T-1532: el estruendo que pide cada tipo de explosión.</summary>
+        public static string IdPara(TipoExplosionSonido tipo)
+        {
+            switch (tipo)
+            {
+                case TipoExplosionSonido.Carro: return IdCarro;
+                case TipoExplosionSonido.Barril: return IdBarril;
+                case TipoExplosionSonido.DronRobot: return IdDronRobot;
+                case TipoExplosionSonido.Nave: return IdNave;
+                default: return IdOnda;
+            }
+        }
+
+        /// <summary>
+        /// T-1532: lo que suena justo después de una explosión grande: escombros siempre, y cristales si había vidrio (carro y nave). El dron y el
+        /// barril solo dan escombros (el barril) o nada (el dron, que es chico).
+        /// </summary>
+        public static string[] IdsDetalle(TipoExplosionSonido tipo)
+        {
+            switch (tipo)
+            {
+                case TipoExplosionSonido.Carro:
+                case TipoExplosionSonido.Nave:
+                    return new[] { IdEscombros, IdCristales };
+                case TipoExplosionSonido.Barril:
+                    return new[] { IdEscombros };
+                default:
+                    return new string[0];
+            }
+        }
+
+        /// <summary>El sonido de la onda de una explosión de vehículo (EXP_ONDA). Se conserva por compatibilidad; el juego pide <see cref="Sonar(TipoExplosionSonido, UnityEngine.Vector3)"/>.</summary>
+        public static bool Sonar(UnityEngine.Vector3 donde) => Sonar(TipoExplosionSonido.Onda, donde);
+
+        /// <summary>Suena la explosión del tipo dado en 3D (y sus escombros y cristales) si el tope lo permite. Devuelve true si sonó.</summary>
+        public static bool Sonar(TipoExplosionSonido tipo, UnityEngine.Vector3 donde)
         {
             if (!Compartido.Permite(UnityEngine.Time.time))
             {
                 return false;
             }
-            MechaCyberpunk.Core.Sonidos.ReproducirEn(IdOnda, donde);
+            MechaCyberpunk.Core.Sonidos.ReproducirEn(IdPara(tipo), donde);
+            string[] detalle = IdsDetalle(tipo);
+            if (detalle.Length > 0)
+            {
+                DetalleExplosionSonido.Programar(donde, detalle, RetrasoDetalle);
+            }
             return true;
         }
+    }
+
+    /// <summary>T-1532: qué explosión suena.</summary>
+    public enum TipoExplosionSonido
+    {
+        Onda,
+        Carro,
+        Barril,
+        DronRobot,
+        Nave,
     }
 }

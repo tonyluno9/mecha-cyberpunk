@@ -33,9 +33,21 @@ namespace MechaCyberpunk.Vehiculos
         public readonly string Apagar;
         public readonly string Claxon;
         public readonly float FactorTono;
+        /// <summary>T-1534: bucle en movimiento (solo el eléctrico: sin ralentí, parado va en silencio). Nulo si el tipo usa ralentí.</summary>
+        public readonly string Mover;
+        /// <summary>T-1534: sonido de pisar el acelerador del eléctrico (el catálogo elige _01 o _02). Nulo si no es eléctrico.</summary>
+        public readonly string Acelerar;
+        /// <summary>T-1534: sonido de pasar a buena velocidad (eléctrico). Nulo si no es eléctrico.</summary>
+        public readonly string Pasar;
 
-        public GrupoSonidoVehiculo(string arranque, string ralenti, string apagar, string claxon, float factorTono)
+        /// <summary>True si es un eléctrico (turbinas): sin ralentí, MOVER en movimiento y silencio parado.</summary>
+        public bool EsElectrico => Mover != null;
+
+        public GrupoSonidoVehiculo(string arranque, string ralenti, string apagar, string claxon, float factorTono, string mover = null, string acelerar = null, string pasar = null)
         {
+            Mover = mover;
+            Acelerar = acelerar;
+            Pasar = pasar;
             Arranque = arranque;
             Ralenti = ralenti;
             Apagar = apagar;
@@ -57,8 +69,9 @@ namespace MechaCyberpunk.Vehiculos
                 case TipoVehiculoSonido.Superdeportivo:
                     return new GrupoSonidoVehiculo("VEH_NORMAL_ARRANQUE", "VEH_NORMAL_RALENTI", "VEH_NORMAL_APAGAR", ClaxonNormal, 1.25f);
                 case TipoVehiculoSonido.Electrico:
-                    // Por revisar a oído: solo se usa VEH_ELECTRICO_ARRANQUE; el ralentí y el apagado reciclan el grupo normal con tono alto.
-                    return new GrupoSonidoVehiculo("VEH_ELECTRICO_ARRANQUE", "VEH_NORMAL_RALENTI", "VEH_NORMAL_APAGAR", ClaxonNormal, 1.4f);
+                    // T-1534 (LEEME_SONIDOS): turbinas sin ralentí ni apagado propio. ARRANQUE solo al encender, ACELERAR al pisar, MOVER y PASAR en movimiento
+                    // subiendo el tono con la rapidez; parado, en silencio.
+                    return new GrupoSonidoVehiculo("VEH_ELECTRICO_ARRANQUE", null, null, ClaxonNormal, 1f, "VEH_ELECTRICO_MOVER", "VEH_ELECTRICO_ACELERAR", "VEH_ELECTRICO_PASAR");
                 default:
                     return new GrupoSonidoVehiculo("VEH_NORMAL_ARRANQUE", "VEH_NORMAL_RALENTI", "VEH_NORMAL_APAGAR", ClaxonNormal, 1f);
             }

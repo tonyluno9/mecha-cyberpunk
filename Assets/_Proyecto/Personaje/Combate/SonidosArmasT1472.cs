@@ -13,7 +13,18 @@ namespace MechaCyberpunk.Personaje.Combate
         public const string ColaCalle = "ARM_COLA_CALLE";
         public const string PlasmaCarga = "ARM_W07_CARGA";
         public const string PlasmaDisparo = "ARM_W07_DISPARO";
-        public const string PlasmaRayo = "ARM_W07_RAYO";
+        public const string PlasmaRayo = "ARM_W07_RAYO_LOOP"; // T-1531: antes ARM_W07_RAYO
+        // T-1532: el resto del flujo del plasma, la mecánica del revólver, el clic vacío, los casquillos y los misiles.
+        public const string PlasmaGatillo = "ARM_W07_GATILLO";
+        public const string PlasmaCapaRayo = "ARM_W07_RAYO_CAPA_EXTRA";
+        public const string PlasmaEnfriar = "ARM_W07_ENFRIAR";
+        public const string PlasmaSinEnergia = "ARM_W07_SIN_ENERGIA";
+        public const string LanzagranadasDisparo = "ARM_W08_DISPARO";
+        public const string RevolverMecanica = "ARM_W06_MECANICA";
+        public const string SinBalas = "ARM_SIN_BALAS";
+        public const string CasquilloChico = "CAS_CHICO";
+        public const string CasquilloGrande = "CAS_GRANDE";
+        public const string MisilesLanzar = "IMP_MISILES_LANZAR";
         public const string GranadaSeguro = "ARM_GRANADA_SEGURO";
         public const string GranadaRebote = "ARM_GRANADA_REBOTE";
         public const string ExplosionGranada = "EXP_GRANADA";
@@ -33,7 +44,7 @@ namespace MechaCyberpunk.Personaje.Combate
                 case ArmaAPie.Sniper: return "ARM_W04_DISPARO";
                 case ArmaAPie.Subfusil: return "ARM_SUB_DISPARO"; // T-1471 lo mapea a W01 agudo
                 case ArmaAPie.Revolver: return "ARM_W06_DISPARO";
-                case ArmaAPie.Lanzagranadas: return "ARM_LGR_DISPARO";
+                case ArmaAPie.Lanzagranadas: return LanzagranadasDisparo;
                 case ArmaAPie.RiflePlasma: return PlasmaDisparo;
                 default: return "ARM_W01_DISPARO";
             }
@@ -50,14 +61,39 @@ namespace MechaCyberpunk.Personaje.Combate
                 case ArmaAPie.Subfusil: return "ARM_W03_RECARGA_CARGADOR";
                 case ArmaAPie.RiflePlasma: return "ARM_W03_RECARGA_CARGADOR";
                 case ArmaAPie.Sniper: return "ARM_SNI_RECARGA";
+                case ArmaAPie.Revolver: return RevolverMecanica; // T-1532: tambor y martillo
                 default: return "ARM_PIS_RECARGA";
             }
         }
 
-        /// <summary>El sonido al sacar el arma, o null si no suena nada (los puños).</summary>
+        /// <summary>
+        /// El sonido al sacar o guardar el arma, o null si no suena nada (los puños). LEEME 20-nov: se usa la recarga de cada arma; solo el revólver
+        /// tiene su propio sacar y la granada (que no recarga) usa ese mismo.
+        /// </summary>
         public static string IdSacar(ArmaAPie arma)
         {
-            return arma == ArmaAPie.Punos ? null : Sacar;
+            if (arma == ArmaAPie.Punos)
+            {
+                return null;
+            }
+            return arma == ArmaAPie.Revolver || arma == ArmaAPie.Granada ? Sacar : IdRecarga(arma);
+        }
+
+        /// <summary>El casquillo que cae tras el tiro: grande en escopeta y francotirador, chico en el resto; null en el revólver (guarda los casquillos) y en lo que no es de balas.</summary>
+        public static string IdCasquillo(ArmaAPie arma)
+        {
+            switch (arma)
+            {
+                case ArmaAPie.Escopeta:
+                case ArmaAPie.Sniper:
+                    return CasquilloGrande;
+                case ArmaAPie.Pistola:
+                case ArmaAPie.Subfusil:
+                case ArmaAPie.Fusil:
+                    return CasquilloChico;
+                default:
+                    return null;
+            }
         }
 
         /// <summary>Lo que suena un poco después de cada tiro (bombeo de la escopeta, cerrojo del francotirador), o null.</summary>
@@ -67,6 +103,7 @@ namespace MechaCyberpunk.Personaje.Combate
             {
                 case ArmaAPie.Escopeta: return Bomba;
                 case ArmaAPie.Sniper: return Cerrojo;
+                case ArmaAPie.Revolver: return RevolverMecanica; // T-1532: el martillo se arma tras el tiro
                 default: return null;
             }
         }

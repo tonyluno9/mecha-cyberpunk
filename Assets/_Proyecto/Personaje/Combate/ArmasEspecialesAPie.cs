@@ -44,6 +44,7 @@ namespace MechaCyberpunk.Personaje.Combate
         private EfectoRayoPlasma rayo;
         private int bucleChispeo = Sonidos.SinBucle;
         private int bucleRayo = Sonidos.SinBucle;
+        private int bucleCapaRayo = Sonidos.SinBucle; // T-1532: ARM_W07_RAYO_CAPA_EXTRA
         /// <summary>T-1309: ID del chispeo en bucle mientras carga el rifle de plasma.</summary>
         public const string IdChispeoPlasma = SonidosArmasT1472.PlasmaCarga;
         /// <summary>T-1309: ID del disparo del rayo de plasma.</summary>
@@ -416,7 +417,28 @@ namespace MechaCyberpunk.Personaje.Combate
                 datosPlasma = d;
             }
             EstadoPlasma antes = plasma.Estado;
-            bool empezo = plasma.Avanzar(Time.deltaTime, pulsado, cargador.IntentarDisparar);
+            bool faltoEnergia = false;
+            bool empezo = plasma.Avanzar(Time.deltaTime, pulsado, () =>
+            {
+                bool hay = cargador.IntentarDisparar();
+                faltoEnergia = !hay;
+                return hay;
+            });
+            // T-1532: GATILLO al apretar, SIN_ENERGIA si la carga acaba sin celda (los bucles de carga y rayo siguen más abajo).
+            EventoSonidoPlasma sonidos = ReglaSonidoPlasma.Evaluar(antes, plasma.Estado, empezo, faltoEnergia);
+            if ((sonidos & EventoSonidoPlasma.Gatillo) != 0)
+            {
+                Sonidos.Reproducir(SonidosArmasT1472.PlasmaGatillo);
+            }
+            if ((sonidos & EventoSonidoPlasma.SinEnergia) != 0)
+            {
+                PararChispeo();
+                Sonidos.Reproducir(SonidosArmasT1472.PlasmaSinEnergia);
+            }
+            if ((sonidos & EventoSonidoPlasma.Enfriar) != 0)
+            {
+                Sonidos.Reproducir(SonidosArmasT1472.PlasmaEnfriar);
+            }
             Transform boca = pistola.BocaDe(arma);
             Vector3 origen = boca != null ? boca.position : transform.position + Vector3.up * AlturaManoGranada;
             if (plasma.Estado == EstadoPlasma.Cargando)
@@ -441,7 +463,9 @@ namespace MechaCyberpunk.Personaje.Combate
                     PararChispeo();
                     Sonidos.Reproducir(IdDisparoPlasma); // T-1472: el disparo del jugador suena en 2D
                     PararRayoSonido();
-                    bucleRayo = Sonidos.ReproducirBucle(SonidosArmasT1472.PlasmaRayo, pistola.BocaDe(arma) != null ? pistola.BocaDe(arma) : transform);
+                    Transform bocaRayo = pistola.BocaDe(arma) != null ? pistola.BocaDe(arma) : transform;
+                    bucleRayo = Sonidos.ReproducirBucle(SonidosArmasT1472.PlasmaRayo, bocaRayo);
+                    bucleCapaRayo = Sonidos.ReproducirBucle(SonidosArmasT1472.PlasmaCapaRayo, bocaRayo); // T-1532
                     pistola.AvisarDisparoEspecial(arma, origen);
                     siguienteZumbido = Time.time;
                     acumuladoTic = TicDanioRayo;
@@ -545,6 +569,11 @@ namespace MechaCyberpunk.Personaje.Combate
             {
                 Sonidos.DetenerBucle(bucleRayo);
                 bucleRayo = Sonidos.SinBucle;
+            }
+            if (bucleCapaRayo != Sonidos.SinBucle)
+            {
+                Sonidos.DetenerBucle(bucleCapaRayo);
+                bucleCapaRayo = Sonidos.SinBucle;
             }
         }
 

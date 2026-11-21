@@ -44,7 +44,6 @@ namespace MechaCyberpunk.Tests
         }
 
         [TestCase("cafe", "CON_BEBER")]
-        [TestCase("papitas", "CON_PAPITAS_COMER")]
         [TestCase("venda", "CON_VENDA")]
         [TestCase("botiquin_grande", "CON_VENDA")]
         [TestCase("bateria_escudo", "CON_CURACION")]
@@ -52,6 +51,13 @@ namespace MechaCyberpunk.Tests
         {
             ReglaSonidoConsumible.Sonar(id);
             CollectionAssert.AreEqual(new[] { esperado }, sonidos.Ids);
+        }
+
+        [Test]
+        public void Sonar_Papitas_AbreLaBolsaAntesDeComer()
+        {
+            ReglaSonidoConsumible.Sonar("papitas");
+            CollectionAssert.AreEqual(new[] { "CON_PAPITAS_ABRIR", "CON_PAPITAS_COMER" }, sonidos.Ids);
         }
 
         [Test]

@@ -29,7 +29,7 @@ namespace MechaCyberpunk.Tests.Sonido
         public void ElMensajeDelTelefonoYaNoUsaElTimbre()
         {
             string codigo = File.ReadAllText("Assets/_Proyecto/Progresion/Mensajes/ServicioMensajes.cs");
-            StringAssert.Contains("\"UI_TEXTO\"", codigo);
+            StringAssert.Contains("\"HUD_MENSAJE_CELULAR\"", codigo); // sonidos 20-nov: el mensaje del celular tiene su sonido propio
             StringAssert.DoesNotContain("UI_TELEFONO", codigo);
         }
 

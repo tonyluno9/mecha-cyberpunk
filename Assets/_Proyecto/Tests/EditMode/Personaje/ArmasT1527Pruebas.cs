@@ -67,8 +67,9 @@ namespace MechaCyberpunk.Tests
         [Test]
         public void CamaraLenta_YaNoSuenaElGolpe()
         {
-            Assert.AreEqual("UI_CAMARA_LENTA", MechaCyberpunk.UI.Rueda.RuedaArmasObjetos.IdCamaraLenta);
+            Assert.AreEqual("EXO_RUEDA_CAMARA_LENTA_ENTRAR", MechaCyberpunk.UI.Rueda.RuedaArmasObjetos.IdCamaraLenta);
             Assert.AreNotEqual("PUN_GOLPE_AIRE", MechaCyberpunk.UI.Rueda.RuedaArmasObjetos.IdCamaraLenta);
+            Assert.AreEqual("EXO_RUEDA_CAMARA_LENTA_SALIR", MechaCyberpunk.UI.Rueda.RuedaArmasObjetos.IdCamaraLentaSalir); // T-1531: al cerrar la rueda suena la salida
         }
     }
 }

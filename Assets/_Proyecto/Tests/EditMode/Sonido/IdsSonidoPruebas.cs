@@ -14,7 +14,7 @@ namespace MechaCyberpunk.Tests.Sonido
     /// <summary>T-470: cada ID usado en el código tiene archivo, cada archivo está en el catálogo y los AMB van en streaming.</summary>
     public class IdsSonidoPruebas
     {
-        private static readonly string[] Secciones = { "JUG", "PUN", "ARM", "VEH", "PAN", "CAL", "ZON", "ECO", "UI", "MUN", "AMB", "MUS", "01_UI", "02_Armas", "03_Impactos", "04_Explosiones", "05_Pasos", "06_Jugador", "07_Interaccion", "08_Consumibles", "09_Vehiculos", "10_Policia" }; // T-1471: y las 10 carpetas nuevas
+        private static readonly string[] Secciones = { "JUG", "PUN", "ARM", "VEH", "PAN", "CAL", "ZON", "ECO", "UI", "MUN", "AMB", "MUS", "01_UI", "02_Armas", "03_Impactos", "04_Explosiones", "05_Pasos", "06_Jugador", "07_Interaccion", "08_Consumibles", "09_Vehiculos", "10_Policia", "11_Nova", "12_NPCs", "13_Robots", "14_Ambiente", "15_Exo_Implantes", "16_Casino", "17_Misiones_HUD", "18_Radio_Musica" }; // T-1471 y T-1530: las carpetas numeradas
         private static readonly Regex Literal = new Regex("\"((?:JUG|PUN|ARM|VEH|PAN|CAL|ZON|ECO|UI|MUN|AMB|MUS)_[A-Z0-9_]+)\"");
         private static readonly Regex Variante = new Regex(@"^(.+?)(_\d\d)?$");
 
@@ -65,7 +65,9 @@ namespace MechaCyberpunk.Tests.Sonido
 
             StringBuilder informe = new StringBuilder();
             informe.AppendLine("IDs usados en el codigo: " + usados.Count + "; IDs con archivo final: " + conFinal.Count);
-            List<string> sinArchivo = usados.Keys.Where(id => !conAlgo.Contains(id)).ToList();
+            // T-1531: un ID viejo con alias (MapaSonidos19nov/20nov) suena con el archivo de su ID nuevo.
+            List<string> sinArchivo = usados.Keys.Where(id => !conAlgo.Contains(id)
+                && !(MapaSonidos19nov.EstaMapeado(id) && conAlgo.Contains(MapaSonidos19nov.Nuevo(id)))).ToList();
             foreach (string id in usados.Keys)
             {
                 string estado = conFinal.Contains(id) ? "FINAL       " : conAlgo.Contains(id) ? "PROVISIONAL " : "SIN ARCHIVO ";
@@ -89,7 +91,7 @@ namespace MechaCyberpunk.Tests.Sonido
             CatalogoSonidos catalogo = AssetDatabase.LoadAssetAtPath<CatalogoSonidos>("Assets/_Proyecto/Progresion/Datos/CatalogoSonidos.asset");
             Assert.IsNotNull(catalogo, "Falta el catalogo; corre Mecha Cyberpunk/Sonido/Crear catalogo.");
             HashSet<string> enCatalogo = new HashSet<string>(catalogo.Entradas.Where(e => e.finales.Length > 0).Select(e => e.id));
-            List<string> faltan = IdsConArchivo(false).Where(id => !enCatalogo.Contains(id)).ToList();
+            List<string> faltan = IdsConArchivo(false).Where(id => !enCatalogo.Contains(id) && !MapaSonidos20nov.IdsDescartados.Contains(id)).ToList();
             Assert.IsEmpty(faltan, "IDs con archivo que no estan en el catalogo: " + string.Join(", ", faltan));
         }
 
@@ -99,6 +101,8 @@ namespace MechaCyberpunk.Tests.Sonido
             int amb = 0, efectos = 0;
             foreach (string s in Secciones)
             {
+                // Las carpetas numeradas tienen sus propias reglas (ImportarSonidos19nov/20nov: cortos ADPCM, largos en streaming, UI en estéreo).
+                if (char.IsDigit(s[0])) continue;
                 string carpeta = "Assets/Arte/Audio/" + s;
                 if (!Directory.Exists(carpeta)) continue;
                 foreach (string f in Directory.GetFiles(carpeta, "*.wav"))
@@ -125,7 +129,7 @@ namespace MechaCyberpunk.Tests.Sonido
         [Test]
         public void ReglaAmbienteZona_PorLugarZonaYHora()
         {
-            Assert.AreEqual("AMB_CALLE_NOCHE", ReglaAmbienteZona.Elegir(IdLugar.Calle, "fosa", true));
+            Assert.AreEqual("AMB_SUBURBIOS_NOCHE", ReglaAmbienteZona.Elegir(IdLugar.Calle, "fosa", true)); // T-1535: los suburbios de noche tienen su ambiente
             Assert.AreEqual("AMB_CALLE_DIA", ReglaAmbienteZona.Elegir(IdLugar.Calle, "", false));
             Assert.AreEqual("AMB_TIANGUIS", ReglaAmbienteZona.Elegir(IdLugar.Calle, "tianguis", true));
             Assert.AreEqual("AMB_NEON_ALTO", ReglaAmbienteZona.Elegir(IdLugar.Calle, "neon", false));

@@ -90,6 +90,9 @@ namespace MechaCyberpunk.Mundo.Ambiente
             // T-537: bajo techo (los locales nuevos sin ZonaInterior, toldos, puentes) tampoco llueve.
             bool techo = objetivo != null && Physics.Raycast(objetivo.position + Vector3.up * AlturaTecho, Vector3.up, LargoRayoTecho, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore);
             bool debe = CalculoLluvia.DebeLlover(Activa, EnInterior() || techo, deNoche, config.LluviaDeDia) && objetivo != null;
+            // T-1536: el sonido y los vehículos oyen la lluvia por el contrato de Core (también bajo techo: se oye caer afuera).
+            bool afuera = CalculoLluvia.DebeLlover(Activa, false, deNoche, config.LluviaDeDia) && objetivo != null;
+            ClimaMundo.Lluvia = afuera ? Mathf.Clamp01(CalculoLluvia.Intensidad(deNoche, config.FraccionDeDia)) : 0f;
             float nueva = CalculoLluvia.Intensidad(deNoche, config.FraccionDeDia);
             if (!Mathf.Approximately(nueva, intensidad))
             {
