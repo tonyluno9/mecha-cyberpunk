@@ -40,7 +40,7 @@ MonoBehaviour:
   alcanceDestello: 12
   colorDestello: {r: 0.3, g: 0.65, b: 1, a: 1}
   materialDestello: {fileID: 2100000, guid: 33ddf6dc28eb6a04397648e9185b2a16, type: 2}
-  sonidoLlegada: POL_NOVA_AVISO
+  sonidoLlegada: NOV_CAIDA_Y_ENCENDIDO
   escalaPesado: 1.43
   distanciaVista: 40
   naves:
