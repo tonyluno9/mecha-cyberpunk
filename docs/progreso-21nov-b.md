@@ -14,10 +14,11 @@ Regla: nada hecho sin verlo en Play, captura en docs/capturas/_21nov-b/. No edit
 | --- | --- | --- |
 | T-1550 | Locomoción y salto PJ01 (CorrerRapido, velocidades, mezcla, retraso 3 frames, aterrizajes, pisadas) | lanzada |
 | T-1551 | Combate y eventos: clips aprobados sin conectar (daños del jugador, recargas, granada, interacciones, implantes, NPC, pandilleros, Nova caída) | lanzada |
-| T-1552 | Alturas: tabla de factores, EscalasNova/EscalasHumanos, Tino, cápsulas y NavMesh E14/E16 | espera worktree |
-| T-1553 | Robots Nova: avatar E18, clips E18, jetpack y puños, E16 escudo y cañón, E15 W10, mover clips a su carpeta | espera worktree |
-| T-1554 | Vehículos: bisagra cofre PA01/PA02/V22, V16–V19, hélices, carros viejos → Carro_Vxx, quitar V10/V11 | espera worktree |
+| T-1552 | Alturas: tabla de factores, EscalasNova/EscalasHumanos, Tino, cápsulas y NavMesh E14/E16 | lanzada |
+| T-1553 | Robots Nova: avatar E18, clips E18, jetpack y puños, E16 escudo y cañón, E15 W10, mover clips a su carpeta | lanzada |
+| T-1554 | Vehículos: bisagra cofre PA01/PA02/V22, V16–V19, hélices, carros viejos → Carro_Vxx, quitar V10/V11 | lanzada |
 | Final | Capturas en Play, pruebas por clase, builds, reporte-21nov-b.md | pendiente |
 
 ## Bitácora
 - Paso 0: Unity cerrado, sin lockfile, main 82f0bac (lo de Blender ya estaba en main; solo cambiaron docs).
+- Lanzadas las 5 tareas (T-1550..T-1554) en wt23/.
