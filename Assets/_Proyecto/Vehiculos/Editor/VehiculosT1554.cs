@@ -757,9 +757,9 @@ namespace MechaCyberpunk.Vehiculos.Editor
                 foreach (AddedComponent agregado in PrefabUtility.GetAddedComponents(go))
                 {
                     if (agregado.instanceComponent != null && nuevo.GetComponent(agregado.instanceComponent.GetType()) == null
-                        && ComponentUtility.CopyComponent(agregado.instanceComponent))
+                        && UnityEditorInternal.ComponentUtility.CopyComponent(agregado.instanceComponent))
                     {
-                        ComponentUtility.PasteComponentAsNew(nuevo);
+                        UnityEditorInternal.ComponentUtility.PasteComponentAsNew(nuevo);
                     }
                 }
                 Object.DestroyImmediate(go);
