@@ -191,7 +191,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
         /// <summary>Radio (m) de la explosión chica al estrellarse.</summary>
         public const float RadioExplosion = 2.5f;
 
-        public const string IdExplosion = MechaCyberpunk.Vehiculos.Efectos.LimiteSonidoExplosion.IdOnda;
+        public const string IdExplosion = MechaCyberpunk.Vehiculos.Efectos.LimiteSonidoExplosion.IdDronRobot; // T-1532: antes EXP_ONDA
         private const float GravedadCaida = 14f;
         private const float GiroCaida = 540f;
         private const float SegundosMaximosCayendo = 4f;
@@ -271,7 +271,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
         {
             Exploto = true;
             Explosion = EfectosExplosion.Explosion(donde, RadioExplosion);
-            MechaCyberpunk.Vehiculos.Efectos.LimiteSonidoExplosion.Sonar(donde); // T-1472: EXP_ONDA con tope en cadena
+            MechaCyberpunk.Vehiculos.Efectos.LimiteSonidoExplosion.Sonar(MechaCyberpunk.Vehiculos.Efectos.TipoExplosionSonido.DronRobot, donde); // T-1472 / T-1532: EXP_DRON_ROBOT con tope en cadena
             Destroy(gameObject);
         }
 

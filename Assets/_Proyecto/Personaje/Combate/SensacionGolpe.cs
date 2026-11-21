@@ -59,7 +59,7 @@ namespace MechaCyberpunk.Personaje.Combate
             Congelar(config.Hitstop(final), objetivo);
             PrepararImpulso();
             TemblorCamara.Generar(impulso, config.ImpulsoCamara(final), direccion);
-            Sonidos.ReproducirEn(ReglaSonidosJugador.GolpeCarne, transform.position);
+            Sonidos.ReproducirEn(ReglaSonidosJugador.IdGolpeConectado(objetivo != null ? objetivo.transform.root.name + " " + objetivo.name : null), transform.position); // T-1532: carne o metal
             if (final)
             {
                 Sonidos.ReproducirEn(IdGolpeFinal, transform.position);

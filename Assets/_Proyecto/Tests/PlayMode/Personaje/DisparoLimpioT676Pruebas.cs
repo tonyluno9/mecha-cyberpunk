@@ -88,7 +88,7 @@ namespace MechaCyberpunk.Tests.Personaje
             // T-977: el tiro que falla suena una vez en la pared (ARM_BALA_IMPACTO_CONCRETO); lo demás es el disparo de siempre.
             foreach (string id in sonidos.Ids)
             {
-                Assert.IsTrue(id == "ARM_W01_DISPARO" || id == "ARM_CASQUILLO" || id == "ARM_PIS_RECARGA" || id == PistolaAPie.SonidoImpactoSuperficie,
+                Assert.IsTrue(id == "ARM_W01_DISPARO" || id == "CAS_CHICO" || id == "ARM_PIS_RECARGA" || id == PistolaAPie.SonidoImpactoSuperficie,
                     "Solo el disparo del arma, el casquillo y el impacto en la pared: " + id);
             }
             Assert.Contains("ARM_W01_DISPARO", sonidos.Ids);
