@@ -13,8 +13,11 @@ namespace MechaCyberpunk.IA.APie
     {
         private const string SonidoMetal = "NOV_ESCUDO_IMPACTO"; // T-1533: balas contra el escudo de Nova
         private const float SegundosPulso = 0.25f;
-        private const float DiametroEsfera = 3.4f;
-        private const float AlturaCentro = 1.15f;
+        /// <summary>T-1552: la esfera y su centro se pensaron para el jefe de 2.3 m y crecen con el de 3.14 m (EscalasNova.AlturaJefeFinalE14).</summary>
+        private const float AlturaJefeDeDiseno = 2.3f;
+        private const float AjusteAlturaJefe = MechaCyberpunk.Personaje.Visual.EscalasNova.AlturaJefeFinalE14 / AlturaJefeDeDiseno;
+        private const float DiametroEsfera = 3.4f * AjusteAlturaJefe;
+        private const float AlturaCentro = 1.15f * AjusteAlturaJefe;
         private const float AumentoPulso = 0.12f;
         private const float BrilloReposo = 1f;
         private const float BrilloPulso = 2.6f;

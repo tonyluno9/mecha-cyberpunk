@@ -106,6 +106,13 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
         [MenuItem("Mecha Cyberpunk/T-1521/2 Aplicar escalas")]
         public static void Aplicar()
         {
+            // T-1552: la tabla de EscalasHumanos ya es la de Tony (20-nov) y la escala se aplica con AlturasT1552.Aplicar (factor sobre la escala de hoy, repetible). Este método
+            // escalaba midiendo la malla animada contra la tabla y, junto con el otro, escalaría dos veces: queda apagado.
+            Debug.LogWarning(Etiqueta + "Aplicar de T-1521 está retirado: usa MechaCyberpunk.Arte.Editor.AlturasT1552.Aplicar.");
+            if (Etiqueta != null)
+            {
+                return;
+            }
             int cambiados = 0;
             int iguales = 0;
             int fallos = 0;

@@ -1,3 +1,4 @@
+using System.Linq;
 using MechaCyberpunk.Personaje.Visual;
 using MechaCyberpunk.Personaje.Visual.Editor;
 using NUnit.Framework;
@@ -7,24 +8,25 @@ using UnityEngine;
 namespace MechaCyberpunk.Tests
 {
     /// <summary>
-    /// T-1521: todos los humanos a la altura del jugador. La tabla es lógica pura; la altura de los prefabs lee lo ya generado con
-    /// EscalaHumanosT1521.Aplicar (corre antes, con -executeMethod): mide la malla animada en Idle, no los bounds.
+    /// T-1521 + T-1552: las alturas de los personajes (tabla de Tony del 20-nov en EscalasHumanos). La tabla es lógica pura; la altura de los prefabs lee lo ya generado con
+    /// AlturasT1552.Aplicar (corre antes, con -executeMethod): mide la malla animada en Idle, no los bounds.
     /// </summary>
     public class EscalaHumanosT1521Pruebas
     {
         private static string[] Prefabs => EscalasHumanos.Prefabs;
 
-        private static readonly string[] NoSeEscalan =
-        {
-            "Visual_E15_CentinelaNova_a", "Visual_E15_CentinelaNova_b", "Visual_E16_RobotPesadoNova_a", "Visual_E16_RobotPesadoNova_b",
-            "Visual_E18_EliteNova_a", "Visual_E17_PerroRobotNova_a", "Visual_E17_PerroRobotNova_esc", "Visual_GuardiaNova",
-            "Visual_E11_JefeSnakes", "Visual_E12_GuardiaPesadoNova", "Visual_E14_JefeFinalNova", "Visual_PJ01",
-        };
+        /// <summary>T-1552: el jugador y el perro no cambian de altura y no están en la tabla (los robots de Nova, los jefes y los pesados ya sí).</summary>
+        private static readonly string[] NoSeEscalan = { "Visual_E17_PerroRobotNova_a", "Visual_E17_PerroRobotNova_esc", "Visual_PJ01" };
+
+        /// <summary>
+        /// Los que se miden animados con el clip humanoide de pie. Sin el soldado azul E18: su avatar y sus clips los rehace T-1553 (hasta entonces no hay medida animada fiable).
+        /// </summary>
+        private static string[] PrefabsMedibles => EscalasHumanos.Prefabs.Where(v => v != "Visual_E18_EliteNova_a").ToArray();
 
         [Test]
-        public void Tabla_TodosEstanEntreLosEnanosYLosGigantes()
+        public void Tabla_TodosEstanEntreLaAbuelaYLosRobotsGrandes()
         {
-            Assert.GreaterOrEqual(Prefabs.Length, 30, "doctor, inventor, hacker, mecánico, meseras, civiles NP07-NP14, man/woman/woman2, pandilleros y policía");
+            Assert.GreaterOrEqual(Prefabs.Length, 41, "doctor, inventor, hacker, mecánico, meseras, civiles NP07-NP14, man/woman/woman2, pandilleros, policía, AL10/AL11 y los robots de Nova");
             foreach (string visual in Prefabs)
             {
                 Assert.That(EscalasHumanos.Objetivo(visual), Is.InRange(EscalasHumanos.AlturaMinima, EscalasHumanos.AlturaMaxima), visual);
@@ -32,14 +34,14 @@ namespace MechaCyberpunk.Tests
         }
 
         [Test]
-        public void Tabla_ElDoc_NoEsMasAltoQueElJugador()
+        public void Tabla_ElDoc_NoPasaDelJugadorPorMasDe5cm()
         {
-            Assert.LessOrEqual(EscalasHumanos.Objetivo("Visual_Doctor"), EscalasHumanos.AlturaJugador + 0.0001f);
+            Assert.LessOrEqual(EscalasHumanos.Objetivo("Visual_Doctor"), EscalasHumanos.AlturaJugador + 0.05f);
             Assert.AreEqual(EscalasHumanos.Objetivo("Visual_Doctor"), EscalasHumanos.Objetivo("Doctor"), 0.0001f, "acepta el nombre con o sin prefijo");
         }
 
         [Test]
-        public void Tabla_RobotsGigantesJefesYJugador_NoEstan()
+        public void Tabla_JugadorYPerro_NoEstan()
         {
             foreach (string visual in NoSeEscalan)
             {
@@ -61,7 +63,7 @@ namespace MechaCyberpunk.Tests
                 menor = Mathf.Min(menor, EscalasHumanos.Objetivo(visual));
                 mayor = Mathf.Max(mayor, EscalasHumanos.Objetivo(visual));
             }
-            Assert.LessOrEqual(mayor - menor, 0.2f, "civiles NP07-NP14: de la abuela al estibador no pasan de 20 cm");
+            Assert.LessOrEqual(mayor - menor, 0.3f, "civiles NP07-NP14: de la abuela (1.64) al estibador (1.90) no pasan de 30 cm (decisión de Tony, 20-nov)");
         }
 
         [TestCase(1.2f, 1.8f, 1.5f)]
@@ -81,15 +83,16 @@ namespace MechaCyberpunk.Tests
             Assert.AreEqual(1f, EscalasHumanos.FactorCorreccion(medida, objetivo), 0.0001f);
         }
 
-        [TestCaseSource(nameof(Prefabs))]
+        [TestCaseSource(nameof(PrefabsMedibles))]
         public void Prefab_AnimadoEnIdle_MideSuAlturaObjetivo(string visual)
         {
             EscalaHumanosT1521.Medida m = EscalaHumanosT1521.MedirPrefab(EscalaHumanosT1521.CarpetaVisuales + visual + ".prefab");
             Assert.IsTrue(m.Valida, visual + ": " + m.Problema);
-            Assert.AreEqual(EscalasHumanos.Objetivo(visual), m.Malla, EscalasHumanos.ToleranciaPrueba, visual + " (malla animada en Idle; corre EscalaHumanosT1521.Aplicar si falla)");
+            float esperada = EscalasHumanos.Objetivo(visual) * EscalasHumanos.AlturaJugadorAnimada / EscalasHumanos.AlturaJugador; // la tabla es de Blender (PJ01 1.84); animado, PJ01 mide 1.80
+            Assert.AreEqual(esperada, m.Malla, EscalasHumanos.TolerarPrueba(visual), visual + " (malla animada en Idle, proporcional a PJ01; corre AlturasT1552.Aplicar si falla)");
         }
 
-        [TestCaseSource(nameof(Prefabs))]
+        [TestCaseSource(nameof(PrefabsMedibles))]
         public void Prefab_EnIdle_LaCabezaNoEstaAcostada(string visual)
         {
             EscalaHumanosT1521.Medida m = EscalaHumanosT1521.MedirPrefab(EscalaHumanosT1521.CarpetaVisuales + visual + ".prefab");

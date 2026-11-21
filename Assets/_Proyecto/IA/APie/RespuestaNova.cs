@@ -17,9 +17,10 @@ namespace MechaCyberpunk.IA.APie
         private const float AlturaSonda = 1.6f;
         private const float MismoPiso = 1.5f;
         private const float CaidaMaxima = 40f;
-        private const float RadioCapsula = 0.6f; // T-1497: el robot pesado de 3.5 m
+        private const float RadioCapsula = 0.6f; // T-1497: el robot pesado (3.14 m desde T-1552; el radio no baja por el margen de los pasillos)
         private const float GravedadAgente = 20f; // la misma de PandilleroAPie (m/s²)
-        private const float AlturaAgente = 3.8f; // lo que mide el robot pesado E16 (3.5 m) más un margen (m)
+        /// <summary>T-1552: lo que miden el robot pesado E16 y el jefe final E14 (3.14 m, EscalasNova) más un margen (m).</summary>
+        public const float AlturaAgente = MechaCyberpunk.Personaje.Visual.EscalasNova.AlturaRobotPesadoE16 + 0.3f;
         private const float MargenCaida = 0.5f;
         private const float AlturaMinimaCaida = 3f; // con menos de esto encima no vale la pena caer: aparecen en el piso
         private const float AlturaDestelloSalida = 1f;
