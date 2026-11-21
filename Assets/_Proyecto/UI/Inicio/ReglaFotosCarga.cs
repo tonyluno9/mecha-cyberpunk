@@ -58,6 +58,33 @@ namespace MechaCyberpunk.UI.Inicio
                 : new Vector2(altoPantalla * aspecto, altoPantalla);
         }
 
+        /// <summary>
+        /// Carga minimalista (Tony): tamaño de una foto de <paramref name="ancho"/> x <paramref name="alto"/> px que llena la pantalla
+        /// conservando la proporción (Envelope: lo que sobra se recorta por el lado más corto, lo mínimo posible). Nunca estira.
+        /// </summary>
+        public static Vector2 TamanoCubierto(float ancho, float alto, float anchoPantalla, float altoPantalla)
+        {
+            float aspecto = ancho / alto;
+            return aspecto > anchoPantalla / altoPantalla
+                ? new Vector2(altoPantalla * aspecto, altoPantalla)
+                : new Vector2(anchoPantalla, anchoPantalla / aspecto);
+        }
+
+        /// <summary>Lo más que se recorta de la foto (fracción del lado recortado) para llenar la pantalla; si haría falta más, bordes negros.</summary>
+        public const float RecorteMaximo = 0.12f;
+
+        /// <summary>
+        /// Tamaño de la foto en la pantalla de carga: la llena recortando lo mínimo (<see cref="TamanoCubierto"/>) si así se recorta
+        /// hasta <see cref="RecorteMaximo"/>; en pantallas más cuadradas (4:3, 5:4) se ve entera con bordes negros (<see cref="TamanoEncajado"/>).
+        /// Nunca se deforma.
+        /// </summary>
+        public static Vector2 TamanoEnPantalla(float ancho, float alto, float anchoPantalla, float altoPantalla)
+        {
+            Vector2 cubierto = TamanoCubierto(ancho, alto, anchoPantalla, altoPantalla);
+            float recorte = Mathf.Max(1f - anchoPantalla / cubierto.x, 1f - altoPantalla / cubierto.y);
+            return recorte <= RecorteMaximo ? cubierto : TamanoEncajado(ancho, alto, anchoPantalla, altoPantalla);
+        }
+
         public static float Escala(float t) => Mathf.Lerp(EscalaInicial, EscalaFinal, Progreso(t));
 
         /// <summary>Desplazamiento (px) de la foto <paramref name="indice"/> a los <paramref name="t"/> segundos: cruza de un lado al otro en una dirección propia.</summary>
