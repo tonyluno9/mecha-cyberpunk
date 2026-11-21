@@ -76,6 +76,7 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             ConstruirBase(c);
             ConstruirArriba(c, mascara);
             ConstruirDano(c, mascara);
+            AnimacionesT1540.AgregarEstados(c); // T-1540: muertes por explosión, atropello y caída; derribo; empujón; explosión cercana
             EditorUtility.SetDirty(c);
             AssetDatabase.SaveAssets();
             CrearOverrides(c);
@@ -196,7 +197,8 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             var mapa = new Dictionary<string, (string Base, string Papel)[]>();
             foreach (string papel in Papeles)
             {
-                mapa[papel] = ClipsDeJugadorPJ01;
+                // T-1540: los papeles que no son el jugador usan el daño PJ01_Dano_* y la burla original de Skull (el jugador conserva Punos_Guardia: no se burla, y ClipsPJ01JugadorT985Pruebas exige PJ01 en él).
+                mapa[papel] = papel == "Jugador" ? ClipsDeJugadorPJ01 : ConCambios(ClipsDeJugadorPJ01, ClipsNoJugadorT1540);
             }
             mapa["Jugador"] = ConCambios(ClipsDeJugadorPJ01, ClipsSoloJugador);
             ClipsNpcNovaT1506.AgregarATabla(mapa); // T-1506: golpes, muerte, daño y manejar del jugador; NPC y guardias de Nova
@@ -223,6 +225,16 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             (RolTroteConImplante, "PJ01_Correr_ConImplante"),
             (RolTroteAtras, "PJ01_Trote_Atras"), (RolTroteDer, "PJ01_Trote_Derecha"), (RolTroteIzq, "PJ01_Trote_Izquierda"),
             ("Loco_SaltoInicio", "PJ01_Salto_Despegue"), ("Loco_SaltoAire", "PJ01_Salto_Aire"), ("Loco_SaltoAterrizaje", "PJ01_Salto_Aterrizaje"),
+        };
+
+        /// <summary>
+        /// T-1540: papeles distintos del jugador (aliados, NPC, SKULLS, SNAKES, guardias, robots, profes y jefe). Daño de frente y de espalda con los clips de Blender de PJ01 (aditivos, igual que el jugador desde T-1506;
+        /// Dano_Fuerte sigue en PJ01_Pistola_Dano_Fuerte porque no hay PJ01_Dano_Fuerte) y la burla con el Skull_Burla.fbx original de Mixamo (Humanoid), que estaba sin usar.
+        /// Los NPC (NPC_Balazo_*), E15 y E16 (su Impacto) lo cambian después con sus tablas de T-1506. Propiedad y no campo por el orden de los campos estáticos.
+        /// </summary>
+        public static (string Base, string Papel)[] ClipsNoJugadorT1540 => new[]
+        {
+            ("Pistola_Dano_Frente", "PJ01_Dano_Frente"), ("Pistola_Dano_Espalda", "PJ01_Dano_Espalda"), ("Skull_Burla", "Skull_Burla"),
         };
 
         private static (string Base, string Papel)[] ConCambios((string Base, string Papel)[] tabla, (string Base, string Papel)[] cambios)

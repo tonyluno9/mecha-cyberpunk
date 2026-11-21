@@ -15,6 +15,9 @@ namespace MechaCyberpunk.Personaje.Visual
         {
             Animator.StringToHash("MuerteAdelante"), Animator.StringToHash("MuerteAtras"), Animator.StringToHash("MuerteDesmayo"),
             Animator.StringToHash("LevantarseBocaArriba"), Animator.StringToHash("LevantarseBocaAbajo"),
+            // T-1540: muertes por explosión (3.1 m atrás), atropello (4 m) y caída; derribo por explosión (1.8 m); empujón (0.55 m) y explosión cercana (0.25 m).
+            Animator.StringToHash("MuerteExplosion"), Animator.StringToHash("MuerteAtropello"), Animator.StringToHash("MuerteCaidaAltura"),
+            Animator.StringToHash("DerriboExplosion"), Animator.StringToHash("DanoEmpujon"), Animator.StringToHash("DanoExplosionCercana"),
         };
 
         private Animator animador;
@@ -22,6 +25,9 @@ namespace MechaCyberpunk.Personaje.Visual
 
         /// <summary>Lo que ha movido a la cápsula desde que se configuró (m, en el plano), para las pruebas.</summary>
         public Vector3 Recorrido { get; private set; }
+
+        /// <summary>T-1540: con true no mueve la cápsula (otro script ya la desplaza, como el derribo por un carro en AtropelloJugador).</summary>
+        public bool Suspendida { get; set; }
 
         /// <summary>True si en ese estado de la capa base el clip mueve la cápsula.</summary>
         public static bool MueveLaRaiz(int estadoHash) => System.Array.IndexOf(EstadosConRaiz, estadoHash) >= 0;
@@ -39,7 +45,7 @@ namespace MechaCyberpunk.Personaje.Visual
 
         private void OnAnimatorMove()
         {
-            if (cuerpo == null || !cuerpo.enabled || !cuerpo.gameObject.activeInHierarchy)
+            if (Suspendida || cuerpo == null || !cuerpo.enabled || !cuerpo.gameObject.activeInHierarchy)
             {
                 return;
             }

@@ -89,6 +89,9 @@ namespace MechaCyberpunk.Personaje.Movimiento
             if (visual != null && visual.gameObject.activeInHierarchy)
             {
                 visual.RegistrarGolpe(direccionEmpuje);
+                // T-1540: cae con PJ01_Muerte_Atropello. El empuje es de este script (DesplazamientoExterno), así que la raíz del clip (4 m) no mueve la cápsula.
+                visual.MotivoDanio = MotivoDanioVisual.Atropello;
+                visual.SuspenderRaiz(true);
                 visual.Caido = true;
             }
             Debug.Log("[Personaje] T-1327: atropellado, cae");
@@ -134,6 +137,7 @@ namespace MechaCyberpunk.Personaje.Movimiento
                     if (visual != null)
                     {
                         visual.Caido = false;
+                        visual.SuspenderRaiz(false); // Dano_Levantarse sí mueve la cápsula
                     }
                 }
             }
@@ -151,6 +155,10 @@ namespace MechaCyberpunk.Personaje.Movimiento
             controlador.FactorVelocidad = 1f;
             controlador.DesplazamientoExterno = Vector3.zero;
             controlador.SaltoBloqueado = false;
+            if (visual != null)
+            {
+                visual.SuspenderRaiz(false);
+            }
             if (levantar && visual != null)
             {
                 visual.Caido = false;

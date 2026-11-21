@@ -85,6 +85,8 @@ namespace MechaCyberpunk.Personaje.Visual
         private static readonly int IdEscalones = Animator.StringToHash(ReglasAnimacion.Escalones);
         private static readonly int IdRapidezEscalones = Animator.StringToHash(ReglasAnimacion.RapidezEscalones);
         private static readonly int IdViendoTelefono = Animator.StringToHash(ReglasAnimacion.ViendoTelefono);
+        private static readonly int IdRapidezSaltoInicio = Animator.StringToHash(ReglasAnimacion.RapidezSaltoInicio);
+        private static readonly int IdRapidezSaltoAterrizaje = Animator.StringToHash(ReglasAnimacion.RapidezSaltoAterrizaje);
 
         private CharacterController controlador;
         private Rigidbody cuerpo;
@@ -123,6 +125,12 @@ namespace MechaCyberpunk.Personaje.Visual
 
         /// <summary>Rapidez de los golpes de puños (1 = la del clip). El jugador la sube para que la animación siga el ritmo del golpe del juego (T-652).</summary>
         public float RapidezGolpes { get => rapidezGolpes; set => rapidezGolpes = Mathf.Max(0.1f, value); }
+
+        /// <summary>T-1540: multiplicador de la rapidez de SaltoInicio y de SaltoAterrizaje (1 = la del estado). El jugador lo pone en <see cref="ReglasAnimacion.AjusteSaltoJugador"/>.</summary>
+        public float RapidezSaltoInicio { get; set; } = 1f;
+
+        /// <inheritdoc cref="RapidezSaltoInicio"/>
+        public float RapidezSaltoAterrizaje { get; set; } = 1f;
 
         /// <summary>T-944: rapidez de los clips de caer muerto (1 = tal como vienen).</summary>
         public float RapidezMuerte { get; set; } = 1f;
@@ -310,6 +318,15 @@ namespace MechaCyberpunk.Personaje.Visual
                 if (value && !caido)
                 {
                     ElegirMuerte();
+                    // T-1540: un gesto pendiente (empujón, derribo) no debe dispararse al levantarse.
+                    if (animador != null && Tiene(IdGesto, AnimatorControllerParameterType.Trigger))
+                    {
+                        animador.ResetTrigger(IdGesto);
+                    }
+                }
+                else if (!value)
+                {
+                    MotivoDanio = MotivoDanioVisual.Normal; // T-1540: el motivo solo vale para la caída que sigue
                 }
                 caido = value;
                 Aplicar();
@@ -376,11 +393,11 @@ namespace MechaCyberpunk.Personaje.Visual
         /// Lanza un gesto de una vez (carro, interacción, burla...). No hace nada si el personaje está caído o el Animator no tiene el gesto.
         /// Mientras dura apaga la capa de arriba (torso) para que no se encime un arma.
         /// </summary>
-        public void Gestear(GestoVisual gesto)
+        public bool Gestear(GestoVisual gesto)
         {
             if (caido || gesto == GestoVisual.Ninguno || animador == null || !Tiene(IdGesto, AnimatorControllerParameterType.Trigger))
             {
-                return;
+                return false;
             }
             if (Tiene(IdGestoTipo, AnimatorControllerParameterType.Int))
             {
@@ -395,9 +412,81 @@ namespace MechaCyberpunk.Personaje.Visual
             {
                 segundosGestoPendiente = 0.15f;
             }
+            return true;
         }
 
         public void Pitar() => Gestear(GestoVisual.Pitar);
+
+        /// <summary>T-1540: segundos tras un empujón en que Herir no encima su reacción (el empujón ya es el golpe).</summary>
+        private const float SegundosSilencioHerir = 0.25f;
+        private float silencioHerirHasta = float.NegativeInfinity;
+
+        /// <summary>
+        /// T-1540: lo empujan (PJ01_Dano_Empujon, 26 cuadros: retrocede ~0.55 m con la raíz). Devuelve false si el Animator no tiene el gesto o está caído (el que llama usa Herir).
+        /// Mientras dura, un Herir inmediato no se encima.
+        /// </summary>
+        public bool Empujar()
+        {
+            bool ok = Gestear(GestoVisual.Empujon);
+            if (ok)
+            {
+                silencioHerirHasta = Time.time + SegundosSilencioHerir;
+            }
+            return ok;
+        }
+
+        /// <summary>T-1540: explosión cercana que no lo tumba (PJ01_Dano_ExplosionCercana).</summary>
+        public bool Tambalear() => Gestear(GestoVisual.ExplosionCercana);
+
+        /// <summary>T-1540: la explosión lo derriba (PJ01_Derribo_Explosion) y el controlador lo levanta con Dano_Levantarse_BocaArriba.</summary>
+        public bool DerribarPorExplosion() => Gestear(GestoVisual.DerriboExplosion);
+
+        /// <summary>T-1540: qué causó el golpe que lo va a tumbar. Lo leen <see cref="ElegirMuerte"/> y se olvida al levantarse.</summary>
+        public MotivoDanioVisual MotivoDanio { get; set; }
+
+        /// <summary>
+        /// T-1540: una explosión lo alcanza. Elige la reacción (<see cref="ReglasAnimacion.ReaccionAExplosion"/>), la juega y devuelve cuál fue. Si murió, deja el motivo para que la caída sea
+        /// PJ01_Muerte_Explosion. <paramref name="direccionGolpe"/> va del origen de la explosión al personaje; <paramref name="cantidad"/> es el daño aplicado.
+        /// </summary>
+        public ReaccionExplosion RecibirExplosion(Vector3 direccionGolpe, float cantidad, float vidaMaxima, bool murio)
+        {
+            ultimaDireccionGolpe = direccionGolpe;
+            ReaccionExplosion reaccion = ReglasAnimacion.ReaccionAExplosion(cantidad, vidaMaxima, murio, direccionGolpe, transform.forward);
+            if (murio)
+            {
+                MotivoDanio = MotivoDanioVisual.Explosion;
+                return reaccion;
+            }
+            bool jugo = false;
+            if (manejando)
+            {
+                reaccion = ReaccionExplosion.Ninguna; // sentado al volante no se derriba ni tambalea: solo se estremece
+            }
+            if (reaccion == ReaccionExplosion.Derribo)
+            {
+                jugo = DerribarPorExplosion();
+            }
+            else if (reaccion == ReaccionExplosion.Tambaleo)
+            {
+                jugo = Tambalear();
+            }
+            if (!jugo)
+            {
+                Herir(direccionGolpe);
+                return ReaccionExplosion.Ninguna;
+            }
+            return reaccion;
+        }
+
+        /// <summary>T-1540: con true la raíz de las caídas no mueve la cápsula (otro script la desplaza: el derribo por un carro).</summary>
+        public void SuspenderRaiz(bool suspender)
+        {
+            RaizCaidaJugador raiz = animador != null ? animador.GetComponent<RaizCaidaJugador>() : null;
+            if (raiz != null)
+            {
+                raiz.Suspendida = suspender;
+            }
+        }
 
         public void Burlar() => Gestear(GestoVisual.Burla);
 
@@ -479,7 +568,7 @@ namespace MechaCyberpunk.Personaje.Visual
         /// <summary>Elige la muerte entre las válidas para la dirección del último golpe y la deja lista en el Animator.</summary>
         public MuerteVisual ElegirMuerte()
         {
-            Muerte = ReglasAnimacion.ElegirMuerte(ultimaDireccionGolpe, transform.forward, azar());
+            Muerte = ReglasAnimacion.ElegirMuerte(ultimaDireccionGolpe, transform.forward, azar(), MotivoDanio);
             if (animador != null && Tiene(IdMuerteTipo, AnimatorControllerParameterType.Int))
             {
                 animador.SetInteger(IdMuerteTipo, (int)Muerte);
@@ -491,6 +580,10 @@ namespace MechaCyberpunk.Personaje.Visual
         public void Herir(Vector3 direccionGolpe, bool fuerte = false)
         {
             ultimaDireccionGolpe = direccionGolpe;
+            if (Time.time < silencioHerirHasta)
+            {
+                return; // T-1540: el empujón ya es la reacción a este golpe
+            }
             if (animador != null && Tiene(IdDanoTipo, AnimatorControllerParameterType.Int))
             {
                 animador.SetInteger(IdDanoTipo, (int)ReglasAnimacion.ElegirDano(direccionGolpe, transform.forward, fuerte, DanoLateral));
@@ -671,6 +764,10 @@ namespace MechaCyberpunk.Personaje.Visual
             if (ReceptorPasos == null)
             {
                 ReceptorPasos = animador.gameObject.AddComponent<ReceptorPasosPJ01>();
+            }
+            if (animador.GetComponent<ReceptorImpactosPJ01>() == null)
+            {
+                animador.gameObject.AddComponent<ReceptorImpactosPJ01>(); // T-1540: sonido de los impactos de los clips (cuerpo al piso, golpe del escudo)
             }
             Transform padre = transform.parent != null ? transform.parent : transform;
             controlador = padre.GetComponentInParent<CharacterController>();
@@ -1009,6 +1106,8 @@ namespace MechaCyberpunk.Personaje.Visual
             Poner(IdEnGuardia, EnGuardia);
             Poner(IdArmaLargaEquipada, tipoArma == TipoArmaVisual.ArmaLarga);
             Poner(IdRapidezGolpe, rapidezGolpes);
+            Poner(IdRapidezSaltoInicio, RapidezSaltoInicio);
+            Poner(IdRapidezSaltoAterrizaje, RapidezSaltoAterrizaje);
             if (leerDelPadre)
             {
                 Poner(IdVelX, velX);

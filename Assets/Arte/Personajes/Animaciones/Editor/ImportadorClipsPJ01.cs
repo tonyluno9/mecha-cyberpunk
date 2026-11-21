@@ -51,7 +51,11 @@ namespace MechaCyberpunk.Arte.Editor
         /// SaltoAterrizaje; en una caída larga se queda en la última pose y entra Loco_Caida, que sí es bucle; BITACORA 03, ajuste 2), y los que en Mixamo llevaban "_Bucle" en el
         /// archivo y aquí no (Carro_Manejar, Moto_Manejar, Inter_VerTelefono).
         /// </summary>
-        public static readonly string[] SinBucle = { "Salto_Despegue", "Salto_Aterrizaje", "Aterrizaje_Fuerte", "Loco_SaltoAire", "Escalera_Entrar", "Escalera_SalirArriba", "Escalera_SalirAbajo", "Parkour_SaltarBarda", "Parkour_TreparBorde", "Parkour_RodarCaida", "CoberturaRifle_Entrar", "CoberturaRifle_Disparo", "Carro_SacarConductor", "Conductor_SerSacado" };
+        public static readonly string[] SinBucle = { "Salto_Despegue", "Salto_Aterrizaje", "Aterrizaje_Fuerte", "Loco_SaltoAire", "Escalera_Entrar", "Escalera_SalirArriba", "Escalera_SalirAbajo", "Parkour_SaltarBarda", "Parkour_TreparBorde", "Parkour_RodarCaida", "CoberturaRifle_Entrar", "CoberturaRifle_Disparo", "Carro_SacarConductor", "Conductor_SerSacado",
+            // T-1540: borradores del 21-nov (muertes por explosión, atropello y caída; derribo por explosión; empujón y explosión cercana): una sola vez, ninguno es aditivo.
+            "Muerte_Explosion", "Muerte_Atropello", "Muerte_CaidaAltura", "Derribo_Explosion", "Dano_Empujon", "Dano_ExplosionCercana",
+            // T-1540: el salto corriendo del 20-nov: una sola vez (sin esto el nombre "Correr_..." lo tomaba por un correr en bucle; Aire se sostiene en su última pose hasta aterrizar).
+            "Salto_Correr_Despegue", "Salto_Correr_Aire", "Salto_Correr_Aterrizaje", "Salto_Correr_Rodada" };
 
         /// <summary>T-964: último cuadro (30 fps) del tramo útil de PJ01_Inter_Telefono: el teléfono ya está en el oído (7.8 s de 37; el estado sale al 88 %, el evento tiene que quedar antes).</summary>
         public const float UltimoCuadroTelefono = 235f;

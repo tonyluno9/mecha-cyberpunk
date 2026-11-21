@@ -133,6 +133,9 @@ namespace MechaCyberpunk.Personaje.Jugador
             visual.ConfigurarMezclaLenta(ReglasAnimacion.VelocidadPJ01Caminar, ReglasAnimacion.VelocidadPJ01CaminarAtras, ReglasAnimacion.VelocidadPJ01CaminarLado,
                 ReglasAnimacion.VelocidadPJ01Caminar, ReglasAnimacion.VelocidadPJ01Trote);
             visual.AterrizajeFuerteActivo = true;
+            // T-1540: los clips de salto Callejero (20-nov) van a 1x: el estado trae 2.5x y 2x de los clips viejos, el parámetro lo compensa solo en el jugador.
+            visual.RapidezSaltoInicio = ReglasAnimacion.AjusteSaltoJugador("SaltoInicio");
+            visual.RapidezSaltoAterrizaje = ReglasAnimacion.AjusteSaltoJugador("SaltoAterrizaje");
             IKPiesYMirada ik = visual.GetComponentInChildren<IKPiesYMirada>(true);
             if (ik != null)
             {
@@ -329,6 +332,23 @@ namespace MechaCyberpunk.Personaje.Jugador
             if (visual == null || objetivo != null || vida == null || (info.Punto - (transform.position + Vector3.up * AlturaCentro)).sqrMagnitude > DistanciaImpacto * DistanciaImpacto)
             {
                 return;
+            }
+            // T-1540: una explosión elige entre tambaleo, derribo (y levantarse) y muerte volando; un golpe vertical hacia abajo que mata es una caída de altura.
+            // El motivo se deja antes de que ActualizarCaido ponga Caido (ahí se elige el clip de muerte).
+            bool explosion = info.Tipo == TipoDanio.Explosion;
+            if (explosion)
+            {
+                float cantidad = resultado.DanioAplicado > 0f ? resultado.DanioAplicado : info.Cantidad;
+                visual.RecibirExplosion(info.Direccion, cantidad, vida.Maxima, resultado.CausoKO);
+                return;
+            }
+            if (resultado.CausoKO)
+            {
+                MotivoDanioVisual motivo = ReglasAnimacion.MotivoDe(false, info.Tipo == TipoDanio.Golpe, info.Direccion);
+                if (motivo != MotivoDanioVisual.Normal)
+                {
+                    visual.MotivoDanio = motivo;
+                }
             }
             visual.Herir(info.Direccion, vida.Maxima > 0f && info.Cantidad >= vida.Maxima * FraccionDanoFuerte);
         }

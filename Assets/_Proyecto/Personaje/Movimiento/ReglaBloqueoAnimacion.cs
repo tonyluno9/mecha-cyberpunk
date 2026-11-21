@@ -21,6 +21,8 @@ namespace MechaCyberpunk.Personaje.Movimiento
             "LevantarseBocaArriba", "LevantarseBocaAbajo",
             // T-1505: el aterrizaje fuerte (PJ01_Aterrizaje_Fuerte, 1.47 s: sentadilla profunda y se levanta) no deja caminar ni saltar hasta terminar.
             "AterrizajeFuerte",
+            // T-1540: el derribo por explosión (1.3 s, con root motion), el empujón (0.87 s, retrocede 0.55 m) y el tambaleo de una explosión cercana (1 s) no dejan caminar mientras duran.
+            "DerriboExplosion", "DanoEmpujon", "DanoExplosionCercana",
         };
 
         private static readonly int[] HashesBloqueantes = CalcularHashes();

@@ -66,7 +66,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Animator a = visual.Animador;
             yield return Hasta(() => Reproduce(a, 0, "PJ01_Loco_Idle"), "Skull_Idle parado");
             pandillero.Alerta = true;
-            yield return Hasta(() => Reproduce(a, 0, "PJ01_Punos_Guardia"), "Skull_Burla al verte");
+            yield return Hasta(() => Reproduce(a, 0, "Skull_Burla"), "Skull_Burla al verte"); // T-1540: la burla de los enemigos es el Skull_Burla original, no la guardia de puños
         }
 
         [UnityTest]
@@ -90,8 +90,8 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.AreEqual("Override_Jefe", a.runtimeAnimatorController.name);
             yield return Hasta(() => Reproduce(a, 0, "PJ01_Loco_Idle"), "PJ01_Loco_Idle");
             jefe.GetComponent<PandilleroAPie>().Alerta = true;
-            yield return Hasta(() => Reproduce(a, 0, "PJ01_Punos_Guardia"), "Jefe_Burla de entrada");
-            yield return Hasta(() => !Reproduce(a, 0, "PJ01_Punos_Guardia"), "termina la burla", 8f);
+            yield return Hasta(() => Reproduce(a, 0, "Skull_Burla"), "Jefe_Burla de entrada");
+            yield return Hasta(() => !Reproduce(a, 0, "Skull_Burla"), "termina la burla", 8f);
             visual.TipoArma = TipoArmaVisual.Pistola;
             yield return Esperar(0.4f);
             visual.Disparar();
@@ -156,7 +156,7 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return Esperar(0.5f);
             skull.GetComponent<PandilleroAPie>().Alerta = true;
             Animator aSkull = skull.GetComponentInChildren<VisualPersonaje>(true).Animador;
-            yield return Hasta(() => Reproduce(aSkull, 0, "PJ01_Punos_Guardia"), "burla");
+            yield return Hasta(() => Reproduce(aSkull, 0, "Skull_Burla"), "burla");
             yield return Esperar(0.6f);
             Debug.Log("[T624] skull base=" + aSkull.GetCurrentAnimatorClipInfo(0)[0].clip.name + " w=" + aSkull.GetLayerWeight(1));
             yield return AnimacionCarroPruebas.Capturar(CamaraFrente(skull), "docs/capturas/anim2-skull-burla.png");
@@ -165,7 +165,7 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return Esperar(0.5f);
             jefe.GetComponent<PandilleroAPie>().Alerta = true;
             Animator aJefe = jefe.GetComponentInChildren<VisualPersonaje>(true).Animador;
-            yield return Hasta(() => Reproduce(aJefe, 0, "PJ01_Punos_Guardia"), "burla jefe");
+            yield return Hasta(() => Reproduce(aJefe, 0, "Skull_Burla"), "burla jefe");
             yield return Esperar(0.6f);
             yield return AnimacionCarroPruebas.Capturar(CamaraFrente(jefe, 3.8f), "docs/capturas/anim2-jefe-burla.png");
 
