@@ -62,9 +62,12 @@ namespace MechaCyberpunk.Tests.Personaje
             float maxima = 0f;
             float despegue = -1f;
             float aterrizaje = -1f;
+            float alturaMinima = float.MaxValue; // T-1550: diagnóstico si no vuelve al piso
+            ControladorAPie control = jugador.GetComponent<ControladorAPie>();
             while (Time.time < fin)
             {
                 float altura = jugador.transform.position.y - piso;
+                if (despegue >= 0f && Time.time > despegue + 0.1f) { alturaMinima = Mathf.Min(alturaMinima, altura); }
                 maxima = Mathf.Max(maxima, altura);
                 if (despegue < 0f && altura > UmbralDespegue) { despegue = Time.time; }
                 if (despegue >= 0f && aterrizaje < 0f && altura <= UmbralDespegue && Time.time > despegue + 0.1f) { aterrizaje = Time.time; }
@@ -96,7 +99,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.IsTrue(vioAterrizaje, "Se ve el aterrizaje");
             Assert.Less(alturaAlAterrizar, 0.35f, "El aterrizaje empieza cerca del piso, no en el aire");
             Assert.AreEqual(AlturaSaltoT961, maxima, 0.05f, "Altura del salto (m)");
-            Assert.Greater(aterrizaje, 0f, "Vuelve al piso");
+            Assert.Greater(aterrizaje, 0f, "Vuelve al piso (T-1550 diagnóstico: altura mínima tras despegar " + alturaMinima.ToString("0.000") + " m, altura final " + (jugador.transform.position.y - piso).ToString("0.000") + " m, EnPiso " + control.EnPiso + ", VelocidadVertical " + control.VelocidadVertical.ToString("0.00") + ", estado " + ultimo + ", rastro " + rastro + ")");
             Assert.AreEqual(SegundosAireT961, aterrizaje - despegue, 0.08f, "Tiempo en el aire (s)");
             Assert.IsNotNull(jugador.GetComponent<ControladorAPie>());
         }
