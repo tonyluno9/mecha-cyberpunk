@@ -1,4 +1,5 @@
 using MechaCyberpunk.Casino.Fichas;
+using MechaCyberpunk.Casino.Tragamonedas;
 using MechaCyberpunk.Core;
 using UnityEngine;
 
@@ -107,13 +108,18 @@ namespace MechaCyberpunk.Casino.Cajera
                 {
                     return;
                 }
+                bool hizo;
                 if (esCambiar)
                 {
-                    servicio.Comprar(cajera.Cartera);
+                    hizo = servicio.Comprar(cajera.Cartera);
                 }
                 else
                 {
-                    servicio.Cobrar(cajera.Cartera);
+                    hizo = servicio.Cobrar(cajera.Cartera) > 0;
+                }
+                if (hizo)
+                {
+                    Sonidos.ReproducirEn(ReglaSonidoTragamonedas.Fichas, cajera.transform.position); // T-1535
                 }
             }
         }

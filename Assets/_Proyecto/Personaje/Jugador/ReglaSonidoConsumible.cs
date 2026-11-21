@@ -11,6 +11,7 @@ namespace MechaCyberpunk.Personaje.Jugador
     {
         public const string Beber = "CON_BEBER";
         public const string LataAbrir = "CON_LATA_ABRIR";
+        public const string PapitasAbrir = "CON_PAPITAS_ABRIR"; // T-1535: la bolsa se abre antes de comer
         public const string PapitasComer = "CON_PAPITAS_COMER";
         public const string Venda = "CON_VENDA";
         public const string Curacion = "CON_CURACION";
@@ -41,6 +42,7 @@ namespace MechaCyberpunk.Personaje.Jugador
             }
             else if (id == IdPapitas)
             {
+                lista.Add(PapitasAbrir);
                 lista.Add(PapitasComer);
             }
             else if (id.Contains(FragmentoVenda) || id.Contains(FragmentoBotiquin))

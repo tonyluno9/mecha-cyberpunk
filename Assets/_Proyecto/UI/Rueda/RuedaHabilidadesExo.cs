@@ -208,10 +208,16 @@ namespace MechaCyberpunk.UI.Rueda
             }
             cursor = ReglaRuedaArmas.MoverCursor(cursor, movimientoPendiente);
             movimientoPendiente = Vector2.zero;
+            int antes = resaltada;
             resaltada = ReglaRuedaArmas.CasillaResaltada(cursor, disposicion, Elegible);
+            if (resaltada >= 0 && resaltada != antes)
+            {
+                Sonidos.Reproducir("UI_MOVER"); // T-1535: la rueda suena al pasar de una habilidad a otra
+            }
             if (clicNuevo && resaltada >= 0 && habilidades != null && habilidades.Pulsar((HabilidadProtesis)resaltada))
             {
                 activaciones++;
+                Sonidos.Reproducir("UI_SELECCIONAR"); // T-1535: elegir la habilidad (los servos los pide la propia habilidad)
             }
             Dibujar();
         }

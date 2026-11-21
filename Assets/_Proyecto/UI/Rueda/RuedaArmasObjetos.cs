@@ -249,7 +249,12 @@ namespace MechaCyberpunk.UI.Rueda
             }
             cursor = ReglaRuedaArmas.MoverCursor(cursor, movimientoPendiente);
             movimientoPendiente = Vector2.zero;
+            int antes = resaltada;
             resaltada = ReglaRuedaArmas.CasillaResaltada(cursor, disposicion, Disponible);
+            if (resaltada >= 0 && resaltada != antes)
+            {
+                Sonidos.Reproducir("UI_MOVER"); // T-1535: la rueda suena al pasar de una casilla a otra
+            }
             Dibujar();
         }
 
@@ -350,6 +355,10 @@ namespace MechaCyberpunk.UI.Rueda
             if (!elegir)
             {
                 return;
+            }
+            if (casilla >= 0)
+            {
+                Sonidos.Reproducir("UI_SELECCIONAR"); // T-1535: elegir en la rueda
             }
             SeleccionRueda eleccion = ReglaRuedaArmas.Resultado(casilla);
             if (eleccion.Tipo == TipoSeleccionRueda.Arma && armas != null && armas.PuedeCambiar)

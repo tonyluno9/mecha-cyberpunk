@@ -119,6 +119,7 @@ namespace MechaCyberpunk.Personaje.Movimiento
         public bool Derribado { get; set; }
 
         // T-992: las habilidades de prótesis suman su multiplicador temporal encima de los implantes (1 si no hay o no están activas).
+        private bool saltoSuper; // T-1535: el salto en curso lo dio el exo
         private MechaCyberpunk.Personaje.Habilidades.HabilidadesProtesis habilidades;
         private MechaCyberpunk.Personaje.Habilidades.HabilidadesProtesis Habilidades =>
             habilidades != null ? habilidades : (habilidades = GetComponent<MechaCyberpunk.Personaje.Habilidades.HabilidadesProtesis>());
@@ -361,6 +362,11 @@ namespace MechaCyberpunk.Personaje.Movimiento
             if (enPiso && quiereSaltar && vertical > 0f)
             {
                 Sonidos.Reproducir(VozJugador.Id("JUG_SALTO"));
+                saltoSuper = Habilidades != null && Habilidades.FactorSalto > 1f; // T-1535: con las piernas activas el salto es súper
+                if (saltoSuper)
+                {
+                    Sonidos.ReproducirEn(MechaCyberpunk.Personaje.Habilidades.ReglaSonidoExo.SaltoSuper, transform.position);
+                }
             }
 
             // Tercera persona: el movimiento es relativo a la cámara; el cuerpo gira hacia donde camina, o hacia donde mira si apunta.
@@ -387,9 +393,17 @@ namespace MechaCyberpunk.Personaje.Movimiento
             {
                 Aterrizo?.Invoke(alturaMaximaAire - transform.position.y); // T-1489
             }
-            if (enPiso && tiempoAire > SegundosMinimosAire && ReglaSonidosJugador.DebeSonarAterrizaje(alturaMaximaAire - transform.position.y))
+            if (enPiso && tiempoAire > SegundosMinimosAire && (saltoSuper || ReglaSonidosJugador.DebeSonarAterrizaje(alturaMaximaAire - transform.position.y)))
             {
                 Sonidos.ReproducirEn(ReglaSonidosJugador.Aterrizaje, transform.position);
+                if (saltoSuper)
+                {
+                    Sonidos.ReproducirEn(MechaCyberpunk.Personaje.Habilidades.ReglaSonidoExo.OndaAterrizaje, transform.position); // T-1535: aterrizaje del súper salto = JUG_ATERRIZAJE + EXP_ONDA
+                }
+            }
+            if (enPiso && tiempoAire > SegundosMinimosAire)
+            {
+                saltoSuper = false;
             }
             tiempoAire = enPiso ? 0f : tiempoAire + dt;
             bool corriendo = enPiso && velocidad.sqrMagnitude > UmbralPaso * UmbralPaso && quiereCorrer;

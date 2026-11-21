@@ -108,7 +108,7 @@ namespace MechaCyberpunk.Progresion
             {
                 recibidos.RemoveAt(0);
             }
-            Sonidos.Reproducir("UI_TEXTO");
+            Sonidos.Reproducir("HUD_MENSAJE_CELULAR"); // T-1535: el tono de mensaje del celular (antes UI_TEXTO)
             Recibido?.Invoke(id);
             Cambio?.Invoke();
             return true;

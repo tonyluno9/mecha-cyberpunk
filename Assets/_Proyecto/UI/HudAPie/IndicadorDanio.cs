@@ -144,6 +144,7 @@ namespace MechaCyberpunk.UI.Hud
             if (ReglaIndicadorDanio.Angulo(referencia.forward, info.Direccion, out float grados))
             {
                 Mostrar(grados);
+                Sonidos.Reproducir("IMP_BALA_ZUMBIDO"); // T-1535: el indicador de daño suena (LEEME 20-nov); el tiempo mínimo del ID evita la ráfaga
             }
         }
 

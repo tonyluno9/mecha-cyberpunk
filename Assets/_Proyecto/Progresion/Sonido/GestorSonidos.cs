@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using MechaCyberpunk.Core;
+using MechaCyberpunk.Core.Mundo;
 using UnityEngine;
 
 namespace MechaCyberpunk.Progresion.Sonido
@@ -22,6 +23,7 @@ namespace MechaCyberpunk.Progresion.Sonido
         [Min(0f)] [Tooltip("Distancia mínima del sonido 3D (m).")] [SerializeField] private float distanciaMinima = 2f;
         [Min(0f)] [Tooltip("Distancia máxima del sonido 3D (m).")] [SerializeField] private float distanciaMaxima = 40f;
         [Min(0.01f)] [Tooltip("Duración del cruce entre ambientes (s).")] [SerializeField] private float segundosCruce = 1f;
+        [Range(ReglaAmbienteZona.MinimoCruceBarrio, ReglaAmbienteZona.MaximoCruceBarrio)] [Tooltip("T-1535: duración del cruce entre dos ambientes de calle al cambiar de barrio o subir a una azotea (s, de 2 a 4).")] [SerializeField] private float segundosCruceBarrio = ReglaAmbienteZona.SegundosCruceBarrio;
         [Min(0.05f)] [Tooltip("Cada cuántos segundos se revisa la zona del jugador (s).")] [SerializeField] private float segundosRevision = 0.5f;
 
         private readonly Dictionary<SeccionSonido, float> volumenes = new Dictionary<SeccionSonido, float>();
@@ -33,6 +35,8 @@ namespace MechaCyberpunk.Progresion.Sonido
         private float[] nivelCruce = new float[2];
         private int cruceActivo;
         private string ambienteDeseado;
+        private float segundosCruceActual = 1f; // T-1535: lo que dura el cruce en curso (el del barrio es más largo que el de un lugar)
+        private bool enAzotea;
         // T-977: lugares en los que está el jugador, el último manda (la clínica está dentro del mercado: al salir de ella vuelve el del mercado).
         private readonly List<IdLugar> lugares = new List<IdLugar>();
         private IdLugar lugar => lugares.Count > 0 ? lugares[lugares.Count - 1] : IdLugar.Calle;
@@ -62,10 +66,17 @@ namespace MechaCyberpunk.Progresion.Sonido
             public SeccionSonido seccion;
             public string id;
             public float relativo;
+            public float factor = 1f; // T-1535: lo que baja un bucle de clima al ir en carro
         }
 
         public string UltimoId { get; private set; }
         public string AmbienteDeseado => ambienteDeseado;
+
+        /// <summary>T-1535: duración (s) del cruce de ambientes que está en curso o el último que hubo.</summary>
+        public float SegundosCruceActual => segundosCruceActual;
+
+        /// <summary>T-1535: el ambiente que toca ahora para un lugar, zona, barrio y hora (las pruebas lo piden sin escena).</summary>
+        public static string AmbientePara(IdLugar lugarActual, string zona, string barrio, bool esDeNoche, bool enAltura) => ReglaAmbienteZona.Elegir(lugarActual, zona, barrio, esDeNoche, enAltura);
 
         /// <summary>T-977: cuántas fuentes de ambiente suenan ahora con volumen (para las pruebas; tras el cruce, una sola).</summary>
         public int AmbientesSonando(float volumenMinimo)
@@ -127,6 +138,7 @@ namespace MechaCyberpunk.Progresion.Sonido
             {
                 fuentes[i] = CrearFuente("Fuente_" + i);
             }
+            segundosCruceActual = segundosCruce;
             cruce = new[] { CrearFuente("Ambiente_A"), CrearFuente("Ambiente_B") };
             foreach (AudioSource a in cruce)
             {
@@ -371,6 +383,9 @@ namespace MechaCyberpunk.Progresion.Sonido
             f.volume = VolumenFinal(seccion) * relativo;
             f.pitch = ReglaMezclaSonidos.Para(id).TonoBase;
             f.priority = ReglaMezclaSonidos.Prioridad(id);
+            // T-1535: los bucles 3D nuevos (interiores 15 m, objetos 6 a 12 m, lámina) se oyen hasta la distancia de su política, no hasta los 40 m de siempre.
+            float distancia = ReglaMezclaSonidos.Para(id).DistanciaMaxima;
+            if (sigue != null && distancia > 0f && MapaSonidos20nov.EsNuevo(id)) f.maxDistance = distancia;
             f.spatialBlend = sigue != null ? 1f : 0f;
             if (sigue != null) f.transform.position = sigue.position;
             f.Play();
@@ -385,6 +400,12 @@ namespace MechaCyberpunk.Progresion.Sonido
             if (!bucles.TryGetValue(bucle, out Bucle b)) return;
             bucles.Remove(bucle);
             if (b.fuente != null) Destroy(b.fuente.gameObject);
+        }
+
+        /// <summary>T-1535: multiplica el volumen de un bucle (0 a 1); lo usa el clima para bajar la lluvia de afuera dentro de un carro.</summary>
+        public void FijarFactorBucle(int bucle, float factor)
+        {
+            if (bucles.TryGetValue(bucle, out Bucle b)) b.factor = Mathf.Clamp01(factor);
         }
 
         public void FijarTono(int bucle, float tono)
@@ -411,13 +432,17 @@ namespace MechaCyberpunk.Progresion.Sonido
             IJugador j = Registro<IJugador>.Actual;
             IRelojMundo reloj = Registro<IRelojMundo>.Actual;
             string zona = t != null && j != null ? t.ZonaEn(j.Raiz.position) : string.Empty;
-            return ReglaAmbienteZona.Elegir(lugar, zona, reloj == null || reloj.EsDeNoche);
+            // T-1535: el barrio de mundo (Las Lomas) y la altura (azotea) salen de la posición del jugador.
+            string barrio = j != null ? ZonasMundo.NombreEn(j.Raiz.position) : null;
+            enAzotea = j != null && ReglaAmbienteZona.EnAzotea(j.Raiz.position.y, enAzotea);
+            return ReglaAmbienteZona.Elegir(lugar, zona, barrio, reloj == null || reloj.EsDeNoche, enAzotea);
         }
 
         private void ActualizarAmbiente()
         {
             string nuevo = AmbienteDe();
             if (nuevo == ambienteDeseado) return;
+            segundosCruceActual = ReglaAmbienteZona.SegundosCruce(ambienteDeseado, nuevo, segundosCruce, segundosCruceBarrio);
             ambienteDeseado = nuevo;
             int otro = 1 - cruceActivo;
             AudioClip clip = nuevo != null ? Preparar(nuevo) : null;
@@ -443,7 +468,7 @@ namespace MechaCyberpunk.Progresion.Sonido
             // T-1471: ducking simple: un disparo o una explosión bajan el ambiente 0.3 s (rápido para bajar, suave para volver).
             float metaDuck = Time.unscaledTime < duckHasta ? ReglaMezclaSonidos.FactorDucking : 1f;
             factorDuck = Mathf.MoveTowards(factorDuck, metaDuck, Time.unscaledDeltaTime * (metaDuck < factorDuck ? 8f : 2f));
-            float paso = Time.unscaledDeltaTime / segundosCruce;
+            float paso = Time.unscaledDeltaTime / segundosCruceActual;
             for (int i = 0; i < 2; i++)
             {
                 float meta = i == cruceActivo && idCruce[i] != null ? 1f : 0f;
@@ -456,7 +481,7 @@ namespace MechaCyberpunk.Progresion.Sonido
             {
                 if (b.sigue != null && b.fuente != null) b.fuente.transform.position = b.sigue.position;
                 // T-1531: el ducking también baja los bucles de ambiente (clima, interiores, objetos); sirenas y fuego no.
-                if (b.fuente != null) b.fuente.volume = VolumenFinal(b.seccion) * b.relativo * (b.seccion == SeccionSonido.Ambiente ? factorDuck : 1f);
+                if (b.fuente != null) b.fuente.volume = VolumenFinal(b.seccion) * b.relativo * b.factor * (b.seccion == SeccionSonido.Ambiente ? factorDuck : 1f);
             }
         }
     }
