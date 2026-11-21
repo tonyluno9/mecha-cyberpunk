@@ -35,6 +35,23 @@ namespace MechaCyberpunk.Personaje.Visual
         [Tooltip("T-1516: NPC_Agachado_CubriendoCabeza (en cuclillas con las manos en la cabeza), en bucle.")]
         [SerializeField] private AnimationClip agachado;
 
+        [Tooltip("T-1553: E18_Jetpack_Volar: el elite vuela con el jetpack hacia el jugador, en bucle.")]
+        [SerializeField] private AnimationClip jetpackVolar;
+
+        /// <summary>T-1553: E18_Jetpack_Volar (null si falta: el elite no vuela).</summary>
+        public AnimationClip JetpackVolar => jetpackVolar;
+
+        /// <summary>T-1553: pone el clip de vuelo del E18 (lo llama el método de editor RobotsNovaT1553.Aplicar).</summary>
+        public void ConfigurarVueloElite(AnimationClip volar) => jetpackVolar = volar;
+
+        [Tooltip("T-1553: giro extra (grados Euler, en el marco de la mano) de la W10 de los E15 para que apunte bien con E15_Caminar y E15_Correr. Lo escribe RobotsNovaT1553.Aplicar y lo lee EscalaNovaT1497.PonerArma; cero = sin corrección.")]
+        [SerializeField] private Vector3 giroArmaE15;
+
+        /// <summary>T-1553: corrección de giro de la W10 en la mano de los E15 (Euler en grados; cero si no hace falta).</summary>
+        public Vector3 GiroArmaE15 => giroArmaE15;
+
+        public void ConfigurarGiroArmaE15(Vector3 giro) => giroArmaE15 = giro;
+
         public AnimationClip Platicar1 => platicar1;
         public AnimationClip Platicar2 => platicar2;
         public AnimationClip SentadoBanca => sentadoBanca;

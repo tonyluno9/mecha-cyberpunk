@@ -798,6 +798,42 @@ namespace MechaCyberpunk.Personaje.Visual
                 AjustarRapidez();
             }
             ActualizarCapas(Time.deltaTime);
+            ActualizarEscudoArriba(Time.deltaTime);
+        }
+
+        /// <summary>T-1553: segundos que tarda en subir o bajar el escudo del E16 (mezcla de E16_Caminar a E16_CaminarEscudo).</summary>
+        public const float SegundosMezclaEscudo = 0.25f;
+        private static readonly int IdConImplanteEscudo = Animator.StringToHash(ReglasAnimacion.ConImplante);
+        private bool escudoArriba;
+        private bool escudoUsado;
+        private float pesoEscudo;
+
+        /// <summary>
+        /// T-1553 (decisión de Tony 20-nov): el robot pesado E16 camina protegiéndose con el escudo. Usa el canal ConImplante del controlador base (en 0 el clip normal,
+        /// en 1 el "con implante"): en Override_E16 el "con implante" de caminar y correr es E16_CaminarEscudo. Los NPC y enemigos no tienen implantes, así que el canal es suyo.
+        /// El peso sube y baja en <see cref="SegundosMezclaEscudo"/> s. Solo se toca el parámetro después de pedir el escudo por primera vez.
+        /// </summary>
+        public bool EscudoArriba
+        {
+            get => escudoArriba;
+            set
+            {
+                escudoArriba = value;
+                escudoUsado |= value;
+            }
+        }
+
+        /// <summary>Peso actual del escudo (0 a 1), el valor que lleva el canal ConImplante.</summary>
+        public float PesoEscudo => pesoEscudo;
+
+        private void ActualizarEscudoArriba(float dt)
+        {
+            if (!escudoUsado || animador == null || animador.runtimeAnimatorController == null || !Tiene(IdConImplanteEscudo, AnimatorControllerParameterType.Float))
+            {
+                return;
+            }
+            pesoEscudo = Mathf.MoveTowards(pesoEscudo, escudoArriba && !caido ? 1f : 0f, dt / SegundosMezclaEscudo);
+            animador.SetFloat(IdConImplanteEscudo, pesoEscudo);
         }
 
         private void ActualizarCapas(float dt)

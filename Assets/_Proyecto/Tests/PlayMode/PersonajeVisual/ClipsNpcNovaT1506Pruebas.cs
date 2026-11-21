@@ -126,6 +126,36 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
         }
 
         [UnityTest]
+        public IEnumerator E16_ConElEscudoArriba_CaminaConE16CaminarEscudo_YSinEscudoConE16Caminar()
+        {
+            // T-1553 (decisión de Tony 20-nov): el canal ConImplante del controlador base es "escudo arriba" en el E16.
+            VisualPersonaje e16 = Crear("E16_RobotPesadoNova_a");
+            e16.Velocidad = 0.8f;
+            yield return Hasta(() => Reproduce(e16.Animador, 0, "E16_Caminar"), "E16_Caminar sin escudo");
+            Assert.IsFalse(Reproduce(e16.Animador, 0, "E16_CaminarEscudo"));
+            e16.EscudoArriba = true;
+            yield return Hasta(() => Reproduce(e16.Animador, 0, "E16_CaminarEscudo"), "E16_CaminarEscudo con el escudo arriba");
+            Assert.AreEqual(1f, e16.PesoEscudo, 0.01f);
+            e16.EscudoArriba = false;
+            yield return Hasta(() => e16.PesoEscudo < 0.01f && !Reproduce(e16.Animador, 0, "E16_CaminarEscudo"), "vuelve a E16_Caminar");
+            Assert.IsTrue(Reproduce(e16.Animador, 0, "E16_Caminar"));
+        }
+
+        [UnityTest]
+        public IEnumerator E18_Camina_Corre_YGolpea_ConSusClips()
+        {
+            // T-1553: el E18 no lleva arma y pelea con sus propios clips (caminar 1.62 m/s, correr 4.53 m/s, golpe de derecha).
+            VisualPersonaje e18 = Crear("E18_EliteNova_a");
+            e18.Velocidad = 1.62f;
+            yield return Hasta(() => Reproduce(e18.Animador, 0, "E18_Caminar"), "E18_Caminar");
+            e18.Velocidad = 4.53f;
+            yield return Hasta(() => Reproduce(e18.Animador, 0, "E18_Correr"), "E18_Correr", 4f);
+            e18.Velocidad = 0f;
+            e18.Golpear(false);
+            yield return Hasta(() => Reproduce(e18.Animador, 1, "E18_Golpe_Der"), "E18_Golpe_Der");
+        }
+
+        [UnityTest]
         [Ignore("Pendiente: los clips E17_* de Blender son del rig a escala real (escala_real/E17); el perro del juego sigue con su modelo y sus clips Perro_*")]
         public IEnumerator PerroRobot_Corre_Muerde_YMuere_ConLosClipsDeE17()
         {

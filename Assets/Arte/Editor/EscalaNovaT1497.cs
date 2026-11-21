@@ -40,6 +40,27 @@ namespace MechaCyberpunk.Arte.Editor
         // Pose de la mano de los enemigos de pistola (la de la W01 de los SKULLS): posición y giro del arma en ManoDer.
         private static readonly Vector3 PosicionEnMano = new Vector3(0f, -0.05f, 0f);
         private static readonly Vector3 GiroEnMano = new Vector3(90f, 0f, 0f);
+        public const string RutaConfigClipsNova = "Assets/_Proyecto/Personaje/Datos/Resources/ConfigClipsNovaNpc.asset";
+        private const string PrefijoEliteE18 = "E18_";
+        private const string PrefijoCentinelaE15 = "E15_";
+
+        /// <summary>
+        /// T-1553 (decisión de Tony 20-nov): el E18 (soldado azul) NO lleva arma: vuela con el jetpack y pelea a puñetazos. Todos los demás agentes con mano (E15, E16 y la
+        /// guardia base, variante null) llevan la W10. RetocarEnemigos quita la W10 que tuviera el E18 y no se la vuelve a poner.
+        /// </summary>
+        public static bool LlevaArma(string variante) => variante == null || !variante.StartsWith(PrefijoEliteE18);
+
+        /// <summary>T-1553: giro extra de la W10 en la mano de los E15 (ConfigClipsNovaNpc.GiroArmaE15; cero si no hay config o no hace falta).</summary>
+        public static Vector3 GiroExtraArma(string variante)
+        {
+            if (variante == null || !variante.StartsWith(PrefijoCentinelaE15))
+            {
+                return Vector3.zero;
+            }
+            ConfigClipsNovaNpc config = AssetDatabase.LoadAssetAtPath<ConfigClipsNovaNpc>(RutaConfigClipsNova);
+            return config != null ? config.GiroArmaE15 : Vector3.zero;
+        }
+
         private const float AlcancePerro = 1.6f;
         private const float RadioPerro = 0.4f;
 
@@ -387,10 +408,14 @@ namespace MechaCyberpunk.Arte.Editor
                     so.ApplyModifiedPropertiesWithoutUndo();
                 }
                 string arm = "sin arma";
-                if (arma != null && !esPerro)
+                if (!esPerro && !LlevaArma(variante))
+                {
+                    arm = QuitarArma(contenido) ? "sin arma (W10 quitada: el E18 pelea a puñetazos)" : "sin arma (decisión de Tony 20-nov)";
+                }
+                else if (arma != null && !esPerro)
                 {
                     float factor = altura > 0f ? EscalasNova.Factor(altura) : 1f;
-                    arm = PonerArma(contenido, arma, factor) ? "W10 x" + factor.ToString("F2") : "SIN ManoDer: no se pudo poner la W10";
+                    arm = PonerArma(contenido, arma, factor, GiroExtraArma(variante)) ? "W10 x" + factor.ToString("F2") : "SIN ManoDer: no se pudo poner la W10";
                 }
                 PrefabUtility.SaveAsPrefabAsset(contenido, ruta);
                 informe.AppendLine("  " + Path.GetFileNameWithoutExtension(ruta) + ": altura " + altura + " m, cápsula " + (altura > 0f ? "ajustada" : "igual") + ", " + arm);
@@ -401,8 +426,26 @@ namespace MechaCyberpunk.Arte.Editor
             }
         }
 
+        /// <summary>T-1553: quita la W10 del socket ManoDer (todas las que haya). Devuelve true si había alguna.</summary>
+        public static bool QuitarArma(GameObject enemigo)
+        {
+            Transform mano = enemigo.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == CreadorVisualTripo.NombreSocket);
+            bool habia = false;
+            Transform vieja = mano != null ? mano.Find(NombreArma) : null;
+            while (vieja != null)
+            {
+                habia = true;
+                Object.DestroyImmediate(vieja.gameObject);
+                vieja = mano.Find(NombreArma);
+            }
+            return habia;
+        }
+
         /// <summary>Pone la W10 en el socket ManoDer del modelo (idempotente: quita la que hubiera). El arma sube de tamaño con el agente.</summary>
-        public static bool PonerArma(GameObject enemigo, GameObject prefabArma, float factor)
+        public static bool PonerArma(GameObject enemigo, GameObject prefabArma, float factor) => PonerArma(enemigo, prefabArma, factor, Vector3.zero);
+
+        /// <summary>Igual, con un giro extra (Euler, marco de la mano) sobre el giro base (T-1553: la corrección de la W10 de los E15).</summary>
+        public static bool PonerArma(GameObject enemigo, GameObject prefabArma, float factor, Vector3 giroExtra)
         {
             Transform mano = enemigo.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == CreadorVisualTripo.NombreSocket);
             if (mano == null) { return false; }
@@ -415,7 +458,7 @@ namespace MechaCyberpunk.Arte.Editor
             GameObject w = (GameObject)PrefabUtility.InstantiatePrefab(prefabArma, mano);
             w.name = NombreArma;
             w.transform.localPosition = PosicionEnMano;
-            w.transform.localRotation = Quaternion.Euler(GiroEnMano);
+            w.transform.localRotation = Quaternion.Euler(giroExtra) * Quaternion.Euler(GiroEnMano);
             w.transform.localScale = Vector3.one * factor;
             return true;
         }
