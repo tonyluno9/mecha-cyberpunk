@@ -10,7 +10,8 @@ namespace MechaCyberpunk.Tests.Personaje
     public class SaltoMedidaT944Pruebas : BaseJugadorAPie
     {
         private const float AlturaAire = 0.2f;
-        private const float UmbralDespegue = 0.02f;
+        // 21-nov B (T-1550): tras aterrizar, la cápsula queda apoyada (EnPiso) ~3 cm arriba de la línea base tomada a los 0.5 s; 5 cm separa "en el piso" de "en el aire".
+        private const float UmbralDespegue = 0.05f;
         private const float AlturaSaltoT961 = 0.45f;
         private const float SegundosAireT961 = 0.47f;
 
