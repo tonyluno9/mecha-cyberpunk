@@ -13,7 +13,7 @@ namespace MechaCyberpunk.Personaje.Combate
         public const string ColaCalle = "ARM_COLA_CALLE";
         public const string PlasmaCarga = "ARM_W07_CARGA";
         public const string PlasmaDisparo = "ARM_W07_DISPARO";
-        public const string PlasmaRayo = "ARM_W07_RAYO";
+        public const string PlasmaRayo = "ARM_W07_RAYO_LOOP"; // T-1531: antes ARM_W07_RAYO
         public const string GranadaSeguro = "ARM_GRANADA_SEGURO";
         public const string GranadaRebote = "ARM_GRANADA_REBOTE";
         public const string ExplosionGranada = "EXP_GRANADA";

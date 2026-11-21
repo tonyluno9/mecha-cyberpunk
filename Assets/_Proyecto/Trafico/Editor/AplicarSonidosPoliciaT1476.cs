@@ -23,11 +23,11 @@ namespace MechaCyberpunk.Trafico.Editor
             }
             SerializedObject so = new SerializedObject(config);
             so.FindProperty("idSonidoRadio").stringValue = "POL_RADIO_AVISO";
-            so.FindProperty("idSonidoDespacho").stringValue = "POL_RADIO_DESPACHO";
+            so.FindProperty("idSonidoDespacho").stringValue = "POL_RADIO_AVISO";
             so.ApplyModifiedPropertiesWithoutUndo();
             EditorUtility.SetDirty(config);
             AssetDatabase.SaveAssets();
-            Debug.Log("[T-1476] ConfigPersecucion: radio POL_RADIO_AVISO, despacho POL_RADIO_DESPACHO");
+            Debug.Log("[T-1476] ConfigPersecucion: radio POL_RADIO_AVISO, despacho POL_RADIO_AVISO");
         }
     }
 }

@@ -278,7 +278,7 @@ namespace MechaCyberpunk.Trafico.Datos
         [Tooltip("ID de sonido de la radio de la policía. T-1476: POL_RADIO_AVISO. Vacío: no suena nada (el ID debe existir en CatalogoSonidos y en ReglaMezclaSonidos).")]
         [SerializeField] private string idSonidoRadio = "POL_RADIO_AVISO";
         [Tooltip("T-1476: ID de sonido de la radio cuando la central manda unidades (sube el nivel de búsqueda). Vacío: no suena.")]
-        [SerializeField] private string idSonidoDespacho = "POL_RADIO_DESPACHO";
+        [SerializeField] private string idSonidoDespacho = "POL_RADIO_AVISO"; // T-1531: la policía solo usa las voces "Mexican Police"; POL_RADIO_DESPACHO sigue como alias
         public int PatrullasExtraCincoEstrellas => patrullasExtraCincoEstrellas;
         public int DronesExtraCincoEstrellas => dronesExtraCincoEstrellas;
         public string IdSonidoRadio => idSonidoRadio;

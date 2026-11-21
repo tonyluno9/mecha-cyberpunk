@@ -95,6 +95,12 @@ namespace MechaCyberpunk.Progresion.Sonido
             {
                 if (par.Encender) ids.Add(par.Viejo);
             }
+            // T-1531: los IDs nuevos del 20-nov y sus alias.
+            foreach (string id in MapaSonidos20nov.IdsNuevos) ids.Add(id);
+            foreach (MapaSonidos19nov.Par par in MapaSonidos20nov.Pares)
+            {
+                if (par.Encender) ids.Add(par.Viejo);
+            }
             interruptores.RemoveAll(i => i == null || !ids.Contains(i.id));
             HashSet<string> tienen = new HashSet<string>();
             foreach (Interruptor i in interruptores) tienen.Add(i.id);

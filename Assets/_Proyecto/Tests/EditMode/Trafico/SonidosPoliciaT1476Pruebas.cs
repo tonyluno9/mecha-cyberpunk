@@ -56,7 +56,7 @@ namespace MechaCyberpunk.Tests
         {
             Assert.IsTrue(RadioPolicia.SonarDespacho(Vector3.zero, config));
             Assert.IsFalse(RadioPolicia.SonarDespacho(Vector3.zero, config));
-            CollectionAssert.AreEqual(new[] { "POL_RADIO_DESPACHO" }, falso.Pedidos);
+            CollectionAssert.AreEqual(new[] { "POL_RADIO_AVISO" }, falso.Pedidos);
         }
 
         [Test]

@@ -455,7 +455,8 @@ namespace MechaCyberpunk.Progresion.Sonido
             foreach (Bucle b in bucles.Values)
             {
                 if (b.sigue != null && b.fuente != null) b.fuente.transform.position = b.sigue.position;
-                if (b.fuente != null) b.fuente.volume = VolumenFinal(b.seccion) * b.relativo;
+                // T-1531: el ducking también baja los bucles de ambiente (clima, interiores, objetos); sirenas y fuego no.
+                if (b.fuente != null) b.fuente.volume = VolumenFinal(b.seccion) * b.relativo * (b.seccion == SeccionSonido.Ambiente ? factorDuck : 1f);
             }
         }
     }

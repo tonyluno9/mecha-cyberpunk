@@ -1,0 +1,316 @@
+IDs pedidos por el codigo del juego (literales, sin Tests ni Editor): 310
+
+OK  AMB_AZOTEA_CIUDAD  <- TablaMezcla20nov.cs
+OK  AMB_BAR  <- ReglaAmbienteZona.cs
+OK  AMB_CALLE_DIA  <- ReglaAmbienteZona.cs
+OK  AMB_CALLE_NOCHE  <- GestorSonidos.cs, ReglaAmbienteZona.cs
+OK  AMB_CASINO  <- ReglaAmbienteZona.cs
+OK  AMB_CLANDESTINO  <- ReglaAmbienteZona.cs
+OK  AMB_CLINICA  <- ReglaAmbienteZona.cs
+OK  AMB_INTERIOR_CASA  <- GestorSonidos.cs, ReglaAmbienteZona.cs
+OK  AMB_LOMAS  <- TablaMezcla20nov.cs
+OK  AMB_MERCADO  <- ReglaAmbienteZona.cs
+OK  AMB_NEON_ALTO  <- ReglaAmbienteZona.cs, ReglaMezclaSonidos.cs
+OK  AMB_NOVA  <- TablaMezcla20nov.cs
+OK  AMB_SIRENA_LOOP  <- TablaMezcla20nov.cs
+OK  AMB_SUBURBIOS_NOCHE  <- TablaMezcla20nov.cs
+OK  AMB_TIANGUIS  <- ReglaAmbienteZona.cs
+OK  ARM_BALA_IMPACTO_CARNE  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs
+OK  ARM_BALA_IMPACTO_CONCRETO  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs
+OK  ARM_BALA_IMPACTO_METAL  <- EscudoEnergia.cs, EscudoFrontal.cs, MapaSonidos19nov.cs, ReglaMezclaSonidos.cs
+OK  ARM_BALA_ROZA  <- DronMundo.cs, MapaSonidos19nov.cs
+OK  ARM_BALA_ZUMBIDO  <- ArmasEspecialesAPie.cs, MapaSonidos19nov.cs
+OK  ARM_CAMBIAR  <- ReglaMezclaSonidos.cs, SonidosArmasT1472.cs
+OK  ARM_CASQUILLO  <- MapaSonidos20nov.cs, PistolaAPie.cs, ReglaMezclaSonidos.cs
+OK  ARM_COLA_CALLE  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs, SonidosArmasT1472.cs
+OK  ARM_DISPARO_LEJANO  <- ReglaMezclaSonidos.cs
+OK  ARM_ESC_BOMBEO  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs
+OK  ARM_ESC_DISPARO  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs
+OK  ARM_ESC_RECARGA_CARTUCHO  <- ReglaMezclaSonidos.cs, SonidosArmasT1472.cs
+OK  ARM_FUS_DISPARO  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs
+OK  ARM_FUS_RAFAGA_COLA  <- ReglaMezclaSonidos.cs
+OK  ARM_FUS_RECARGA  <- CatalogoSonidos.cs, MapaSonidos19nov.cs, ReglaMezclaSonidos.cs
+OK  ARM_GRANADA_REBOTE  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs, SonidosArmasT1472.cs
+OK  ARM_GRANADA_SEGURO  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs, SonidosArmasT1472.cs
+OK  ARM_LASER_AVISO  <- GuardiaNova.cs, PistolaPandillero.cs
+OK  ARM_LGR_DISPARO  <- ReglaMezclaSonidos.cs, SonidosArmasT1472.cs
+OK  ARM_NOVA_CARGA_DISPARO (alias -> ARM_W07_SIN_ENERGIA)  <- MapaSonidos20nov.cs
+OK  ARM_NOVA_DISPARO (alias -> ARM_W07_GATILLO)  <- MapaSonidos20nov.cs
+OK  ARM_PIS_DISPARO  <- DronMundo.cs, MapaSonidos19nov.cs, ReglaMezclaSonidos.cs
+OK  ARM_PIS_RECARGA  <- ReglaMezclaSonidos.cs, SonidosArmasT1472.cs
+OK  ARM_PIS_SACAR  <- ReglaMezclaSonidos.cs
+OK  ARM_PLA_CARGA  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs
+OK  ARM_PLA_DISPARO  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs
+OK  ARM_REV_DISPARO  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs
+OK  ARM_SIN_BALAS  <- MapaSonidos20nov.cs, TablaMezcla20nov.cs
+OK  ARM_SNI_CERROJO  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs
+OK  ARM_SNI_DISPARO  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs
+OK  ARM_SNI_RECARGA  <- ReglaMezclaSonidos.cs, SonidosArmasT1472.cs
+OK  ARM_SNI_ZOOM  <- ZoomSniper.cs
+OK  ARM_SUB_DISPARO  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs, SonidosArmasT1472.cs
+OK  ARM_SUB_RECARGA  <- CatalogoSonidos.cs, MapaSonidos19nov.cs
+OK  ARM_VACIO  <- MapaSonidos20nov.cs, PistolaAPie.cs, ReglaMezclaSonidos.cs
+OK  ARM_W01_DISPARO  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs, SonidosArmasT1472.cs
+OK  ARM_W02_BOMBA  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs, SonidosArmasT1472.cs
+OK  ARM_W02_DISPARO  <- MapaSonidos19nov.cs, ProtesisAtaqueAPie.cs, ReglaMezclaSonidos.cs, SonidosArmasT1472.cs
+OK  ARM_W03_DISPARO  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs, SonidosArmasT1472.cs
+OK  ARM_W03_RECARGA_CARGADOR  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs, SonidosArmasT1472.cs
+OK  ARM_W04_CERROJO  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs, SonidosArmasT1472.cs
+OK  ARM_W04_DISPARO  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs, SonidosArmasT1472.cs
+OK  ARM_W06_DISPARO  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs, SonidosArmasT1472.cs
+OK  ARM_W06_MECANICA  <- TablaMezcla20nov.cs
+OK  ARM_W06_SACAR  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs, SonidosArmasT1472.cs
+OK  ARM_W07_CARGA  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs, SonidosArmasT1472.cs
+OK  ARM_W07_DISPARO  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs, SonidosArmasT1472.cs
+OK  ARM_W07_ENFRIAR  <- TablaMezcla20nov.cs
+OK  ARM_W07_GATILLO  <- MapaSonidos20nov.cs, TablaMezcla20nov.cs
+OK  ARM_W07_RAYO (alias -> ARM_W07_RAYO_LOOP)  <- MapaSonidos20nov.cs
+OK  ARM_W07_RAYO_CAPA_EXTRA  <- TablaMezcla20nov.cs
+OK  ARM_W07_RAYO_LOOP  <- MapaSonidos20nov.cs, SonidosArmasT1472.cs, TablaMezcla20nov.cs
+OK  ARM_W07_SIN_ENERGIA  <- MapaSonidos20nov.cs, TablaMezcla20nov.cs
+OK  ARM_W08_DISPARO  <- TablaMezcla20nov.cs
+OK  CAL_BAJA_NIVEL  <- ServicioCalor.cs
+OK  CAL_DRON_ZUMBIDO  <- DronMundo.cs, ReglaMezclaSonidos.cs
+OK  CAL_PATRULLA_MEGAFONO  <- GuardiaNova.cs, MapaSonidos20nov.cs, PatrullaMundo.cs, ReglaMezclaSonidos.cs
+OK  CAL_PATRULLA_SIRENA  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs
+OK  CAL_SUBE_NIVEL  <- MapaSonidos20nov.cs, ReglaMezclaSonidos.cs, ServicioCalor.cs
+OK  CAS_CARTAS_BARAJAR  <- TablaMezcla20nov.cs
+OK  CAS_CARTAS_REPARTIR  <- TablaMezcla20nov.cs
+OK  CAS_CHICO  <- MapaSonidos20nov.cs, TablaMezcla20nov.cs
+OK  CAS_FICHAS  <- TablaMezcla20nov.cs
+OK  CAS_GRANDE  <- TablaMezcla20nov.cs
+OK  CAS_PREMIO_CHICO  <- TablaMezcla20nov.cs
+OK  CAS_PREMIO_GRANDE  <- TablaMezcla20nov.cs
+OK  CAS_RULETA_GIRA  <- TablaMezcla20nov.cs
+OK  CAS_TRAGAMONEDAS  <- TablaMezcla20nov.cs
+OK  CLI_LLUVIA_DENTRO_CARRO  <- TablaMezcla20nov.cs
+OK  CLI_LLUVIA_FUERTE  <- TablaMezcla20nov.cs
+OK  CLI_LLUVIA_SOBRE_LAMINA  <- TablaMezcla20nov.cs
+OK  CLI_TORMENTA_TRUENOS  <- TablaMezcla20nov.cs
+OK  CLI_VIENTO  <- TablaMezcla20nov.cs
+OK  CON_BEBER  <- MapaSonidos19nov.cs, ReglaSonidoConsumible.cs
+OK  CON_CURACION  <- MapaSonidos19nov.cs, ReglaSonidoConsumible.cs
+OK  CON_LATA_ABRIR  <- MapaSonidos19nov.cs, ReglaSonidoConsumible.cs
+OK  CON_PAPITAS_ABRIR  <- TablaMezcla20nov.cs
+OK  CON_PAPITAS_COMER  <- MapaSonidos19nov.cs, ReglaSonidoConsumible.cs
+OK  CON_VENDA  <- MapaSonidos19nov.cs, ReglaSonidoConsumible.cs
+OK  DES_CRISTAL_VENTANA  <- TablaMezcla20nov.cs
+OK  DRN_PES_AMETRALLADORA  <- ReglaMezclaSonidos.cs, TablaMezcla20nov.cs
+OK  ECO_ARMA_RECOGER  <- ArmaEnPiso.cs, MapaSonidos19nov.cs, MunicionEnPiso.cs
+OK  ECO_CLINICA_DESPERTAR  <- DoctorClinica.cs
+OK  ECO_COMPRA  <- ConfigMenuArmas.cs, ConfigPantallaClinica.cs, MapaSonidos19nov.cs, PantallaTienda.cs, ReglaMezclaSonidos.cs, ServicioGuarida.cs, ServicioNegocios.cs
+OK  ECO_DINERO_RECOGER  <- MapaSonidos20nov.cs, ReglaMezclaSonidos.cs
+OK  ECO_SIN_DINERO  <- ConfigMenuArmas.cs, ConfigPantallaClinica.cs, MapaSonidos19nov.cs
+OK  EXO_ESCUDO_GOLPE  <- TablaMezcla20nov.cs
+OK  EXO_PIERNAS_SALTO_SUPER  <- TablaMezcla20nov.cs
+OK  EXO_PUESTO_LOOP  <- TablaMezcla20nov.cs
+OK  EXO_RUEDA_CAMARA_LENTA_ENTRAR  <- MapaSonidos20nov.cs, RuedaArmasObjetos.cs, TablaMezcla20nov.cs
+OK  EXO_RUEDA_CAMARA_LENTA_SALIR  <- RuedaArmasObjetos.cs, TablaMezcla20nov.cs
+OK  EXO_SERVOS_CAMINAR  <- TablaMezcla20nov.cs
+OK  EXO_VISOR_ACTIVAR  <- TablaMezcla20nov.cs
+OK  EXP_BARRIL  <- TablaMezcla20nov.cs
+OK  EXP_CARRO  <- MapaSonidos20nov.cs, TablaMezcla20nov.cs
+OK  EXP_CRISTALES  <- TablaMezcla20nov.cs
+OK  EXP_DRON_ROBOT  <- TablaMezcla20nov.cs
+OK  EXP_ESCOMBROS  <- TablaMezcla20nov.cs
+OK  EXP_GRANADA  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs, SonidosArmasT1472.cs
+OK  EXP_NAVE  <- TablaMezcla20nov.cs
+OK  EXP_ONDA  <- LimiteSonidoExplosion.cs, MapaSonidos19nov.cs, ReglaMezclaSonidos.cs, SonidosArmasT1472.cs
+OK  FUE_ENCENDER  <- TablaMezcla20nov.cs
+OK  FUE_LOOP_CHICO  <- LimiteSonidoExplosion.cs, MapaSonidos19nov.cs, ReglaMezclaSonidos.cs, SonidosArmasT1472.cs
+OK  FUE_LOOP_GRANDE  <- ReglaMezclaSonidos.cs, TablaMezcla20nov.cs
+OK  HUD_LOGRO  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs, ReglaRetrocesoArma.cs
+OK  HUD_MENSAJE_CELULAR  <- MapaSonidos20nov.cs, TablaMezcla20nov.cs
+OK  HUD_NOTIFICACION  <- MapaSonidos19nov.cs, MapaSonidos20nov.cs, ReglaMezclaSonidos.cs, ReglaRetrocesoArma.cs
+OK  HUD_VIDA_BAJA  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs, VidaAPie.cs
+OK  IMP_BALA_CABEZA  <- MapaSonidos19nov.cs, ReglaMaterialImpacto.cs, ReglaMezclaSonidos.cs
+OK  IMP_BALA_CARNE  <- MapaSonidos19nov.cs, ReglaMaterialImpacto.cs, ReglaMezclaSonidos.cs
+OK  IMP_BALA_CONCRETO  <- MapaSonidos19nov.cs, ReglaMaterialImpacto.cs, ReglaMezclaSonidos.cs
+OK  IMP_BALA_CRISTAL  <- MapaSonidos19nov.cs, ReglaMaterialImpacto.cs, ReglaMezclaSonidos.cs
+OK  IMP_BALA_METAL  <- MapaSonidos19nov.cs, ReglaMaterialImpacto.cs, ReglaMezclaSonidos.cs
+OK  IMP_BALA_ROBOT  <- MapaSonidos19nov.cs, ReglaMaterialImpacto.cs, ReglaMezclaSonidos.cs
+OK  IMP_BALA_ZUMBIDO  <- DronMundo.cs, MapaSonidos19nov.cs, MapaSonidos20nov.cs, ReglaMezclaSonidos.cs, SonidosArmasT1472.cs
+OK  IMP_INSTALAR_TALADRO  <- TablaMezcla20nov.cs
+OK  IMP_LASER_DISPARO  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs, SonidosArmasT1472.cs
+OK  IMP_MISILES_FIJAR  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs, SonidosArmasT1472.cs
+OK  IMP_MISILES_LANZAR  <- TablaMezcla20nov.cs
+OK  IMP_SINAPSIS  <- TablaMezcla20nov.cs
+OK  INT_ARMERIA_VENTILADOR  <- MapaSonidos20nov.cs, TablaMezcla20nov.cs
+OK  INT_BODEGA_GOTERAS  <- MapaSonidos20nov.cs, TablaMezcla20nov.cs
+OK  INT_HACKEO_EXITO  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs
+OK  INT_HACKEO_FALLO  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs
+OK  INT_INTERRUPTOR_LUZ  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs
+OK  INT_MALETIN_CERRAR  <- MaletinAsalto.cs, MapaSonidos19nov.cs, ReglaMezclaSonidos.cs
+OK  INT_PUERTA_CRISTAL  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs, ReglaSonidoPuerta.cs
+OK  INT_PUERTA_MADERA  <- MapaSonidos19nov.cs, PuertaCuarto.cs, ReglaMezclaSonidos.cs, ReglaSonidoPuerta.cs
+OK  INT_PUERTA_METAL  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs, ReglaSonidoPuerta.cs
+OK  INT_PUERTA_REJA  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs, ReglaSonidoPuerta.cs
+OK  INT_RECOGER_DINERO  <- MapaSonidos20nov.cs, TablaMezcla20nov.cs
+OK  INT_RECOGER_OBJETO  <- DineroEnPiso.cs, MapaSonidos19nov.cs, ReglaMezclaSonidos.cs
+OK  INT_TALLER_CANEPA  <- MapaSonidos20nov.cs, TablaMezcla20nov.cs
+OK  INT_TECLEO_HACKEO  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs
+OK  INT_TIENDA_TINO_RADIO  <- MapaSonidos20nov.cs, TablaMezcla20nov.cs
+OK  INT_TIENDA_TINO_VENTILADOR  <- MapaSonidos20nov.cs, TablaMezcla20nov.cs
+OK  JUG_ATERRIZAJE  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs, ReglaSonidosJugador.cs
+OK  JUG_CAER  <- MapaSonidos19nov.cs
+OK  JUG_CAE_DERROTADO  <- ReglaMezclaSonidos.cs, VidaAPie.cs
+OK  JUG_CORRER_RESPIRA  <- ControladorAPie.cs, ReglaMezclaSonidos.cs
+OK  JUG_DANIO  <- EtiquetaVoz.cs, ReglaMezclaSonidos.cs, VidaAPie.cs
+OK  JUG_LATIDO_VIDA_BAJA  <- TablaMezcla20nov.cs
+OK  JUG_PASO_ASFALTO  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs
+OK  JUG_PASO_ASFALTO_MOJADO  <- MapaSonidos19nov.cs
+OK  JUG_PASO_INTERIOR  <- MapaSonidos19nov.cs
+OK  JUG_PASO_METAL  <- MapaSonidos19nov.cs
+OK  JUG_REGENERA  <- VidaAPie.cs
+OK  JUG_RODADA  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs, ReglaSonidosJugador.cs
+OK  JUG_ROPA_ROCE  <- TablaMezcla20nov.cs
+OK  JUG_SALTO  <- ControladorAPie.cs, ReglaMezclaSonidos.cs
+OK  JUG_TREPAR  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs, ReglaSonidosJugador.cs
+OK  JUG_VIDA_BAJA  <- MapaSonidos19nov.cs
+OK  JUG_ZUMBIDO_EXPLOSION  <- TablaMezcla20nov.cs
+OK  MEL_BLOQUEO  <- TablaMezcla20nov.cs
+OK  MEL_GOLPE  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs, SensacionGolpe.cs
+OK  MEL_GOLPE_AIRE  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs, ReglaSonidosJugador.cs
+OK  MEL_GOLPE_CARNE  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs, ReglaSonidosJugador.cs
+OK  MEL_GOLPE_METAL  <- TablaMezcla20nov.cs
+OK  MIS_TEMPORIZADOR  <- TablaMezcla20nov.cs
+OK  MOTO_APAGAR  <- GrupoSonidoVehiculo.cs, MapaSonidos19nov.cs, ReglaMezclaSonidos.cs
+OK  MOTO_ARRANQUE  <- GrupoSonidoVehiculo.cs, MapaSonidos19nov.cs, ReglaMezclaSonidos.cs
+OK  MOTO_RALENTI  <- GrupoSonidoVehiculo.cs, MapaSonidos19nov.cs, ReglaMezclaSonidos.cs
+OK  MUN_AIRE_ACONDICIONADO  <- ReglaMezclaSonidos.cs
+OK  MUN_CHISPAS_ELECTRICAS  <- CarroTrafico.cs, DanioCarro.cs, ReglaMezclaSonidos.cs
+OK  MUN_HOLOGRAMA  <- ReglaMezclaSonidos.cs
+OK  MUN_NEON_ZUMBIDO  <- ReglaMezclaSonidos.cs
+OK  MUN_PERRO_LADRA  <- ReglaMezclaSonidos.cs
+OK  MUN_PUERTA_CASA_ABRIR  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs
+OK  MUN_PUERTA_CASA_CERRAR  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs
+OK  NAV_DANIADA  <- TablaMezcla20nov.cs
+OK  NAV_REFLECTOR  <- TablaMezcla20nov.cs
+OK  NAV_ROTORES_LOOP  <- TablaMezcla20nov.cs
+OK  NOV_ARMADURA_MOVER  <- TablaMezcla20nov.cs
+OK  NOV_CAIDA_Y_ENCENDIDO  <- ConfigRespuestaNova.cs, MapaSonidos20nov.cs, ReglaMezclaSonidos.cs, TablaMezcla20nov.cs
+OK  NOV_ESCUDO_ACTIVAR  <- TablaMezcla20nov.cs
+OK  NOV_ESCUDO_IMPACTO  <- TablaMezcla20nov.cs
+OK  NOV_JETPACK_LOOP  <- TablaMezcla20nov.cs
+OK  NOV_PASOS_CAMINAR  <- ReglaMezclaSonidos.cs, TablaMezcla20nov.cs
+OK  NOV_PASOS_CORRER  <- ReglaMezclaSonidos.cs, TablaMezcla20nov.cs
+OK  NPC_H_DOLOR  <- TablaMezcla20nov.cs
+OK  NPC_M_DOLOR  <- TablaMezcla20nov.cs
+OK  OBJ_AIRE_ACONDICIONADO  <- TablaMezcla20nov.cs
+OK  OBJ_CAMARA_SEGURIDAD  <- TablaMezcla20nov.cs
+OK  OBJ_MAQUINA_EXPENDEDORA  <- TablaMezcla20nov.cs
+OK  OBJ_REFRIGERADOR  <- TablaMezcla20nov.cs
+OK  OBJ_TELE_REINICIO  <- TablaMezcla20nov.cs
+OK  OBJ_TRANSFORMADOR  <- TablaMezcla20nov.cs
+OK  PAN_ALIADO_CAE  <- ReglaMezclaSonidos.cs
+OK  PAN_ALIADO_ESPERA  <- ReglaMezclaSonidos.cs
+OK  PAN_ALIADO_RECLUTA  <- ReglaMezclaSonidos.cs
+OK  PAN_ALIADO_SIGUE  <- ReglaMezclaSonidos.cs
+OK  PAN_ARRESTADO_ESPOSAS  <- TablaMezcla20nov.cs
+OK  PAN_HAS_MUERTO  <- TablaMezcla20nov.cs
+OK  PAN_JEFE_CAE  <- PandilleroAPie.cs
+OK  PAN_JEFE_ENTRADA  <- JefePandilla.cs, ReglaMezclaSonidos.cs
+OK  PAN_RIVAL_ALERTA  <- PandilleroAPie.cs, ReglaMezclaSonidos.cs
+OK  PAN_RIVAL_CAE  <- PandilleroAPie.cs, ReglaMezclaSonidos.cs
+OK  PAN_RIVAL_DANIO  <- ReglaMezclaSonidos.cs
+OK  PAN_RIVAL_PROVOCA  <- ReglaMezclaSonidos.cs
+OK  PAN_SILBIDO_LLAMAR  <- ReglaMezclaSonidos.cs
+OK  PAN_VECINO_AUXILIO  <- ReglaMezclaSonidos.cs
+OK  PAS_CONCRETO  <- MapaSonidos19nov.cs, ReglaSuperficiePaso.cs
+OK  PAS_GRAVA  <- MapaSonidos19nov.cs, ReglaSuperficiePaso.cs
+OK  PAS_MADERA  <- MapaSonidos19nov.cs, ReglaSuperficiePaso.cs
+OK  PAS_METAL  <- MapaSonidos19nov.cs, ReglaSuperficiePaso.cs
+OK  PAS_MOJADO  <- MapaSonidos19nov.cs, ReglaSuperficiePaso.cs
+OK  PAS_TIERRA  <- MapaSonidos19nov.cs, ReglaSuperficiePaso.cs
+OK  POL_ESTRELLA_SUBE  <- MapaSonidos20nov.cs, TablaMezcla20nov.cs
+OK  POL_NOVA_AVISO (alias -> NOV_CAIDA_Y_ENCENDIDO)  <- MapaSonidos20nov.cs
+OK  POL_RADIO_AVISO  <- ConfigPersecucion.cs, MapaSonidos19nov.cs, MapaSonidos20nov.cs, ReglaMezclaSonidos.cs
+OK  POL_RADIO_DESPACHO (alias -> POL_RADIO_AVISO)  <- MapaSonidos20nov.cs
+OK  POL_RADIO_ESTATICA  <- TablaMezcla20nov.cs
+OK  POL_SIRENA_CORTA  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs, SonidosPolicia.cs
+OK  POL_SIRENA_LOOP  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs, SonidosPolicia.cs
+OK  POL_SIRENA_MURO  <- TablaMezcla20nov.cs
+OK  PUN_BLOQUEO  <- VidaAPie.cs
+OK  PUN_GOLPE_AIRE  <- MapaSonidos19nov.cs
+OK  PUN_GOLPE_CARNE  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs
+OK  RAD_CAMBIAR_ESTACION  <- TablaMezcla20nov.cs
+OK  RAD_EST1_CUMBIA_PERCUSION  <- TablaMezcla20nov.cs
+OK  ROB_CHISPAS_DANIO  <- TablaMezcla20nov.cs
+OK  ROB_ENCENDER  <- TablaMezcla20nov.cs
+OK  ROB_MUERTE  <- TablaMezcla20nov.cs
+OK  ROB_PERRO_GRUNIDO  <- TablaMezcla20nov.cs
+OK  ROB_PERRO_MOVER  <- TablaMezcla20nov.cs
+OK  ROB_PES_HIDRAULICA  <- TablaMezcla20nov.cs
+OK  ROB_PES_LLEGADA  <- TablaMezcla20nov.cs
+OK  ROB_PES_PLACA_CAE  <- TablaMezcla20nov.cs
+OK  ROB_SERVOS  <- TablaMezcla20nov.cs
+OK  ROB_VOZ  <- ReglaCatalogoSonidos.cs, ReglaMezclaSonidos.cs
+OK  ROB_VOZ_ALERTA  <- TablaMezcla20nov.cs
+OK  TIE_COMPRAR  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs
+OK  TIE_DESEQUIPAR  <- MapaSonidos19nov.cs, PantallaInventario.cs, ReglaMezclaSonidos.cs
+OK  TIE_EQUIPAR  <- MapaSonidos19nov.cs, PantallaInventario.cs, ReglaMezclaSonidos.cs
+OK  UI_ACEPTAR  <- BotonCyberfix.cs, BotonInicio.cs, ConfigMenuArmas.cs, ConfigPantallaClinica.cs, MapaSonidos19nov.cs, PantallaTienda.cs, ReglaMezclaSonidos.cs
+OK  UI_ATRAS  <- MapaSonidos19nov.cs
+OK  UI_CAMARA_LENTA  <- MapaSonidos20nov.cs
+OK  UI_CANCELAR  <- BotonInicio.cs, ConfigMenuArmas.cs, ConfigPantallaClinica.cs, MapaSonidos19nov.cs, MenuCyberfix.cs, PantallaCreditos.cs, PantallaTienda.cs, ReglaMezclaSonidos.cs
+OK  UI_CHECKPOINT (alias -> UI_SELECCIONAR)  <- MapaSonidos20nov.cs
+OK  UI_CONTINUARA  <- PantallaContinuara.cs
+OK  UI_ERROR  <- BotonCyberfix.cs, MapaSonidos19nov.cs, MapaSonidos20nov.cs, PantallaTienda.cs, ReglaMezclaSonidos.cs, ServicioGuarida.cs, ServicioNegocios.cs
+OK  UI_GUARDADO  <- AvisoGuardado.cs, MapaSonidos20nov.cs
+OK  UI_INDICADOR_DANIO (alias -> IMP_BALA_ZUMBIDO)  <- MapaSonidos20nov.cs
+OK  UI_LOGO_INTRO  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs
+OK  UI_MAPA_ABRIR  <- MapaSonidos19nov.cs, PantallaInventario.cs, PantallaMapa.cs
+OK  UI_MAPA_CERRAR  <- MapaSonidos19nov.cs, PantallaInventario.cs, PantallaMapa.cs
+OK  UI_MARCADOR (alias -> UI_SELECCIONAR)  <- MapaSonidos20nov.cs
+OK  UI_MENU_ABRIR  <- MapaSonidos19nov.cs, PantallaPausa.cs, PantallaTelefono.cs, ReglaMezclaSonidos.cs
+OK  UI_MENU_CERRAR  <- MapaSonidos19nov.cs, PantallaPausa.cs, PantallaTelefono.cs, ReglaMezclaSonidos.cs
+OK  UI_MOVER  <- BotonCyberfix.cs, BotonInicio.cs, ConfigMenuArmas.cs, ConfigPantallaClinica.cs, MapaSonidos19nov.cs, PantallaInventario.cs, PantallaTienda.cs, ReglaMezclaSonidos.cs
+OK  UI_OBJETIVO_ACTUALIZADO (alias -> HUD_NOTIFICACION)  <- MapaSonidos20nov.cs
+OK  UI_OBJETIVO_CUMPLIDO  <- MapaSonidos19nov.cs, MarcadorObjetivo.cs, ReglaMezclaSonidos.cs
+OK  UI_OBJETIVO_FALLIDO (alias -> UI_ERROR)  <- MapaSonidos20nov.cs
+OK  UI_OBJETIVO_NUEVO  <- MapaSonidos19nov.cs, MarcadorObjetivo.cs, ReglaMezclaSonidos.cs
+OK  UI_PESTANA  <- MapaSonidos19nov.cs, PantallaInventario.cs, PantallaTelefono.cs
+OK  UI_SELECCIONAR  <- MapaSonidos19nov.cs, MapaSonidos20nov.cs
+OK  UI_TELEFONO  <- MapaSonidos20nov.cs
+OK  UI_TEXTO  <- ColaAvisos.cs, ReglaMezclaSonidos.cs, ServicioMensajes.cs
+OK  UI_TITULO_INICIO  <- MapaSonidos19nov.cs, MenuInicio.cs, PantallaTitulo.cs
+OK  VEH_ACELERON  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs, ReglasSonidoVehiculoT1475.cs
+OK  VEH_ALARMA  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs, ReglasSonidoVehiculoT1475.cs
+OK  VEH_ALARMA_ROBO  <- MapaSonidos19nov.cs
+OK  VEH_CHOQUE  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs, ReglasSonidoVehiculoT1475.cs
+OK  VEH_CHOQUE_FUERTE  <- DanioCarro.cs, MapaSonidos19nov.cs, ReglaMezclaSonidos.cs, ReglasSonidoVehiculoT1475.cs
+OK  VEH_CHOQUE_LEVE  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs
+OK  VEH_CLAXON_CAMION  <- GrupoSonidoVehiculo.cs, MapaSonidos19nov.cs, ReglaMezclaSonidos.cs
+OK  VEH_CLAXON_NORMAL  <- GrupoSonidoVehiculo.cs, MapaSonidos19nov.cs, ReglaMezclaSonidos.cs
+OK  VEH_CLAXON_TRAFICO  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs
+OK  VEH_CLAXON_VIEJO  <- AnimacionCarro.cs, MapaSonidos19nov.cs, ReglaMezclaSonidos.cs
+OK  VEH_CRISTAL_ROMPER  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs, ReglasSonidoVehiculoT1475.cs
+OK  VEH_ELECTRICO_ACELERAR  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs
+OK  VEH_ELECTRICO_ARRANQUE  <- GrupoSonidoVehiculo.cs, MapaSonidos19nov.cs, ReglaMezclaSonidos.cs
+OK  VEH_ELECTRICO_MOVER  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs
+OK  VEH_ELECTRICO_PASAR  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs
+OK  VEH_EXPLOSION  <- MapaSonidos20nov.cs, ReglaMezclaSonidos.cs
+OK  VEH_FORZAR_PUERTA  <- CarroEstacionado.cs
+OK  VEH_FRENO_DERRAPE  <- CarroViejo.cs, MapaSonidos19nov.cs, ReglaMezclaSonidos.cs
+OK  VEH_FRENO_FUERTE  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs
+OK  VEH_LLANTAS_GRAVA  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs
+OK  VEH_NORMAL_APAGAR  <- GrupoSonidoVehiculo.cs, MapaSonidos19nov.cs, ReglaMezclaSonidos.cs
+OK  VEH_NORMAL_ARRANQUE  <- GrupoSonidoVehiculo.cs, MapaSonidos19nov.cs, ReglaMezclaSonidos.cs
+OK  VEH_NORMAL_RALENTI  <- GrupoSonidoVehiculo.cs, MapaSonidos19nov.cs, ReglaMezclaSonidos.cs
+OK  VEH_PASA_CERCA  <- CarroTrafico.cs, ReglaMezclaSonidos.cs
+OK  VEH_PESADO_APAGAR  <- GrupoSonidoVehiculo.cs, MapaSonidos19nov.cs, ReglaMezclaSonidos.cs
+OK  VEH_PESADO_ARRANQUE  <- GrupoSonidoVehiculo.cs, MapaSonidos19nov.cs, ReglaMezclaSonidos.cs
+OK  VEH_PESADO_RALENTI  <- GrupoSonidoVehiculo.cs, MapaSonidos19nov.cs, ReglaMezclaSonidos.cs
+OK  VEH_PUENTE  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs
+OK  VEH_PUERTA_ABRIR  <- CarroEstacionado.cs, CarroTrafico.cs, MapaSonidos19nov.cs, PatrullaMundo.cs, ReglaMezclaSonidos.cs
+OK  VEH_PUERTA_CERRAR  <- CarroEstacionado.cs, MapaSonidos19nov.cs, ReglaMezclaSonidos.cs
+OK  VEH_TOPE  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs, ReglasSonidoVehiculoT1475.cs
+OK  VEH_VIEJO_ARRANQUE  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs
+OK  VEH_VIEJO_MOTOR_ACELERA  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs
+OK  VEH_VIEJO_MOTOR_RALENTI  <- MapaSonidos19nov.cs, ReglaMezclaSonidos.cs
+OK  ZON_CONQUISTADA  <- DirectorAtaques.cs, ReglaMezclaSonidos.cs, ServicioTerritorio.cs
+OK  ZON_RESPETO_SUBE  <- ServicioTerritorio.cs
+
+Antes de T-1531 (rama integ/sonidos-20nov, ya con los archivos de T-1530): 5 IDs sin archivo: ARM_W07_RAYO, ARM_NOVA_DISPARO, ARM_NOVA_CARGA_DISPARO, POL_NOVA_AVISO, POL_RADIO_DESPACHO (sus archivos se renombraron o quitaron).
+Despues de T-1531: 0 sin archivo (los 5 suenan por alias; el codigo ya pide ARM_W07_RAYO_LOOP y NOV_CAIDA_Y_ENCENDIDO directo).
+Sin archivo DESPUES (0): 
