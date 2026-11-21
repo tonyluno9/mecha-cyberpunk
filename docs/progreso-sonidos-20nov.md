@@ -22,3 +22,4 @@ Fuente: `3d sonidos/` en la carpeta principal (ignorada por git; 229 sonidos út
 
 ## Bitácora
 - 20-nov tarde: paso 0 (sin Unity abierto, sin lockfile; main 8f97866). integ/sonidos-20nov creada en s2.
+- T-1530 integrada (b6a9569): 122 WAV nuevos, 5 renombrados, 0 reemplazos. Importador viejo ImportadorAudio pisaba TODAS las carpetas numeradas (todo CompressedInMemory y mono, también lo del 19-nov): ya no; reimportado 01..18. T-1531 (catálogo y mezcla) corriendo.
