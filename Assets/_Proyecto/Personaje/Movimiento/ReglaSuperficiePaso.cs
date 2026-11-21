@@ -15,6 +15,11 @@ namespace MechaCyberpunk.Personaje.Movimiento
         public const string Mojado = "PAS_MOJADO";
         public const string Tierra = "PAS_TIERRA";
         public const string Grava = "PAS_GRAVA";
+        // T-1534: arena, pasto y loseta todavía no tienen sonido propio (LEEME_SONIDOS, "Faltan"): suenan con el más cercano. Cuando lleguen
+        // PAS_ARENA_NN, PAS_PASTO_NN y PAS_LOSETA_NN al catálogo, basta cambiar estas tres constantes.
+        public const string Arena = Tierra;
+        public const string Pasto = Tierra;
+        public const string Loseta = Concreto;
 
         private static readonly string[] PalabrasMojado = { "mojad", "charco", "wet", "lluvia", "agua", "water", "puddle" };
         private static readonly string[] PalabrasMetal =
@@ -23,6 +28,10 @@ namespace MechaCyberpunk.Personaje.Movimiento
         };
         private static readonly string[] PalabrasMadera = { "madera", "muelle", "tablon", "tablones", "tabla", "wood", "plank", "parquet", "deck", "duela" };
         private static readonly string[] PalabrasGrava = { "grava", "gravel", "obra", "escombro", "rubble", "balasto" };
+        // "arena" a secas no: la Arena es la jaula de pelea y daría arena en todo el clandestino.
+        private static readonly string[] PalabrasArena = { "arenal", "arenoso", "sand", "playa", "duna", "arena_suelo", "suelo_arena", "piso_arena" };
+        private static readonly string[] PalabrasPasto = { "pasto", "grass", "cesped", "césped", "hierba", "jardin", "jardín", "lawn", "maleza" };
+        private static readonly string[] PalabrasLoseta = { "loseta", "azulejo", "baldosa", "mosaico", "ceramica", "cerámica", "marmol", "mármol", "tilefloor", "piso_tile" };
         private static readonly string[] PalabrasTierra = { "tierra", "baldio", "deshuesadero", "dirt", "soil", "lodo", "mud", "terreno", "lote" };
 
         /// <summary>
@@ -31,12 +40,15 @@ namespace MechaCyberpunk.Personaje.Movimiento
         /// </summary>
         public static string IdPaso(IdLugar lugar, string nombrePiso, bool esMontable, bool llueve = false)
         {
+            if (Contiene(nombrePiso, PalabrasLoseta) && !Contiene(nombrePiso, PalabrasMojado)) return Loseta; // T-1534: también dentro de un local
             if (EsInterior(lugar)) return Madera;
             if (esMontable || Contiene(nombrePiso, PalabrasMetal)) return Metal;
             if (Contiene(nombrePiso, PalabrasMojado)) return Mojado;
             if (Contiene(nombrePiso, PalabrasMadera)) return Madera;
             if (Contiene(nombrePiso, PalabrasGrava)) return Grava;
             if (Contiene(nombrePiso, PalabrasTierra)) return Tierra;
+            if (Contiene(nombrePiso, PalabrasArena)) return Arena;
+            if (Contiene(nombrePiso, PalabrasPasto)) return Pasto;
             return llueve ? Mojado : Concreto;
         }
 

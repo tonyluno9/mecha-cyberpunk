@@ -1,0 +1,14 @@
+{
+    "name": "MechaCyberpunk.Tests.EditMode.SonidosVehiculosPasos",
+    "rootNamespace": "MechaCyberpunk.Tests",
+    "references": ["UnityEngine.TestRunner", "UnityEditor.TestRunner", "MechaCyberpunk.Core", "MechaCyberpunk.Personaje", "MechaCyberpunk.Personaje.Visual", "MechaCyberpunk.Arte.Editor", "MechaCyberpunk.Arte.Animaciones.Editor", "MechaCyberpunk.Vehiculos", "MechaCyberpunk.Progresion", "MechaCyberpunk.Economia"],
+    "includePlatforms": ["Editor"],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": ["nunit.framework.dll"],
+    "autoReferenced": false,
+    "defineConstraints": ["UNITY_INCLUDE_TESTS"],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

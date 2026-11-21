@@ -142,6 +142,10 @@ namespace MechaCyberpunk.Vehiculos.Carro
             {
                 gameObject.AddComponent<TemblorCarro>();
             }
+            if (GetComponent<SonidoSueloCarro>() == null)
+            {
+                gameObject.AddComponent<SonidoSueloCarro>(); // T-1534: grava, puente y lluvia dentro del carro del jugador
+            }
             // T-660: las motos no llevan faros ni calaveras (se veían raras).
             if (GetComponent<LucesCarro>() == null && GetComponent<ManejoMoto>() == null)
             {
@@ -493,6 +497,9 @@ namespace MechaCyberpunk.Vehiculos.Carro
 
         /// <summary>T-1475: ID del claxon de este vehículo (camión o normal).</summary>
         public string IdClaxon => GrupoSonidoVehiculo.Para(TipoSonido).Claxon;
+
+        /// <summary>T-1534: ID del sonido de pasar cerca del jugador: el eléctrico pasa con su turbina (VEH_ELECTRICO_PASAR); el resto, VEH_PASA_CERCA.</summary>
+        public string IdPasaCerca => GrupoSonidoVehiculo.Para(TipoSonido).Pasar ?? "VEH_PASA_CERCA";
 
         // T-1475: una sola voz de motor. El jugador oye ARRANQUE al subir y APAGAR al bajar; la IA solo el bucle. El tono sube con la rapidez.
         private void ActualizarMotor(float dt)
