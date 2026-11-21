@@ -38,12 +38,11 @@ namespace MechaCyberpunk.Arte.Editor
 
         // ------------------------------------------------------------------ el mapa (medido en Ciudad_Prologo)
 
-        /// <summary>Neón Alto y Nova empiezan en x = 47 (T-1107, T-418); El Mercado va de x = -47 a 47 y el tianguis está en z entre -8 y 8; Suburbios queda al oeste.</summary>
-        public const float LimiteOeste = -47f;
-        public const float LimiteEste = 47f;
-        /// <summary>La avenida este-oeste va en z = -43 (T-1463): al este y al sur de ella está Nova, y al sur del Mercado (taller, fonda) siguen los Suburbios.</summary>
-        public const float LimiteNova = -25f;
-        public const float LimiteSurMercado = -45f;
+        // Medidas en Play el 21-nov con ITerritorio.ZonaEn (rejilla de 20 m): fosa (Suburbios) en x < -40 para todo z; tianguis (El Mercado) en -40 <= x <= 40 para todo z;
+        // neon (Neón Alto) en x > 40 y z > -10; refineria (Nova) en x > 40 y z < -10. En el editor sin Play no hay ITerritorio, así que se usan estas cuatro reglas.
+        public const float LimiteOeste = -40f;
+        public const float LimiteEste = 40f;
+        public const float LimiteNova = -10f;
         public const float LimiteNorte = 120f;
         public const float LimiteSur = -140f;
         public const float LimiteOesteCiudad = -140f;
@@ -62,9 +61,9 @@ namespace MechaCyberpunk.Arte.Editor
             {
                 return Barrio.Suburbios;
             }
-            if (p.x < LimiteEste)
+            if (p.x <= LimiteEste)
             {
-                return p.z < LimiteSurMercado ? Barrio.Suburbios : Barrio.Mercado;
+                return Barrio.Mercado;
             }
             return p.z < LimiteNova ? Barrio.Nova : Barrio.NeonAlto;
         }
@@ -633,10 +632,10 @@ namespace MechaCyberpunk.Arte.Editor
 
         private static readonly Dictionary<Barrio, Rect> Regiones = new Dictionary<Barrio, Rect>
         {
-            { Barrio.Suburbios, Rect.MinMaxRect(-135f, -135f, -48f, 15f) },
-            { Barrio.Mercado, Rect.MinMaxRect(-46f, -44f, 46f, 45f) },
-            { Barrio.NeonAlto, Rect.MinMaxRect(48f, -24f, 110f, 95f) },
-            { Barrio.Nova, Rect.MinMaxRect(48f, -62f, 148f, -26f) },
+            { Barrio.Suburbios, Rect.MinMaxRect(-135f, -135f, -41f, 15f) },
+            { Barrio.Mercado, Rect.MinMaxRect(-39f, -75f, 39f, 45f) },
+            { Barrio.NeonAlto, Rect.MinMaxRect(41f, -9f, 110f, 95f) },
+            { Barrio.Nova, Rect.MinMaxRect(41f, -62f, 148f, -11f) },
         };
 
         private static int PonerEnBanquetas(Dictionary<Barrio, Transform> padres)

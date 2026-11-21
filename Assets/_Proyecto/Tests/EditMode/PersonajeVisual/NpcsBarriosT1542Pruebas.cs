@@ -22,12 +22,13 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
         private static System.Collections.Generic.IEnumerable<string> Visuales(Barrio b) => NpcsBarriosT1542.Reparto[b].Select(e => e.visual);
 
         [TestCase(-55.5f, -77f, Barrio.Suburbios)]   // la casa del jugador
-        [TestCase(-37f, -71.7f, Barrio.Suburbios)]   // El Canepa
+        [TestCase(-37f, -71.7f, Barrio.Mercado)]     // x >= -40
         [TestCase(-92f, 8.8f, Barrio.Suburbios)]
         [TestCase(0f, 0f, Barrio.Mercado)]           // el tianguis
         [TestCase(-29.3f, 26f, Barrio.Mercado)]      // el mercado de armas
         [TestCase(57.5f, 47f, Barrio.NeonAlto)]      // el casino
-        [TestCase(75f, -16f, Barrio.NeonAlto)]
+        [TestCase(75f, 0f, Barrio.NeonAlto)]
+        [TestCase(75f, -16f, Barrio.Nova)]
         [TestCase(94f, -43f, Barrio.Nova)]           // la avenida de Nova
         [TestCase(-300f, 0f, Barrio.Fuera)]          // las afueras
         public void BarrioDe_PuntosDelMapa(float x, float z, Barrio esperado)
