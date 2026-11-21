@@ -27,3 +27,4 @@ Regla: nada hecho sin verlo en Play, captura en docs/capturas/_21nov-b/. No edit
 - T-1552: la columna "hoy" de Blender no coincide con Unity (NPCs ya medían ~1.84); el factor los dejó en 2.0–2.2 m. Se corrió Afinar: 40 a ±5 cm de la altura nueva.
 - T-1554: arreglo de compilación (ComponentUtility). Rotores: el eje del disco era Z local y GiroRotores giraba en Y (el temblor); ahora giran sobre el eje más delgado de su malla.
 - Sigue: T-1553 (robots Nova) corriendo; luego Play con capturas y pruebas por clase.
+- EditMode de lo tocado: 697 pruebas, 48 fallos, casi todos esperados (pruebas que exigían lo viejo). Mandados a corregir a cada subagente: alturas (prueba del factor tras Afinar, woman2 por idle, Nova fuera de la prueba de idle de PJ01), locomoción (Salto_Aire sin bucle, umbral 1.62, 121 clips, claves nuevas sin clip en overrides, T739 3.155), vehículos (V10 aún en la escena, prueba del eje del rotor), combate (T1004 debe permitir Skull_Burla).
