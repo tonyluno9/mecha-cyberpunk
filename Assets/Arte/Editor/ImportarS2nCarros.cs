@@ -164,6 +164,9 @@ namespace MechaCyberpunk.Arte.Editor
             return codigo + "\ttráfico " + CreadorTraficoT511.RutaPrefab(codigo);
         }
 
+        /// <summary>T-1554: V10 y V11 quedaron fuera del tráfico por decisión de Tony (20-nov).</summary>
+        public static bool Descartado(string ruta) => ruta.EndsWith("_V10.prefab") || ruta.EndsWith("_V11.prefab");
+
         /// <summary>Agrega esos prefabs de tráfico a TraficoCalle.prefabsCarro de Ciudad_Prologo si no están (guarda la escena solo si cambió).</summary>
         public static int AgregarAlTrafico(string[] rutas)
         {
@@ -180,7 +183,8 @@ namespace MechaCyberpunk.Arte.Editor
             foreach (string ruta in rutas)
             {
                 CarroTrafico prefab = AssetDatabase.LoadAssetAtPath<CarroTrafico>(ruta);
-                if (prefab == null)
+                // Decisión de Tony 20-nov (T-1554): V10 y V11 descartados; no vuelven al tráfico aunque se reimporte.
+                if (prefab == null || Descartado(ruta))
                 {
                     continue;
                 }

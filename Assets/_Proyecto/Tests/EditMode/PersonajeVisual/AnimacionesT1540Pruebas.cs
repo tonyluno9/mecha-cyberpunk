@@ -179,7 +179,9 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
         {
             foreach (string clip in TablaImpactosPJ01.Todos.Select(i => i.Clip).Distinct())
             {
-                Assert.IsTrue(System.IO.File.Exists(ImportadorClipsPJ01.Carpeta + clip + ".fbx"), "la tabla de impactos nombra un clip que no existe: " + clip);
+                // T-1553 movió los clips E16_*/E18_* a la carpeta de su personaje: se buscan en las tres carpetas.
+                bool existe = ClipsRobotsNovaT1553.CarpetasDeClips().Any(c => System.IO.File.Exists(c + "/" + clip + ".fbx"));
+                Assert.IsTrue(existe, "la tabla de impactos nombra un clip que no existe: " + clip);
             }
         }
 
