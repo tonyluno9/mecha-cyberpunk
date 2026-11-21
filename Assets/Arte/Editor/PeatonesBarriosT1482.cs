@@ -30,9 +30,9 @@ namespace MechaCyberpunk.Arte.Editor
         /// </summary>
         public static readonly (string zona, string[] propias)[] Diseno =
         {
-            ("Avenida", new[] { "NP07_Pescador_a", "NP07_Pescador_b", "NP08_Turista_a", "NP10_Elotero_a", "NP12_Abuela_a" }),
-            ("NeonAlto", new[] { "NP08_Turista_a", "NP08_Turista_b", "NP09_Corredor_a", "NP09_Corredor_b" }),
-            ("LasLomas", new[] { "NP12_Abuela_a", "NP10_Elotero_a", "NP09_Corredor_a", "NP09_Corredor_b" }),
+            ("Avenida", new[] { "NP07_Pescador_a", "NP07_Pescador_b", "NP08_Turista_a", "NP10_Elotero_a", "NP12_Abuela_a", "NP11_Estibador_a" }),
+            ("NeonAlto", new[] { "NP08_Turista_a", "NP08_Turista_b", "NP09_Corredor_a", "NP09_Corredor_b", "NP14_Oficinista_a", "NP14_Oficinista_b" }), // T-1542: oficinistas propios
+            ("LasLomas", new[] { "NP12_Abuela_a", "NP10_Elotero_a", "NP09_Corredor_a", "NP09_Corredor_b", "NP11_Estibador_b", "NP07_Pescador_b" }), // T-1542: estibador y pescador
             ("Deshuesadero", new[] { "NP11_Estibador_a", "NP11_Estibador_b" }),
         };
 

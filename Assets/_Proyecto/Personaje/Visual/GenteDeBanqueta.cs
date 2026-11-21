@@ -44,6 +44,9 @@ namespace MechaCyberpunk.Personaje.Visual
         [Tooltip("Quien se mueve al caminar (el objeto que envuelve al visual); vacío = el padre.")]
         [SerializeField] private Transform mover;
 
+        [Tooltip("T-1542: true = no busca pareja de plática ni se une a ninguna (un vendedor en su puesto que juega un clip: no se voltea hacia el de al lado).")]
+        [SerializeField] private bool sinPareja;
+
         [Tooltip("Quieto: fracción de la gente (0 a 1, según su fase) que está viendo el celular.")]
         [Range(0f, 1f)] [SerializeField] private float fraccionCelular = 0.15f;
 
@@ -83,6 +86,20 @@ namespace MechaCyberpunk.Personaje.Visual
         private float segundosQuieto = SegundosQuietoNormal;
 
         public ModoGente Modo => modo;
+
+        /// <summary>T-1542: true si es de los que juegan un clip sin pareja (vendedores).</summary>
+        public bool SinPareja => sinPareja;
+
+        /// <summary>T-1542: pone o quita "sin pareja" (los creadores de escena).</summary>
+        public void FijarSinPareja(bool valor)
+        {
+            sinPareja = valor;
+            if (valor)
+            {
+                companero = null;
+                Platicadores.Remove(this);
+            }
+        }
 
         /// <summary>True si esta persona ve el celular: modo Celular, o una parte de la gente quieta (por su fase).</summary>
         public bool ViendoCelular => modo == ModoGente.Celular || (modo == ModoGente.Quieto && fase >= 1f - fraccionCelular);
@@ -180,7 +197,7 @@ namespace MechaCyberpunk.Personaje.Visual
             }
             if (modo == ModoGente.Platicar)
             {
-                if (!Platicadores.Contains(this))
+                if (!sinPareja && !Platicadores.Contains(this))
                 {
                     Platicadores.Add(this);
                 }
@@ -253,6 +270,10 @@ namespace MechaCyberpunk.Personaje.Visual
         // T-1332: gira hacia su pareja de plática (la busca si no tiene o si la suya ya no está).
         private void MirarAlCompanero(float dt)
         {
+            if (sinPareja)
+            {
+                return;
+            }
             if (companero == null || !companero.isActiveAndEnabled)
             {
                 companero = null;
