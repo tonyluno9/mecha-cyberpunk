@@ -51,7 +51,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
         public void Ids_ExplosionYFuego()
         {
             Assert.AreEqual("EXP_ONDA", LimiteSonidoExplosion.IdOnda);
-            Assert.AreEqual("EXP_ONDA", BarrilExplosivo.IdExplosion);
+            Assert.AreEqual("EXP_BARRIL", BarrilExplosivo.IdExplosion); // T-1532
             Assert.AreEqual("FUE_LOOP_CHICO", LimiteSonidoExplosion.IdFuegoChico);
         }
     }

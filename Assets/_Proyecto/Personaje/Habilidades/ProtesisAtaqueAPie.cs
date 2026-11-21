@@ -242,7 +242,7 @@ namespace MechaCyberpunk.Personaje.Habilidades
             {
                 Sonidos.Reproducir(MechaCyberpunk.Personaje.Combate.SonidosArmasT1472.MisilesFijar); // T-1472: fijó blancos
             }
-            Sonidos.Reproducir("ARM_W02_DISPARO"); // T-1472: 2D, es del jugador
+            Sonidos.Reproducir(MechaCyberpunk.Personaje.Combate.SonidosArmasT1472.MisilesLanzar); // T-1472 / T-1532: IMP_MISILES_LANZAR, 2D, es del jugador
             for (int i = 0; i < cfg.CantidadMisiles; i++)
             {
                 Transform blanco = blancos.Count > 0 ? blancos[i % blancos.Count] : null;

@@ -337,6 +337,14 @@ namespace MechaCyberpunk.Vehiculos.Carro
             }
         }
 
+        // T-1532: al explotar, el fuego chico del aviso cede su lugar al fwoosh y al fuego grande en bucle.
+        private void IniciarFuegoGrande(Vector3 centro)
+        {
+            DetenerSonidoFuego();
+            Sonidos.ReproducirEn(LimiteSonidoExplosion.IdFuegoEncender, centro);
+            bucleFuego = Sonidos.ReproducirBucle(LimiteSonidoExplosion.IdFuegoGrande, transform);
+        }
+
         private void DetenerSonidoFuego()
         {
             if (bucleFuego != Sonidos.SinBucle)
@@ -383,7 +391,7 @@ namespace MechaCyberpunk.Vehiculos.Carro
             gameObject.SendMessage(MensajeExplosion, SendMessageOptions.DontRequireReceiver); // T-692: las patrullas dejan de manejar
 
             Sonidos.ReproducirEn("VEH_CHOQUE_FUERTE", centro);
-            IniciarSonidoFuego();
+            IniciarFuegoGrande(centro); // T-1532: fwoosh y fuego grande en bucle (antes ardía el chico)
             UltimaExplosion = ExplosionCarro.Crear(centro, config.RadioExplosion);
             DanarAlrededor(centro);
             SumarCalorSiEstaCerca(centro);

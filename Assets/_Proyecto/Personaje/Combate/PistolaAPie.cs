@@ -308,7 +308,7 @@ namespace MechaCyberpunk.Personaje.Combate
                     }
                     else if (actual.Fuente != null && actual.Fuente.Disponibles <= 0 && actual.Balas < actual.Tamano && !actual.Recargando)
                     {
-                        Sonidos.Reproducir("ARM_VACIO"); // T-720: sin balas de reserva
+                        Sonidos.Reproducir(SonidosArmasT1472.SinBalas); // T-1532: clic vacío (ARM_SIN_BALAS) // T-720: sin balas de reserva
                     }
                 }
                 DatosArma d = datosArmas[(int)activa];
@@ -345,7 +345,7 @@ namespace MechaCyberpunk.Personaje.Combate
                 else if (pidio && !actual.Recargando && actual.Balas <= 0 && Time.time >= finEsperaVacio)
                 {
                     finEsperaVacio = Time.time + EsperaClicVacio;
-                    Sonidos.Reproducir("ARM_VACIO");
+                    Sonidos.Reproducir(SonidosArmasT1472.SinBalas); // T-1532: clic vacío (ARM_SIN_BALAS)
                 }
             }
             if (especiales != null && (!puede || datosArmas[Indice(activa)] == null || datosArmas[Indice(activa)].TipoDisparo == TipoDisparoArma.Bala))
@@ -455,6 +455,7 @@ namespace MechaCyberpunk.Personaje.Combate
 
         // T-442: sonidos que suenan un poco después del disparo (casquillo, bombeo de la escopeta, cerrojo del sniper).
         private const float SegundosCasquillo = 0.25f;
+        private const float SegundosMartillo = 0.3f; // T-1532: el martillo del revólver se arma tras el tiro
         private const float SegundosBombeo = 0.45f;
         private const float SegundosCerrojo = 0.5f;
         private const float AlturaCasquillo = 0.05f;
@@ -499,11 +500,15 @@ namespace MechaCyberpunk.Personaje.Combate
         // Lo que suena un poco después de cada disparo: el casquillo al caer y el bombeo o el cerrojo de las armas que los tienen.
         private void ProgramarSonidosTrasDisparo(ArmaAPie arma)
         {
-            Diferir("ARM_CASQUILLO", SegundosCasquillo, transform.position + Vector3.up * AlturaCasquillo);
+            string casquillo = SonidosArmasT1472.IdCasquillo(arma); // T-1532: chico o grande según el arma; el revólver no suelta casquillos
+            if (casquillo != null)
+            {
+                Diferir(casquillo, SegundosCasquillo, transform.position + Vector3.up * AlturaCasquillo);
+            }
             string tras = SonidosArmasT1472.IdTrasDisparo(arma);
             if (tras != null)
             {
-                Diferir(tras, arma == ArmaAPie.Escopeta ? SegundosBombeo : SegundosCerrojo, transform.position);
+                Diferir(tras, arma == ArmaAPie.Escopeta ? SegundosBombeo : arma == ArmaAPie.Revolver ? SegundosMartillo : SegundosCerrojo, transform.position);
             }
         }
 
