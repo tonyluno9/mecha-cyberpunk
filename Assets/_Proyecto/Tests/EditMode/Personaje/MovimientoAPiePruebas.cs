@@ -15,6 +15,22 @@ namespace MechaCyberpunk.Tests.Personaje
         private const float AlturaSalto = 1.1f;
         private const float Dt = 0.02f;
 
+        /// <summary>
+        /// T-1550 (decisión de Tony del 20-nov): el impulso del salto sale 0.1 s (3 cuadros) después de pedirlo, así que las pruebas viejas, que esperaban el impulso en el mismo cuadro,
+        /// siguen pidiendo el salto y esperan a que salga. Devuelve cuánto subió en el cuadro del despegue (los cuadros de la agachada se quedan en el piso).
+        /// </summary>
+        private static float Despegar(MovimientoAPie m, out int cuadros)
+        {
+            float altura = m.ActualizarVertical(true, true, Dt, AlturaSalto, Gravedad);
+            cuadros = 1;
+            while (!m.DespegoEsteFrame && cuadros < 100)
+            {
+                altura = m.ActualizarVertical(true, false, Dt, AlturaSalto, Gravedad);
+                cuadros++;
+            }
+            return altura;
+        }
+
         private static void Horizontal(MovimientoAPie m, Vector2 entrada, bool correr, bool enPiso, float segundos)
         {
             for (float t = 0f; t < segundos; t += Dt)
@@ -101,7 +117,7 @@ namespace MechaCyberpunk.Tests.Personaje
             MovimientoAPie m = new MovimientoAPie();
             float altura = 0f;
             float maxima = 0f;
-            altura += m.ActualizarVertical(true, true, Dt, AlturaSalto, Gravedad);
+            altura += Despegar(m, out _); // T-1550: el impulso sale 0.1 s después de pedir el salto
             maxima = Mathf.Max(maxima, altura);
             while (altura > 0f)
             {
@@ -115,7 +131,7 @@ namespace MechaCyberpunk.Tests.Personaje
         public void Vertical_SaltarEnElAire_NoHaceNada()
         {
             MovimientoAPie m = new MovimientoAPie();
-            m.ActualizarVertical(true, true, Dt, AlturaSalto, Gravedad);
+            Despegar(m, out _); // T-1550: el impulso sale 0.1 s después de pedir el salto
             m.ActualizarVertical(false, false, Dt, AlturaSalto, Gravedad);
             float antes = m.VelocidadVertical;
             m.ActualizarVertical(false, true, Dt, AlturaSalto, Gravedad);
@@ -129,12 +145,90 @@ namespace MechaCyberpunk.Tests.Personaje
                 MovimientoAPie.VelocidadInicialSalto(4.4f, Gravedad), 0.0001f);
         }
 
+        // ---------- T-1550: el impulso del salto sale 3 cuadros (0.1 s) después de pedirlo ----------
+
+        [Test]
+        public void Salto_ElImpulsoSaleTresCuadrosDespuesDePedirlo_YMientrasTantoSigueEnElPiso()
+        {
+            Assert.AreEqual(0.1f, MovimientoAPie.SegundosRetardoSalto, 1e-6f, "3 cuadros a 30 fps");
+            MovimientoAPie m = new MovimientoAPie();
+            float desplazamiento = m.ActualizarVertical(true, true, 0.03f, AlturaSalto, Gravedad);
+            Assert.IsTrue(m.PreparandoSalto, "Al pedirlo empieza la agachada");
+            Assert.IsFalse(m.DespegoEsteFrame);
+            Assert.AreEqual(MovimientoAPie.VelocidadVerticalEnPiso * 0.03f, desplazamiento, 1e-5f, "Sigue pegado al piso");
+            m.ActualizarVertical(true, false, 0.03f, AlturaSalto, Gravedad);
+            m.ActualizarVertical(true, false, 0.03f, AlturaSalto, Gravedad);
+            Assert.IsTrue(m.PreparandoSalto, "A los 0.09 s todavía no sale");
+            Assert.IsFalse(m.DespegoEsteFrame);
+            float sube = m.ActualizarVertical(true, false, 0.03f, AlturaSalto, Gravedad);
+            Assert.IsTrue(m.DespegoEsteFrame, "A los 0.12 s (pasados 0.1) sale el impulso");
+            Assert.IsFalse(m.PreparandoSalto);
+            Assert.Greater(sube, 0f);
+            m.ActualizarVertical(false, false, 0.03f, AlturaSalto, Gravedad);
+            Assert.IsFalse(m.DespegoEsteFrame, "Solo cuenta en el cuadro del impulso");
+        }
+
+        [Test]
+        public void Salto_SinRetardo_SaleEnElMismoCuadro()
+        {
+            MovimientoAPie m = new MovimientoAPie { RetardoSalto = 0f };
+            float sube = m.ActualizarVertical(true, true, Dt, AlturaSalto, Gravedad);
+            Assert.IsTrue(m.DespegoEsteFrame);
+            Assert.Greater(sube, 0f);
+        }
+
+        [Test]
+        public void Salto_SiDejaElPisoAntesDelImpulso_SeCancela()
+        {
+            MovimientoAPie m = new MovimientoAPie();
+            m.ActualizarVertical(true, true, Dt, AlturaSalto, Gravedad);
+            Assert.IsTrue(m.PreparandoSalto);
+            m.ActualizarVertical(false, false, Dt, AlturaSalto, Gravedad);
+            Assert.IsFalse(m.PreparandoSalto, "Si se cae del borde en la agachada, no salta en el aire");
+            for (int i = 0; i < 20; i++)
+            {
+                m.ActualizarVertical(true, false, Dt, AlturaSalto, Gravedad);
+                Assert.IsFalse(m.DespegoEsteFrame);
+            }
+        }
+
+        [Test]
+        public void Salto_PedirloDeNuevoEnLaAgachada_NoReiniciaLaEspera()
+        {
+            MovimientoAPie m = new MovimientoAPie();
+            Despegar(m, out int cuadrosSolo);
+            MovimientoAPie otro = new MovimientoAPie();
+            otro.ActualizarVertical(true, true, Dt, AlturaSalto, Gravedad);
+            int cuadros = 1;
+            while (!otro.DespegoEsteFrame && cuadros < 100)
+            {
+                otro.ActualizarVertical(true, true, Dt, AlturaSalto, Gravedad); // sigue pulsando espacio
+                cuadros++;
+            }
+            Assert.AreEqual(cuadrosSolo, cuadros, "Pulsar de nuevo durante la agachada no la alarga");
+            Assert.AreEqual(Mathf.CeilToInt(MovimientoAPie.SegundosRetardoSalto / Dt), cuadrosSolo, 1, "0.1 s a 50 cuadros por segundo");
+        }
+
+        [Test]
+        public void Salto_ConRetardo_LlegaALaMismaAltura()
+        {
+            MovimientoAPie m = new MovimientoAPie();
+            float altura = Despegar(m, out _);
+            float maxima = altura;
+            while (altura > 0f)
+            {
+                altura += m.ActualizarVertical(false, false, Dt, AlturaSalto, Gravedad);
+                maxima = Mathf.Max(maxima, altura);
+            }
+            Assert.AreEqual(AlturaSalto, maxima, AlturaSalto * 0.05f, "El retardo no cambia la altura");
+        }
+
         [Test]
         public void Reiniciar_DespuesDeCorrerYSaltar_DejaTodoEnCero()
         {
             MovimientoAPie m = new MovimientoAPie();
             Horizontal(m, Vector2.up, true, true, 1f);
-            m.ActualizarVertical(true, true, Dt, AlturaSalto, Gravedad);
+            Despegar(m, out _); // T-1550: el impulso sale 0.1 s después de pedir el salto
             m.Reiniciar();
             Assert.AreEqual(Vector2.zero, m.VelocidadHorizontal);
             Assert.AreEqual(0f, m.VelocidadVertical);

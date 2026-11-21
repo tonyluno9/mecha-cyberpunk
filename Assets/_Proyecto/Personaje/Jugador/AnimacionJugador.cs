@@ -126,9 +126,9 @@ namespace MechaCyberpunk.Personaje.Jugador
             {
                 return;
             }
-            // T-1505: el estado Caminar del jugador mezcla por Velocidad caminar (1.6) -> trote (4.5); Correr es el sprint (7.25). La rapidez sigue esa mezcla
+            // T-1505: el estado Caminar del jugador mezcla por Velocidad caminar (1.62) -> trote (4.53); Correr es la velocidad rápida, PJ01_CorrerRapido (6.25; T-1550). La rapidez sigue esa mezcla
             // (ConstructorControladorBase.ClipsSoloJugador) y queda entre 0.85 y 1.15.
-            visual.ConfigurarClipsDireccionales(ReglasAnimacion.VelocidadPJ01Trote, ReglasAnimacion.VelocidadPJ01Sprint,
+            visual.ConfigurarClipsDireccionales(ReglasAnimacion.VelocidadPJ01Trote, ReglasAnimacion.VelocidadPJ01CorrerRapido,
                 ReglasAnimacion.VelocidadPJ01TroteAtras, ReglasAnimacion.VelocidadPJ01TroteLado, ReglasAnimacion.RapidezMinimaJugador, ReglasAnimacion.RapidezMaximaJugador);
             visual.ConfigurarMezclaLenta(ReglasAnimacion.VelocidadPJ01Caminar, ReglasAnimacion.VelocidadPJ01CaminarAtras, ReglasAnimacion.VelocidadPJ01CaminarLado,
                 ReglasAnimacion.VelocidadPJ01Caminar, ReglasAnimacion.VelocidadPJ01Trote);

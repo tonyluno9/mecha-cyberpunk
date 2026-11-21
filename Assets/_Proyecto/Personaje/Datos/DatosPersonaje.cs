@@ -9,11 +9,11 @@ namespace MechaCyberpunk.Personaje
         [Tooltip("Vida máxima del jugador a pie (puntos).")]
         [Min(1f)] [SerializeField] private float vidaMaxima = 100f;
 
-        [Tooltip("Velocidad al caminar (m/s).")]
-        [Min(0.1f)] [SerializeField] private float velocidadCaminar = 4.5f;
+        [Tooltip("Velocidad al caminar con WASD (m/s). T-1550 (decisión de Tony del 20-nov): ≈1.6, la de PJ01_Caminar (1.62; antes 4.5).")]
+        [Min(0.1f)] [SerializeField] private float velocidadCaminar = Visual.ReglasAnimacion.VelocidadPJ01Caminar;
 
-        [Tooltip("Velocidad al correr (m/s).")]
-        [Min(0.1f)] [SerializeField] private float velocidadCorrer = 7.5f;
+        [Tooltip("Velocidad al correr con Shift (m/s). T-1550 (decisión de Tony del 20-nov): ≈4.5, la de PJ01_Trote (4.53; antes 7.5). La velocidad rápida de implantes y consumibles sube a 6.25 (PJ01_CorrerRapido).")]
+        [Min(0.1f)] [SerializeField] private float velocidadCorrer = Visual.ReglasAnimacion.VelocidadPJ01Trote;
 
         [Tooltip("Altura máxima del salto (m).")]
         [Min(0.1f)] [SerializeField] private float alturaSalto = 0.45f;

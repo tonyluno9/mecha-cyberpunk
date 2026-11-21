@@ -268,12 +268,12 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return Asentar();
             Press(teclado.wKey);
             yield return Esperar(1.0f);
-            Assert.AreEqual("PJ01_Trote", ClipBase()); // T-1505: el paso normal del jugador es el trote
+            Assert.AreEqual("PJ01_Caminar", ClipBase()); // T-1550 (decisión de Tony del 20-nov (T-1550)): WASD es PJ01_Caminar
             Fotos("caminar-sin-implante");
             implantes.Poner(EspacioImplante.Piernas, 2);
             implantes.Poner(EspacioImplante.Brazos, 2);
             yield return Asentar();
-            Assert.AreEqual("PJ01_Correr_ConImplante", ClipBase());
+            Assert.AreEqual("PJ01_Caminar_ConImplante", ClipBase()); // T-1550: caminando con implante, el clip lento con implante
             Fotos("caminar-con-implante");
             Press(teclado.leftShiftKey);
             yield return Esperar(1.6f);
@@ -282,7 +282,7 @@ namespace MechaCyberpunk.Tests.Personaje
             implantes.Poner(EspacioImplante.Piernas, 0);
             implantes.Poner(EspacioImplante.Brazos, 0);
             yield return Asentar();
-            Assert.AreEqual("PJ01_Sprint", ClipBase());
+            Assert.AreEqual("PJ01_Trote", ClipBase()); // T-1550: con Shift sin implante, el trote (PJ01_Sprint ya no se usa)
             Fotos("correr-sin-implante");
             Release(teclado.leftShiftKey);
             Release(teclado.wKey);

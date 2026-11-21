@@ -276,6 +276,10 @@ namespace MechaCyberpunk.Personaje.Movimiento
                 apuntando = false;
                 QuiereApuntar = false;
                 movimiento.Reiniciar();
+                if (visualBloqueo != null)
+                {
+                    visualBloqueo.PreparandoSalto = false;
+                }
                 // T-728: el CharacterController guarda la velocidad del último Move. Sin esto el visual del jugador seguía "caminando" quieto durante una
                 // cinemática (lee controlador.velocity): un Move en cero la deja en cero y el muñeco queda en reposo.
                 if (controlador != null && controlador.enabled && controlador.gameObject.activeInHierarchy)
@@ -355,11 +359,18 @@ namespace MechaCyberpunk.Personaje.Movimiento
             pasosPorAnimacion = receptorPasos != null && receptorPasos.ClipActivoTienePasos();
             Vector2 velocidad = movimiento.ActualizarHorizontal(entrada, quiereCorrer,
                 enPiso, dt, ReglaCaminarLento.VelocidadCaminar(CaminandoLento, datos.VelocidadCaminar) * (Habilidades != null ? Habilidades.FactorCaminar : 1f),
-                EfectosAPie.VelocidadCorrer(datos, implantes.Efectos) * (Habilidades != null ? Habilidades.FactorCorrer : 1f), config.AceleracionPiso, config.FrenadoPiso, config.ControlAire);
+                // T-1550: Shift trota a 4.5; con velocidad rápida (implante, habilidad o consumible) la carrera es de 6.25 m/s o más (PJ01_CorrerRapido).
+                ReglaVelocidadRapida.VelocidadCorrer(datos.VelocidadCorrer, implantes.Efectos.multiplicadorCorrer, Habilidades != null ? Habilidades.FactorCorrer : 1f, FactorExtraVelocidad),
+                config.AceleracionPiso, config.FrenadoPiso, config.ControlAire);
             bool quiereSaltar = !SaltoBloqueado && !bloqueadoAnim && saltar.action.WasPressedThisFrame();
             float vertical = movimiento.ActualizarVertical(enPiso, quiereSaltar, dt,
                 EfectosAPie.AlturaSalto(datos, implantes.Efectos) * (Habilidades != null ? Habilidades.FactorSalto : 1f), config.Gravedad);
-            if (enPiso && quiereSaltar && vertical > 0f)
+            // T-1550: el impulso sale 0.1 s después de pedir el salto (decisión de Tony del 20-nov: despega en el cuadro 4 del clip); la animación arranca al pedirlo (PreparandoSalto).
+            if (visualBloqueo != null)
+            {
+                visualBloqueo.PreparandoSalto = movimiento.PreparandoSalto || movimiento.DespegoEsteFrame;
+            }
+            if (enPiso && movimiento.DespegoEsteFrame)
             {
                 Sonidos.Reproducir(VozJugador.Id("JUG_SALTO"));
                 saltoSuper = Habilidades != null && Habilidades.FactorSalto > 1f; // T-1535: con las piernas activas el salto es súper
