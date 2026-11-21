@@ -1,0 +1,290 @@
+== Referencia: C:/Users/Angel Perez/Desktop/videojuego/mecha-cyberpunk/Assets/Arte/Audio (138 archivos)
+== Recortes del 19-nov regenerados desde la fuente: 38 archivos, iguales byte a byte a Assets: 38, distintos: 0, sin comparar: 0
+== Comparacion: IGNORADO 4, IGUAL 104, NUEVO 121, RENOMBRADO 5, SE QUITO 2
+== ya movido: 02_Armas/ARM_W07_DISPARO.wav
+== ya movido: 02_Armas/ARM_W07_RAYO_LOOP.wav
+== ya movido: 02_Armas/ARM_W07_GATILLO.wav
+== ya movido: 02_Armas/ARM_W07_SIN_ENERGIA.wav
+== ya movido: 11_Nova/NOV_CAIDA_Y_ENCENDIDO.wav
+== Importacion
+  00_Sin_nombre_ponselo_tu/percusion_cumbia.wav -> 18_Radio_Musica/RAD_EST1_CUMBIA_PERCUSION [NUEVO] 10.00 s 44100 Hz 2 canales PCM 24bit
+    -> 18_Radio_Musica/RAD_EST1_CUMBIA_PERCUSION: 10.00 s, 1722 KB, pico -1.0 dB, RMS -16.9 dB | loop ritmico: sin crossfade; empalme medido (salto 0.0 sigma, nivel -4.7 dB)
+       empalme final: salto 0.0 sigma (prediccion 0.0), nivel -4.7 dB
+  00_Sin_nombre_ponselo_tu/tele_reiniciando.mp3 -> 14_Ambiente/OBJ_TELE_REINICIO [NUEVO] 7.22 s 24000 Hz 2 canales mp3
+    -> 14_Ambiente/OBJ_TELE_REINICIO: 7.22 s, 338 KB, pico -24.8 dB, RMS -36.7 dB | 
+  00_Sin_nombre_ponselo_tu/zumbido_refrigerador.wav -> 14_Ambiente/OBJ_REFRIGERADOR [NUEVO] 52.79 s 44100 Hz 2 canales PCM 24bit
+    -> 14_Ambiente/OBJ_REFRIGERADOR: 52.75 s, 4543 KB, pico -32.3 dB, RMS -46.1 dB | bordes flojos recortados (inicio 0.00 s, final 0.04 s); empalme ya limpio (salto 0.0 sigma, nivel -1.3 dB): sin cambios
+       empalme final: salto 0.0 sigma (prediccion 0.5), nivel -1.3 dB
+  02_Armas/ARM_SIN_BALAS.wav -> 02_Armas/ARM_SIN_BALAS [NUEVO] 0.19 s 44100 Hz 2 canales PCM 24bit
+    -> 02_Armas/ARM_SIN_BALAS: 0.19 s, 16 KB, pico -1.0 dB, RMS -19.6 dB | 
+  02_Armas/ARM_W06_MECANICA_01.wav -> 02_Armas/ARM_W06_MECANICA_01 [NUEVO] 0.33 s 96000 Hz 2 canales PCM 24bit
+    -> 02_Armas/ARM_W06_MECANICA_01: 0.33 s, 31 KB, pico -9.1 dB, RMS -26.3 dB | 
+  02_Armas/ARM_W06_MECANICA_02.wav -> 02_Armas/ARM_W06_MECANICA_02 [NUEVO] 0.20 s 96000 Hz 2 canales PCM 24bit
+    -> 02_Armas/ARM_W06_MECANICA_02: 0.20 s, 19 KB, pico -0.2 dB, RMS -19.4 dB | 
+  02_Armas/ARM_W06_MECANICA_03.wav -> 02_Armas/ARM_W06_MECANICA_03 [NUEVO] 0.15 s 96000 Hz 2 canales PCM 24bit
+    -> 02_Armas/ARM_W06_MECANICA_03: 0.15 s, 14 KB, pico -0.5 dB, RMS -23.0 dB | 
+  02_Armas/ARM_W06_MECANICA_04.wav -> 02_Armas/ARM_W06_MECANICA_04 [NUEVO] 0.57 s 96000 Hz 2 canales PCM 24bit
+    -> 02_Armas/ARM_W06_MECANICA_04: 0.57 s, 53 KB, pico -0.2 dB, RMS -23.7 dB | 
+  02_Armas/ARM_W06_MECANICA_05.wav -> 02_Armas/ARM_W06_MECANICA_05 [NUEVO] 0.22 s 96000 Hz 2 canales PCM 24bit
+    -> 02_Armas/ARM_W06_MECANICA_05: 0.22 s, 20 KB, pico -1.0 dB, RMS -26.1 dB | 
+  02_Armas/ARM_W07_DISPARO.wav -> 02_Armas/ARM_W07_DISPARO [RENOMBRADO] 1.42 s 96000 Hz 2 canales PCM 24bit
+    plasma ARM_W07_DISPARO: encaja -> ataque rapido (0.15 s) y cuerpo corto: sirve para el disparo al terminar la carga [dur 1.42 s, pico -6.6 dB a 0.15 s, activo(-20 dB) 0.05-1.00 s, cuartos -15, -15, -14, -41 dB, centroide 4352 Hz]
+  02_Armas/ARM_W07_ENFRIAR.wav -> 02_Armas/ARM_W07_ENFRIAR [NUEVO] 1.50 s 48000 Hz 2 canales PCM 24bit
+    plasma ARM_W07_ENFRIAR: encaja -> siseo de vapor que decae (centroide 9513 Hz, -18 a -56 dB): sirve para enfriar [dur 1.50 s, pico -13.1 dB a 0.15 s, activo(-20 dB) 0.05-0.75 s, cuartos -18, -24, -37, -56 dB, centroide 9513 Hz]
+    -> 02_Armas/ARM_W07_ENFRIAR: 1.50 s, 140 KB, pico -3.2 dB, RMS -21.1 dB | 
+  02_Armas/ARM_W07_GATILLO.wav -> 02_Armas/ARM_W07_GATILLO [RENOMBRADO] 1.21 s 96000 Hz 2 canales PCM 24bit
+    plasma ARM_W07_GATILLO: encaja -> golpe corto que decae (1.21 s, pico a 0.10 s); algo largo para un clic de gatillo [dur 1.21 s, pico -3.5 dB a 0.10 s, activo(-20 dB) 0.05-0.65 s, cuartos -15, -15, -25, -50 dB, centroide 7449 Hz]
+  02_Armas/ARM_W07_RAYO_CAPA_EXTRA.wav -> 02_Armas/ARM_W07_RAYO_CAPA_EXTRA [NUEVO] 10.55 s 96000 Hz 2 canales PCM 24bit
+    plasma ARM_W07_RAYO_CAPA_EXTRA: encaja -> capa estable y larga (10.5 s, 6383 Hz de centroide, muy brillante): capa extra del rayo [dur 10.55 s, pico -6.6 dB a 3.80 s, activo(-20 dB) 0.00-10.50 s, cuartos -8, -8, -8, -8 dB, centroide 6383 Hz]
+    -> 02_Armas/ARM_W07_RAYO_CAPA_EXTRA: 10.50 s, 984 KB, pico -3.2 dB, RMS -7.5 dB | bordes flojos recortados (inicio 0.00 s, final 0.05 s); empalme ya limpio (salto 0.0 sigma, nivel +0.8 dB): sin cambios
+       empalme final: salto 0.0 sigma (prediccion 0.1), nivel +0.8 dB
+  02_Armas/ARM_W07_RAYO_LOOP.wav -> 02_Armas/ARM_W07_RAYO_LOOP [RENOMBRADO] 3.64 s 96000 Hz 2 canales PCM 24bit
+  02_Armas/ARM_W07_SIN_ENERGIA.wav -> 02_Armas/ARM_W07_SIN_ENERGIA [RENOMBRADO] 1.02 s 96000 Hz 2 canales PCM 24bit
+    plasma ARM_W07_SIN_ENERGIA: encaja con reservas -> golpe grave corto que decae (1.02 s): suena mas a 'boom' que a clic seco [dur 1.02 s, pico -7.1 dB a 0.00 s, activo(-20 dB) 0.00-0.70 s, cuartos -9, -15, -22, -42 dB, centroide 5254 Hz]
+  02_Armas/ARM_W08_DISPARO.wav -> 02_Armas/ARM_W08_DISPARO [NUEVO] 1.19 s 96000 Hz 2 canales extensible 24bit
+    -> 02_Armas/ARM_W08_DISPARO: 1.19 s, 111 KB, pico -1.0 dB, RMS -17.1 dB | 
+  02_Armas/CAS_CHICO_01.wav -> 02_Armas/CAS_CHICO_01 [NUEVO] 0.90 s 96000 Hz 2 canales PCM 24bit
+    -> 02_Armas/CAS_CHICO_01: 0.90 s, 84 KB, pico -0.2 dB, RMS -34.3 dB | 
+  02_Armas/CAS_CHICO_02.wav -> 02_Armas/CAS_CHICO_02 [NUEVO] 0.67 s 96000 Hz 2 canales PCM 24bit
+    -> 02_Armas/CAS_CHICO_02: 0.67 s, 62 KB, pico -2.8 dB, RMS -29.7 dB | 
+  02_Armas/CAS_GRANDE_01.wav -> 02_Armas/CAS_GRANDE_01 [NUEVO] 0.78 s 96000 Hz 2 canales PCM 24bit
+    -> 02_Armas/CAS_GRANDE_01: 0.78 s, 73 KB, pico -1.1 dB, RMS -34.2 dB | 
+  02_Armas/IMP_MISILES_LANZAR.wav -> 02_Armas/IMP_MISILES_LANZAR [NUEVO] 2.46 s 96000 Hz 2 canales PCM 24bit
+    -> 02_Armas/IMP_MISILES_LANZAR: 2.46 s, 230 KB, pico -4.0 dB, RMS -25.7 dB | 
+  04_Explosiones/DES_CRISTAL_VENTANA.wav -> 04_Explosiones/DES_CRISTAL_VENTANA [NUEVO] 2.42 s 192000 Hz 2 canales PCM 24bit
+    -> 04_Explosiones/DES_CRISTAL_VENTANA: 2.42 s, 227 KB, pico -3.0 dB, RMS -28.2 dB | 
+  04_Explosiones/EXP_BARRIL.wav -> 04_Explosiones/EXP_BARRIL [NUEVO] 7.05 s 48000 Hz 2 canales PCM 16bit
+    -> 04_Explosiones/EXP_BARRIL: 7.05 s, 661 KB, pico -0.7 dB, RMS -18.6 dB | 
+  04_Explosiones/EXP_CARRO.wav -> 04_Explosiones/EXP_CARRO [NUEVO] 7.97 s 96000 Hz 2 canales PCM 24bit
+    -> 04_Explosiones/EXP_CARRO: 7.97 s, 747 KB, pico -1.6 dB, RMS -16.1 dB | 
+  04_Explosiones/EXP_CRISTALES.wav -> 04_Explosiones/EXP_CRISTALES [NUEVO] 3.89 s 96000 Hz 2 canales PCM 24bit
+    -> 04_Explosiones/EXP_CRISTALES: 3.89 s, 365 KB, pico -1.7 dB, RMS -22.2 dB | 
+  04_Explosiones/EXP_DRON_ROBOT.wav -> 04_Explosiones/EXP_DRON_ROBOT [NUEVO] 1.89 s 44100 Hz 2 canales PCM 24bit
+    -> 04_Explosiones/EXP_DRON_ROBOT: 1.89 s, 162 KB, pico -1.3 dB, RMS -16.4 dB | 
+  04_Explosiones/EXP_ESCOMBROS.wav -> 04_Explosiones/EXP_ESCOMBROS [NUEVO] 1.53 s 96000 Hz 2 canales PCM 24bit
+    -> 04_Explosiones/EXP_ESCOMBROS: 1.53 s, 143 KB, pico -1.1 dB, RMS -23.4 dB | 
+  04_Explosiones/EXP_NAVE.wav -> 04_Explosiones/EXP_NAVE [NUEVO] 5.55 s 44100 Hz 2 canales PCM 24bit
+    -> 04_Explosiones/EXP_NAVE: 5.55 s, 478 KB, pico -1.3 dB, RMS -12.7 dB | 
+  04_Explosiones/FUE_ENCENDER.wav -> 04_Explosiones/FUE_ENCENDER [NUEVO] 1.99 s 96000 Hz 2 canales PCM 24bit
+    -> 04_Explosiones/FUE_ENCENDER: 1.99 s, 186 KB, pico -0.5 dB, RMS -17.0 dB | 
+  04_Explosiones/FUE_LOOP_GRANDE.wav -> 04_Explosiones/FUE_LOOP_GRANDE [NUEVO] 145.66 s 44100 Hz 2 canales PCM 24bit
+    -> 04_Explosiones/FUE_LOOP_GRANDE: 27.91 s, 2404 KB, pico -9.5 dB, RMS -24.2 dB | ventana mas estable de 28.0 s tomada de 51.2 s; crossfade 120 ms (lineal, parecido 0.66), largo 28.20 s -> 27.91 s | empalme antes: salto 13.0 sigma, nivel -0.4 dB; despues: salto 0.7 sigma, nivel +0.3 dB
+       empalme final: salto 0.7 sigma (prediccion 1.0), nivel +0.3 dB
+  06_Jugador/JUG_LATIDO_VIDA_BAJA.wav -> 06_Jugador/JUG_LATIDO_VIDA_BAJA [NUEVO] 4.25 s 44100 Hz 2 canales PCM 24bit
+    -> 06_Jugador/JUG_LATIDO_VIDA_BAJA: 4.25 s, 366 KB, pico -1.0 dB, RMS -15.5 dB | 
+  06_Jugador/JUG_ROPA_ROCE.wav -> 06_Jugador/JUG_ROPA_ROCE [NUEVO] 1.36 s 192000 Hz 2 canales PCM 24bit
+    -> 06_Jugador/JUG_ROPA_ROCE: 1.36 s, 127 KB, pico -6.0 dB, RMS -32.6 dB | 
+  06_Jugador/JUG_ZUMBIDO_EXPLOSION.wav -> 06_Jugador/JUG_ZUMBIDO_EXPLOSION [NUEVO] 8.09 s 44100 Hz 1 canales PCM 24bit
+    -> 06_Jugador/JUG_ZUMBIDO_EXPLOSION: 8.09 s, 697 KB, pico -6.4 dB, RMS -12.5 dB | 
+  06_Jugador/MEL_BLOQUEO.wav -> 06_Jugador/MEL_BLOQUEO [NUEVO] 0.26 s 44100 Hz 1 canales PCM 24bit
+    -> 06_Jugador/MEL_BLOQUEO: 0.26 s, 22 KB, pico -0.3 dB, RMS -11.8 dB | 
+  06_Jugador/MEL_GOLPE_METAL.wav -> 06_Jugador/MEL_GOLPE_METAL [NUEVO] 0.52 s 96000 Hz 2 canales PCM 24bit
+    -> 06_Jugador/MEL_GOLPE_METAL: 0.52 s, 48 KB, pico -0.8 dB, RMS -18.7 dB | 
+  07_Interaccion/INT_RECOGER_DINERO.wav -> 07_Interaccion/INT_RECOGER_DINERO [NUEVO] 0.75 s 96000 Hz 2 canales extensible 24bit
+    -> 07_Interaccion/INT_RECOGER_DINERO: 0.75 s, 70 KB, pico -1.5 dB, RMS -19.3 dB | 
+  08_Consumibles/CON_PAPITAS_ABRIR.wav -> 08_Consumibles/CON_PAPITAS_ABRIR [NUEVO] 0.98 s 96000 Hz 2 canales PCM 24bit
+    -> 08_Consumibles/CON_PAPITAS_ABRIR: 0.98 s, 91 KB, pico -0.7 dB, RMS -27.6 dB | 
+  09_Vehiculos/RAD_CAMBIAR_ESTACION.wav -> 09_Vehiculos/RAD_CAMBIAR_ESTACION [NUEVO] 0.61 s 96000 Hz 2 canales PCM 24bit
+    -> 09_Vehiculos/RAD_CAMBIAR_ESTACION: 0.61 s, 57 KB, pico -3.5 dB, RMS -21.3 dB | 
+  10_Policia/AMB_SIRENA_LOOP.wav -> 10_Policia/AMB_SIRENA_LOOP [NUEVO] 60.76 s 96000 Hz 2 canales PCM 24bit
+    -> 10_Policia/AMB_SIRENA_LOOP: 55.25 s, 5179 KB, pico -13.3 dB, RMS -27.1 dB | bordes flojos recortados (inicio 0.00 s, final 0.16 s); crossfade 120 ms (lineal, parecido 1.00), largo 60.60 s -> 55.25 s | empalme antes: salto 0.1 sigma, nivel -9.2 dB; despues: salto 0.1 sigma, nivel -13.0 dB
+       empalme final: salto 0.1 sigma (prediccion 0.0), nivel -13.0 dB
+  10_Policia/NAV_DANIADA.wav -> 10_Policia/NAV_DANIADA [NUEVO] 3.17 s 48000 Hz 2 canales PCM 24bit
+    -> 10_Policia/NAV_DANIADA: 3.17 s, 296 KB, pico -1.0 dB, RMS -13.9 dB | 
+  10_Policia/NAV_REFLECTOR.mp3 -> 10_Policia/NAV_REFLECTOR [NUEVO] 3.89 s 24000 Hz 2 canales mp3
+    -> 10_Policia/NAV_REFLECTOR: 3.89 s, 182 KB, pico -3.3 dB, RMS -30.8 dB | 
+  10_Policia/NAV_ROTORES_LOOP.wav -> 10_Policia/NAV_ROTORES_LOOP [NUEVO] 59.61 s 48000 Hz 1 canales PCM 16bit
+    -> 10_Policia/NAV_ROTORES_LOOP: 59.60 s, 5587 KB, pico -0.2 dB, RMS -15.5 dB | bordes flojos recortados (inicio 0.00 s, final 0.00 s); empalme ya limpio (salto 3.3 sigma, nivel +2.9 dB): sin cambios
+       empalme final: salto 3.3 sigma (prediccion 3.8), nivel +2.9 dB
+  10_Policia/POL_ESTRELLA_SUBE.wav -> 10_Policia/POL_ESTRELLA_SUBE [NUEVO] 0.87 s 96000 Hz 2 canales PCM 24bit
+    -> 10_Policia/POL_ESTRELLA_SUBE: 0.87 s, 81 KB, pico -5.3 dB, RMS -22.9 dB | 
+  10_Policia/POL_RADIO_AVISO_05.wav -> 10_Policia/POL_RADIO_AVISO_05 [NUEVO] 4.90 s 48000 Hz 1 canales PCM 24bit
+    -> 10_Policia/POL_RADIO_AVISO_05: 4.90 s, 459 KB, pico -5.8 dB, RMS -22.2 dB | 
+  10_Policia/POL_RADIO_ESTATICA.wav -> 10_Policia/POL_RADIO_ESTATICA [NUEVO] 8.04 s 96000 Hz 2 canales PCM 24bit
+    -> 10_Policia/POL_RADIO_ESTATICA: 8.04 s, 753 KB, pico -6.0 dB, RMS -18.5 dB | fade-out 8 ms
+  10_Policia/POL_SIRENA_MURO.wav -> 10_Policia/POL_SIRENA_MURO [NUEVO] 14.96 s 44100 Hz 2 canales PCM 24bit
+    -> 10_Policia/POL_SIRENA_MURO: 14.20 s, 1223 KB, pico -2.0 dB, RMS -14.5 dB | bordes flojos recortados (inicio 0.25 s, final 0.51 s); empalme ya limpio (salto 0.2 sigma, nivel -1.8 dB): sin cambios
+       empalme final: salto 0.2 sigma (prediccion 0.3), nivel -1.8 dB
+  11_Nova/NOV_ARMADURA_MOVER.wav -> 11_Nova/NOV_ARMADURA_MOVER [NUEVO] 0.52 s 96000 Hz 2 canales PCM 24bit
+    -> 11_Nova/NOV_ARMADURA_MOVER: 0.52 s, 48 KB, pico -0.5 dB, RMS -13.9 dB | 
+  11_Nova/NOV_CAIDA_Y_ENCENDIDO.wav -> 11_Nova/NOV_CAIDA_Y_ENCENDIDO [RENOMBRADO] 2.13 s 44100 Hz 2 canales PCM 24bit
+  11_Nova/NOV_ESCUDO_ACTIVAR.wav -> 11_Nova/NOV_ESCUDO_ACTIVAR [NUEVO] 0.99 s 96000 Hz 2 canales extensible 24bit
+    -> 11_Nova/NOV_ESCUDO_ACTIVAR: 0.99 s, 92 KB, pico -1.1 dB, RMS -17.2 dB | 
+  11_Nova/NOV_ESCUDO_IMPACTO.wav -> 11_Nova/NOV_ESCUDO_IMPACTO [NUEVO] 0.60 s 96000 Hz 2 canales PCM 24bit
+    -> 11_Nova/NOV_ESCUDO_IMPACTO: 0.60 s, 56 KB, pico -1.1 dB, RMS -18.0 dB | 
+  11_Nova/NOV_JETPACK_LOOP.wav -> 11_Nova/NOV_JETPACK_LOOP [NUEVO] 52.46 s 96000 Hz 2 canales PCM 24bit
+    -> 11_Nova/NOV_JETPACK_LOOP: 14.93 s, 1399 KB, pico -3.9 dB, RMS -11.5 dB | ventana mas estable de 16.0 s tomada de 0.0 s; crossfade 120 ms (potencia constante, parecido 0.39), largo 16.20 s -> 14.93 s | empalme antes: salto 4.0 sigma, nivel -1.2 dB; despues: salto 2.2 sigma, nivel -0.8 dB
+       empalme final: salto 2.2 sigma (prediccion 0.0), nivel -0.8 dB
+  11_Nova/NOV_PASOS_CAMINAR_01.wav -> 11_Nova/NOV_PASOS_CAMINAR_01 [NUEVO] 0.31 s 48000 Hz 2 canales PCM 24bit
+    -> 11_Nova/NOV_PASOS_CAMINAR_01: 0.31 s, 29 KB, pico -1.1 dB, RMS -14.5 dB | 
+  11_Nova/NOV_PASOS_CAMINAR_02.wav -> 11_Nova/NOV_PASOS_CAMINAR_02 [NUEVO] 0.31 s 48000 Hz 2 canales PCM 24bit
+    -> 11_Nova/NOV_PASOS_CAMINAR_02: 0.31 s, 29 KB, pico -1.1 dB, RMS -13.8 dB | 
+  11_Nova/NOV_PASOS_CAMINAR_03.wav -> 11_Nova/NOV_PASOS_CAMINAR_03 [NUEVO] 0.31 s 48000 Hz 2 canales PCM 24bit
+    -> 11_Nova/NOV_PASOS_CAMINAR_03: 0.31 s, 29 KB, pico -1.1 dB, RMS -14.5 dB | 
+  11_Nova/NOV_PASOS_CAMINAR_04.wav -> 11_Nova/NOV_PASOS_CAMINAR_04 [NUEVO] 0.31 s 48000 Hz 2 canales PCM 24bit
+    -> 11_Nova/NOV_PASOS_CAMINAR_04: 0.31 s, 29 KB, pico -1.0 dB, RMS -14.6 dB | 
+  11_Nova/NOV_PASOS_CAMINAR_05.wav -> 11_Nova/NOV_PASOS_CAMINAR_05 [NUEVO] 0.31 s 48000 Hz 2 canales PCM 24bit
+    -> 11_Nova/NOV_PASOS_CAMINAR_05: 0.31 s, 29 KB, pico -1.4 dB, RMS -13.8 dB | 
+  11_Nova/NOV_PASOS_CAMINAR_06.wav -> 11_Nova/NOV_PASOS_CAMINAR_06 [NUEVO] 0.31 s 48000 Hz 2 canales PCM 24bit
+    -> 11_Nova/NOV_PASOS_CAMINAR_06: 0.31 s, 29 KB, pico -1.4 dB, RMS -13.8 dB | 
+  11_Nova/NOV_PASOS_CAMINAR_07.wav -> 11_Nova/NOV_PASOS_CAMINAR_07 [NUEVO] 0.31 s 48000 Hz 2 canales PCM 24bit
+    -> 11_Nova/NOV_PASOS_CAMINAR_07: 0.31 s, 29 KB, pico -1.2 dB, RMS -14.6 dB | 
+  11_Nova/NOV_PASOS_CAMINAR_08.wav -> 11_Nova/NOV_PASOS_CAMINAR_08 [NUEVO] 0.31 s 48000 Hz 2 canales PCM 24bit
+    -> 11_Nova/NOV_PASOS_CAMINAR_08: 0.31 s, 29 KB, pico -1.3 dB, RMS -14.3 dB | 
+  11_Nova/NOV_PASOS_CAMINAR_09.wav -> 11_Nova/NOV_PASOS_CAMINAR_09 [NUEVO] 0.31 s 48000 Hz 2 canales PCM 24bit
+    -> 11_Nova/NOV_PASOS_CAMINAR_09: 0.31 s, 29 KB, pico -1.2 dB, RMS -14.3 dB | 
+  11_Nova/NOV_PASOS_CAMINAR_10.wav -> 11_Nova/NOV_PASOS_CAMINAR_10 [NUEVO] 0.58 s 48000 Hz 2 canales PCM 24bit
+    -> 11_Nova/NOV_PASOS_CAMINAR_10: 0.58 s, 54 KB, pico -1.9 dB, RMS -17.4 dB | 
+  11_Nova/NOV_PASOS_CAMINAR_11.wav -> 11_Nova/NOV_PASOS_CAMINAR_11 [NUEVO] 0.58 s 48000 Hz 2 canales PCM 24bit
+    -> 11_Nova/NOV_PASOS_CAMINAR_11: 0.58 s, 54 KB, pico -1.4 dB, RMS -16.7 dB | 
+  11_Nova/NOV_PASOS_CAMINAR_12.wav -> 11_Nova/NOV_PASOS_CAMINAR_12 [NUEVO] 0.56 s 48000 Hz 2 canales PCM 24bit
+    -> 11_Nova/NOV_PASOS_CAMINAR_12: 0.56 s, 52 KB, pico -1.0 dB, RMS -22.8 dB | 
+  11_Nova/NOV_PASOS_CORRER_01.wav -> 11_Nova/NOV_PASOS_CORRER_01 [NUEVO] 0.30 s 48000 Hz 2 canales PCM 24bit
+    -> 11_Nova/NOV_PASOS_CORRER_01: 0.30 s, 27 KB, pico -1.1 dB, RMS -13.6 dB | 
+  11_Nova/NOV_PASOS_CORRER_02.wav -> 11_Nova/NOV_PASOS_CORRER_02 [NUEVO] 0.30 s 48000 Hz 2 canales PCM 24bit
+    -> 11_Nova/NOV_PASOS_CORRER_02: 0.30 s, 28 KB, pico -1.4 dB, RMS -13.7 dB | 
+  11_Nova/NOV_PASOS_CORRER_03.wav -> 11_Nova/NOV_PASOS_CORRER_03 [NUEVO] 0.30 s 48000 Hz 2 canales PCM 24bit
+    -> 11_Nova/NOV_PASOS_CORRER_03: 0.30 s, 28 KB, pico -1.2 dB, RMS -14.5 dB | 
+  11_Nova/NOV_PASOS_CORRER_04.wav -> 11_Nova/NOV_PASOS_CORRER_04 [NUEVO] 0.30 s 48000 Hz 2 canales PCM 24bit
+    -> 11_Nova/NOV_PASOS_CORRER_04: 0.30 s, 28 KB, pico -1.3 dB, RMS -14.2 dB | 
+  11_Nova/NOV_PASOS_CORRER_05.wav -> 11_Nova/NOV_PASOS_CORRER_05 [NUEVO] 0.30 s 48000 Hz 2 canales PCM 24bit
+    -> 11_Nova/NOV_PASOS_CORRER_05: 0.30 s, 28 KB, pico -1.1 dB, RMS -14.5 dB | 
+  11_Nova/NOV_PASOS_CORRER_06.wav -> 11_Nova/NOV_PASOS_CORRER_06 [NUEVO] 0.30 s 48000 Hz 2 canales PCM 24bit
+    -> 11_Nova/NOV_PASOS_CORRER_06: 0.30 s, 28 KB, pico -1.4 dB, RMS -13.7 dB | 
+  11_Nova/NOV_PASOS_CORRER_07.wav -> 11_Nova/NOV_PASOS_CORRER_07 [NUEVO] 0.30 s 48000 Hz 2 canales PCM 24bit
+    -> 11_Nova/NOV_PASOS_CORRER_07: 0.30 s, 28 KB, pico -1.0 dB, RMS -14.5 dB | 
+  11_Nova/NOV_PASOS_CORRER_08.wav -> 11_Nova/NOV_PASOS_CORRER_08 [NUEVO] 0.30 s 48000 Hz 2 canales PCM 24bit
+    -> 11_Nova/NOV_PASOS_CORRER_08: 0.30 s, 28 KB, pico -1.1 dB, RMS -14.3 dB | 
+  11_Nova/NOV_PASOS_CORRER_09.wav -> 11_Nova/NOV_PASOS_CORRER_09 [NUEVO] 0.34 s 48000 Hz 2 canales PCM 24bit
+    -> 11_Nova/NOV_PASOS_CORRER_09: 0.34 s, 32 KB, pico -1.5 dB, RMS -12.9 dB | 
+  11_Nova/NOV_PASOS_CORRER_10.wav -> 11_Nova/NOV_PASOS_CORRER_10 [NUEVO] 0.34 s 48000 Hz 2 canales PCM 24bit
+    -> 11_Nova/NOV_PASOS_CORRER_10: 0.34 s, 31 KB, pico -1.5 dB, RMS -13.8 dB | 
+  12_NPCs/NPC_H_DOLOR.wav -> 12_NPCs/NPC_H_DOLOR [NUEVO] 0.38 s 96000 Hz 2 canales PCM 24bit
+    -> 12_NPCs/NPC_H_DOLOR: 0.38 s, 36 KB, pico -1.0 dB, RMS -12.9 dB | 
+  12_NPCs/NPC_M_DOLOR.wav -> 12_NPCs/NPC_M_DOLOR [NUEVO] 0.33 s 44100 Hz 2 canales PCM 24bit
+    -> 12_NPCs/NPC_M_DOLOR: 0.33 s, 28 KB, pico -1.0 dB, RMS -13.7 dB | 
+  13_Robots/DRN_PES_AMETRALLADORA.wav -> 13_Robots/DRN_PES_AMETRALLADORA [NUEVO] 0.45 s 44100 Hz 2 canales PCM 16bit
+    -> 13_Robots/DRN_PES_AMETRALLADORA: 0.45 s, 38 KB, pico -2.4 dB, RMS -11.2 dB | 
+  13_Robots/ROB_CHISPAS_DANIO.wav -> 13_Robots/ROB_CHISPAS_DANIO [NUEVO] 3.10 s 96000 Hz 2 canales PCM 24bit
+    -> 13_Robots/ROB_CHISPAS_DANIO: 3.10 s, 290 KB, pico -1.5 dB, RMS -21.5 dB | 
+  13_Robots/ROB_ENCENDER.wav -> 13_Robots/ROB_ENCENDER [NUEVO] 2.50 s 44100 Hz 2 canales PCM 16bit
+    -> 13_Robots/ROB_ENCENDER: 2.50 s, 215 KB, pico -6.8 dB, RMS -29.2 dB | 
+  13_Robots/ROB_MUERTE.wav -> 13_Robots/ROB_MUERTE [NUEVO] 5.12 s 96000 Hz 2 canales PCM 24bit
+    -> 13_Robots/ROB_MUERTE: 1.00 s, 93 KB, pico -6.7 dB, RMS -27.2 dB | solo el primer segundo (1.00 s), fade-out 60 ms (LEEME)
+  13_Robots/ROB_PERRO_GRUNIDO.wav -> 13_Robots/ROB_PERRO_GRUNIDO [NUEVO] 2.00 s 44100 Hz 2 canales PCM 24bit
+    -> 13_Robots/ROB_PERRO_GRUNIDO: 2.00 s, 172 KB, pico -1.0 dB, RMS -15.8 dB | 
+  13_Robots/ROB_PERRO_MOVER.wav -> 13_Robots/ROB_PERRO_MOVER [NUEVO] 1.77 s 44100 Hz 2 canales PCM 24bit
+    -> 13_Robots/ROB_PERRO_MOVER: 1.77 s, 152 KB, pico -2.1 dB, RMS -24.2 dB | 
+  13_Robots/ROB_PES_HIDRAULICA.wav -> 13_Robots/ROB_PES_HIDRAULICA [NUEVO] 4.62 s 44100 Hz 2 canales PCM 24bit
+    -> 13_Robots/ROB_PES_HIDRAULICA: 4.62 s, 398 KB, pico -1.9 dB, RMS -24.8 dB | 
+  13_Robots/ROB_PES_LLEGADA_01.wav -> 13_Robots/ROB_PES_LLEGADA_01 [NUEVO] 7.66 s 44100 Hz 2 canales PCM 24bit
+    -> 13_Robots/ROB_PES_LLEGADA_01: 7.66 s, 659 KB, pico -1.6 dB, RMS -17.7 dB | 
+  13_Robots/ROB_PES_LLEGADA_02.wav -> 13_Robots/ROB_PES_LLEGADA_02 [NUEVO] 2.43 s 44100 Hz 2 canales PCM 24bit
+    -> 13_Robots/ROB_PES_LLEGADA_02: 2.43 s, 209 KB, pico -1.0 dB, RMS -7.8 dB | 
+  13_Robots/ROB_PES_PLACA_CAE.wav -> 13_Robots/ROB_PES_PLACA_CAE [NUEVO] 5.11 s 96000 Hz 2 canales PCM 24bit
+    -> 13_Robots/ROB_PES_PLACA_CAE: 5.11 s, 479 KB, pico -0.4 dB, RMS -18.1 dB | 
+  13_Robots/ROB_SERVOS.wav -> 13_Robots/ROB_SERVOS [NUEVO] 0.75 s 44100 Hz 2 canales PCM 16bit
+    -> 13_Robots/ROB_SERVOS: 0.75 s, 64 KB, pico -8.9 dB, RMS -23.8 dB | 
+  13_Robots/ROB_VOZ_ALERTA.wav -> 13_Robots/ROB_VOZ_ALERTA [NUEVO] 7.68 s 44100 Hz 2 canales PCM 24bit
+    -> 13_Robots/ROB_VOZ_ALERTA: 7.68 s, 661 KB, pico -0.2 dB, RMS -17.0 dB | 
+  14_Ambiente/AMB_AZOTEA_CIUDAD.wav -> 14_Ambiente/AMB_AZOTEA_CIUDAD [NUEVO] 152.00 s 44100 Hz 2 canales PCM 24bit
+    -> 14_Ambiente/AMB_AZOTEA_CIUDAD: 152.00 s, 13092 KB, pico -13.5 dB, RMS -33.5 dB | bordes flojos recortados (inicio 0.00 s, final 0.00 s); empalme ya limpio (salto 0.1 sigma, nivel +1.0 dB): sin cambios
+       empalme final: salto 0.1 sigma (prediccion 0.5), nivel +1.0 dB
+  14_Ambiente/AMB_LOMAS.mp3 -> 14_Ambiente/AMB_LOMAS [NUEVO] 54.98 s 24000 Hz 2 canales mp3
+    -> 14_Ambiente/AMB_LOMAS: 52.85 s, 2477 KB, pico -30.3 dB, RMS -49.6 dB | bordes flojos recortados (inicio 0.05 s, final 0.03 s); crossfade 120 ms (potencia constante, parecido 0.55), largo 54.90 s -> 52.85 s | empalme antes: salto 0.1 sigma, nivel +15.1 dB; despues: salto 0.9 sigma, nivel +2.0 dB
+       empalme final: salto 0.9 sigma (prediccion 1.5), nivel +2.0 dB
+  14_Ambiente/AMB_NOVA.wav -> 14_Ambiente/AMB_NOVA [NUEVO] 102.70 s 96000 Hz 2 canales PCM 24bit
+    -> 14_Ambiente/AMB_NOVA: 100.59 s, 9430 KB, pico -1.7 dB, RMS -15.6 dB | bordes flojos recortados (inicio 0.20 s, final 1.50 s); crossfade 120 ms (lineal, parecido 0.92), largo 101.00 s -> 100.59 s | empalme antes: salto 16.4 sigma, nivel -3.7 dB; despues: salto 0.0 sigma, nivel -4.2 dB
+       empalme final: salto 0.0 sigma (prediccion 0.0), nivel -4.2 dB
+  14_Ambiente/AMB_SUBURBIOS_NOCHE.wav -> 14_Ambiente/AMB_SUBURBIOS_NOCHE [NUEVO] 70.24 s 44100 Hz 2 canales PCM 24bit
+    -> 14_Ambiente/AMB_SUBURBIOS_NOCHE: 70.20 s, 6046 KB, pico -30.6 dB, RMS -43.7 dB | bordes flojos recortados (inicio 0.00 s, final 0.04 s); empalme ya limpio (salto 0.3 sigma, nivel -1.5 dB): sin cambios
+       empalme final: salto 0.3 sigma (prediccion 0.2), nivel -1.5 dB
+  14_Ambiente/CLI_LLUVIA_DENTRO_CARRO.wav -> 14_Ambiente/CLI_LLUVIA_DENTRO_CARRO [NUEVO] 15.43 s 48000 Hz 2 canales extensible 24bit
+    -> 14_Ambiente/CLI_LLUVIA_DENTRO_CARRO: 15.40 s, 1443 KB, pico -3.1 dB, RMS -23.1 dB | bordes flojos recortados (inicio 0.00 s, final 0.03 s); empalme ya limpio (salto 0.3 sigma, nivel +1.6 dB): sin cambios
+       empalme final: salto 0.3 sigma (prediccion 0.3), nivel +1.6 dB
+  14_Ambiente/CLI_LLUVIA_FUERTE.wav -> 14_Ambiente/CLI_LLUVIA_FUERTE [NUEVO] 120.48 s 96000 Hz 2 canales PCM 24bit
+    -> 14_Ambiente/CLI_LLUVIA_FUERTE: 119.20 s, 11175 KB, pico -2.5 dB, RMS -20.8 dB | bordes flojos recortados (inicio 0.25 s, final 1.03 s); empalme ya limpio (salto 0.2 sigma, nivel -0.6 dB): sin cambios
+       empalme final: salto 0.2 sigma (prediccion 0.4), nivel -0.6 dB
+  14_Ambiente/CLI_LLUVIA_SOBRE_LAMINA.wav -> 14_Ambiente/CLI_LLUVIA_SOBRE_LAMINA [NUEVO] 30.00 s 48000 Hz 2 canales PCM 24bit
+    -> 14_Ambiente/CLI_LLUVIA_SOBRE_LAMINA: 27.05 s, 2536 KB, pico -3.2 dB, RMS -24.4 dB | bordes flojos recortados (inicio 0.00 s, final 0.05 s); crossfade 120 ms (potencia constante, parecido 0.18), largo 29.95 s -> 27.05 s | empalme antes: salto 0.1 sigma, nivel +5.3 dB; despues: salto 0.3 sigma, nivel +2.0 dB
+       empalme final: salto 0.3 sigma (prediccion 0.6), nivel +2.0 dB
+  14_Ambiente/CLI_TORMENTA_TRUENOS.wav -> 14_Ambiente/CLI_TORMENTA_TRUENOS [NUEVO] 51.75 s 44100 Hz 2 canales PCM 16bit
+    -> 14_Ambiente/CLI_TORMENTA_TRUENOS: 46.87 s, 4036 KB, pico -2.2 dB, RMS -28.2 dB | bordes flojos recortados (inicio 0.15 s, final 1.00 s); crossfade 120 ms (potencia constante, parecido 0.23), largo 50.60 s -> 46.87 s | empalme antes: salto 0.1 sigma, nivel -9.3 dB; despues: salto 0.6 sigma, nivel +0.1 dB
+       empalme final: salto 0.6 sigma (prediccion 0.4), nivel +0.1 dB
+  14_Ambiente/CLI_VIENTO.wav -> 14_Ambiente/CLI_VIENTO [NUEVO] 45.17 s 44100 Hz 2 canales PCM 24bit
+    -> 14_Ambiente/CLI_VIENTO: 45.15 s, 3888 KB, pico -28.7 dB, RMS -43.5 dB | bordes flojos recortados (inicio 0.00 s, final 0.02 s); empalme ya limpio (salto 0.2 sigma, nivel -1.6 dB): sin cambios
+       empalme final: salto 0.2 sigma (prediccion 1.6), nivel -1.6 dB
+  14_Ambiente/INT_ARMERIA_VENTILADOR.wav -> 14_Ambiente/INT_ARMERIA_VENTILADOR [NUEVO] 18.11 s 44100 Hz 2 canales PCM 24bit
+    -> 14_Ambiente/INT_ARMERIA_VENTILADOR: 17.98 s, 1548 KB, pico -5.2 dB, RMS -15.9 dB | bordes flojos recortados (inicio 0.00 s, final 0.01 s); crossfade 120 ms (lineal, parecido 0.96), largo 18.10 s -> 17.98 s | empalme antes: salto 90.1 sigma, nivel +1.0 dB; despues: salto 0.7 sigma, nivel +0.8 dB
+       empalme final: salto 0.7 sigma (prediccion 0.2), nivel +0.8 dB
+  14_Ambiente/INT_BODEGA_GOTERAS.wav -> 14_Ambiente/INT_BODEGA_GOTERAS [NUEVO] 30.36 s 96000 Hz 2 canales PCM 24bit
+    -> 14_Ambiente/INT_BODEGA_GOTERAS: 24.43 s, 2290 KB, pico -22.6 dB, RMS -50.7 dB | bordes flojos recortados (inicio 0.60 s, final 1.50 s); crossfade 120 ms (potencia constante, parecido 0.45), largo 28.26 s -> 24.43 s | empalme antes: salto 0.1 sigma, nivel -10.2 dB; despues: salto 0.5 sigma, nivel +0.1 dB
+       empalme final: salto 0.5 sigma (prediccion 0.1), nivel +0.1 dB
+  14_Ambiente/INT_TALLER_CANEPA.mp3 -> 14_Ambiente/INT_TALLER_CANEPA [NUEVO] 165.07 s 48000 Hz 2 canales mp3
+    -> 14_Ambiente/INT_TALLER_CANEPA: 163.45 s, 15323 KB, pico -1.3 dB, RMS -27.9 dB | bordes flojos recortados (inicio 0.35 s, final 0.97 s); crossfade 120 ms (potencia constante, parecido 0.11), largo 163.75 s -> 163.45 s | empalme antes: salto 0.1 sigma, nivel -14.9 dB; despues: salto 0.1 sigma, nivel -6.6 dB
+       empalme final: salto 0.1 sigma (prediccion 0.1), nivel -6.6 dB
+  14_Ambiente/INT_TIENDA_TINO_RADIO.wav -> 14_Ambiente/INT_TIENDA_TINO_RADIO [NUEVO] 6.48 s 48000 Hz 2 canales PCM 24bit
+    -> 14_Ambiente/INT_TIENDA_TINO_RADIO: 4.74 s, 444 KB, pico -0.2 dB, RMS -18.0 dB | bordes flojos recortados (inicio 0.00 s, final 0.28 s); crossfade 120 ms (potencia constante, parecido 0.23), largo 6.20 s -> 4.74 s | empalme antes: salto 2.1 sigma, nivel -7.1 dB; despues: salto 0.1 sigma, nivel +5.3 dB
+       empalme final: salto 0.1 sigma (prediccion 0.1), nivel +5.3 dB
+  14_Ambiente/INT_TIENDA_TINO_VENTILADOR.wav -> 14_Ambiente/INT_TIENDA_TINO_VENTILADOR [NUEVO] 4.02 s 48000 Hz 2 canales PCM 24bit
+    -> 14_Ambiente/INT_TIENDA_TINO_VENTILADOR: 4.00 s, 374 KB, pico -0.5 dB, RMS -17.7 dB | bordes flojos recortados (inicio 0.00 s, final 0.02 s); empalme ya limpio (salto 0.2 sigma, nivel -0.6 dB): sin cambios
+       empalme final: salto 0.2 sigma (prediccion 0.0), nivel -0.6 dB
+  14_Ambiente/OBJ_AIRE_ACONDICIONADO.wav -> 14_Ambiente/OBJ_AIRE_ACONDICIONADO [NUEVO] 26.00 s 44100 Hz 2 canales PCM 24bit
+    -> 14_Ambiente/OBJ_AIRE_ACONDICIONADO: 25.95 s, 2235 KB, pico -3.2 dB, RMS -17.1 dB | bordes flojos recortados (inicio 0.00 s, final 0.05 s); empalme ya limpio (salto 0.4 sigma, nivel +0.5 dB): sin cambios
+       empalme final: salto 0.4 sigma (prediccion 0.2), nivel +0.5 dB
+  14_Ambiente/OBJ_CAMARA_SEGURIDAD.wav -> 14_Ambiente/OBJ_CAMARA_SEGURIDAD [NUEVO] 1.29 s 44100 Hz 1 canales PCM 24bit
+    -> 14_Ambiente/OBJ_CAMARA_SEGURIDAD: 1.25 s, 107 KB, pico -33.7 dB, RMS -46.8 dB | bordes flojos recortados (inicio 0.00 s, final 0.04 s); empalme ya limpio (salto 0.8 sigma, nivel -1.2 dB): sin cambios
+       empalme final: salto 0.8 sigma (prediccion 0.5), nivel -1.2 dB
+  14_Ambiente/OBJ_MAQUINA_EXPENDEDORA.wav -> 14_Ambiente/OBJ_MAQUINA_EXPENDEDORA [NUEVO] 1.16 s 96000 Hz 2 canales PCM 24bit
+    -> 14_Ambiente/OBJ_MAQUINA_EXPENDEDORA: 1.16 s, 108 KB, pico -2.2 dB, RMS -22.6 dB | el audio decae a silencio (no tiene cuerpo estable): se deja como evento, loop=n
+  14_Ambiente/OBJ_TRANSFORMADOR.wav -> 14_Ambiente/OBJ_TRANSFORMADOR [NUEVO] 50.37 s 44100 Hz 1 canales PCM 24bit
+    -> 14_Ambiente/OBJ_TRANSFORMADOR: 50.35 s, 4336 KB, pico -1.0 dB, RMS -11.0 dB | bordes flojos recortados (inicio 0.00 s, final 0.02 s); empalme ya limpio (salto 0.2 sigma, nivel +0.3 dB): sin cambios
+       empalme final: salto 0.2 sigma (prediccion 0.7), nivel +0.3 dB
+  15_Exo_Implantes/EXO_ESCUDO_GOLPE.wav -> 15_Exo_Implantes/EXO_ESCUDO_GOLPE [NUEVO] 0.55 s 44100 Hz 2 canales PCM 24bit
+    -> 15_Exo_Implantes/EXO_ESCUDO_GOLPE: 0.55 s, 47 KB, pico -1.8 dB, RMS -17.8 dB | 
+  15_Exo_Implantes/EXO_PIERNAS_SALTO_SUPER.wav -> 15_Exo_Implantes/EXO_PIERNAS_SALTO_SUPER [NUEVO] 0.22 s 44100 Hz 2 canales PCM 16bit
+    -> 15_Exo_Implantes/EXO_PIERNAS_SALTO_SUPER: 0.22 s, 18 KB, pico -5.8 dB, RMS -22.8 dB | 
+  15_Exo_Implantes/EXO_PUESTO_LOOP_01.wav -> 15_Exo_Implantes/EXO_PUESTO_LOOP_01 [NUEVO] 2.12 s 44100 Hz 2 canales PCM 24bit
+    -> 15_Exo_Implantes/EXO_PUESTO_LOOP_01: 2.12 s, 183 KB, pico -9.3 dB, RMS -29.6 dB | el audio decae a silencio (no tiene cuerpo estable): se deja como evento, loop=n
+  15_Exo_Implantes/EXO_PUESTO_LOOP_02.wav -> 15_Exo_Implantes/EXO_PUESTO_LOOP_02 [NUEVO] 0.84 s 44100 Hz 2 canales PCM 24bit
+    -> 15_Exo_Implantes/EXO_PUESTO_LOOP_02: 0.84 s, 72 KB, pico -5.2 dB, RMS -28.9 dB | el audio decae a silencio (no tiene cuerpo estable): se deja como evento, loop=n
+  15_Exo_Implantes/EXO_RUEDA_CAMARA_LENTA.wav -> 15_Exo_Implantes/EXO_RUEDA_CAMARA_LENTA [NUEVO] 3.49 s 96000 Hz 2 canales extensible 24bit
+    -> 15_Exo_Implantes/EXO_RUEDA_CAMARA_LENTA_ENTRAR: 2.00 s, 375 KB, pico -1.0 dB, RMS -15.8 dB | primeros 2.00 s (entrada a camara lenta)
+    -> 15_Exo_Implantes/EXO_RUEDA_CAMARA_LENTA_SALIR: 1.49 s, 279 KB, pico -3.4 dB, RMS -28.5 dB | de 2.00 s hasta que baja de -60 dB (1.49 s). El ultimo segundo literal (2.49-3.49 s) ya esta casi en silencio (-41 a -57 dB) y perderia la caida, por eso se parte en 2.0 s
+  15_Exo_Implantes/EXO_SERVOS_CAMINAR.wav -> 15_Exo_Implantes/EXO_SERVOS_CAMINAR [NUEVO] 1.59 s 44100 Hz 1 canales PCM 24bit
+    -> 15_Exo_Implantes/EXO_SERVOS_CAMINAR: 1.59 s, 137 KB, pico -10.7 dB, RMS -27.0 dB | 
+  15_Exo_Implantes/EXO_VISOR_ACTIVAR.wav -> 15_Exo_Implantes/EXO_VISOR_ACTIVAR [NUEVO] 0.90 s 96000 Hz 2 canales PCM 24bit
+    -> 15_Exo_Implantes/EXO_VISOR_ACTIVAR: 0.90 s, 84 KB, pico -4.4 dB, RMS -27.1 dB | fade-out 8 ms
+  15_Exo_Implantes/IMP_INSTALAR_TALADRO.mp3 -> 15_Exo_Implantes/IMP_INSTALAR_TALADRO [NUEVO] 6.90 s 44100 Hz 1 canales mp3
+    -> 15_Exo_Implantes/IMP_INSTALAR_TALADRO: 6.90 s, 594 KB, pico -7.3 dB, RMS -23.6 dB | 
+  15_Exo_Implantes/IMP_SINAPSIS_01.wav -> 15_Exo_Implantes/IMP_SINAPSIS_01 [NUEVO] 0.46 s 44100 Hz 2 canales PCM 24bit
+    -> 15_Exo_Implantes/IMP_SINAPSIS_01: 0.46 s, 40 KB, pico -21.5 dB, RMS -34.2 dB | 
+  15_Exo_Implantes/IMP_SINAPSIS_02.wav -> 15_Exo_Implantes/IMP_SINAPSIS_02 [NUEVO] 0.23 s 44100 Hz 2 canales PCM 24bit
+    -> 15_Exo_Implantes/IMP_SINAPSIS_02: 0.23 s, 20 KB, pico -1.0 dB, RMS -11.4 dB | 
+  16_Casino/CAS_CARTAS_BARAJAR_01.wav -> 16_Casino/CAS_CARTAS_BARAJAR_01 [NUEVO] 0.72 s 96000 Hz 2 canales PCM 24bit
+    -> 16_Casino/CAS_CARTAS_BARAJAR_01: 0.72 s, 67 KB, pico -0.9 dB, RMS -19.4 dB | 
+  16_Casino/CAS_CARTAS_BARAJAR_02.wav -> 16_Casino/CAS_CARTAS_BARAJAR_02 [NUEVO] 0.55 s 96000 Hz 2 canales PCM 24bit
+    -> 16_Casino/CAS_CARTAS_BARAJAR_02: 0.55 s, 51 KB, pico -2.4 dB, RMS -23.1 dB | 
+  16_Casino/CAS_CARTAS_REPARTIR.wav -> 16_Casino/CAS_CARTAS_REPARTIR [NUEVO] 2.90 s 44100 Hz 1 canales PCM 16bit
+    -> 16_Casino/CAS_CARTAS_REPARTIR: 2.90 s, 250 KB, pico -2.7 dB, RMS -32.6 dB | 
+  16_Casino/CAS_FICHAS.wav -> 16_Casino/CAS_FICHAS [NUEVO] 0.60 s 44100 Hz 2 canales PCM 24bit
+    -> 16_Casino/CAS_FICHAS: 0.60 s, 51 KB, pico -1.0 dB, RMS -28.2 dB | 
+  16_Casino/CAS_PREMIO_CHICO.wav -> 16_Casino/CAS_PREMIO_CHICO [NUEVO] 0.89 s 44100 Hz 2 canales PCM 24bit
+    -> 16_Casino/CAS_PREMIO_CHICO: 0.89 s, 76 KB, pico -1.3 dB, RMS -11.4 dB | 
+  16_Casino/CAS_PREMIO_GRANDE.wav -> 16_Casino/CAS_PREMIO_GRANDE [NUEVO] 2.76 s 44100 Hz 2 canales PCM 24bit
+    -> 16_Casino/CAS_PREMIO_GRANDE: 2.76 s, 237 KB, pico -1.5 dB, RMS -16.6 dB | 
+  16_Casino/CAS_RULETA_GIRA.wav -> 16_Casino/CAS_RULETA_GIRA [NUEVO] 27.97 s 44100 Hz 2 canales PCM 24bit
+    -> 16_Casino/CAS_RULETA_GIRA: 27.97 s, 2409 KB, pico -14.8 dB, RMS -39.5 dB | el audio decae a silencio (no tiene cuerpo estable): se deja como evento, loop=n
+  16_Casino/CAS_TRAGAMONEDAS.wav -> 16_Casino/CAS_TRAGAMONEDAS [NUEVO] 5.14 s 96000 Hz 2 canales PCM 24bit
+    -> 16_Casino/CAS_TRAGAMONEDAS: 5.14 s, 482 KB, pico -4.7 dB, RMS -17.1 dB | fade-out 8 ms
+  17_Misiones_HUD/HUD_MENSAJE_CELULAR.wav -> 17_Misiones_HUD/HUD_MENSAJE_CELULAR [NUEVO] 1.46 s 44100 Hz 2 canales PCM 16bit
+    -> 17_Misiones_HUD/HUD_MENSAJE_CELULAR: 1.46 s, 251 KB, pico -3.7 dB, RMS -28.5 dB | 
+  17_Misiones_HUD/MIS_TEMPORIZADOR.wav -> 17_Misiones_HUD/MIS_TEMPORIZADOR [NUEVO] 1.82 s 96000 Hz 2 canales PCM 24bit
+    -> 17_Misiones_HUD/MIS_TEMPORIZADOR: 1.82 s, 342 KB, pico -0.5 dB, RMS -30.3 dB | 
+  17_Misiones_HUD/PAN_ARRESTADO_ESPOSAS.wav -> 17_Misiones_HUD/PAN_ARRESTADO_ESPOSAS [NUEVO] 0.73 s 96000 Hz 2 canales PCM 24bit
+    -> 17_Misiones_HUD/PAN_ARRESTADO_ESPOSAS: 0.73 s, 136 KB, pico -1.7 dB, RMS -24.7 dB | 
+  17_Misiones_HUD/PAN_HAS_MUERTO.wav -> 17_Misiones_HUD/PAN_HAS_MUERTO [NUEVO] 4.25 s 44100 Hz 2 canales PCM 24bit
+    -> 17_Misiones_HUD/PAN_HAS_MUERTO: 4.25 s, 732 KB, pico -1.0 dB, RMS -15.5 dB | 
+    plasma ARM_W07_RAYO_LOOP: encaja -> nivel estable (-12, -8, -9, -11 dB por cuartos): cuerpo de rayo para loop [dur 3.64 s, pico -6.0 dB a 0.15 s, activo(-20 dB) 0.05-3.60 s, cuartos -12, -8, -9, -11 dB, centroide 1674 Hz]
+    -> 02_Armas/ARM_W07_RAYO_LOOP: reescrito en su sitio como loop limpio (mono, 48000 Hz, 3.10 s): crossfade 120 ms (potencia constante, parecido 0.36), largo 3.55 s -> 3.10 s | empalme antes: salto 0.0 sigma, nivel +4.6 dB; despues: salto 0.2 sigma, nivel +1.2 dB
+== ids-20nov.csv: 260 filas
