@@ -418,6 +418,7 @@ namespace MechaCyberpunk.UI.Mapa
                 if (lugar != null && CatalogoDestinosMapa.Posicion(lugar.Id, out Vector3 sitio))
                 {
                     PuntoMarcadoMapa.AlternarDestino(lugar.Id, sitio);
+                    Sonidos.Reproducir("UI_SELECCIONAR"); // T-1535
                     return;
                 }
                 Vector2 marcado = GeometriaBarrio.AMapa(PuntoMarcadoMapa.Posicion) * pixelesPorMetro;
@@ -428,6 +429,7 @@ namespace MechaCyberpunk.UI.Mapa
                 else
                 {
                     PuntoMarcadoMapa.Marcar(GeometriaBarrio.AMundo(local / pixelesPorMetro));
+                    Sonidos.Reproducir("UI_SELECCIONAR"); // T-1535: poner un marcador (LEEME 20-nov: UI_MARCADOR = UI_SELECCIONAR)
                 }
             }
         }

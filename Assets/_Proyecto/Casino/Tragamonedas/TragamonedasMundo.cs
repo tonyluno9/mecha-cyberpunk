@@ -35,6 +35,10 @@ namespace MechaCyberpunk.Casino.Tragamonedas
         [SerializeField] private string textoGanaste = "GANASTE {0} FICHAS";
         [SerializeField] private string textoPerdiste = "SUERTE LA PRÓXIMA";
         [SerializeField] private string textoListo = "APUESTA {0} FICHAS";
+        [Min(1)] [Tooltip("T-1535: un premio de tantas apuestas o más suena como premio grande (×).")]
+        [SerializeField] private int vecesApuestaPremioGrande = ReglaSonidoTragamonedas.VecesApuestaPremioGrande;
+        [Min(0f)] [Tooltip("T-1535: lo que se espera tras parar los carretes para que suene el premio, para no pisar el final del sonido del giro (s).")]
+        [SerializeField] private float segundosHastaPremio = 3f;
         [Min(0f)] [SerializeField] private float intensidadNeonQuieto = 1.5f;
         [Min(0f)] [SerializeField] private float intensidadNeonGirando = 4f;
         [Min(0.1f)] [SerializeField] private float frecuenciaNeonGirando = 12f;
@@ -140,6 +144,7 @@ namespace MechaCyberpunk.Casino.Tragamonedas
             premioEnCurso = calculo.Pago(simbolosEnCurso, Apuesta);
             premioPagado = false;
             girando = true;
+            Sonidos.ReproducirEn(ReglaSonidoTragamonedas.Giro, transform.position); // T-1535
             StartCoroutine(Girar());
         }
 
@@ -177,6 +182,14 @@ namespace MechaCyberpunk.Casino.Tragamonedas
                 yield return null;
             }
             TerminarGiro();
+            // T-1535: el premio suena cuando el sonido del giro (5 s) está por acabar; si ya hubo otro giro, no.
+            int giro = GirosCobrados;
+            yield return new WaitForSeconds(segundosHastaPremio);
+            string sonidoPremio = ReglaSonidoTragamonedas.Premio(UltimoPremio, Apuesta, vecesApuestaPremioGrande);
+            if (sonidoPremio != null && giro == GirosCobrados)
+            {
+                Sonidos.ReproducirEn(sonidoPremio, transform.position);
+            }
         }
 
         private void TerminarGiro()

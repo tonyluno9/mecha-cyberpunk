@@ -241,6 +241,10 @@ namespace MechaCyberpunk.Personaje.Vida
                 quemadura.Prender(info.Punto); // T-691: una explosión te prende fuego
             }
             ResultadoDanio resultado = new ResultadoDanio(aplicado, TipoBloqueo.Ninguno, modelo.EstaKO);
+            if (info.Tipo == TipoDanio.Explosion && aplicado > 0f)
+            {
+                Sonidos.Reproducir(ReglaSonidoVida.ZumbidoOido); // T-1535: el pitido en el oído tras una explosión que te alcanza
+            }
             EventosPelea.PublicarImpacto(null, info, resultado);
             Sonidos.ReproducirEn(VozJugador.Id("JUG_DANIO"), transform.position);
             return resultado;
@@ -272,6 +276,11 @@ namespace MechaCyberpunk.Personaje.Vida
         {
             AplicarVidaMaxima(); // T-1529: las prótesis de ataque se tienen al llevarlas en el inventario (compra, carga): se revisa cada cuadro
             modelo?.Avanzar(Time.deltaTime);
+            if (modelo != null && ReglaSonidoVida.TocaLatido(modelo.Actual, modelo.Maxima, FraccionVidaBaja, modelo.EstaKO, Time.time, ultimoLatido))
+            {
+                ultimoLatido = Time.time;
+                Sonidos.Reproducir(ReglaSonidoVida.Latido); // T-1535: el corazón con la vida baja
+            }
         }
 
         private void LateUpdate()
@@ -293,6 +302,7 @@ namespace MechaCyberpunk.Personaje.Vida
         public const float FraccionVidaBaja = 0.4f; // T-1492: antes 0.25
         private float vidaAnterior = -1f;
         private bool avisoVidaBaja;
+        private float ultimoLatido = float.NegativeInfinity;
         private bool avisoRegenera;
 
         private void AlCambiar()
