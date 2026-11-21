@@ -214,4 +214,7 @@ Sonnet e integradas, compiladas y probadas por clase en `.sesiones/s2`. Progreso
 10. **Volúmenes viejos contra nuevos**: los ambientes viejos (carpeta AMB/) no se normalizan y los nuevos sí; quedaron empatados a ojo.
 
 ## Builds
-Se agrega al final en `docs/progreso-sonidos-20nov.md`.
+- `Builds/Demo/CyberCity.exe` y `Builds/Juego/CyberCity.exe`, hechos en la carpeta principal desde `main` 6073d8f, uno por uno: los dos con
+  "Build Finished, Result: Success".
+- **Ojo**: la carpeta principal tenía cambios sin guardar del chat de Blender en FBX (PJ01, E16, E18, drones, PA01/PA02), y los builds los llevan.
+- No abrí los .exe.
