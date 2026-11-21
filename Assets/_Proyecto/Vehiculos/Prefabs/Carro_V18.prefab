@@ -179,7 +179,7 @@ Transform:
   m_GameObject: {fileID: 1361393059839960828}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.2853595, y: 0.35, z: -3.675}
+  m_LocalPosition: {x: -1.2853595, y: 0.5000001, z: -3.675}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -211,7 +211,7 @@ Transform:
   m_GameObject: {fileID: 1703705669371926505}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.6388693, y: 0, z: -0.35999998}
+  m_LocalPosition: {x: -3.0674407, y: 0, z: -0.35999998}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -242,7 +242,7 @@ Transform:
   m_GameObject: {fileID: 2133863692817164674}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.2853583, y: 0.35, z: -3.675}
+  m_LocalPosition: {x: 1.2853583, y: 0.5000001, z: -3.675}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1372,7 +1372,7 @@ Transform:
   m_GameObject: {fileID: 4161134859938527398}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.3054327, y: 0.35, z: 4.5825005}
+  m_LocalPosition: {x: 1.3054327, y: 0.5000011, z: 4.5825005}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1404,7 +1404,7 @@ Transform:
   m_GameObject: {fileID: 4176077904460573193}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.3054324, y: 0.35, z: 4.5825005}
+  m_LocalPosition: {x: -1.3054324, y: 0.5000011, z: 4.5825005}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1526,7 +1526,7 @@ Transform:
   m_GameObject: {fileID: 4997178423022715544}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.72110254, y: 2.3538444, z: -0.35999998}
+  m_LocalPosition: {x: -0.72110254, y: 1.8609861, z: -0.35999998}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1679,7 +1679,7 @@ Transform:
   m_GameObject: {fileID: 6249516729441768523}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.3025001, z: 0}
+  m_LocalPosition: {x: 0, y: 0.15249991, z: 0.00000023841858}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1775,7 +1775,7 @@ Transform:
   m_GameObject: {fileID: 6902425577467548719}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.30250105, z: 0}
+  m_LocalPosition: {x: 0.00000011920929, y: 0.15249991, z: -0.00000047683716}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1897,7 +1897,7 @@ Transform:
   m_GameObject: {fileID: 7006180730891392556}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.30250105, z: 0}
+  m_LocalPosition: {x: -0.00000011920929, y: 0.15249991, z: -0.00000047683716}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2238,7 +2238,7 @@ Transform:
   m_GameObject: {fileID: 7477058112263676811}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.3025001, z: 0}
+  m_LocalPosition: {x: 0, y: 0.15249991, z: 0.00000023841858}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2630,7 +2630,7 @@ Transform:
   m_GameObject: {fileID: 8218492072962631560}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.72110254, y: 3.5038443, z: -0.35999998}
+  m_LocalPosition: {x: -0.72110254, y: 3.5038433, z: -0.35999998}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2700,7 +2700,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Carro.CamaraCarro
   config: {fileID: 11400000, guid: aa68fc6c12cf1a74daa79d83d8f49f5d, type: 2}
-  alturaFocoPropia: 2.7851071
+  alturaFocoPropia: 1.9495744
   distanciaAtrasPropia: 8
 --- !u!81 &6507073500933336479
 AudioListener:
@@ -3204,7 +3204,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9104971381492454133}
   serializedVersion: 5
-  m_Mass: 1100
+  m_Mass: 8000
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -3271,8 +3271,8 @@ MonoBehaviour:
   - {fileID: 8236932846488419482}
   - {fileID: 8124579413520298788}
   - {fileID: 33505751287149546}
-  radio: 0.6525001
-  distanciaEjes: 8.257501
+  radio: 0.45674998
+  distanciaEjes: 5.7802496
   anguloParado: 32
   anguloRapido: 12
   velocidadRapida: 16

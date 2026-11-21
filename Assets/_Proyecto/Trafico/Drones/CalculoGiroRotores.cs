@@ -18,5 +18,15 @@ namespace MechaCyberpunk.Trafico.Drones
         {
             return distanciaMaxima <= 0f || distanciaCuadrada <= distanciaMaxima * distanciaMaxima;
         }
-    }
+    
+        /// <summary>T-1554: el eje del disco de un rotor = el eje más delgado del tamaño de su malla (local). Con empate gana Y.</summary>
+        public static UnityEngine.Vector3 EjeDelDisco(UnityEngine.Vector3 tamano)
+        {
+            if (tamano.y <= tamano.x && tamano.y <= tamano.z)
+            {
+                return UnityEngine.Vector3.up;
+            }
+            return tamano.z <= tamano.x ? UnityEngine.Vector3.forward : UnityEngine.Vector3.right;
+        }
+}
 }

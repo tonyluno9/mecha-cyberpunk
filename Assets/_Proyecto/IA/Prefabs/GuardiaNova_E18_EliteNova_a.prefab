@@ -53,13 +53,13 @@ CharacterController:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Height: 2.134
-  m_Radius: 0.35675678
+  m_Height: 2.0758002
+  m_Radius: 0.34702703
   m_SlopeLimit: 45
-  m_StepOffset: 0.35675678
+  m_StepOffset: 0.34702703
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 1.067, z: 0}
+  m_Center: {x: 0, y: 1.0379001, z: 0}
 --- !u!114 &7634085100518340134
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -86,7 +86,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.APie.PandilleroAPie
   datos: {fileID: 11400000, guid: 813b565b3714953418e5eea6c1fb6bf6, type: 2}
   siempreAlerta: 0
-  escalaCuerpo: 1.1891892
+  escalaCuerpo: 1.1567568
   cuerpo: {fileID: 0}
   brazo: {fileID: 0}
   piezasBrazo: []

@@ -14,6 +14,15 @@ namespace MechaCyberpunk.Tests.Trafico
         private static readonly string[] Modelos = DronesT1397.Modelos;
 
         [Test]
+        public void EjeDelDisco_EsElEjeMasDelgadoDeLaMalla()
+        {
+            // T-1554: rotores de Blender (Z arriba) tienen el disco en XY; girar sobre Y los hacía bambolear.
+            Assert.AreEqual(Vector3.forward, CalculoGiroRotores.EjeDelDisco(new Vector3(0.4f, 0.4f, 0.02f)));
+            Assert.AreEqual(Vector3.up, CalculoGiroRotores.EjeDelDisco(new Vector3(0.4f, 0.02f, 0.4f)));
+            Assert.AreEqual(Vector3.right, CalculoGiroRotores.EjeDelDisco(new Vector3(0.02f, 0.4f, 0.4f)));
+        }
+
+        [Test]
         public void CadaPrefab_TieneGiroRotoresYAlMenosUnRotor([ValueSource(nameof(Modelos))] string codigo)
         {
             GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(DronesT1397.RutaPrefab(codigo));
