@@ -16,7 +16,8 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
     /// </summary>
     public class ClipsNpcNovaT1506Pruebas
     {
-        private static string RutaClip(string nombre) => nombre.StartsWith("E17_") ? ClipsNpcNovaT1506.CarpetaPerro + nombre + ".fbx" : ImportadorClipsPJ01.Carpeta + nombre + ".fbx";
+        // T-1553: E16_CaminarEscudo y los E18_* están en la carpeta Clips de su personaje.
+        private static string RutaClip(string nombre) => nombre.StartsWith("E17_") ? ClipsNpcNovaT1506.CarpetaPerro + nombre + ".fbx" : ClipsRobotsNovaT1553.RutaClip(nombre);
 
         private static ModelImporterClipAnimation ClipImportado(string nombre)
         {
@@ -43,7 +44,11 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
                 var importador = (ModelImporter)AssetImporter.GetAtPath(RutaClip(nombre));
                 Assert.IsNotNull(importador, "Falta " + nombre);
                 Assert.AreEqual(ModelImporterAnimationType.Human, importador.animationType, nombre);
-                Assert.AreEqual(ImportadorClipsPJ01.EscalaClips, importador.globalScale, 1e-3f, nombre);
+                // T-1553: los cuatro clips con el rig del propio personaje llevan la escala de su personaje; los demás, la de PJ01.
+                float escala = ClipsRobotsNovaT1553.TieneRigPropio(nombre)
+                    ? ((ModelImporter)AssetImporter.GetAtPath(ClipsRobotsNovaT1553.RutaModeloDe(nombre))).globalScale
+                    : ImportadorClipsPJ01.EscalaClips;
+                Assert.AreEqual(escala, importador.globalScale, 1e-3f, nombre);
                 Assert.AreEqual(nombre, ClipImportado(nombre).name, nombre);
             }
         }
@@ -150,6 +155,10 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
         [TestCase("E15", "Pistola_Disparo", "E15_Disparar")]
         [TestCase("E15", "Pistola_Dano_Frente", "E15_Impacto")]
         [TestCase("E16", "Loco_Caminar", "E16_Caminar")]
+        // T-1553 (decisión de Tony 20-nov): con el escudo arriba (canal ConImplante = 1 en el controlador base) camina con E16_CaminarEscudo, al acercarse o al recibir disparos.
+        [TestCase("E16", "Loco_Caminar_ConImplante", "E16_CaminarEscudo")]
+        [TestCase("E16", "Loco_Correr_ConImplante", "E16_CaminarEscudo")]
+        [TestCase("E16", "Loco_Correr", "E16_Caminar")]
         [TestCase("E16", "Loco_GirarDer", "E16_Girar_Derecha")]
         [TestCase("E16", "Loco_GirarIzq", "E16_Girar_Izquierda")]
         [TestCase("E16", "Pistola_Disparo", "E16_Disparar_Canon")]
@@ -158,6 +167,14 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
         [TestCase("E18", "Pistola_Disparo", "E18_Disparar")]
         [TestCase("E18", "Loco_Caida", "E18_Jetpack_Volar")]
         [TestCase("E18", "Loco_SaltoAterrizaje", "E18_Caida_Aterrizaje")]
+        // T-1553: el E18 no lleva arma; camina, corre y golpea con sus propios clips.
+        [TestCase("E18", "Loco_Caminar", "E18_Caminar")]
+        [TestCase("E18", "Loco_Caminar_ConImplante", "E18_Caminar")]
+        [TestCase("E18", "Loco_Correr", "E18_Correr")]
+        [TestCase("E18", "Loco_Correr_ConImplante", "E18_Correr")]
+        [TestCase("E18", "Punos_GolpeDer", "E18_Golpe_Der")]
+        [TestCase("E18", "Punos_GolpeIzq", "E18_Golpe_Der")]
+        [TestCase("E18", "Punos_Fuerte", "E18_Golpe_Der")]
         [TestCase("Hacker", "Loco_Idle", "NPC_Hacker_Tecleando")]
         public void OverrideExtra_TieneElClipDeSuTipo(string nombre, string clipBase, string esperado)
         {

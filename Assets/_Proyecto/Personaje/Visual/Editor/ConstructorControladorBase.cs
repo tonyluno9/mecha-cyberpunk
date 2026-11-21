@@ -43,7 +43,9 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
                 return limpio;
             }
             string carpeta = nombre.StartsWith(PrefijoClipPJ01) || ClipsNpcNovaT1506.EsClipBlender(nombre) ? CarpetaClipsPJ01 : Carpeta;
-            foreach (string guid in AssetDatabase.FindAssets(nombre + " t:Model", new[] { carpeta }))
+            // T-1553: E16_CaminarEscudo y los E18_* viven en la carpeta Clips de su personaje (siguen siendo clips Blender de Nova).
+            string[] carpetas = ClipsNpcNovaT1506.EsClipBlender(nombre) ? ClipsRobotsNovaT1553.CarpetasDeClips() : new[] { carpeta };
+            foreach (string guid in AssetDatabase.FindAssets(nombre + " t:Model", carpetas))
             {
                 string ruta = AssetDatabase.GUIDToAssetPath(guid);
                 if (Path.GetFileNameWithoutExtension(ruta) != nombre)

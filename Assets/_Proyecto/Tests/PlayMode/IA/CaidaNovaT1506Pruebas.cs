@@ -22,8 +22,13 @@ namespace MechaCyberpunk.Tests
         public void Preparar()
         {
             var config = ScriptableObject.CreateInstance<ConfigClipsNovaNpc>();
-            AnimationClip Clip(string n) => AssetDatabase.LoadAllAssetsAtPath("Assets/Arte/Personajes/PJ01/Clips/" + n + ".fbx") is Object[] todos
-                ? System.Array.Find(todos, o => o is AnimationClip c && c.name == n) as AnimationClip : null;
+            // T-1553: los E18_* viven en la carpeta Clips de su personaje; los NPC_* siguen en PJ01/Clips.
+            AnimationClip Clip(string n)
+            {
+                string carpeta = n.StartsWith("E18_") ? "Assets/Arte/Personajes/E18_EliteNova/Clips/" : "Assets/Arte/Personajes/PJ01/Clips/";
+                return AssetDatabase.LoadAllAssetsAtPath(carpeta + n + ".fbx") is Object[] todos
+                    ? System.Array.Find(todos, o => o is AnimationClip c && c.name == n) as AnimationClip : null;
+            }
             config.Configurar(Clip("E18_Caida_Aire"), Clip("E18_Caida_Aterrizaje"), Clip("E18_Caida_Levantarse"), Clip("NPC_Asustarse"));
             Assert.IsNotNull(config.CaidaAire, "falta E18_Caida_Aire importado");
             ConfigClipsNovaNpc.Forzar(config);

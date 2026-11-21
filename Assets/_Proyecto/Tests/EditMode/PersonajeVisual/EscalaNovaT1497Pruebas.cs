@@ -20,7 +20,8 @@ namespace MechaCyberpunk.Tests
         private const string RutaConfig = "Assets/_Proyecto/IA/Resources/ConfigRespuestaNova.asset";
 
         private static readonly string[] Humanoides = { "E15_CentinelaNova_a", "E15_CentinelaNova_b", "E16_RobotPesadoNova_a", "E18_EliteNova_a" };
-        private static readonly string[] ConArma = { "E15_CentinelaNova_a", "E15_CentinelaNova_b", "E16_RobotPesadoNova_a", "E18_EliteNova_a" };
+        // T-1553 (decisión de Tony 20-nov): el E18 (soldado azul) ya no lleva arma; vuela con el jetpack y pelea a puñetazos.
+        private static readonly string[] ConArma = { "E15_CentinelaNova_a", "E15_CentinelaNova_b", "E16_RobotPesadoNova_a" };
 
         private static float AlturaRenderers(GameObject prefab)
         {
@@ -165,6 +166,19 @@ namespace MechaCyberpunk.Tests
         {
             GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(PersonajesNuevosT1389b.RutaPrefabEnemigo(variante));
             AsegurarW10(prefab, variante);
+        }
+
+        [Test]
+        public void Enemigo_E18_NoLlevaArma_YEscalaNovaNoSeLaVuelveAPoner()
+        {
+            Assert.IsFalse(EscalaNovaT1497.LlevaArma("E18_EliteNova_a"), "decisión de Tony 20-nov");
+            Assert.IsTrue(EscalaNovaT1497.LlevaArma("E15_CentinelaNova_a"));
+            Assert.IsTrue(EscalaNovaT1497.LlevaArma("E16_RobotPesadoNova_a"));
+            Assert.IsTrue(EscalaNovaT1497.LlevaArma(null), "la guardia base de Nova conserva su arma");
+            GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(PersonajesNuevosT1389b.RutaPrefabEnemigo("E18_EliteNova_a"));
+            Assert.IsNotNull(prefab);
+            Transform mano = prefab.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == CreadorVisualTripo.NombreSocket);
+            Assert.IsTrue(mano == null || mano.Find(EscalaNovaT1497.NombreArma) == null, "el E18 no tiene W10 en la mano (corre RobotsNovaT1553.Aplicar)");
         }
 
         [Test]
