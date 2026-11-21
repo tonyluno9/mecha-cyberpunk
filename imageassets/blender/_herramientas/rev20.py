@@ -309,3 +309,136 @@ def deform_sheet(code, lay):
     out = os.path.join(CAP, 'P01_deformacion_%s.png' % code)
     sheet(rows, out)
     return out, miss
+
+
+def set_act(T, name):
+    if not T.animation_data: T.animation_data_create()
+    T.animation_data.action = bpy.data.actions[name]
+    try:
+        sl = T.animation_data.action.slots
+        if len(sl): T.animation_data.action_slot = sl[0]
+    except Exception: pass
+
+def torso_faces(mesh_obj, arm, keys=('Hip','Pelvis','Waist','Spine','Chest','Neck','Head','Clavicle','Shoulder')):
+    """caras del torso/cabeza (vertices con peso dominante en esos huesos)"""
+    me = mesh_obj.data; vg = {g.index: g.name for g in mesh_obj.vertex_groups}
+    good = np.zeros(len(me.vertices), bool)
+    for v in me.vertices:
+        if not v.groups: continue
+        g = max(v.groups, key=lambda x: x.weight)
+        n = vg.get(g.group, '')
+        if any(k.lower() in n.lower() for k in keys) and 'Twist' not in n and 'arm' not in n.lower(): good[v.index] = True
+    return [p.index for p in me.polygons if all(good[i] for i in p.vertices)]
+
+def clip_metrics(T, mesh, act, bones, step=1, torso=None, hand_pts=None):
+    """bones: dict hip, lf, rf (pies), lh, rh (manos). Devuelve metricas en metros/segundos (30 fps)."""
+    from mathutils.bvhtree import BVHTree
+    sc = bpy.context.scene; set_act(T, act)
+    a = bpy.data.actions[act]; f0, f1 = int(a.frame_range[0]), int(a.frame_range[1])
+    W = T.matrix_world
+    def wp(b, tail=False):
+        pb = T.pose.bones[b]; return W @ (pb.tail if tail else pb.head)
+    hip = []; feet = {k: [] for k in ('lf', 'rf')}; toes = {k: [] for k in ('lf', 'rf')}; minz = []; inside = []
+    poses = {}
+    dg = None
+    for f in range(f0, f1 + 1, step):
+        sc.frame_set(f)
+        hip.append(wp(bones['hip']))
+        for k in ('lf', 'rf'):
+            feet[k].append(wp(bones[k])); toes[k].append(wp(bones[k], tail=True))
+        if f == f0 or f == f1:
+            poses[f] = {pb.name: pb.matrix.copy() for pb in T.pose.bones}
+        if mesh is not None and (f - f0) % 2 == 0:
+            dg = bpy.context.evaluated_depsgraph_get(); ev = mesh.evaluated_get(dg); me = ev.to_mesh()
+            n = len(me.vertices); co = np.empty(n * 3, np.float32); me.vertices.foreach_get('co', co); co = co.reshape(-1, 3)
+            M = np.array(mesh.matrix_world); P = co @ M[:3, :3].T + M[:3, 3]
+            minz.append(float(P[:, 2].min()))
+            if torso:
+                bvh = BVHTree.FromPolygons([Vector(p) for p in P], [tuple(me.polygons[i].vertices) for i in torso])
+                worst = 0.0
+                for b in hand_pts or ():
+                    for tail in (False, True):
+                        p = wp(b, tail); hit = bvh.find_nearest(p)
+                        if hit[0] is not None:
+                            d = (p - hit[0]).dot(hit[1])
+                            if d < worst: worst = d
+                inside.append((f, round(-worst, 3)))
+            ev.to_mesh_clear()
+    dur = (f1 - f0) / 30.0
+    dxy = (hip[-1] - hip[0]); dxy.z = 0
+    speed = dxy.length / dur if dur > 0 else 0
+    vz = (hip[-1].z - hip[0].z) / dur if dur > 0 else 0
+    # patinaje: frames de apoyo = pie a menos de 3.5 cm de su altura minima
+    skate = {}
+    for k in ('lf', 'rf'):
+        zs = [min(p.z, q.z) for p, q in zip(feet[k], toes[k])]; zmin = min(zs)
+        best = 0.0; run = []
+        for i, z in enumerate(zs):
+            if z < zmin + 0.035: run.append(i)
+            else:
+                if len(run) >= 3:
+                    pts = [toes[k][j] for j in run]
+                    d = max(((p - pts[0]).to_2d()).length for p in pts); best = max(best, d)
+                run = []
+        if len(run) >= 3:
+            pts = [toes[k][j] for j in run]; best = max(best, max(((p - pts[0]).to_2d()).length for p in pts))
+        skate[k] = round(best * 100, 1)
+    # loop: diferencia de pose primer/ultimo frame (grados, locales sin raiz)
+    loopdeg = None
+    if f0 in poses and f1 in poses:
+        mx = 0.0
+        for n, m0 in poses[f0].items():
+            if n in (bones['hip'], 'BoneRoot'): continue
+            m1 = poses[f1][n]
+            d = math.degrees(m0.to_quaternion().rotation_difference(m1.to_quaternion()).angle)
+            mx = max(mx, d)
+        loopdeg = round(mx, 1)
+    hz0, hz1 = hip[0].z, hip[-1].z
+    return dict(frames='%d-%d' % (f0, f1), dur=round(dur, 2), mps=round(speed, 2), vz=round(vz, 2), dir=[round(dxy.x, 2), round(dxy.y, 2)],
+                loop_deg=loopdeg, loop_hipz_cm=round((hz1 - hz0) * 100, 1), patin_cm=skate,
+                piso_min_cm=round(min(minz) * 100, 1) if minz else None,
+                mano_dentro_cm=round(max([x[1] for x in inside] or [0]) * 100, 1),
+                mano_dentro_frames=[x[0] for x in inside if x[1] > 0.02][:12])
+
+
+def cam_label(text, res, lens=50):
+    cam = bpy.data.objects['_CamRev']
+    t = bpy.data.objects.get('_lblCam')
+    if not t:
+        cu = bpy.data.curves.new('_lblCam', 'FONT'); t = bpy.data.objects.new('_lblCam', cu)
+        bpy.context.scene.collection.objects.link(t); t.data.materials.append(mat('_TextoAmarillo', (1, 0.9, 0.1), 4))
+    t.parent = cam; t.matrix_parent_inverse.identity()
+    if cam.data.type == 'ORTHO':
+        w = cam.data.ortho_scale; d = 1.0
+    else:
+        d = 0.5; big = 36.0 / cam.data.lens * d
+        w = big if res[0] >= res[1] else big * res[0] / res[1]
+    h = w * res[1] / res[0]
+    if cam.data.type == 'ORTHO' and res[1] > res[0]: h = w; w = h * res[0] / res[1]
+    t.data.body = text; t.data.size = w * 0.045
+    t.location = (-w / 2 + w * 0.02, h / 2 - w * 0.06, -d); t.rotation_euler = (0, 0, 0)
+    t.hide_viewport = not bool(text)
+
+def snapL(path, loc, target, label='', lens=50, ortho=None, res=(1280, 720), frame=None):
+    cam('_CamRev', loc, target, lens, ortho)
+    if frame is not None: bpy.context.scene.frame_set(frame)
+    cam_label(label, res, lens)
+    return snap(path, loc, target, lens, ortho, res, None)
+
+def clip_sheet(T, act, out, n=10, views=('lado', 'frente'), hip='Hip', res=(300, 420), dist=3.4, zc=0.95, extra_frames=None, title=''):
+    set_act(T, act); a = bpy.data.actions[act]; f0, f1 = int(a.frame_range[0]), int(a.frame_range[1])
+    fr = extra_frames or sorted(set(int(round(f0 + (f1 - f0) * i / (n - 1))) for i in range(n)))
+    dirs = {'lado': Vector((1, 0, 0.06)), 'frente': Vector((0, -1, 0.08)), 'q': Vector((0.75, -0.65, 0.2)), 'atras': Vector((0, 1, 0.1))}
+    rows = []
+    for v in views:
+        row = []
+        for k, f in enumerate(fr):
+            bpy.context.scene.frame_set(f)
+            hp = T.matrix_world @ T.pose.bones[hip].head
+            tgt = Vector((hp.x, hp.y, zc if zc is not None else hp.z)); loc = tgt + dirs[v].normalized() * dist
+            p = os.path.join(CAP, '_tmp_c_%s_%s_%02d.png' % (act, v, k))
+            lab = ('%s  %s' % (title or act, v) if k == 0 else '') + ('\n' if k == 0 else '') + 'f%d' % f
+            snapL(p, tuple(loc), tuple(tgt), label=lab, lens=50, res=res, frame=f); row.append(p)
+        rows.append(row)
+    cam_label('', res)
+    return sheet(rows, out)

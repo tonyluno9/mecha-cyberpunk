@@ -137,7 +137,7 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             ("Doctor", "NPC", 1.40f, 5.0f),
             ("GuardiaNova", "Guardias", 1.10f, ReglasAnimacion.VelocidadClipCorrerSinImplante), ("E12_GuardiaPesadoNova", "Guardias", 1.10f, ReglasAnimacion.VelocidadClipCorrerSinImplante),
             ("E15_CentinelaNova_a", "E15", 1.10f, 3.60f), ("E15_CentinelaNova_b", "E15", 1.10f, 3.60f),
-            ("E16_RobotPesadoNova_a", "E16", 0.80f, 0.80f),
+            ("E16_RobotPesadoNova_a", "E16", 0.80f, 0.80f), ("E16_RobotPesadoNova_b", "E16", 0.80f, 0.80f),
             ("E18_EliteNova_a", "E18", ReglasAnimacion.VelocidadClipCaminarSinImplante, ReglasAnimacion.VelocidadClipCorrerSinImplante),
             ("Hacker", "Hacker", 0f, 0f),
             ("MeseraRobot", null, 1.20f, 1.20f),

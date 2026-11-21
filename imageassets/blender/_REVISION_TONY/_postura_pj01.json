@@ -1,0 +1,93 @@
+{
+ "hip_de_pie_m": 0.93,
+ "G_Caminar": {
+  "cadera_pct": 96.4,
+  "inclinacion_deg": 4.3,
+  "mano_sobre_pecho_cm": -33.5,
+  "braceo_cm": 37.6,
+  "rodilla_max_deg": 80,
+  "frames_en_aire": 0,
+  "frames": 30
+ },
+ "Loco_Caminar": {
+  "cadera_pct": 96.7,
+  "inclinacion_deg": 3.2,
+  "mano_sobre_pecho_cm": -36.6,
+  "braceo_cm": 34.1,
+  "rodilla_max_deg": 79,
+  "frames_en_aire": 0,
+  "frames": 31
+ },
+ "G_Trote": {
+  "cadera_pct": 92.5,
+  "inclinacion_deg": 9.1,
+  "mano_sobre_pecho_cm": -13.5,
+  "braceo_cm": 35.0,
+  "rodilla_max_deg": 129,
+  "frames_en_aire": 9,
+  "frames": 20
+ },
+ "Loco_Correr": {
+  "cadera_pct": 96.0,
+  "inclinacion_deg": 17.2,
+  "mano_sobre_pecho_cm": -22.7,
+  "braceo_cm": 46.4,
+  "rodilla_max_deg": 121,
+  "frames_en_aire": 9,
+  "frames": 21
+ },
+ "G_Sprint": {
+  "cadera_pct": 90.3,
+  "inclinacion_deg": 19.1,
+  "mano_sobre_pecho_cm": -12.8,
+  "braceo_cm": 54.1,
+  "rodilla_max_deg": 151,
+  "frames_en_aire": 8,
+  "frames": 18
+ },
+ "G_TroteAtras": {
+  "cadera_pct": 92.5,
+  "inclinacion_deg": -7.7,
+  "mano_sobre_pecho_cm": -14.0,
+  "braceo_cm": 20.1,
+  "rodilla_max_deg": 122,
+  "frames_en_aire": 6,
+  "frames": 20
+ },
+ "G_TroteDer": {
+  "cadera_pct": 92.5,
+  "inclinacion_deg": -1.2,
+  "mano_sobre_pecho_cm": -13.1,
+  "braceo_cm": 7.3,
+  "rodilla_max_deg": 133,
+  "frames_en_aire": 9,
+  "frames": 20
+ },
+ "Loco_CaminarDer": {
+  "cadera_pct": 95.1,
+  "inclinacion_deg": 13.5,
+  "mano_sobre_pecho_cm": -38.8,
+  "braceo_cm": 26.5,
+  "rodilla_max_deg": 82,
+  "frames_en_aire": 1,
+  "frames": 31
+ },
+ "G_ApuntarAdelante": {
+  "cadera_pct": 94.0,
+  "inclinacion_deg": 5.1,
+  "mano_sobre_pecho_cm": 4.1,
+  "braceo_cm": 0.4,
+  "rodilla_max_deg": 85,
+  "frames_en_aire": 0,
+  "frames": 26
+ },
+ "Pistola_Correr": {
+  "cadera_pct": 85.9,
+  "inclinacion_deg": 15.1,
+  "mano_sobre_pecho_cm": -0.1,
+  "braceo_cm": 1.6,
+  "rodilla_max_deg": 115,
+  "frames_en_aire": 2,
+  "frames": 22
+ }
+}

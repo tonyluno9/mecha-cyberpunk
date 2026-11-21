@@ -4018,3 +4018,195 @@ Use the attached images ONLY for the art style, colors and level of detail of ou
 ```
 Use the attached image ONLY for the mood. A mask texture seen straight from above (orthographic, flat): several puddles of irregular natural shapes and different sizes scattered across the square, with soft feathered edges, the water drawn in white and light grey with subtle variation; everything that is not water is PURE BLACK (#000000). The pattern should tile seamlessly at the edges. No reflections of objects, no text.
 ```
+
+
+# Parte 33 — Pedido 21-nov: granada W11 + holograma H11, entrada del mercado K19, EM01, EM02 (_a/_b)
+
+Lote: `lote_21nov.json` · script: `generar_21nov.ps1` (fase 1: W11, K19; fase 2: H11 desde W11; fase 3: EM01, EM02 con K19).
+
+## W11 — W11_Granada (fase 1)
+- **Adjuntar:** `W01_Pistola.png`, `W03_Fusil.png` · **Medida:** 10 cm de alto · **Tripo:** HD · 6,000 caras · 2K
+
+```
+Use the attached weapons as the reference for the art style, materials, wear and level of detail so it matches our weapon set; use them ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents and magenta neon); do not copy their scenes. Original design, nothing copied. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a compact cyberpunk hand grenade: a rounded segmented body of dark gunmetal grey metal with a glowing turquoise band around the middle, the safety lever (spoon) along the side and the pull ring at the top clearly visible and chunky, small scratches and worn edges.
+```
+
+## K19 — K19_EntradaMercado (fase 1)
+- **Adjuntar:** `K02_Tianguis.png`, `K01_Barrio_HUDnuevo.png`
+
+```
+The FIRST attached image is our El Mercado district and the SECOND our game's look: match their illustrated art style EXACTLY (thin outlines, painted rendering, blue night with soft fog, orange sodium lights, turquoise and magenta neon, wet reflective ground). At street level, as seen in the game, 16:9, NO HUD, NO text, NO letters, NO logos. Original design. Scene: the entrance to a neighborhood market at night: a big arch-shaped gateway made of a metal frame and corrugated metal sheets, with a neon sign on top made of abstract shapes (no letters), market stalls with colorful tarp roofs lining both sides and continuing inside, strings of hanging bulbs, people walking in, cars and motorcycles parked outside, utility poles with thick cables.
+```
+
+## H11 — H11_Granada (fase 2)
+- **Adjuntar:** `W11_Granada_a.png`
+
+```
+Turn the grenade in the attached image into a holographic projection for a video game user interface. Keep EXACTLY the same shape, parts and proportions, but shown perfectly from the side (pure side profile, orthographic), centered and filling about 60% of the height. Translucent cyan-turquoise glowing body, bright glowing outlines on every part, faint inner wireframe lines, thin horizontal scan lines, a slight digital glitch on one or two slices, soft cyan glow. PURE BLACK (#000000) background everywhere, no text, no hands.
+```
+
+## EM01 — EM01_PortonMercado (fase 3)
+- **Adjuntar:** `K02_Tianguis.png`, `K19_EntradaMercado_a.png` · **Medida:** 8 m ancho × 6 m alto · **Tripo:** Smart Mesh P2 · 12,000 caras · 2K
+
+```
+Use the attached images (our market district and the market entrance) ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents and magenta neon); do not copy their scenes. Original design, nothing copied. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: the market entrance structure alone: a large arch-shaped gateway about 8 meters wide and 6 meters high, made of a metal frame covered with corrugated metal sheets, an open passage in the middle to walk through, a neon sign on top made of abstract shapes (no letters), strings of bulbs and a few lamps. View: 3/4 view from the front.
+```
+
+## EM02 — EM02_PuestoEntrada (fase 3)
+- **Adjuntar:** `K02_Tianguis.png`, `K19_EntradaMercado_a.png` · **Medida:** 2.5 × 1.5 × 2.4 m · **Tripo:** Smart Mesh P2 · 10,000 caras · 2K
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents and magenta neon); do not copy their scenes. Original design, nothing copied. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a market stall: a metal frame with a colorful tarp roof, a wooden counter in front, crates of fruit and boxes of goods on and under the counter, a hanging bulb.
+```
+
+
+# Parte 34 — Pedido 21-nov: referencias de todo el mapa (K20–K34, A20–A24, M13)
+
+Lote: `lote_21nov_b.json` · script: `generar_21nov_b.ps1` · salida `imageassets/referencias/look/mapa-final/`.
+
+## K20 — K20_Suburbios_CallePrincipal (fase 1)
+- **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `K05_EsquinaBarrio.png`, `K08_CalleSuburbios_Cuadra.png`, `L15_LetreroCanepa.png`
+
+```
+The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY, as if it were another screenshot of the same game: thin outlines, painted rendering, blue night with light fog, orange sodium street lights, magenta and turquoise neon, wet ground with reflections, thick cables between utility poles, a worn Mexican cyberpunk megacity. Any other attached images are our existing places: keep them consistent. Our city has only 4 districts inside a tall wall that surrounds it completely; there are no empty lots or gaps between districts: blocks touch each other and the style changes gradually. 16:9, NO HUD, NO interface, no readable text, no letters, no logos: signs and screens show only abstract shapes. Original design, nothing copied from real places. Street-level view at the height of the player (camera about 2 meters high), as it would look in the game. Scene: the main street of the Suburbios district (warm orange light, attached colorful two-story houses), the street where the player's house is, and right across the street the neighborhood car workshop El Canepa with its open garage, a car lifted inside, tools and a hand-painted sign shown as colorful shapes.
+```
+
+## K21 — K21_Suburbios_Callejon (fase 1)
+- **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `K05_EsquinaBarrio.png`, `SkullHombre_frente.png`
+
+```
+The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY, as if it were another screenshot of the same game: thin outlines, painted rendering, blue night with light fog, orange sodium street lights, magenta and turquoise neon, wet ground with reflections, thick cables between utility poles, a worn Mexican cyberpunk megacity. Any other attached images are our existing places: keep them consistent. Our city has only 4 districts inside a tall wall that surrounds it completely; there are no empty lots or gaps between districts: blocks touch each other and the style changes gradually. 16:9, NO HUD, NO interface, no readable text, no letters, no logos: signs and screens show only abstract shapes. Original design, nothing copied from real places. Street-level view at the height of the player (camera about 2 meters high), as it would look in the game. Scene: the narrow alley of the SKULLS gang in Suburbios: high walls with magenta skull-themed graffiti as abstract shapes, trash bags and metal barrels, a fire glowing in one barrel, metal fire escape stairs on the walls, puddles, a few gang members as distant silhouettes.
+```
+
+## K22 — K22_Suburbios_ClinicaTaller (fase 1)
+- **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `K05_EsquinaBarrio.png`, `K08_CalleSuburbios_Cuadra.png`, `P12_FachadaConsultorio.png`
+
+```
+The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY, as if it were another screenshot of the same game: thin outlines, painted rendering, blue night with light fog, orange sodium street lights, magenta and turquoise neon, wet ground with reflections, thick cables between utility poles, a worn Mexican cyberpunk megacity. Any other attached images are our existing places: keep them consistent. Our city has only 4 districts inside a tall wall that surrounds it completely; there are no empty lots or gaps between districts: blocks touch each other and the style changes gradually. 16:9, NO HUD, NO interface, no readable text, no letters, no logos: signs and screens show only abstract shapes. Original design, nothing copied from real places. Street-level view at the height of the player (camera about 2 meters high), as it would look in the game. Scene: a block of Suburbios with the underground clinic of the Doc (a reinforced metal door, a covered window, a turquoise light and a medical cross shape over the door) and, a few doors down, the inventor's workshop of Tino (a wide open garage with workbenches, drones and parts inside, warm light).
+```
+
+## K23 — K23_Mercado_Tianguis (fase 1)
+- **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `K02_Tianguis.png`, `K10_CalleMercado.png`
+
+```
+The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY, as if it were another screenshot of the same game: thin outlines, painted rendering, blue night with light fog, orange sodium street lights, magenta and turquoise neon, wet ground with reflections, thick cables between utility poles, a worn Mexican cyberpunk megacity. Any other attached images are our existing places: keep them consistent. Our city has only 4 districts inside a tall wall that surrounds it completely; there are no empty lots or gaps between districts: blocks touch each other and the style changes gradually. 16:9, NO HUD, NO interface, no readable text, no letters, no logos: signs and screens show only abstract shapes. Original design, nothing copied from real places. Street-level view at the height of the player (camera about 2 meters high), as it would look in the game. Scene: the closed street of the tianguis in El Mercado: rows of stalls with colorful tarp roofs on both sides, piles of goods, people shopping; NO hanging bulb strings over the street, the light comes from the stalls and the street lamps.
+```
+
+## K24 — K24_Mercado_Plaza (fase 1)
+- **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `K09_Plaza_Barrio.png`, `K02_Tianguis.png`
+
+```
+The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY, as if it were another screenshot of the same game: thin outlines, painted rendering, blue night with light fog, orange sodium street lights, magenta and turquoise neon, wet ground with reflections, thick cables between utility poles, a worn Mexican cyberpunk megacity. Any other attached images are our existing places: keep them consistent. Our city has only 4 districts inside a tall wall that surrounds it completely; there are no empty lots or gaps between districts: blocks touch each other and the style changes gradually. 16:9, NO HUD, NO interface, no readable text, no letters, no logos: signs and screens show only abstract shapes. Original design, nothing copied from real places. Street-level view at the height of the player (camera about 2 meters high), as it would look in the game. Scene: the plaza of El Mercado: a small kiosk in the center, benches, round trees, food stalls around it, and on the corner the little corner shop (tiendita) with a metal awning and a glowing soda fridge outside.
+```
+
+## K25 — K25_Mercado_Armas (fase 1)
+- **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `K10_CalleMercado.png`, `L12_LetreroElMercado.png`
+
+```
+The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY, as if it were another screenshot of the same game: thin outlines, painted rendering, blue night with light fog, orange sodium street lights, magenta and turquoise neon, wet ground with reflections, thick cables between utility poles, a worn Mexican cyberpunk megacity. Any other attached images are our existing places: keep them consistent. Our city has only 4 districts inside a tall wall that surrounds it completely; there are no empty lots or gaps between districts: blocks touch each other and the style changes gradually. 16:9, NO HUD, NO interface, no readable text, no letters, no logos: signs and screens show only abstract shapes. Original design, nothing copied from real places. Street-level view at the height of the player (camera about 2 meters high), as it would look in the game. Scene: the gun market street of El Mercado: a shop front behind a heavy metal grille with display cases of weapons glowing amber inside, crates of ammunition stacked outside, a rough rusty sign shown as a plate with a pistol silhouette, a couple of armed guards as silhouettes.
+```
+
+## K26 — K26_NeonAlto_Casino (fase 1)
+- **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `K03_NeonAlto.png`, `L10_LetreroVivaCoin.png`, `L11_LetreroHotel.png`
+
+```
+The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY, as if it were another screenshot of the same game: thin outlines, painted rendering, blue night with light fog, orange sodium street lights, magenta and turquoise neon, wet ground with reflections, thick cables between utility poles, a worn Mexican cyberpunk megacity. Any other attached images are our existing places: keep them consistent. Our city has only 4 districts inside a tall wall that surrounds it completely; there are no empty lots or gaps between districts: blocks touch each other and the style changes gradually. 16:9, NO HUD, NO interface, no readable text, no letters, no logos: signs and screens show only abstract shapes. Original design, nothing copied from real places. Street-level view at the height of the player (camera about 2 meters high), as it would look in the game. Scene: the intersection of Neon Alto with the VivaCoin casino on the corner (a big gold and magenta sign as a glowing shape with no readable letters) and a hotel next to it with a tall vertical neon sign, buildings of 4 to 6 floors, lots of magenta and turquoise neon.
+```
+
+## K27 — K27_NeonAlto_Calle (fase 1)
+- **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `K03_NeonAlto.png`, `V09_Taxi.png`
+
+```
+The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY, as if it were another screenshot of the same game: thin outlines, painted rendering, blue night with light fog, orange sodium street lights, magenta and turquoise neon, wet ground with reflections, thick cables between utility poles, a worn Mexican cyberpunk megacity. Any other attached images are our existing places: keep them consistent. Our city has only 4 districts inside a tall wall that surrounds it completely; there are no empty lots or gaps between districts: blocks touch each other and the style changes gradually. 16:9, NO HUD, NO interface, no readable text, no letters, no logos: signs and screens show only abstract shapes. Original design, nothing copied from real places. Street-level view at the height of the player (camera about 2 meters high), as it would look in the game. Scene: a street of Neon Alto: tall buildings of 4 to 6 floors with big glowing screens showing abstract images, projecting neon signs, pink and white taxis driving and parked, people on the sidewalks.
+```
+
+## K28 — K28_Nova_Avenida (fase 1)
+- **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `K06_CalleNova.png`, `K07_PuenteNova.png`
+
+```
+The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY, as if it were another screenshot of the same game: thin outlines, painted rendering, blue night with light fog, orange sodium street lights, magenta and turquoise neon, wet ground with reflections, thick cables between utility poles, a worn Mexican cyberpunk megacity. Any other attached images are our existing places: keep them consistent. Our city has only 4 districts inside a tall wall that surrounds it completely; there are no empty lots or gaps between districts: blocks touch each other and the style changes gradually. 16:9, NO HUD, NO interface, no readable text, no letters, no logos: signs and screens show only abstract shapes. Original design, nothing copied from real places. Street-level view at the height of the player (camera about 2 meters high), as it would look in the game. Scene: the wide clean avenue of the Nova district right in front of the huge white Nova tower, office towers with white panels and cold blue light strips, bollards, cameras, almost no neon, white and blue light.
+```
+
+## K29 — K29_Nova_Refineria (fase 1)
+- **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `K06_CalleNova.png`
+
+```
+The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY, as if it were another screenshot of the same game: thin outlines, painted rendering, blue night with light fog, orange sodium street lights, magenta and turquoise neon, wet ground with reflections, thick cables between utility poles, a worn Mexican cyberpunk megacity. Any other attached images are our existing places: keep them consistent. Our city has only 4 districts inside a tall wall that surrounds it completely; there are no empty lots or gaps between districts: blocks touch each other and the style changes gradually. 16:9, NO HUD, NO interface, no readable text, no letters, no logos: signs and screens show only abstract shapes. Original design, nothing copied from real places. Street-level view at the height of the player (camera about 2 meters high), as it would look in the game. Scene: the Nova refinery inside the Nova district: large clean white industrial structures, big storage tanks, thick pipes running along racks, catwalks with solid railings, steam rising and glowing in the cold blue light, red warning lights on the tops.
+```
+
+## K30 — K30_Cruce_Suburbios_Mercado (fase 1)
+- **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `K05_EsquinaBarrio.png`, `K02_Tianguis.png`
+
+```
+The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY, as if it were another screenshot of the same game: thin outlines, painted rendering, blue night with light fog, orange sodium street lights, magenta and turquoise neon, wet ground with reflections, thick cables between utility poles, a worn Mexican cyberpunk megacity. Any other attached images are our existing places: keep them consistent. Our city has only 4 districts inside a tall wall that surrounds it completely; there are no empty lots or gaps between districts: blocks touch each other and the style changes gradually. 16:9, NO HUD, NO interface, no readable text, no letters, no logos: signs and screens show only abstract shapes. Original design, nothing copied from real places. Street-level view at the height of the player (camera about 2 meters high), as it would look in the game. Scene: the corner where Suburbios becomes El Mercado: on one side attached colorful two-story houses with warm orange light, on the other side shops with colorful tarps and stalls starting, the styles mixing gradually along the block.
+```
+
+## K31 — K31_Cruce_NeonAlto_Nova (fase 1)
+- **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `K03_NeonAlto.png`, `K06_CalleNova.png`
+
+```
+The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY, as if it were another screenshot of the same game: thin outlines, painted rendering, blue night with light fog, orange sodium street lights, magenta and turquoise neon, wet ground with reflections, thick cables between utility poles, a worn Mexican cyberpunk megacity. Any other attached images are our existing places: keep them consistent. Our city has only 4 districts inside a tall wall that surrounds it completely; there are no empty lots or gaps between districts: blocks touch each other and the style changes gradually. 16:9, NO HUD, NO interface, no readable text, no letters, no logos: signs and screens show only abstract shapes. Original design, nothing copied from real places. Street-level view at the height of the player (camera about 2 meters high), as it would look in the game. Scene: the corner where Neon Alto becomes Nova: on one side buildings covered in magenta and turquoise neon and screens, on the other side clean white office towers with cold blue light, the transition gradual across the intersection.
+```
+
+## K32 — K32_Muro_Calle (fase 2)
+- **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `MU01_MuroPerimetral_a.png`, `K05_EsquinaBarrio.png`
+
+```
+The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY, as if it were another screenshot of the same game: thin outlines, painted rendering, blue night with light fog, orange sodium street lights, magenta and turquoise neon, wet ground with reflections, thick cables between utility poles, a worn Mexican cyberpunk megacity. Any other attached images are our existing places: keep them consistent. Our city has only 4 districts inside a tall wall that surrounds it completely; there are no empty lots or gaps between districts: blocks touch each other and the style changes gradually. 16:9, NO HUD, NO interface, no readable text, no letters, no logos: signs and screens show only abstract shapes. Original design, nothing copied from real places. Street-level view at the height of the player (camera about 2 meters high), as it would look in the game. Scene: The wall is 8 meters tall, made of concrete panels and metal beams, with thick pipes, amber warning lights, yellow and black hazard stripes and coils of razor wire on top. Behind the wall there is NOTHING: only the night sky, at most a few very distant tiny lights. a neighborhood street that ends against the wall, with houses built right up against the wall (no empty land between the houses and the wall).
+```
+
+## K33 — K33_Muro_Puerta (fase 2)
+- **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `MU03_PuertaMuro_a.png`, `MU02_TorreControl_a.png`
+
+```
+The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY, as if it were another screenshot of the same game: thin outlines, painted rendering, blue night with light fog, orange sodium street lights, magenta and turquoise neon, wet ground with reflections, thick cables between utility poles, a worn Mexican cyberpunk megacity. Any other attached images are our existing places: keep them consistent. Our city has only 4 districts inside a tall wall that surrounds it completely; there are no empty lots or gaps between districts: blocks touch each other and the style changes gradually. 16:9, NO HUD, NO interface, no readable text, no letters, no logos: signs and screens show only abstract shapes. Original design, nothing copied from real places. Street-level view at the height of the player (camera about 2 meters high), as it would look in the game. Scene: The wall is 8 meters tall, made of concrete panels and metal beams, with thick pipes, amber warning lights, yellow and black hazard stripes and coils of razor wire on top. Behind the wall there is NOTHING: only the night sky, at most a few very distant tiny lights. one of the giant gates of the wall, closed, with a watchtower next to it with a sweeping searchlight, and the street leading straight to it.
+```
+
+## K34 — K34_Muro_Esquina (fase 2)
+- **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `MU02_TorreControl_a.png`, `MU01_MuroPerimetral_a.png`
+
+```
+The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY, as if it were another screenshot of the same game: thin outlines, painted rendering, blue night with light fog, orange sodium street lights, magenta and turquoise neon, wet ground with reflections, thick cables between utility poles, a worn Mexican cyberpunk megacity. Any other attached images are our existing places: keep them consistent. Our city has only 4 districts inside a tall wall that surrounds it completely; there are no empty lots or gaps between districts: blocks touch each other and the style changes gradually. 16:9, NO HUD, NO interface, no readable text, no letters, no logos: signs and screens show only abstract shapes. Original design, nothing copied from real places. Street-level view at the height of the player (camera about 2 meters high), as it would look in the game. Scene: The wall is 8 meters tall, made of concrete panels and metal beams, with thick pipes, amber warning lights, yellow and black hazard stripes and coils of razor wire on top. Behind the wall there is NOTHING: only the night sky, at most a few very distant tiny lights. a corner of the wall where two sections meet at a watchtower, with the city buildings pressed right against the wall on the inside.
+```
+
+## A20 — A20_Suburbios_Aerea (fase 3)
+- **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `K08_CalleSuburbios_Cuadra.png`, `K05_EsquinaBarrio.png`
+
+```
+The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY, as if it were another screenshot of the same game: thin outlines, painted rendering, blue night with light fog, orange sodium street lights, magenta and turquoise neon, wet ground with reflections, thick cables between utility poles, a worn Mexican cyberpunk megacity. Any other attached images are our existing places: keep them consistent. Our city has only 4 districts inside a tall wall that surrounds it completely; there are no empty lots or gaps between districts: blocks touch each other and the style changes gradually. 16:9, NO HUD, NO interface, no readable text, no letters, no logos: signs and screens show only abstract shapes. Original design, nothing copied from real places. AERIAL ISOMETRIC view at 45 degrees from about 60 meters high, showing clearly how everything is laid out: streets, blocks, alleys and plazas, with no gaps or empty lots, as a layout guide. No people. Scene: the whole Suburbios district: attached colorful two-story houses in short blocks, narrow alleys, one small plaza, the player's house street with the El Canepa workshop, the clinic and Tino's workshop, warm orange light.
+```
+
+## A21 — A21_Mercado_Aerea (fase 3)
+- **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `K02_Tianguis.png`, `K09_Plaza_Barrio.png`
+
+```
+The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY, as if it were another screenshot of the same game: thin outlines, painted rendering, blue night with light fog, orange sodium street lights, magenta and turquoise neon, wet ground with reflections, thick cables between utility poles, a worn Mexican cyberpunk megacity. Any other attached images are our existing places: keep them consistent. Our city has only 4 districts inside a tall wall that surrounds it completely; there are no empty lots or gaps between districts: blocks touch each other and the style changes gradually. 16:9, NO HUD, NO interface, no readable text, no letters, no logos: signs and screens show only abstract shapes. Original design, nothing copied from real places. AERIAL ISOMETRIC view at 45 degrees from about 60 meters high, showing clearly how everything is laid out: streets, blocks, alleys and plazas, with no gaps or empty lots, as a layout guide. No people. Scene: the whole El Mercado district: the closed tianguis street with rows of colorful tarp stalls, the market plaza with its kiosk, the gun market street, the corner shop, shops with tarps on every block.
+```
+
+## A22 — A22_NeonAlto_Aerea (fase 3)
+- **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `K03_NeonAlto.png`
+
+```
+The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY, as if it were another screenshot of the same game: thin outlines, painted rendering, blue night with light fog, orange sodium street lights, magenta and turquoise neon, wet ground with reflections, thick cables between utility poles, a worn Mexican cyberpunk megacity. Any other attached images are our existing places: keep them consistent. Our city has only 4 districts inside a tall wall that surrounds it completely; there are no empty lots or gaps between districts: blocks touch each other and the style changes gradually. 16:9, NO HUD, NO interface, no readable text, no letters, no logos: signs and screens show only abstract shapes. Original design, nothing copied from real places. AERIAL ISOMETRIC view at 45 degrees from about 60 meters high, showing clearly how everything is laid out: streets, blocks, alleys and plazas, with no gaps or empty lots, as a layout guide. No people. Scene: the whole Neon Alto district: buildings of 4 to 6 floors in dense blocks, rooftops with neon signs and screens, the casino on a corner intersection, the hotel, magenta and turquoise light everywhere.
+```
+
+## A23 — A23_Nova_Aerea (fase 3)
+- **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `K06_CalleNova.png`, `K07_PuenteNova.png`
+
+```
+The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY, as if it were another screenshot of the same game: thin outlines, painted rendering, blue night with light fog, orange sodium street lights, magenta and turquoise neon, wet ground with reflections, thick cables between utility poles, a worn Mexican cyberpunk megacity. Any other attached images are our existing places: keep them consistent. Our city has only 4 districts inside a tall wall that surrounds it completely; there are no empty lots or gaps between districts: blocks touch each other and the style changes gradually. 16:9, NO HUD, NO interface, no readable text, no letters, no logos: signs and screens show only abstract shapes. Original design, nothing copied from real places. AERIAL ISOMETRIC view at 45 degrees from about 60 meters high, showing clearly how everything is laid out: streets, blocks, alleys and plazas, with no gaps or empty lots, as a layout guide. No people. Scene: the whole Nova district: clean white office towers on wide streets, the huge Nova tower in a plaza, the refinery with tanks and pipes in one corner of the district, cold white and blue light.
+```
+
+## A24 — A24_Muro_Aerea (fase 3)
+- **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `MU01_MuroPerimetral_a.png`, `MU02_TorreControl_a.png`
+
+```
+The FIRST attached image is the target look of our game: match its illustrated art style EXACTLY, as if it were another screenshot of the same game: thin outlines, painted rendering, blue night with light fog, orange sodium street lights, magenta and turquoise neon, wet ground with reflections, thick cables between utility poles, a worn Mexican cyberpunk megacity. Any other attached images are our existing places: keep them consistent. Our city has only 4 districts inside a tall wall that surrounds it completely; there are no empty lots or gaps between districts: blocks touch each other and the style changes gradually. 16:9, NO HUD, NO interface, no readable text, no letters, no logos: signs and screens show only abstract shapes. Original design, nothing copied from real places. AERIAL ISOMETRIC view at 45 degrees from about 60 meters high, showing clearly how everything is laid out: streets, blocks, alleys and plazas, with no gaps or empty lots, as a layout guide. No people. Scene: The wall is 8 meters tall, made of concrete panels and metal beams, with thick pipes, amber warning lights, yellow and black hazard stripes and coils of razor wire on top. Behind the wall there is NOTHING: only the night sky, at most a few very distant tiny lights. a section of the edge of the city: the dense blocks of the city pressed right against the inside of the wall, a watchtower on the wall, and on the outside of the wall absolutely nothing, only darkness.
+```
+
+## M13 — M13_MapaFinal (fase 4)
+- **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `M11_MapaCiudad.png`, `M10_MapaCiudad.png`
+
+```
+Use the FIRST attached image for the art style and color mood of our game, and the other images (our previous city maps) for the illustrated top-down map style. Our city has only 4 districts inside a tall wall that surrounds it completely; there are no empty lots or gaps between districts: blocks touch each other and the style changes gradually. Draw the final full-screen city map seen from directly above, like the pause-menu map of an open-world game, at night colors. Layout: NOVA top-left (cold blue, white towers, the big tower and a small refinery), NEÓN ALTO top-right (magenta, dense tall buildings and the casino), SUBURBIOS bottom-left (warm orange, small attached houses), EL MERCADO bottom-right (yellow, the tianguis street and a plaza). Short blocks touching each other everywhere with no gaps, streets, alleys and a few plazas. A thick wall surrounds the whole city with 6 gates spread along it and watchtowers at the four corners. OUTSIDE the wall there is nothing: plain dark. The ONLY text on the map, in thin capital letters for the districts and small thin labels with small round icons for the places, spelled exactly: "NOVA", "NEÓN ALTO", "SUBURBIOS", "EL MERCADO", "Casa", "Doc", "Tino", "El Canepa", "Tianguis", "Mercado de armas", "Casino VivaCoin", "Torre Nova". Casa, Doc, Tino and El Canepa are close to each other inside Suburbios (El Canepa across the street from Casa). No legend, no compass text, no other words.
+```

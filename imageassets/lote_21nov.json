@@ -1,0 +1,196 @@
+{
+ "version": 1,
+ "resolution": "1k",
+ "variantes_por_defecto": 1,
+ "carpeta_salida": "imageassets",
+ "trabajos": [
+  {
+   "id": "W11a",
+   "archivo": "W11_Granada_a",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/nuevos-21nov/W11_Granada_a.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/armas/W01_Pistola.png",
+    "imageassets/armas/W03_Fusil.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached weapons as the reference for the art style, materials, wear and level of detail so it matches our weapon set; use them ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents and magenta neon); do not copy their scenes. Original design, nothing copied. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a compact cyberpunk hand grenade: a rounded segmented body of dark gunmetal grey metal with a glowing turquoise band around the middle, the safety lever (spoon) along the side and the pull ring at the top clearly visible and chunky, small scratches and worn edges.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 6000,
+    "textura": "2K"
+   },
+   "medida": "10 cm de alto"
+  },
+  {
+   "id": "W11b",
+   "archivo": "W11_Granada_b",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/nuevos-21nov/W11_Granada_b.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/armas/W01_Pistola.png",
+    "imageassets/armas/W03_Fusil.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached weapons as the reference for the art style, materials, wear and level of detail so it matches our weapon set; use them ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents and magenta neon); do not copy their scenes. Original design, nothing copied. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a compact cyberpunk hand grenade: a rounded segmented body of dark gunmetal grey metal with a glowing turquoise band around the middle, the safety lever (spoon) along the side and the pull ring at the top clearly visible and chunky, small scratches and worn edges. VARIANT B: make a clearly different design from the most obvious version: different proportions, different placement of colors and details, while keeping the same description.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 6000,
+    "textura": "2K"
+   },
+   "medida": "10 cm de alto"
+  },
+  {
+   "id": "K19a",
+   "archivo": "K19_EntradaMercado_a",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/nuevos-21nov/K19_EntradaMercado_a.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K02_Tianguis.png",
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is our El Mercado district and the SECOND our game's look: match their illustrated art style EXACTLY (thin outlines, painted rendering, blue night with soft fog, orange sodium lights, turquoise and magenta neon, wet reflective ground). At street level, as seen in the game, 16:9, NO HUD, NO text, NO letters, NO logos. Original design. Scene: the entrance to a neighborhood market at night: a big arch-shaped gateway made of a metal frame and corrugated metal sheets, with a neon sign on top made of abstract shapes (no letters), market stalls with colorful tarp roofs lining both sides and continuing inside, strings of hanging bulbs, people walking in, cars and motorcycles parked outside, utility poles with thick cables.",
+   "uso": "Referencia de look (no va a Tripo)"
+  },
+  {
+   "id": "K19b",
+   "archivo": "K19_EntradaMercado_b",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/nuevos-21nov/K19_EntradaMercado_b.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K02_Tianguis.png",
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is our El Mercado district and the SECOND our game's look: match their illustrated art style EXACTLY (thin outlines, painted rendering, blue night with soft fog, orange sodium lights, turquoise and magenta neon, wet reflective ground). At street level, as seen in the game, 16:9, NO HUD, NO text, NO letters, NO logos. Original design. Scene: the entrance to a neighborhood market at night: a big arch-shaped gateway made of a metal frame and corrugated metal sheets, with a neon sign on top made of abstract shapes (no letters), market stalls with colorful tarp roofs lining both sides and continuing inside, strings of hanging bulbs, people walking in, cars and motorcycles parked outside, utility poles with thick cables. VARIANT B: make a clearly different design from the most obvious version: different proportions, different placement of colors and details, while keeping the same description.",
+   "uso": "Referencia de look (no va a Tripo)"
+  },
+  {
+   "id": "H11a",
+   "archivo": "H11_Granada_a",
+   "fase": 2,
+   "salida": "imageassets/ui/hologramas/H11_Granada_a.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/modelos-nuevos/nuevos-21nov/W11_Granada_a.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Turn the grenade in the attached image into a holographic projection for a video game user interface. Keep EXACTLY the same shape, parts and proportions, but shown perfectly from the side (pure side profile, orthographic), centered and filling about 60% of the height. Translucent cyan-turquoise glowing body, bright glowing outlines on every part, faint inner wireframe lines, thin horizontal scan lines, a slight digital glitch on one or two slices, soft cyan glow. PURE BLACK (#000000) background everywhere, no text, no hands.",
+   "uso": "UI (no va a Tripo)"
+  },
+  {
+   "id": "H11b",
+   "archivo": "H11_Granada_b",
+   "fase": 2,
+   "salida": "imageassets/ui/hologramas/H11_Granada_b.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/modelos-nuevos/nuevos-21nov/W11_Granada_b.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Turn the grenade in the attached image into a holographic projection for a video game user interface. Keep EXACTLY the same shape, parts and proportions, but shown perfectly from the side (pure side profile, orthographic), centered and filling about 60% of the height. Translucent cyan-turquoise glowing body, bright glowing outlines on every part, faint inner wireframe lines, thin horizontal scan lines, a slight digital glitch on one or two slices, soft cyan glow. PURE BLACK (#000000) background everywhere, no text, no hands.",
+   "uso": "UI (no va a Tripo)"
+  },
+  {
+   "id": "EM01a",
+   "archivo": "EM01_PortonMercado_a",
+   "fase": 3,
+   "salida": "imageassets/modelos-nuevos/nuevos-21nov/EM01_PortonMercado_a.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K02_Tianguis.png",
+    "imageassets/modelos-nuevos/nuevos-21nov/K19_EntradaMercado_a.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images (our market district and the market entrance) ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents and magenta neon); do not copy their scenes. Original design, nothing copied. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: the market entrance structure alone: a large arch-shaped gateway about 8 meters wide and 6 meters high, made of a metal frame covered with corrugated metal sheets, an open passage in the middle to walk through, a neon sign on top made of abstract shapes (no letters), strings of bulbs and a few lamps. View: 3/4 view from the front.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "8 m ancho × 6 m alto"
+  },
+  {
+   "id": "EM01b",
+   "archivo": "EM01_PortonMercado_b",
+   "fase": 3,
+   "salida": "imageassets/modelos-nuevos/nuevos-21nov/EM01_PortonMercado_b.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K02_Tianguis.png",
+    "imageassets/modelos-nuevos/nuevos-21nov/K19_EntradaMercado_b.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images (our market district and the market entrance) ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents and magenta neon); do not copy their scenes. Original design, nothing copied. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: the market entrance structure alone: a large arch-shaped gateway about 8 meters wide and 6 meters high, made of a metal frame covered with corrugated metal sheets, an open passage in the middle to walk through, a neon sign on top made of abstract shapes (no letters), strings of bulbs and a few lamps. View: 3/4 view from the front. VARIANT B: make a clearly different design from the most obvious version: different proportions, different placement of colors and details, while keeping the same description.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "8 m ancho × 6 m alto"
+  },
+  {
+   "id": "EM02a",
+   "archivo": "EM02_PuestoEntrada_a",
+   "fase": 3,
+   "salida": "imageassets/modelos-nuevos/nuevos-21nov/EM02_PuestoEntrada_a.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K02_Tianguis.png",
+    "imageassets/modelos-nuevos/nuevos-21nov/K19_EntradaMercado_a.png"
+   ],
+   "aspect_ratio": "4:3",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents and magenta neon); do not copy their scenes. Original design, nothing copied. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a market stall: a metal frame with a colorful tarp roof, a wooden counter in front, crates of fruit and boxes of goods on and under the counter, a hanging bulb.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 10000,
+    "textura": "2K"
+   },
+   "medida": "2.5 × 1.5 × 2.4 m"
+  },
+  {
+   "id": "EM02b",
+   "archivo": "EM02_PuestoEntrada_b",
+   "fase": 3,
+   "salida": "imageassets/modelos-nuevos/nuevos-21nov/EM02_PuestoEntrada_b.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K02_Tianguis.png",
+    "imageassets/modelos-nuevos/nuevos-21nov/K19_EntradaMercado_b.png"
+   ],
+   "aspect_ratio": "4:3",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents and magenta neon); do not copy their scenes. Original design, nothing copied. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a market stall: a metal frame with a colorful tarp roof, a wooden counter in front, crates of fruit and boxes of goods on and under the counter, a hanging bulb. VARIANT B: make a clearly different design from the most obvious version: different proportions, different placement of colors and details, while keeping the same description.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 10000,
+    "textura": "2K"
+   },
+   "medida": "2.5 × 1.5 × 2.4 m"
+  }
+ ]
+}

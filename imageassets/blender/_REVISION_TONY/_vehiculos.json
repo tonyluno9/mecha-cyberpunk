@@ -1,0 +1,2468 @@
+{
+ "V03": {
+  "L": 4.5,
+  "W": 2.53,
+  "H": 2.1,
+  "pivote_raiz_cm": 0.0,
+  "escala": "W=2.53 (esperado 1.6-2.0); H=2.10 (esperado 1.2-1.9)",
+  "ruedas": 4,
+  "rueda_pivote_cm": 0.0,
+  "rueda_piso_cm": [
+   0.0,
+   0.0,
+   -0.0,
+   0.0
+  ],
+  "rueda_desnivel_cm": 0.0,
+  "rueda_no_redonda_pct": 2.0,
+  "puertas": [
+   "Puerta_D",
+   "Puerta_I"
+  ],
+  "cofre": true,
+  "bisagra_Puerta_D_cm": 0.0,
+  "choque_Puerta_D": [
+   87,
+   0
+  ],
+  "bisagra_Puerta_I_cm": 0.0,
+  "choque_Puerta_I": [
+   97,
+   0
+  ],
+  "bisagra_Cofre_cm": 0.0,
+  "choque_Cofre": [
+   37,
+   0
+  ],
+  "cristales": {
+   "n": 5,
+   "transparentes": 5,
+   "cara_detras_pct": 0.0
+  },
+  "interior": true,
+  "motor": true,
+  "invertidas_pct": 0.16,
+  "bordes_abiertos": 878,
+  "islas": 41,
+  "islas_flotando": 0,
+  "vertices": 8455,
+  "piezas": [
+   "Carroceria",
+   "Cofre",
+   "Cristal_Laterales",
+   "Cristal_Medallon",
+   "Cristal_Parabrisas",
+   "Cristal_Puerta_D",
+   "Cristal_Puerta_I",
+   "Interior",
+   "Interior_Casco",
+   "Motor",
+   "Puerta_D",
+   "Puerta_I",
+   "Rueda_DD",
+   "Rueda_DI",
+   "Rueda_TD",
+   "Rueda_TI"
+  ],
+  "tipo": "auto",
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Vehiculos\\Piezas\\V03\\V03.fbx",
+  "coleccion": "REV_V03",
+  "_v2": true
+ },
+ "V07": {
+  "L": 2.0,
+  "W": 0.87,
+  "H": 1.35,
+  "pivote_raiz_cm": 0.0,
+  "escala": "OK",
+  "ruedas": 2,
+  "rueda_pivote_cm": 0.0,
+  "rueda_piso_cm": [
+   0.8,
+   0.6
+  ],
+  "rueda_desnivel_cm": 0.2,
+  "rueda_no_redonda_pct": 1.7,
+  "puertas": [],
+  "cofre": false,
+  "cristales": {
+   "n": 0,
+   "transparentes": 0,
+   "cara_detras_pct": null
+  },
+  "interior": false,
+  "motor": false,
+  "invertidas_pct": 0.0,
+  "bordes_abiertos": 517,
+  "islas": 17,
+  "islas_flotando": 0,
+  "vertices": 10763,
+  "piezas": [
+   "Cuerpo",
+   "Rueda_D",
+   "Rueda_T"
+  ],
+  "tipo": "moto",
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Vehiculos\\Piezas\\V07\\V07.fbx",
+  "coleccion": "REV_V07",
+  "_v2": true
+ },
+ "V08": {
+  "L": 2.0,
+  "W": 0.88,
+  "H": 1.3,
+  "pivote_raiz_cm": 0.0,
+  "escala": "OK",
+  "ruedas": 2,
+  "rueda_pivote_cm": 0.0,
+  "rueda_piso_cm": [
+   0.3,
+   -0.0
+  ],
+  "rueda_desnivel_cm": 0.3,
+  "rueda_no_redonda_pct": 2.6,
+  "puertas": [],
+  "cofre": false,
+  "cristales": {
+   "n": 0,
+   "transparentes": 0,
+   "cara_detras_pct": null
+  },
+  "interior": false,
+  "motor": false,
+  "invertidas_pct": 0.01,
+  "bordes_abiertos": 1193,
+  "islas": 114,
+  "islas_flotando": 0,
+  "vertices": 7647,
+  "piezas": [
+   "Cuerpo",
+   "Rueda_D",
+   "Rueda_T"
+  ],
+  "tipo": "moto",
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Vehiculos\\Piezas\\V08\\V08.fbx",
+  "coleccion": "REV_V08",
+  "_v2": true
+ },
+ "V10": {
+  "L": 4.41,
+  "W": 2.18,
+  "H": 1.86,
+  "pivote_raiz_cm": 0.0,
+  "escala": "OK",
+  "ruedas": 4,
+  "rueda_pivote_cm": 0.0,
+  "rueda_piso_cm": [
+   0.0,
+   0.0,
+   -0.0,
+   -0.0
+  ],
+  "rueda_desnivel_cm": 0.0,
+  "rueda_no_redonda_pct": 0.2,
+  "puertas": [
+   "Puerta_D",
+   "Puerta_I"
+  ],
+  "cofre": true,
+  "bisagra_Puerta_D_cm": 0.0,
+  "choque_Puerta_D": [
+   12,
+   6
+  ],
+  "bisagra_Puerta_I_cm": 0.0,
+  "choque_Puerta_I": [
+   10,
+   0
+  ],
+  "bisagra_Cofre_cm": 0.0,
+  "choque_Cofre": [
+   20,
+   0
+  ],
+  "cristales": {
+   "n": 4,
+   "transparentes": 4,
+   "cara_detras_pct": 0.02
+  },
+  "interior": true,
+  "motor": true,
+  "invertidas_pct": 0.0,
+  "bordes_abiertos": 692,
+  "islas": 8,
+  "islas_flotando": 2,
+  "vertices": 4638,
+  "piezas": [
+   "Carroceria",
+   "Cofre",
+   "Cristal_Medallon",
+   "Cristal_Parabrisas",
+   "Cristal_Puerta_D",
+   "Cristal_Puerta_I",
+   "Interior",
+   "Interior_Casco",
+   "Motor",
+   "Puerta_D",
+   "Puerta_I",
+   "Rueda_DD",
+   "Rueda_DI",
+   "Rueda_TD",
+   "Rueda_TI"
+  ],
+  "tipo": "auto",
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Vehiculos\\Piezas\\V10\\V10.fbx",
+  "coleccion": "REV_V10",
+  "_v2": true
+ },
+ "MT01": {
+  "L": 2.05,
+  "W": 0.81,
+  "H": 1.2,
+  "pivote_raiz_cm": 0.0,
+  "escala": "OK",
+  "ruedas": 2,
+  "rueda_pivote_cm": 0.0,
+  "rueda_piso_cm": [
+   0.0,
+   0.1
+  ],
+  "rueda_desnivel_cm": 0.1,
+  "rueda_no_redonda_pct": 4.9,
+  "puertas": [],
+  "cofre": false,
+  "cristales": {
+   "n": 0,
+   "transparentes": 0,
+   "cara_detras_pct": null
+  },
+  "interior": false,
+  "motor": false,
+  "invertidas_pct": 0.0,
+  "bordes_abiertos": 455,
+  "islas": 2,
+  "islas_flotando": 0,
+  "vertices": 22230,
+  "piezas": [
+   "Carroceria",
+   "Rueda_D",
+   "Rueda_T"
+  ],
+  "tipo": "moto",
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Vehiculos\\Piezas\\MT01\\MT01.fbx",
+  "coleccion": "REV_MT01",
+  "_v2": true
+ },
+ "MT02": {
+  "L": 2.4,
+  "W": 1.01,
+  "H": 1.21,
+  "pivote_raiz_cm": 0.0,
+  "escala": "OK",
+  "ruedas": 2,
+  "rueda_pivote_cm": 0.6,
+  "rueda_piso_cm": [
+   0.1,
+   -0.0
+  ],
+  "rueda_desnivel_cm": 0.1,
+  "rueda_no_redonda_pct": 0.7,
+  "puertas": [],
+  "cofre": false,
+  "cristales": {
+   "n": 0,
+   "transparentes": 0,
+   "cara_detras_pct": null
+  },
+  "interior": false,
+  "motor": false,
+  "invertidas_pct": 0.0,
+  "bordes_abiertos": 605,
+  "islas": 11,
+  "islas_flotando": 0,
+  "vertices": 21089,
+  "piezas": [
+   "Carroceria",
+   "Rueda_D",
+   "Rueda_T"
+  ],
+  "tipo": "moto",
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Vehiculos\\Piezas\\MT02\\MT02.fbx",
+  "coleccion": "REV_MT02",
+  "_v2": true
+ },
+ "C19": {
+  "L": 2.11,
+  "W": 0.73,
+  "H": 1.13,
+  "pivote_raiz_cm": 0.1,
+  "escala": "OK",
+  "ruedas": 2,
+  "rueda_pivote_cm": 0.0,
+  "rueda_piso_cm": [
+   -0.1,
+   -0.1
+  ],
+  "rueda_desnivel_cm": 0.0,
+  "rueda_no_redonda_pct": 0.3,
+  "puertas": [],
+  "cofre": false,
+  "cristales": {
+   "n": 0,
+   "transparentes": 0,
+   "cara_detras_pct": null
+  },
+  "interior": false,
+  "motor": false,
+  "invertidas_pct": 0.0,
+  "bordes_abiertos": 6,
+  "islas": 3,
+  "islas_flotando": 0,
+  "vertices": 9420,
+  "piezas": [
+   "Cuerpo",
+   "Rueda_D",
+   "Rueda_T"
+  ],
+  "tipo": "moto",
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Vehiculos\\Piezas\\C19\\C19.fbx",
+  "coleccion": "REV_C19",
+  "_v2": true
+ },
+ "DR01": {
+  "L": 0.62,
+  "W": 0.8,
+  "H": 0.33,
+  "pivote_raiz_cm": 16.4,
+  "escala": "OK",
+  "ruedas": 0,
+  "rotores": 4,
+  "rotor_pivote_cm": 2.7,
+  "puertas": [],
+  "cofre": false,
+  "cristales": {
+   "n": 0,
+   "transparentes": 0,
+   "cara_detras_pct": null
+  },
+  "interior": false,
+  "motor": false,
+  "invertidas_pct": 0.0,
+  "bordes_abiertos": 2066,
+  "islas": 57,
+  "islas_flotando": 0,
+  "vertices": 9142,
+  "piezas": [
+   "Cuerpo",
+   "Rotor_1",
+   "Rotor_2",
+   "Rotor_3",
+   "Rotor_4"
+  ],
+  "tipo": "dron",
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Vehiculos\\Drones\\DR01\\DR01.fbx",
+  "coleccion": "REV_DR01",
+  "_v2": true
+ },
+ "DR02_a": {
+  "L": 1.48,
+  "W": 1.8,
+  "H": 0.78,
+  "pivote_raiz_cm": 39.0,
+  "escala": "OK",
+  "ruedas": 0,
+  "rotores": 4,
+  "rotor_pivote_cm": 6.1,
+  "puertas": [],
+  "cofre": false,
+  "cristales": {
+   "n": 0,
+   "transparentes": 0,
+   "cara_detras_pct": null
+  },
+  "interior": false,
+  "motor": false,
+  "invertidas_pct": 0.0,
+  "bordes_abiertos": 1084,
+  "islas": 40,
+  "islas_flotando": 0,
+  "vertices": 21291,
+  "piezas": [
+   "Cuerpo",
+   "Rotor_1",
+   "Rotor_2",
+   "Rotor_3",
+   "Rotor_4"
+  ],
+  "tipo": "dron",
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Vehiculos\\Drones\\DR02_a\\DR02_a.fbx",
+  "coleccion": "REV_DR02_a",
+  "_v2": true
+ },
+ "DR02_b": {
+  "L": 1.67,
+  "W": 1.8,
+  "H": 0.69,
+  "pivote_raiz_cm": 34.4,
+  "escala": "OK",
+  "ruedas": 0,
+  "rotores": 4,
+  "rotor_pivote_cm": 6.2,
+  "puertas": [],
+  "cofre": false,
+  "cristales": {
+   "n": 0,
+   "transparentes": 0,
+   "cara_detras_pct": null
+  },
+  "interior": false,
+  "motor": false,
+  "invertidas_pct": 0.0,
+  "bordes_abiertos": 873,
+  "islas": 38,
+  "islas_flotando": 0,
+  "vertices": 19623,
+  "piezas": [
+   "Cuerpo",
+   "Rotor_1",
+   "Rotor_2",
+   "Rotor_3",
+   "Rotor_4"
+  ],
+  "tipo": "dron",
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Vehiculos\\Drones\\DR02_b\\DR02_b.fbx",
+  "coleccion": "REV_DR02_b",
+  "_v2": true
+ },
+ "DR03_a": {
+  "L": 2.4,
+  "W": 2.08,
+  "H": 1.17,
+  "pivote_raiz_cm": 58.4,
+  "escala": "OK",
+  "ruedas": 0,
+  "rotores": 6,
+  "rotor_pivote_cm": 6.2,
+  "puertas": [],
+  "cofre": false,
+  "cristales": {
+   "n": 0,
+   "transparentes": 0,
+   "cara_detras_pct": null
+  },
+  "interior": false,
+  "motor": false,
+  "invertidas_pct": 0.0,
+  "bordes_abiertos": 249,
+  "islas": 6,
+  "islas_flotando": 0,
+  "vertices": 13080,
+  "piezas": [
+   "Cuerpo",
+   "Rotor_1",
+   "Rotor_2",
+   "Rotor_3",
+   "Rotor_4",
+   "Rotor_5",
+   "Rotor_6"
+  ],
+  "tipo": "dron",
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Vehiculos\\Drones\\DR03_a\\DR03_a.fbx",
+  "coleccion": "REV_DR03_a",
+  "_v2": true
+ },
+ "DR04_a": {
+  "L": 0.73,
+  "W": 0.7,
+  "H": 0.58,
+  "pivote_raiz_cm": 28.9,
+  "escala": "OK",
+  "ruedas": 0,
+  "rotores": 1,
+  "rotor_pivote_cm": 4.9,
+  "puertas": [],
+  "cofre": false,
+  "cristales": {
+   "n": 0,
+   "transparentes": 0,
+   "cara_detras_pct": null
+  },
+  "interior": false,
+  "motor": false,
+  "invertidas_pct": 0.0,
+  "bordes_abiertos": 118,
+  "islas": 3,
+  "islas_flotando": 0,
+  "vertices": 15675,
+  "piezas": [
+   "Cuerpo",
+   "Rotor_1"
+  ],
+  "tipo": "dron",
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Vehiculos\\Drones\\DR04_a\\DR04_a.fbx",
+  "coleccion": "REV_DR04_a",
+  "_v2": true
+ },
+ "E13": {
+  "L": 1.02,
+  "W": 1.1,
+  "H": 0.42,
+  "pivote_raiz_cm": 21.0,
+  "escala": "OK",
+  "ruedas": 0,
+  "rotores": 4,
+  "rotor_pivote_cm": 3.8,
+  "puertas": [],
+  "cofre": false,
+  "cristales": {
+   "n": 0,
+   "transparentes": 0,
+   "cara_detras_pct": null
+  },
+  "interior": false,
+  "motor": false,
+  "invertidas_pct": 0.0,
+  "bordes_abiertos": 873,
+  "islas": 38,
+  "islas_flotando": 0,
+  "vertices": 19623,
+  "piezas": [
+   "Cuerpo",
+   "Rotor_1",
+   "Rotor_2",
+   "Rotor_3",
+   "Rotor_4"
+  ],
+  "tipo": "dron",
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Vehiculos\\Drones\\E13\\E13.fbx",
+  "coleccion": "REV_E13",
+  "_v2": true
+ },
+ "NV01": {
+  "L": 11.98,
+  "W": 12.0,
+  "H": 4.64,
+  "pivote_raiz_cm": 231.8,
+  "escala": "OK",
+  "ruedas": 0,
+  "rotores": 2,
+  "rotor_pivote_cm": 7.5,
+  "puertas": [],
+  "cofre": false,
+  "cristales": {
+   "n": 0,
+   "transparentes": 0,
+   "cara_detras_pct": null
+  },
+  "interior": false,
+  "motor": false,
+  "invertidas_pct": 0.0,
+  "bordes_abiertos": 293,
+  "islas": 7,
+  "islas_flotando": 0,
+  "vertices": 28674,
+  "piezas": [
+   "Cuerpo",
+   "Rotor_1",
+   "Rotor_2"
+  ],
+  "tipo": "nave",
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Vehiculos\\Drones\\NV01\\NV01.fbx",
+  "coleccion": "REV_NV01",
+  "_v2": true
+ },
+ "NV03_a": {
+  "L": 8.18,
+  "W": 9.0,
+  "H": 3.41,
+  "pivote_raiz_cm": 170.3,
+  "escala": "OK",
+  "ruedas": 0,
+  "rotores": 2,
+  "rotor_pivote_cm": 1.4,
+  "puertas": [],
+  "cofre": false,
+  "cristales": {
+   "n": 0,
+   "transparentes": 0,
+   "cara_detras_pct": null
+  },
+  "interior": false,
+  "motor": false,
+  "invertidas_pct": 0.0,
+  "bordes_abiertos": 406,
+  "islas": 12,
+  "islas_flotando": 0,
+  "vertices": 30592,
+  "piezas": [
+   "Cuerpo",
+   "Rotor_1",
+   "Rotor_2"
+  ],
+  "tipo": "nave",
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Vehiculos\\Drones\\NV03_a\\NV03_a.fbx",
+  "coleccion": "REV_NV03_a",
+  "_v2": true
+ },
+ "NV03_b": {
+  "L": 6.4,
+  "W": 9.0,
+  "H": 3.02,
+  "pivote_raiz_cm": 150.8,
+  "escala": "OK",
+  "ruedas": 0,
+  "rotores": 2,
+  "rotor_pivote_cm": 3.1,
+  "puertas": [],
+  "cofre": false,
+  "cristales": {
+   "n": 0,
+   "transparentes": 0,
+   "cara_detras_pct": null
+  },
+  "interior": false,
+  "motor": false,
+  "invertidas_pct": 0.0,
+  "bordes_abiertos": 411,
+  "islas": 12,
+  "islas_flotando": 0,
+  "vertices": 31306,
+  "piezas": [
+   "Cuerpo",
+   "Rotor_1",
+   "Rotor_2"
+  ],
+  "tipo": "nave",
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Vehiculos\\Drones\\NV03_b\\NV03_b.fbx",
+  "coleccion": "REV_NV03_b",
+  "_v2": true
+ },
+ "PA01": {
+  "L": 4.8,
+  "W": 2.39,
+  "H": 2.22,
+  "pivote_raiz_cm": 0.0,
+  "escala": "W=2.39 (esperado 1.6-2.0); H=2.22 (esperado 1.2-1.9)",
+  "ruedas": 4,
+  "rueda_pivote_cm": 1.0,
+  "rueda_piso_cm": [
+   0.1,
+   0.2,
+   -0.0,
+   0.3
+  ],
+  "rueda_desnivel_cm": 0.3,
+  "rueda_no_redonda_pct": 3.2,
+  "puertas": [
+   "Puerta_D",
+   "Puerta_I"
+  ],
+  "cofre": false,
+  "bisagra_Puerta_D_cm": 0.0,
+  "choque_Puerta_D": [
+   40,
+   4
+  ],
+  "bisagra_Puerta_I_cm": 0.0,
+  "choque_Puerta_I": [
+   35,
+   5
+  ],
+  "cristales": {
+   "n": 5,
+   "transparentes": 5,
+   "cara_detras_pct": 1.0
+  },
+  "interior": true,
+  "motor": false,
+  "invertidas_pct": 0.0,
+  "bordes_abiertos": 1384,
+  "islas": 39,
+  "islas_flotando": 0,
+  "vertices": 16227,
+  "piezas": [
+   "Carroceria",
+   "Cristal_Laterales",
+   "Cristal_Medallon",
+   "Cristal_Parabrisas",
+   "Cristal_Puerta_D",
+   "Cristal_Puerta_I",
+   "Interior",
+   "Puerta_D",
+   "Puerta_I",
+   "Rueda_DD",
+   "Rueda_DI",
+   "Rueda_TD",
+   "Rueda_TI"
+  ],
+  "tipo": "auto",
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Vehiculos\\Piezas\\PA01\\PA01.fbx",
+  "coleccion": "REV_PA01",
+  "_v2": true
+ },
+ "PA02": {
+  "L": 5.0,
+  "W": 2.62,
+  "H": 2.24,
+  "pivote_raiz_cm": 0.0,
+  "escala": "W=2.62 (esperado 1.8-2.1)",
+  "ruedas": 4,
+  "rueda_pivote_cm": 0.9,
+  "rueda_piso_cm": [
+   0.0,
+   0.0,
+   0.1,
+   -0.0
+  ],
+  "rueda_desnivel_cm": 0.1,
+  "rueda_no_redonda_pct": 4.8,
+  "puertas": [
+   "Puerta_D",
+   "Puerta_I"
+  ],
+  "cofre": false,
+  "bisagra_Puerta_D_cm": 0.0,
+  "choque_Puerta_D": [
+   65,
+   2
+  ],
+  "bisagra_Puerta_I_cm": 0.0,
+  "choque_Puerta_I": [
+   48,
+   3
+  ],
+  "cristales": {
+   "n": 5,
+   "transparentes": 5,
+   "cara_detras_pct": 1.0
+  },
+  "interior": true,
+  "motor": false,
+  "invertidas_pct": 0.01,
+  "bordes_abiertos": 874,
+  "islas": 11,
+  "islas_flotando": 0,
+  "vertices": 15167,
+  "piezas": [
+   "Carroceria",
+   "Cristal_Laterales",
+   "Cristal_Medallon",
+   "Cristal_Parabrisas",
+   "Cristal_Puerta_D",
+   "Cristal_Puerta_I",
+   "Interior",
+   "Puerta_D",
+   "Puerta_I",
+   "Rueda_DD",
+   "Rueda_DI",
+   "Rueda_TD",
+   "Rueda_TI"
+  ],
+  "tipo": "pickup",
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Vehiculos\\Piezas\\PA02\\PA02.fbx",
+  "coleccion": "REV_PA02",
+  "_v2": true
+ },
+ "V11": {
+  "L": 4.4,
+  "W": 2.16,
+  "H": 2.32,
+  "pivote_raiz_cm": 0.0,
+  "escala": "L=4.40 (esperado 4.8-5.9); H=2.32 (esperado 1.6-2.1)",
+  "ruedas": 4,
+  "rueda_pivote_cm": 0.0,
+  "rueda_piso_cm": [
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "rueda_desnivel_cm": 0.0,
+  "rueda_no_redonda_pct": 0.0,
+  "puertas": [
+   "Puerta_D",
+   "Puerta_I"
+  ],
+  "cofre": true,
+  "bisagra_Puerta_D_cm": 0.0,
+  "choque_Puerta_D": [
+   33,
+   0
+  ],
+  "bisagra_Puerta_I_cm": 0.0,
+  "choque_Puerta_I": [
+   25,
+   0
+  ],
+  "bisagra_Cofre_cm": 0.0,
+  "choque_Cofre": [
+   53,
+   2
+  ],
+  "cristales": {
+   "n": 5,
+   "transparentes": 5,
+   "cara_detras_pct": 0.07
+  },
+  "interior": true,
+  "motor": true,
+  "invertidas_pct": 0.0,
+  "bordes_abiertos": 1876,
+  "islas": 11,
+  "islas_flotando": 2,
+  "vertices": 19948,
+  "piezas": [
+   "Carroceria",
+   "Cofre",
+   "Cristal_Laterales",
+   "Cristal_Medallon",
+   "Cristal_Parabrisas",
+   "Cristal_Puerta_D",
+   "Cristal_Puerta_I",
+   "Interior",
+   "Interior_Casco",
+   "Motor",
+   "Puerta_D",
+   "Puerta_I",
+   "Rueda_DD",
+   "Rueda_DI",
+   "Rueda_TD",
+   "Rueda_TI"
+  ],
+  "tipo": "pickup",
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Vehiculos\\Piezas\\V11\\V11.fbx",
+  "coleccion": "REV_V11",
+  "_v2": true
+ },
+ "V05": {
+  "L": 4.43,
+  "W": 2.2,
+  "H": 2.11,
+  "pivote_raiz_cm": 0.0,
+  "escala": "H=2.11 (esperado 1.2-1.9)",
+  "ruedas": 4,
+  "rueda_pivote_cm": 0.0,
+  "rueda_piso_cm": [
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "rueda_desnivel_cm": 0.0,
+  "rueda_no_redonda_pct": 0.0,
+  "puertas": [
+   "Puerta_D",
+   "Puerta_I"
+  ],
+  "cofre": true,
+  "bisagra_Puerta_D_cm": 0.0,
+  "choque_Puerta_D": [
+   253,
+   88
+  ],
+  "bisagra_Puerta_I_cm": 0.0,
+  "choque_Puerta_I": [
+   102,
+   62
+  ],
+  "bisagra_Cofre_cm": 0.0,
+  "choque_Cofre": [
+   170,
+   0
+  ],
+  "cristales": {
+   "n": 4,
+   "transparentes": 4,
+   "cara_detras_pct": 0.07
+  },
+  "interior": false,
+  "motor": true,
+  "invertidas_pct": 0.0,
+  "bordes_abiertos": 287,
+  "islas": 3,
+  "islas_flotando": 0,
+  "vertices": 10021,
+  "piezas": [
+   "Carroceria",
+   "Cofre",
+   "Cristal_Lateral_D",
+   "Cristal_Lateral_I",
+   "Cristal_Medallon",
+   "Cristal_Parabrisas",
+   "Motor",
+   "Puerta_D",
+   "Puerta_I",
+   "Rueda_DD",
+   "Rueda_DI",
+   "Rueda_TD",
+   "Rueda_TI"
+  ],
+  "tipo": "auto",
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Vehiculos\\Piezas\\V05\\V05.fbx",
+  "coleccion": "REV_V05",
+  "_v2": true
+ },
+ "V06": {
+  "L": 4.5,
+  "W": 2.54,
+  "H": 2.3,
+  "pivote_raiz_cm": 0.0,
+  "escala": "W=2.54 (esperado 1.6-2.0); H=2.30 (esperado 1.2-1.9)",
+  "ruedas": 4,
+  "rueda_pivote_cm": 0.0,
+  "rueda_piso_cm": [
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "rueda_desnivel_cm": 0.0,
+  "rueda_no_redonda_pct": 0.0,
+  "puertas": [
+   "Puerta_D",
+   "Puerta_I"
+  ],
+  "cofre": true,
+  "bisagra_Puerta_D_cm": 0.0,
+  "choque_Puerta_D": [
+   51,
+   14
+  ],
+  "bisagra_Puerta_I_cm": 0.0,
+  "choque_Puerta_I": [
+   55,
+   12
+  ],
+  "bisagra_Cofre_cm": 0.0,
+  "choque_Cofre": [
+   106,
+   16
+  ],
+  "cristales": {
+   "n": 5,
+   "transparentes": 5,
+   "cara_detras_pct": 0.14
+  },
+  "interior": true,
+  "motor": true,
+  "invertidas_pct": 0.42,
+  "bordes_abiertos": 1282,
+  "islas": 43,
+  "islas_flotando": 0,
+  "vertices": 5558,
+  "piezas": [
+   "Carroceria",
+   "Cofre",
+   "Cristal_Laterales",
+   "Cristal_Medallon",
+   "Cristal_Parabrisas",
+   "Cristal_Puerta_D",
+   "Cristal_Puerta_I",
+   "Interior",
+   "Interior_Casco",
+   "Motor",
+   "Puerta_D",
+   "Puerta_I",
+   "Rueda_DD",
+   "Rueda_DI",
+   "Rueda_TD",
+   "Rueda_TI"
+  ],
+  "tipo": "auto",
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Vehiculos\\Piezas\\V06\\V06.fbx",
+  "coleccion": "REV_V06",
+  "_v2": true
+ },
+ "V01a": {
+  "L": 4.41,
+  "W": 2.46,
+  "H": 2.04,
+  "pivote_raiz_cm": 0.0,
+  "escala": "W=2.46 (esperado 1.6-2.0)",
+  "ruedas": 4,
+  "rueda_pivote_cm": 0.0,
+  "rueda_piso_cm": [
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "rueda_desnivel_cm": 0.0,
+  "rueda_no_redonda_pct": 0.2,
+  "puertas": [
+   "Puerta_D",
+   "Puerta_I"
+  ],
+  "cofre": true,
+  "bisagra_Puerta_D_cm": 0.0,
+  "choque_Puerta_D": [
+   34,
+   41
+  ],
+  "bisagra_Puerta_I_cm": 0.0,
+  "choque_Puerta_I": [
+   36,
+   37
+  ],
+  "bisagra_Cofre_cm": 0.0,
+  "choque_Cofre": [
+   147,
+   0
+  ],
+  "cristales": {
+   "n": 4,
+   "transparentes": 4,
+   "cara_detras_pct": 0.05
+  },
+  "interior": false,
+  "motor": true,
+  "invertidas_pct": 0.0,
+  "bordes_abiertos": 255,
+  "islas": 11,
+  "islas_flotando": 0,
+  "vertices": 9612,
+  "piezas": [
+   "Carroceria",
+   "Cofre",
+   "Cristal_Lateral_D",
+   "Cristal_Lateral_I",
+   "Cristal_Medallon",
+   "Cristal_Parabrisas",
+   "Motor",
+   "Puerta_D",
+   "Puerta_I",
+   "Rueda_DD",
+   "Rueda_DI",
+   "Rueda_TD",
+   "Rueda_TI"
+  ],
+  "tipo": "auto",
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Vehiculos\\Piezas\\V01a\\V01a.fbx",
+  "coleccion": "REV_V01a",
+  "_v2": true
+ },
+ "V01b": {
+  "L": 4.41,
+  "W": 2.3,
+  "H": 1.6,
+  "pivote_raiz_cm": 0.0,
+  "escala": "W=2.30 (esperado 1.6-2.0)",
+  "ruedas": 4,
+  "rueda_pivote_cm": 0.0,
+  "rueda_piso_cm": [
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "rueda_desnivel_cm": 0.0,
+  "rueda_no_redonda_pct": 0.2,
+  "puertas": [
+   "Puerta_D",
+   "Puerta_I"
+  ],
+  "cofre": true,
+  "bisagra_Puerta_D_cm": 0.0,
+  "choque_Puerta_D": [
+   80,
+   58
+  ],
+  "bisagra_Puerta_I_cm": 0.0,
+  "choque_Puerta_I": [
+   76,
+   57
+  ],
+  "bisagra_Cofre_cm": 0.0,
+  "choque_Cofre": [
+   76,
+   0
+  ],
+  "cristales": {
+   "n": 3,
+   "transparentes": 3,
+   "cara_detras_pct": 0.14
+  },
+  "interior": false,
+  "motor": true,
+  "invertidas_pct": 0.0,
+  "bordes_abiertos": 170,
+  "islas": 4,
+  "islas_flotando": 0,
+  "vertices": 9805,
+  "piezas": [
+   "Carroceria",
+   "Cofre",
+   "Cristal_Lateral_D",
+   "Cristal_Lateral_I",
+   "Cristal_Parabrisas",
+   "Motor",
+   "Puerta_D",
+   "Puerta_I",
+   "Rueda_DD",
+   "Rueda_DI",
+   "Rueda_TD",
+   "Rueda_TI"
+  ],
+  "tipo": "auto",
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Vehiculos\\Piezas\\V01b\\V01b.fbx",
+  "coleccion": "REV_V01b",
+  "_v2": true
+ },
+ "V02": {
+  "L": 4.33,
+  "W": 2.32,
+  "H": 2.26,
+  "pivote_raiz_cm": 0.0,
+  "escala": "W=2.32 (esperado 1.6-2.0); H=2.26 (esperado 1.2-1.9)",
+  "ruedas": 4,
+  "rueda_pivote_cm": 0.0,
+  "rueda_piso_cm": [
+   0.0,
+   0.0,
+   0.2,
+   0.2
+  ],
+  "rueda_desnivel_cm": 0.2,
+  "rueda_no_redonda_pct": 2.9,
+  "puertas": [
+   "Puerta_D",
+   "Puerta_I"
+  ],
+  "cofre": true,
+  "bisagra_Puerta_D_cm": 0.0,
+  "choque_Puerta_D": [
+   11,
+   45
+  ],
+  "bisagra_Puerta_I_cm": 0.0,
+  "choque_Puerta_I": [
+   43,
+   57
+  ],
+  "bisagra_Cofre_cm": 0.0,
+  "choque_Cofre": [
+   39,
+   0
+  ],
+  "cristales": {
+   "n": 5,
+   "transparentes": 5,
+   "cara_detras_pct": 0.02
+  },
+  "interior": true,
+  "motor": true,
+  "invertidas_pct": 0.11,
+  "bordes_abiertos": 1142,
+  "islas": 56,
+  "islas_flotando": 0,
+  "vertices": 6875,
+  "piezas": [
+   "Carroceria",
+   "Cofre",
+   "Cristal_Laterales",
+   "Cristal_Medallon",
+   "Cristal_Parabrisas",
+   "Cristal_Puerta_D",
+   "Cristal_Puerta_I",
+   "Interior",
+   "Interior_Casco",
+   "Motor",
+   "Puerta_D",
+   "Puerta_I",
+   "Rueda_DD",
+   "Rueda_DI",
+   "Rueda_TD",
+   "Rueda_TI"
+  ],
+  "tipo": "auto",
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Vehiculos\\Piezas\\V02\\V02.fbx",
+  "coleccion": "REV_V02",
+  "_v2": true
+ },
+ "V04": {
+  "L": 4.5,
+  "W": 2.3,
+  "H": 2.5,
+  "pivote_raiz_cm": 0.0,
+  "escala": "W=2.30 (esperado 1.6-2.0); H=2.50 (esperado 1.2-1.9)",
+  "ruedas": 4,
+  "rueda_pivote_cm": 0.0,
+  "rueda_piso_cm": [
+   0.0,
+   0.0,
+   -0.0,
+   -0.0
+  ],
+  "rueda_desnivel_cm": 0.0,
+  "rueda_no_redonda_pct": 0.0,
+  "puertas": [
+   "Puerta_D",
+   "Puerta_I"
+  ],
+  "cofre": true,
+  "bisagra_Puerta_D_cm": 0.0,
+  "choque_Puerta_D": [
+   9,
+   12
+  ],
+  "bisagra_Puerta_I_cm": 0.0,
+  "choque_Puerta_I": [
+   10,
+   24
+  ],
+  "bisagra_Cofre_cm": 0.0,
+  "choque_Cofre": [
+   117,
+   0
+  ],
+  "cristales": {
+   "n": 5,
+   "transparentes": 5,
+   "cara_detras_pct": 0.24
+  },
+  "interior": true,
+  "motor": true,
+  "invertidas_pct": 0.23,
+  "bordes_abiertos": 1803,
+  "islas": 70,
+  "islas_flotando": 0,
+  "vertices": 7411,
+  "piezas": [
+   "Carroceria",
+   "Cofre",
+   "Cristal_Laterales",
+   "Cristal_Medallon",
+   "Cristal_Parabrisas",
+   "Cristal_Puerta_D",
+   "Cristal_Puerta_I",
+   "Interior",
+   "Interior_Casco",
+   "Motor",
+   "Puerta_D",
+   "Puerta_I",
+   "Rueda_DD",
+   "Rueda_DI",
+   "Rueda_TD",
+   "Rueda_TI"
+  ],
+  "tipo": "auto",
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Vehiculos\\Piezas\\V04\\V04.fbx",
+  "coleccion": "REV_V04",
+  "_v2": true
+ },
+ "V09": {
+  "L": 4.41,
+  "W": 2.17,
+  "H": 1.98,
+  "pivote_raiz_cm": 0.0,
+  "escala": "OK",
+  "ruedas": 4,
+  "rueda_pivote_cm": 0.0,
+  "rueda_piso_cm": [
+   0.0,
+   0.0,
+   -0.0,
+   -0.0
+  ],
+  "rueda_desnivel_cm": 0.0,
+  "rueda_no_redonda_pct": 0.2,
+  "puertas": [
+   "Puerta_D",
+   "Puerta_I"
+  ],
+  "cofre": true,
+  "bisagra_Puerta_D_cm": 0.0,
+  "choque_Puerta_D": [
+   18,
+   53
+  ],
+  "bisagra_Puerta_I_cm": 0.0,
+  "choque_Puerta_I": [
+   7,
+   43
+  ],
+  "bisagra_Cofre_cm": 0.7,
+  "choque_Cofre": [
+   66,
+   0
+  ],
+  "cristales": {
+   "n": 5,
+   "transparentes": 5,
+   "cara_detras_pct": 0.05
+  },
+  "interior": true,
+  "motor": true,
+  "invertidas_pct": 0.0,
+  "bordes_abiertos": 745,
+  "islas": 7,
+  "islas_flotando": 0,
+  "vertices": 3420,
+  "piezas": [
+   "Carroceria",
+   "Cofre",
+   "Cristal_Laterales",
+   "Cristal_Medallon",
+   "Cristal_Parabrisas",
+   "Cristal_Puerta_D",
+   "Cristal_Puerta_I",
+   "Interior",
+   "Interior_Casco",
+   "Motor",
+   "Puerta_D",
+   "Puerta_I",
+   "Rueda_DD",
+   "Rueda_DI",
+   "Rueda_TD",
+   "Rueda_TI"
+  ],
+  "tipo": "auto",
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Vehiculos\\Piezas\\V09\\V09.fbx",
+  "coleccion": "REV_V09",
+  "_v2": true
+ },
+ "V12": {
+  "L": 4.4,
+  "W": 2.28,
+  "H": 1.53,
+  "pivote_raiz_cm": 0.0,
+  "escala": "W=2.28 (esperado 1.6-2.0)",
+  "ruedas": 4,
+  "rueda_pivote_cm": 0.0,
+  "rueda_piso_cm": [
+   0.0,
+   0.0,
+   -0.0,
+   -0.0
+  ],
+  "rueda_desnivel_cm": 0.0,
+  "rueda_no_redonda_pct": 0.0,
+  "puertas": [
+   "Puerta_D",
+   "Puerta_I"
+  ],
+  "cofre": true,
+  "bisagra_Puerta_D_cm": 0.0,
+  "choque_Puerta_D": [
+   15,
+   2
+  ],
+  "bisagra_Puerta_I_cm": 0.0,
+  "choque_Puerta_I": [
+   15,
+   2
+  ],
+  "bisagra_Cofre_cm": 0.0,
+  "choque_Cofre": [
+   0,
+   0
+  ],
+  "cristales": {
+   "n": 5,
+   "transparentes": 5,
+   "cara_detras_pct": 0.02
+  },
+  "interior": true,
+  "motor": true,
+  "invertidas_pct": 0.0,
+  "bordes_abiertos": 1391,
+  "islas": 14,
+  "islas_flotando": 0,
+  "vertices": 16305,
+  "piezas": [
+   "Carroceria",
+   "Cofre",
+   "Cristal_Laterales",
+   "Cristal_Medallon",
+   "Cristal_Parabrisas",
+   "Cristal_Puerta_D",
+   "Cristal_Puerta_I",
+   "Interior",
+   "Interior_Casco",
+   "Motor",
+   "Puerta_D",
+   "Puerta_I",
+   "Rueda_DD",
+   "Rueda_DI",
+   "Rueda_TD",
+   "Rueda_TI"
+  ],
+  "tipo": "auto",
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Vehiculos\\Piezas\\V12\\V12.fbx",
+  "coleccion": "REV_V12",
+  "_v2": true
+ },
+ "V13": {
+  "L": 4.7,
+  "W": 2.44,
+  "H": 1.81,
+  "pivote_raiz_cm": 0.0,
+  "escala": "W=2.44 (esperado 1.6-2.0)",
+  "ruedas": 4,
+  "rueda_pivote_cm": 0.0,
+  "rueda_piso_cm": [
+   0.0,
+   0.0,
+   -0.0,
+   -0.0
+  ],
+  "rueda_desnivel_cm": 0.0,
+  "rueda_no_redonda_pct": 0.0,
+  "puertas": [
+   "Puerta_D",
+   "Puerta_I"
+  ],
+  "cofre": true,
+  "bisagra_Puerta_D_cm": 0.0,
+  "choque_Puerta_D": [
+   2,
+   0
+  ],
+  "bisagra_Puerta_I_cm": 0.0,
+  "choque_Puerta_I": [
+   2,
+   0
+  ],
+  "bisagra_Cofre_cm": 0.0,
+  "choque_Cofre": [
+   13,
+   0
+  ],
+  "cristales": {
+   "n": 5,
+   "transparentes": 5,
+   "cara_detras_pct": 0.03
+  },
+  "interior": true,
+  "motor": true,
+  "invertidas_pct": 0.0,
+  "bordes_abiertos": 1205,
+  "islas": 12,
+  "islas_flotando": 0,
+  "vertices": 14058,
+  "piezas": [
+   "Carroceria",
+   "Cofre",
+   "Cristal_Laterales",
+   "Cristal_Medallon",
+   "Cristal_Parabrisas",
+   "Cristal_Puerta_D",
+   "Cristal_Puerta_I",
+   "Interior",
+   "Interior_Casco",
+   "Motor",
+   "Puerta_D",
+   "Puerta_I",
+   "Rueda_DD",
+   "Rueda_DI",
+   "Rueda_TD",
+   "Rueda_TI"
+  ],
+  "tipo": "auto",
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Vehiculos\\Piezas\\V13\\V13.fbx",
+  "coleccion": "REV_V13",
+  "_v2": true
+ },
+ "V14": {
+  "L": 3.8,
+  "W": 2.31,
+  "H": 1.96,
+  "pivote_raiz_cm": 0.0,
+  "escala": "W=2.31 (esperado 1.6-2.0)",
+  "ruedas": 4,
+  "rueda_pivote_cm": 0.0,
+  "rueda_piso_cm": [
+   0.0,
+   0.0,
+   -0.0,
+   -0.0
+  ],
+  "rueda_desnivel_cm": 0.0,
+  "rueda_no_redonda_pct": 0.0,
+  "puertas": [
+   "Puerta_D",
+   "Puerta_I"
+  ],
+  "cofre": true,
+  "bisagra_Puerta_D_cm": 0.0,
+  "choque_Puerta_D": [
+   88,
+   3
+  ],
+  "bisagra_Puerta_I_cm": 0.0,
+  "choque_Puerta_I": [
+   92,
+   1
+  ],
+  "bisagra_Cofre_cm": 0.0,
+  "choque_Cofre": [
+   0,
+   0
+  ],
+  "cristales": {
+   "n": 5,
+   "transparentes": 5,
+   "cara_detras_pct": 0.02
+  },
+  "interior": true,
+  "motor": true,
+  "invertidas_pct": 0.0,
+  "bordes_abiertos": 2689,
+  "islas": 80,
+  "islas_flotando": 0,
+  "vertices": 23851,
+  "piezas": [
+   "Carroceria",
+   "Cofre",
+   "Cristal_Laterales",
+   "Cristal_Medallon",
+   "Cristal_Parabrisas",
+   "Cristal_Puerta_D",
+   "Cristal_Puerta_I",
+   "Interior",
+   "Interior_Casco",
+   "Motor",
+   "Puerta_D",
+   "Puerta_I",
+   "Rueda_DD",
+   "Rueda_DI",
+   "Rueda_TD",
+   "Rueda_TI"
+  ],
+  "tipo": "auto",
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Vehiculos\\Piezas\\V14\\V14.fbx",
+  "coleccion": "REV_V14",
+  "_v2": true
+ },
+ "V15": {
+  "L": 5.1,
+  "W": 2.21,
+  "H": 1.45,
+  "pivote_raiz_cm": 0.0,
+  "escala": "OK",
+  "ruedas": 4,
+  "rueda_pivote_cm": 0.0,
+  "rueda_piso_cm": [
+   0.0,
+   0.0,
+   -0.0,
+   -0.0
+  ],
+  "rueda_desnivel_cm": 0.0,
+  "rueda_no_redonda_pct": 0.0,
+  "puertas": [
+   "Puerta_D",
+   "Puerta_I"
+  ],
+  "cofre": true,
+  "bisagra_Puerta_D_cm": 0.0,
+  "choque_Puerta_D": [
+   19,
+   5
+  ],
+  "bisagra_Puerta_I_cm": 0.0,
+  "choque_Puerta_I": [
+   13,
+   18
+  ],
+  "bisagra_Cofre_cm": 0.0,
+  "choque_Cofre": [
+   3,
+   0
+  ],
+  "cristales": {
+   "n": 5,
+   "transparentes": 5,
+   "cara_detras_pct": 0.02
+  },
+  "interior": true,
+  "motor": true,
+  "invertidas_pct": 0.0,
+  "bordes_abiertos": 1034,
+  "islas": 24,
+  "islas_flotando": 0,
+  "vertices": 16073,
+  "piezas": [
+   "Carroceria",
+   "Cofre",
+   "Cristal_Laterales",
+   "Cristal_Medallon",
+   "Cristal_Parabrisas",
+   "Cristal_Puerta_D",
+   "Cristal_Puerta_I",
+   "Interior",
+   "Interior_Casco",
+   "Motor",
+   "Puerta_D",
+   "Puerta_I",
+   "Rueda_DD",
+   "Rueda_DI",
+   "Rueda_TD",
+   "Rueda_TI"
+  ],
+  "tipo": "auto",
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Vehiculos\\Piezas\\V15\\V15.fbx",
+  "coleccion": "REV_V15",
+  "_v2": true
+ },
+ "V16": {
+  "L": 7.0,
+  "W": 3.54,
+  "H": 4.05,
+  "pivote_raiz_cm": 0.0,
+  "escala": "W=3.54 (esperado 1.9-2.4); H=4.05 (esperado 2.2-3.0)",
+  "ruedas": 4,
+  "rueda_pivote_cm": 0.0,
+  "rueda_piso_cm": [
+   0.0,
+   0.0,
+   -0.0,
+   -0.0
+  ],
+  "rueda_desnivel_cm": 0.0,
+  "rueda_no_redonda_pct": 0.0,
+  "puertas": [
+   "Puerta_D",
+   "Puerta_I"
+  ],
+  "cofre": true,
+  "bisagra_Puerta_D_cm": 0.0,
+  "choque_Puerta_D": [
+   41,
+   0
+  ],
+  "bisagra_Puerta_I_cm": 0.0,
+  "choque_Puerta_I": [
+   42,
+   0
+  ],
+  "bisagra_Cofre_cm": 0.0,
+  "choque_Cofre": [
+   82,
+   0
+  ],
+  "cristales": {
+   "n": 5,
+   "transparentes": 5,
+   "cara_detras_pct": 0.0
+  },
+  "interior": true,
+  "motor": true,
+  "invertidas_pct": 0.0,
+  "bordes_abiertos": 1717,
+  "islas": 6,
+  "islas_flotando": 0,
+  "vertices": 16810,
+  "piezas": [
+   "Carroceria",
+   "Cofre",
+   "Cristal_Laterales",
+   "Cristal_Medallon",
+   "Cristal_Parabrisas",
+   "Cristal_Puerta_D",
+   "Cristal_Puerta_I",
+   "Interior",
+   "Interior_Casco",
+   "Motor",
+   "Puerta_D",
+   "Puerta_I",
+   "Rueda_DD",
+   "Rueda_DI",
+   "Rueda_TD",
+   "Rueda_TI"
+  ],
+  "tipo": "microbus",
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Vehiculos\\Piezas\\V16\\V16.fbx",
+  "coleccion": "REV_V16",
+  "_v2": true
+ },
+ "V17": {
+  "L": 8.0,
+  "W": 4.02,
+  "H": 4.45,
+  "pivote_raiz_cm": 0.0,
+  "escala": "W=4.02 (esperado 2.2-2.6); H=4.45 (esperado 2.8-3.8)",
+  "ruedas": 4,
+  "rueda_pivote_cm": 0.0,
+  "rueda_piso_cm": [
+   0.0,
+   0.0,
+   -0.0,
+   -0.0
+  ],
+  "rueda_desnivel_cm": 0.0,
+  "rueda_no_redonda_pct": 0.0,
+  "puertas": [
+   "Puerta_D",
+   "Puerta_I"
+  ],
+  "cofre": true,
+  "bisagra_Puerta_D_cm": 0.0,
+  "choque_Puerta_D": [
+   21,
+   17
+  ],
+  "bisagra_Puerta_I_cm": 0.0,
+  "choque_Puerta_I": [
+   12,
+   11
+  ],
+  "bisagra_Cofre_cm": 0.0,
+  "choque_Cofre": [
+   0,
+   0
+  ],
+  "cristales": {
+   "n": 5,
+   "transparentes": 5,
+   "cara_detras_pct": 0.09
+  },
+  "interior": true,
+  "motor": true,
+  "invertidas_pct": 0.0,
+  "bordes_abiertos": 1081,
+  "islas": 7,
+  "islas_flotando": 0,
+  "vertices": 22287,
+  "piezas": [
+   "Carroceria",
+   "Cofre",
+   "Cristal_Laterales",
+   "Cristal_Medallon",
+   "Cristal_Parabrisas",
+   "Cristal_Puerta_D",
+   "Cristal_Puerta_I",
+   "Interior",
+   "Interior_Casco",
+   "Motor",
+   "Puerta_D",
+   "Puerta_I",
+   "Rueda_DD",
+   "Rueda_DI",
+   "Rueda_TD",
+   "Rueda_TI"
+  ],
+  "tipo": "camion",
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Vehiculos\\Piezas\\V17\\V17.fbx",
+  "coleccion": "REV_V17",
+  "_v2": true
+ },
+ "V18": {
+  "L": 16.0,
+  "W": 4.37,
+  "H": 5.99,
+  "pivote_raiz_cm": 0.0,
+  "escala": "W=4.37 (esperado 2.4-2.6); H=5.99 (esperado 3.5-4.2)",
+  "ruedas": 8,
+  "rueda_pivote_cm": 0.0,
+  "rueda_piso_cm": [
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   -0.0,
+   -0.0,
+   -0.0,
+   -0.0
+  ],
+  "rueda_desnivel_cm": 0.0,
+  "rueda_no_redonda_pct": 0.0,
+  "puertas": [
+   "Puerta_D",
+   "Puerta_I"
+  ],
+  "cofre": true,
+  "bisagra_Puerta_D_cm": 0.0,
+  "choque_Puerta_D": [
+   4,
+   4
+  ],
+  "bisagra_Puerta_I_cm": 0.0,
+  "choque_Puerta_I": [
+   6,
+   2
+  ],
+  "bisagra_Cofre_cm": 0.0,
+  "choque_Cofre": [
+   12,
+   0
+  ],
+  "cristales": {
+   "n": 5,
+   "transparentes": 5,
+   "cara_detras_pct": 0.0
+  },
+  "interior": true,
+  "motor": true,
+  "invertidas_pct": 0.0,
+  "bordes_abiertos": 1790,
+  "islas": 39,
+  "islas_flotando": 0,
+  "vertices": 25505,
+  "piezas": [
+   "Carroceria",
+   "Cofre",
+   "Cristal_Laterales",
+   "Cristal_Medallon",
+   "Cristal_Parabrisas",
+   "Cristal_Puerta_D",
+   "Cristal_Puerta_I",
+   "Interior",
+   "Interior_Casco",
+   "Motor",
+   "Puerta_D",
+   "Puerta_I",
+   "Rueda_DD",
+   "Rueda_DI",
+   "Rueda_T1D",
+   "Rueda_T1I",
+   "Rueda_T2D",
+   "Rueda_T2I",
+   "Rueda_T3D",
+   "Rueda_T3I"
+  ],
+  "tipo": "trailer",
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Vehiculos\\Piezas\\V18\\V18.fbx",
+  "coleccion": "REV_V18",
+  "_v2": true
+ },
+ "V19": {
+  "L": 6.0,
+  "W": 3.22,
+  "H": 3.66,
+  "pivote_raiz_cm": 0.0,
+  "escala": "W=3.22 (esperado 1.9-2.3); H=3.66 (esperado 2.3-2.9)",
+  "ruedas": 4,
+  "rueda_pivote_cm": 0.0,
+  "rueda_piso_cm": [
+   0.0,
+   0.0,
+   -0.0,
+   -0.0
+  ],
+  "rueda_desnivel_cm": 0.0,
+  "rueda_no_redonda_pct": 0.0,
+  "puertas": [
+   "Puerta_D",
+   "Puerta_I"
+  ],
+  "cofre": true,
+  "bisagra_Puerta_D_cm": 0.0,
+  "choque_Puerta_D": [
+   26,
+   0
+  ],
+  "bisagra_Puerta_I_cm": 0.0,
+  "choque_Puerta_I": [
+   37,
+   0
+  ],
+  "bisagra_Cofre_cm": 0.0,
+  "choque_Cofre": [
+   78,
+   0
+  ],
+  "cristales": {
+   "n": 5,
+   "transparentes": 5,
+   "cara_detras_pct": 0.0
+  },
+  "interior": true,
+  "motor": true,
+  "invertidas_pct": 0.0,
+  "bordes_abiertos": 1972,
+  "islas": 23,
+  "islas_flotando": 0,
+  "vertices": 19126,
+  "piezas": [
+   "Carroceria",
+   "Cofre",
+   "Cristal_Laterales",
+   "Cristal_Medallon",
+   "Cristal_Parabrisas",
+   "Cristal_Puerta_D",
+   "Cristal_Puerta_I",
+   "Interior",
+   "Interior_Casco",
+   "Motor",
+   "Puerta_D",
+   "Puerta_I",
+   "Rueda_DD",
+   "Rueda_DI",
+   "Rueda_TD",
+   "Rueda_TI"
+  ],
+  "tipo": "ambulancia",
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Vehiculos\\Piezas\\V19\\V19.fbx",
+  "coleccion": "REV_V19",
+  "_v2": true
+ },
+ "V20": {
+  "L": 4.5,
+  "W": 2.33,
+  "H": 1.6,
+  "pivote_raiz_cm": 0.0,
+  "escala": "W=2.33 (esperado 1.6-2.0)",
+  "ruedas": 4,
+  "rueda_pivote_cm": 0.0,
+  "rueda_piso_cm": [
+   0.0,
+   0.0,
+   -0.0,
+   -0.0
+  ],
+  "rueda_desnivel_cm": 0.0,
+  "rueda_no_redonda_pct": 0.0,
+  "puertas": [
+   "Puerta_D",
+   "Puerta_I"
+  ],
+  "cofre": true,
+  "bisagra_Puerta_D_cm": 0.0,
+  "choque_Puerta_D": [
+   10,
+   0
+  ],
+  "bisagra_Puerta_I_cm": 0.0,
+  "choque_Puerta_I": [
+   4,
+   0
+  ],
+  "bisagra_Cofre_cm": 0.0,
+  "choque_Cofre": [
+   41,
+   0
+  ],
+  "cristales": {
+   "n": 5,
+   "transparentes": 5,
+   "cara_detras_pct": 0.0
+  },
+  "interior": true,
+  "motor": true,
+  "invertidas_pct": 0.0,
+  "bordes_abiertos": 1615,
+  "islas": 19,
+  "islas_flotando": 0,
+  "vertices": 21410,
+  "piezas": [
+   "Carroceria",
+   "Cofre",
+   "Cristal_Laterales",
+   "Cristal_Medallon",
+   "Cristal_Parabrisas",
+   "Cristal_Puerta_D",
+   "Cristal_Puerta_I",
+   "Interior",
+   "Interior_Casco",
+   "Motor",
+   "Puerta_D",
+   "Puerta_I",
+   "Rueda_DD",
+   "Rueda_DI",
+   "Rueda_TD",
+   "Rueda_TI"
+  ],
+  "tipo": "auto",
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Vehiculos\\Piezas\\V20\\V20.fbx",
+  "coleccion": "REV_V20",
+  "_v2": true
+ },
+ "V21": {
+  "L": 4.2,
+  "W": 2.55,
+  "H": 1.95,
+  "pivote_raiz_cm": 0.0,
+  "escala": "W=2.55 (esperado 1.6-2.0)",
+  "ruedas": 4,
+  "rueda_pivote_cm": 0.0,
+  "rueda_piso_cm": [
+   0.0,
+   0.0,
+   -0.0,
+   -0.0
+  ],
+  "rueda_desnivel_cm": 0.0,
+  "rueda_no_redonda_pct": 0.0,
+  "puertas": [
+   "Puerta_D",
+   "Puerta_I"
+  ],
+  "cofre": true,
+  "bisagra_Puerta_D_cm": 0.0,
+  "choque_Puerta_D": [
+   3,
+   0
+  ],
+  "bisagra_Puerta_I_cm": 0.0,
+  "choque_Puerta_I": [
+   7,
+   0
+  ],
+  "bisagra_Cofre_cm": 0.0,
+  "choque_Cofre": [
+   17,
+   0
+  ],
+  "cristales": {
+   "n": 5,
+   "transparentes": 5,
+   "cara_detras_pct": 0.02
+  },
+  "interior": true,
+  "motor": true,
+  "invertidas_pct": 0.0,
+  "bordes_abiertos": 1706,
+  "islas": 22,
+  "islas_flotando": 0,
+  "vertices": 22376,
+  "piezas": [
+   "Carroceria",
+   "Cofre",
+   "Cristal_Laterales",
+   "Cristal_Medallon",
+   "Cristal_Parabrisas",
+   "Cristal_Puerta_D",
+   "Cristal_Puerta_I",
+   "Interior",
+   "Interior_Casco",
+   "Motor",
+   "Puerta_D",
+   "Puerta_I",
+   "Rueda_DD",
+   "Rueda_DI",
+   "Rueda_TD",
+   "Rueda_TI"
+  ],
+  "tipo": "auto",
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Vehiculos\\Piezas\\V21\\V21.fbx",
+  "coleccion": "REV_V21",
+  "_v2": true
+ },
+ "V22": {
+  "L": 4.6,
+  "W": 2.54,
+  "H": 1.38,
+  "pivote_raiz_cm": 0.0,
+  "escala": "W=2.54 (esperado 1.6-2.0)",
+  "ruedas": 4,
+  "rueda_pivote_cm": 0.0,
+  "rueda_piso_cm": [
+   0.0,
+   0.3,
+   -0.0,
+   0.0
+  ],
+  "rueda_desnivel_cm": 0.3,
+  "rueda_no_redonda_pct": 1.0,
+  "puertas": [
+   "Puerta_D",
+   "Puerta_I"
+  ],
+  "cofre": false,
+  "bisagra_Puerta_D_cm": 0.0,
+  "choque_Puerta_D": [
+   38,
+   7
+  ],
+  "bisagra_Puerta_I_cm": 0.0,
+  "choque_Puerta_I": [
+   25,
+   1
+  ],
+  "cristales": {
+   "n": 5,
+   "transparentes": 5,
+   "cara_detras_pct": 1.0
+  },
+  "interior": true,
+  "motor": false,
+  "invertidas_pct": 0.0,
+  "bordes_abiertos": 832,
+  "islas": 15,
+  "islas_flotando": 0,
+  "vertices": 15339,
+  "piezas": [
+   "Carroceria",
+   "Cristal_Laterales",
+   "Cristal_Medallon",
+   "Cristal_Parabrisas",
+   "Cristal_Puerta_D",
+   "Cristal_Puerta_I",
+   "Interior",
+   "Puerta_D",
+   "Puerta_I",
+   "Rueda_DD",
+   "Rueda_DI",
+   "Rueda_TD",
+   "Rueda_TI"
+  ],
+  "tipo": "auto",
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Vehiculos\\Piezas\\V22\\V22.fbx",
+  "coleccion": "REV_V22",
+  "_v2": true
+ },
+ "V23": {
+  "L": 4.6,
+  "W": 2.12,
+  "H": 1.24,
+  "pivote_raiz_cm": 0.0,
+  "escala": "OK",
+  "ruedas": 4,
+  "rueda_pivote_cm": 0.0,
+  "rueda_piso_cm": [
+   0.0,
+   0.0,
+   -0.0,
+   -0.0
+  ],
+  "rueda_desnivel_cm": 0.0,
+  "rueda_no_redonda_pct": 0.0,
+  "puertas": [
+   "Puerta_D",
+   "Puerta_I"
+  ],
+  "cofre": true,
+  "bisagra_Puerta_D_cm": 0.0,
+  "choque_Puerta_D": [
+   12,
+   60
+  ],
+  "bisagra_Puerta_I_cm": 0.0,
+  "choque_Puerta_I": [
+   7,
+   61
+  ],
+  "bisagra_Cofre_cm": 0.0,
+  "choque_Cofre": [
+   2,
+   0
+  ],
+  "cristales": {
+   "n": 5,
+   "transparentes": 5,
+   "cara_detras_pct": 0.0
+  },
+  "interior": true,
+  "motor": true,
+  "invertidas_pct": 0.01,
+  "bordes_abiertos": 3142,
+  "islas": 147,
+  "islas_flotando": 0,
+  "vertices": 24267,
+  "piezas": [
+   "Carroceria",
+   "Cofre",
+   "Cristal_Laterales",
+   "Cristal_Medallon",
+   "Cristal_Parabrisas",
+   "Cristal_Puerta_D",
+   "Cristal_Puerta_I",
+   "Interior",
+   "Interior_Casco",
+   "Motor",
+   "Puerta_D",
+   "Puerta_I",
+   "Rueda_DD",
+   "Rueda_DI",
+   "Rueda_TD",
+   "Rueda_TI"
+  ],
+  "tipo": "auto",
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Vehiculos\\Piezas\\V23\\V23.fbx",
+  "coleccion": "REV_V23",
+  "_v2": true
+ },
+ "V24": {
+  "L": 4.7,
+  "W": 2.25,
+  "H": 1.45,
+  "pivote_raiz_cm": 0.0,
+  "escala": "W=2.25 (esperado 1.6-2.0)",
+  "ruedas": 4,
+  "rueda_pivote_cm": 0.0,
+  "rueda_piso_cm": [
+   0.0,
+   0.0,
+   -0.0,
+   -0.0
+  ],
+  "rueda_desnivel_cm": 0.0,
+  "rueda_no_redonda_pct": 0.0,
+  "puertas": [
+   "Puerta_D",
+   "Puerta_I"
+  ],
+  "cofre": true,
+  "bisagra_Puerta_D_cm": 0.0,
+  "choque_Puerta_D": [
+   47,
+   1
+  ],
+  "bisagra_Puerta_I_cm": 0.0,
+  "choque_Puerta_I": [
+   41,
+   0
+  ],
+  "bisagra_Cofre_cm": 0.0,
+  "choque_Cofre": [
+   1,
+   0
+  ],
+  "cristales": {
+   "n": 5,
+   "transparentes": 5,
+   "cara_detras_pct": 0.02
+  },
+  "interior": true,
+  "motor": true,
+  "invertidas_pct": 0.0,
+  "bordes_abiertos": 2287,
+  "islas": 35,
+  "islas_flotando": 0,
+  "vertices": 23504,
+  "piezas": [
+   "Carroceria",
+   "Cofre",
+   "Cristal_Laterales",
+   "Cristal_Medallon",
+   "Cristal_Parabrisas",
+   "Cristal_Puerta_D",
+   "Cristal_Puerta_I",
+   "Interior",
+   "Interior_Casco",
+   "Motor",
+   "Puerta_D",
+   "Puerta_I",
+   "Rueda_DD",
+   "Rueda_DI",
+   "Rueda_TD",
+   "Rueda_TI"
+  ],
+  "tipo": "auto",
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Vehiculos\\Piezas\\V24\\V24.fbx",
+  "coleccion": "REV_V24",
+  "_v2": true
+ },
+ "V01a_viejo": {
+  "L": 0.53,
+  "W": 0.98,
+  "H": 0.46,
+  "pivote_raiz_cm": 0.0,
+  "escala": "L=0.53 (esperado 3.6-5.2); W=0.98 (esperado 1.6-2.0); H=0.46 (esperado 1.2-1.9)",
+  "ruedas": 0,
+  "puertas": [],
+  "cofre": false,
+  "piezas": [
+   "tripo_node_c81d487f"
+  ],
+  "una_sola_malla": true,
+  "invertidas_pct": 0.0,
+  "bordes_abiertos": 3,
+  "vertices": 45144,
+  "tipo": "auto",
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Vehiculos\\V01a_CarroViejito\\V01a_CarroViejito.fbx",
+  "coleccion": "REV_V01a_viejo"
+ },
+ "V01b_viejo": {
+  "L": 0.52,
+  "W": 0.98,
+  "H": 0.33,
+  "pivote_raiz_cm": 0.1,
+  "escala": "L=0.52 (esperado 3.6-5.2); W=0.98 (esperado 1.6-2.0); H=0.33 (esperado 1.2-1.9)",
+  "ruedas": 0,
+  "puertas": [],
+  "cofre": false,
+  "piezas": [
+   "tripo_node_a5b838dd"
+  ],
+  "una_sola_malla": true,
+  "invertidas_pct": 0.0,
+  "bordes_abiertos": 12,
+  "vertices": 45083,
+  "tipo": "auto",
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Vehiculos\\V01b_CarroPro\\V01b_CarroPro.fbx",
+  "coleccion": "REV_V01b_viejo"
+ },
+ "V02_viejo": {
+  "L": 0.81,
+  "W": 1.0,
+  "H": 0.5,
+  "pivote_raiz_cm": 0.0,
+  "escala": "L=0.81 (esperado 3.6-5.2); W=1.00 (esperado 1.6-2.0); H=0.50 (esperado 1.2-1.9)",
+  "ruedas": 0,
+  "puertas": [],
+  "cofre": false,
+  "piezas": [
+   "tripo_6e970eb1_a14b_4f58_9207_6b3a278c0ade"
+  ],
+  "una_sola_malla": true,
+  "invertidas_pct": 0.4,
+  "bordes_abiertos": 1472,
+  "vertices": 10419,
+  "tipo": "auto",
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Vehiculos\\V02\\V02.fbx",
+  "coleccion": "REV_V02_viejo"
+ },
+ "V03_viejo": {
+  "L": 0.99,
+  "W": 1.0,
+  "H": 0.47,
+  "pivote_raiz_cm": 0.0,
+  "escala": "L=0.99 (esperado 3.6-5.2); W=1.00 (esperado 1.6-2.0); H=0.47 (esperado 1.2-1.9)",
+  "ruedas": 0,
+  "puertas": [],
+  "cofre": false,
+  "piezas": [
+   "tripo_64e94ff7_84c6_4dda_9269_412e72153c23"
+  ],
+  "una_sola_malla": true,
+  "invertidas_pct": 0.11,
+  "bordes_abiertos": 523,
+  "vertices": 9945,
+  "tipo": "auto",
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Vehiculos\\V03\\V03.fbx",
+  "coleccion": "REV_V03_viejo"
+ },
+ "V04_viejo": {
+  "L": 0.51,
+  "W": 1.0,
+  "H": 0.56,
+  "pivote_raiz_cm": 0.0,
+  "escala": "L=0.51 (esperado 3.6-5.2); W=1.00 (esperado 1.6-2.0); H=0.56 (esperado 1.2-1.9)",
+  "ruedas": 0,
+  "puertas": [],
+  "cofre": false,
+  "piezas": [
+   "tripo_5e88ec21_9bc4_4ab9_8a05_31fb10cbf60c"
+  ],
+  "una_sola_malla": true,
+  "invertidas_pct": 0.12,
+  "bordes_abiertos": 1697,
+  "vertices": 10404,
+  "tipo": "auto",
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Vehiculos\\V04\\V04.fbx",
+  "coleccion": "REV_V04_viejo"
+ },
+ "V05_viejo": {
+  "L": 1.0,
+  "W": 0.56,
+  "H": 0.51,
+  "pivote_raiz_cm": 0.0,
+  "escala": "L=1.00 (esperado 3.6-5.2); W=0.56 (esperado 1.6-2.0); H=0.51 (esperado 1.2-1.9)",
+  "ruedas": 0,
+  "puertas": [],
+  "cofre": false,
+  "piezas": [
+   "tripo_1ced3d85_f248_4286_9b10_95e36beee6ce"
+  ],
+  "una_sola_malla": true,
+  "invertidas_pct": 0.23,
+  "bordes_abiertos": 1610,
+  "vertices": 10764,
+  "tipo": "auto",
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Vehiculos\\V05\\V05.fbx",
+  "coleccion": "REV_V05_viejo"
+ },
+ "V06_viejo": {
+  "L": 1.0,
+  "W": 0.56,
+  "H": 0.51,
+  "pivote_raiz_cm": 0.0,
+  "escala": "L=1.00 (esperado 3.6-5.2); W=0.56 (esperado 1.6-2.0); H=0.51 (esperado 1.2-1.9)",
+  "ruedas": 0,
+  "puertas": [],
+  "cofre": false,
+  "piezas": [
+   "tripo_1ced3d85_f248_4286_9b10_95e36beee6ce.001"
+  ],
+  "una_sola_malla": true,
+  "invertidas_pct": 0.23,
+  "bordes_abiertos": 1610,
+  "vertices": 10764,
+  "tipo": "auto",
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Vehiculos\\V06\\V06.fbx",
+  "coleccion": "REV_V06_viejo"
+ },
+ "V07_viejo": {
+  "L": 0.42,
+  "W": 0.98,
+  "H": 0.66,
+  "pivote_raiz_cm": 0.0,
+  "escala": "L=0.42 (esperado 1.8-2.4); H=0.66 (esperado 1.0-1.4)",
+  "ruedas": 0,
+  "puertas": [],
+  "cofre": false,
+  "piezas": [
+   "tripo_node_8ebc2972"
+  ],
+  "una_sola_malla": true,
+  "invertidas_pct": 0.0,
+  "bordes_abiertos": 502,
+  "vertices": 13455,
+  "tipo": "moto",
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Vehiculos\\V07\\V07.fbx",
+  "coleccion": "REV_V07_viejo"
+ },
+ "V08_viejo": {
+  "L": 0.44,
+  "W": 1.0,
+  "H": 0.65,
+  "pivote_raiz_cm": 0.0,
+  "escala": "L=0.44 (esperado 1.8-2.4); H=0.65 (esperado 1.0-1.4)",
+  "ruedas": 0,
+  "puertas": [],
+  "cofre": false,
+  "piezas": [
+   "f0175aff_2cb1_4fed_92be_0fba0934c902"
+  ],
+  "una_sola_malla": true,
+  "invertidas_pct": 0.05,
+  "bordes_abiertos": 1750,
+  "vertices": 10872,
+  "tipo": "moto",
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Vehiculos\\V08\\V08.fbx",
+  "coleccion": "REV_V08_viejo"
+ },
+ "V09_viejo": {
+  "L": 0.98,
+  "W": 0.48,
+  "H": 0.44,
+  "pivote_raiz_cm": 0.0,
+  "escala": "L=0.98 (esperado 3.6-5.2); W=0.48 (esperado 1.6-2.0); H=0.44 (esperado 1.2-1.9)",
+  "ruedas": 0,
+  "puertas": [],
+  "cofre": false,
+  "piezas": [
+   "tripo_node_e4f940df"
+  ],
+  "una_sola_malla": true,
+  "invertidas_pct": 0.0,
+  "bordes_abiertos": 27,
+  "vertices": 5467,
+  "tipo": "auto",
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Vehiculos\\V09\\V09.fbx",
+  "coleccion": "REV_V09_viejo"
+ },
+ "V10_viejo": {
+  "L": 0.48,
+  "W": 0.98,
+  "H": 0.41,
+  "pivote_raiz_cm": 0.0,
+  "escala": "L=0.48 (esperado 3.6-5.2); W=0.98 (esperado 1.6-2.0); H=0.41 (esperado 1.2-1.9)",
+  "ruedas": 0,
+  "puertas": [],
+  "cofre": false,
+  "piezas": [
+   "tripo_node_ea047f49"
+  ],
+  "una_sola_malla": true,
+  "invertidas_pct": 0.0,
+  "bordes_abiertos": 10,
+  "vertices": 5242,
+  "tipo": "auto",
+  "fbx": "C:\\Users\\Angel Perez\\Desktop\\videojuego\\mecha-cyberpunk\\Assets\\Arte\\Vehiculos\\V10\\V10.fbx",
+  "coleccion": "REV_V10_viejo"
+ }
+}
