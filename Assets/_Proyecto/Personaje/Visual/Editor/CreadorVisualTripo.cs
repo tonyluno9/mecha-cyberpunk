@@ -32,7 +32,7 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
                 case "E10_PandilleroSnakes": return 1.8f;
                 case "E11_JefeSnakes": return 1.95f;
                 case "E12_GuardiaPesadoNova": return 2.05f;
-                case "E14_JefeFinalNova": return 2.3f;
+                case "E14_JefeFinalNova": return EscalasNova.AlturaJefeFinalE14; // T-1552: 3.14 m (antes 2.3)
                 // T-1497: la altura real de los agentes de Nova sale de EscalasNova (E15 2.6 m, E16 3.5 m, E18 2.2 m).
                 case "E15_CentinelaNova_a":
                 case "E15_CentinelaNova_b": return EscalasNova.AlturaCentinelaE15;
