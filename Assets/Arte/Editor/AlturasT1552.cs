@@ -537,6 +537,20 @@ namespace MechaCyberpunk.Arte.Editor
         // ---------- Afinar ----------
 
         /// <summary>
+        /// Visuales cuya pose de bind no sirve para medir (woman2 viene agachada: bind 1.84 pero animada en Idle mide 2.17): Afinar los lleva a la altura nueva proporcional
+        /// (nueva x 1.80 / 1.84) midiendo la malla animada en Idle.
+        /// </summary>
+        public static readonly string[] AfinadosPorIdle = { "Visual_woman2" };
+
+        public static bool SeAfinaPorIdle(string visual) => System.Array.IndexOf(AfinadosPorIdle, visual) >= 0;
+
+        private static MedidaAltura MedirIdle(string ruta)
+        {
+            EscalaHumanosT1521.Medida m = EscalaHumanosT1521.MedirPrefab(ruta);
+            return new MedidaAltura(m.Valida, m.Malla, m.Problema);
+        }
+
+        /// <summary>
         /// Solo si hace falta: a quien ya tiene la etiqueta de Aplicar y mide en bind más de 5 cm lejos de su altura nueva (porque la tabla de Blender y la malla no coinciden),
         /// le pone la escala que lo lleva a la nueva midiendo la malla. Actualiza su etiqueta (la base se conserva).
         /// </summary>
@@ -553,8 +567,9 @@ namespace MechaCyberpunk.Arte.Editor
                 {
                     continue;
                 }
-                MedidaAltura bind = MedirBind(ruta);
-                float objetivo = EscalasHumanos.Objetivo(visual);
+                bool porIdle = SeAfinaPorIdle(visual);
+                MedidaAltura bind = porIdle ? MedirIdle(ruta) : MedirBind(ruta);
+                float objetivo = porIdle ? EscalasHumanos.Objetivo(visual) * EscalasHumanos.AlturaJugadorAnimada / EscalasHumanos.AlturaJugador : EscalasHumanos.Objetivo(visual);
                 if (!bind.Valida || Mathf.Abs(bind.Altura - objetivo) <= ToleranciaAfinar)
                 {
                     continue;

@@ -23,6 +23,12 @@ namespace MechaCyberpunk.Tests
         /// </summary>
         private static string[] PrefabsMedibles => EscalasHumanos.Prefabs.Where(v => v != "Visual_E18_EliteNova_a").ToArray();
 
+        /// <summary>
+        /// Para la altura animada en Idle con PJ01_Loco_Idle: sin los robots de Nova (E15, E16, E18). En juego no usan ese idle (tienen sus propios clips) y retargeteado
+        /// en su esqueleto da 2.1 a 4.3 m; su altura buena es la de bind, que comprueba AlturasT1552Pruebas.
+        /// </summary>
+        private static string[] PrefabsIdle => PrefabsMedibles.Where(v => !v.StartsWith("Visual_E15_") && !v.StartsWith("Visual_E16_")).ToArray();
+
         [Test]
         public void Tabla_TodosEstanEntreLaAbuelaYLosRobotsGrandes()
         {
@@ -83,7 +89,7 @@ namespace MechaCyberpunk.Tests
             Assert.AreEqual(1f, EscalasHumanos.FactorCorreccion(medida, objetivo), 0.0001f);
         }
 
-        [TestCaseSource(nameof(PrefabsMedibles))]
+        [TestCaseSource(nameof(PrefabsIdle))]
         public void Prefab_AnimadoEnIdle_MideSuAlturaObjetivo(string visual)
         {
             EscalaHumanosT1521.Medida m = EscalaHumanosT1521.MedirPrefab(EscalaHumanosT1521.CarpetaVisuales + visual + ".prefab");

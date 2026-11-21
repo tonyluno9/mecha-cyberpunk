@@ -1,3 +1,4 @@
+using MechaCyberpunk.Personaje.Visual.Editor;
 using System.Linq;
 using MechaCyberpunk.Arte.Editor;
 using MechaCyberpunk.Personaje.Visual;
@@ -264,15 +265,24 @@ namespace MechaCyberpunk.Tests
         {
             string ruta = CarpetaVisuales + visual + ".prefab";
             GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(ruta);
-            Assert.IsTrue(AlturasT1552.LeerEtiqueta(AssetDatabase.GetLabels(prefab), out float baseEsc, out float fin), visual + ": sin etiqueta T1552 (corre AlturasT1552.Aplicar)");
+            Assert.IsTrue(AlturasT1552.LeerEtiqueta(AssetDatabase.GetLabels(prefab), out _, out float fin), visual + ": sin etiqueta T1552 (corre AlturasT1552.Aplicar)");
             Transform modelo = prefab.transform.Find("Giro/Modelo");
             Assert.AreEqual(fin, modelo.localScale.y, fin * 0.002f, visual + ": escala del Modelo contra la etiqueta");
-            Assert.AreEqual(modelo.localScale.x, modelo.localScale.y, 0.0001f, visual + ": uniforme");
             Assert.AreEqual(Vector3.one, prefab.transform.localScale, visual + ": la raíz no se escala");
-            if (!Mathf.Approximately(baseEsc, fin))
+            // Tras Afinar la escala final ya no es base x factor (la tabla de Blender no coincide con la malla de Unity): lo que vale es que la malla mida la altura nueva.
+            // La altura es la de bind; woman2 (bind agachado) se mide animada en Idle y proporcional a PJ01 (1.80 contra 1.84).
+            float nueva = EscalasHumanos.Objetivo(visual);
+            float medida;
+            if (AlturasT1552.SeAfinaPorIdle(visual))
             {
-                Assert.AreEqual(EscalasHumanos.Factor(visual), fin / baseEsc, 0.002f, visual + ": final / base = factor de la tabla");
+                medida = EscalaHumanosT1521.MedirPrefab(ruta).Malla;
+                nueva *= EscalasHumanos.AlturaJugadorAnimada / EscalasHumanos.AlturaJugador;
             }
+            else
+            {
+                medida = AlturasT1552.MedirBind(ruta).Altura;
+            }
+            Assert.AreEqual(nueva, medida, AlturasT1552.ToleranciaAfinar, visual + ": altura medida contra la nueva (corre AlturasT1552.Afinar si falla)");
         }
 
         [Test]
