@@ -38,7 +38,7 @@ namespace MechaCyberpunk.UI.Editor
             Texture2D h05 = Textura("H05_Subfusil.png");
             Texture2D h06 = Textura("H06_Revolver.png");
             Texture2D h07 = Textura("H07_Lanzagranadas.png");
-            Texture2D h08 = Textura("H08_Granada.png");
+            Texture2D h08 = Textura("H11_Granada.png");
             Texture2D h09 = Textura("H09_RiflePlasma.png");
 
             var armas = new List<EntradaArmaMenu>
@@ -50,7 +50,7 @@ namespace MechaCyberpunk.UI.Editor
                 EntradaArmaMenu.Crear(ArmaAPie.Subfusil, "SUBFUSIL", h05, Modelo("W05_Subfusil"), h05, "Cargador", "Canon", "Mira"),
                 EntradaArmaMenu.Crear(ArmaAPie.Revolver, "REVÓLVER", h06, Modelo("W06_Revolver"), h06, "Tambor", "Canon", "", false),
                 EntradaArmaMenu.Crear(ArmaAPie.Lanzagranadas, "LANZAGRANADAS", h07, Modelo("W08_Lanzagranadas"), h07, "Tambor", "Canon", "", false),
-                EntradaArmaMenu.Crear(ArmaAPie.Granada, "GRANADA", h08, Modelo("W09_Granada"), h08, "", "", ""),
+                EntradaArmaMenu.Crear(ArmaAPie.Granada, "GRANADA", h08, Modelo("W11_Granada"), h08, "", "", ""),
                 EntradaArmaMenu.Crear(ArmaAPie.RiflePlasma, "RIFLE DE PLASMA", h09, Modelo("W07_RiflePlasma"), h09, "Celda", "Canon", "Mira")
             };
             var piezas = new List<EntradaPiezaMenu>
