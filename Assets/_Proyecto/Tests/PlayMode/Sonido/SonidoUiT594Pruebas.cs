@@ -37,7 +37,7 @@ namespace MechaCyberpunk.Tests.Sonido
         }
 
         [UnityTest]
-        public IEnumerator UnMensajeNuevoPideElTicDeTexto_YNoElTimbre()
+        public IEnumerator UnMensajeNuevoPideElTonoDelCelular_YNoElTimbre()
         {
             GestorSonidos g = CrearGestor();
             yield return null;
@@ -45,10 +45,10 @@ namespace MechaCyberpunk.Tests.Sonido
             ServicioMensajes mensajes = servicio.AddComponent<ServicioMensajes>();
             yield return null;
             Assert.IsTrue(mensajes.Entregar(ReglaMensajes.IdLibre, 1));
-            Assert.AreEqual(1, g.Pedidos("UI_TEXTO"));
+            // Sonidos 20-nov (T-1535): el mensaje del celular suena con HUD_MENSAJE_CELULAR (antes el tic UI_TEXTO); el timbre sigue sin usarse.
+            Assert.AreEqual(1, g.Pedidos("HUD_MENSAJE_CELULAR"));
+            Assert.AreEqual(0, g.Pedidos("UI_TEXTO"));
             Assert.AreEqual(0, g.Pedidos("UI_TELEFONO"));
-            Assert.AreEqual("tic", g.UltimoClip.name);
-            Assert.LessOrEqual(g.UltimoVolumenRelativo, 0.5f);
             Object.Destroy(servicio);
         }
 

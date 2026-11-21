@@ -150,7 +150,8 @@ namespace MechaCyberpunk.Tests.Sonido
             Assert.AreEqual(0, apagadosSonando, "ningun ID apagado suena");
             foreach (string id in new[] { "ARM_PIS_DISPARO", "ARM_ESC_DISPARO", "VEH_CHOQUE_LEVE", "VEH_EXPLOSION", "PUN_GOLPE_CARNE", "UI_ACEPTAR" })
             {
-                Assert.IsTrue(sonaron.Contains(id), id + " debia sonar");
+                // Sonidos 19/20-nov: un ID viejo con alias (VEH_EXPLOSION -> EXP_CARRO) suena con el nuevo.
+                Assert.IsTrue(sonaron.Contains(id) || sonaron.Contains(MapaSonidos19nov.Nuevo(id) ?? id), id + " debia sonar");
             }
             Assert.IsFalse(sonaron.Contains("UI_TEXTO"));
             Assert.IsFalse(sonaron.Contains("VEH_CLAXON_TRAFICO"));
