@@ -239,7 +239,7 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
         }
 
         [Test]
-        public void Velocidades_LosUmbralesDelArbolDeCaminarSon1_6y4_5()
+        public void Velocidades_LosUmbralesDelArbolDeCaminarSon1_62y4_53()
         {
             var umbrales = new List<float>();
             void Recorrer(BlendTree a)

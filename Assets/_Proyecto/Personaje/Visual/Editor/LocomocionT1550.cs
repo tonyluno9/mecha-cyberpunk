@@ -55,6 +55,7 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
                 Debug.LogError(Etiqueta + "falta " + ConstructorControladorBase.RutaControlador);
                 return;
             }
+            int umbrales = AjustarUmbralesCaminar(controlador);
             int estados = AnimacionesT1540.AgregarEstados(controlador);
             EditorUtility.SetDirty(controlador);
             AssetDatabase.SaveAssets();
@@ -67,9 +68,97 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             {
                 Debug.LogError(Etiqueta + "no se pudo importar " + RutaClipRapido + ": el override del jugador NO se cambió");
             }
+            int rellenados = RellenarClavesSinClip(controlador);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
-            Debug.Log(Etiqueta + "Aplicar listo: " + estados + " estados del salto tocados en el ControladorBase; correr rapido importado=" + importado);
+            Debug.Log(Etiqueta + "Aplicar listo: " + umbrales + " umbrales de Caminar ajustados, " + rellenados + " claves sin clip rellenadas en los overrides, " + estados + " estados del salto tocados en el ControladorBase; correr rapido importado=" + importado);
+        }
+
+        // ---------- Umbrales y claves sin clip ----------
+
+        /// <summary>
+        /// Los árboles 1D por Velocidad del estado Caminar (caminar -> trote) se armaron con 1.6 y 4.5: los pone en 1.62 y 4.53 (las velocidades de los clips) sin reconstruir el controlador.
+        /// Devuelve cuántos umbrales cambió.
+        /// </summary>
+        public static int AjustarUmbralesCaminar(AnimatorController c)
+        {
+            int cambios = 0;
+            AnimatorState caminar = c.layers[0].stateMachine.states.Select(h => h.state).FirstOrDefault(s => s.name == "Caminar");
+            if (caminar != null && caminar.motion is BlendTree raiz)
+            {
+                RecorrerArbol(raiz, ref cambios);
+            }
+            if (cambios > 0) { EditorUtility.SetDirty(c); }
+            return cambios;
+        }
+
+        private static void RecorrerArbol(BlendTree arbol, ref int cambios)
+        {
+            if (arbol.blendType == BlendTreeType.Simple1D && arbol.blendParameter == ReglasVisual.Velocidad && arbol.children.Length == 2)
+            {
+                ChildMotion[] hijos = arbol.children;
+                int bajo = hijos[0].threshold <= hijos[1].threshold ? 0 : 1;
+                int alto = 1 - bajo;
+                if (!Mathf.Approximately(hijos[bajo].threshold, ReglasAnimacion.VelocidadPJ01Caminar) || !Mathf.Approximately(hijos[alto].threshold, ReglasAnimacion.VelocidadPJ01Trote))
+                {
+                    hijos[bajo].threshold = ReglasAnimacion.VelocidadPJ01Caminar;
+                    hijos[alto].threshold = ReglasAnimacion.VelocidadPJ01Trote;
+                    arbol.children = hijos;
+                    cambios += 2;
+                }
+            }
+            foreach (ChildMotion h in arbol.children)
+            {
+                if (h.motion is BlendTree hijo) { RecorrerArbol(hijo, ref cambios); }
+            }
+        }
+
+        private static int UmbralesMalos(BlendTree arbol)
+        {
+            int malos = 0;
+            if (arbol.blendType == BlendTreeType.Simple1D && arbol.blendParameter == ReglasVisual.Velocidad && arbol.children.Length == 2)
+            {
+                float min = Mathf.Min(arbol.children[0].threshold, arbol.children[1].threshold);
+                float max = Mathf.Max(arbol.children[0].threshold, arbol.children[1].threshold);
+                if (!Mathf.Approximately(min, ReglasAnimacion.VelocidadPJ01Caminar) || !Mathf.Approximately(max, ReglasAnimacion.VelocidadPJ01Trote)) { malos++; }
+            }
+            foreach (ChildMotion h in arbol.children)
+            {
+                if (h.motion is BlendTree hijo) { malos += UmbralesMalos(hijo); }
+            }
+            return malos;
+        }
+
+        /// <summary>
+        /// Los estados nuevos (T-1540 y T-1550) dejan en cada override claves sin clip: se asigna a cada una el mismo clip base. Revisa los 9 papeles y los 7 extra. Devuelve cuántas rellenó.
+        /// </summary>
+        public static int RellenarClavesSinClip(AnimatorController baseCtrl)
+        {
+            int rellenadas = 0;
+            foreach (var entrada in AnimacionesT1540.TablasDeOverrides())
+            {
+                var o = AssetDatabase.LoadAssetAtPath<AnimatorOverrideController>(entrada.Ruta);
+                if (o == null) { continue; }
+                o.runtimeAnimatorController = baseCtrl;
+                var pares = new System.Collections.Generic.List<System.Collections.Generic.KeyValuePair<AnimationClip, AnimationClip>>();
+                o.GetOverrides(pares);
+                bool cambio = false;
+                for (int i = 0; i < pares.Count; i++)
+                {
+                    if (pares[i].Key != null && pares[i].Value == null)
+                    {
+                        pares[i] = new System.Collections.Generic.KeyValuePair<AnimationClip, AnimationClip>(pares[i].Key, pares[i].Key);
+                        rellenadas++;
+                        cambio = true;
+                    }
+                }
+                if (cambio)
+                {
+                    o.ApplyOverrides(pares);
+                    EditorUtility.SetDirty(o);
+                }
+            }
+            return rellenadas;
         }
 
         // ---------- 1) Importar PJ01_CorrerRapido ----------
@@ -243,6 +332,24 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             else
             {
                 problemas += RevisarControlador(c0, sb);
+            }
+
+            // Umbrales del arbol de Caminar y claves sin clip en todos los overrides.
+            if (c0 != null)
+            {
+                AnimatorState cam = c0.layers[0].stateMachine.states.Select(h => h.state).FirstOrDefault(s => s.name == "Caminar");
+                int malos = cam != null && cam.motion is BlendTree arbolCam ? UmbralesMalos(arbolCam) : 1;
+                if (malos > 0) Falla(malos + " arbol(es) de Caminar con umbrales distintos de 1.62 y 4.53");
+                else Ok("umbrales del arbol de Caminar 1.62 y 4.53");
+                foreach (var entrada in AnimacionesT1540.TablasDeOverrides())
+                {
+                    var ov = AssetDatabase.LoadAssetAtPath<AnimatorOverrideController>(entrada.Ruta);
+                    if (ov == null) continue;
+                    var ps = new System.Collections.Generic.List<System.Collections.Generic.KeyValuePair<AnimationClip, AnimationClip>>();
+                    ov.GetOverrides(ps);
+                    string[] vacias = ps.Where(p => p.Key != null && p.Value == null).Select(p => p.Key.name).ToArray();
+                    if (vacias.Length > 0) Falla(System.IO.Path.GetFileNameWithoutExtension(entrada.Ruta) + ": claves sin clip " + string.Join(", ", vacias));
+                }
             }
 
             // 5) Override del jugador.

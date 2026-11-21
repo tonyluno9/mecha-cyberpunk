@@ -83,12 +83,13 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
         [TestCase("PJ01_Caminar", true)]
         [TestCase("PJ01_Trote", true)]
         [TestCase("PJ01_Sprint", true)]
+        [TestCase("PJ01_CorrerRapido", true)] // T-1550
         [TestCase("PJ01_Trote_Izquierda", true)]
         [TestCase("PJ01_Trote_Derecha", true)]
         [TestCase("PJ01_Trote_Atras", true)]
         [TestCase("PJ01_Escaleras_Subir", true)]
         [TestCase("PJ01_Escaleras_Bajar", true)]
-        [TestCase("PJ01_Salto_Aire", true)]
+        [TestCase("PJ01_Salto_Aire", false)] // T-1550: decisión de Tony del 20-nov, SaltoAire ya no hace ciclo (se queda en la pose de bajada)
         [TestCase("PJ01_Salto_Despegue", false)]
         [TestCase("PJ01_Salto_Aterrizaje", false)]
         [TestCase("PJ01_Aterrizaje_Fuerte", false)]
@@ -138,7 +139,7 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
         public void ClipImportado_SaltoDespegueNoEsBucle_YSaltoAireSi()
         {
             Assert.IsFalse(MechaCyberpunk.Personaje.Visual.Editor.ConstructorControladorBase.Clip("PJ01_Salto_Despegue").isLooping);
-            Assert.IsTrue(MechaCyberpunk.Personaje.Visual.Editor.ConstructorControladorBase.Clip("PJ01_Salto_Aire").isLooping);
+            Assert.IsFalse(MechaCyberpunk.Personaje.Visual.Editor.ConstructorControladorBase.Clip("PJ01_Salto_Aire").isLooping); // T-1550: decisión de Tony del 20-nov, ya no hace ciclo
             Assert.IsFalse(MechaCyberpunk.Personaje.Visual.Editor.ConstructorControladorBase.Clip("PJ01_Aterrizaje_Fuerte").isLooping);
         }
 
