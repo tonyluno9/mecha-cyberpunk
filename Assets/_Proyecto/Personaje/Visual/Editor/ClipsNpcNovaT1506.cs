@@ -107,6 +107,8 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
                 ("Muerte_Adelante", "E15_Muerte"), ("Muerte_Atras", "E15_Muerte"), ("Muerte_Desmayo", "E15_Muerte"),
                 ("PJ01_Muerte_Explosion", "E15_Muerte"), ("PJ01_Muerte_Atropello", "E15_Muerte"), ("PJ01_Muerte_CaidaAltura", "E15_Muerte"),
                 ("PJ01_Derribo_Explosion", "E15_Impacto"), ("PJ01_Dano_Empujon", "E15_Impacto"), ("PJ01_Dano_ExplosionCercana", "E15_Impacto"),
+                // T-1551: E15_Cubrirse (aprobado 19-nov, agachado vigilando, 91 cuadros en bucle) agachado y en cobertura.
+                ("Loco_AgachadoIdle", "E15_Cubrirse"), ("PJ01_Cobertura_Quieto", "E15_Cubrirse"),
             }),
             ("E16", "Guardias", new[]
             {
@@ -173,6 +175,7 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             mapa["Jugador"] = Combinar(mapa["Jugador"], ClipsSoloJugador);
             mapa["NPC"] = Combinar(mapa["NPC"], ClipsNpcComun);
             mapa["Guardias"] = Combinar(mapa["Guardias"], ClipsGuardias);
+            AnimacionesT1551.AgregarATabla(mapa); // T-1551: muertes aprobadas PJ01_Muerte_Frente/Espaldas en los papeles que seguían con las viejas
         }
 
         public static (string Base, string Papel)[] Combinar((string Base, string Papel)[] tabla, (string Base, string Papel)[] cambios)
