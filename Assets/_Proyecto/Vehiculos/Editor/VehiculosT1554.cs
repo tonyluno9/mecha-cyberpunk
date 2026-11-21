@@ -451,22 +451,27 @@ namespace MechaCyberpunk.Vehiculos.Editor
         }
 
         /// <summary>
-        /// Cuánto se aleja del eje de giro (Y local del rotor) el centro de su malla, en la unidad local del rotor, y el radio aproximado del disco.
+        /// Cuánto se aleja del eje de giro (el eje del disco, ver <c>eje</c>) el centro de su malla, en la unidad local del rotor, y el radio aproximado del disco.
         /// Si el centro está lejos del pivote el rotor "tiembla" al girar. Devuelve false si el rotor no tiene malla.
         /// </summary>
-        public static bool DescentradoDelRotor(Transform rotor, out float descentrado, out float radio, out bool ejeYEsElDelDisco)
+        public static bool DescentradoDelRotor(Transform rotor, out float descentrado, out float radio, out Vector3 eje)
         {
             Bounds b = CreadorCarrosBlenderT1312.LimitesEn(rotor.gameObject, rotor);
             descentrado = 0f;
             radio = 0f;
-            ejeYEsElDelDisco = true;
+            eje = Vector3.up;
             if (b.size == Vector3.zero)
             {
                 return false;
             }
-            descentrado = new Vector2(b.center.x, b.center.z).magnitude;
-            radio = Mathf.Max(b.extents.x, b.extents.z);
-            ejeYEsElDelDisco = b.extents.y <= Mathf.Min(b.extents.x, b.extents.z) + ToleranciaVector2;
+            // Mismo criterio que CalculoGiroRotores.EjeDelDisco (T-1554): el eje más delgado de la malla; con empate gana Y.
+            Vector3 t = b.size;
+            if (t.y <= t.x && t.y <= t.z) { eje = Vector3.up; }
+            else { eje = t.z <= t.x ? Vector3.forward : Vector3.right; }
+            Vector3 centro = b.center - Vector3.Project(b.center, eje);
+            descentrado = centro.magnitude;
+            Vector3 ext = b.extents;
+            radio = eje == Vector3.up ? Mathf.Max(ext.x, ext.z) : eje == Vector3.forward ? Mathf.Max(ext.x, ext.y) : Mathf.Max(ext.y, ext.z);
             return true;
         }
 
@@ -537,11 +542,11 @@ namespace MechaCyberpunk.Vehiculos.Editor
                     {
                         bool sobrescrita = TienePosicionSobrescrita(rotor);
                         string linea = "\t" + rotor.name + ": posición local " + rotor.localPosition.ToString("F3") + (sobrescrita ? ", OVERRIDE de posición" : ", sin override");
-                        if (DescentradoDelRotor(rotor, out float descentrado, out float radio, out bool ejeY))
+                        if (DescentradoDelRotor(rotor, out float descentrado, out float radio, out Vector3 ejeDisco))
                         {
                             bool tiembla = radio > 0f && descentrado / radio > ToleranciaDescentradoRotor;
                             linea += string.Format(", centro de la malla a {0:F3} del eje ({1:P1} del radio){2}{3}", descentrado, radio > 0f ? descentrado / radio : 0f,
-                                tiembla ? "  <-- DESCENTRADO (tiembla)" : "", ejeY ? "" : "  <-- el eje Y no es el del disco");
+                                tiembla ? "  <-- DESCENTRADO (tiembla)" : "", "  eje del disco " + ejeDisco);
                         }
                         if (sobrescrita && aplicar)
                         {
@@ -817,7 +822,7 @@ namespace MechaCyberpunk.Vehiculos.Editor
                 bool entrar = true;
                 while (it.Next(entrar))
                 {
-                    if (!it.isArray || it.propertyType != SerializedPropertyType.Generic || it.arrayElementType == null || !it.arrayElementType.StartsWith("PPtr<"))
+                    if (!it.isArray || it.name == "Array" || it.propertyType != SerializedPropertyType.Generic || it.arrayElementType == null || !it.arrayElementType.StartsWith("PPtr<"))
                     {
                         continue;
                     }
