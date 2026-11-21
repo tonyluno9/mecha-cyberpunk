@@ -23,3 +23,5 @@ Fuente: `3d sonidos/` en la carpeta principal (ignorada por git; 229 sonidos út
 ## Bitácora
 - 20-nov tarde: paso 0 (sin Unity abierto, sin lockfile; main 8f97866). integ/sonidos-20nov creada en s2.
 - T-1530 integrada (b6a9569): 122 WAV nuevos, 5 renombrados, 0 reemplazos. Importador viejo ImportadorAudio pisaba TODAS las carpetas numeradas (todo CompressedInMemory y mono, también lo del 19-nov): ya no; reimportado 01..18. T-1531 (catálogo y mezcla) corriendo.
+- T-1531 integrada (a85697f): catálogo 01..18 creado en Unity (5954b9f), alias de renombrados, TablaMezcla20nov (96 IDs). EditMode de sonido 251/251 (IdsSonidoPruebas al día).
+- T-1532..T-1535 lanzadas en paralelo (wt21/). Reglas: no tocan tablas de mezcla/catálogo/mapa (me piden lo que falte) ni los .meta de clips de PJ01 (el chat de Blender los re-exporta en la carpeta principal).
