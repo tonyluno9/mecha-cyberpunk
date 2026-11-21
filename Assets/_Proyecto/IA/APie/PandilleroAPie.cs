@@ -537,6 +537,11 @@ namespace MechaCyberpunk.IA.APie
                     return bloqueado;
                 }
             }
+            bool porExplosion = info.Tipo == TipoDanio.Explosion;
+            if (visual != null && porExplosion)
+            {
+                visual.MotivoDanio = MotivoDanioVisual.Explosion; // T-1540: Aplicar puede dejarlo KO y ahí mismo se elige cómo cae (PJ01_Muerte_Explosion)
+            }
             float aplicado = modelo.Aplicar(cantidad);
             if (EsMaleanteDeCalle && !ConductaRina.GolpeDeRinaEnCurso && !DanioDeLaPolicia)
             {
@@ -566,7 +571,13 @@ namespace MechaCyberpunk.IA.APie
             if (!modelo.EstaKO && bloqueoFiltro != TipoBloqueo.Normal) // T-1109: un golpe bloqueado por el escudo no hace parpadear ni herir al guardia
             {
                 finParpadeo = Time.time + datos.DuracionParpadeo;
-                if (visual != null)
+                if (visual != null && porExplosion)
+                {
+                    // T-1540: una explosión que no lo mata lo tambalea o lo derriba (se levanta solo) según el daño; si no, herido normal.
+                    visual.MotivoDanio = MotivoDanioVisual.Normal;
+                    visual.RecibirExplosion(info.Direccion, aplicado, modelo.Maxima, false);
+                }
+                else if (visual != null)
                 {
                     visual.Herir(info.Direccion);
                 }
@@ -772,7 +783,8 @@ namespace MechaCyberpunk.IA.APie
             if (distancia <= ReglaProvocacionCalle.DistanciaEmpujon && Time.time >= proximoEmpujon)
             {
                 proximoEmpujon = Time.time + UnityEngine.Random.Range(ReglaProvocacionCalle.EmpujonMinimo, ReglaProvocacionCalle.EmpujonMaximo);
-                AnimarGolpe(false); // no hay clip de empujón: se usa el golpe suave
+                AnimarGolpe(false); // el que empuja usa el golpe suave; el jugador recibe PJ01_Dano_Empujon (T-1540)
+                EmpujarVisualDelJugador();
                 DaniarJugador(ReglaProvocacionCalle.DanioEmpujon, adelante);
             }
             if (adelante.sqrMagnitude > 0.0001f)
@@ -1253,6 +1265,25 @@ namespace MechaCyberpunk.IA.APie
             }
             Quaternion meta = Quaternion.LookRotation(dir.normalized, Vector3.up);
             transform.rotation = Quaternion.RotateTowards(transform.rotation, meta, gradosPorSegundo * Time.deltaTime);
+        }
+
+        private VisualPersonaje visualJugador;
+
+        /// <summary>T-1540: el jugador juega PJ01_Dano_Empujon (retrocede 0.55 m) si el empujón le va a pegar; sin visual o con otro modo, solo recibe el daño.</summary>
+        private void EmpujarVisualDelJugador()
+        {
+            if (!EsAtacable() || raizJugador == null)
+            {
+                return;
+            }
+            if (visualJugador == null)
+            {
+                visualJugador = raizJugador.GetComponentInChildren<VisualPersonaje>(true); // solo en un empujón (cada varios segundos), no por cuadro
+            }
+            if (visualJugador != null && visualJugador.isActiveAndEnabled)
+            {
+                visualJugador.Empujar();
+            }
         }
 
         /// <summary>Le pega al jugador (si es atacable) con <paramref name="cantidad"/> de daño en <paramref name="direccion"/>.</summary>

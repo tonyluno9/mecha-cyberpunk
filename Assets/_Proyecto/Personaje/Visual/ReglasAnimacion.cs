@@ -9,6 +9,34 @@ namespace MechaCyberpunk.Personaje.Visual
         Adelante = 0,
         Atras = 1,
         Desmayo = 2,
+        /// <summary>T-1540: sale volando hacia atrás por una explosión (PJ01_Muerte_Explosion).</summary>
+        Explosion = 3,
+        /// <summary>T-1540: lo arrolla un carro (PJ01_Muerte_Atropello).</summary>
+        Atropello = 4,
+        /// <summary>T-1540: cae de una altura mortal (PJ01_Muerte_CaidaAltura, boca abajo).</summary>
+        CaidaAltura = 5,
+    }
+
+    /// <summary>T-1540: qué causó el golpe que tumba al personaje; decide el clip de muerte (<see cref="MuerteVisual"/>).</summary>
+    public enum MotivoDanioVisual
+    {
+        Normal = 0,
+        Explosion = 1,
+        Atropello = 2,
+        CaidaAltura = 3,
+    }
+
+    /// <summary>T-1540: cómo reacciona a una explosión que lo alcanza (<see cref="ReglasAnimacion.ReaccionAExplosion"/>).</summary>
+    public enum ReaccionExplosion
+    {
+        /// <summary>Daño chico: la reacción normal de herido.</summary>
+        Ninguna = 0,
+        /// <summary>Explosión cercana que no lo tumba: tambalea (PJ01_Dano_ExplosionCercana).</summary>
+        Tambaleo = 1,
+        /// <summary>Lo derriba y se levanta (PJ01_Derribo_Explosion, luego PJ01_Dano_Levantarse_BocaArriba).</summary>
+        Derribo = 2,
+        /// <summary>Lo mata la explosión: sale volando (PJ01_Muerte_Explosion).</summary>
+        Muerte = 3,
     }
 
     /// <summary>Qué reacción de daño se muestra (parámetro DanoTipo).</summary>
@@ -48,6 +76,12 @@ namespace MechaCyberpunk.Personaje.Visual
         MotoSubir = 10,
         /// <summary>T-963: bajar de la moto (PJ01_Moto_Bajar).</summary>
         MotoBajar = 11,
+        /// <summary>T-1540: empujón de un maleante (PJ01_Dano_Empujon, retrocede ~0.55 m).</summary>
+        Empujon = 12,
+        /// <summary>T-1540: explosión cercana que no lo tumba (PJ01_Dano_ExplosionCercana).</summary>
+        ExplosionCercana = 13,
+        /// <summary>T-1540: la explosión lo derriba (PJ01_Derribo_Explosion) y se levanta boca arriba.</summary>
+        DerriboExplosion = 14,
     }
 
     /// <summary>
@@ -211,7 +245,94 @@ namespace MechaCyberpunk.Personaje.Visual
             "MuerteAdelante", "MuerteAtras", "MuerteDesmayo", "LevantarseBocaArriba", "LevantarseBocaAbajo",
             "CarroEntrar", "CarroManejar", "CarroSalir", "AbrirPuerta", "Boton", "Recoger", "Telefono", "VerTelefono", "Burla", "Presumir",
             "MotoSubir", "MotoManejar", "MotoBajar", "AterrizajeFuerte", "EscalonesSubir", "EscalonesBajar",
+            // T-1540: muertes por explosión, atropello y caída; derribo por explosión; empujón y explosión cercana.
+            "MuerteExplosion", "MuerteAtropello", "MuerteCaidaAltura", "DerriboExplosion", "DanoEmpujon", "DanoExplosionCercana",
+            // T-1540: salto corriendo (despegue, aire, aterrizaje y la rodada del aterrizaje fuerte corriendo), aprobados el 20-nov.
+            "SaltoCorrerInicio", "SaltoCorrerAire", "SaltoCorrerAterrizaje", "SaltoCorrerRodada",
         };
+
+        /// <summary>T-1540: estados del salto corriendo -> clip PJ01. Se entra desde Correr (Velocidad arriba de <see cref="UmbralCorrer"/> x <see cref="HisteresisCorrer"/>) al dejar el piso; la rodada, con el aterrizaje fuerte corriendo.</summary>
+        public static readonly (string Estado, string Clip)[] EstadosSaltoCorrerT1540 =
+        {
+            ("SaltoCorrerInicio", "PJ01_Salto_Correr_Despegue"), ("SaltoCorrerAire", "PJ01_Salto_Correr_Aire"),
+            ("SaltoCorrerAterrizaje", "PJ01_Salto_Correr_Aterrizaje"), ("SaltoCorrerRodada", "PJ01_Salto_Correr_Rodada"),
+        };
+
+        /// <summary>
+        /// T-1540: multiplicadores de la rapidez de SaltoInicio y SaltoAterrizaje (el estado trae 2.5x y 2x, de los clips viejos). El jugador usa los clips Callejero del 20-nov (Despegue 8 cuadros, Aterrizaje 14),
+        /// que van a 1x (BITACORA: "SaltoInicio 2.5 a 1, SaltoAterrizaje 2 a 1"): su parámetro vale 1 / la rapidez del estado. Los demás se quedan en 1 (siguen con los clips viejos a su rapidez).
+        /// </summary>
+        public const string RapidezSaltoInicio = "RapidezSaltoInicio", RapidezSaltoAterrizaje = "RapidezSaltoAterrizaje";
+
+        public static float AjusteSaltoJugador(string estado) => 1f / Mathf.Max(0.01f, VelocidadEstado(estado));
+
+        /// <summary>T-1540: estado de la capa base -> (clip PJ01, tipo de gesto o -1 si es una muerte). Lo usan el constructor del controlador, el diagnóstico y las pruebas.</summary>
+        public static readonly (string Estado, string Clip, int Gesto)[] EstadosT1540 =
+        {
+            ("MuerteExplosion", "PJ01_Muerte_Explosion", -1), ("MuerteAtropello", "PJ01_Muerte_Atropello", -1), ("MuerteCaidaAltura", "PJ01_Muerte_CaidaAltura", -1),
+            ("DerriboExplosion", "PJ01_Derribo_Explosion", (int)GestoVisual.DerriboExplosion),
+            ("DanoEmpujon", "PJ01_Dano_Empujon", (int)GestoVisual.Empujon),
+            ("DanoExplosionCercana", "PJ01_Dano_ExplosionCercana", (int)GestoVisual.ExplosionCercana),
+        };
+
+        /// <summary>T-1540: una explosión que quita esta fracción de la vida máxima (o más) derriba; entre <see cref="FraccionTambaleoExplosion"/> y esta, tambalea.</summary>
+        public const float FraccionDerriboExplosion = 0.3f;
+        /// <summary>T-1540: fracción mínima de la vida máxima de una explosión para que tambalee (menos es un herido normal).</summary>
+        public const float FraccionTambaleoExplosion = 0.1f;
+
+        /// <summary>
+        /// T-1540: qué muestra el personaje al recibir una explosión. <paramref name="direccionGolpe"/> va del origen de la explosión al personaje. La muerte y el derribo lo lanzan hacia atrás
+        /// (como el clip), así que solo valen si la explosión viene del frente o de un costado; si le explota por la espalda tambalea o cae como siempre.
+        /// </summary>
+        public static ReaccionExplosion ReaccionAExplosion(float cantidad, float vidaMaxima, bool murio, Vector3 direccionGolpe, Vector3 frente)
+        {
+            bool porLaEspalda = GolpeDeEspalda(direccionGolpe, frente);
+            if (murio)
+            {
+                return porLaEspalda ? ReaccionExplosion.Ninguna : ReaccionExplosion.Muerte;
+            }
+            float fraccion = vidaMaxima > 0f ? cantidad / vidaMaxima : 1f;
+            if (fraccion >= FraccionDerriboExplosion && !porLaEspalda)
+            {
+                return ReaccionExplosion.Derribo;
+            }
+            return fraccion >= FraccionTambaleoExplosion ? ReaccionExplosion.Tambaleo : ReaccionExplosion.Ninguna;
+        }
+
+        /// <summary>
+        /// T-1540: la muerte para el motivo del golpe. Explosión (si no viene por la espalda), atropello y caída tienen clip propio; lo demás sale de <see cref="ElegirMuerte(Vector3, Vector3, float)"/>.
+        /// </summary>
+        public static MuerteVisual ElegirMuerte(Vector3 direccionGolpe, Vector3 frente, float azar, MotivoDanioVisual motivo)
+        {
+            switch (motivo)
+            {
+                case MotivoDanioVisual.Explosion:
+                    if (!GolpeDeEspalda(direccionGolpe, frente)) { return MuerteVisual.Explosion; }
+                    break;
+                case MotivoDanioVisual.Atropello:
+                    return MuerteVisual.Atropello;
+                case MotivoDanioVisual.CaidaAltura:
+                    return MuerteVisual.CaidaAltura;
+            }
+            return ElegirMuerte(direccionGolpe, frente, azar);
+        }
+
+        /// <summary>T-1540: un golpe cuya dirección va casi recto hacia abajo (la caída) es de caída de altura.</summary>
+        public const float CosenoCaidaAltura = 0.9f;
+
+        /// <summary>T-1540: el motivo del golpe para la animación: explosión, caída (golpe vertical hacia abajo) o normal.</summary>
+        public static MotivoDanioVisual MotivoDe(bool esExplosion, bool esGolpe, Vector3 direccionGolpe)
+        {
+            if (esExplosion)
+            {
+                return MotivoDanioVisual.Explosion;
+            }
+            if (esGolpe && direccionGolpe.sqrMagnitude > 1e-6f && Vector3.Dot(direccionGolpe.normalized, Vector3.down) >= CosenoCaidaAltura)
+            {
+                return MotivoDanioVisual.CaidaAltura;
+            }
+            return MotivoDanioVisual.Normal;
+        }
 
         /// <summary>Estados de la capa aditiva de daño (T-735).</summary>
         public static readonly string[] EstadosDano = { "Vacio", "DanoFrente", "DanoEspalda", "DanoFuerte", "DanoIzquierda", "DanoDerecha" };
@@ -224,7 +345,7 @@ namespace MechaCyberpunk.Personaje.Visual
             "LargaIdle", "LargaApuntar", "LargaDisparo", "LargaRecargar", "Pitar",
         };
 
-        public static readonly string[] ParametrosFloat = { ReglasVisual.Velocidad, VelX, VelZ, VelY, Giro, PoseCobertura, RapidezGolpe, RapidezEscalones, ApuntarX, ApuntarZ, ConImplante };
+        public static readonly string[] ParametrosFloat = { ReglasVisual.Velocidad, VelX, VelZ, VelY, Giro, PoseCobertura, RapidezGolpe, RapidezEscalones, ApuntarX, ApuntarZ, ConImplante, RapidezSaltoInicio, RapidezSaltoAterrizaje };
         public static readonly string[] ParametrosBool = { ReglasVisual.EnSuelo, ReglasVisual.Apuntando, ReglasVisual.Caer, ReglasVisual.Cubierto, Agachado, Manejando, ViendoTelefono, EnGuardia, ArmaLargaEquipada };
         public static readonly string[] ParametrosInt = { ReglasVisual.TipoArma, DanoTipo, MuerteTipo, GolpeTipo, CoberturaTipo, GestoTipo, Escalones };
         public static readonly string[] ParametrosTrigger =
@@ -464,7 +585,7 @@ namespace MechaCyberpunk.Personaje.Visual
         }
 
         /// <summary>Cae de espaldas (o se desmaya) se levanta boca arriba; cae de frente, boca abajo.</summary>
-        public static bool LevantarseBocaArriba(MuerteVisual muerte) => muerte != MuerteVisual.Adelante;
+        public static bool LevantarseBocaArriba(MuerteVisual muerte) => muerte != MuerteVisual.Adelante && muerte != MuerteVisual.CaidaAltura;
 
         /// <summary>Giro en el sitio: -1 izquierda, 0 nada, 1 derecha, según la velocidad angular (°/s, positiva a la derecha) y si está quieto.</summary>
         public static int GiroEnSitio(float gradosPorSegundo, float velocidad, float umbral = UmbralGiro, float velocidadQuieto = 0.1f)

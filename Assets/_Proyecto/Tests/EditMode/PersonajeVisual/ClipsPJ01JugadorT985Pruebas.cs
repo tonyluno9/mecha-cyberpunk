@@ -94,7 +94,7 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
             string[] sinUsar = todos.Where(n => !usados.Contains(n) && !soloNpc.Contains(n)).ToArray();
             Debug.Log("[T-985] clips no PJ01: " + noPJ01.Length + "; PJ01 sin usar: " + sinUsar.Length + " de " + todos.Length);
 
-            Assert.AreEqual(110, todos.Length, "La carpeta de clips debe tener los 110 PJ01_* (T-1505 y T-1506: +17 de Blender del 19-nov)");
+            Assert.AreEqual(116, todos.Length, "La carpeta de clips debe tener los 116 PJ01_* (T-1505 y T-1506: +17 de Blender del 19-nov; T-1540: +6 borradores del 21-nov)");
             Assert.IsEmpty(noPJ01, "Clips que no son PJ01 en el jugador:\n" + string.Join("\n", noPJ01));
             Assert.IsEmpty(sinUsar, "PJ01 sin ningún estado:\n" + string.Join("\n", sinUsar));
         }
