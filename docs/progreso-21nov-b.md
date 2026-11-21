@@ -12,13 +12,18 @@ Regla: nada hecho sin verlo en Play, captura en docs/capturas/_21nov-b/. No edit
 ## Tareas
 | Tarea | Qué | Estado |
 | --- | --- | --- |
-| T-1550 | Locomoción y salto PJ01 (CorrerRapido, velocidades, mezcla, retraso 3 frames, aterrizajes, pisadas) | lanzada |
-| T-1551 | Combate y eventos: clips aprobados sin conectar (daños del jugador, recargas, granada, interacciones, implantes, NPC, pandilleros, Nova caída) | lanzada |
-| T-1552 | Alturas: tabla de factores, EscalasNova/EscalasHumanos, Tino, cápsulas y NavMesh E14/E16 | lanzada |
+| T-1550 | Locomoción y salto PJ01 (CorrerRapido, velocidades, mezcla, retraso 3 frames, aterrizajes, pisadas) | aplicada (falta Play) |
+| T-1551 | Combate y eventos: clips aprobados sin conectar (daños del jugador, recargas, granada, interacciones, implantes, NPC, pandilleros, Nova caída) | aplicada (falta Play) |
+| T-1552 | Alturas: tabla de factores, EscalasNova/EscalasHumanos, Tino, cápsulas y NavMesh E14/E16 | aplicada + Afinar (falta Play) |
 | T-1553 | Robots Nova: avatar E18, clips E18, jetpack y puños, E16 escudo y cañón, E15 W10, mover clips a su carpeta | lanzada |
-| T-1554 | Vehículos: bisagra cofre PA01/PA02/V22, V16–V19, hélices, carros viejos → Carro_Vxx, quitar V10/V11 | lanzada |
+| T-1554 | Vehículos: bisagra cofre PA01/PA02/V22, V16–V19, hélices, carros viejos → Carro_Vxx, quitar V10/V11 | aplicada (falta Play) |
 | Final | Capturas en Play, pruebas por clase, builds, reporte-21nov-b.md | pendiente |
 
 ## Bitácora
 - Paso 0: Unity cerrado, sin lockfile, main 82f0bac (lo de Blender ya estaba en main; solo cambiaron docs).
 - Lanzadas las 5 tareas (T-1550..T-1554) en wt23/.
+- T-1550 aplicada (0 problemas). Escala de CorrerRapido 1.88 como Trote (el doc decía 1.8367). ImportadorClipsPJ01: CorrerRapido con bucle, Salto_Aire sin bucle.
+- T-1551 aplicada: 16 clips en overrides, 2 estados del policía.
+- T-1552: la columna "hoy" de Blender no coincide con Unity (NPCs ya medían ~1.84); el factor los dejó en 2.0–2.2 m. Se corrió Afinar: 40 a ±5 cm de la altura nueva.
+- T-1554: arreglo de compilación (ComponentUtility). Rotores: el eje del disco era Z local y GiroRotores giraba en Y (el temblor); ahora giran sobre el eje más delgado de su malla.
+- Sigue: T-1553 (robots Nova) corriendo; luego Play con capturas y pruebas por clase.
