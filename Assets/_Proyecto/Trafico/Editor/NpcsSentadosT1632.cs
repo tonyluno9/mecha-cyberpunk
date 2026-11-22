@@ -55,6 +55,7 @@ namespace MechaCyberpunk.Trafico.Editor
             AnimationClip sentado = CargarClip("PJ01_Sentado");
             AnimationClip susto = CargarClip("NPC_Asustarse");
             AnimationClip huir = CargarClip("NPC_Huir_Corriendo");
+            AnimationClip levantar = ExisteClip("PJ01_Sentado_Levantarse") ? CargarClip("PJ01_Sentado_Levantarse") : (ExisteClip("NPC_Sentado_Levantarse") ? CargarClip("NPC_Sentado_Levantarse") : null);
             if (sentado == null)
             {
                 Debug.LogError("[Trafico] T-1632: no encuentro el clip PJ01_Sentado en " + CarpetaClips);
@@ -84,6 +85,7 @@ namespace MechaCyberpunk.Trafico.Editor
                 float giro = ((i * 7) % 11 - 5) * 1.2f;
                 sentadoNpc.Configurar(l.ancla, l.lateral, l.frenteMenosZ, l.asiento, sentado, susto, huir, desfase, rapidez, giro);
                 sentadoNpc.FijarAlturaAsiento(l.altura);
+                sentadoNpc.FijarClipLevantarse(levantar); // T-1653: null si todavía no existe el clip
                 // Colocación aproximada para el editor (el clip se alinea solo al jugar: asiento a 0.46 m sobre el origen).
                 Vector3 asientoPos = sentadoNpc.PosicionAsiento;
                 Vector3 frente = sentadoNpc.FrenteAsiento;
@@ -379,6 +381,8 @@ namespace MechaCyberpunk.Trafico.Editor
         }
 
         /// <summary>Clip (del FBX de PJ01/Clips, Humanoid) por nombre.</summary>
+        private static bool ExisteClip(string nombre) => File.Exists(CarpetaClips + "/" + nombre + ".fbx");
+
         public static AnimationClip CargarClip(string nombre)
         {
             string ruta = CarpetaClips + "/" + nombre + ".fbx";

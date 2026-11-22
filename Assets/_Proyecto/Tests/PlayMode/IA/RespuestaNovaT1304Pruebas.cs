@@ -12,7 +12,8 @@ using Object = UnityEngine.Object;
 namespace MechaCyberpunk.Tests
 {
     /// <summary>
-    /// T-1304: con 4 estrellas llega Nova (guardias robot y un guardia pesado) cerca del jugador y va por él; con 5, más y el jefe final; bajo 4 se retira.
+    /// T-1304, reescrita en T-1653 para la llegada gradual de T8/T17: con 4 estrellas Nova llega de a una unidad con espera (nunca en oleada) cerca del jugador y va
+    /// por él; con 5 interviene (un solo aviso); sin búsqueda se retira.
     /// </summary>
     public class RespuestaNovaT1304Pruebas
     {
@@ -93,6 +94,21 @@ namespace MechaCyberpunk.Tests
             Assert.IsNotNull(config.Guardia, "el guardia de Nova");
             Assert.IsNotNull(config.GuardiaPesado, "el guardia pesado");
             Assert.IsNotNull(config.JefeFinal, "el jefe final");
+            // T-1653: el director de respuesta con tiempos cortos para que la llegada gradual se vea en pocos segundos.
+            ParametrosRespuesta numeros = ParametrosRespuesta.PorOmision();
+            numeros.RetrasoNivelNuevo = 1f;
+            numeros.SegundosEntreGenerados = 1.5f;
+            numeros.SegundosParaSubir = 3f;
+            numeros.Registrar = false;
+            numeros.Tipos = new[]
+            {
+                new AjusteTipoRespuesta(TipoRespuesta.NovaHumanoide, 4, 4, 1f, 1f),
+                new AjusteTipoRespuesta(TipoRespuesta.RobotMediano, 1, 1, 1f, 1f),
+                new AjusteTipoRespuesta(TipoRespuesta.Perro, 1, 1, 1f, 1f),
+                new AjusteTipoRespuesta(TipoRespuesta.RobotGrande, 1, 1, 1f, 1f),
+                new AjusteTipoRespuesta(TipoRespuesta.Jefe, 1, 1, 1f, 1f),
+            };
+            DirectorRespuesta.Configurar(numeros);
             respuesta = new GameObject("RespuestaNovaPrueba").AddComponent<RespuestaNova>();
             respuesta.Configurar(config);
         }
@@ -113,6 +129,7 @@ namespace MechaCyberpunk.Tests
                 RespuestaNova.Actual.enabled = true;
             }
             Registros.LimpiarTodos();
+            DirectorRespuesta.Configurar(null); // vuelve a los números del asset
         }
 
         private static IEnumerator Esperar(float segundos)
@@ -134,19 +151,46 @@ namespace MechaCyberpunk.Tests
             Assert.IsFalse(respuesta.HayJefe);
         }
 
+        private int NovaVivos() => respuesta.GuardiasVivos + respuesta.PesadosVivos + respuesta.PerrosVivos;
+
+        /// <summary>
+        /// T-1653 (T8/T17): con 4 estrellas Nova llega de a una unidad, con espera entre una y otra (el director va con valores cortos), y no en oleada:
+        /// al principio no hay nadie, la primera aparece sola y nunca suben dos en el mismo cuadro; cada una aparece a 22-34 m y va por el jugador.
+        /// </summary>
         [UnityTest]
-        public IEnumerator CuatroEstrellas_LlegaNova_CercaYVaPorElJugador_CincoTraeAlJefe_YBajoCuatroSeRetira()
+        public IEnumerator CincoEstrellas_LlegaDeAUno_ConEspera_NoEnOleada_YVaPorElJugador()
         {
-            calor.Poner(75f); // 4 estrellas
-            yield return Esperar(1.5f);
-            Assert.AreEqual(4, respuesta.Estrellas);
-            Assert.AreEqual(3, respuesta.GuardiasVivos, "con 4 estrellas: 3 guardias robot de Nova");
-            Assert.AreEqual(1, respuesta.PesadosVivos, "y un guardia pesado");
+            calor.Poner(95f); // 5 estrellas: con T17 Nova solo entra con el máximo de estrellas
+            float inicio = Time.time;
+            int anterior = 0;
+            float primera = -1f;
+            float segunda = -1f;
+            int saltoMaximo = 0;
+            while (Time.time - inicio < 7f)
+            {
+                yield return null;
+                int ahora = NovaVivos();
+                saltoMaximo = Mathf.Max(saltoMaximo, ahora - anterior);
+                if (ahora >= 1 && primera < 0f)
+                {
+                    primera = Time.time - inicio;
+                }
+                if (ahora >= 2 && segunda < 0f)
+                {
+                    segunda = Time.time - inicio;
+                }
+                anterior = ahora;
+            }
+            Debug.Log("[T-1653] primera unidad a los " + primera + " s, segunda a los " + segunda + " s, salto máximo por cuadro " + saltoMaximo + ", vivos " + NovaVivos());
+            Assert.AreEqual(5, respuesta.Estrellas);
+            Assert.GreaterOrEqual(primera, 0.9f, "no llega nadie al instante: el nivel nuevo tiene su retraso");
+            Assert.LessOrEqual(saltoMaximo, 1, "nunca dos unidades en el mismo cuadro (nada de oleada)");
+            Assert.GreaterOrEqual(segunda, 0f, "con espera, pero sí llega la segunda");
+            Assert.GreaterOrEqual(segunda - primera, 1.0f, "entre una y otra hay espera (SegundosEntreGenerados)");
+            Assert.LessOrEqual(NovaVivos(), 4, "dentro del tope");
             Assert.IsFalse(respuesta.HayJefe, "el jefe final solo con 5");
             foreach (PandilleroAPie p in respuesta.Guardias.Concat(respuesta.Pesados))
             {
-                float d = Vector3.Distance(Plano(p.transform.position), Plano(jugador.transform.position));
-                Assert.That(d, Is.InRange(12f, 34.5f), p.name + " aparece lejos (22-34 m) y ya viene caminando");
                 Assert.IsTrue(p.Alerta, p.name + " está en alerta contra el jugador");
             }
             for (int i = 0; i < 20; i++)
@@ -156,21 +200,35 @@ namespace MechaCyberpunk.Tests
             }
             float antes = respuesta.Guardias.Average(p => Vector3.Distance(Plano(p.transform.position), Plano(jugador.transform.position)));
             Time.timeScale = 3f;
-            yield return Esperar(12f);
+            yield return Esperar(8f);
             Time.timeScale = 1f;
             float despues = respuesta.Guardias.Where(p => p != null).Average(p => Vector3.Distance(Plano(p.transform.position), Plano(jugador.transform.position)));
-            Debug.Log("[T-1304] distancia media de los guardias: " + antes + " -> " + despues + "; daño al jugador " + jugador.GetComponent<CuerpoJugador>().Recibido);
-            Assert.Less(despues, antes - 5f, "Nova va por el jugador");
+            Assert.Less(despues, antes + 2f, "Nova no se aleja del jugador");
+        }
 
-            calor.Poner(95f); // 5 estrellas
-            yield return Esperar(1.5f);
-            Assert.AreEqual(5, respuesta.Estrellas);
-            Assert.IsTrue(respuesta.HayJefe, "con 5 estrellas llega el jefe final");
-
-            calor.Poner(0f); // T-1323: con 1-3 estrellas los que ya vieron al jugador lo siguen; sin búsqueda (Doc, arresto) Nova se retira
-            yield return Esperar(8f);
-            Assert.AreEqual(0, respuesta.GuardiasVivos + respuesta.PesadosVivos, "sin búsqueda Nova se retira");
-            Assert.IsFalse(respuesta.HayJefe);
+        [UnityTest]
+        public IEnumerator CincoEstrellas_NovaInterviene_SeAvisaUnaVez_Y_SinBusqueda_NovaSeRetira()
+        {
+            int avisos = 0;
+            Action alAviso = () => avisos++;
+            EventosRespuesta.NovaInterviene += alAviso;
+            try
+            {
+                calor.Poner(95f); // 5 estrellas
+                yield return Esperar(2f);
+                Assert.AreEqual(5, respuesta.Estrellas);
+                Assert.IsTrue(DirectorRespuesta.ModoNova, "con 5 estrellas Nova interviene");
+                Assert.AreEqual(1, avisos, "el aviso de NOVA INTERVIENE sale una sola vez");
+                Assert.LessOrEqual(NovaVivos(), 1, "tras 2 s solo ha llegado una unidad como mucho");
+                calor.Poner(0f); // T-1323: sin búsqueda (Doc, arresto) Nova se retira
+                yield return Esperar(8f);
+                Assert.AreEqual(0, NovaVivos(), "sin búsqueda Nova se retira");
+                Assert.IsFalse(respuesta.HayJefe);
+            }
+            finally
+            {
+                EventosRespuesta.NovaInterviene -= alAviso;
+            }
         }
 
         private static Vector3 Plano(Vector3 v) => new Vector3(v.x, 0f, v.z);
