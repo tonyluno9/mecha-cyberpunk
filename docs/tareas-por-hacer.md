@@ -280,3 +280,43 @@ Cómo:
 6. Lista de todas las líneas en docs/dialogos-barrio.md (quién, texto, escena, archivo de audio esperado), para que Tony sepa qué grabar.
 Comprobar: forzar cada escena con un menú de depuración y verla completa (animaciones, subtítulos, reacción de los alrededores), y caminar 10
 minutos por los barrios contando cuántas escenas aparecen solas. Capturas de cada escena.
+
+---
+# NUEVAS (22-nov, después de la prueba de las 15 tareas)
+
+## T16. Tráfico: los civiles ya no manejan, solo patrullas patrullando (y con semáforos)
+Decisión de Tony: para acabar con los choques y amontonamientos, los carros civiles ya NO circulan.
+Cómo:
+1. Los carros civiles quedan solo ESTACIONADOS junto a la banqueta (quietos, bien alineados, sin encimarse ni salir a la calle); el jugador
+   los puede robar como siempre. Apaga la generación del tráfico civil en movimiento (el sistema de T13 se reutiliza para las patrullas).
+2. Lo único que circula sin persecución son POCAS patrullas patrullando (2 a 4 en toda la ciudad), siguiendo las rutas por carril de T13,
+   a velocidad tranquila, sin torreta. Si el jugador comete un delito cerca, la patrulla reacciona y empieza la persecución (sistema actual).
+3. SEMÁFOROS que funcionen en los cruces: ciclo verde/amarillo/rojo por sentido, con sus luces encendidas en el modelo (los semáforos ES01 que ya
+   hay; si un cruce no tiene, ponlo). Las patrullas que patrullan se detienen en rojo; en persecución pueden pasarse el alto con la sirena.
+4. Con esto, el cruce de los choques (x≈-47, z≈-2.4) deja de tener problema; revísalo de todos modos.
+5. Peatones (NPCs) siguen caminando normal por las banquetas.
+Comprobar: 3 minutos mirando la ciudad: solo patrullas circulando, que se detienen en los semáforos en rojo, 0 choques; robar un carro
+estacionado; cometer un delito junto a una patrulla que patrulla y que empiece la persecución.
+
+## T17. Escalada final: con el máximo de estrellas la policía se retira y solo llega Nova (progresivo)
+Decisión de Tony: si llegas al máximo de estrellas es porque la policía no pudo frenarte; entonces deja de llegar policía y empiezan a llegar
+SOLO los Nova, de forma progresiva. Ajusta el director de respuesta de T8.
+Cómo:
+1. Estrellas 1 a 4: solo policía (patrullas, policías a pie, camionetas, drones de policía) con la jerarquía y tiempos de T8.
+2. Al llegar al máximo (5 estrellas): aviso especial (sonido y texto "NOVA INTERVIENE"), deja de generarse policía nueva y la que hay se va
+   retirando manejando o caminando fuera de la vista (nunca desaparece frente al jugador). Los topes que antes ocupaban las patrullas quedan libres
+   para Nova (así ya no frenan su llegada).
+3. Nova llega progresivo, en cápsulas (T7), con su jerarquía: primero 1 soldado humanoide (guardia/E15); si lo vences, después de su tiempo 1 o 2
+   más; luego E18 élite; luego perros E17; luego el robot grande E16; drones de Nova en cápsula también (conectar los drones que faltaron).
+   Máximo de Nova vivos a la vez (por ejemplo 3, con 1 robot grande). Tiempos en ConfigRespuesta.
+4. Si escapas, se retiran primero los niveles altos y bajan las estrellas como ya funciona.
+Comprobar en Play con el registro de T8: subir a 5 estrellas y ver que deja de llegar policía, la que estaba se va, y llegan Nova de a poco en
+cápsulas en el orden de la jerarquía.
+
+## T18. NPCs sentados con la animación de sentado del jugador
+Decisión de Tony: para los NPCs sentados en las bancas (y donde haga falta) se usa el clip de SENTADO DEL JUGADOR (PJ01), retargeteado por
+Humanoid a los NPCs. No hace falta un modelo nuevo de civil sentado.
+Cómo: en las 4 bancas sentables del parque y en otras bancas y sillas del mapa (puestos, plazas), poner NPCs (de NP01–NP14 y los demás) sentados
+con ese clip, alineados al asiento (cadera sobre el asiento, pies en el piso, mirando al frente), con variaciones pequeñas (algunos con el
+celular, platicando de frente si son dos — T11). Cuando oyen balazos se levantan y huyen (T11).
+Comprobar: capturas de NPCs sentados en el parque y en otro punto, bien alineados al asiento, y que se levanten y huyan al disparar.
