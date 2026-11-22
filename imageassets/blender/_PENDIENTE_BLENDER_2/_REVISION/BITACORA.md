@@ -976,3 +976,24 @@ Los NPC (NP01-NP14), la mesera robot R01 (65 huesos mixamorig) y el hacker usan 
 - 2026-11-21 (Mixamo): Tony aprobó SOLO para el E16 (grande): E16_Bloquear_Tambaleo (Standing Block React Large) y E16_Encenderse (Sword And Shield Power Up). El E15 (pequeño humanoide) NO usa estas. 'Rugir' (Mutant Roaring) DESCARTADO para todos.
 
 - 2026-11-21 PELEA PJ01 (Tony): DESCARTADOS PJ01_Golpe1_Directo, PJ01_Golpe2_Gancho y PJ01_Punos_Fuerte (malos). Se quedan: PJ01_Punos_Guardia (sin cambio), PJ01_Golpe_Der (Punos_GolpeDer, 49 f), PJ01_Golpe_Izq (Punos_GolpeIzq con todo el brazo girado 35° hacia arriba en el impacto f13, misma inercia, 44 f), PJ01_Golpe_Protesis (Protesis_Golpe, empieza y termina en guardia para bucle, 49 f). EN UNITY Override_Jugador: Punos_GolpeDer -> PJ01_Golpe_Der, Punos_GolpeIzq -> PJ01_Golpe_Izq, Punos_Fuerte -> PJ01_Golpe_Protesis.
+
+## 2026-11-22 — Revisión de Tony tras meter los clips en Unity
+1. **E15_Muerte y E16_Muerte (REEMPLAZADOS, mismo nombre → revisar .meta):** al final el cuerpo subía unos cm (la corrección anti-piso levantaba la cadera cuando un brazo/rodilla tocaba el suelo). Ahora la cadera solo baja o se queda desde que el cuerpo toca el piso (E16 sube 0 cm, E15 < 1 cm) y la malla no atraviesa el suelo (≤ 4 mm). Terminan apoyados en el piso. 71 f, rango 1–71.
+2. **Hueso de cabeza (E18_Caminar, E18_Correr, E18_Golpe_Der, E16_CaminarEscudo):** los rigs de E15, E16 y E18 NO tienen hueso Head (39 huesos mixamorig: el último de la columna es Neck). No se puede exportar un Head que no existe en el rig. En Unity: dejar Head = vacío (opcional en Humanoid) o mapearlo a Neck como ya está. Agregar un hueso Head obligaría a re-pesar la malla; no se hizo.
+3. **Conductor robado — versión corta NUEVA:** NPC_SacadoDelCarro_Corto.fbx (74 f = 3.1 s a 24 fps): lo jalan (f1–38), cae al piso rápido (f38–52), se acomoda (f52–56) y se levanta acelerado listo para huir (f56–74, termina de pie). Sin atravesar el piso. La larga (NPC_SacadoDelCarro_Huir, 174 f) y PJ01_Conductor_SerSacado (74 f) se dejan como están. Archivo nuevo, no hay .meta viejo.
+4. **REGLA para reemplazos:** cada vez que se sobrescriba un FBX que ya existe en Assets se anota aquí con "(REEMPLAZADO, mismo nombre → revisar .meta)" y su rango nuevo, porque el .meta viejo hace que Unity no lo reimporte o conserve el rango anterior. En Unity: Reimport del FBX y ajustar firstFrame/lastFrame de la toma.
+   FBX reemplazados 21–22 nov (todos en Assets/Arte/Personajes/PJ01/Clips): PJ01_Muerte_Frente (1–51), PJ01_Dano_Levantarse_BocaArriba (1–88), NPC_Balazo_Frente (1–25), NPC_Balazo_Espalda (1–25), E15_Muerte (1–71), E16_Muerte (1–71), PJ01_Conductor_SerSacado (1–74), PJ01_Carro_SacarConductor (1–98). Todos los demás clips del 21-nov son archivos nuevos.
+
+- 2026-11-22 CARROS V01a, V01b, V05 (REEMPLAZADOS, mismo nombre → revisar .meta y reimportar): Assets/Arte/Vehiculos/Piezas/{V01a,V01b,V05}/Vxx.fbx ahora es la versión por piezas hecha desde el modelo ORIGINAL completo (aprobada por Tony): Carroceria, Cofre, Motor, Puerta_D/I, Rueda_DD/DI/TD/TI, Interior, Interior_Casco. YA NO trae Cristal_* (el vidrio va en la carrocería, como el original). En Unity: reimportar y volver a correr el creador de carros por piezas para Carro_V01a/V01b/V05 (las bisagras de puertas y cofre cambiaron de lugar; quitar del prefab las referencias a Cristal_*). Respaldo: _REVISION_TONY/respaldos/vehiculos/Vxx_ANTES_22nov.fbx.
+
+
+## 22-nov — Cápsula de caída CP01 (APROBADA por Tony)
+Exportado (todo NUEVO, nada reemplazado):
+- Assets/Arte/Nova/CP01_Capsula/CP01_Capsula.fbx — raíz CP01 + Base, Tapa, Pared_Frente/Atras/Izq/Der. Animación de objetos 1–90 a escala E16 (5.4 m). Para otros robots escalar la raíz: E15 0.66, E18 0.85, E17 perro 0.45, dron 0.35.
+- Clips (fps 24, el robot entra en frame 12 de la cápsula y se ve desde el frame 39):
+  - PJ01/Clips/E15_Capsula_Salida.fbx (1–122) y E16_Capsula_Salida.fbx (1–140): pose de héroe 1 s + levantarse.
+  - E18_EliteNova/Clips/E18_Capsula_Salida.fbx (1–96): aterrizaje de héroe aprobado (R_E18Aterrizaje) + 1 s + levantarse.
+  - E17_PerroRobotNova/Clips/E17_Capsula_Salida.fbx (1–98): agachado 1 s + ladrar x2.
+  - Dron: de prueba se usó CY07b_Dron (sin esqueleto). En Unity, mover el objeto: sube 0.3→1.9 m en frames 52–76 con vaivén. Usar el dron enemigo real.
+Secuencia: cae de 30 m (frames 1–12, cae rápido por ser pesada), rebota (14–20), la tapa vuela (36–64), las paredes se abren como flor (38–56).
+HOLOGRAMA (no viaja en el FBX, hacerlo con shader de disolución en Unity): tapa desde el frame 46 y base/paredes desde el 58. 3 frames pasando a cian emisivo (0.2,0.9,1.0, intensidad 4), 6 parpadeos cada 2 frames con opacidad aleatoria de 35–85 %, y luego se desvanece a 0 en ~8 frames. Desactivar el objeto al terminar.

@@ -4404,3 +4404,26 @@ Use the attached image ONLY for the art style, colors and level of detail of our
 ```
 Use the attached images ONLY for the colors and mood. A sheet with 4 separate colorful abstract graffiti pieces arranged in a 2 by 2 grid with space between them, drawn flat and straight on, spray paint style with outlines, drips and highlights, NO letters, NO words, NO brands, NO symbols of real groups: only abstract shapes, waves, eyes and characters. Everything around them is PURE BLACK (#000000).
 ```
+
+
+# Parte 36 — Pedido 22-nov: cápsula de despliegue de Nova (CP01 cerrada, CP02 abierta desde CP01, F03 impacto)
+
+Lote: `lote_22nov.json` · script: `generar_22nov.ps1`.
+
+## CP01 — CP01_CapsulaNova_Cerrada (fase 1)
+
+```
+Use the attached Nova characters ONLY for the art style, materials and colors of the Nova corporation (clean corporate white armor plates, cold blue light stripes, gunmetal joints, illustrated with thin outlines and soft hand-painted gradients). Original design. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. View: 3/4 view from the front left, slightly from above. Subject: a Nova drop pod that is dropped from aircraft, stands vertically, about 3.5 meters tall and 2 meters wide: a tall reinforced capsule shape with heavy white armor plates, glowing cold blue stripes, vents, short stabilizer fins at the bottom, small braking thrusters around the lower part, and a base with claw-like spikes that dig into the ground. CLOSED: the front doors are shut, with clearly marked panel cut lines around them so they can be separated later in Blender.
+```
+
+## F03 — F03_ImpactoCapsula (fase 1)
+
+```
+Use the attached image ONLY for the color mood (cold blue). A ground impact effect sprite for a video game, seen from slightly above: a bright white-blue flash at the center where something hits the ground, a ring-shaped shockwave of dust spreading outward, blue sparks and small debris flying out. Stylized and clean, soft glow. PURE BLACK (#000000) background everywhere, flat, no ground texture, no object, no text.
+```
+
+## CP02 — CP02_CapsulaNova_Abierta (fase 2)
+
+```
+The FIRST attached image is our closed Nova drop pod: keep EXACTLY the same pod, shape, armor, colors, fins, thrusters and base, the same view and the same plain flat pure white background, no ground, no people, no text. Show it OPEN and EMPTY: the front doors swung fully open to the sides (still attached at their hinges), revealing a dark interior with padded support harness frames where a soldier stood, cold blue lights inside, and a little white vapor drifting out of the opening.
+```
