@@ -154,6 +154,11 @@ namespace MechaCyberpunk.Trafico.Persecucion
             montable = GetComponent<IMontable>();
             carro = GetComponent<CarroViejo>();
             danioCarro = GetComponent<DanioCarro>();
+            if (danioCarro == null)
+            {
+                // T25: DanioCarro no viene en el prefab: lo agrega CarroViejo en su Awake, que puede correr después de este. Sin él la patrulla no recibía daño ni sumaba estrellas.
+                danioCarro = gameObject.AddComponent<DanioCarro>();
+            }
             List<Renderer> mallas = new List<Renderer>();
             foreach (Renderer r in GetComponentsInChildren<Renderer>(true))
             {
@@ -368,6 +373,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
                 return;
             }
             Robada = true;
+            EstrellasBusqueda.SubirA(Registro<ICalor>.Actual, EstrellasBusqueda.EstrellasPorDispararAPatrulla); // T25: robar una patrulla = 2 estrellas, igual que dispararle
             // T-1202: si el jugador se sube con los policías dentro, ellos ya están afuera.
             BajarOcupantes(true);
             VeAlJugador = false;
