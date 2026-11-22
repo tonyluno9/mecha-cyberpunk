@@ -331,9 +331,13 @@ namespace MechaCyberpunk.Progresion.Opciones
             }
         }
 
+        private const string LlaveCalidadRealismo = "T1605_CalidadRealismo";
+
         private void AplicarCalidad()
         {
             CalidadVisual.FijarReflejosCharcos(ReglaOpciones.ReflejosCharcos(Valores.calidad));
+            // T14 (T-1605): Mundo (CalidadRealismo) lee este nivel; las areas no se referencian, por eso la llave va duplicada (CalculoCalidadRealismo.LlaveNivel).
+            PlayerPrefs.SetInt(LlaveCalidadRealismo, (int)Valores.calidad);
             versionCalidad++;
             if (!copiaPuesta)
             {
