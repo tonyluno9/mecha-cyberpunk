@@ -438,7 +438,7 @@ namespace MechaCyberpunk.Progresion.Recorrido
             molestia = gameObject.AddComponent<MolestiaSkulls>();
             molestia.Terminada += AlTerminarMolestia;
             float distancia = datos != null ? datos.DistanciaAparicionSkulls : 10f;
-            if (datos == null || !molestia.Iniciar(datos.PrefabsSkull, distancia))
+            if (datos == null || !molestia.Iniciar(datos.PrefabsSkull, distancia, PosicionCallejonSkulls()))
             {
                 Debug.LogWarning("[Historia] No se pudo armar la escena de los SKULLS (faltan los prefabs en DatosRecorrido o el jugador): se sigue con la historia.");
                 AlTerminarMolestia();
@@ -1034,6 +1034,23 @@ namespace MechaCyberpunk.Progresion.Recorrido
             AvisarSinMarcador(MarcadorHistoria.IdMolestia);
             ConocerInicio();
             return Ajustar(inicioPos + inicioAdelante * MetrosParaMolestia());
+        }
+
+        // T-1652: de dónde salen los SKULLS: el callejón junto a la casa (marcador); respaldo, un hueco libre a 15-20 m del Inicio_Calle a un lado de la calle;
+        // null si no hay nada (salen adelante del jugador como antes).
+        private Vector3? PosicionCallejonSkulls()
+        {
+            if (MarcadorHistoria.TryBuscar(MarcadorHistoria.IdCallejonSkulls, out Pose pose))
+            {
+                return pose.position;
+            }
+            AvisarSinMarcador(MarcadorHistoria.IdCallejonSkulls);
+            ConocerInicio();
+            if (inicioConocido && MolestiaSkulls.BuscarSalidaRespaldo(inicioPos, inicioAdelante, out Vector3 punto))
+            {
+                return punto;
+            }
+            return null;
         }
 
         private Pose PoseRanura()

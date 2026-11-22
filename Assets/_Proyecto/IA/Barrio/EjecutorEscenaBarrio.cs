@@ -31,12 +31,16 @@ namespace MechaCyberpunk.IA.Barrio
         private const float VelocidadRegreso = 1.8f;
         private const float GradosGiroAgresor = 360f;
         private const float SegundosMaximosAcercarse = 25f; // la víctima puede estar hasta a 40 m (hay pocos civiles)
-        private const float SegundosMaximosRegreso = 25f; // hasta 40 m a 1.8 m/s
+        private const float SegundosMaximosRegreso = 8f; // después los suelta: su grupo (GrupoAcoso) los regresa con su IA
         private const float DistanciaLlegadaHogar = 1.5f;
         private const float SegundosGesto = 1f;
         private const float SegundosMaximosCaido = 5f;
         private const float SegundosAlLevantar = 1.7f;
         private const float SegundosRisaFinal = 1.6f;
+        private const float DistanciaContactoEmpujon = 0.8f; // T-1652: de frente y pegados
+        private const float SegundosHastaContacto = 0.4f; // del inicio de PJ01_Pandillero_Empujar (23 cuadros) a la mano en el pecho
+        private const float SegundosMaximosPegarse = 1.5f;
+        private const float SegundosSinAvanzar = 6f; // sin acercarse en este tiempo hay un obstáculo en medio
         private const float RadioIntervencion = 30f;
         private const float RadioArmaIntervencion = 15f;
         private const float DistanciaJugadorHostil = 60f;
@@ -142,14 +146,19 @@ namespace MechaCyberpunk.IA.Barrio
         {
             if (info.Cantidad > 0f)
             {
+                Debug.Log("[Barrio] intervención: daño a " + (quien != null ? quien.name : "-") + " de " + (info.Atacante != null ? info.Atacante.ToString() : "nadie") + " tipo " + info.Tipo);
                 intervencion = true;
             }
         }
 
         private void AlDisparo(Vector3 punto)
         {
-            if (Cerca(punto, RadioIntervencion))
+            // T12: interviene el JUGADOR; los balazos de otros (policía, la otra pandilla) no cuentan. El disparo del jugador sale junto a él.
+            IJugador jugador = Registro<IJugador>.Actual;
+            bool delJugador = jugador != null && jugador.Raiz != null && Vector3.Distance(jugador.Raiz.position, punto) <= DistanciaDisparoDelJugador;
+            if (delJugador && Cerca(punto, RadioIntervencion))
             {
+                Debug.Log("[Barrio] intervención: el jugador disparó en " + punto);
                 intervencion = true;
             }
         }
@@ -226,10 +235,22 @@ namespace MechaCyberpunk.IA.Barrio
         {
             if (EsBullying)
             {
-                return Vigente(reparto.Agresor1) && (reparto.Agresor2 == null || Vigente(reparto.Agresor2)) && reparto.Victima != null && reparto.Victima.Vivo;
+                bool ok = Vigente(reparto.Agresor1) && (reparto.Agresor2 == null || Vigente(reparto.Agresor2)) && reparto.Victima != null && reparto.Victima.Vivo;
+                if (!ok && !motivoAvisado)
+                {
+                    motivoAvisado = true;
+                    Debug.Log("[Barrio] escena " + escena.Id + " sin actores: " + Estado(reparto.Agresor1) + " / " + Estado(reparto.Agresor2)
+                        + " / víctima " + (reparto.Victima != null && reparto.Victima.Vivo));
+                }
+                return ok;
             }
             return true;
         }
+
+        private bool motivoAvisado;
+        private const float DistanciaDisparoDelJugador = 2f; // m: el disparo del jugador se publica desde su arma
+
+        private static string Estado(PandilleroAPie p) => p == null ? "-" : p.name + " activo " + p.isActiveAndEnabled + " ko " + p.EstaKO + " acosando " + p.Acosando + " alerta " + p.Alerta + " hostil " + p.EsHostil;
 
         private static bool Vigente(PandilleroAPie p) => p != null && p.isActiveAndEnabled && !p.EstaKO && p.Acosando; // sin Acosando alguien lo soltó (su grupo pasó a alerta)
 
@@ -238,6 +259,8 @@ namespace MechaCyberpunk.IA.Barrio
         private IEnumerator Acercarse()
         {
             float t = 0f;
+            float mejorDistancia = float.MaxValue;
+            float ultimoAvance = 0f;
             while (!Terminada)
             {
                 if (MisionProtegida.Activa || CinematicaEnCurso.Activa || !ActoresVigentes())
@@ -246,6 +269,18 @@ namespace MechaCyberpunk.IA.Barrio
                     break;
                 }
                 Vector3 meta = reparto.Victima.Transform.position;
+                float falta = Vector3.Distance(Plano(reparto.Agresor1.transform.position), Plano(meta));
+                if (falta < mejorDistancia - 0.5f)
+                {
+                    mejorDistancia = falta;
+                    ultimoAvance = t;
+                }
+                else if (t - ultimoAvance > SegundosSinAvanzar)
+                {
+                    abortar = true;
+                    Debug.Log("[Barrio] escena " + escena.Id + ": un obstáculo detuvo a los agresores, se cancela.");
+                    yield break;
+                }
                 bool llegaron = true;
                 float dt = Time.deltaTime;
                 llegaron &= IrHacia(reparto.Agresor1, meta, dt, DistanciaAbordaje);
@@ -378,7 +413,14 @@ namespace MechaCyberpunk.IA.Barrio
             {
                 VocesPandilla.Decir(pandillero.transform, l.IdVozSku, true);
             }
-            Gesticular(l, quien, pandillero);
+            if (l.Gesto == GestoBarrio.Empujar)
+            {
+                yield return EmpujarDeFrente(pandillero != null ? pandillero : reparto.Agresor1);
+            }
+            else
+            {
+                Gesticular(l, quien, pandillero);
+            }
             float espera = Mathf.Max(duracion, l.Gesto != GestoBarrio.Ninguno ? SegundosGesto : 0f);
             yield return Esperar(espera);
         }
@@ -445,6 +487,77 @@ namespace MechaCyberpunk.IA.Barrio
                 case GestoBarrio.Levantar:
                     reparto.Victima?.Levantar();
                     break;
+            }
+        }
+
+        private static Vector3 Plano(Vector3 v)
+        {
+            v.y = 0f;
+            return v;
+        }
+
+        /// <summary>Depuración (T-1652): arranca el empujón de frente del escena en curso ya, sin esperar al guion. False si no hay bullying en curso.</summary>
+        public bool ForzarEmpujon(out IEnumerator rutina)
+        {
+            rutina = null;
+            if (!EsBullying || reparto.Agresor1 == null || reparto.Victima == null)
+            {
+                return false;
+            }
+            rutina = EmpujarDeFrente(reparto.Agresor1);
+            return true;
+        }
+
+        // T-1652: el empujón se ve: el agresor se pega a la víctima (0.8 m), se miran de frente, juega PJ01_Pandillero_Empujar y la víctima reacciona
+        // justo en el contacto (no antes). Después sigue el guion (la caída de Tumbar sale de frente porque ya se miran).
+        private IEnumerator EmpujarDeFrente(PandilleroAPie agresor)
+        {
+            if (agresor == null || reparto.Victima == null || reparto.Victima.Transform == null)
+            {
+                yield break;
+            }
+            Transform victima = reparto.Victima.Transform;
+            float t = 0f;
+            while (!Terminada && t < SegundosMaximosPegarse)
+            {
+                Vector3 d = Plano(victima.position - agresor.transform.position);
+                if (d.magnitude <= DistanciaContactoEmpujon + 0.05f)
+                {
+                    break;
+                }
+                agresor.MirarHacia(d, GradosGiroAgresor);
+                agresor.MoverPlano(d.normalized * (VelocidadAcercarse * 0.6f));
+                PandilleroAPie otro = agresor == reparto.Agresor1 ? reparto.Agresor2 : reparto.Agresor1;
+                if (otro != null)
+                {
+                    Atender(otro, victima.position, Time.deltaTime);
+                }
+                reparto.Victima.Mirar(agresor.transform.position, Time.deltaTime);
+                t += Time.deltaTime;
+                yield return null;
+            }
+            if (Terminada)
+            {
+                yield break;
+            }
+            Vector3 haciaVictima = Plano(victima.position - agresor.transform.position);
+            if (haciaVictima.sqrMagnitude > 1e-6f)
+            {
+                agresor.transform.rotation = Quaternion.LookRotation(haciaVictima.normalized, Vector3.up);
+                if (!reparto.Victima.Caido)
+                {
+                    victima.rotation = Quaternion.LookRotation(-haciaVictima.normalized, Vector3.up); // de frente
+                }
+            }
+            VisualPersonaje v = agresor.Visual;
+            if (v == null || !EstadosNpcT1560.Gestear(v, GestoNpcT1560.Empujar))
+            {
+                v?.Golpear(false);
+            }
+            yield return Esperar(SegundosHastaContacto);
+            if (!Terminada)
+            {
+                reparto.Victima.Empujar(haciaVictima);
             }
         }
 
