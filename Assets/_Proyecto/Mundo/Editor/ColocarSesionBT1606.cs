@@ -159,9 +159,12 @@ namespace MechaCyberpunk.Mundo.Editor
                 if (molestia != null)
                 {
                     Vector3 pos;
-                    if (BuscarLibre(inicio.transform.position + adelante * 20f, inicio.transform.position.y, raiz.transform, out pos))
+                    // La calle de Suburbios corre norte-sur (asfalto x -51 a -42): Inicio_Calle mira +X hacia la casa de enfrente,
+                    // asi que "20 m por donde sale" es 20 m a lo largo de la calle (+Z), en el centro del asfalto.
+                    Vector3 sobreCalle = new Vector3(-46.5f, inicio.transform.position.y, inicio.transform.position.z + 20f);
+                    if (BuscarLibre(sobreCalle, inicio.transform.position.y, raiz.transform, out pos))
                     {
-                        Poner(molestia, raiz.transform, pos, Quaternion.LookRotation(adelante, Vector3.up), log, "Historia_Molestia");
+                        Poner(molestia, raiz.transform, pos, Quaternion.LookRotation(Vector3.forward, Vector3.up), log, "Historia_Molestia");
                     }
                     else
                     {
@@ -227,8 +230,10 @@ namespace MechaCyberpunk.Mundo.Editor
             GameObject prefabMarcador = Cargar(RutaMarcador, log);
             if (prefabMarcador != null)
             {
-                Vector3 tianguis = CentroDe("Tianguis", Vector3.zero);
-                Vector3 neon = CentroDe("NeonAlto", new Vector3(90f, 0f, 40f));
+                Vector3 tianguis = CentroDe("Calle_tianguis", CentroDe("Tianguis", Vector3.zero));
+                log.AppendLine("Ref tianguis " + V(tianguis));
+                Vector3 neon = CentroDe("Calle_neon", new Vector3(90f, 0f, 40f));
+                log.AppendLine("Ref neon " + V(neon));
                 Transform cortina = BuscarPorNombre("Cortina") ?? BuscarPorNombre("Persiana");
                 Vector3 cortinaPos = cortina != null ? CajaDe(cortina).center : tianguis + new Vector3(0f, 0f, 14f);
                 Vector3 inicioPos = inicio != null ? inicio.transform.position : new Vector3(-53f, 0f, -76.5f);
@@ -237,15 +242,18 @@ namespace MechaCyberpunk.Mundo.Editor
                 Vector3 haciaCentro = Vector3.ProjectOnPlane(-recintoPos, Vector3.up).normalized;
                 Dictionary<string, Vector3> deseado = new Dictionary<string, Vector3>
                 {
-                    { "bully_piso_tianguis", tianguis },
-                    { "vendedor_tacos", tianguis + new Vector3(8f, 0f, 0f) },
-                    { "vendedor_elotes", tianguis + new Vector3(-8f, 0f, 0f) },
-                    { "bully_snakes_senora", neon },
+                    // El tianguis es una calle E-O de 18 m (banquetas en z = +-9): los puntos van sobre las banquetas, junto a los puestos.
+                    { "bully_piso_tianguis", tianguis + new Vector3(0f, 0f, 8.5f) },
+                    { "vendedor_tacos", tianguis + new Vector3(10f, 0f, -8.5f) },
+                    { "vendedor_elotes", tianguis + new Vector3(-10f, 0f, 8.5f) },
+                    // Neon Alto: calle E-O con banquetas en z = +-9 alrededor de la referencia.
+                    { "bully_snakes_senora", neon + new Vector3(0f, 0f, 3.5f) },
                     { "bully_comerciante_cortina", cortinaPos },
-                    { "borracho", tianguis + new Vector3(0f, 0f, -16f) },
-                    { "celular", tianguis + new Vector3(16f, 0f, 10f) },
-                    { "pareja_discutiendo", inicioPos - hacia * 14f },
-                    { "vecinos_muro", inicioPos + hacia * 6f },
+                    { "borracho", tianguis + new Vector3(-22f, 0f, -8.5f) },
+                    { "celular", tianguis + new Vector3(18f, 0f, 8.5f) },
+                    // Calle de Suburbios (N-S, banqueta oeste en x -53.5): la casa de la izquierda tiene interior en x < -57.
+                    { "pareja_discutiendo", new Vector3(inicioPos.x + 0.5f, 0f, inicioPos.z + 14f) },
+                    { "vecinos_muro", new Vector3(inicioPos.x + 0.5f, 0f, inicioPos.z - 4f) },
                     { "vecinos_nova", recintoPos + haciaCentro * 20f },
                 };
                 foreach (string id in IdsEscena)
