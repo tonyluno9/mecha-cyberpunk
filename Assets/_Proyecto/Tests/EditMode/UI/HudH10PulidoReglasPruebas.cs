@@ -17,8 +17,8 @@ namespace MechaCyberpunk.Tests.UI
         [Test]
         public void Titulo_ElTextoLlevaLaCiudadYLaZonaEnMayusculas()
         {
-            Assert.AreEqual("MEGALOPOLIS · SUBURBIOS", ReglaTituloZonaH10.Texto("Suburbios"));
-            Assert.IsTrue(ReglaTituloZonaH10.EsTituloDeZona("MEGALOPOLIS · SUBURBIOS"));
+            Assert.AreEqual("CYBER CITY · SUBURBIOS", ReglaTituloZonaH10.Texto("Suburbios"));
+            Assert.IsTrue(ReglaTituloZonaH10.EsTituloDeZona("CYBER CITY · SUBURBIOS"));
             Assert.IsFalse(ReglaTituloZonaH10.EsTituloDeZona("ENCARGO: ENTREGA"));
             Assert.IsFalse(ReglaTituloZonaH10.EsTituloDeZona(string.Empty));
         }

@@ -97,7 +97,7 @@ namespace MechaCyberpunk.Tests.UI
             {
                 // T-701: el HUD nuevo lleva el nombre de la zona chico y delgado arriba al centro (TituloZona de CanvasH10), que se desvanece solo; no es el cartel de lugar viejo.
                 bool tituloDelHudNuevo = t.name == "TituloZona" && t.canvas.name == "CanvasH10";
-                if (t.enabled && t.text.Contains("MEGALOPOLIS") && t.canvas.name != "CanvasAvisos" && !tituloDelHudNuevo)
+                if (t.enabled && t.text.Contains("CYBER CITY") && t.canvas.name != "CanvasAvisos" && !tituloDelHudNuevo)
                 {
                     Assert.Fail("cartel de lugar suelto fuera de la cola: " + t.name);
                 }

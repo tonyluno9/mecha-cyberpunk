@@ -19,7 +19,7 @@ namespace MechaCyberpunk.UI.Mapa
     public class PantallaMapa : MonoBehaviour
     {
         /// <summary>Título del mapa (documento del juego, 29-oct).</summary>
-        public const string NombreCiudad = "MEGALOPOLIS";
+        public const string NombreCiudad = "CYBER CITY";
         public const string TextoLeyenda = "LEYENDA";
         public const string TextoAyuda = "M O ESC PARA CERRAR · RUEDA: ZOOM · CLIC: MARCAR UN PUNTO O UN LUGAR";
         public const int OrdenCanvas = 40;

@@ -62,11 +62,11 @@ namespace MechaCyberpunk.Tests.UI
         {
             yield return Preparar();
             Assert.IsFalse(h10.TituloVisible, "No se ve de entrada");
-            Assert.IsTrue(HudH10.MostrarTitulo("MEGALOPOLIS · SUBURBIOS", 2.4f));
+            Assert.IsTrue(HudH10.MostrarTitulo("CYBER CITY · SUBURBIOS", 2.4f));
             yield return null;
             yield return null;
             Assert.IsTrue(h10.TituloVisible, "Sale al entrar a la zona");
-            Assert.AreEqual("MEGALOPOLIS · SUBURBIOS", h10.TituloZona);
+            Assert.AreEqual("CYBER CITY · SUBURBIOS", h10.TituloZona);
             Text texto = h10.Canvas.transform.Find("TituloZona").GetComponent<Text>();
             Assert.LessOrEqual(texto.fontSize, 32, "Chico");
             Assert.AreEqual(0.5f, texto.rectTransform.anchorMin.x, "Al centro");
@@ -83,7 +83,7 @@ namespace MechaCyberpunk.Tests.UI
             yield return Preparar();
             MechaCyberpunk.UI.Historia.PantallaHistoriaPandillas pantalla = new GameObject("Historia").AddComponent<MechaCyberpunk.UI.Historia.PantallaHistoriaPandillas>();
             ColaAvisos cola = hud.GetComponent<ColaAvisos>();
-            pantalla.MostrarAyuda("MEGALOPOLIS · SUBURBIOS", 4f);
+            pantalla.MostrarAyuda("CYBER CITY · SUBURBIOS", 4f);
             yield return null;
             Assert.IsTrue(h10.TituloVisible, "Sale en el nombre chico de arriba");
             Assert.AreEqual(0, cola.EnEspera, "No entra a la cola de avisos del centro");

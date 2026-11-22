@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66fe399b8f3e9174d87ec4ece74a168d, type: 3}
+  m_Name: DatosCinematica_C01_EL_RECUERDO
+  m_EditorClassIdentifier: MechaCyberpunk.Progresion.Recorrido::MechaCyberpunk.Progresion.Recorrido.DatosCinematica
+  id: C01
+  nombre: EL RECUERDO
+  texto: "Un ni\xF1o corre en el campo con su hermano. Su mam\xE1 los llama. Despierta."
+  duracion: 9
+  video: {fileID: 0}

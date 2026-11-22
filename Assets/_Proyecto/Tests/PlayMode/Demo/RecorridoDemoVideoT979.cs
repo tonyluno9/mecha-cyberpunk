@@ -73,7 +73,7 @@ namespace MechaCyberpunk.Tests.Demo
             DirectorPandillas director = null;
             yield return EsperarCiudad(directorViejo, d => director = d);
 
-            // 3. Despierta en su cuarto (MEGALOPOLIS · SUBURBIOS).
+            // 3. Despierta en su cuarto (CYBER CITY · SUBURBIOS).
             yield return Grabar(6f);
 
             // 4. La ciudad de noche: una cámara recorre la calle principal, sin HUD.

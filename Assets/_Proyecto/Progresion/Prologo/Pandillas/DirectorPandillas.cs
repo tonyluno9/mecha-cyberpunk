@@ -35,7 +35,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
         public const string TextoHacker = "VE CON EL HACKER A NEÓN ALTO";
         public const string PrefijoTianguis = "VENCE A LOS SKULLS ";
         public const int LargoMaximoObjetivo = 32;
-        public const string AyudaInicio = "MEGALOPOLIS · SUBURBIOS";
+        public const string AyudaInicio = "CYBER CITY · SUBURBIOS";
         public const string SubtituloDoc = "—Aguanta, mijo. Esto no te va a doler… mucho.";
         public const string SubtituloInventor = "—Esa pistola está de museo. Ya quedó.";
         public const string FinAyudaInventor = ": MÁS DAÑO Y MÁS BALAS";
@@ -101,6 +101,16 @@ namespace MechaCyberpunk.Progresion.Prologo.Pandillas
         private bool cargadoAntes;
         private AsaltoDinero asalto;
         private int dineroRobadoGuardado;
+
+        // T-1625 (T10): lo que el recorrido nuevo reutiliza de la escena (el recorrido viejo queda desconectado, no borrado).
+        public Transform PuertaCasa => puertaCasa;
+        public GameObject[] GruposTianguis => gruposTianguis;
+        public GameObject[] GruposNeon => gruposNeon;
+        public PersonajeApoyo Doc => doc;
+        public PersonajeApoyo Inventor => inventor;
+        public PersonajeApoyo Hacker => hacker;
+        public string ZonaTianguis => zona;
+        public string IdPuntoInicio => idInicio;
 
         public PasoHistoria Paso => maquina.Paso;
         public bool Iniciado => arrancado;
