@@ -100,7 +100,7 @@ namespace MechaCyberpunk.Tests.IA
             float anterior = vida.Actual;
             float mayorCaida = 0f;
             float menorDistancia = float.MaxValue;
-            float fin = Time.time + 12f;
+            float fin = Time.time + 30f; // T-1651 (T26): primero advierten unos 20 s y después empujan
             while (Time.time < fin)
             {
                 yield return null;

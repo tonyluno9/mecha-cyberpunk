@@ -4,6 +4,7 @@ using MechaCyberpunk.Combate.Lectura;
 using MechaCyberpunk.Combate.Voces;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.IA.Datos;
+using MechaCyberpunk.Personaje.Movimiento;
 using MechaCyberpunk.Personaje.Visual;
 using UnityEngine;
 
@@ -161,6 +162,39 @@ namespace MechaCyberpunk.IA.APie
         public float EscalaCuerpo => escalaCuerpo;
 
         /// <summary>T-1497: de dónde sale el tiro: 1.4 m de alto y 0.4 m al frente a escala 1, más arriba y más lejos en los grandes.</summary>
+        /// <summary>T25: error máximo (°) entre hacia dónde mira el policía y el jugador para que el arma pueda apuntarle; más allá dispara hacia donde mira (y falla).</summary>
+        private const float ErrorMaximoPunteriaPolicia = 20f;
+        /// <summary>T25: dispersión del arma del policía (radio del cono, tangente de ~2.5°).</summary>
+        private const float DispersionPolicia = 0.045f;
+
+        /// <summary>T25: hacia dónde sale de verdad la bala del policía: al pecho si lo tiene de frente (con dispersión), o hacia donde mira si no.</summary>
+        private Vector3 DireccionRealDeTiro(Vector3 boca, Vector3 pecho)
+        {
+            Vector3 haciaPecho = pecho - boca;
+            if (haciaPecho.sqrMagnitude < 0.0001f)
+            {
+                return transform.forward;
+            }
+            Vector3 plano = new Vector3(haciaPecho.x, 0f, haciaPecho.z);
+            Vector3 direccion = haciaPecho.normalized;
+            if (plano.sqrMagnitude > 0.0001f && Vector3.Angle(transform.forward, plano) > ErrorMaximoPunteriaPolicia)
+            {
+                direccion = new Vector3(transform.forward.x, direccion.y, transform.forward.z).normalized;
+            }
+            return (direccion + UnityEngine.Random.insideUnitSphere * DispersionPolicia).normalized;
+        }
+
+        /// <summary>T25 (depuración): este policía dispara una vez hacia <paramref name="punto"/> como lo haría en combate (con su cuerpo, su dispersión y su rayo). Devuelve true si el daño llegó al jugador.</summary>
+        public bool DispararAPuntoDepuracion(Vector3 punto, float danio = 5f)
+        {
+            if (pistola == null || recibeJugador == null)
+            {
+                return false;
+            }
+            Vector3 boca = BocaDelArma();
+            return pistola.Disparar(boca, punto, recibeJugador, danio, 1f, false, DireccionRealDeTiro(boca, punto));
+        }
+
         private Vector3 BocaDelArma() => transform.position + Vector3.up * AlturaBoca * escalaCuerpo + transform.forward * AdelanteBoca * escalaCuerpo;
 
         /// <summary>Fase del patrón del jefe cuerpo a cuerpo (T-693); Acecho si no lo es.</summary>
@@ -416,6 +450,7 @@ namespace MechaCyberpunk.IA.APie
             if (percepcion != null)
             {
                 EventosRuido.Disparo += AlOirDisparo;
+                EventosRuido.ArmaSacada += AlSacarArmaCercaDeGuardia; // T-1651
             }
             if (datos != null && datos.ProvocaAntesDeAtacar)
             {
@@ -462,6 +497,7 @@ namespace MechaCyberpunk.IA.APie
         {
             EventosJugador.Desperto -= AlDespertarElJugador;
             EventosRuido.Disparo -= AlOirDisparo;
+            EventosRuido.ArmaSacada -= AlSacarArmaCercaDeGuardia;
             EventosRuido.Disparo -= AlRespuestaDelJugador;
             EventosRuido.ArmaSacada -= AlRespuestaDelJugador;
             Registro<ICriminalCalle>.Quitar(this);
@@ -476,6 +512,7 @@ namespace MechaCyberpunk.IA.APie
         {
             EventosJugador.Desperto -= AlDespertarElJugador;
             EventosRuido.Disparo -= AlOirDisparo;
+            EventosRuido.ArmaSacada -= AlSacarArmaCercaDeGuardia;
             EventosRuido.Disparo -= AlRespuestaDelJugador;
             EventosRuido.ArmaSacada -= AlRespuestaDelJugador;
             Registro<ILecturaRival>.Quitar(this);
@@ -667,7 +704,22 @@ namespace MechaCyberpunk.IA.APie
             }
             if (datos.UsaPistola)
             {
-                if (EnProvocacion())
+                bool provocando = EnProvocacion();
+                ConfrontacionGrupo conf = ConfrontacionDeCalle();
+                if (conf != null && Alerta && !EsHostil)
+                {
+                    // T-1651: advertencia, empujón o retirada; la pelea solo empieza cuando el jugador ataca.
+                    if (conf.EnConfrontacion)
+                    {
+                        ActualizarConfrontando(conf);
+                        return;
+                    }
+                    suprimirAtaque = true;
+                    ActualizarArmado();
+                    suprimirAtaque = false;
+                    return;
+                }
+                if (provocando)
                 {
                     ActualizarProvocando();
                     return;
@@ -830,6 +882,12 @@ namespace MechaCyberpunk.IA.APie
                 EmpujarVisualDelJugador();
                 DaniarJugador(ReglaProvocacionCalle.DanioEmpujon, adelante);
             }
+            MoverProvocando(adelante, deseada, false);
+        }
+
+        // Giro, gravedad, movimiento y animación comunes de provocar (T-1528) y de advertir (T-1651).
+        private void MoverProvocando(Vector3 adelante, Vector3 deseada, bool armaSacada)
+        {
             if (adelante.sqrMagnitude > 0.0001f)
             {
                 Quaternion meta = Quaternion.LookRotation(adelante, Vector3.up);
@@ -846,13 +904,129 @@ namespace MechaCyberpunk.IA.APie
                 if (visual != null)
                 {
                     visual.Agachado = false;
-                    visual.Apuntando = false;
+                    visual.Apuntando = armaSacada;
                     visual.TipoArma = TipoArmaVisual.Pistola;
                 }
                 else
                 {
-                    animador.SetBool(IdApuntando, false);
+                    animador.SetBool(IdApuntando, armaSacada);
                 }
+            }
+        }
+
+        // ---- T-1651 (T26): confrontación con advertencias ----
+
+        private bool suprimirAtaque;
+        private static float proximaAdvertenciaGuardia;
+        private static int ultimaFraseGuardia = -1;
+        private static ConfigConfrontacion configGuardias;
+        private int avisosGuardia;
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void LimpiarGuardias()
+        {
+            proximaAdvertenciaGuardia = 0f;
+            ultimaFraseGuardia = -1;
+            configGuardias = null;
+        }
+
+        // Guardias de lugares (los que reaccionan a disparos): si sacas el arma cerca te advierten (frase con subtítulo, una a la vez en todos los guardias); solo atacan si disparas o les pegas.
+        private void AlSacarArmaCercaDeGuardia(Vector3 punto)
+        {
+            if (EstaKO || raizJugador == null || Time.time < proximaAdvertenciaGuardia || ConfrontacionDeCalle() != null)
+            {
+                return;
+            }
+            if (configGuardias == null)
+            {
+                configGuardias = Resources.Load<ConfigConfrontacion>(ConfigConfrontacion.RecursoGuardias);
+                if (configGuardias == null)
+                {
+                    return;
+                }
+            }
+            if (DistanciaPlana(punto, raizJugador.position) > ReglaProvocacionCalle.CercaniaJugador
+                || DistanciaPlana(transform.position, raizJugador.position) > configGuardias.DistanciaDeteccion)
+            {
+                return;
+            }
+            proximaAdvertenciaGuardia = Time.time + configGuardias.SegundosEntreFrases;
+            avisosGuardia++;
+            string texto = FrasesConfrontacion.Elegir(avisosGuardia >= 3 ? FrasesConfrontacion.UltimoAvisoGuardia : FrasesConfrontacion.AvisoGuardia, ref ultimaFraseGuardia);
+            Gritar(texto);
+            Subtitulos.Publicar(configGuardias.NombreHablante, texto, transform.position + Vector3.up * 1.6f, 0f, configGuardias.ColorHablante);
+            Debug.Log("[Confrontacion] guardia " + name + " advierte: " + texto);
+        }
+        private float finQuieto = -1f;
+        private AtropelloJugador atropelloJugador;
+        private const float DistanciaContactoEmpujon = 2.2f;
+        private const float DistanciaEmpujarConfrontacion = 2.6f;
+        private const float SegundosGestoEmpujon = 1f;
+
+        /// <summary>T-1651: la confrontación de su grupo si es maleante de calle, o null (guion, jefes, policía, Nova, sin config).</summary>
+        private ConfrontacionGrupo ConfrontacionDeCalle() => Grupo != null && EsMaleanteDeCalle ? Grupo.Confrontacion : null;
+
+        /// <summary>T-1651: fase de confrontación de su grupo (Reposo si no aplica). Para depuración y pruebas.</summary>
+        public ReglaConfrontacion.Fase FaseConfrontacion
+        {
+            get
+            {
+                ConfrontacionGrupo c = ConfrontacionDeCalle();
+                return c != null ? c.Fase : ReglaConfrontacion.Fase.Reposo;
+            }
+        }
+
+        // Una cosa a la vez: o camina, o hace el gesto (burla, empujón) y se queda quieto. No apunta ni dispara: la pelea la empieza el jugador.
+        private void ActualizarConfrontando(ConfrontacionGrupo conf)
+        {
+            ObjetivoActual = null; // no apunta a nadie: la policía no lo toma por criminal
+            turnos?.Soltar(this);
+            pistola?.QuitarAviso();
+            Vector3 hacia = (raizJugador != null ? raizJugador.position : hogar) - transform.position;
+            hacia.y = 0f;
+            float distancia = hacia.magnitude;
+            Vector3 adelante = distancia > 0.0001f ? hacia / distancia : transform.forward;
+            ConfigConfrontacion config = conf.Config;
+            bool quieto = Time.time < finQuieto;
+            if (!quieto && distancia <= DistanciaEmpujarConfrontacion && conf.TomarEmpujon(this, out bool tira))
+            {
+                AnimarGolpe(false);
+                EmpujarVisualDelJugador();
+                DaniarJugador(config.DanioEmpujon, adelante);
+                if (tira)
+                {
+                    DerribarJugador(adelante);
+                }
+                finQuieto = Time.time + SegundosGestoEmpujon;
+                quieto = true;
+            }
+            if (!quieto && conf.TomarFrase(this, out string idVoz, out string texto))
+            {
+                DecirSkull(idVoz);
+                Gritar(texto);
+                conf.PublicarSubtitulo(transform, texto);
+                visual?.Burlar();
+                finQuieto = Time.time + config.SegundosGesto;
+                quieto = true;
+            }
+            float meta = conf.Fase == ReglaConfrontacion.Fase.Empujon ? DistanciaContactoEmpujon : config.DistanciaAcercamiento;
+            Vector3 deseada = !quieto && distancia > meta ? adelante * Mathf.Min(datos.Velocidad, ReglaProvocacionCalle.VelocidadAcercamiento) : Vector3.zero;
+            MoverProvocando(adelante, deseada, config.SacaArmaEnAdvertencia);
+        }
+
+        private void DerribarJugador(Vector3 direccion)
+        {
+            if (raizJugador == null)
+            {
+                return;
+            }
+            if (atropelloJugador == null)
+            {
+                atropelloJugador = raizJugador.GetComponentInChildren<AtropelloJugador>(true);
+            }
+            if (atropelloJugador != null)
+            {
+                atropelloJugador.Derribar(direccion);
             }
         }
 
@@ -902,7 +1076,7 @@ namespace MechaCyberpunk.IA.APie
 
         private void ActualizarArmado()
         {
-            bool atacable = Alerta && EsAtacable();
+            bool atacable = Alerta && EsAtacable() && !suprimirAtaque;
             Vector3 posicionJugador = raizJugador != null ? raizJugador.position : hogar;
             IRecibeDanio recibe = recibeJugador;
             ObjetivoActual = atacable ? raizJugador : null;
@@ -1040,7 +1214,7 @@ namespace MechaCyberpunk.IA.APie
                 Sonidos.ReproducirEn(MechaCyberpunk.Personaje.Combate.SonidosArmasT1472.IdDisparoEnemigo(datos.Perdigones), boca); // T-1472: el disparo enemigo, en 3D
                 for (int perdigon = 0; perdigon < datos.Perdigones; perdigon++)
                 {
-                    pistola.Disparar(boca, pecho, recibe, danioTiro, probabilidad);
+                    pistola.Disparar(boca, pecho, recibe, danioTiro, probabilidad, false, datos.EsPolicia ? DireccionRealDeTiro(boca, pecho) : (Vector3?)null);
                 }
                 DanioDeLaPolicia = false;
                 if (visual != null)
@@ -1111,7 +1285,7 @@ namespace MechaCyberpunk.IA.APie
                 // T-1494: buscando en su última posición conocida: gira mirando alrededor.
                 mirada = Quaternion.Euler(0f, GradosBusqueda * Time.deltaTime, 0f) * transform.forward;
             }
-            if (datos.EsPolicia && deseada.magnitude > VelocidadCaminarPolicia + 0.5f)
+            if (datos.EsPolicia && deseada.magnitude > VelocidadCaminarPolicia + 0.5f && regla.Estado != EstadoPandillero.Preparando)
             {
                 mirada = deseada; // T-1303: corriendo mira hacia donde corre (no corre de lado ni de espaldas)
             }
