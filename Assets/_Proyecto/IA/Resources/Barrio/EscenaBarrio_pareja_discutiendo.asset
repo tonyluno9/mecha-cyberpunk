@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25daeeae7b71b7744bb6d0de13470c7c, type: 3}
+  m_Name: EscenaBarrio_pareja_discutiendo
+  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.Barrio.EscenaBarrio
+  id: pareja_discutiendo
+  tipo: 0
+  pandilla: 0
+  agresores: 1
+  descripcion: Una pareja discute.
+  peso: 0.6
+  rieAlFinal: 0
+  lineas:
+  - quien: 3
+    hablante: "\xC9L"
+    texto: "\xA1Siempre dices lo mismo!"
+    audio: {fileID: 0}
+    idVozSku: 
+    gesto: 0
+    retraso: 0.4
+    duracion: 0
+  - quien: 4
+    hablante: ELLA
+    texto: "\xA1Es que nunca me escuchas!"
+    audio: {fileID: 0}
+    idVozSku: 
+    gesto: 0
+    retraso: 0.5
+    duracion: 0
