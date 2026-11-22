@@ -1,0 +1,122 @@
+{
+ "version": 1,
+ "resolution": "1k",
+ "variantes_por_defecto": 1,
+ "carpeta_salida": "imageassets",
+ "trabajos": [
+  {
+   "id": "CP01a",
+   "archivo": "CP01_CapsulaNova_Cerrada_a",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/nuevos-22nov/CP01_CapsulaNova_Cerrada_a.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/modelos-nuevos/E12_GuardiaPesadoNova.png",
+    "imageassets/modelos-nuevos/nuevos-18nov/E15_CentinelaNova_a.png"
+   ],
+   "aspect_ratio": "3:4",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached Nova characters ONLY for the art style, materials and colors of the Nova corporation (clean corporate white armor plates, cold blue light stripes, gunmetal joints, illustrated with thin outlines and soft hand-painted gradients). Original design. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. View: 3/4 view from the front left, slightly from above. Subject: a Nova drop pod that is dropped from aircraft, stands vertically, about 3.5 meters tall and 2 meters wide: a tall reinforced capsule shape with heavy white armor plates, glowing cold blue stripes, vents, short stabilizer fins at the bottom, small braking thrusters around the lower part, and a base with claw-like spikes that dig into the ground. CLOSED: the front doors are shut, with clearly marked panel cut lines around them so they can be separated later in Blender.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "3.5 m alto × 2 m ancho"
+  },
+  {
+   "id": "F03a",
+   "archivo": "F03_ImpactoCapsula_a",
+   "fase": 1,
+   "salida": "imageassets/vfx/F03_ImpactoCapsula_a.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/modelos-nuevos/nuevos-18nov/E15_CentinelaNova_a.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image ONLY for the color mood (cold blue). A ground impact effect sprite for a video game, seen from slightly above: a bright white-blue flash at the center where something hits the ground, a ring-shaped shockwave of dust spreading outward, blue sparks and small debris flying out. Stylized and clean, soft glow. PURE BLACK (#000000) background everywhere, flat, no ground texture, no object, no text.",
+   "uso": "Sprite aditivo"
+  },
+  {
+   "id": "CP02a",
+   "archivo": "CP02_CapsulaNova_Abierta_a",
+   "fase": 2,
+   "salida": "imageassets/modelos-nuevos/nuevos-22nov/CP02_CapsulaNova_Abierta_a.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/modelos-nuevos/nuevos-22nov/CP01_CapsulaNova_Cerrada_a.png",
+    "imageassets/modelos-nuevos/E12_GuardiaPesadoNova.png"
+   ],
+   "aspect_ratio": "3:4",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is our closed Nova drop pod: keep EXACTLY the same pod, shape, armor, colors, fins, thrusters and base, the same view and the same plain flat pure white background, no ground, no people, no text. Show it OPEN and EMPTY: the front doors swung fully open to the sides (still attached at their hinges), revealing a dark interior with padded support harness frames where a soldier stood, cold blue lights inside, and a little white vapor drifting out of the opening.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 15000,
+    "textura": "2K"
+   },
+   "medida": "3.5 m alto × 2 m ancho (puertas abiertas ~3.5 m)"
+  },
+  {
+   "id": "CP01b",
+   "archivo": "CP01_CapsulaNova_Cerrada_b",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/nuevos-22nov/CP01_CapsulaNova_Cerrada_b.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/modelos-nuevos/E12_GuardiaPesadoNova.png",
+    "imageassets/modelos-nuevos/nuevos-18nov/E15_CentinelaNova_a.png"
+   ],
+   "aspect_ratio": "3:4",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached Nova characters ONLY for the art style, materials and colors of the Nova corporation (clean corporate white armor plates, cold blue light stripes, gunmetal joints, illustrated with thin outlines and soft hand-painted gradients). Original design. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. View: 3/4 view from the front left, slightly from above. Subject: a Nova drop pod that is dropped from aircraft, stands vertically, about 3.5 meters tall and 2 meters wide: a tall reinforced capsule shape with heavy white armor plates, glowing cold blue stripes, vents, short stabilizer fins at the bottom, small braking thrusters around the lower part, and a base with claw-like spikes that dig into the ground. CLOSED: the front doors are shut, with clearly marked panel cut lines around them so they can be separated later in Blender. VARIANT B: make a clearly different design from the most obvious version: different proportions, different placement of the plates, lights and details, while keeping the same description.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "3.5 m alto × 2 m ancho"
+  },
+  {
+   "id": "F03b",
+   "archivo": "F03_ImpactoCapsula_b",
+   "fase": 1,
+   "salida": "imageassets/vfx/F03_ImpactoCapsula_b.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/modelos-nuevos/nuevos-18nov/E15_CentinelaNova_a.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image ONLY for the color mood (cold blue). A ground impact effect sprite for a video game, seen from slightly above: a bright white-blue flash at the center where something hits the ground, a ring-shaped shockwave of dust spreading outward, blue sparks and small debris flying out. Stylized and clean, soft glow. PURE BLACK (#000000) background everywhere, flat, no ground texture, no object, no text. VARIANT B: a different shape of flash and dust ring.",
+   "uso": "Sprite aditivo"
+  },
+  {
+   "id": "CP02b",
+   "archivo": "CP02_CapsulaNova_Abierta_b",
+   "fase": 2,
+   "salida": "imageassets/modelos-nuevos/nuevos-22nov/CP02_CapsulaNova_Abierta_b.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/modelos-nuevos/nuevos-22nov/CP01_CapsulaNova_Cerrada_b.png",
+    "imageassets/modelos-nuevos/E12_GuardiaPesadoNova.png"
+   ],
+   "aspect_ratio": "3:4",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is our closed Nova drop pod: keep EXACTLY the same pod, shape, armor, colors, fins, thrusters and base, the same view and the same plain flat pure white background, no ground, no people, no text. Show it OPEN and EMPTY: the front doors swung fully open to the sides (still attached at their hinges), revealing a dark interior with padded support harness frames where a soldier stood, cold blue lights inside, and a little white vapor drifting out of the opening.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 15000,
+    "textura": "2K"
+   },
+   "medida": "3.5 m alto × 2 m ancho (puertas abiertas ~3.5 m)"
+  }
+ ]
+}
