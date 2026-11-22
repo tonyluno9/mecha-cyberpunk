@@ -15,6 +15,8 @@ namespace MechaCyberpunk.Trafico.Peatones
         public const float Altura = 1.7f;
         /// <summary>Lo que se puede pisar sin que cuente como obstáculo (m).</summary>
         public const float AlturaPaso = 0.35f;
+        /// <summary>Lo que empieza más arriba de esto sobre los pies (toldos, letreros colgantes) se pasa por debajo (m).</summary>
+        public const float AlturaPasarDebajo = 1.4f;
         private const int TamanoBuffer = 32;
         private static readonly Collider[] Buffer = new Collider[TamanoBuffer];
 
@@ -26,7 +28,7 @@ namespace MechaCyberpunk.Trafico.Peatones
             int n = Physics.OverlapCapsuleNonAlloc(abajo, arriba, Radio, Buffer, ~0, QueryTriggerInteraction.Ignore);
             for (int i = 0; i < n; i++)
             {
-                if (EsObstaculo(Buffer[i], propio))
+                if (EsObstaculo(Buffer[i], propio) && Buffer[i].bounds.min.y < pie.y + AlturaPasarDebajo)
                 {
                     return false;
                 }

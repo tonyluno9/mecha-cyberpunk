@@ -48,6 +48,7 @@ namespace MechaCyberpunk.Trafico.Peatones
         private float proximaRevision;
         private bool ocupadoAdelante;
         private float evasion;
+        private Vector3 ultimaDerecha;
         private float metaEvasion;
         private float segundosRodeando;
 
@@ -863,12 +864,30 @@ namespace MechaCyberpunk.Trafico.Peatones
                 }
             }
             RevisarPaso();
-            if (Time.time >= proximaVuelta && (Tapado() || ocupadoAdelante) && !RodearEstorbo())
+            bool rodeando = metaEvasion != 0f;
+            if ((Time.time >= proximaVuelta || rodeando) && (ocupadoAdelante || Tapado()))
             {
+                if (!rodeando)
+                {
+                    Bloqueos++;
+                }
+                if (RodearEstorbo())
+                {
+                    // Se hace a un lado sin avanzar hasta que el paso de enfrente queda libre (no se mete en el estorbo mientras se aparta).
+                    Colocar();
+                    return;
+                }
                 proximaVuelta = Time.time + SegundosEntreVueltas;
                 calculo.InvertirSentido();
                 haciaDonde = -haciaDonde;
                 Vueltas++;
+                proximaRevision = 0f;
+            }
+            else if (ocupadoAdelante)
+            {
+                // Recién dio la vuelta y algo sólido le tapa también este lado: espera sin meterse en él hasta poder decidir otra vez.
+                Colocar();
+                return;
             }
             Frenado = HayPeatonAdelante();
             if (Frenado)
@@ -1010,7 +1029,8 @@ namespace MechaCyberpunk.Trafico.Peatones
             Vector3 pos = transform.position;
             foreach (float c in LateralesParaRodear)
             {
-                if (MovimientoSeguro.Libre(pos + lateral * c, transform) && MovimientoSeguro.Libre(pos + lateral * c + adelante * AnticipoRevision, transform))
+                if (MovimientoSeguro.Libre(pos + lateral * c, transform) && MovimientoSeguro.Libre(pos + lateral * c + adelante * AnticipoRevision, transform)
+                    && MovimientoSeguro.Libre(pos + lateral * c + adelante * (DistanciaVer + RadioCuerpo * 2f), transform))
                 {
                     metaEvasion = evasion + c;
                     segundosRodeando = 0f;
@@ -1089,6 +1109,20 @@ namespace MechaCyberpunk.Trafico.Peatones
                 }
             }
             desvioPlatica = Vector3.MoveTowards(desvioPlatica, metaPlatica, VelocidadDesvio * Time.deltaTime);
+            // La evasión se mide hacia la derecha de la marcha: si da la vuelta, cambia de signo para quedarse del mismo lado de la calle (sin saltar).
+            if (derechaLocal == Vector3.zero)
+            {
+                derechaLocal = ultimaDerecha;
+            }
+            else
+            {
+                if (Vector3.Dot(derechaLocal, ultimaDerecha) < 0f)
+                {
+                    evasion = -evasion;
+                    metaEvasion = -metaEvasion;
+                }
+                ultimaDerecha = derechaLocal;
+            }
             evasion = Mathf.MoveTowards(evasion, metaEvasion, VelocidadDesvio * Time.deltaTime);
             transform.localPosition = posRuta + desvio + desvioPlatica + derechaLocal * evasion;
         }

@@ -59,7 +59,7 @@ namespace MechaCyberpunk.Tests.Trafico
                         continue;
                     }
                     peatones++;
-                    Anotar(ejemplos, "peaton", p.name, p.transform.position, Time.time);
+                    Anotar(ejemplos, "peaton", p.name + " (" + QueToca(p.transform.position, p.transform) + ")", p.transform.position, Time.time);
                     primerCaso = primerCaso ?? p.transform.position;
                 }
                 foreach (CharacterController cc in Object.FindObjectsByType<CharacterController>(FindObjectsSortMode.None))
@@ -74,7 +74,7 @@ namespace MechaCyberpunk.Tests.Trafico
                         continue;
                     }
                     otros++;
-                    Anotar(ejemplos, "cc", cc.name, pie, Time.time);
+                    Anotar(ejemplos, "cc", cc.name + " (" + QueToca(pie, cc.transform) + ")", pie, Time.time);
                     primerCaso = primerCaso ?? pie;
                 }
                 dentroPeatones += peatones;
@@ -115,6 +115,24 @@ namespace MechaCyberpunk.Tests.Trafico
             }
             Object.Destroy(camObjeto);
             Debug.Log("[Trafico] T23 registro: peatones dentro=" + dentroPeatones + ", otros=" + dentroOtros);
+        }
+
+        // Nombre del primer collider sólido que toca la cápsula (para saber qué atraviesan).
+        private static string QueToca(Vector3 pie, Transform propio)
+        {
+            Collider[] cs = Physics.OverlapCapsule(pie + Vector3.up * (MovimientoSeguro.AlturaPaso + MovimientoSeguro.Radio),
+                pie + Vector3.up * (MovimientoSeguro.Altura - MovimientoSeguro.Radio), MovimientoSeguro.Radio, ~0, QueryTriggerInteraction.Ignore);
+            foreach (Collider c in cs)
+            {
+                if (!c.transform.IsChildOf(propio) && c.GetComponentInParent<PeatonMundo>() == null && c.GetComponentInParent<CharacterController>() == null)
+                {
+                    Transform t = c.transform;
+                    string ruta = t.name;
+                    for (int i = 0; i < 2 && t.parent != null; i++) { t = t.parent; ruta = t.name + "/" + ruta; }
+                    return ruta + " " + c.GetType().Name + " capa " + c.gameObject.layer;
+                }
+            }
+            return "?";
         }
 
         private static void Anotar(List<string> ejemplos, string tipo, string nombre, Vector3 pos, float t)
