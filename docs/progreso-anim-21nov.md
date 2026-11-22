@@ -21,3 +21,4 @@ No tocar el contenido de los FBX de Blender: solo importación (.meta), controla
 
 ## Bitácora
 - Lanzadas T-1560 (importación/overrides/estados NPC-robots) y T-1561 (transiciones/estados de acciones del jugador) en wt24/.
+- T-1561 entregada (0912fce) e integrada; espera a T-1560 para aplicar (importación primero).
