@@ -52,6 +52,9 @@ namespace MechaCyberpunk.UI.Hud
         private GameObject grupoObjetos;
         private GameObject grupoArma;
         private Text textoTitulo;
+        private Text textoAvisoNova;
+        private Text textoSubAvisoNova;
+        private float inicioAvisoNova = float.MinValue;
         private string tituloActual = string.Empty;
         private float inicioTitulo = float.MinValue;
         private float duracionTitulo;
@@ -179,10 +182,73 @@ namespace MechaCyberpunk.UI.Hud
             EventosRespuesta.NovaInterviene += AlIntervenirNova; // T-1631
         }
 
-        // T-1631: el máximo de estrellas: Nova toma el lugar de la policía; el aviso sale arriba al centro como el nombre de la zona.
-        private void AlIntervenirNova() => MostrarTitulo(EventosRespuesta.TextoNovaInterviene, SegundosAvisoNova);
+        // T-1631 / T-1653 (T19.2): el máximo de estrellas: Nova toma el lugar de la policía. El aviso sale GRANDE al centro de la pantalla, turquesa y blanco,
+        // con un glitch breve de entrada (parpadeo y desplazamiento) y una alarma grave (la más grave de Nova: falta una de alarma corporativa propia).
+        private void AlIntervenirNova()
+        {
+            inicioAvisoNova = Time.unscaledTime;
+            Sonidos.Reproducir(SonidoAvisoNova);
+        }
+
+        /// <summary>T-1653: el sonido más grave del catálogo de Nova (llegada del robot pesado); falta una alarma corporativa propia.</summary>
+        public const string SonidoAvisoNova = "ROB_PES_LLEGADA";
 
         private const float SegundosAvisoNova = 5f;
+        private const float SegundosGlitchNova = 0.7f;
+        private const float SegundosDesvaneceNova = 0.8f;
+
+        /// <summary>T-1653: muestra el aviso de Nova ahora (para comprobarlo en Play). False si no hay HUD nuevo armado.</summary>
+        public static bool DepurarAvisoNova()
+        {
+            HudH10 h = Actual;
+            if (h == null || h.textoAvisoNova == null)
+            {
+                return false;
+            }
+            h.AlIntervenirNova();
+            return true;
+        }
+
+        /// <summary>T-1653: el aviso de Nova se ve ahora (para pruebas).</summary>
+        public bool AvisoNovaVisible => textoAvisoNova != null && textoAvisoNova.color.a > 0.01f;
+
+        /// <summary>T-1653: opacidad del aviso a los <paramref name="t"/> segundos de salir (parpadea en el glitch inicial, luego fija y se desvanece al final).</summary>
+        public static float AlfaAvisoNova(float t, float azar)
+        {
+            if (t < 0f || t >= SegundosAvisoNova)
+            {
+                return 0f;
+            }
+            if (t < SegundosGlitchNova)
+            {
+                return azar < 0.35f ? 0.15f : (azar < 0.6f ? 0.55f : 1f);
+            }
+            float resto = SegundosAvisoNova - t;
+            return resto < SegundosDesvaneceNova ? resto / SegundosDesvaneceNova : 1f;
+        }
+
+        private void ActualizarAvisoNova()
+        {
+            float t = Time.unscaledTime - inicioAvisoNova;
+            bool glitch = t >= 0f && t < SegundosGlitchNova;
+            float alfa = AlfaAvisoNova(t, Random.value);
+            string texto = alfa > 0f ? EventosRespuesta.TextoNovaInterviene : string.Empty;
+            Poner(textoAvisoNova, texto);
+            Poner(textoSubAvisoNova, alfa > 0f ? "PROTOCOLO DE CONTENCION ACTIVO" : string.Empty);
+            if (alfa <= 0f)
+            {
+                return;
+            }
+            float fuerza = glitch ? 1f - t / SegundosGlitchNova : 0f;
+            Vector2 desplazamiento = glitch ? new Vector2(Random.Range(-26f, 26f) * fuerza, Random.Range(-5f, 5f) * fuerza) : Vector2.zero;
+            textoAvisoNova.rectTransform.anchoredPosition = new Vector2(0f, DistanciaAvisoNovaY) + desplazamiento;
+            textoSubAvisoNova.rectTransform.anchoredPosition = new Vector2(0f, DistanciaAvisoNovaY - 92f) + desplazamiento * 0.5f;
+            Color baseColor = glitch && Random.value < 0.3f ? Blanco : (glitch && Random.value < 0.15f ? Rosa : Turquesa);
+            textoAvisoNova.color = new Color(baseColor.r, baseColor.g, baseColor.b, alfa);
+            textoSubAvisoNova.color = new Color(Blanco.r, Blanco.g, Blanco.b, alfa * 0.9f);
+        }
+
+        private const float DistanciaAvisoNovaY = 170f;
 
         private void OnDestroy()
         {
@@ -235,6 +301,11 @@ namespace MechaCyberpunk.UI.Hud
             textoTitulo = Texto(canvas.transform, "TituloZona", new Vector2(0.5f, 1f), new Vector2(0f, -70f), new Vector2(900f, 44f), 30, TurquesaSuave, TextAnchor.MiddleCenter);
             textoTitulo.rectTransform.pivot = new Vector2(0.5f, 1f);
             textoTitulo.color = new Color(TurquesaSuave.r, TurquesaSuave.g, TurquesaSuave.b, 0f);
+            textoAvisoNova = Texto(canvas.transform, "AvisoNova", new Vector2(0.5f, 0.5f), new Vector2(0f, DistanciaAvisoNovaY), new Vector2(1500f, 130f), 108, Turquesa, TextAnchor.MiddleCenter);
+            textoAvisoNova.fontStyle = FontStyle.Bold;
+            textoAvisoNova.color = new Color(Turquesa.r, Turquesa.g, Turquesa.b, 0f);
+            textoSubAvisoNova = Texto(canvas.transform, "SubAvisoNova", new Vector2(0.5f, 0.5f), new Vector2(0f, DistanciaAvisoNovaY - 92f), new Vector2(1200f, 50f), 34, Blanco, TextAnchor.MiddleCenter);
+            textoSubAvisoNova.color = new Color(Blanco.r, Blanco.g, Blanco.b, 0f);
             ArmarEscudoYVida();
             ArmarEstrellas();
             ArmarObjetivo();
@@ -580,6 +651,7 @@ namespace MechaCyberpunk.UI.Hud
             Activar(grupoObjetos, aPie || carro); // T-1492: también en carro (curarse en la persecución)
             Activar(grupoArma, aPie);
             ActualizarTitulo(aPie || carro);
+            ActualizarAvisoNova();
             if (!aPie && !carro)
             {
                 return;

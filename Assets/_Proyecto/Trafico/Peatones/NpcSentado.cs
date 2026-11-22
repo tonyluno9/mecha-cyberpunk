@@ -9,7 +9,7 @@ namespace MechaCyberpunk.Trafico.Peatones
     /// T-1632 (T18): un civil sentado en una banca con el clip de sentado del jugador (PJ01_Sentado, Humanoid, retargeteado). Va en la raíz de un Visual_* (con su Animator)
     /// que NO es un <see cref="PeatonMundo"/>, así que no cuenta en el pool de peatones. Se alinea solo: mide la cadera en la pose del clip (PlayableGraph evaluado a mano)
     /// y mueve la raíz para que la cadera quede sobre el asiento. Al oír un disparo (<see cref="EventosRuido.DisparoConRadio"/>) o una muerte cercana se asusta, se levanta
-    /// (no hay clip de levantarse: salta al clip de huir) y corre en dirección contraria; al terminar la huida se apaga y no vuelve.
+    /// (T-1653: primero se LEVANTA, despacio y de frente, con su clip de levantarse si existe; si no, se endereza con el clip de susto; recién de pie se asusta un instante) y después corre en dirección contraria; al terminar la huida se apaga y no vuelve.
     /// </summary>
     public class NpcSentado : MonoBehaviour
     {
@@ -23,9 +23,12 @@ namespace MechaCyberpunk.Trafico.Peatones
         public const float SegundosHuida = 8f;
         public const float GradosMirarseEnBanca = 25f;
         private const int MuestrasMedicion = 6;
-        private const float SegundosSubirAlPiso = 0.3f;
+        /// <summary>T-1653: lo que tarda en ponerse de pie desde la banca (s); antes de correr siempre pasa por aquí.</summary>
+        public const float SegundosLevantarse = 1.0f;
+        /// <summary>T-1653: el instante de pie, mirando hacia el ruido, antes de echar a correr (s).</summary>
+        public const float SegundosSustoDePie = 0.35f;
 
-        public enum Fase { Sentado, Susto, Huyendo, Terminado }
+        public enum Fase { Sentado, Levantandose, Susto, Huyendo, Terminado }
 
         [Tooltip("Transform del asiento: el origen va al piso, el frente es -forward (como PZ01_Banca y Banca_Sentable).")]
         [SerializeField] private Transform ancla;
@@ -40,6 +43,8 @@ namespace MechaCyberpunk.Trafico.Peatones
         [SerializeField] private AnimationClip clipSentado;
         [SerializeField] private AnimationClip clipSusto;
         [SerializeField] private AnimationClip clipHuir;
+        [Tooltip("T-1653: levantarse del asiento (PJ01_Sentado_Levantarse o NPC_Sentado_Levantarse). Opcional: sin él se endereza con el clip de susto.")]
+        [SerializeField] private AnimationClip clipLevantarse;
         [Tooltip("Dónde empieza el clip de sentado (0 a 1 de su duración): así no respiran todos igual.")]
         [Range(0f, 1f)] [SerializeField] private float desfase;
         [Tooltip("Rapidez del clip de sentado (1 = normal).")]
@@ -142,6 +147,37 @@ namespace MechaCyberpunk.Trafico.Peatones
         }
 
         public void Acompanar(NpcSentado otro) => companero = otro;
+
+        /// <summary>T-1653: el clip con el que se levanta del asiento antes de huir (null: usa el de susto).</summary>
+        public void FijarClipLevantarse(AnimationClip clip) => clipLevantarse = clip;
+
+        /// <summary>T-1653: para comprobar en Play: todos los sentados activos oyen un balazo a 6 m de cada uno (radio 25 m). Devuelve cuántos.</summary>
+        public static int DepurarBalazo()
+        {
+            int n = 0;
+            foreach (NpcSentado s in FindObjectsByType<NpcSentado>(FindObjectsSortMode.None))
+            {
+                if (s.fase == Fase.Sentado)
+                {
+                    s.AlOirDisparo(s.transform.position + s.transform.right * 6f, 25f);
+                    n++;
+                }
+            }
+            Debug.Log("[Sentado] balazo oído por " + n + " NPC sentados");
+            return n;
+        }
+
+        /// <summary>T-1653: una línea por NPC con su fase y su altura sobre el piso del asiento (para ver sentado, levantándose, susto y huida).</summary>
+        public static string DepurarEstado()
+        {
+            string texto = "[Sentado]";
+            foreach (NpcSentado s in FindObjectsByType<NpcSentado>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+            {
+                texto += " | " + s.name + " " + s.fase + " y=" + (s.transform.position.y - s.PisoBase).ToString("F2") + " clipLevantarse=" + (s.clipLevantarse != null ? s.clipLevantarse.name : "no (usa susto)");
+            }
+            Debug.Log(texto);
+            return texto;
+        }
 
         /// <summary>Altura de la superficie del asiento sobre el origen del ancla (taburetes y sillas; las bancas usan 0.41).</summary>
         public void FijarAlturaAsiento(float altura) => alturaAsiento = Mathf.Max(0.05f, altura);
@@ -293,9 +329,15 @@ namespace MechaCyberpunk.Trafico.Peatones
                         EmpezarSusto();
                     }
                     break;
-                case Fase.Susto:
+                case Fase.Levantandose:
                     SubirAlPiso();
-                    if (Time.time - faseDesde >= (clipSusto != null ? Mathf.Min(clipSusto.length, 0.7f) : 0.3f))
+                    if (Time.time - faseDesde >= SegundosLevantarse)
+                    {
+                        EmpezarSustoDePie();
+                    }
+                    break;
+                case Fase.Susto:
+                    if (Time.time - faseDesde >= SegundosSustoDePie)
                     {
                         EmpezarHuida();
                     }
@@ -316,7 +358,7 @@ namespace MechaCyberpunk.Trafico.Peatones
 
         private void EmpezarSusto()
         {
-            fase = Fase.Susto;
+            fase = Fase.Levantandose;
             faseDesde = Time.time;
             alturaInicioSubida = transform.position.y;
             if (asientoOcupable != null)
@@ -330,9 +372,27 @@ namespace MechaCyberpunk.Trafico.Peatones
             }
             Vector3 lejos = Vector3.ProjectOnPlane(transform.position - ruidoPos, Vector3.up);
             direccionHuida = lejos.sqrMagnitude > 0.01f ? lejos.normalized : FrenteAsiento;
-            if (clipSusto != null)
+            AnimationClip clip = clipLevantarse != null ? clipLevantarse : clipSusto;
+            if (clip != null)
+            {
+                // Con el clip de levantarse se estira a lo que dura la subida; el de susto solo acompaña el enderezarse.
+                IniciarClip(clip, clipLevantarse != null ? Mathf.Max(0.3f, clipLevantarse.length / SegundosLevantarse) : 1f, 0f);
+            }
+        }
+
+        // T-1653: ya de pie, un instante de susto mirando hacia el ruido; después sí corre.
+        private void EmpezarSustoDePie()
+        {
+            fase = Fase.Susto;
+            faseDesde = Time.time;
+            if (clipLevantarse != null && clipSusto != null)
             {
                 IniciarClip(clipSusto, 1f, 0f);
+            }
+            Vector3 haciaRuido = Vector3.ProjectOnPlane(ruidoPos - transform.position, Vector3.up);
+            if (haciaRuido.sqrMagnitude > 0.01f)
+            {
+                transform.rotation = Quaternion.LookRotation(haciaRuido.normalized, Vector3.up);
             }
         }
 
@@ -351,7 +411,7 @@ namespace MechaCyberpunk.Trafico.Peatones
 
         private void SubirAlPiso()
         {
-            float u = Mathf.Clamp01((Time.time - faseDesde) / SegundosSubirAlPiso);
+            float u = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01((Time.time - faseDesde) / SegundosLevantarse));
             Vector3 p = transform.position;
             p.y = Mathf.Lerp(alturaInicioSubida, PisoBase, u);
             transform.position = p;
