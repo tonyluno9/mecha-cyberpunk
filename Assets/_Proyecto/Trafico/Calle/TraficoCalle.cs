@@ -43,12 +43,23 @@ namespace MechaCyberpunk.Trafico.Calle
         [Tooltip("Anota los choques entre carros y los atorones en Logs/trafico-ordenado.txt.")]
         [SerializeField] private bool registrarEnArchivo;
 
+        [Header("T-1630: solo patrullas")]
+        [Tooltip("Si es false los carros civiles del pool no circulan (quedan apagados; solo salen como refuerzo o asaltante). Ciudad_Prologo lo apaga: los civiles son carros estacionados.")]
+        [SerializeField] private bool circulanCiviles = true;
+
         private readonly List<CarroTrafico> carros = new List<CarroTrafico>();
         private float proximaRevisionDeLejania;
         private GrafoCalles calles;
         private bool listo;
 
         public IReadOnlyList<CarroTrafico> Carros => carros;
+
+        /// <summary>T-1630: true = los carros civiles del pool circulan como en T-1603; false = ninguno circula (el pool queda listo para refuerzos y asaltos).</summary>
+        public bool CirculanCiviles
+        {
+            get => circulanCiviles;
+            set => circulanCiviles = value;
+        }
 
         /// <summary>Cuántos carros andan ahora (prendidos).</summary>
         public int Vivos
@@ -356,7 +367,7 @@ namespace MechaCyberpunk.Trafico.Calle
             RevisarLejania();
             EstadisticasTrafico.RevisarChoques(CarroTrafico.Activos, Time.time);
             IRelojMundo reloj = Registro<IRelojMundo>.Actual;
-            int objetivo = config.Cantidad(reloj != null && reloj.EsDeNoche);
+            int objetivo = circulanCiviles ? config.Cantidad(reloj != null && reloj.EsDeNoche) : 0; // T-1630
             int lugares = objetivo;
             for (int i = 0; i < carros.Count; i++)
             {
