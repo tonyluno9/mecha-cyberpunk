@@ -2072,6 +2072,9 @@ MonoBehaviour:
   camara: {fileID: 523304371379065450}
   alturaBusquedaPiso: 1.5
   distanciaBusquedaPiso: 4
+  radioPuntoSeguro: 12
+  pasoPuntoSeguro: 1.5
+  alturaMinimaMapa: -20
 --- !u!114 &6535121655832087697
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2182,6 +2185,7 @@ MonoBehaviour:
   duracionMarca: 2
   maxMarcas: 16
   tamanoMarca: 0.08
+  sacarAntesDeDisparar: 1
 --- !u!114 &822305837107762520
 MonoBehaviour:
   m_ObjectHideFlags: 0

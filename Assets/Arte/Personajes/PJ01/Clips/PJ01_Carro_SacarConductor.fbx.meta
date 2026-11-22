@@ -77,6 +77,36 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: M_T07_AsfaltoMojado
+    second: {fileID: 2100000, guid: f337482ba19209849b7d3ff1b57cbbe5, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_T07_AsfaltoMojado_b
+    second: {fileID: 2100000, guid: 9042ab81d67ddd44db2813a123a3f19a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_T08_LaminaOxidada
+    second: {fileID: 2100000, guid: fae2a5801e6bca24e9982aad32d6da69, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_T08_LaminaOxidada_b
+    second: {fileID: 2100000, guid: 4dd3f2c7359830049a3040470bc6ab89, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_T09_ConcretoManchado
+    second: {fileID: 2100000, guid: 4908fdc1964ef1844bf9250d3a99e5f9, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_T09_ConcretoManchado_b
+    second: {fileID: 2100000, guid: 6f9c029f55d46bd4c8b8e2d5832f148c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: Madera_Oscura
     second: {fileID: 2100000, guid: 0a6e5df51da8a454492e5ea2b59ff8b5, type: 2}
   - first:
@@ -183,12 +213,15 @@ ModelImporter:
     removeConstantScaleCurves: 0
     motionNodeName: 
     animationImportErrors: 
-    animationImportWarnings: 
+    animationImportWarnings: "\nClip 'Scene' has import animation warnings that might
+      lower retargeting quality:\nNote: Activate translation DOF on avatar to improve
+      retargeting quality.\n\t'NeckTwist01' is inbetween humanoid transforms and
+      has rotation animation that will be discarded.\n"
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
     importConstraints: 0
-    animationCompression: 1
+    animationCompression: 0
     animationRotationError: 0.5
     animationPositionError: 0.5
     animationScaleError: 0.5
@@ -198,10 +231,10 @@ ModelImporter:
     clipAnimations:
     - serializedVersion: 16
       name: PJ01_Carro_SacarConductor
-      takeName: Carro_SacarConductor
-      internalID: 1911249235712614251
+      takeName: Scene
+      internalID: -623603649343465320
       firstFrame: 1
-      lastFrame: 80
+      lastFrame: 98
       wrapMode: 0
       orientationOffsetY: 180
       level: 0
@@ -690,10 +723,15 @@ ModelImporter:
     - name: PJ01_Carro_SacarConductor(Clone)
       parentName: 
       position: {x: 0, y: 0, z: 0}
+      rotation: {x: 0, y: 0, z: 0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: PJ01_REV
+      parentName: PJ01_Carro_SacarConductor(Clone)
+      position: {x: 0, y: 0, z: 0}
       rotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071067}
       scale: {x: 1, y: 1, z: 1}
     - name: BoneRoot
-      parentName: PJ01_Carro_SacarConductor(Clone)
+      parentName: PJ01_REV
       position: {x: 0.0036032482, y: 0.06125217, z: -0.967677}
       rotation: {x: -0.06251752, y: 0.06251787, z: -0.14560038, w: 0.985385}
       scale: {x: 1, y: 0.99999994, z: 0.99999994}
@@ -1082,6 +1120,11 @@ ModelImporter:
       position: {x: -0.00000006653369, y: 0.1438525, z: -0.00000019609926}
       rotation: {x: -0.000000039115548, y: -0.000000051455576, z: -0.000000013038516, w: 1}
       scale: {x: 1, y: 1, z: 0.99999994}
+    - name: PJ01_REV_Malla
+      parentName: PJ01_Carro_SacarConductor(Clone)
+      position: {x: 0.000000056028366, y: -0.00000015750236, z: -0.00000008404254}
+      rotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071067}
+      scale: {x: 1, y: 1, z: 1}
     armTwist: 0.5
     foreArmTwist: 0.5
     upperLegTwist: 0.5
@@ -1093,7 +1136,7 @@ ModelImporter:
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0
-    skeletonHasParents: 1
+    skeletonHasParents: 0
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 3

@@ -54,6 +54,12 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             ("PJ01_Dano_Izquierda", "NPC_Dano_Izquierda"), ("PJ01_Dano_Derecha", "NPC_Dano_Derecha"),
         };
 
+        /// <summary>Muertes de frente y de espaldas para todos los papeles (las del jugador aprobadas el 21-nov).</summary>
+        public static (string Base, string Papel)[] MuertesTodos => new[]
+        {
+            ("Muerte_Adelante", "PJ01_Muerte_Frente"), ("Muerte_Atras", "PJ01_Muerte_Espaldas"),
+        };
+
         /// <summary>Claves del controlador base cuyo clip fija <see cref="AplicarOverrides"/> con las tablas (las de arriba y las filas de robots y E20 de ClipsNpcNovaT1506.OverridesExtra).</summary>
         public static readonly string[] ClavesT1560 =
         {
@@ -67,6 +73,8 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             foreach (string papel in mapa.Keys.ToArray())
             {
                 mapa[papel] = ClipsNpcNovaT1506.Combinar(mapa[papel], BurlaYPresumirTodos);
+                // Decisión de Tony 21-nov: todos mueren con las muertes aprobadas del jugador (PJ01_Muerte_Frente v2 y Espaldas), no las viejas.
+                mapa[papel] = ClipsNpcNovaT1506.Combinar(mapa[papel], MuertesTodos);
             }
             if (mapa.ContainsKey("Jugador"))
             {
@@ -86,6 +94,37 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             ("Visual_E10_PandilleroSnakes", "SNAKES"), ("Visual_E11_JefeSnakes", "Jefe"), ("Visual_E14_JefeFinalNova", "Jefe"), ("Visual_Inventor", "Profes"),
             ("Visual_RobotHombre", "Robots"), ("Visual_Hacker", "Hacker"),
         };
+
+        /// <summary>
+        /// Los clips del robo de carro y el parkour en ConfigAnimacionParkour se guardan por id interno del FBX: al rehacer la
+        /// importación de un clip reemplazado (raíz PJ01_REV), la referencia queda vacía. Las vuelve a poner por nombre. Repetible.
+        /// </summary>
+        public static void ReasignarConfigParkour()
+        {
+            const string ruta = "Assets/_Proyecto/Personaje/Datos/Resources/ConfigAnimacionParkour.asset";
+            var config = AssetDatabase.LoadAssetAtPath<ScriptableObject>(ruta);
+            if (config == null)
+            {
+                Debug.LogError(Etiqueta + "falta " + ruta);
+                return;
+            }
+            var so = new SerializedObject(config);
+            int puestos = 0;
+            foreach ((string campo, string clip) in new[] { ("carroSacarConductor", "PJ01_Carro_SacarConductor"), ("conductorSerSacado", "PJ01_Conductor_SerSacado") })
+            {
+                SerializedProperty prop = so.FindProperty(campo);
+                AnimationClip c = ConstructorControladorBase.Clip(clip);
+                if (prop != null && c != null && prop.objectReferenceValue != c)
+                {
+                    prop.objectReferenceValue = c;
+                    puestos++;
+                }
+            }
+            so.ApplyModifiedPropertiesWithoutUndo();
+            EditorUtility.SetDirty(config);
+            AssetDatabase.SaveAssets();
+            Debug.Log(Etiqueta + "ConfigAnimacionParkour: " + puestos + " clip(s) reasignados");
+        }
 
         [MenuItem("Mecha Cyberpunk/T-1560/Aplicar todo")]
         public static void Aplicar()
