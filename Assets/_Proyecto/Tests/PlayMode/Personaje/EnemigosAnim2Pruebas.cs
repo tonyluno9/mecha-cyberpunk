@@ -119,9 +119,9 @@ namespace MechaCyberpunk.Tests.Personaje
             guardia.transform.position = new Vector3(0f, 0f, 1.5f);
             EventosRuido.PublicarDisparo(guardia.transform.position);
             yield return Hasta(() => nova.GolpesDados >= 1, "golpe de amenaza", 4f);
-            yield return Hasta(() => Reproduce(a, 1, "PJ01_Punos_Golpe*"), "PJ01_Punos_Golpe*");
+            yield return Hasta(() => Reproduce(a, 1, "PJ01_Golpe_*"), "PJ01_Golpe_* (decisión de Tony 21-nov: Golpe_Der/Izq)");
             yield return Hasta(() => nova.GolpesDados >= 3, "tercer golpe", 6f);
-            yield return Hasta(() => Reproduce(a, 1, "PJ01_Punos_Fuerte"), "PJ01_Punos_Fuerte", 2f);
+            yield return Hasta(() => Reproduce(a, 1, "PJ01_Golpe_Der"), "golpe fuerte = PJ01_Golpe_Der (Punos_Fuerte descartado)", 2f);
 
             visual.Caido = true;
             yield return Hasta(() => Reproduce(a, 0, "Guardia_Muerte"), "Guardia_Muerte"); // T-1506

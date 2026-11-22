@@ -111,7 +111,12 @@ namespace MechaCyberpunk.Tests.Personaje
                 {
                     inicioJugador = Time.time;
                 }
-                if (inicioConductor < 0f && repConductor.ClipActual == clipConductor)
+                // T-1561: el conductor recibe su ReproductorClipUnico al ser sacado (después de empezar la prueba): se busca cada cuadro.
+                if (repConductor == null)
+                {
+                    repConductor = conductor.GetComponentInChildren<ReproductorClipUnico>();
+                }
+                if (inicioConductor < 0f && repConductor != null && repConductor.ClipActual == clipConductor)
                 {
                     inicioConductor = Time.time;
                 }
