@@ -155,8 +155,9 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
             Avatar avatar = AssetDatabase.LoadAllAssetsAtPath(ClipsRobotsNovaT1553.RutaModeloE18).OfType<Avatar>().FirstOrDefault();
             Assert.IsNotNull(avatar);
             Assert.IsTrue(avatar.isValid && avatar.isHuman, "avatar humanoide válido");
-            (float izquierdo, float derecho)? brazos = RobotsNovaT1553.MedirBrazos(ClipsRobotsNovaT1553.RutaModeloE18);
-            Assert.IsTrue(brazos.HasValue, "no se pudo medir los brazos del modelo");
+            // T-1626: se mide la pose de referencia del avatar (su HumanDescription), que es la que se fuerza en T; el FBX no cambia.
+            (float izquierdo, float derecho)? brazos = AvatarE18EnT1626.MedirAvatarE18();
+            Assert.IsTrue(brazos.HasValue, "no se pudo medir los brazos del avatar");
             Assert.IsTrue(RobotsNovaT1553.BrazosEnT(brazos), "brazos a " + brazos.Value.izquierdo.ToString("F1") + " y " + brazos.Value.derecho.ToString("F1")
                 + " grados de la horizontal (máximo " + RobotsNovaT1553.ToleranciaBrazoT + "): rehacer el avatar con RobotsNovaT1553.Aplicar o Rig, Configure, Enforce T-Pose");
         }
