@@ -231,6 +231,7 @@ debe ser 0 o casi 0, y ningún carro atorado más de 8 s); recorrer los 4 barrio
 amontonamientos.
 
 ## T14. Más realismo visual: cielo, charcos, luz y materiales
+**HECHA (sesión A, 22-nov, merge 4e47779):** cielo propio (degradado, nubes que se mueven teñidas por barrio, estrellas, luna con halo), SSAO, postproceso (bloom, ACES, split toning, viñeta, aberración leve), normal map genérico en 100 materiales, polvo cerca del jugador, selector Bajo/Medio/Alto conectado a Opciones. Medido en build a 1080p en 13 puntos: 199–245 fps de promedio, mínimo 73 (antes 233–296). Capturas antes/después en docs/capturas/_tareas/T14/. No quedó: vapor de rejillas (no hay rejillas con ese nombre), SSR (URP no lo trae; se usan las sondas y el reflejo planar de charcos que ya había), sharpening, ventanas cálidas nuevas.
 Objetivo: que la ciudad se vea más real y rica, como las referencias K01–K10 y mapa-real/*_final.png, sin bajar de 50 fps.
 Cómo:
 1. CIELO: cielo de noche con profundidad (degradado azul profundo a morado cerca del horizonte, nubes bajas iluminadas por la ciudad con tono

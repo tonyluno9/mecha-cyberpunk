@@ -17,7 +17,8 @@ espaldo-metas-22nov (B ya los subió).
 - T9 muro: HECHA, merge 3c8ccff
 - T4 hitboxes: HECHA, merge 96d66b1
 - T13 tráfico + T6 carros: HECHAS, merge dd7fd55
-- para-sesion-A: código en tony/T-1606-para-sesion-A (worktree wt23A/T1606-colocar), falta aplicar
+- para-sesion-A: aplicando en integ/A-T1606
+- Sesión B: TERMINÓ (docs/progreso-tareas-B.md). Siguen: builds Demo y Juego, reporte docs/reporte-tareas-22nov.md
 - T6 Blender modelos: pendiente
-- T14 realismo: aplicando en integ/A-T14 (carpeta principal)
+- T14 realismo: HECHA, merge 4e47779 (+7b180a3 cielo menos naranja)
 - para-sesion-A: pendiente
