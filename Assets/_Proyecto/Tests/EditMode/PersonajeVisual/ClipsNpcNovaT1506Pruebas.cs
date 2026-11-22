@@ -45,6 +45,10 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
                 Assert.IsNotNull(importador, "Falta " + nombre);
                 Assert.AreEqual(ModelImporterAnimationType.Human, importador.animationType, nombre);
                 // T-1553: los cuatro clips con el rig del propio personaje llevan la escala de su personaje; los demás, la de PJ01.
+                if (TablaClipsT1560.ClipsConRigPropio.Contains(nombre))
+                {
+                    continue; // T-1560: esqueleto propio del robot, con la escala de su personaje (la comprueba AnimacionesT1560Pruebas).
+                }
                 float escala = ClipsRobotsNovaT1553.TieneRigPropio(nombre)
                     ? ((ModelImporter)AssetImporter.GetAtPath(ClipsRobotsNovaT1553.RutaModeloDe(nombre))).globalScale
                     : ImportadorClipsPJ01.EscalaClips;

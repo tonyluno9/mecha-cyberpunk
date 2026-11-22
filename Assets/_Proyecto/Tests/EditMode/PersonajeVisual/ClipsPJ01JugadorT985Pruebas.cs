@@ -113,7 +113,8 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
         [Test]
         public void Escalera_LosClipsPJ01_Escalera_EstanEnLaConfigDeEscalera()
         {
-            string[] escalera = Directory.GetFiles(ConstructorControladorBase.CarpetaClipsPJ01, PrefijoEscalera + "*.fbx").Select(Path.GetFileNameWithoutExtension).ToArray();
+            // T-1560: PJ01_Escalera_SubirMixamo (21-nov) es la propuesta de Mixamo para comparar; no va en la config de escalera.
+            string[] escalera = Directory.GetFiles(ConstructorControladorBase.CarpetaClipsPJ01, PrefijoEscalera + "*.fbx").Select(Path.GetFileNameWithoutExtension).Where(n => !n.EndsWith("Mixamo")).ToArray();
             var config = AssetDatabase.LoadAssetAtPath<MechaCyberpunk.Personaje.ConfigAnimacionEscalera>("Assets/_Proyecto/Personaje/Datos/Resources/ConfigAnimacionEscalera.asset");
             Assert.IsNotNull(config, "Falta ConfigAnimacionEscalera");
             var enConfig = new HashSet<string>(new[] { config.Entrar, config.Subir, config.Bajar, config.SalirArriba, config.SalirAbajo }.Where(c => c != null).Select(c => c.name));

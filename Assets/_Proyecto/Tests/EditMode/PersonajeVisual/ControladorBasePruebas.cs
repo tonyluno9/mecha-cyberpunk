@@ -38,18 +38,23 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
             Assert.IsFalse(mascara.GetHumanoidBodyPartActive(AvatarMaskBodyPart.RightLeg));
         }
 
+        private static readonly string[] EstadosBaseT1561 = { "Beber", "CamillaAcostarse", "ColgadoSubir", "Sentarse", "Colgarse" };
+        private static readonly string[] EstadosArribaT1561 = { "RifleSacar", "RifleGuardar", "GranadaDePie", "GranadaAgachado" };
+
         [Test]
         public void Controlador_TieneTodosLosEstadosDeCadaCapa_ConClip()
         {
             AnimatorController c = Base();
             string[] baseE = Estados(c.layers[0].stateMachine);
             // T-1560: la capa base también lleva los estados de NPC, pandilleros y robots (EstadosNpcT1560).
-            string[] esperados = ReglasAnimacion.EstadosBase.Concat(EstadosNpcT1560.Nombres).ToArray();
+            // T-1561 (decisión de Tony 21-nov): beber, camilla, colgarse y sentarse en la base; sacar/guardar rifle y granada arriba.
+            string[] esperados = ReglasAnimacion.EstadosBase.Concat(EstadosNpcT1560.Nombres).Concat(EstadosBaseT1561).ToArray();
             foreach (string e in esperados) { CollectionAssert.Contains(baseE, e); }
             Assert.AreEqual(esperados.Length, baseE.Length);
             string[] arribaE = Estados(c.layers[1].stateMachine);
-            foreach (string e in ReglasAnimacion.EstadosArriba) { CollectionAssert.Contains(arribaE, e); }
-            Assert.AreEqual(ReglasAnimacion.EstadosArriba.Length, arribaE.Length);
+            string[] arribaEsperados = ReglasAnimacion.EstadosArriba.Concat(EstadosArribaT1561).ToArray();
+            foreach (string e in arribaEsperados) { CollectionAssert.Contains(arribaE, e); }
+            Assert.AreEqual(arribaEsperados.Length, arribaE.Length);
             CollectionAssert.AreEquivalent(ReglasAnimacion.EstadosDano, Estados(c.layers[2].stateMachine));
             foreach (ChildAnimatorState s in c.layers[0].stateMachine.states.Concat(c.layers[1].stateMachine.states).Concat(c.layers[2].stateMachine.states))
             {

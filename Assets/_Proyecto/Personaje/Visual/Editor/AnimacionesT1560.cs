@@ -47,6 +47,12 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             ("Punos_GolpeDer", "PJ01_Golpe_Der"), ("Punos_GolpeIzq", "PJ01_Golpe_Izq"), ("Punos_Fuerte", "PJ01_Golpe_Protesis"),
         };
 
+        /// <summary>Golpes de todos los papeles (el jugador además usa la prótesis en el fuerte, ver <see cref="GolpesJugadorT1560"/>).</summary>
+        public static (string Base, string Papel)[] GolpesTodos => new[]
+        {
+            ("Punos_GolpeDer", "PJ01_Golpe_Der"), ("Punos_GolpeIzq", "PJ01_Golpe_Izq"), ("Punos_Fuerte", "PJ01_Golpe_Der"),
+        };
+
         /// <summary>NPC (y sus tres variantes Mujer, Mayor y Celular): mismas muertes que el jugador (NPC_Muerte_* se descartan) y daño por izquierda y derecha propio.</summary>
         public static (string Base, string Papel)[] NpcT1560 => new[]
         {
@@ -74,7 +80,13 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             {
                 mapa[papel] = ClipsNpcNovaT1506.Combinar(mapa[papel], BurlaYPresumirTodos);
                 // Decisión de Tony 21-nov: todos mueren con las muertes aprobadas del jugador (PJ01_Muerte_Frente v2 y Espaldas), no las viejas.
-                mapa[papel] = ClipsNpcNovaT1506.Combinar(mapa[papel], MuertesTodos);
+                // Los guardias de Nova conservan su Guardia_Muerte (T-1506).
+                if (papel != "Guardias")
+                {
+                    mapa[papel] = ClipsNpcNovaT1506.Combinar(mapa[papel], MuertesTodos);
+                }
+                // Golpe1_Directo, Golpe2_Gancho y Punos_Fuerte se descartaron para todos: los demás golpean con los golpes aprobados.
+                mapa[papel] = ClipsNpcNovaT1506.Combinar(mapa[papel], GolpesTodos);
             }
             if (mapa.ContainsKey("Jugador"))
             {

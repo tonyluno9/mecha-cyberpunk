@@ -137,7 +137,12 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
             foreach (string guid in AssetDatabase.FindAssets("t:Model", new[] { ConstructorControladorBase.CarpetaClipsPJ01 }))
             {
                 var importer = (ModelImporter)AssetImporter.GetAtPath(AssetDatabase.GUIDToAssetPath(guid));
-                Assert.AreEqual(EscalaPJ01, importer.globalScale, 1e-4f, importer.assetPath);
+                // T-1560 (decisión de Tony 21-nov): los clips con el esqueleto propio del robot llevan la escala de su personaje, no la de PJ01.
+                string nombreClip = System.IO.Path.GetFileNameWithoutExtension(importer.assetPath);
+                if (!TablaClipsT1560.ClipsConRigPropio.Contains(nombreClip) && !ClipsRobotsNovaT1553.TieneRigPropio(nombreClip))
+                {
+                    Assert.AreEqual(EscalaPJ01, importer.globalScale, 1e-4f, importer.assetPath);
+                }
                 Assert.AreEqual(ModelImporterAnimationType.Human, importer.animationType, importer.assetPath);
             }
         }
