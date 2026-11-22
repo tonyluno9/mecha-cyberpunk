@@ -7,7 +7,9 @@ namespace MechaCyberpunk.Tests
     {
         private static ReglaEscaladaRespuesta Crear()
         {
-            return new ReglaEscaladaRespuesta(ParametrosRespuesta.PorOmision(), new System.Random(1));
+            ParametrosRespuesta numeros = ParametrosRespuesta.PorOmision();
+            numeros.EstrellasModoNova = 0; // T-1631: estas pruebas son de la escalada de T8; el modo "NOVA INTERVIENE" se prueba en ReglaNovaIntervieneT1631Pruebas
+            return new ReglaEscaladaRespuesta(numeros, new System.Random(1));
         }
 
         private static void Avanzar(ReglaEscaladaRespuesta r, float t, int estrellas, int[] vivos = null)

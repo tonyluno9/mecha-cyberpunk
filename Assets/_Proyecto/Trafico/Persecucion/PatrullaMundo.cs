@@ -229,7 +229,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
         /// </summary>
         public void BajarPolicias()
         {
-            if (PoliciasBajaron || prefabPolicia == null || config == null || Robada)
+            if (PoliciasBajaron || prefabPolicia == null || config == null || Robada || DirectorRespuesta.ModoNova) // T-1631: en modo Nova no bajan policías nuevos
             {
                 return;
             }

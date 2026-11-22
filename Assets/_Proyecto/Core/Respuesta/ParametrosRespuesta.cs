@@ -23,6 +23,16 @@ namespace MechaCyberpunk.Core
         public float SegundosEntreGenerados = 4f;
         [Tooltip("Estrellas con las que responde NOVA en una misión protegida que la permite.")]
         public int EstrellasNovaEnMision = 4;
+        [Tooltip("T-1631 (T17): con estas estrellas (el máximo) NOVA INTERVIENE: deja de llegar policía, la que hay se retira y llega solo Nova.")]
+        public int EstrellasModoNova = 5;
+        [Tooltip("T-1631: máximo de unidades de NOVA vivas a la vez (humanoides, medianos, perros, grandes y drones de Nova; el jefe no cuenta) en modo Nova.")]
+        public int TopeNovaVivos = 3;
+        [Tooltip("T-1631: unidades de un nivel de NOVA que hay que vencer para que se desbloquee el siguiente en modo Nova (el tiempo también lo desbloquea).")]
+        public int PerdidasNovaParaSubir = 2;
+        [Tooltip("T-1631: nivel de la jerarquía (1 a 8) desde el que llegan los drones de NOVA en cápsula en modo Nova.")]
+        public int NivelDronNova = 6;
+        [Tooltip("T-1631: un policía a pie que se retira solo desaparece si está al menos a esta distancia del jugador y fuera de su vista (m).")]
+        public float MetrosMinimosRetiroPolicia = 15f;
         [Tooltip("Escribe una línea [Respuesta] en consola por cada unidad que sale o se retira.")]
         public bool Registrar = true;
 

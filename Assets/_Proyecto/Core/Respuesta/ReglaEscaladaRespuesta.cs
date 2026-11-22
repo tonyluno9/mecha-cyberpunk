@@ -10,6 +10,8 @@ namespace MechaCyberpunk.Core
     public sealed class ReglaEscaladaRespuesta
     {
         public const int Niveles = 8;
+        /// <summary>T-1631: primer nivel de la jerarquía que es de NOVA (los soldados humanoides).</summary>
+        public const int PrimerNivelNova = 4;
         private static readonly int NumeroTipos = Enum.GetValues(typeof(TipoRespuesta)).Length;
 
         private readonly ParametrosRespuesta p;
@@ -38,6 +40,31 @@ namespace MechaCyberpunk.Core
         }
 
         public int Estrellas { get; private set; }
+
+        /// <summary>
+        /// T-1631 (T17): "NOVA INTERVIENE". Con las estrellas del máximo (sin misión protegida y con algo de NOVA para generar) no se pide policía nueva, la que hay se
+        /// retira, los drones solo salen como drones de NOVA (desde <see cref="ParametrosRespuesta.NivelDronNova"/>) y NOVA llega por la jerarquía con su tope de vivos.
+        /// </summary>
+        public bool ModoNova { get; private set; }
+
+        /// <summary>T-1631: unidades de NOVA vivas que cuentan para <see cref="ParametrosRespuesta.TopeNovaVivos"/> (sin el jefe; con los drones solo en modo Nova).</summary>
+        public int NovaVivos
+        {
+            get
+            {
+                int suma = 0;
+                for (int i = 0; i < vivos.Length; i++)
+                {
+                    suma += CuentaParaTopeNova((TipoRespuesta)i) ? vivos[i] : 0;
+                }
+                return suma;
+            }
+        }
+
+        private bool CuentaParaTopeNova(TipoRespuesta tipo) => (EsNova(tipo) && tipo != TipoRespuesta.Jefe) || (ModoNova && tipo == TipoRespuesta.Dron);
+
+        /// <summary>T-1631: True si el tipo es de la policía (niveles 1 a 3: a pie, patrullas, camionetas y drones).</summary>
+        public static bool EsPolicia(TipoRespuesta tipo) => NivelDe(tipo) < PrimerNivelNova;
 
         /// <summary>Nivel más alto ya desbloqueado (0 sin búsqueda).</summary>
         public int NivelDesbloqueado { get; private set; }
@@ -103,7 +130,29 @@ namespace MechaCyberpunk.Core
         public bool PermitidoPorMision(TipoRespuesta tipo) => !mision || (novaPermitida && EsNova(tipo));
 
         /// <summary>True si el tipo todavía puede estar en pie con las estrellas y la misión de ahora (para retirar primero los niveles altos).</summary>
-        public bool PermiteMantener(TipoRespuesta tipo) => Estrellas > 0 && PermitidoPorMision(tipo) && NivelDe(tipo) <= NivelMaximoPara(Estrellas);
+        public bool PermiteMantener(TipoRespuesta tipo) => Estrellas > 0 && PermitidoPorMision(tipo) && !BloqueadoPorModoNova(tipo) && NivelDe(tipo) <= NivelMaximoPara(Estrellas);
+
+        // T-1631: en modo Nova no entra policía; el dron solo entra cuando ya se desbloqueó su nivel de NOVA.
+        private bool BloqueadoPorModoNova(TipoRespuesta tipo)
+        {
+            if (!ModoNova)
+            {
+                return false;
+            }
+            return tipo == TipoRespuesta.Dron ? NivelDesbloqueado < p.NivelDronNova : EsPolicia(tipo);
+        }
+
+        private bool HayNovaQueGenerar()
+        {
+            for (int t = 0; t < NumeroTipos; t++)
+            {
+                if (EsNova((TipoRespuesta)t) && disponible[t])
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
 
         public void Avanzar(float ahora, int estrellas, bool misionActiva, bool novaEnMision, int[] vivosActuales)
         {
@@ -114,6 +163,7 @@ namespace MechaCyberpunk.Core
                 vivos[i] = vivosActuales != null && i < vivosActuales.Length ? vivosActuales[i] : 0;
             }
             Estrellas = estrellas;
+            ModoNova = estrellas > 0 && !misionActiva && p.EstrellasModoNova > 0 && estrellas >= p.EstrellasModoNova && HayNovaQueGenerar();
             if (estrellas <= 0)
             {
                 Reiniciar();
@@ -129,6 +179,14 @@ namespace MechaCyberpunk.Core
             if (NivelDesbloqueado > tope)
             {
                 NivelDesbloqueado = tope; // perdiste estrellas: los niveles altos se cierran primero
+            }
+            if (ModoNova && NivelDesbloqueado < PrimerNivelNova)
+            {
+                // T-1631: NOVA INTERVIENE: se salta lo que falta de la policía y empieza por el primer nivel de NOVA (con su retraso de nivel nuevo).
+                NivelDesbloqueado = PrimerNivelNova;
+                desdeNivel = ahora;
+                perdidasDelNivel = 0;
+                RetrasarNivel(NivelDesbloqueado, ahora);
             }
             while (NivelDesbloqueado < tope && (!NivelDisponible(NivelDesbloqueado) || NivelNoTeDetuvo(NivelDesbloqueado, ahora)))
             {
@@ -171,7 +229,9 @@ namespace MechaCyberpunk.Core
                     vivosDelNivel += vivos[t];
                 }
             }
-            return (perdidasDelNivel > 0 && vivosDelNivel == 0) || ahora - desdeNivel >= p.SegundosParaSubir;
+            // T-1631: en modo Nova hay que vencer más de uno por nivel (1 y luego "1 o 2 más") antes de que llegue el siguiente nivel.
+            int necesarias = ModoNova && nivel >= PrimerNivelNova ? Math.Max(1, p.PerdidasNovaParaSubir) : 1;
+            return (perdidasDelNivel >= necesarias && vivosDelNivel == 0) || ahora - desdeNivel >= p.SegundosParaSubir;
         }
 
         private void RetrasarNivel(int nivel, float ahora)
@@ -202,9 +262,13 @@ namespace MechaCyberpunk.Core
         {
             int nivel = NivelDe(tipo);
             if (NivelDesbloqueado <= 0 || nivel > NivelDesbloqueado || nivel > NivelMaximoPara(Estrellas)
-                || !disponible[(int)tipo] || !PermitidoPorMision(tipo))
+                || !disponible[(int)tipo] || !PermitidoPorMision(tipo) || BloqueadoPorModoNova(tipo))
             {
                 return false;
+            }
+            if (ModoNova && CuentaParaTopeNova(tipo) && NovaVivos >= p.TopeNovaVivos)
+            {
+                return false; // T-1631: nunca más de TopeNovaVivos de NOVA a la vez
             }
             return ahora >= proximo[(int)tipo] && VivosTotal < p.TopeTotal && vivos[(int)tipo] < CupoActual(tipo);
         }
