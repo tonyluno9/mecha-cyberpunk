@@ -90,7 +90,31 @@ namespace MechaCyberpunk.IA.APie
             objeto.AddComponent<RespuestaNova>().Configurar(cfg);
         }
 
-        public void Configurar(ConfigRespuestaNova cfg) => config = cfg;
+        private readonly List<GameObject> humanoides = new List<GameObject>();
+        private readonly List<GameObject> medianos = new List<GameObject>();
+
+        public void Configurar(ConfigRespuestaNova cfg)
+        {
+            config = cfg;
+            humanoides.Clear();
+            medianos.Clear();
+            if (cfg == null)
+            {
+                return;
+            }
+            // T-1620: los guardias se reparten por la jerarquía: centinelas E15 son humanoides (nivel 4), la élite E18 es un robot mediano (nivel 5).
+            foreach (GameObject g in cfg.TodosLosGuardias())
+            {
+                (EsRobotMediano(g) ? medianos : humanoides).Add(g);
+            }
+            DirectorRespuesta.DeclararDisponible(TipoRespuesta.NovaHumanoide, humanoides.Count > 0);
+            DirectorRespuesta.DeclararDisponible(TipoRespuesta.RobotMediano, medianos.Count > 0);
+            DirectorRespuesta.DeclararDisponible(TipoRespuesta.Perro, cfg.Perros.Count > 0);
+            DirectorRespuesta.DeclararDisponible(TipoRespuesta.RobotGrande, cfg.TodosLosPesados().Count > 0);
+            DirectorRespuesta.DeclararDisponible(TipoRespuesta.Jefe, cfg.JefeFinal != null);
+        }
+
+        private static bool EsRobotMediano(GameObject prefab) => prefab != null && (prefab.name.Contains("E18") || prefab.name.Contains("Elite"));
 
         private void OnEnable()
         {
@@ -117,8 +141,19 @@ namespace MechaCyberpunk.IA.APie
             }
             proximaRevision = Time.time + SegundosRevisar;
             IJugador jugador = Registro<IJugador>.Actual;
-            bool hayPolicia = Registro<IZonaBusqueda>.Actual != null;
-            Estrellas = config == null || Apagada || !hayPolicia ? 0 : EstrellasBusqueda.De(Registro<ICalor>.Actual);
+            bool novaEnMision = MisionProtegida.Activa && MisionProtegida.NovaPermitida; // T-1620: en la misión de NOVA, NOVA sí responde
+            bool hayPolicia = Registro<IZonaBusqueda>.Actual != null || novaEnMision;
+            int estrellasCalor = EstrellasBusqueda.De(Registro<ICalor>.Actual);
+            DirectorRespuesta.Avanzar(Time.time, estrellasCalor); // T-1620: el director cuenta bajas y desbloquea niveles
+            if (novaEnMision)
+            {
+                estrellasCalor = Mathf.Max(estrellasCalor, DirectorRespuesta.Parametros.EstrellasNovaEnMision);
+            }
+            else if (MisionProtegida.Activa)
+            {
+                estrellasCalor = 0;
+            }
+            Estrellas = config == null || Apagada || !hayPolicia ? 0 : estrellasCalor;
             guardias.RemoveAll(p => p == null);
             pesados.RemoveAll(p => p == null);
             perros.RemoveAll(p => p == null);
@@ -157,17 +192,15 @@ namespace MechaCyberpunk.IA.APie
                 LlegadaEspecial?.Invoke();
                 proximaOleada = Time.time; // la oleada baja en ese momento, no a la siguiente vuelta
             }
-            if (Time.time >= proximaOleada)
-            {
-                proximaOleada = Time.time + config.SegundosEntreOleadas;
-                Reponer(guardias, config.TodosLosGuardias(), config.Guardias(Estrellas), donde, "Nova_Guardia_");
-                Reponer(pesados, config.TodosLosPesados(), config.Pesados(Estrellas), donde, "Nova_GuardiaPesado_");
-                Reponer(perros, config.Perros, config.CantidadPerros(Estrellas), donde, "Nova_Perro_");
-            }
-            if (Estrellas >= EstrellasBusqueda.Total && !jefeSalio && config.JefeFinal != null)
+            GenerarGradual(donde); // T-1620: una unidad a la vez, en orden de jerarquía, con los cooldowns y topes del director
+            if (Estrellas >= EstrellasBusqueda.Total && !jefeSalio && config.JefeFinal != null && DirectorRespuesta.PuedeGenerar(TipoRespuesta.Jefe))
             {
                 jefe = Aparecer(config.JefeFinal, donde, "Nova_JefeFinal");
                 jefeSalio = jefe != null;
+                if (jefe != null)
+                {
+                    RegistrarNova(TipoRespuesta.Jefe, jefe);
+                }
             }
             LlevarNave(donde);
             MarcarVistos(donde);
@@ -191,7 +224,7 @@ namespace MechaCyberpunk.IA.APie
                 naveLlamada = false;
                 proximaNave = Time.time + config.SegundosEntreNaves;
             }
-            if (nave != null || Time.time < proximaNave)
+            if (nave != null || Time.time < proximaNave || !DirectorRespuesta.PuedeGenerar(TipoRespuesta.NovaHumanoide))
             {
                 return;
             }
@@ -226,7 +259,7 @@ namespace MechaCyberpunk.IA.APie
             {
                 return null;
             }
-            int cantidad = config.SoldadosNave(estrellas);
+            int cantidad = Mathf.Min(config.SoldadosNave(estrellas), DirectorRespuesta.Espacio(TipoRespuesta.NovaHumanoide)); // T-1620: nunca sobre el tope
             if (cantidad <= 0 || config.TodosLosGuardias().Count == 0 || !BuscarPuntoNave(jugador, out Vector3 suelo, out float altura))
             {
                 return null;
@@ -309,6 +342,7 @@ namespace MechaCyberpunk.IA.APie
             objeto.AddComponent<ZonaCabezaNova>();
             Azuzar(p, jugador.Raiz.position);
             deNave.Add(p);
+            RegistrarNova(TipoRespuesta.NovaHumanoide, p);
             DescensoNova.Iniciar(p, quien.transform, anclaLocal, suelo, config.VelocidadDescenso, config.MaterialCuerda);
         }
 
@@ -401,6 +435,41 @@ namespace MechaCyberpunk.IA.APie
             p.Alerta = true;
         }
 
+        // T-1620: un solo agente por vuelta; el director decide si toca (nivel desbloqueado, cooldown de reposición, topes por tipo y totales).
+        private void GenerarGradual(Vector3 donde)
+        {
+            if (Intentar(TipoRespuesta.NovaHumanoide, guardias, humanoides, donde, "Nova_Guardia_")
+                || Intentar(TipoRespuesta.RobotMediano, guardias, medianos, donde, "Nova_Elite_")
+                || Intentar(TipoRespuesta.Perro, perros, config.Perros, donde, "Nova_Perro_"))
+            {
+                return;
+            }
+            Intentar(TipoRespuesta.RobotGrande, pesados, config.TodosLosPesados(), donde, "Nova_GuardiaPesado_");
+        }
+
+        private bool Intentar(TipoRespuesta tipo, List<PandilleroAPie> lista, IReadOnlyList<GameObject> prefabs, Vector3 donde, string nombre)
+        {
+            if (prefabs == null || prefabs.Count == 0 || !DirectorRespuesta.PuedeGenerar(tipo))
+            {
+                return false;
+            }
+            GameObject prefab = prefabs[lista.Count % prefabs.Count];
+            PandilleroAPie nuevo = Aparecer(prefab, donde, nombre + (lista.Count + 1));
+            if (nuevo == null)
+            {
+                return false;
+            }
+            lista.Add(nuevo);
+            RegistrarNova(tipo, nuevo);
+            return true;
+        }
+
+        private static void RegistrarNova(TipoRespuesta tipo, PandilleroAPie agente)
+        {
+            DirectorRespuesta.Registrar(tipo, agente.gameObject, () =>
+                agente == null ? EstadoUnidad.Retirada : agente.EstaKO ? EstadoUnidad.Muerta : EstadoUnidad.Viva);
+        }
+
         // T-1389b: con varias variantes salen por turnos (la variante la da cuántos han salido ya de esa lista).
         private void Reponer(List<PandilleroAPie> lista, IReadOnlyList<GameObject> prefabs, int cantidad, Vector3 donde, string nombre)
         {
@@ -451,12 +520,19 @@ namespace MechaCyberpunk.IA.APie
             objeto.AddComponent<ZonaCabezaNova>();
             Azuzar(p, jugador);
             // T-1323: llegan cayendo (la gravedad del agente y su animación de caída hacen el resto) con un destello al salir y otro al aterrizar.
-            DestelloLlegadaNova.Lanzar(inicio + Vector3.up * AlturaDestelloSalida, config, 0f);
             if (altura > 0f)
             {
-                DestelloLlegadaNova.Lanzar(punto, config, SegundosDeCaida(altura));
                 // T-1506: la caída especial (aire, aterrizaje, levantarse); aterriza sola cuando el agente toca el piso.
-                CaidaNova.Iniciar(objeto, true);
+                // T-1621: E15, E16, E17 y E18 llegan en la cápsula CP01 (devuelve null): la cápsula pone su propio impacto, sin los destellos de la caída vieja.
+                if (CaidaNova.Iniciar(objeto, true) != null)
+                {
+                    DestelloLlegadaNova.Lanzar(inicio + Vector3.up * AlturaDestelloSalida, config, 0f);
+                    DestelloLlegadaNova.Lanzar(punto, config, SegundosDeCaida(altura));
+                }
+            }
+            else
+            {
+                DestelloLlegadaNova.Lanzar(inicio + Vector3.up * AlturaDestelloSalida, config, 0f);
             }
             return p;
         }

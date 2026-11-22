@@ -1,0 +1,69 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72aca5448adb45b43a921128a4118866, type: 3}
+  m_Name: ConfigRespuesta
+  m_EditorClassIdentifier: MechaCyberpunk.Core::MechaCyberpunk.Core.ConfigRespuesta
+  parametros:
+    Tipos:
+    - Tipo: 0
+      Tope: 6
+      CupoInicial: 6
+      CooldownMin: 0
+      CooldownMax: 0
+    - Tipo: 1
+      Tope: 3
+      CupoInicial: 1
+      CooldownMin: 30
+      CooldownMax: 30
+    - Tipo: 2
+      Tope: 2
+      CupoInicial: 1
+      CooldownMin: 35
+      CooldownMax: 45
+    - Tipo: 3
+      Tope: 2
+      CupoInicial: 1
+      CooldownMin: 25
+      CooldownMax: 35
+    - Tipo: 4
+      Tope: 2
+      CupoInicial: 1
+      CooldownMin: 20
+      CooldownMax: 30
+    - Tipo: 5
+      Tope: 1
+      CupoInicial: 1
+      CooldownMin: 25
+      CooldownMax: 35
+    - Tipo: 6
+      Tope: 2
+      CupoInicial: 1
+      CooldownMin: 20
+      CooldownMax: 30
+    - Tipo: 7
+      Tope: 1
+      CupoInicial: 1
+      CooldownMin: 40
+      CooldownMax: 60
+    - Tipo: 8
+      Tope: 1
+      CupoInicial: 1
+      CooldownMin: 120
+      CooldownMax: 120
+    TopeTotal: 8
+    NivelMaximoPorEstrellas: 0100000002000000030000000500000008000000
+    SegundosParaSubir: 45
+    RetrasoNivelNuevo: 10
+    PerdidasParaUnoMas: 2
+    SegundosEntreGenerados: 4
+    EstrellasNovaEnMision: 4
+    Registrar: 1
