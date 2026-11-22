@@ -101,7 +101,7 @@ namespace MechaCyberpunk.Tests.Personaje
             ConfigClipsNpcT1561 npc = ConfigClipsNpcT1561.Actual;
             bool conductorRetrasado = npc != null && npc.SacadoDelCarroHuir != null;
             AnimationClip clipConductor = conductorRetrasado ? npc.SacadoDelCarroHuir : config.ConductorSerSacado;
-            float tope = Time.time + 1.6f;
+            float tope = Time.time + 3f; // T-1627: el del conductor arranca 0.75 s después del del jugador, que a su vez tarda en empezar
             bool alineado = false;
             float distancia = 0f;
             float angulo = 180f;
@@ -155,7 +155,7 @@ namespace MechaCyberpunk.Tests.Personaje
             }
 
             Assert.GreaterOrEqual(inicioJugador, 0f, "El jugador juega PJ01_Carro_SacarConductor");
-            Assert.GreaterOrEqual(inicioConductor, 0f, "El conductor juega PJ01_Conductor_SerSacado");
+            Assert.GreaterOrEqual(inicioConductor, 0f, "El conductor juega " + (clipConductor != null ? clipConductor.name : "null") + " (reproductor " + (repConductor != null ? "sí, clip " + (repConductor.ClipActual != null ? repConductor.ClipActual.name : "ninguno") : "no") + ", visual " + (conductor.GetComponentInChildren<VisualPersonaje>() != null) + ")");
             if (conductorRetrasado)
             {
                 // El conductor arranca después que el jugador (0.75 s con el objeto activo; ya no antes).

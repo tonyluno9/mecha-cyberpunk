@@ -33,6 +33,14 @@ namespace MechaCyberpunk.Trafico.Calle
         private float t;
         private PeatonMundo peaton;
         private Collider capsula;
+        // T-1627 (T2): duración total del clip del conductor (sacado, cae, se levanta) que avisa VisualPersonaje; con ella huye al terminar el clip.
+        private float segundosClip = -1f;
+
+        /// <summary>T-1627: el conductor juega un clip completo (sacado, cae y se levanta) que dura <paramref name="segundos"/>; huye al terminar.</summary>
+        public void DuracionSacado(float segundos) => segundosClip = segundos;
+
+        /// <summary>Lo que falta para que huya (s), si se juega el clip completo; -1 si no.</summary>
+        public float SegundosHastaHuir => segundosClip > 0f ? Mathf.Max(0f, segundosClip - t) : -1f;
 
         public FaseConductor Fase { get; private set; } = FaseConductor.Sacado;
 
@@ -94,6 +102,16 @@ namespace MechaCyberpunk.Trafico.Calle
                     }
                     break;
                 case FaseConductor.Caido:
+                    if (segundosClip > 0f)
+                    {
+                        // El clip ya trae la caída y el levantarse: no se le manda Levantar a media animación; huye cuando termina.
+                        if (t >= segundosClip)
+                        {
+                            BroadcastMessage("Levantar", SendMessageOptions.DontRequireReceiver);
+                            Fase = FaseConductor.Asustado;
+                        }
+                        break;
+                    }
                     if (t >= SegundosCaido)
                     {
                         Fase = FaseConductor.Levantandose;

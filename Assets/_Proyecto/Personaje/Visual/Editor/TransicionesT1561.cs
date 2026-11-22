@@ -281,7 +281,7 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
                 config = ScriptableObject.CreateInstance<ConfigClipsNpcT1561>();
                 AssetDatabase.CreateAsset(config, RutaConfigNpc);
             }
-            AnimationClip ayuda = CargarClip("NPC_Herido_PedirAyuda"), herido = CargarClip("PJ01_Herido_Idle"), llamar = CargarClip("NPC_LlamarPolicia"), sacado = CargarClip("NPC_SacadoDelCarro_Huir");
+            AnimationClip ayuda = CargarClip("NPC_Herido_PedirAyuda"), herido = CargarClip("PJ01_Herido_Idle"), llamar = CargarClip("NPC_LlamarPolicia"), sacado = CargarClip("NPC_SacadoDelCarro_Corto") ?? CargarClip("NPC_SacadoDelCarro_Huir"); // T-1627 (T2): la versión corta de Blender (22-nov) si ya está importada
             config.Configurar(ayuda, herido, llamar, sacado);
             EditorUtility.SetDirty(config);
             if (ayuda == null || herido == null || llamar == null || sacado == null)

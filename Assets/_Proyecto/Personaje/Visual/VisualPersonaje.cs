@@ -547,15 +547,19 @@ namespace MechaCyberpunk.Personaje.Visual
                     gameObject.AddComponent<ReproductorClipUnico>();
                 }
                 // Con Update activo espera el retraso (temporizador en Update, sin corrutina); si el objeto está apagado arranca de una vez (como antes).
+                float retraso = 0f;
                 if (isActiveAndEnabled)
                 {
                     clipSacadoPendiente = npc.SacadoDelCarroHuir;
                     sacadoEn = Time.time + ReglasTransicionesT1561.SegundosRetrasoConductor;
+                    retraso = ReglasTransicionesT1561.SegundosRetrasoConductor;
                 }
                 else
                 {
                     GetComponent<ReproductorClipUnico>().Reproducir(animador, npc.SacadoDelCarroHuir, 1f);
                 }
+                // T-1627 (T2): ConductorRobado (Trafico) espera a que termine el clip para huir; se le avisa cuánto dura en total.
+                SendMessageUpwards("DuracionSacado", retraso + npc.SacadoDelCarroHuir.length, SendMessageOptions.DontRequireReceiver);
                 return;
             }
             ConfigAnimacionParkour config = ConfigAnimacionParkour.Actual;
@@ -853,6 +857,12 @@ namespace MechaCyberpunk.Personaje.Visual
                 Aplicar();
             }
         }
+
+        /// <summary>T-1628: el Animator tiene el bool Colgado y el disparador de gestos (hay controlador base).</summary>
+        public bool PuedeColgarse => animador != null && Tiene(IdColgado, AnimatorControllerParameterType.Bool) && Tiene(IdGesto, AnimatorControllerParameterType.Trigger);
+
+        /// <summary>T-1628: el Animator tiene el bool Sentado y el disparador de gestos.</summary>
+        public bool PuedeSentarse => animador != null && Tiene(IdSentado, AnimatorControllerParameterType.Bool) && Tiene(IdGesto, AnimatorControllerParameterType.Trigger);
 
         public bool AcostarseEnCamilla() => Gestear(GestoVisual.CamillaAcostarse);
         public bool SubirDeColgado() => Gestear(GestoVisual.ColgadoSubir);
