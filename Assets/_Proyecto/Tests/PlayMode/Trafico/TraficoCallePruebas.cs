@@ -267,6 +267,7 @@ namespace MechaCyberpunk.Tests.Trafico
                 Assert.Less(Time.realtimeSinceStartup, limite, "La ciudad trae el tráfico de calle");
                 yield return null;
             }
+            trafico.CirculanCiviles = true; // T-1630: la ciudad trae los civiles apagados (solo estacionados); esta prueba mide el sistema de T-451, así que se prende aquí
             // T-1603: con 20 carros salen de a poco (solo donde la cámara no los ve): se espera a que lleguen a los que tocan.
             float limiteVivos = Time.realtimeSinceStartup + 30f;
             while (Time.realtimeSinceStartup < limiteVivos && trafico.Vivos < config.CarrosDeDia)
