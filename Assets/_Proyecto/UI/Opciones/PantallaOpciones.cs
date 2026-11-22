@@ -26,6 +26,7 @@ namespace MechaCyberpunk.UI.Opciones
         public const string TextoResolucion = "RESOLUCIÓN";
         public const string TextoPantallaCompleta = "PANTALLA COMPLETA";
         public const string TextoTutorial = "TUTORIAL";
+        public const string TextoSubtitulos = "SUBTÍTULOS";
         public const string TextoVolver = "VOLVER";
         public const string TextoAyuda = "↑ ↓ ELEGIR · ← → CAMBIAR · ESC VOLVER";
         public const string FormatoSensibilidad = "{0:0.00}x";
@@ -54,6 +55,7 @@ namespace MechaCyberpunk.UI.Opciones
         [SerializeField] private SelectorCyberfix resolucion;
         [SerializeField] private ConmutadorCyberfix pantallaCompleta;
         [SerializeField] private ConmutadorCyberfix tutorial;
+        [SerializeField] private ConmutadorCyberfix subtitulos;
         [SerializeField] private BotonCyberfix volver;
 
         private ServicioOpciones servicio;
@@ -70,6 +72,8 @@ namespace MechaCyberpunk.UI.Opciones
         public SelectorCyberfix Resolucion => resolucion;
         public ConmutadorCyberfix PantallaCompleta => pantallaCompleta;
         public ConmutadorCyberfix Tutorial => tutorial;
+        /// <summary>T-1624: subtítulos de las voces del mundo (se guarda en OpcionSubtitulos). Null en un prefab armado antes de T-1624.</summary>
+        public ConmutadorCyberfix Subtitulos => subtitulos;
         public BotonCyberfix Volver => volver;
 
         /// <summary>Se dispara al cerrarse (Esc o VOLVER).</summary>
@@ -83,7 +87,7 @@ namespace MechaCyberpunk.UI.Opciones
             Vector2 fila = e.TamanoFila;
             float altoTitulo = e.Tamano(RolTexto.Encabezado) + relleno;
             float altoAyuda = e.AltoFilaHud;
-            int cantidadFilas = 7 + SeccionesVisibles.Length;
+            int cantidadFilas = 8 +SeccionesVisibles.Length;
             Canvas canvas = KitUI.CrearCanvas(transform, "CanvasOpciones", OrdenCanvas);
             contenido = canvas.gameObject;
             KitUI.CrearFondoPantalla(canvas.transform, "FondoPantalla");
@@ -130,6 +134,8 @@ namespace MechaCyberpunk.UI.Opciones
             Fila(pantallaCompleta, ref y);
             tutorial = KitUI.CrearConmutador(panel, TextoTutorial, true, null);
             Fila(tutorial, ref y);
+            subtitulos = KitUI.CrearConmutador(panel, TextoSubtitulos, true, null);
+            Fila(subtitulos, ref y);
 
             y += separacionFilas - e.SeparacionBloques;
             volver = KitUI.CrearBoton(panel, TextoVolver, null);
@@ -173,6 +179,10 @@ namespace MechaCyberpunk.UI.Opciones
             resolucion.CambioValor += AlCambiarResolucion;
             pantallaCompleta.CambioValor += v => Servicio?.FijarPantallaCompleta(v);
             tutorial.CambioValor += v => Servicio?.FijarTutorial(v);
+            if (subtitulos != null)
+            {
+                subtitulos.CambioValor += MechaCyberpunk.UI.Voces.OpcionSubtitulos.Fijar;
+            }
             volver.AlPulsar.AddListener(Cerrar);
             menu.Regresar += Cerrar;
             contenido.SetActive(false);
@@ -273,6 +283,10 @@ namespace MechaCyberpunk.UI.Opciones
             resolucion.Configurar(textos, elegida);
             pantallaCompleta.Configurar(s.PantallaCompleta);
             tutorial.Configurar(s.Tutorial);
+            if (subtitulos != null)
+            {
+                subtitulos.Configurar(MechaCyberpunk.UI.Voces.OpcionSubtitulos.Activado);
+            }
         }
 
         private void AlCambiarResolucion(int indice)

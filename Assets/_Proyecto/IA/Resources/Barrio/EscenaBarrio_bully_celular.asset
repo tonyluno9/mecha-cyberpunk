@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25daeeae7b71b7744bb6d0de13470c7c, type: 3}
+  m_Name: EscenaBarrio_bully_celular
+  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.Barrio.EscenaBarrio
+  id: bully_celular
+  tipo: 1
+  pandilla: 2
+  agresores: 2
+  descripcion: Un SKULL le quita el celular a un joven y lo empuja al suelo.
+  peso: 1
+  rieAlFinal: 1
+  lineas:
+  - quien: 0
+    hablante: SKULL
+    texto: "Pr\xE9stame tu cel, carnal... gracias."
+    audio: {fileID: 0}
+    idVozSku: 
+    gesto: 4
+    retraso: 0.4
+    duracion: 0
+  - quien: 0
+    hablante: SKULL
+    texto: 
+    audio: {fileID: 0}
+    idVozSku: 
+    gesto: 2
+    retraso: 0.4
+    duracion: 0
+  - quien: 2
+    hablante: 
+    texto: 
+    audio: {fileID: 0}
+    idVozSku: 
+    gesto: 3
+    retraso: 0.2
+    duracion: 0
+  - quien: 1
+    hablante: SKULL
+    texto: (risas)
+    audio: {fileID: 0}
+    idVozSku: SKU_RISA_BURLA
+    gesto: 1
+    retraso: 0.4
+    duracion: 0
