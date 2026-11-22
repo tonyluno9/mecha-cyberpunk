@@ -33,7 +33,7 @@ T-1644 carros Tripo (T24, wt23A/T1604-blender-modelos), T-1645 carro fuera del m
 Paso 0: HECHO (389475c). No hay video del logo en la carpeta (solo PNG en imageassets/logo).
 - T29: HECHA, merge a2a1a1e
 - T21 (1-2): HECHA, merge 96afae0
-- T22: en curso en la carpeta principal (rama tony/T-1642-charcos)
+- T22: en curso en la carpeta principal (rama tony/T-1642-charcos). El subagente Sonnet se cortó por el límite semanal (vuelve el 26-nov 2 a. m.): se siguió con subagentes Opus.
 - T23: código listo (0fcacd3), falta integrar
 - T24: código listo (b711288), falta integrar
 - T19.4: código listo (d5f0d67), falta integrar
