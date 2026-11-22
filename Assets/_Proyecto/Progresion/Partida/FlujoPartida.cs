@@ -36,6 +36,7 @@ namespace MechaCyberpunk.Progresion.Partida
             pendiente = AccionPartida.Ninguna;
             ranuraPendiente = 0;
             interceptor = null;
+            UltimaConsumida = AccionPartida.Ninguna;
             EnTitulo = false;
             yaArranco = false;
             DejarDeEscuchar();
@@ -82,6 +83,9 @@ namespace MechaCyberpunk.Progresion.Partida
         /// <summary>Lo que quedó pendiente (sin consumirlo).</summary>
         public static AccionPartida Pendiente => pendiente;
 
+        /// <summary>T-1625: la última acción que consumió ServicioGuardado (Nueva, Cargar o Titulo); el recorrido nuevo la lee.</summary>
+        public static AccionPartida UltimaConsumida { get; private set; }
+
         public static int RanuraPendiente => ranuraPendiente;
 
         public static void IrANuevaPartida() => Ir(AccionPartida.Nueva, 0);
@@ -125,6 +129,7 @@ namespace MechaCyberpunk.Progresion.Partida
         public static bool ConsumirPendiente(out AccionPartida accion, out int ranura)
         {
             accion = pendiente;
+            if (pendiente != AccionPartida.Ninguna) UltimaConsumida = pendiente;
             ranura = ranuraPendiente;
             pendiente = AccionPartida.Ninguna;
             ranuraPendiente = 0;

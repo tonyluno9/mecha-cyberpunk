@@ -1,0 +1,14 @@
+{
+    "name": "MechaCyberpunk.Progresion.Recorrido",
+    "rootNamespace": "MechaCyberpunk.Progresion.Recorrido",
+    "references": ["MechaCyberpunk.Core", "MechaCyberpunk.IA", "MechaCyberpunk.Personaje", "MechaCyberpunk.Personaje.Visual", "MechaCyberpunk.Progresion", "MechaCyberpunk.Progresion.Prologo", "MechaCyberpunk.Progresion.Apoyo", "MechaCyberpunk.Economia", "MechaCyberpunk.UI", "MechaCyberpunk.UI.Creditos", "Unity.InputSystem", "UnityEngine.UI"],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

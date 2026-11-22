@@ -1,0 +1,14 @@
+{
+    "name": "MechaCyberpunk.Progresion.Recorrido.Editor",
+    "rootNamespace": "MechaCyberpunk.Progresion.Recorrido.Editor",
+    "references": ["MechaCyberpunk.Core", "MechaCyberpunk.Progresion.Recorrido"],
+    "includePlatforms": ["Editor"],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

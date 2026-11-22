@@ -1624,7 +1624,7 @@ namespace MechaCyberpunk.Tests.Demo
             string ayudaInicio = director.Pantalla.Ayuda;
             if (ayudaInicio != DirectorPandillas.AyudaInicio)
             {
-                Bug("Al despertar no sale MEGALOPOLIS · SUBURBIOS", "la ayuda dice \"" + ayudaInicio + "\"", "A", true);
+                Bug("Al despertar no sale CYBER CITY · SUBURBIOS", "la ayuda dice \"" + ayudaInicio + "\"", "A", true);
             }
             if (TextoObjetivo != AsaltoDinero.TextoRobarCarro)
             {

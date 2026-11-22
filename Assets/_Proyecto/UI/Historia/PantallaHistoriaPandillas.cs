@@ -57,7 +57,7 @@ namespace MechaCyberpunk.UI.Historia
             ayuda = texto;
             finAyuda = Time.unscaledTime + segundos;
             // T-523: la ayuda sale por la cola de avisos del centro (de a una y por poco tiempo); aquí queda como dato.
-            // T-701: el nombre de la zona ("MEGALOPOLIS · SUBURBIOS") va chico arriba al centro y se desvanece, no en la cola.
+            // T-701: el nombre de la zona ("CYBER CITY · SUBURBIOS") va chico arriba al centro y se desvanece, no en la cola.
             if (!(MechaCyberpunk.UI.Hud.ReglaTituloZonaH10.EsTituloDeZona(texto) && MechaCyberpunk.UI.Hud.HudH10.MostrarTitulo(texto, segundos)))
             {
                 PublicarEnCola(texto, segundos);

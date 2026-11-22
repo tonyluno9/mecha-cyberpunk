@@ -16,7 +16,7 @@ namespace MechaCyberpunk.Tests.UI
 {
     /// <summary>
     /// T-414 en Ciudad_Prologo real, como un jugador: lee el letrero de El Mercado, entra con W, abre la tienda con E (EL MERCADO, precios en Ƀ),
-    /// camina por la calle del Tianguis (el HUD dice SKULLS), abre el mapa con M (MEGALOPOLIS) y mira El Fox. Con CAPTURAR_T414=1 guarda las capturas.
+    /// camina por la calle del Tianguis (el HUD dice SKULLS), abre el mapa con M (CYBER CITY) y mira El Fox. Con CAPTURAR_T414=1 guarda las capturas.
     /// </summary>
     public class RecorridoNombresPruebas : InputTestFixture
     {
@@ -211,12 +211,12 @@ namespace MechaCyberpunk.Tests.UI
             Release(teclado.wKey);
             StringAssert.Contains("EL TIANGUIS · SKULLS · RESPETO", hud.TextoZona.text);
 
-            // d. El mapa: M abre (MEGALOPOLIS, SUBURBIOS) y M cierra.
+            // d. El mapa: M abre (CYBER CITY, SUBURBIOS) y M cierra.
             PantallaMapa mapa = UnityEngine.Object.FindFirstObjectByType<PantallaMapa>();
             Assert.IsNotNull(mapa);
             yield return Pulsar(teclado.mKey);
             yield return EsperarHasta(() => mapa.Abierto, "abrir el mapa con M", 5f);
-            Assert.AreEqual("MEGALOPOLIS", mapa.Titulo.text);
+            Assert.AreEqual("CYBER CITY", mapa.Titulo.text);
             bool haySuburbios = false;
             foreach (Text etiqueta in mapa.Etiquetas)
             {

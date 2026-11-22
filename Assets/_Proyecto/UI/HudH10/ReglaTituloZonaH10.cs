@@ -10,7 +10,7 @@ namespace MechaCyberpunk.UI.Hud
         public const float SegundosVisible = 4f;
         public const float SegundosDesvanecer = 1.2f;
 
-        /// <summary>"MEGALOPOLIS · SUBURBIOS" a partir del nombre de la zona.</summary>
+        /// <summary>"CYBER CITY · SUBURBIOS" a partir del nombre de la zona.</summary>
         public static string Texto(string nombreZona) => NombreCiudad + " · " + nombreZona.ToUpperInvariant();
 
         /// <summary>True si el aviso es el nombre de una zona (empieza con la ciudad y un punto medio).</summary>
