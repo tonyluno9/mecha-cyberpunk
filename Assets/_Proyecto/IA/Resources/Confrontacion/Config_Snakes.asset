@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa06960e11454a348a134024258c3e50, type: 3}
+  m_Name: Config_Snakes
+  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.Datos.ConfigConfrontacion
+  nombreHablante: SNAKE
+  colorHablante: {r: 0.6, g: 1, b: 0.2, a: 1}
+  cuandoPelea: 0
+  distanciaDeteccion: 14
+  segundosAdvertencia: 14
+  distanciaQuedarse: 11
+  distanciaDejarDeSeguir: 24
+  segundosRetirada: 3
+  distanciaAcercamiento: 4
+  segundosEntreFrases: 4.5
+  segundosGesto: 2
+  sacaArmaEnAdvertencia: 1
+  segundosEntreEmpujones: 3.5
+  empujonesParaTirar: 2
+  empujonesMaximos: 5
+  danioEmpujon: 1

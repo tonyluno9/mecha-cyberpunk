@@ -36,6 +36,72 @@ namespace MechaCyberpunk.IA.APie
         public TurnosPandillaAPie Turnos => turnos;
         public PandilleroAPie[] Pandilleros => pandilleros;
 
+        private ConfrontacionGrupo confrontacion;
+        private float proximaResolucionConfrontacion;
+
+        /// <summary>
+        /// T-1651 (T26): la confrontación con advertencias de este grupo si es de maleantes de calle (SKULLS o SNAKES de calle) y existe su
+        /// ConfigConfrontacion en Resources; null en cualquier otro caso (guion, jefes, policía, Nova): ahí queda la IA de siempre.
+        /// </summary>
+        public ConfrontacionGrupo Confrontacion
+        {
+            get
+            {
+                if (confrontacion != null || pandilleros == null || Time.time < proximaResolucionConfrontacion)
+                {
+                    return confrontacion;
+                }
+                proximaResolucionConfrontacion = Time.time + 2f; // EsDeGuion se pone después del Awake: se reintenta un rato
+                if (GetComponent<GrupoAcoso>() != null)
+                {
+                    return null; // los grupos de acoso (T12/T-1633) tienen su propia lógica y prestan pandilleros al bullying
+                }
+                bool calle = false;
+                foreach (PandilleroAPie p in pandilleros)
+                {
+                    if (p != null && p.EsMaleanteDeCalle)
+                    {
+                        calle = true;
+                        break;
+                    }
+                }
+                if (!calle)
+                {
+                    return null;
+                }
+                string recurso = idPandilla == IdPandilla.Viboras ? ConfigConfrontacion.RecursoSnakes : ConfigConfrontacion.RecursoSkulls;
+                ConfigConfrontacion config = Resources.Load<ConfigConfrontacion>(recurso);
+                if (config != null)
+                {
+                    confrontacion = new ConfrontacionGrupo(this, config);
+                }
+                return confrontacion;
+            }
+        }
+
+        /// <summary>Depuración (Play, por eval): el estado de la confrontación del grupo con confrontación más cercano al jugador (o a la cámara), o "sin grupos".</summary>
+        public static string EstadoConfrontacionMasCercano()
+        {
+            IJugador jugador = Registro<IJugador>.Actual;
+            Vector3 origen = jugador != null && jugador.Raiz != null ? jugador.Raiz.position : (Camera.main != null ? Camera.main.transform.position : Vector3.zero);
+            PandillaAPie mejor = null;
+            float menor = float.MaxValue;
+            foreach (PandillaAPie g in todas)
+            {
+                if (g == null || g.Confrontacion == null || g.Presentes == 0)
+                {
+                    continue;
+                }
+                float d = (g.centro - origen).sqrMagnitude;
+                if (d < menor)
+                {
+                    menor = d;
+                    mejor = g;
+                }
+            }
+            return mejor != null ? mejor.Confrontacion.ToString() : "sin grupos";
+        }
+
         /// <summary>S2: con true el territorio no enciende la alerta por sí solo (el <see cref="GrupoAcoso"/> decide cuándo te ven).</summary>
         public bool TerritorioSuprimido { get; set; }
 
@@ -262,6 +328,15 @@ namespace MechaCyberpunk.IA.APie
                 delta.y = 0f;
                 distancia = delta.magnitude;
             }
+            // T-1651: los maleantes de calle te detectan a la distancia de su ConfigConfrontacion (no a todo el territorio) y te sueltan al alejarte más que la distancia de dejar de seguir.
+            float radioDeteccion = datos.RadioTerritorio;
+            float margenPersecucion = datos.MargenPersecucion;
+            ConfrontacionGrupo conf = Confrontacion;
+            if (conf != null)
+            {
+                radioDeteccion = conf.Config.DistanciaDeteccion;
+                margenPersecucion = Mathf.Max(0f, conf.Config.DistanciaDejarDeSeguir - radioDeteccion);
+            }
             if (!TerritorioSuprimido)
             {
                 bool alertaAntes = alerta;
@@ -270,11 +345,11 @@ namespace MechaCyberpunk.IA.APie
                 {
                     alerta = false;
                 }
-                else if (!alerta && distancia <= datos.RadioTerritorio)
+                else if (!alerta && distancia <= radioDeteccion)
                 {
                     alerta = true;
                 }
-                else if (alerta && distancia > datos.RadioTerritorio + datos.MargenPersecucion && Time.time >= forzadaHasta)
+                else if (alerta && distancia > radioDeteccion + margenPersecucion && Time.time >= forzadaHasta)
                 {
                     alerta = false;
                 }
@@ -321,6 +396,7 @@ namespace MechaCyberpunk.IA.APie
 
         private void Update()
         {
+            Confrontacion?.Avanzar(Time.deltaTime, pandilleros);
             if (datos.UsaPistola)
             {
                 ActualizarTerritorio();
