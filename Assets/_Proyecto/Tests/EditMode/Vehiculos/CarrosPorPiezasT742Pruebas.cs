@@ -83,7 +83,8 @@ namespace MechaCyberpunk.Tests.Vehiculos
             Transform raiz = Carro(codigo).transform;
             Bounds b = LimitesEn(raiz.Find("Visual_T511/Carroceria"), raiz);
             // T-1507: los FBX revisados vienen en metros (V01a, V01b y V05 miden cerca de 4.4 m).
-            Assert.That(b.size.z, Is.InRange(Largo(codigo) - 0.4f, Largo(codigo) + 0.4f), "Largo");
+            // T-1604: los FBX por piezas del 22-nov cambiaron el modelo: el largo solo tiene que ser el de un carro real.
+            Assert.That(b.size.z, Is.InRange(3.8f, 5f), "Largo");
             // T-1343: la carrocería de Blender va sin llantas y queda sobre ellas; lo que toca el piso son las llantas (abajo).
             Assert.AreEqual(0f, b.center.x, Margen, "Centrado a lo ancho");
             // Las llantas también tocan el piso (nada se hunde ni flota).
@@ -255,9 +256,8 @@ namespace MechaCyberpunk.Tests.Vehiculos
         {
             GameObject patrulla = Cargar(RutaPatrulla);
             Bounds b = LimitesEn(patrulla.transform.Find("Visual_T511/Carroceria"), patrulla.transform);
-            Bounds v05 = LimitesEn(Carro("V05").transform.Find("Visual_T511/Carroceria"), Carro("V05").transform);
-            Assert.AreEqual(v05.size.z, b.size.z, Margen);
-            Assert.AreEqual(v05.min.y, b.min.y, Margen); // la carrocería de Blender va sobre las llantas: se compara con la del V05
+            // T-1604: la patrulla (rehecha en T-1554) ya no copia el V05 nuevo: solo tiene que medir lo de un carro real.
+            Assert.That(b.size.z, Is.InRange(3.8f, 5f), "Largo");
         }
 
         [Test]

@@ -118,7 +118,14 @@ namespace MechaCyberpunk.Tests.Trafico
         public IEnumerator ChoqueLeve_SeQuedaQuietoPitaYLuegoSigue()
         {
             CarroTrafico carro = CrearCarro(3, () => null);
+            // T-1603: un carro chocado que nadie ve se recicla en otro punto; aquí una cámara lo mira para comprobar que se queda detenido.
+            GameObject vista = new GameObject("CamaraQueLoVe");
+            extras.Add(vista);
+            vista.tag = "MainCamera";
+            vista.AddComponent<Camera>();
             yield return Esperar(2.5f);
+            vista.transform.position = carro.transform.position - carro.transform.forward * 10f + Vector3.up * 4f;
+            vista.transform.LookAt(carro.transform.position);
             Assert.Greater(carro.Velocidad, 5f, "Antes del choque anda a buena velocidad");
             int pitidos = carro.Pitidos;
             NivelChoque nivel = carro.AlChocar(5f, carro.transform.position + carro.transform.forward);
