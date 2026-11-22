@@ -111,6 +111,99 @@ namespace MechaCyberpunk.Trafico.Editor
             Debug.Log("[Trafico] T-1632: " + creados.Count + " NPCs sentados; ver " + RutaLog);
         }
 
+        /// <summary>
+        /// T-1640 (T29): quita TODOS los civiles sentados de Ciudad_Prologo (la raíz NpcsSentados_T1632 y cualquier otro NPC con NpcSentado o NpcSentadoBanca).
+        /// El código de sentarse y las bancas se quedan. Escribe Logs/t1640.txt.
+        /// </summary>
+        [MenuItem("Mecha Cyberpunk/T-1640/Quitar NPCs sentados")]
+        public static void Quitar()
+        {
+            var escena = EditorSceneManager.OpenScene(RutaEscena, OpenSceneMode.Single);
+            var sb = new StringBuilder();
+            int quitados = 0;
+            GameObject viejo = GameObject.Find(NombreRaiz);
+            while (viejo != null)
+            {
+                quitados += viejo.GetComponentsInChildren<NpcSentado>(true).Length;
+                sb.AppendLine("quita raiz " + viejo.name + " con " + viejo.transform.childCount + " hijos");
+                Object.DestroyImmediate(viejo);
+                viejo = GameObject.Find(NombreRaiz);
+            }
+            foreach (GameObject r in escena.GetRootGameObjects())
+            {
+                foreach (MonoBehaviour mb in r.GetComponentsInChildren<MonoBehaviour>(true))
+                {
+                    if (mb != null && (mb is NpcSentado || mb.GetType().Name == "NpcSentadoBanca"))
+                    {
+                        sb.AppendLine("quita " + Ruta(mb.transform) + " en " + mb.transform.position);
+                        Object.DestroyImmediate(mb.gameObject);
+                        quitados++;
+                    }
+                }
+            }
+            int quedan = Object.FindObjectsByType<NpcSentado>(FindObjectsInactive.Include, FindObjectsSortMode.None).Length
+                + Object.FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Include, FindObjectsSortMode.None).Count(m => m != null && m.GetType().Name == "NpcSentadoBanca");
+            sb.AppendLine("quitados: " + quitados + ", quedan sentados: " + quedan);
+            EditorSceneManager.MarkSceneDirty(escena);
+            EditorSceneManager.SaveScene(escena);
+            Directory.CreateDirectory("Logs");
+            File.WriteAllText("Logs/t1640.txt", sb.ToString());
+            Debug.Log("[Trafico] T-1640: " + sb.ToString());
+        }
+
+        [MenuItem("Mecha Cyberpunk/T-1640/Fotos antes")]
+        public static void FotosAntes() { Fotos("antes"); }
+
+        [MenuItem("Mecha Cyberpunk/T-1640/Fotos despues")]
+        public static void FotosDespues() { Fotos("despues"); }
+
+        /// <summary>Capturas de las bancas (con o sin sentados) en docs/capturas/_tareas/T29/. Va en una corrida aparte de Quitar.</summary>
+        private static void Fotos(string sufijo)
+        {
+            EditorSceneManager.OpenScene(RutaEscena, OpenSceneMode.Single);
+            Directory.CreateDirectory("docs/capturas/_tareas/T29");
+            var bancas = new List<Transform>();
+            foreach (GameObject r in UnityEngine.SceneManagement.SceneManager.GetActiveScene().GetRootGameObjects())
+            {
+                bancas.AddRange(r.GetComponentsInChildren<Transform>(false).Where(t => t.name.StartsWith("Banca_Sentable")));
+            }
+            bancas = bancas.OrderBy(t => t.position.x).ThenBy(t => t.position.z).ToList();
+            Debug.Log("[Trafico] T-1640 fotos " + sufijo + ": bancas " + bancas.Count);
+            for (int i = 0; i < Mathf.Min(4, bancas.Count); i++)
+            {
+                Vector3 c = bancas[i].position;
+                FotoCamara("banca" + i + "_" + sufijo, c + new Vector3(0f, 3f, -4.5f), c + Vector3.up * 0.7f, 60f);
+            }
+            if (bancas.Count > 0)
+            {
+                Vector3 c = bancas[0].position;
+                FotoCamara("parque_aerea_" + sufijo, c + new Vector3(0f, 45f, -30f), c, 50f);
+            }
+        }
+
+        private static void FotoCamara(string nombre, Vector3 pos, Vector3 mira, float fov)
+        {
+            var go = new GameObject("CamFotosT1640");
+            Camera cam = go.AddComponent<Camera>();
+            cam.fieldOfView = fov;
+            cam.farClipPlane = 800f;
+            go.transform.position = pos;
+            go.transform.LookAt(mira);
+            var rt = new RenderTexture(1280, 720, 24);
+            cam.targetTexture = rt;
+            cam.Render();
+            RenderTexture.active = rt;
+            var tex = new Texture2D(1280, 720, TextureFormat.RGB24, false);
+            tex.ReadPixels(new Rect(0, 0, 1280, 720), 0, 0);
+            tex.Apply();
+            File.WriteAllBytes("docs/capturas/_tareas/T29/" + nombre + ".png", tex.EncodeToPNG());
+            RenderTexture.active = null;
+            cam.targetTexture = null;
+            Object.DestroyImmediate(rt);
+            Object.DestroyImmediate(tex);
+            Object.DestroyImmediate(go);
+        }
+
         [MenuItem("Mecha Cyberpunk/T-1632/Diagnostico")]
         public static void Diagnostico()
         {
