@@ -326,6 +326,7 @@ celular, platicando de frente si son dos — T11). Cuando oyen balazos se levant
 Comprobar: capturas de NPCs sentados en el parque y en otro punto, bien alineados al asiento, y que se levanten y huyan al disparar.
 
 ## T19. Detalles que quedaron de T12, T17 y T18 (22-nov tarde)
+**Punto 4 HECHO (sesión A, merge 9b27d39):** el carro era CarroRobable_17 guardado en la escena en (-20,-127.8), de cuando el mapa era más grande; se apagó y se agregó VigilanteVehiculosMuro (runtime) que apaga o reubica cualquier vehículo fuera del muro o bajo y=-5. Prueba de 3 min: 360 muestras, hasta 88 vehículos, 0 fuera del muro. Pruebas EditMode 5/5.
 **Puntos 1-3 HECHOS (22-nov noche, sesión B, T-1652 3f7d52a y T-1653 cded5bb): empujón de frente y solo civiles con camino libre (pasan las pruebas de bullying de SKULLS y SNAKES); NOVA INTERVIENE a 108 pt turquesa, centrado, con glitch y sonido ROB_PES_LLEGADA (FALTA una alarma corporativa propia en el catálogo); RespuestaNovaT1304Pruebas reescrita y pasando; el sentado se levanta antes de huir, pero NO hay clip de levantarse de sentado (se endereza con NPC_Asustarse; pedir PJ01_Sentado_Levantarse a Blender). El punto 4 es de A.**
 1. T12: el empujón al civil no se ve claro; que la animación de empujar y la caída del civil se vean completas y de frente. Los pandilleros que
    tienen una pared entre ellos y el civil cancelan la escena a los 25 s porque caminan en línea recta: que rodeen por la banqueta (ruta o NavMesh
@@ -345,6 +346,7 @@ Le gustó (NO se toca): empezar con la cinemática del recuerdo y caer/levantars
 la patrulla buena (la de docs/capturas/patrulla-buena-22nov.png).
 
 ## T20. Intro del juego: video del logo
+**HECHA en código (22-nov noche, merge 9b27d39), falta verla en el build:** videologo.mp4 movido a Assets/Arte/Video/ (Git LFS; *.mp4/.mov/.webm agregados a .gitattributes), importado H264 1284x716 4 s; IntroInicio en Inicio.unity: video a pantalla completa con su proporción, se salta con Enter/clic/Esc, al terminar arranca el menú como antes (música con fade, sonido de logo). Se salta solo en el editor y con -pruebaInicio. Pruebas ReglaIntro 8/8, IntroInicio 5/5.
 Al abrir el juego, después del logo de Unity: se reproduce el video del logo de CyberCity "pintándose" (Tony lo deja en la raíz del proyecto o en
 imageassets/logo/; búscalo por nombre con "logo" y extensión .mp4/.mov/.webm; si no está, deja todo listo con un VideoClip vacío y anótalo).
 Al terminar el video: suena el sonido tecnológico que ya usa el menú (el del logo/intro, UI_LOGO_INTRO o el que suena al abrir el menú), entra la
@@ -374,6 +376,7 @@ Comprobar: Nueva partida → levantarse → caminar → los SKULLS salen del cal
 Comprobar: capturas de 6 calles distintas (incluida la de la casa) con charcos visibles y texturas correctas.
 
 ## T23. NPCs que atraviesan modelos
+**HECHA (22-nov noche, merge 9b27d39):** los peatones (PeatonMundo) revisan cada 0.1 s con una cápsula si el paso de enfrente está libre, rodean por un lado (±0.6/±1.2 m) sin avanzar dentro del obstáculo o dan la vuelta, y al aparecer dentro de algo se reubican por su ruta. Pandilleros y policías ya chocaban (CharacterController). En 2 min en la ciudad: 31 → 20 muestras de peatones dentro de algo; lo que queda es por un toldo, un corro de plática y costales sobre la ruta (se mueven junto con T24). Pruebas 12/12 (NpcsColision + PeatonHuye). Registro docs/capturas/_tareas/T23/registro.txt.
 Revisa que los NPCs (peatones, pandilleros, policías) no atraviesen paredes, puestos, carros estacionados ni otros objetos: que caminen por
 banquetas y rutas libres, con colisión o evitación contra obstáculos, y que no aparezcan dentro de objetos. Corrige los puntos donde pase.
 

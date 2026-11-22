@@ -34,8 +34,6 @@ Paso 0: HECHO (389475c). No hay video del logo en la carpeta (solo PNG en imagea
 - T29: HECHA, merge a2a1a1e
 - T21 (1-2): HECHA, merge 96afae0
 - T22: HECHA, merge 88a04e9. El subagente Sonnet se cortó por el límite semanal (vuelve el 26-nov 2 a. m.): se siguió con subagentes Opus.
-- T23 + T19.4 + T20 + marcador del callejón de B: integrando en integ/A3-T23-T19-T20 (video ya movido a Assets/Arte/Video, *.mp4 en LFS)
-- T24: código listo (b711288), falta integrar
-- T19.4: código listo (d5f0d67), falta integrar
-- T20: código listo (07c88ed), falta integrar; Tony dejó videologo.mp4 en la raíz: moverlo a Assets/Arte/Video/ (LFS) al integrar
+- T23, T19.4, T20 y marcador del callejón (-64,0.2,-59): HECHOS, merge 9b27d39 (T20 falta verlo en el build)
+- T24: integrando en integ/A3-T24 (+ mover toldo/corro/costales de T23)
 - Builds y reporte docs/reporte-tareas-22nov-c.md: pendiente
