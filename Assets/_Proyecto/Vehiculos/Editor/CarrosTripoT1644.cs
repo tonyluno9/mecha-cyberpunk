@@ -101,6 +101,10 @@ namespace MechaCyberpunk.Vehiculos.Editor
         private const float SeparacionPuerta = 1f;
         private const float LargoMinimoAuto = 3.6f;
         private const float LargoMaximoAuto = 5.2f;
+        private const float ProporcionCasiCuadrado = 0.75f;
+        private const float PasoEnderezado = 0.5f;
+        private const float ToleranciaEnderezado = 4f;
+        private const float MejoraMinimaEnderezado = 0.02f;
         private const int Celdas = 32;
         private const int MaximoPuntos = 40000;
         private static readonly string[] CodigosGrandes = { "V16", "V17", "V18", "V19" };
@@ -131,9 +135,26 @@ namespace MechaCyberpunk.Vehiculos.Editor
             }
             AssetDatabase.SaveAssets();
             // Las motos con caballete en el modelo de Tripo: la malla sin caballete se rehace con los creadores de siempre.
+            // Preparar también reescribe los ConfigCarro de moto con los números de T-592; se guardan antes y se devuelven después (los calibró T-1488).
+            Dictionary<ConfigCarro, string> configs = new Dictionary<ConfigCarro, string>();
+            foreach (string codigo in CreadorMotosT592.Motos)
+            {
+                GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(RutaPrefab(codigo));
+                CarroViejo carro = prefab != null ? prefab.GetComponent<CarroViejo>() : null;
+                ConfigCarro config = carro != null ? new SerializedObject(carro).FindProperty("config").objectReferenceValue as ConfigCarro : null;
+                if (config != null && !configs.ContainsKey(config))
+                {
+                    configs[config] = EditorJsonUtility.ToJson(config);
+                }
+            }
             foreach (string codigo in CreadorMotosT592.Motos)
             {
                 informe.AppendLine(CreadorMotosT592.Preparar(codigo));
+            }
+            foreach (KeyValuePair<ConfigCarro, string> par in configs)
+            {
+                EditorJsonUtility.FromJsonOverwrite(par.Value, par.Key);
+                EditorUtility.SetDirty(par.Key);
             }
             AssetDatabase.SaveAssets();
             Directory.CreateDirectory("Logs");
@@ -212,9 +233,9 @@ namespace MechaCyberpunk.Vehiculos.Editor
                 envoltorio.localPosition = Vector3.zero;
                 envoltorio.localRotation = Quaternion.identity;
                 envoltorio.localScale = Vector3.one;
-                foreach (string nombre in CreadorCarrosPiezasT742.NombresRuedas)
+                foreach (Transform ancla in Anclas(raiz))
                 {
-                    Transform modelo = raiz.transform.Find(nombre + "/Direccion/Giro/Modelo");
+                    Transform modelo = ancla.Find("Direccion/Giro/Modelo");
                     if (modelo != null)
                     {
                         Object.DestroyImmediate(modelo.gameObject);
@@ -250,6 +271,20 @@ namespace MechaCyberpunk.Vehiculos.Editor
             {
                 PrefabUtility.UnloadPrefabContents(raiz);
             }
+        }
+
+        // Las anclas de las llantas: las cuatro de siempre y las de los ejes de más (V18 trae Rueda_T1I, Rueda_T3D...).
+        private static List<Transform> Anclas(GameObject raiz)
+        {
+            List<Transform> anclas = new List<Transform>();
+            foreach (Transform hijo in raiz.transform)
+            {
+                if (hijo.name.StartsWith("Rueda_"))
+                {
+                    anclas.Add(hijo);
+                }
+            }
+            return anclas;
         }
 
         // Las cajas de choque a la medida de la malla (la misma receta de T-511).
@@ -293,14 +328,11 @@ namespace MechaCyberpunk.Vehiculos.Editor
             {
                 return "anclas sin config";
             }
-            float altura = CarrosPAT1510.AlturaAnclaEnReposo(config);
-            foreach (string nombre in CreadorCarrosPiezasT742.NombresRuedas)
+            // La altura es en metros del mundo; V16 a V19 tienen la raíz escalada (0.7 a 0.8), así que en local se divide entre esa escala.
+            float altura = CarrosPAT1510.AlturaAnclaEnReposo(config) / Mathf.Max(0.0001f, raiz.transform.localScale.y);
+            foreach (Transform ancla in Anclas(raiz))
             {
-                Transform ancla = raiz.transform.Find(nombre);
-                if (ancla != null)
-                {
-                    ancla.localPosition = new Vector3(ancla.localPosition.x, altura, ancla.localPosition.z);
-                }
+                ancla.localPosition = new Vector3(ancla.localPosition.x, altura, ancla.localPosition.z);
             }
             return "anclas y " + altura.ToString("F3");
         }
@@ -457,7 +489,7 @@ namespace MechaCyberpunk.Vehiculos.Editor
             Vector3[] referencia = new Vector3[0];
             if (previo != null)
             {
-                plan.Yaw = Mathf.Round(previo.localEulerAngles.y / 90f) * 90f;
+                plan.Yaw = previo.localEulerAngles.y;
                 plan.Escala = previo.localScale.x;
                 plan.Nota = "segunda corrida: conserva giro y escala";
             }
@@ -476,12 +508,16 @@ namespace MechaCyberpunk.Vehiculos.Editor
                 {
                     int eje = cajaReferencia.size.z >= cajaReferencia.size.x ? 2 : 0;
                     Perfil(referencia, eje, out float[] alturaRef, out float[] anchoRef);
-                    foreach (float yaw in new[] { 0f, 90f, 180f, 270f })
+                    float enderezado = f.Moto ? 0f : GiroEnderezado(plan.Nube);
+                    foreach (float cuarto in new[] { 0f, 90f, 180f, 270f })
                     {
+                        float yaw = enderezado + cuarto;
                         Vector3[] girada = Girar(plan.Nube, yaw);
                         Bounds b = Limites(girada);
                         int ejeCandidata = b.size.z >= b.size.x ? 2 : 0;
-                        if (ejeCandidata != eje)
+                        // Casi cuadrado en planta (V02, V03 llevan carga a los lados): cualquiera de los dos ejes puede ser el largo, decide la silueta.
+                        bool casiCuadrado = Mathf.Min(b.size.x, b.size.z) >= Mathf.Max(b.size.x, b.size.z) * ProporcionCasiCuadrado;
+                        if (ejeCandidata != eje && !casiCuadrado)
                         {
                             continue;
                         }
@@ -498,12 +534,12 @@ namespace MechaCyberpunk.Vehiculos.Editor
                             mejorYaw = yaw;
                         }
                     }
-                    plan.Nota = mejor < float.MaxValue ? "giro por silueta" : "sin giro que alinee el largo: giro 0";
+                    plan.Nota = (mejor < float.MaxValue ? "giro por silueta" : "sin giro que alinee el largo: giro 0") + ", enderezado " + enderezado.ToString("F1");
                 }
                 else
                 {
                     Bounds sinGiro = Limites(plan.Nube);
-                    mejorYaw = !f.Moto && sinGiro.size.x > sinGiro.size.z ? 90f : 0f;
+                    mejorYaw = f.Moto ? 0f : (sinGiro.size.x > sinGiro.size.z ? 90f : 0f) + GiroEnderezado(plan.Nube);
                     plan.Nota = "SIN visual de referencia: largo hacia Z y escala por el largo de la tabla";
                 }
                 plan.Yaw = mejorYaw;
@@ -560,9 +596,9 @@ namespace MechaCyberpunk.Vehiculos.Editor
             }
             if (!f.Moto)
             {
-                foreach (string nombre in CreadorCarrosPiezasT742.NombresRuedas)
+                foreach (Transform ancla in Anclas(raiz))
                 {
-                    Transform modelo = raiz.transform.Find(nombre + "/Direccion/Giro/Modelo");
+                    Transform modelo = ancla.Find("Direccion/Giro/Modelo");
                     if (modelo != null)
                     {
                         filtros.AddRange(modelo.GetComponentsInChildren<MeshFilter>(true));
@@ -590,6 +626,33 @@ namespace MechaCyberpunk.Vehiculos.Editor
                 }
             }
             return puntos;
+        }
+
+        // Algunos FBX de Tripo traen el carro en diagonal (V02 a ~27°, V03 a ~41°): el giro de 0 a 90° con la menor caja en planta lo endereza. Cerca de 0 o 90 se deja en 0.
+        public static float GiroEnderezado(Vector3[] puntos)
+        {
+            float mejorArea = float.MaxValue;
+            float mejor = 0f;
+            for (float a = 0f; a < 90f; a += PasoEnderezado)
+            {
+                Quaternion q = Quaternion.Euler(0f, a, 0f);
+                float minX = float.MaxValue, maxX = float.MinValue, minZ = float.MaxValue, maxZ = float.MinValue;
+                foreach (Vector3 p in puntos)
+                {
+                    Vector3 g = q * p;
+                    minX = Mathf.Min(minX, g.x);
+                    maxX = Mathf.Max(maxX, g.x);
+                    minZ = Mathf.Min(minZ, g.z);
+                    maxZ = Mathf.Max(maxZ, g.z);
+                }
+                float area = (maxX - minX) * (maxZ - minZ);
+                if (area < mejorArea * (1f - MejoraMinimaEnderezado))
+                {
+                    mejorArea = area;
+                    mejor = a;
+                }
+            }
+            return mejor <= ToleranciaEnderezado || mejor >= 90f - ToleranciaEnderezado ? 0f : mejor;
         }
 
         private static Vector3[] Girar(Vector3[] puntos, float yaw)
@@ -688,6 +751,12 @@ namespace MechaCyberpunk.Vehiculos.Editor
             {
                 Bounds b = Limites(propia);
                 s.Append(string.Format("\n\tFBX medido en el marco del FBX: {0:F2} x {1:F2} x {2:F2} (x, y, z)", b.size.x, b.size.y, b.size.z));
+                foreach (MeshFilter m in fbx.GetComponentsInChildren<MeshFilter>(true).Where(m => m.sharedMesh != null))
+                {
+                    Vector3[] nm = Nube(new[] { m }, null).ToArray();
+                    Bounds bm = Limites(nm);
+                    s.Append(string.Format("\n\t  malla {0}: {1:F2} x {2:F2} x {3:F2}, centro {4:F2},{5:F2},{6:F2}, {7} vértices", m.name, bm.size.x, bm.size.y, bm.size.z, bm.center.x, bm.center.y, bm.center.z, m.sharedMesh.vertexCount));
+                }
             }
             GameObject raiz = PrefabUtility.LoadPrefabContents(RutaPrefab(f.Codigo));
             try
