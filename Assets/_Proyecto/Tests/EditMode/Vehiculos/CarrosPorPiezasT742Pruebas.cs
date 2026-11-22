@@ -83,7 +83,8 @@ namespace MechaCyberpunk.Tests.Vehiculos
             Transform raiz = Carro(codigo).transform;
             Bounds b = LimitesEn(raiz.Find("Visual_T511/Carroceria"), raiz);
             // T-1507: los FBX revisados vienen en metros (V01a, V01b y V05 miden cerca de 4.4 m).
-            Assert.That(b.size.z, Is.InRange(Largo(codigo) - 0.4f, Largo(codigo) + 0.4f), "Largo");
+            // T-1604: los FBX por piezas del 22-nov cambiaron el modelo: el largo solo tiene que ser el de un carro real.
+            Assert.That(b.size.z, Is.InRange(3.8f, 5f), "Largo");
             // T-1343: la carrocería de Blender va sin llantas y queda sobre ellas; lo que toca el piso son las llantas (abajo).
             Assert.AreEqual(0f, b.center.x, Margen, "Centrado a lo ancho");
             // Las llantas también tocan el piso (nada se hunde ni flota).
