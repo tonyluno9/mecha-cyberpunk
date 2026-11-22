@@ -5,6 +5,7 @@ using MechaCyberpunk.Core;
 using MechaCyberpunk.IA.APie;
 using MechaCyberpunk.Personaje.Combate;
 using MechaCyberpunk.Personaje.Movimiento;
+using MechaCyberpunk.Personaje.Visual;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -42,6 +43,58 @@ namespace MechaCyberpunk.Progresion.Recorrido
         private bool controlAntes;
         private float ultimoAviso = -100f;
         private Coroutine escena;
+        private Vector3 puntoSalida;
+
+        // T-1652: caminan lento platicando, se le ponen enfrente (contacto a 0.8 m), lo empujan en el cuadro del contacto y se van corriendo.
+        private const float RapidezPlatica = 1.4f;
+        private const float RapidezPlantarse = 2.8f;
+        private const float RapidezCorrer = 5.5f;
+        private const float DistanciaPlantarse = 4.5f;
+        private const float DistanciaContacto = 0.8f;
+        private const float SegundosEntreFrases = 3.4f;
+        private const float SegundosHastaContacto = 0.4f; // PJ01_Pandillero_Empujar (23 cuadros): la mano llega al pecho a ~0.4 s
+        private const float SegundosMaximosPlatica = 45f;
+        private const float AlturaBoca = 1.7f;
+        private static readonly Color ColorSkull = new Color(1f, 0.25f, 0.85f);
+        private static readonly string[] FrasesPlatica =
+        {
+            "¿Y ese quién es?", "Mira nomás, un pelado perdido.", "Ni se ha dado cuenta.", "Va solito, el valiente.", "Pa' mí que trae lana."
+        };
+        private static readonly string[] FrasesEnfrente = { "¿A dónde tan solito, pelado?", "Aquí se paga el paso." };
+
+        /// <summary>Depuración: qué fase va ("platica", "plantan", "empujan", "huyen", "") para las pruebas y capturas.</summary>
+        public string Fase { get; private set; } = string.Empty;
+
+        /// <summary>
+        /// Respaldo cuando no hay marcador Historia_CallejonSkulls: un punto a unos 15-20 m de <paramref name="inicio"/>, a un lado de la calle (perpendicular a
+        /// <paramref name="adelante"/>), con piso debajo y sin colisionadores encima. Devuelve false si no encuentra hueco (quien llama usa otra cosa).
+        /// </summary>
+        public static bool BuscarSalidaRespaldo(Vector3 inicio, Vector3 adelante, out Vector3 punto)
+        {
+            adelante = Plano(adelante);
+            adelante = adelante.sqrMagnitude > 0.0001f ? adelante.normalized : Vector3.forward;
+            Vector3 lado = Vector3.Cross(Vector3.up, adelante);
+            float[] distancias = { 17f, 15f, 20f, 18f };
+            float[] avances = { 0f, 4f, -4f, 8f, -8f };
+            foreach (float d in distancias)
+            {
+                foreach (float a in avances)
+                {
+                    for (int signo = -1; signo <= 1; signo += 2)
+                    {
+                        Vector3 candidato = inicio + lado * (d * signo) + adelante * a;
+                        if (Physics.Raycast(candidato + Vector3.up * 8f, Vector3.down, out RaycastHit golpe, 20f, ~0, QueryTriggerInteraction.Ignore)
+                            && !Physics.CheckCapsule(golpe.point + Vector3.up * 0.4f, golpe.point + Vector3.up * 1.7f, 0.4f, ~0, QueryTriggerInteraction.Ignore))
+                        {
+                            punto = golpe.point + Vector3.up * 0.05f;
+                            return true;
+                        }
+                    }
+                }
+            }
+            punto = default;
+            return false;
+        }
 
         /// <summary>True mientras la escena corre.</summary>
         public bool EnCurso => escena != null;
@@ -59,7 +112,13 @@ namespace MechaCyberpunk.Progresion.Recorrido
         /// Arranca la escena. <paramref name="prefabs"/> trae uno o dos prefabs de SKULL; <paramref name="distancia"/> es qué tan adelante del jugador salen.
         /// Devuelve false (sin hacer nada) si falta el jugador o los prefabs: quien llama sigue con la historia.
         /// </summary>
-        public bool Iniciar(IReadOnlyList<GameObject> prefabs, float distancia)
+        public bool Iniciar(IReadOnlyList<GameObject> prefabs, float distancia) => Iniciar(prefabs, distancia, null);
+
+        /// <summary>
+        /// T-1652: como <see cref="Iniciar(IReadOnlyList{GameObject}, float)"/> pero los SKULLS salen de <paramref name="salida"/> (el callejón junto a la casa)
+        /// y caminan hacia el jugador. Con null salen <paramref name="distancia"/> metros adelante de él, como antes.
+        /// </summary>
+        public bool Iniciar(IReadOnlyList<GameObject> prefabs, float distancia, Vector3? salida)
         {
             IJugador j = Registro<IJugador>.Actual;
             if (escena != null || j == null || j.Raiz == null || prefabs == null || prefabs.Count == 0 || prefabs[0] == null)
@@ -82,8 +141,11 @@ namespace MechaCyberpunk.Progresion.Recorrido
             for (int i = 0; i < 2; i++)
             {
                 GameObject prefab = prefabs[Mathf.Min(i, prefabs.Count - 1)] != null ? prefabs[Mathf.Min(i, prefabs.Count - 1)] : prefabs[0];
-                Vector3 donde = Suelo(jugador.position + adelante * distancia + lado * (i == 0 ? -1.2f : 1.2f));
-                GameObject objeto = Instantiate(prefab, donde, Quaternion.LookRotation(-adelante, Vector3.up));
+                Vector3 baseSalida = salida.HasValue ? salida.Value : jugador.position + adelante * distancia;
+                Vector3 donde = Suelo(baseSalida + lado * (i == 0 ? -0.8f : 0.8f));
+                Vector3 mira = Plano(jugador.position - donde);
+                Quaternion giro = mira.sqrMagnitude > 0.0001f ? Quaternion.LookRotation(mira.normalized, Vector3.up) : Quaternion.LookRotation(-adelante, Vector3.up);
+                GameObject objeto = Instantiate(prefab, donde, giro);
                 objeto.name = "SkullRecorrido_" + (i + 1);
                 PandilleroAPie p = objeto.GetComponent<PandilleroAPie>() ?? objeto.GetComponentInChildren<PandilleroAPie>(true);
                 if (p == null)
@@ -98,6 +160,7 @@ namespace MechaCyberpunk.Progresion.Recorrido
             {
                 return false;
             }
+            puntoSalida = skulls[0].transform.position;
             escena = StartCoroutine(Correr());
             return true;
         }
@@ -119,78 +182,162 @@ namespace MechaCyberpunk.Progresion.Recorrido
         {
             BloquearAtaque();
             controlAntes = controlador.ControlActivo;
-            // 1. Se le acercan: lo detienen en seco.
-            controlador.ActivarControl(false);
-            float limite = Time.time + SegundosMaximosAcercarse;
-            while (Time.time < limite && DistanciaMinima() > DistanciaFrente)
+            // 1. Caminan lento hacia él desde el callejón, platicando entre ellos. El jugador sigue libre de moverse (no de pegar).
+            Fase = "platica";
+            float inicio = Time.time;
+            float proximaFrase = Time.time + 0.5f;
+            int frase = 0;
+            while (Time.time - inicio < SegundosMaximosPlatica && DistanciaMinima() > DistanciaPlantarse)
             {
+                bool apurar = Time.time - inicio > SegundosMaximosPlatica * 0.5f;
                 foreach (PandilleroAPie p in Vivos())
                 {
                     Vector3 hacia = Plano(jugador.position - p.transform.position);
-                    p.MirarHacia(hacia, GradosGiroPorSegundo);
-                    p.MoverPlano(hacia.normalized * RapidezCaminar);
+                    p.MirarHacia(hacia, GradosGiroPorSegundo * 0.5f);
+                    p.MoverPlano(hacia.normalized * (apurar ? RapidezPlantarse : RapidezPlatica));
+                }
+                if (Time.time >= proximaFrase)
+                {
+                    proximaFrase = Time.time + SegundosEntreFrases;
+                    Platicar(frase++);
                 }
                 yield return null;
             }
-            // 2. Lo insultan.
-            AlinearFrenteAlJugador();
-            for (int i = 0; i < skulls.Count; i++)
+            // 2. Se le ponen enfrente: lo detienen en seco, uno de frente a 0.8 m y el otro a un lado.
+            Fase = "plantan";
+            controlador.ActivarControl(false);
+            List<PandilleroAPie> vivos = Vivos();
+            PandilleroAPie empujador = vivos.Count > 0 ? vivos[0] : null;
+            PandilleroAPie otro = vivos.Count > 1 ? vivos[1] : null;
+            Vector3 frente = Plano(jugador.forward).normalized;
+            Vector3 lado = Vector3.Cross(Vector3.up, frente);
+            Vector3 puestoFrente = jugador.position + frente * DistanciaContacto;
+            if (Physics.Raycast(jugador.position + Vector3.up * 0.9f, frente, DistanciaContacto + 0.4f, ~0, QueryTriggerInteraction.Ignore))
             {
-                PandilleroAPie p = skulls[i];
-                if (p == null)
+                // Pared de frente: el empujador se pone del lado por donde venía.
+                Vector3 vino = empujador != null ? Plano(empujador.transform.position - jugador.position).normalized : -frente;
+                puestoFrente = jugador.position + vino * DistanciaContacto;
+            }
+            Vector3 puestoOtro = jugador.position + (puestoFrente - jugador.position).normalized * 1.5f + lado * 1.1f;
+            float limitePlantarse = Time.time + 6f;
+            while (Time.time < limitePlantarse)
+            {
+                bool listos = IrAlPuesto(empujador, puestoFrente, 0.12f);
+                listos &= IrAlPuesto(otro, puestoOtro, 0.3f);
+                if (listos)
                 {
-                    continue;
+                    break;
                 }
-                p.MoverPlano(Vector3.zero);
-                p.Gritar(GritosInsulto[i % GritosInsulto.Length]);
-                Sonidos.ReproducirEn(i == 0 ? SonidoInsulto : SonidoProvocar, p.transform.position);
+                yield return null;
             }
-            yield return Esperar(SegundosInsulto);
-            // 3. Lo empujan y lo tiran. El control vuelve un instante para que el empujón lo mueva; el derribo bloquea caminar y pegar.
-            PandilleroAPie empujador = Vivos().Count > 0 ? Vivos()[0] : null;
-            Vector3 direccion = empujador != null ? Plano(jugador.position - empujador.transform.position) : jugador.forward;
-            if (empujador != null && empujador.Visual != null)
+            AlinearFrenteAlJugador();
+            foreach (PandilleroAPie p in Vivos())
             {
-                empujador.Visual.Golpear(false);
+                p.MoverPlano(Vector3.zero);
             }
-            controlador.ActivarControl(controlAntes);
-            Aviso(TablaRecorrido.AvisoSinAtacar);
-            atropello.Derribar(direccion);
+            // 3. Le dicen algo.
             if (empujador != null)
             {
-                Sonidos.ReproducirEn(SonidoInsulto, empujador.transform.position);
+                Frase(empujador, FrasesEnfrente[0], VocesPandilla.Provocar);
             }
-            yield return Esperar(0.6f);
-            // 4. Se ríen y se van.
+            yield return Esperar(SegundosInsulto);
+            if (otro != null)
+            {
+                Frase(otro, FrasesEnfrente[1], VocesPandilla.Insulto);
+                yield return Esperar(0.9f);
+            }
+            // 4. Lo empujan: el clip de empujar y, en el cuadro del contacto, el derribo del jugador (ni antes ni después).
+            Fase = "empujan";
+            Vector3 direccion = empujador != null ? Plano(jugador.position - empujador.transform.position) : jugador.forward;
+            if (empujador != null)
+            {
+                AlinearFrenteAlJugador();
+                if (empujador.Visual == null || !EstadosNpcT1560.Gestear(empujador.Visual, GestoNpcT1560.Empujar))
+                {
+                    empujador.Visual?.Golpear(false);
+                }
+                Sonidos.ReproducirEn(SonidoInsulto, empujador.transform.position);
+                yield return Esperar(SegundosHastaContacto);
+            }
+            controlador.ActivarControl(controlAntes); // un instante, para que el empujón lo mueva; el derribo bloquea caminar y pegar
+            Aviso(TablaRecorrido.AvisoSinAtacar);
+            atropello.Derribar(direccion);
+            yield return Esperar(0.7f);
+            // 5. Se ríen un momento y se van CORRIENDO por donde llegaron.
+            Fase = "huyen";
             foreach (PandilleroAPie p in Vivos())
             {
                 Sonidos.ReproducirEn(SonidoRisa, p.transform.position);
-                if (p.Visual != null)
-                {
-                    p.Visual.Burlar();
-                }
+                p.Visual?.Burlar();
             }
             yield return Esperar(SegundosRisa);
-            Vector3 salida = Plano(Vivos().Count > 0 ? Vivos()[0].transform.position - jugador.position : -jugador.forward).normalized;
             float finHuida = Time.time + SegundosHuida;
             while (Time.time < finHuida)
             {
                 foreach (PandilleroAPie p in Vivos())
                 {
+                    Vector3 salida = Plano(puntoSalida - p.transform.position);
+                    if (salida.sqrMagnitude < 1f)
+                    {
+                        salida = Plano(p.transform.position - jugador.position);
+                    }
+                    salida.Normalize();
                     p.MirarHacia(salida, GradosGiroPorSegundo);
-                    p.MoverPlano(salida * RapidezHuir);
+                    p.MoverPlano(salida * RapidezCorrer);
                 }
                 yield return null;
             }
-            // 5. Espera a que se levante (AtropelloJugador lo levanta solo) y lo suelta.
+            // 6. Espera a que se levante (AtropelloJugador lo levanta solo) y lo suelta.
             float limiteLevantar = Time.time + SegundosMaximosLevantarse;
             while (atropello != null && atropello.Derribado && Time.time < limiteLevantar)
             {
                 yield return null;
             }
+            Fase = string.Empty;
             escena = null;
             Limpiar();
             Terminada?.Invoke();
+        }
+
+        // Camina hacia el puesto girando de frente a donde va; true si ya llegó (o no existe).
+        private bool IrAlPuesto(PandilleroAPie p, Vector3 puesto, float margen)
+        {
+            if (p == null)
+            {
+                return true;
+            }
+            Vector3 d = Plano(puesto - p.transform.position);
+            if (d.magnitude <= margen)
+            {
+                p.MoverPlano(Vector3.zero);
+                p.MirarHacia(Plano(jugador.position - p.transform.position), GradosGiroPorSegundo);
+                return true;
+            }
+            p.MirarHacia(d, GradosGiroPorSegundo);
+            p.MoverPlano(d.normalized * RapidezPlantarse);
+            return false;
+        }
+
+        // Una frase de la plática: habla uno y luego el otro; voz SKU_AMBIENTE (si la cola lo deja) y subtítulo siempre.
+        private void Platicar(int indice)
+        {
+            List<PandilleroAPie> vivos = Vivos();
+            if (vivos.Count == 0)
+            {
+                return;
+            }
+            PandilleroAPie quien = vivos[indice % vivos.Count];
+            Frase(quien, FrasesPlatica[indice % FrasesPlatica.Length], VocesPandilla.Ambiente);
+        }
+
+        private void Frase(PandilleroAPie quien, string texto, string idVoz)
+        {
+            if (quien == null)
+            {
+                return;
+            }
+            Subtitulos.Publicar("SKULL", texto, quien.transform.position + Vector3.up * AlturaBoca, 2.8f, ColorSkull);
+            VocesPandilla.Decir(quien.transform, idVoz, true);
         }
 
         private void Update()

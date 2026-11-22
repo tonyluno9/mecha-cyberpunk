@@ -1,103 +1,84 @@
-t+2.2s LOG [Barrio] escena bully_piso_tianguis empieza (Bullying)
+t+3.5s LOG [Barrio] escena bully_piso_tianguis empieza (Bullying)
 t+0.0s === skulls_sin_intervenir (bully_piso_tianguis, intervenir=False)
 t+0.0s LOG [Barrio] escena bully_piso_tianguis termina (abortada)
 t+0.0s LOG [Barrio] escena bully_piso_tianguis empieza (Bullying)
 t+0.0s FORZAR ok bully_piso_tianguis
-t+0.0s REPARTO civil en (10.4, 0.2, 9.5) | Pandillero_1 Calaveras en (21.9, 0.3, -24.0) dist=35.4 | Pandillero_3 Calaveras en (20.4, 0.3, -26.6) dist=37.5 | jugador a 37.4
-t+5.0s POS civil en (10.4, 0.2, 9.5) | Pandillero_1 Calaveras en (17.7, 0.3, -18.4) dist=28.8 | Pandillero_3 Calaveras en (16.8, 0.3, -18.4) dist=28.6 | jugador a 37.4
-t+10.0s POS civil en (10.4, 0.2, 9.5) | Pandillero_1 Calaveras en (15.0, 0.3, -18.4) dist=28.3 | Pandillero_3 Calaveras en (14.3, 0.3, -18.4) dist=28.2 | jugador a 37.4
-t+15.0s POS civil en (10.4, 0.2, 9.5) | Pandillero_1 Calaveras en (13.5, 0.3, -18.4) dist=28.1 | Pandillero_3 Calaveras en (12.8, 0.3, -18.4) dist=28.0 | jugador a 37.4
-t+20.0s POS civil en (10.4, 0.2, 9.5) | Pandillero_1 Calaveras en (13.4, 0.3, -18.4) dist=28.1 | Pandillero_3 Calaveras en (12.7, 0.3, -18.4) dist=28.0 | jugador a 37.4
-t+25.0s LOG [Barrio] escena bully_piso_tianguis: los agresores no llegaron a la víctima, se cancela.
-t+25.0s LOG [Barrio] escena bully_piso_tianguis termina (abortada)
-t+25.5s CAPTURA skulls_sin_intervenir_final.png
-t+25.5s FIN escena (en curso=False)
-t+25.5s RESULTADO skulls_sin_intervenir: intento 1 sin el desenlace buscado (motivo=abortada, intervino=False)
-t+25.6s LOG [Barrio] escena bully_piso_tianguis empieza (Bullying)
+t+0.0s REPARTO civil en (101.0, 0.2, -9.7) | Pandillero_4 Calaveras en (88.2, 0.3, -11.6) dist=13.0 | Pandillero_5 Calaveras en (90.6, 0.3, -13.0) dist=11.0 | Pandillero_1 Calaveras en (101.7, 0.3, -10.4) dist=1.0 | Pandillero_2 Calaveras en (101.7, 0.3, -12.0) dist=2.4 | Pandillero_3 Calaveras en (101.7, 0.3, -13.6) dist=4.0 | Pandillero_1 Viboras en (100.3, 0.3, -10.4) dist=1.0 | Pandillero_2 Viboras en (100.3, 0.3, -12.0) dist=2.4 | Pandillero_3 Viboras en (100.3, 0.3, -13.6) dist=4.0 | Pandillero_1 Viboras en (74.3, 0.3, -14.4) dist=27.2 | Pandillero_2 Viboras en (74.3, 0.3, -16.0) dist=27.5 | Pandillero_3 Viboras en (74.3, 0.3, -17.6) dist=27.9 | Pandillero_1 Calaveras en (75.7, 0.3, -14.4) dist=25.7 | Pandillero_2 Calaveras en (75.7, 0.3, -16.0) dist=26.1 | Pandillero_3 Calaveras en (75.7, 0.3, -17.6) dist=26.5 | jugador a 15.4
+t+4.4s SUBTITULO [SKULL] ¿Y la cuota de esta semana, jefe?
+t+5.0s POS civil en (101.0, 0.2, -9.7) | Pandillero_4 Calaveras en (98.2, 0.3, -10.4) dist=3.0 | Pandillero_5 Calaveras en (99.3, 0.3, -10.2) dist=1.8 | Pandillero_1 Calaveras en (101.7, 0.3, -10.4) dist=1.0 | Pandillero_2 Calaveras en (101.7, 0.3, -12.0) dist=2.4 | Pandillero_3 Calaveras en (101.7, 0.3, -13.6) dist=4.0 | Pandillero_1 Viboras en (100.3, 0.3, -10.4) dist=1.0 | Pandillero_2 Viboras en (100.3, 0.3, -12.0) dist=2.4 | Pandillero_3 Viboras en (100.3, 0.3, -13.6) dist=4.0 | Pandillero_1 Viboras en (74.3, 0.3, -14.4) dist=27.2 | Pandillero_2 Viboras en (74.3, 0.3, -16.0) dist=27.5 | Pandillero_3 Viboras en (74.3, 0.3, -17.6) dist=27.9 | Pandillero_1 Calaveras en (75.7, 0.3, -14.4) dist=25.7 | Pandillero_2 Calaveras en (75.7, 0.3, -16.0) dist=26.1 | Pandillero_3 Calaveras en (75.7, 0.3, -17.6) dist=26.5 | jugador a 15.4
+t+7.8s SUBTITULO [VENDEDOR] Ya les pagué ayer...
+t+10.0s POS civil en (101.0, 0.2, -9.7) | Pandillero_4 Calaveras en (98.2, 0.3, -10.4) dist=3.0 | Pandillero_5 Calaveras en (99.3, 0.3, -10.2) dist=1.8 | Pandillero_1 Calaveras en (101.7, 0.3, -10.4) dist=1.0 | Pandillero_2 Calaveras en (101.7, 0.3, -12.0) dist=2.4 | Pandillero_3 Calaveras en (101.7, 0.3, -13.6) dist=4.0 | Pandillero_1 Viboras en (100.3, 0.3, -10.4) dist=1.0 | Pandillero_2 Viboras en (100.3, 0.3, -12.0) dist=2.4 | Pandillero_3 Viboras en (100.3, 0.3, -13.6) dist=4.0 | Pandillero_1 Viboras en (74.3, 0.3, -14.4) dist=27.2 | Pandillero_2 Viboras en (74.3, 0.3, -16.0) dist=27.5 | Pandillero_3 Viboras en (74.3, 0.3, -17.6) dist=27.9 | Pandillero_1 Calaveras en (75.7, 0.3, -14.4) dist=25.7 | Pandillero_2 Calaveras en (75.7, 0.3, -16.0) dist=26.1 | Pandillero_3 Calaveras en (75.7, 0.3, -17.6) dist=26.5 | jugador a 15.4
+t+10.5s SUBTITULO [SKULL] Pues hoy pagas doble.
+t+11.0s CAPTURA skulls_sin_intervenir_empujon.png
+t+15.0s POS civil en (101.0, 0.2, -9.7) | Pandillero_4 Calaveras en (99.4, 0.3, -9.6) dist=1.7 | Pandillero_5 Calaveras en (99.3, 0.3, -10.2) dist=1.8 | Pandillero_1 Calaveras en (101.7, 0.3, -10.4) dist=1.0 | Pandillero_2 Calaveras en (101.7, 0.3, -12.0) dist=2.4 | Pandillero_3 Calaveras en (101.7, 0.3, -13.6) dist=4.0 | Pandillero_1 Viboras en (100.3, 0.3, -10.4) dist=1.0 | Pandillero_2 Viboras en (100.3, 0.3, -12.0) dist=2.4 | Pandillero_3 Viboras en (100.3, 0.3, -13.6) dist=4.0 | Pandillero_1 Viboras en (74.3, 0.3, -14.4) dist=27.2 | Pandillero_2 Viboras en (74.3, 0.3, -16.0) dist=27.5 | Pandillero_3 Viboras en (74.3, 0.3, -17.6) dist=27.9 | Pandillero_1 Calaveras en (75.7, 0.3, -14.4) dist=25.7 | Pandillero_2 Calaveras en (75.7, 0.3, -16.0) dist=26.1 | Pandillero_3 Calaveras en (75.7, 0.3, -17.6) dist=26.5 | jugador a 15.4
+t+15.3s LOG [Barrio] escena bully_piso_tianguis sin actores: Pandillero_5 activo True ko False acosando False alerta True hostil False / Pandillero_4 activo True ko False acosando False alerta True hostil False / víctima True
+t+15.3s LOG [Barrio] escena bully_piso_tianguis termina (abortada)
+t+15.4s CAPTURA skulls_sin_intervenir_final.png
+t+15.4s FIN escena (en curso=False)
+t+15.4s RESULTADO skulls_sin_intervenir: intento 1 sin el desenlace buscado (motivo=abortada, intervino=False)
+t+15.6s LOG [Barrio] escena bully_piso_tianguis empieza (Bullying)
 t+0.0s === skulls_sin_intervenir (bully_piso_tianguis, intervenir=False)
 t+0.0s LOG [Barrio] escena bully_piso_tianguis termina (abortada)
 t+0.0s LOG [Barrio] escena bully_piso_tianguis empieza (Bullying)
 t+0.0s FORZAR ok bully_piso_tianguis
-t+0.0s REPARTO civil en (-37.3, 0.2, -26.6) | Pandillero_3 Calaveras en (-24.0, 0.3, -29.3) dist=13.5 | Pandillero_4 Calaveras en (-23.9, 0.3, -26.5) dist=13.4 | jugador a 38.8
-t+5.0s POS civil en (-37.3, 0.2, -26.6) | Pandillero_3 Calaveras en (-28.6, 0.3, -27.2) dist=8.7 | Pandillero_4 Calaveras en (-28.6, 0.3, -26.4) dist=8.7 | jugador a 37.0
-t+10.0s POS civil en (-37.3, 0.2, -26.6) | Pandillero_3 Calaveras en (-28.6, 0.3, -27.1) dist=8.7 | Pandillero_4 Calaveras en (-28.6, 0.3, -26.4) dist=8.7 | jugador a 37.0
-t+15.0s POS civil en (-37.3, 0.2, -26.6) | Pandillero_3 Calaveras en (-28.6, 0.3, -27.1) dist=8.7 | Pandillero_4 Calaveras en (-28.6, 0.3, -26.4) dist=8.7 | jugador a 37.0
-t+20.0s POS civil en (-37.3, 0.2, -26.6) | Pandillero_3 Calaveras en (-28.6, 0.3, -27.1) dist=8.7 | Pandillero_4 Calaveras en (-28.6, 0.3, -26.4) dist=8.7 | jugador a 37.0
-t+25.0s LOG [Barrio] escena bully_piso_tianguis: los agresores no llegaron a la víctima, se cancela.
-t+25.0s LOG [Barrio] escena bully_piso_tianguis termina (abortada)
-t+25.3s CAPTURA skulls_sin_intervenir_final.png
-t+25.3s FIN escena (en curso=False)
-t+25.3s RESULTADO skulls_sin_intervenir: intento 1 sin el desenlace buscado (motivo=abortada, intervino=False)
-t+25.4s LOG [Barrio] escena bully_piso_tianguis empieza (Bullying)
-t+0.0s === skulls_sin_intervenir (bully_piso_tianguis, intervenir=False)
-t+0.0s LOG [Barrio] escena bully_piso_tianguis termina (abortada)
-t+0.0s LOG [Barrio] escena bully_piso_tianguis empieza (Bullying)
-t+0.0s FORZAR ok bully_piso_tianguis
-t+0.0s REPARTO civil en (-37.3, 0.2, -26.6) | Pandillero_3 Calaveras en (-28.6, 0.3, -27.1) dist=8.7 | Pandillero_4 Calaveras en (-28.6, 0.3, -26.4) dist=8.7 | jugador a 18.7
-t+5.0s POS civil en (-37.3, 0.2, -26.6) | Pandillero_3 Calaveras en (-28.6, 0.3, -27.1) dist=8.7 | Pandillero_4 Calaveras en (-28.6, 0.3, -26.4) dist=8.7 | jugador a 18.7
-t+10.0s POS civil en (-37.3, 0.2, -26.6) | Pandillero_3 Calaveras en (-28.6, 0.3, -27.1) dist=8.7 | Pandillero_4 Calaveras en (-28.6, 0.3, -26.4) dist=8.7 | jugador a 18.7
-t+15.0s POS civil en (-37.3, 0.2, -26.6) | Pandillero_3 Calaveras en (-28.6, 0.3, -27.1) dist=8.7 | Pandillero_4 Calaveras en (-28.6, 0.3, -26.4) dist=8.7 | jugador a 18.7
-t+20.0s POS civil en (-37.3, 0.2, -26.6) | Pandillero_3 Calaveras en (-28.6, 0.3, -27.1) dist=8.7 | Pandillero_4 Calaveras en (-28.6, 0.3, -26.4) dist=8.7 | jugador a 18.7
-t+25.0s LOG [Barrio] escena bully_piso_tianguis: los agresores no llegaron a la víctima, se cancela.
-t+25.0s LOG [Barrio] escena bully_piso_tianguis termina (abortada)
-t+25.1s CAPTURA skulls_sin_intervenir_final.png
-t+25.1s FIN escena (en curso=False)
-t+25.1s RESULTADO skulls_sin_intervenir: intento 1 sin el desenlace buscado (motivo=abortada, intervino=False)
-t+25.3s LOG [Barrio] escena bully_piso_tianguis empieza (Bullying)
-t+0.0s === skulls_sin_intervenir (bully_piso_tianguis, intervenir=False)
-t+0.0s LOG [Barrio] escena bully_piso_tianguis termina (abortada)
-t+0.0s LOG [Barrio] escena bully_piso_tianguis empieza (Bullying)
-t+0.0s FORZAR ok bully_piso_tianguis
-t+0.0s REPARTO civil en (86.6, 0.2, -9.7) | Pandillero_4 Calaveras en (87.9, 0.3, -11.6) dist=2.3 | Pandillero_5 Calaveras en (90.2, 0.3, -13.1) dist=4.9 | jugador a 40.1
-t+1.6s SUBTITULO [SKULL] ¿Y la cuota de esta semana, jefe?
-t+5.0s SUBTITULO [VENDEDOR] Ya les pagué ayer...
-t+5.0s POS civil en (86.6, 0.2, -9.7) | Pandillero_4 Calaveras en (87.9, 0.3, -11.6) dist=2.3 | Pandillero_5 Calaveras en (87.9, 0.3, -10.9) dist=1.8 | jugador a 40.1
-t+7.7s SUBTITULO [SKULL] Pues hoy pagas doble.
-t+7.8s CAPTURA skulls_sin_intervenir_empujon.png
-t+10.0s POS civil en (86.6, 0.2, -9.7) | Pandillero_4 Calaveras en (87.9, 0.3, -11.6) dist=2.3 | Pandillero_5 Calaveras en (87.9, 0.3, -10.9) dist=1.8 | jugador a 40.1
-t+12.9s SUBTITULO [SKULL] (risas)
-t+15.0s POS civil en (86.6, 0.2, -9.7) | Pandillero_4 Calaveras en (87.9, 0.3, -11.6) dist=2.3 | Pandillero_5 Calaveras en (87.9, 0.3, -10.9) dist=1.8 | jugador a 40.6
-t+19.0s LOG [Barrio] escena bully_piso_tianguis termina (completa)
-t+19.0s CAPTURA skulls_sin_intervenir_final.png
-t+19.0s FIN escena (en curso=False)
-t+19.0s RESULTADO skulls_sin_intervenir: ok en el intento 1
+t+0.0s REPARTO civil en (102.2, 0.2, -9.7) | Pandillero_2 Calaveras en (101.1, 0.3, -11.8) dist=2.4 | jugador a 54.7
+t+1.2s SUBTITULO [SKULL] ¿Y la cuota de esta semana, jefe?
+t+4.6s SUBTITULO [VENDEDOR] Ya les pagué ayer...
+t+5.0s POS civil en (102.2, 0.2, -9.7) | Pandillero_2 Calaveras en (101.1, 0.3, -11.8) dist=2.4 | jugador a 54.7
+t+7.4s SUBTITULO [SKULL] Pues hoy pagas doble.
+t+7.4s CAPTURA skulls_sin_intervenir_empujon.png
+t+10.0s POS civil en (102.2, 0.2, -9.7) | Pandillero_2 Calaveras en (101.8, 0.3, -10.4) dist=0.9 | jugador a 54.7
+t+13.9s SUBTITULO [SKULL] (risas)
+t+15.0s POS civil en (102.2, 0.2, -9.7) | Pandillero_2 Calaveras en (101.8, 0.3, -10.4) dist=0.9 | jugador a 54.7
+t+20.0s POS ningún civil sujeto
+t+25.0s POS ningún civil sujeto
+t+26.0s LOG [Barrio] escena bully_piso_tianguis termina (completa)
+t+26.1s CAPTURA skulls_sin_intervenir_final.png
+t+26.1s FIN escena (en curso=False)
+t+26.1s RESULTADO skulls_sin_intervenir: ok en el intento 1
 t+0.0s === skulls_con_intervencion (bully_piso_tianguis, intervenir=True)
 t+0.0s LOG [Barrio] escena bully_piso_tianguis empieza (Bullying)
 t+0.0s FORZAR ok bully_piso_tianguis
-t+0.0s REPARTO civil en (86.6, 0.2, -9.7) | Pandillero_4 Calaveras en (87.9, 0.3, -11.6) dist=2.3 | Pandillero_5 Calaveras en (89.1, 0.3, -12.0) dist=3.5 | jugador a 40.1
-t+1.0s SUBTITULO [SKULL] ¿Y la cuota de esta semana, jefe?
-t+4.4s SUBTITULO [VENDEDOR] Ya les pagué ayer...
-t+4.4s INTERVENCION: el jugador golpea a Pandillero_5
-t+4.5s LOG [Barrio] escena bully_piso_tianguis termina (jugador)
-t+7.0s RESULTADO: escena en curso=False, agresor hostil=True, alerta=True
-t+7.0s CAPTURA skulls_con_intervencion_contra_jugador.png
-t+7.2s CAPTURA skulls_con_intervencion_final.png
-t+7.2s FIN escena (en curso=False)
-t+7.2s RESULTADO skulls_con_intervencion: ok en el intento 1
+t+0.0s REPARTO civil en (85.5, 0.2, -9.1) | Pandillero_2 Calaveras en (80.3, 0.3, -16.3) dist=8.8 | jugador a 39.3
+t+2.6s SUBTITULO [SKULL] ¿Y la cuota de esta semana, jefe?
+t+5.0s POS civil en (85.5, 0.2, -9.1) | Pandillero_2 Calaveras en (83.5, 0.3, -11.3) dist=3.0 | jugador a 39.3
+t+6.1s SUBTITULO [VENDEDOR] Ya les pagué ayer...
+t+6.1s INTERVENCION: el jugador golpea a Pandillero_2
+t+6.1s LOG [Barrio] intervención: daño a Pandillero_2 de nadie tipo Golpe
+t+6.1s LOG [Barrio] escena bully_piso_tianguis termina (jugador)
+t+8.6s RESULTADO: escena en curso=False, agresor hostil=True, alerta=True
+t+8.6s CAPTURA skulls_con_intervencion_contra_jugador.png
+t+8.8s CAPTURA skulls_con_intervencion_final.png
+t+8.8s FIN escena (en curso=False)
+t+8.8s RESULTADO skulls_con_intervencion: ok en el intento 1
 t+0.0s === snakes_sin_intervenir (bully_snakes_senora, intervenir=False)
 t+0.0s LOG [Barrio] escena bully_snakes_senora empieza (Bullying)
 t+0.0s FORZAR ok bully_snakes_senora
-t+0.0s REPARTO civil en (103.2, 0.2, -9.1) | Pandillero_1 Viboras en (99.7, 0.3, -7.5) dist=3.8 | Pandillero_2 Viboras en (96.2, 0.3, -12.1) dist=7.6 | jugador a 39.1
-t+2.2s SUBTITULO [SNAKE] Esta calle es nuestra, doña.
-t+5.0s POS civil en (103.2, 0.2, -9.1) | Pandillero_1 Viboras en (101.6, 0.3, -8.4) dist=1.8 | Pandillero_2 Viboras en (100.6, 0.3, -10.6) dist=3.0 | jugador a 60.4
-t+5.4s SUBTITULO [SEÑORA] Ya no traigo nada, muchachos...
-t+8.7s SUBTITULO [SNAKE] Aquí se paga por pasar.
-t+8.7s CAPTURA snakes_sin_intervenir_empujon.png
-t+10.0s POS civil en (103.2, 0.2, -9.1) | Pandillero_1 Viboras en (101.6, 0.3, -8.4) dist=1.8 | Pandillero_2 Viboras en (100.6, 0.3, -10.6) dist=3.0 | jugador a 61.7
-t+14.0s LOG [Barrio] escena bully_snakes_senora termina (completa)
-t+14.1s CAPTURA snakes_sin_intervenir_final.png
-t+14.1s FIN escena (en curso=False)
-t+14.1s RESULTADO snakes_sin_intervenir: ok en el intento 1
+t+0.0s REPARTO civil en (105.1, 0.2, -9.1) | Pandillero_1 Viboras en (98.3, 0.3, -8.9) dist=6.8 | Pandillero_3 Viboras en (98.5, 0.3, -11.1) dist=6.9 | jugador a 35.3
+t+2.3s SUBTITULO [SNAKE] Esta calle es nuestra, doña.
+t+5.0s POS civil en (105.1, 0.2, -9.1) | Pandillero_1 Viboras en (103.3, 0.3, -9.1) dist=1.8 | Pandillero_3 Viboras en (102.2, 0.3, -10.0) dist=3.0 | jugador a 57.6
+t+5.5s SUBTITULO [SEÑORA] Ya no traigo nada, muchachos...
+t+8.8s SUBTITULO [SNAKE] Aquí se paga por pasar.
+t+8.8s CAPTURA snakes_sin_intervenir_empujon.png
+t+10.0s POS civil en (105.1, 0.2, -9.1) | Pandillero_1 Viboras en (103.3, 0.3, -9.1) dist=1.8 | Pandillero_3 Viboras en (102.2, 0.3, -10.0) dist=3.0 | jugador a 57.6
+t+15.0s POS ningún civil sujeto
+t+20.0s POS ningún civil sujeto
+t+20.9s LOG [Barrio] escena bully_snakes_senora termina (completa)
+t+21.0s CAPTURA snakes_sin_intervenir_final.png
+t+21.0s FIN escena (en curso=False)
+t+21.0s RESULTADO snakes_sin_intervenir: ok en el intento 1
 t+0.0s === snakes_con_intervencion (bully_snakes_senora, intervenir=True)
 t+0.0s LOG [Barrio] escena bully_snakes_senora empieza (Bullying)
 t+0.0s FORZAR ok bully_snakes_senora
-t+0.0s REPARTO civil en (104.7, 0.2, -9.2) | Pandillero_1 Viboras en (99.6, 0.3, -9.2) dist=5.1 | Pandillero_3 Viboras en (100.2, 0.3, -10.0) dist=4.6 | jugador a 37.1
-t+1.5s SUBTITULO [SNAKE] Esta calle es nuestra, doña.
-t+4.6s SUBTITULO [SEÑORA] Ya no traigo nada, muchachos...
-t+4.6s INTERVENCION: el jugador golpea a Pandillero_3
-t+4.7s LOG [Barrio] escena bully_snakes_senora termina (jugador)
-t+7.1s RESULTADO: escena en curso=False, agresor hostil=True, alerta=False
-t+7.2s CAPTURA snakes_con_intervencion_contra_jugador.png
-t+7.4s CAPTURA snakes_con_intervencion_final.png
-t+7.4s FIN escena (en curso=False)
-t+7.4s RESULTADO snakes_con_intervencion: ok en el intento 1
+t+0.0s REPARTO civil en (106.8, 0.2, -9.4) | Pandillero_2 Viboras en (100.6, 0.3, -9.7) dist=6.3 | Pandillero_3 Viboras en (102.2, 0.3, -10.1) dist=4.7 | jugador a 33.6
+t+1.9s SUBTITULO [SNAKE] Esta calle es nuestra, doña.
+t+5.0s POS civil en (106.8, 0.2, -9.4) | Pandillero_2 Viboras en (103.9, 0.3, -10.0) dist=3.0 | Pandillero_3 Viboras en (105.1, 0.3, -9.7) dist=1.8 | jugador a 59.2
+t+5.1s SUBTITULO [SEÑORA] Ya no traigo nada, muchachos...
+t+5.1s INTERVENCION: el jugador golpea a Pandillero_3
+t+5.1s LOG [Barrio] intervención: daño a Pandillero_3 de nadie tipo Golpe
+t+5.1s LOG [Barrio] escena bully_snakes_senora termina (jugador)
+t+7.6s RESULTADO: escena en curso=False, agresor hostil=True, alerta=True
+t+7.7s CAPTURA snakes_con_intervencion_contra_jugador.png
+t+7.9s CAPTURA snakes_con_intervencion_final.png
+t+7.9s FIN escena (en curso=False)
+t+7.9s RESULTADO snakes_con_intervencion: ok en el intento 1

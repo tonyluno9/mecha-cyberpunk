@@ -315,7 +315,8 @@ namespace MechaCyberpunk.IA.Barrio
             float mejorVictima = float.MaxValue;
             foreach (PandilleroAPie p in libres)
             {
-                AnimacionCivilMundo c = MasCercano(p.transform.position, civiles, null, distanciaVictimaMinima, distanciaVictima);
+                PandilleroAPie desde = p;
+                AnimacionCivilMundo c = MasCercano(p.transform.position, civiles, null, distanciaVictimaMinima, distanciaVictima, civil => CaminoLibre(desde, civil));
                 float d = c != null ? (c.transform.position - p.transform.position).sqrMagnitude : float.MaxValue;
                 if (c != null && d < mejorVictima)
                 {
@@ -378,7 +379,45 @@ namespace MechaCyberpunk.IA.Barrio
             return g == null || g != b.GetComponentInParent<GrupoAcoso>() || g.CupoPrestable >= 2;
         }
 
-        private static AnimacionCivilMundo MasCercano(Vector3 desde, List<AnimacionCivilMundo> lista, AnimacionCivilMundo excepto, float min, float max)
+        private const float AlturaRayoCamino = 0.9f;
+        private const float RadioRayoCamino = 0.25f;
+
+        /// <summary>
+        /// T-1652: true si entre el pandillero y el civil no hay pared, puesto ni carro (los pandilleros caminan en línea recta, no hay NavMesh).
+        /// Los demás personajes (CharacterController, pandilleros, civiles) no cuentan como obstáculo.
+        /// </summary>
+        public static bool CaminoLibre(PandilleroAPie desde, AnimacionCivilMundo hasta)
+        {
+            if (desde == null || hasta == null)
+            {
+                return false;
+            }
+            Vector3 a = desde.transform.position + Vector3.up * AlturaRayoCamino;
+            Vector3 b = hasta.transform.position + Vector3.up * AlturaRayoCamino;
+            Vector3 d = b - a;
+            float largo = d.magnitude;
+            if (largo < 0.5f)
+            {
+                return true;
+            }
+            RaycastHit[] golpes = Physics.SphereCastAll(a, RadioRayoCamino, d / largo, largo, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore);
+            foreach (RaycastHit g in golpes)
+            {
+                Collider c = g.collider;
+                // distance 0: la esfera ya tocaba algo al salir (la pared o la banca junto al pandillero); eso no tapa el camino.
+                if (c == null || g.distance <= 0f || c.transform.IsChildOf(desde.transform) || c.transform.IsChildOf(hasta.transform)
+                    || c.GetComponentInParent<CharacterController>() != null || c.GetComponentInParent<PandilleroAPie>() != null
+                    || c.GetComponentInParent<AnimacionCivilMundo>() != null)
+                {
+                    continue;
+                }
+                return false;
+            }
+            return true;
+        }
+
+        private static AnimacionCivilMundo MasCercano(Vector3 desde, List<AnimacionCivilMundo> lista, AnimacionCivilMundo excepto, float min, float max,
+            System.Func<AnimacionCivilMundo, bool> admite = null)
         {
             AnimacionCivilMundo mejor = null;
             float menor = max * max;
@@ -390,7 +429,7 @@ namespace MechaCyberpunk.IA.Barrio
                     continue;
                 }
                 float d = (c.transform.position - desde).sqrMagnitude;
-                if (d >= minimo2 && d <= menor)
+                if (d >= minimo2 && d <= menor && (admite == null || admite(c)))
                 {
                     menor = d;
                     mejor = c;
