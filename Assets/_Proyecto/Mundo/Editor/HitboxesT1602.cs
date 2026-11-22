@@ -305,6 +305,10 @@ namespace MechaCyberpunk.Mundo.Editor
             if (capa >= 0 && c.gameObject.layer == capa)
             {
                 cuenta.EnCapa++;
+                if (nombre == "edificios")
+                {
+                    Debug.Log("[T1602-edificio-en-capa] " + Cadena(c.transform, 5) + " " + c.GetType().Name);
+                }
             }
 
             bool hayRender = BoundsRender(c.transform, out Bounds render);
@@ -313,6 +317,10 @@ namespace MechaCyberpunk.Mundo.Editor
             if (grande)
             {
                 cuenta.Grandes++;
+                if (!aplicar && nombre == "postes")
+                {
+                    Debug.Log("[T1602-grande] " + c.GetType().Name + " " + c.transform.name + " col=" + caja.size.ToString("F2") + " render=" + render.size.ToString("F2") + " ruta=" + Cadena(c.transform, 4));
+                }
             }
 
             bool cambio = false;
@@ -424,7 +432,8 @@ namespace MechaCyberpunk.Mundo.Editor
             return true;
         }
 
-        private static int EjeLargo(Vector3 s) => s.y >= s.x && s.y >= s.z ? 1 : (s.x >= s.z ? 0 : 2);
+        // Los postes están parados: se prefiere el eje vertical salvo que otro eje sea más del doble de largo (brazos de farola no cuentan).
+        private static int EjeLargo(Vector3 s) => s.y * 2f >= s.x && s.y * 2f >= s.z ? 1 : (s.x >= s.z ? 0 : 2);
 
         private static IEnumerable<MeshFilter> Mallas(Transform t)
         {
