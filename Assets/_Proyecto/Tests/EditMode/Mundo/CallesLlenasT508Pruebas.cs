@@ -98,6 +98,13 @@ namespace MechaCyberpunk.Tests.Mundo
             Assert.GreaterOrEqual(charcos.Length, 50);
             foreach (MeshRenderer r in charcos)
             {
+                // T-1642 (T22): los charcos sutiles de T-508 casi no se veían; ahora llevan el agua de T-1503 (máscara con forma irregular).
+                if (r.sharedMaterial.shader.name == "MechaCyberpunk/Mundo/Charco")
+                {
+                    Assert.LessOrEqual(Mathf.Max(r.transform.lossyScale.x, r.transform.lossyScale.y), CharcoMaximo + 1f, r.name + " muy grande");
+                    Assert.IsNotNull(r.sharedMaterial.GetTexture("_Mascara"), r.name + " sin forma irregular");
+                    continue;
+                }
                 StringAssert.StartsWith("T508_Charco", r.sharedMaterial.name, r.transform.parent.name + "/" + r.name);
                 Assert.LessOrEqual(r.sharedMaterial.GetColor("_BaseColor").a, AlfaMaximoCharco, r.name + " muy opaco");
                 Assert.LessOrEqual(Mathf.Max(r.transform.lossyScale.x, r.transform.lossyScale.y), CharcoMaximo, r.name + " muy grande");
