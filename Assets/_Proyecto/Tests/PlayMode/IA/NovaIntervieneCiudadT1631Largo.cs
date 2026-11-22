@@ -61,6 +61,7 @@ namespace MechaCyberpunk.Tests
             Time.timeScale = Escala;
             float inicio = Time.time;
             float proximoResumen = inicio;
+            float proximaBaja = 0f;
             int capturasCapsula = 0;
             int capturasNova = 0;
             bool avisoCapturado = false;
@@ -83,6 +84,15 @@ namespace MechaCyberpunk.Tests
                         DirectorRespuesta.DepurarSubirEstrellas(2);
                     }
                     modoNovaVisto |= DirectorRespuesta.ModoNova;
+                    if (Time.time - inicio >= SegundosPolicia + 12f && Time.time >= proximaBaja)
+                    {
+                        // El jugador invulnerable y quieto no mata a nadie: se abaten los Nova llegados (como DepurarMatar) para ver la progresion por niveles.
+                        proximaBaja = Time.time + 10f;
+                        for (int t = (int)TipoRespuesta.NovaHumanoide; t <= (int)TipoRespuesta.RobotGrande; t++)
+                        {
+                            DirectorRespuesta.DepurarMatar((TipoRespuesta)t);
+                        }
+                    }
                     if (Time.time >= proximoResumen)
                     {
                         proximoResumen += 15f;

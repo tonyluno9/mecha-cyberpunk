@@ -61,6 +61,10 @@ namespace MechaCyberpunk.Tests
 
         private GameObject CrearCamara(Vector3 posicion, Quaternion giro)
         {
+            foreach (Camera otra in Object.FindObjectsByType<Camera>(FindObjectsSortMode.None))
+            {
+                otra.gameObject.tag = "Untagged"; // que Camera.main sea la de la prueba y no la del jugador
+            }
             GameObject camObjeto = new GameObject("CamaraPrueba");
             camObjeto.tag = "MainCamera";
             camObjeto.AddComponent<Camera>();
