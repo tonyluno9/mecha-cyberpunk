@@ -176,13 +176,20 @@ namespace MechaCyberpunk.UI.Hud
             Armar();
             EscondeLoViejo();
             EventosPelea.ImpactoRecibido += AlImpacto;
+            EventosRespuesta.NovaInterviene += AlIntervenirNova; // T-1631
         }
+
+        // T-1631: el máximo de estrellas: Nova toma el lugar de la policía; el aviso sale arriba al centro como el nombre de la zona.
+        private void AlIntervenirNova() => MostrarTitulo(EventosRespuesta.TextoNovaInterviene, SegundosAvisoNova);
+
+        private const float SegundosAvisoNova = 5f;
 
         private void OnDestroy()
         {
             barraVida?.Detener();
             barraEscudoPerdida?.Detener();
             EventosPelea.ImpactoRecibido -= AlImpacto;
+            EventosRespuesta.NovaInterviene -= AlIntervenirNova;
             if (Actual == this)
             {
                 Actual = null;

@@ -326,6 +326,9 @@ namespace MechaCyberpunk.IA.APie
             Iniciar();
         }
 
+        /// <summary>T-1631: pone esta conducta como la que manda (la de retirada de la policía cuando NOVA interviene); reemplaza a la que hubiera.</summary>
+        public void ImponerConducta(IConductaAPie nueva) => conducta = nueva;
+
         // Start corre un cuadro después: una conducta agregada justo tras instanciar también se encuentra.
         private void Start() => ResolverGanchos();
 

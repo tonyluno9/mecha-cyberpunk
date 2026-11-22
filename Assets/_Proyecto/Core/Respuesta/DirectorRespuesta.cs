@@ -30,10 +30,12 @@ namespace MechaCyberpunk.Core
         private static ReglaEscaladaRespuesta regla;
         private static float ultimoAhora = float.NaN;
         private static int ultimasEstrellas = -1;
+        private static bool modoNovaPrevio;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void Reiniciar()
         {
+            modoNovaPrevio = false;
             entradas.Clear();
             Array.Clear(declarados, 0, declarados.Length);
             Array.Clear(existen, 0, existen.Length);
@@ -99,6 +101,14 @@ namespace MechaCyberpunk.Core
 
         public static int NivelDesbloqueado => Regla.NivelDesbloqueado;
 
+        /// <summary>
+        /// T-1631 (T17): True mientras "NOVA INTERVIENE" (estrellas al máximo): no se genera policía, la que hay debe retirarse (quien la maneja lee esto) y llega solo Nova.
+        /// </summary>
+        public static bool ModoNova => Regla.ModoNova;
+
+        /// <summary>T-1631: unidades de NOVA vivas que cuentan para el tope de modo Nova.</summary>
+        public static int NovaVivos => Regla.NovaVivos;
+
         public static int NivelDe(TipoRespuesta tipo) => ReglaEscaladaRespuesta.NivelDe(tipo);
 
         /// <summary>Avanza el tiempo del director: cuenta vivos, bajas y retiradas y desbloquea niveles. Varias llamadas en el mismo instante valen una.</summary>
@@ -142,6 +152,28 @@ namespace MechaCyberpunk.Core
                 }
             }
             Regla.Avanzar(ahora, estrellas, mision, nova, cuenta);
+            AvisarCambioDeModoNova(ahora);
+        }
+
+        // T-1631: al entrar al modo Nova se escribe en el registro y se publica el aviso (el HUD pone el texto); al salir se anota que vuelve la policía.
+        private static void AvisarCambioDeModoNova(float ahora)
+        {
+            bool modo = Regla.ModoNova;
+            if (modo == modoNovaPrevio)
+            {
+                return;
+            }
+            modoNovaPrevio = modo;
+            if (Parametros.Registrar)
+            {
+                Debug.Log("[Respuesta] " + ahora.ToString("F1") + (modo
+                    ? " NOVA INTERVIENE: deja de llegar policia, la que hay se retira (tope Nova " + Parametros.TopeNovaVivos + ")"
+                    : " fin de NOVA INTERVIENE: puede volver la policia"));
+            }
+            if (modo)
+            {
+                EventosRespuesta.PublicarNovaInterviene();
+            }
         }
 
         /// <summary>True si el director deja generar otra unidad de este tipo ahora (nivel desbloqueado, cooldown, topes, misión).</summary>
@@ -205,7 +237,7 @@ namespace MechaCyberpunk.Core
             {
                 return;
             }
-            Debug.Log("[Respuesta] " + ahora.ToString("F1") + " " + tipo + " nivel " + NivelDe(tipo) + " vivos " + Regla.Vivos(tipo) + "/" + Regla.VivosTotal + " (" + que + ")");
+            Debug.Log("[Respuesta] " + ahora.ToString("F1") + " " + tipo + " nivel " + NivelDe(tipo) + " vivos " + Regla.Vivos(tipo) + "/" + Regla.VivosTotal + (Regla.ModoNova ? " nova " + Regla.NovaVivos + "/" + Parametros.TopeNovaVivos : string.Empty) + " (" + que + ")");
         }
 
         // ----- Depuración para comprobar en Play (se llaman por eval) -----
@@ -240,7 +272,7 @@ namespace MechaCyberpunk.Core
         /// <summary>Una línea con el estado: nivel desbloqueado y vivos por tipo.</summary>
         public static string DepurarEstado()
         {
-            string texto = "[Respuesta] estado estrellas " + Regla.Estrellas + " nivel " + Regla.NivelDesbloqueado + " total " + Regla.VivosTotal;
+            string texto = "[Respuesta] estado estrellas " + Regla.Estrellas + " nivel " + Regla.NivelDesbloqueado + " total " + Regla.VivosTotal + " modoNova " + Regla.ModoNova + " (nova " + Regla.NovaVivos + ")";
             foreach (TipoRespuesta t in Enum.GetValues(typeof(TipoRespuesta)))
             {
                 texto += " | " + t + " " + Regla.Vivos(t) + " (bajas " + Regla.Perdidas(t) + ")";

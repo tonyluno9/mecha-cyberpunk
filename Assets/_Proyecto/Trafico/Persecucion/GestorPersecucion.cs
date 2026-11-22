@@ -263,7 +263,8 @@ namespace MechaCyberpunk.Trafico.Persecucion
             if (reintentoSalida <= 0f)
             {
                 reintentoSalida = SegundosReintentoSalida;
-                if (patrullas.Count < PatrullasPedidas(calor.Nivel) || drones.Count < DronesPedidos(calor.Nivel))
+                if (patrullas.Count < PatrullasPedidas(calor.Nivel) || drones.Count < DronesPedidos(calor.Nivel)
+                    || (DirectorRespuesta.ModoNova && patrullas.Count > 0)) // T-1631: NOVA INTERVIENE: las patrullas que queden se retiran
                 {
                     Reconciliar(calor.Nivel); // T-664: las patrullas que no pudieron salir sin verse lo intentan de nuevo
                 }
@@ -583,6 +584,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
             Vector3 centro = PosicionDelJugador() ?? transform.position;
             Camera camara = Camera.main;
             Vector3 lejos = centro;
+            Vector3 sueloCapsula = centro;
             int indice = drones.Count;
             float anguloBase = (float)azar.NextDouble() * GradosPorVuelta;
             for (int intento = 0; intento < IntentosDeSalidaDron; intento++)
@@ -594,7 +596,9 @@ namespace MechaCyberpunk.Trafico.Persecucion
                     break; // T-587: sale fuera de la vista
                 }
             }
-            DronMundo dron = Instantiate(prefabDron, lejos, Quaternion.identity, transform);
+            // T-1631: con NOVA INTERVIENE los drones son de Nova y llegan en cápsula: cae en un punto libre del piso cerca del jugador (si no hay punto o cápsula, llega volando como antes).
+            bool enCapsula = DirectorRespuesta.ModoNova && EventosRespuesta.CapsulaDron != null && BuscarPuntoCapsula(centro, out sueloCapsula);
+            DronMundo dron = Instantiate(prefabDron, enCapsula ? sueloCapsula : lejos, Quaternion.identity, transform);
             dron.Preparar(calculo, config, PosicionDelJugador);
             if (!variantesBuscadas)
             {
@@ -604,23 +608,69 @@ namespace MechaCyberpunk.Trafico.Persecucion
                     variantesDron = Resources.Load<ConfigDronesCombate>(ConfigDronesCombate.Recurso);
                 }
             }
+            VarianteDronCombate variante = variantesDron != null ? variantesDron.Elegir(EstrellasBusqueda.De(calor), indice) : null;
             if (variantesDron != null)
             {
-                dron.AplicarVariante(variantesDron.Elegir(EstrellasBusqueda.De(calor), indice)); // T-1498
+                dron.AplicarVariante(variante); // T-1498
             }
             drones.Add(dron);
             dron.AsignarOrbita(indice, total);
             DirectorRespuesta.Registrar(TipoRespuesta.Dron, dron.gameObject, () =>
                 dron == null || dron.EstaCayendo ? EstadoUnidad.Muerta : dron.Retirando ? EstadoUnidad.Retirada : EstadoUnidad.Viva);
+            if (enCapsula)
+            {
+                string nombre = variante != null ? (variante.Modelo != null ? variante.Modelo.name : variante.Nombre) : dron.name;
+                Vector3 mira = centro - sueloCapsula;
+                mira.y = 0f;
+                Quaternion giro = mira.sqrMagnitude > 0.01f ? Quaternion.LookRotation(mira) : Quaternion.identity;
+                if (!EventosRespuesta.CapsulaDron(dron.gameObject, nombre, sueloCapsula, giro, null))
+                {
+                    dron.transform.position = lejos; // sin cápsula (falta su config): llega volando
+                }
+            }
+        }
+
+        private const int IntentosPuntoCapsula = 12;
+        private const float DistanciaCapsulaMin = 14f;
+        private const float DistanciaCapsulaMax = 24f;
+        private const float AlturaSondaCapsula = 40f;
+        private const float MismoPisoCapsula = 2f;
+        private const float AireLibreCapsula = 14f;
+        private const float RadioLibreCapsula = 0.6f;
+
+        /// <summary>T-1631: un punto del piso a 14-24 m del jugador, a su nivel, plano y con aire libre arriba (donde cae la cápsula).</summary>
+        private bool BuscarPuntoCapsula(Vector3 centro, out Vector3 punto)
+        {
+            for (int i = 0; i < IntentosPuntoCapsula; i++)
+            {
+                float angulo = (float)azar.NextDouble() * Mathf.PI * 2f;
+                float d = DistanciaCapsulaMin + (float)azar.NextDouble() * (DistanciaCapsulaMax - DistanciaCapsulaMin);
+                Vector3 arriba = new Vector3(centro.x + Mathf.Cos(angulo) * d, centro.y + AlturaSondaCapsula, centro.z + Mathf.Sin(angulo) * d);
+                if (!Physics.Raycast(arriba, Vector3.down, out RaycastHit golpe, AlturaSondaCapsula * 2f, ~0, QueryTriggerInteraction.Ignore)
+                    || golpe.normal.y < 0.85f || Mathf.Abs(golpe.point.y - centro.y) > MismoPisoCapsula)
+                {
+                    continue;
+                }
+                Vector3 pie = golpe.point + Vector3.up * (RadioLibreCapsula + 0.1f);
+                if (Physics.CheckSphere(pie, RadioLibreCapsula, ~0, QueryTriggerInteraction.Ignore)
+                    || Physics.Raycast(pie, Vector3.up, AireLibreCapsula, ~0, QueryTriggerInteraction.Ignore))
+                {
+                    continue;
+                }
+                punto = golpe.point;
+                return true;
+            }
+            punto = centro;
+            return false;
         }
 
         // T-933: mantiene las patrullas de ronda: si falta alguna sale otra, siempre lejos y fuera de la vista.
         private void MantenerRondas(float dt)
         {
             rondas.RemoveAll(p => p == null || p.Robada || p.Retirando || !p.EnRonda);
-            if (MisionProtegida.Activa)
+            if (MisionProtegida.Activa || DirectorRespuesta.ModoNova)
             {
-                return; // T-1620: misión protegida: no salen rondas nuevas
+                return; // T-1620: misión protegida (T-1631: y NOVA INTERVIENE): no salen rondas nuevas
             }
             reintentoRonda -= dt;
             if (reintentoRonda > 0f || config == null || calculo == null || prefabPatrulla == null || rondas.Count >= config.PatrullasDeRonda)

@@ -112,6 +112,7 @@ namespace MechaCyberpunk.IA.APie
             DirectorRespuesta.DeclararDisponible(TipoRespuesta.Perro, cfg.Perros.Count > 0);
             DirectorRespuesta.DeclararDisponible(TipoRespuesta.RobotGrande, cfg.TodosLosPesados().Count > 0);
             DirectorRespuesta.DeclararDisponible(TipoRespuesta.Jefe, cfg.JefeFinal != null);
+            EventosRespuesta.CapsulaDron = LanzarCapsulaDron; // T-1631: los drones de Nova de la persecución (Trafico) llegan en cápsula
         }
 
         private static bool EsRobotMediano(GameObject prefab) => prefab != null && (prefab.name.Contains("E18") || prefab.name.Contains("Elite"));
@@ -131,7 +132,24 @@ namespace MechaCyberpunk.IA.APie
             }
         }
 
-        private void OnDestroy() => RetirarTodos();
+        private void OnDestroy()
+        {
+            if (EventosRespuesta.CapsulaDron == (EventosRespuesta.LanzadorCapsulaDron)LanzarCapsulaDron)
+            {
+                EventosRespuesta.CapsulaDron = null;
+            }
+            RetirarTodos();
+        }
+
+        // T-1631: cápsula CP01 con un dron dentro; la escala sale de la tabla por el nombre del modelo (con 0.3 si no se reconoce).
+        private static bool LanzarCapsulaDron(GameObject dron, string nombre, Vector3 punto, Quaternion rotacion, System.Action<GameObject> alTerminar)
+        {
+            float escala = CalculoCapsulaCaida.TipoDronDeNombre(nombre, out TipoCapsulaCaida tipo) || CalculoCapsulaCaida.TipoDronDeNombre("Dron_" + nombre, out tipo)
+                ? CalculoCapsulaCaida.EscalaDe(tipo) : DronSinTipoEscala;
+            return CapsulaCaida.LanzarDron(dron, punto, rotacion, escala, alTerminar) != null;
+        }
+
+        private const float DronSinTipoEscala = 0.3f;
 
         private void Update()
         {
@@ -145,6 +163,10 @@ namespace MechaCyberpunk.IA.APie
             bool hayPolicia = Registro<IZonaBusqueda>.Actual != null || novaEnMision;
             int estrellasCalor = EstrellasBusqueda.De(Registro<ICalor>.Actual);
             DirectorRespuesta.Avanzar(Time.time, estrellasCalor); // T-1620: el director cuenta bajas y desbloquea niveles
+            if (DirectorRespuesta.ModoNova)
+            {
+                RetirarPoliciaAPie(); // T-1631: NOVA INTERVIENE: la policía a pie se aleja y desaparece solo fuera de la vista
+            }
             if (novaEnMision)
             {
                 estrellasCalor = Mathf.Max(estrellasCalor, DirectorRespuesta.Parametros.EstrellasNovaEnMision);
@@ -205,6 +227,26 @@ namespace MechaCyberpunk.IA.APie
             LlevarNave(donde);
             MarcarVistos(donde);
             Azuzar(donde);
+        }
+
+        // T-1631: NOVA INTERVIENE: cada policía a pie vivo recibe la orden de retirarse (una vez); se aleja y solo desaparece fuera de la vista (ConductaRetiradaPolicia).
+        private static readonly List<PandilleroAPie> sinOrden = new List<PandilleroAPie>();
+
+        private void RetirarPoliciaAPie()
+        {
+            sinOrden.Clear();
+            foreach (PandilleroAPie p in PandilleroAPie.Activos)
+            {
+                if (p != null && p.Datos != null && p.Datos.EsPolicia && !p.EstaKO && p.GetComponent<ConductaRetiradaPolicia>() == null)
+                {
+                    sinOrden.Add(p);
+                }
+            }
+            foreach (PandilleroAPie p in sinOrden)
+            {
+                ConductaRetiradaPolicia.Ordenar(p);
+            }
+            sinOrden.Clear();
         }
 
         // T-1498: con Nova en la ciudad llega una nave a la vez, a intervalos; cuando se va pasa el tiempo de espera y llega otra.
