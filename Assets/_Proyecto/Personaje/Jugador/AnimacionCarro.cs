@@ -28,7 +28,7 @@ namespace MechaCyberpunk.Personaje.Jugador
         private const float MaximaSubidaAsiento = 1f;
         // T-1335: robo con conductor. El conductor (ConductorRobado, Trafico) juega PJ01_Conductor_SerSacado en 0.35 + 0.9 s; el clip del jugador dura lo mismo para que terminen juntos.
         private const string NombreConductorRobado = "ConductorRobado";
-        private const float SegundosSacarConductor = 1.25f;
+        // T-1561: PJ01_Carro_SacarConductor v4 (98 cuadros) se juega a su rapidez natural y pasa directo a PJ01_Carro_Entrar al terminar; el conductor arranca 0.75 s después (VisualPersonaje.SerSacado).
         private const float SegundosAlinearPuerta = 0.25f;
         private const float DistanciaMaximaConductor = 5f;
 
@@ -119,6 +119,7 @@ namespace MechaCyberpunk.Personaje.Jugador
             {
                 return false;
             }
+            visual?.GuardarArmaYSalirDePelea(); // T-1561: antes de subir al carro (o a la moto) se guarda el arma y se sale de pelea
             raizVisual.gameObject.SetActive(true);
             posicionOriginal = raizVisual.localPosition;
             rotacionOriginal = raizVisual.localRotation;
@@ -153,7 +154,7 @@ namespace MechaCyberpunk.Personaje.Jugador
             Vector3 haciaAsiento = asientoLocal - puertaLocal;
             puertaYaw = Mathf.Atan2(haciaAsiento.x, haciaAsiento.z) * Mathf.Rad2Deg;
             segundosAcercar = sacando ? SegundosAlinearPuerta : ReglasEntradaCarro.SegundosAcercar(Vector3.Distance(inicioLocal, puertaLocal));
-            inicioClipEntrar = sacando ? Mathf.Max(segundosAcercar, SegundosSacarConductor) : segundosAcercar;
+            inicioClipEntrar = sacando ? Mathf.Max(segundosAcercar, config.CarroSacarConductor.length) : segundosAcercar;
 
             ApagarIK(true);
             avanceClip = AvanceDelClip("Carro_Entrar", true);
@@ -170,7 +171,7 @@ namespace MechaCyberpunk.Personaje.Jugador
                 {
                     reproductorSacar = visual.gameObject.AddComponent<ReproductorClipUnico>();
                 }
-                reproductorSacar.Reproducir(animador, config.CarroSacarConductor, config.CarroSacarConductor.length / SegundosSacarConductor);
+                reproductorSacar.Reproducir(animador, config.CarroSacarConductor, 1f); // T-1561: rapidez natural, sin acelerarlo
             }
             return true;
         }

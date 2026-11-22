@@ -23,6 +23,8 @@ namespace MechaCyberpunk.Personaje.Movimiento
             "AterrizajeFuerte",
             // T-1540: el derribo por explosión (1.3 s, con root motion), el empujón (0.87 s, retrocede 0.55 m) y el tambaleo de una explosión cercana (1 s) no dejan caminar mientras duran.
             "DerriboExplosion", "DanoEmpujon", "DanoExplosionCercana",
+            // T-1561: beber (PJ01_Beber a 2.2x) y acostarse en la camilla (a 2x) y subir de colgado bloquean solo lo que dura su clip (tope de seguridad de SegundosMaximos).
+            "Beber", "CamillaAcostarse", "ColgadoSubir",
         };
 
         private static readonly int[] HashesBloqueantes = CalcularHashes();

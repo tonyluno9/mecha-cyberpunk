@@ -52,6 +52,62 @@ namespace MechaCyberpunk.IA.APie
             if (Visual != null)
             {
                 Visual.Herir(Plano(direccion));
+                // T-1561: herido que no murió y se queda quieto: pide ayuda con señas o se queda herido de pie (si corre, sigue corriendo).
+                if (isActiveAndEnabled && !muerto)
+                {
+                    StartCoroutine(HeridoTrasReaccion());
+                }
+            }
+        }
+
+        /// <summary>Segundos que dura la reacción de daño antes de pasar a herido (s).</summary>
+        private const float SegundosReaccionHerida = 0.7f;
+        /// <summary>Velocidad (m/s) por debajo de la cual un civil herido se considera quieto.</summary>
+        private const float VelocidadQuietoHerido = 0.3f;
+        private bool heridoEnCurso;
+
+        private System.Collections.IEnumerator HeridoTrasReaccion()
+        {
+            if (heridoEnCurso)
+            {
+                yield break;
+            }
+            heridoEnCurso = true;
+            yield return new WaitForSeconds(SegundosReaccionHerida);
+            ConfigClipsNpcT1561 config = ConfigClipsNpcT1561.Actual;
+            VisualPersonaje v = Visual;
+            if (config != null && v != null && !muerto && !v.Caido && v.Velocidad < VelocidadQuietoHerido)
+            {
+                AnimationClip clip = ReglasTransicionesT1561.HeridoPideAyuda(GetInstanceID()) ? config.HeridoPedirAyuda : config.HeridoIdle;
+                if (clip != null && JugarEnBucle(clip))
+                {
+                    yield return new WaitForSeconds(ReglasTransicionesT1561.SegundosPedirAyuda);
+                    DetenerSiJuega(clip);
+                }
+            }
+            heridoEnCurso = false;
+        }
+
+        /// <summary>Mensaje (SendMessage) para que un civil que vio al jugador matar a alguien llame a la policía (NPC_LlamarPolicia). Quien detecte la muerte vista lo manda; hoy nadie (ver T-1561).</summary>
+        public const string MensajeLlamarPolicia = "AlLlamarPoliciaCivil";
+
+        /// <summary>T-1561: llama a la policía (NPC_LlamarPolicia en bucle, mezclado desde lo que hacía). Se corta con <see cref="AlDejarDeLlamarPoliciaCivil"/>.</summary>
+        public void AlLlamarPoliciaCivil()
+        {
+            ConfigClipsNpcT1561 config = ConfigClipsNpcT1561.Actual;
+            if (config == null || config.LlamarPolicia == null || Visual == null || Visual.Animador == null || Visual.Caido || muerto)
+            {
+                return;
+            }
+            Reproductor().Reproducir(Visual.Animador, config.LlamarPolicia, 1f, true, ReglasTransicionesT1561.SegundosMezclaNpc);
+        }
+
+        public void AlDejarDeLlamarPoliciaCivil()
+        {
+            ConfigClipsNpcT1561 config = ConfigClipsNpcT1561.Actual;
+            if (config != null)
+            {
+                DetenerSiJuega(config.LlamarPolicia);
             }
         }
 
@@ -82,7 +138,9 @@ namespace MechaCyberpunk.IA.APie
             ReproductorClipUnico reproductor = Reproductor();
             if (reproductor.Repite)
             {
-                reproductor.Detener(); // T-1516: deja de platicar o de estar agachado para asustarse
+                // T-1561: de platicar, discutir, celular o agachado a asustarse con una mezcla corta (0.2 s), no de golpe.
+                reproductor.Reproducir(Visual.Animador, config.Asustarse, 1f, false, ReglasTransicionesT1561.SegundosMezclaNpc);
+                return;
             }
             if (!reproductor.Reproduciendo)
             {
