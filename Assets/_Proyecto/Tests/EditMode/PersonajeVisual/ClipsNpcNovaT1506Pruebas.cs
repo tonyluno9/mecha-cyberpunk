@@ -120,8 +120,8 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
             }
         }
 
-        [TestCase("Jugador", "Punos_GolpeDer", "PJ01_Golpe1_Directo")]
-        [TestCase("Jugador", "Punos_GolpeIzq", "PJ01_Golpe2_Gancho")]
+        [TestCase("Jugador", "Punos_GolpeDer", "PJ01_Golpe_Der")] // decisión de Tony 21-nov (T-1560)
+        [TestCase("Jugador", "Punos_GolpeIzq", "PJ01_Golpe_Izq")]
         [TestCase("Jugador", "Muerte_Adelante", "PJ01_Muerte_Frente")]
         [TestCase("Jugador", "Muerte_Atras", "PJ01_Muerte_Espaldas")]
         [TestCase("Jugador", "Pistola_Dano_Frente", "PJ01_Dano_Frente")]
@@ -135,8 +135,8 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
         [TestCase("NPC", "Loco_Correr", "NPC_Huir_Corriendo")]
         [TestCase("NPC", "Pistola_Dano_Frente", "NPC_Balazo_Frente")]
         [TestCase("NPC", "Pistola_Dano_Espalda", "NPC_Balazo_Espalda")]
-        [TestCase("NPC", "Muerte_Adelante", "NPC_Muerte_Frente")]
-        [TestCase("NPC", "Muerte_Atras", "NPC_Muerte_Espaldas")]
+        [TestCase("NPC", "Muerte_Adelante", "PJ01_Muerte_Frente")] // decisión de Tony 21-nov (T-1560): mismas muertes que el jugador
+        [TestCase("NPC", "Muerte_Atras", "PJ01_Muerte_Espaldas")]
         [TestCase("Guardias", "Loco_Caminar", "Guardia_Caminar")]
         [TestCase("Guardias", "Pistola_Disparo", "Guardia_Disparar")]
         [TestCase("Guardias", "Loco_Caida", "Guardia_Caida_Aire")]

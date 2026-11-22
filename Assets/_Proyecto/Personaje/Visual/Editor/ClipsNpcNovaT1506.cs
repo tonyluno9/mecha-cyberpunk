@@ -53,7 +53,7 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
         };
 
         /// <summary>Prefijos de los clips que no llevan "PJ01_" pero viven en la carpeta de clips de PJ01 (los busca ConstructorControladorBase.Clip).</summary>
-        public static readonly string[] PrefijosBlender = { "NPC_", "E15_", "E16_", "E18_", "Guardia_" };
+        public static readonly string[] PrefijosBlender = { "NPC_", "E15_", "E16_", "E18_", "E20_", "Guardia_" };
 
         public static bool EsClipBlender(string nombre) => PrefijosBlender.Any(nombre.StartsWith);
 
@@ -109,6 +109,9 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
                 ("Muerte_Adelante", "E15_Muerte"), ("Muerte_Atras", "E15_Muerte"), ("Muerte_Desmayo", "E15_Muerte"),
                 ("PJ01_Muerte_Explosion", "E15_Muerte"), ("PJ01_Muerte_Atropello", "E15_Muerte"), ("PJ01_Muerte_CaidaAltura", "E15_Muerte"),
                 ("PJ01_Derribo_Explosion", "E15_Impacto"), ("PJ01_Dano_Empujon", "E15_Impacto"), ("PJ01_Dano_ExplosionCercana", "E15_Impacto"),
+                // T-1560 (decisión de Tony 21-nov): caída del cielo, herido y cojear propios del E15 (E15_Caida_Aire, E15_Caida_Aterrizaje, E15_Herido_Idle, E15_Cojear).
+                ("Loco_Caida", "E15_Caida_Aire"), ("Loco_SaltoAterrizaje", "E15_Caida_Aterrizaje"), ("E18_Caida_Levantarse", "E15_Caida_Levantarse"),
+                ("PJ01_Herido_Idle", "E15_Herido_Idle"), ("E15_Cojear", "E15_Cojear"),
                 // T-1551: E15_Cubrirse (aprobado 19-nov, agachado vigilando, 91 cuadros en bucle) agachado y en cobertura.
                 ("Loco_AgachadoIdle", "E15_Cubrirse"), ("PJ01_Cobertura_Quieto", "E15_Cubrirse"),
             }),
@@ -126,6 +129,9 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
                 ("Muerte_Adelante", "E16_Muerte"), ("Muerte_Atras", "E16_Muerte"), ("Muerte_Desmayo", "E16_Muerte"),
                 ("PJ01_Muerte_Explosion", "E16_Muerte"), ("PJ01_Muerte_Atropello", "E16_Muerte"), ("PJ01_Muerte_CaidaAltura", "E16_Muerte"),
                 ("PJ01_Derribo_Explosion", "E16_Impacto"), ("PJ01_Dano_Empujon", "E16_Impacto"), ("PJ01_Dano_ExplosionCercana", "E16_Impacto"),
+                // T-1560 (decisión de Tony 21-nov): caída del cielo (más lenta y pesada), herido y cojear propios del E16. E16_Bloquear_Tambaleo y E16_Encenderse son solo del E16 (son la base de sus estados).
+                ("Loco_Caida", "E16_Caida_Aire"), ("Loco_SaltoAterrizaje", "E16_Caida_Aterrizaje"), ("E18_Caida_Levantarse", "E16_Caida_Levantarse"),
+                ("PJ01_Herido_Idle", "E16_Herido_Idle"), ("E15_Cojear", "E16_Cojear"),
             }),
             ("E18", "Guardias", new[]
             {
@@ -138,6 +144,8 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
                 ("Punos_GolpeDer", "E18_Golpe_Der"), ("Punos_GolpeIzq", "E18_Golpe_Der"), ("Punos_Fuerte", "E18_Golpe_Der"),
             }),
             ("Hacker", "SNAKES", new[] { ("Loco_Idle", "NPC_Hacker_Tecleando") }),
+            // T-1560: el E20 (matón de los Skulls, brazo robótico) pega con E20_Golpe_Brazo (Mutant Punch en su rig, aprobado 21-nov) en los tres golpes; el resto es de SKULLS.
+            ("E20", "SKULLS", new[] { ("Punos_GolpeDer", "E20_Golpe_Brazo"), ("Punos_GolpeIzq", "E20_Golpe_Brazo"), ("Punos_Fuerte", "E20_Golpe_Brazo") }),
         };
 
         /// <summary>T-1540: claves del controlador base (aparte de las de ConstructorControladorBase.ClavesNoJugador) que AnimacionesT1540.AplicarOverrides recalcula con las tablas de E15 y E16.</summary>
@@ -166,6 +174,7 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             ("E16_RobotPesadoNova_a", "E16", 0.80f, 0.80f), ("E16_RobotPesadoNova_b", "E16", 0.80f, 0.80f),
             ("E18_EliteNova_a", "E18", ClipsRobotsNovaT1553.VelocidadCaminarE18, ClipsRobotsNovaT1553.VelocidadCorrerE18),
             ("Hacker", "Hacker", 0f, 0f),
+            ("E20_MatonSkulls_a", "E20", 0f, 0f), ("E20_MatonSkulls_b", "E20", 0f, 0f), // T-1560: velocidades 0 = no se tocan (ConfigurarClips solo corre con caminar > 0)
             ("MeseraRobot", null, 1.20f, 1.20f),
             ("E17_PerroRobotNova_a", null, 0.90f, 5.00f),
         };
@@ -185,6 +194,7 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             mapa["NPC"] = Combinar(mapa["NPC"], ClipsNpcComun);
             mapa["Guardias"] = Combinar(mapa["Guardias"], ClipsGuardias);
             AnimacionesT1551.AgregarATabla(mapa); // T-1551: muertes aprobadas PJ01_Muerte_Frente/Espaldas en los papeles que seguían con las viejas
+            AnimacionesT1560.AgregarATabla(mapa); // T-1560 (decisión de Tony 21-nov): golpes del jugador, muertes y daño lateral del NPC, burla y presumir de todos
         }
 
         public static (string Base, string Papel)[] Combinar((string Base, string Papel)[] tabla, (string Base, string Papel)[] cambios)
