@@ -33,7 +33,18 @@ namespace MechaCyberpunk.Trafico.Calle
         [Tooltip("T-1526: cuánto (m) se mete el área hacia adentro del trazo del muro al detectarla.")]
         [SerializeField, Min(0f)] private float margenAlMuro = AreaMuro.MargenPorOmision;
 
+        [Header("T-1603: tráfico ordenado")]
+        [Tooltip("Los carros que se reciclan reaparecen a esta distancia (m) del jugador como máximo (si no hay sitio así, en toda la red).")]
+        [SerializeField, Min(0f)] private float radioAlrededor = 140f;
+        [Tooltip("Un carro más lejos que esto (m) del jugador y fuera de la vista se recicla cerca de él (0 = no recicla por lejanía).")]
+        [SerializeField, Min(0f)] private float radioReciclar = 180f;
+        [Tooltip("Cada cuántos segundos se revisa qué carros están muy lejos.")]
+        [SerializeField, Min(0.1f)] private float segundosEntreRevisionesDeLejania = 1f;
+        [Tooltip("Anota los choques entre carros y los atorones en Logs/trafico-ordenado.txt.")]
+        [SerializeField] private bool registrarEnArchivo;
+
         private readonly List<CarroTrafico> carros = new List<CarroTrafico>();
+        private float proximaRevisionDeLejania;
         private GrafoCalles calles;
         private bool listo;
 
@@ -209,9 +220,11 @@ namespace MechaCyberpunk.Trafico.Calle
                 CarroTrafico carro = Instantiate(molde, transform);
                 carro.name = "CarroTrafico_" + (i + 1);
                 carro.Preparar(config, calles, nodo, new System.Random(azar.Next()), PosicionDelJugador);
+                carro.FijarRadioAlrededor(radioAlrededor);
                 carro.gameObject.SetActive(false);
                 carros.Add(carro);
             }
+            EstadisticasTrafico.RegistrarEnArchivo = registrarEnArchivo;
             listo = true;
         }
 
@@ -304,6 +317,35 @@ namespace MechaCyberpunk.Trafico.Calle
             }
         }
 
+        // T-1603: cantidad fija alrededor del jugador: el carro que quedó muy lejos y fuera de la vista se recicla cerca de él (nunca se generan carros de más).
+        private void RevisarLejania()
+        {
+            if (radioReciclar <= 0f || Time.time < proximaRevisionDeLejania)
+            {
+                return;
+            }
+            proximaRevisionDeLejania = Time.time + segundosEntreRevisionesDeLejania;
+            Vector3? jugador = PosicionDelJugador();
+            if (!jugador.HasValue)
+            {
+                return;
+            }
+            Camera camara = Camera.main;
+            foreach (CarroTrafico c in carros)
+            {
+                if (c == null || !c.gameObject.activeSelf || c.Robado || c.EnRefuerzo || c.EstaSiendoRobado)
+                {
+                    continue;
+                }
+                Vector3 d = c.transform.position - jugador.Value;
+                d.y = 0f;
+                if (d.magnitude > radioReciclar && !c.EnVista(camara))
+                {
+                    c.Reaparecer(false);
+                }
+            }
+        }
+
         private void Update()
         {
             if (!listo)
@@ -311,6 +353,8 @@ namespace MechaCyberpunk.Trafico.Calle
                 return;
             }
             RevisarMuro();
+            RevisarLejania();
+            EstadisticasTrafico.RevisarChoques(CarroTrafico.Activos, Time.time);
             IRelojMundo reloj = Registro<IRelojMundo>.Actual;
             int objetivo = config.Cantidad(reloj != null && reloj.EsDeNoche);
             int lugares = objetivo;
