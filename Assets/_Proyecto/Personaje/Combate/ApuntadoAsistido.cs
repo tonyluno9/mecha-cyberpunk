@@ -133,7 +133,7 @@ namespace MechaCyberpunk.Personaje.Combate
         {
             Vector3 hacia = centro - origen;
             float distancia = hacia.magnitude;
-            int cantidad = Physics.RaycastNonAlloc(origen, hacia / distancia, choques, distancia, ~0, QueryTriggerInteraction.Ignore);
+            int cantidad = Physics.RaycastNonAlloc(origen, hacia / distancia, choques, distancia, ReglaImpactoBala.MascaraBala, QueryTriggerInteraction.Ignore);
             for (int i = 0; i < cantidad; i++)
             {
                 Transform t = choques[i].collider.transform;
