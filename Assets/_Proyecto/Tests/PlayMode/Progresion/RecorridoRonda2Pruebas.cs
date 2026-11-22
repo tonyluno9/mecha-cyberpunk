@@ -154,8 +154,9 @@ namespace MechaCyberpunk.Tests.Progresion
                 escuchas += a.isActiveAndEnabled ? 1 : 0;
             }
             Assert.AreEqual(1, escuchas, "Un solo AudioListener prendido.");
-            Assert.AreEqual(0f, gestor.Volumen(SeccionSonido.Ambiente), "El ambiente arranca apagado.");
-            Assert.AreEqual(0f, gestor.Volumen(SeccionSonido.Musica), "La música arranca apagada.");
+            // Música del menú (pedido de Tony): ya ninguna sección arranca apagada.
+            Assert.AreEqual(1f, gestor.Volumen(SeccionSonido.Ambiente), "El ambiente arranca encendido.");
+            Assert.AreEqual(1f, gestor.Volumen(SeccionSonido.Musica), "La música arranca encendida.");
             foreach (AudioSource fuente in UnityEngine.Object.FindObjectsByType<AudioSource>(FindObjectsSortMode.None))
             {
                 Assert.IsFalse(fuente.isPlaying && fuente.loop && fuente.volume > 0f && fuente.transform.parent != gestor.transform,

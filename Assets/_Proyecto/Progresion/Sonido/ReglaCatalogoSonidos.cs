@@ -55,10 +55,10 @@ namespace MechaCyberpunk.Progresion.Sonido
             return provisionales ?? (IReadOnlyList<T>)Array.Empty<T>();
         }
 
-        /// <summary>Las secciones que arrancan apagadas (T-407, plan de la noche): Ambiente y Música.</summary>
+        /// <summary>Volumen con el que arranca cada sección antes de leer las opciones. Ya ninguna arranca apagada (música del menú).</summary>
         public static float VolumenInicial(SeccionSonido seccion)
         {
-            return seccion == SeccionSonido.Ambiente || seccion == SeccionSonido.Musica ? 0f : 1f;
+            return 1f;
         }
     }
 }

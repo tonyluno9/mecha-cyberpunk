@@ -16,6 +16,8 @@ namespace MechaCyberpunk.Progresion.Editor
     {
         public const string RutaCatalogo = "Assets/_Proyecto/Progresion/Datos/CatalogoSonidos.asset";
         public const string CarpetaAudio = "Assets/Arte/Audio";
+        /// <summary>La música (MUS_MENU_PRINCIPAL...), dentro de Assets/Arte/Audio.</summary>
+        public const string CarpetaMusica = "Musica";
         private static readonly string[] Secciones = { "JUG", "PUN", "ARM", "VEH", "PAN", "CAL", "ZON", "ECO", "UI", "MUN", "AMB", "MUS" };
         /// <summary>T-1471: carpetas de los sonidos nuevos (T-1470), dentro de Assets/Arte/Audio.</summary>
         public static readonly string[] CarpetasNuevas =
@@ -54,6 +56,8 @@ namespace MechaCyberpunk.Progresion.Editor
             {
                 Leer(CarpetaAudio + "/" + carpeta, nuevas, false);
             }
+            // Música del menú principal (MUS_MENU_PRINCIPAL) en Assets/Arte/Audio/Musica.
+            Leer(CarpetaAudio + "/" + CarpetaMusica, nuevas, false);
             // Los archivos que ya no se usan (POL_RADIO_DESPACHO_01/02) siguen en Assets pero no entran al catalogo: el ID suena con su alias.
             foreach (string id in MapaSonidos20nov.IdsDescartados)
             {

@@ -26,6 +26,8 @@ namespace MechaCyberpunk.Tests.Sonido
                 AgregarCarpeta("Assets/Arte/Audio/" + s, ids);
                 if (incluirProvisionales) AgregarCarpeta("Assets/Arte/Audio/Provisional/" + s, ids);
             }
+            // La música del menú (MUS_MENU_PRINCIPAL) vive en Assets/Arte/Audio/Musica.
+            AgregarCarpeta("Assets/Arte/Audio/Musica", ids);
             return ids;
         }
 

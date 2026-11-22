@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Core.Mundo;
 using UnityEngine;
+using UnityEngine.Audio;
 
 namespace MechaCyberpunk.Progresion.Sonido
 {
@@ -11,7 +12,7 @@ namespace MechaCyberpunk.Progresion.Sonido
     /// Ambientes (T-470, ver ReglaAmbienteZona): por lugar y por zona del jugador, de noche o de día, con cruce de 1 s.
     /// La mezcla (ganancia por sección) vive en el CatalogoSonidos.
     /// </summary>
-    public class GestorSonidos : MonoBehaviour, ISonidos
+    public class GestorSonidos : MonoBehaviour, ISonidos, IMezclaAudio
     {
         public const string IdAmbienteCalle = "AMB_CALLE_NOCHE";
         public const string IdAmbienteCasa = "AMB_INTERIOR_CASA";
@@ -142,6 +143,7 @@ namespace MechaCyberpunk.Progresion.Sonido
             cruce = new[] { CrearFuente("Ambiente_A"), CrearFuente("Ambiente_B") };
             foreach (AudioSource a in cruce)
             {
+                a.outputAudioMixerGroup = MezclaAudio.Grupo(SeccionSonido.Ambiente);
                 a.loop = true;
                 a.spatialBlend = 0f;
                 a.priority = ReglaMezclaSonidos.Prioridad("AMB_");
@@ -151,6 +153,7 @@ namespace MechaCyberpunk.Progresion.Sonido
         private void OnEnable()
         {
             Registro<ISonidos>.Agregar(this);
+            Registro<IMezclaAudio>.Agregar(this);
             EventosLugares.JugadorEntro += AlEntrar;
             EventosLugares.JugadorSalio += AlSalir;
         }
@@ -158,6 +161,7 @@ namespace MechaCyberpunk.Progresion.Sonido
         private void OnDisable()
         {
             Registro<ISonidos>.Quitar(this);
+            Registro<IMezclaAudio>.Quitar(this);
             EventosLugares.JugadorEntro -= AlEntrar;
             EventosLugares.JugadorSalio -= AlSalir;
         }
@@ -176,15 +180,20 @@ namespace MechaCyberpunk.Progresion.Sonido
 
         public float Volumen(SeccionSonido seccion) => volumenes.TryGetValue(seccion, out float v) ? v : 0f;
 
-        public void FijarVolumen(SeccionSonido seccion, float volumen) => volumenes[seccion] = Mathf.Clamp01(volumen);
+        /// <summary>Guarda el valor del deslizador y lo aplica al AudioMixer al instante (en decibeles; 0 = silencio).</summary>
+        public void FijarVolumen(SeccionSonido seccion, float volumen)
+        {
+            volumenes[seccion] = Mathf.Clamp01(volumen);
+            MezclaAudio.FijarVolumen(seccion, volumenes[seccion]);
+        }
 
+        public AudioMixerGroup Grupo(SeccionSonido seccion) => MezclaAudio.Grupo(seccion);
+
+        // Volumen de mezcla de la fuente (balance entre secciones del catálogo). Los deslizadores de opciones ya no multiplican aquí:
+        // los aplica el AudioMixer por grupo, en decibeles.
         private float VolumenFinal(SeccionSonido seccion)
         {
-            if (seccion == SeccionSonido.General) return Volumen(seccion);
-            float opcion = Volumen(seccion);
-            if (seccion == SeccionSonido.Ambiente && catalogo != null) opcion = Mathf.Max(opcion, catalogo.PisoOpcionAmbiente);
-            float ganancia = catalogo != null ? catalogo.Ganancia(seccion) : 1f;
-            return Volumen(SeccionSonido.General) * opcion * ganancia;
+            return catalogo != null ? catalogo.Ganancia(seccion) : 1f;
         }
 
         private AudioSource FuenteLibre()
@@ -349,6 +358,7 @@ namespace MechaCyberpunk.Progresion.Sonido
             f.pitch = tono;
             f.maxDistance = politica.DistanciaMaxima > 0f ? politica.DistanciaMaxima : distanciaMaxima;
             f.volume = VolumenFinal(seccion) * relativo;
+            f.outputAudioMixerGroup = MezclaAudio.Grupo(seccion);
             UltimoTono = tono;
             UltimoVolumenRelativo = relativo;
             UltimoClip = clip;
@@ -381,6 +391,7 @@ namespace MechaCyberpunk.Progresion.Sonido
             // T-977: el bucle también lleva el volumen relativo de su ID (la sirena es fuerte; el derrape, bajo).
             float relativo = ReglaMezclaSonidos.Para(id).Volumen;
             f.volume = VolumenFinal(seccion) * relativo;
+            f.outputAudioMixerGroup = MezclaAudio.Grupo(seccion);
             f.pitch = ReglaMezclaSonidos.Para(id).TonoBase;
             f.priority = ReglaMezclaSonidos.Prioridad(id);
             // T-1535: los bucles 3D nuevos (interiores 15 m, objetos 6 a 12 m, lámina) se oyen hasta la distancia de su política, no hasta los 40 m de siempre.

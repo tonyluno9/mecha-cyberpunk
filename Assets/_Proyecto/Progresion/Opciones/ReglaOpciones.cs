@@ -32,7 +32,7 @@ namespace MechaCyberpunk.Progresion.Opciones
 
         public static ValoresOpciones PorDefecto()
         {
-            ValoresOpciones v = new ValoresOpciones { volumenes = new float[CantidadSecciones] };
+            ValoresOpciones v = new ValoresOpciones { volumenes = new float[CantidadSecciones], versionVolumen = VersionVolumen };
             for (int i = 0; i < CantidadSecciones; i++)
             {
                 v.volumenes[i] = VolumenInicial((SeccionSonido)i);
@@ -40,9 +40,15 @@ namespace MechaCyberpunk.Progresion.Opciones
             return v;
         }
 
+        /// <summary>
+        /// Versión actual de los volúmenes. 1: hay música en el menú (MUS_MENU_PRINCIPAL) y los volúmenes van por el AudioMixer; la
+        /// música ya no arranca apagada.
+        /// </summary>
+        public const int VersionVolumen = 1;
+
         public static float VolumenInicial(SeccionSonido seccion)
         {
-            return seccion == SeccionSonido.Musica ? 0f : VolumenPorDefecto;
+            return VolumenPorDefecto;
         }
 
         /// <summary>Deja cada valor en su rango y en su paso. Devuelve el mismo objeto.</summary>
@@ -53,6 +59,16 @@ namespace MechaCyberpunk.Progresion.Opciones
             for (int i = 0; i < CantidadSecciones; i++)
             {
                 volumenes[i] = v.volumenes != null && i < v.volumenes.Length ? RecortarVolumen(v.volumenes[i]) : VolumenInicial((SeccionSonido)i);
+            }
+            // Archivos viejos: la música se guardó en 0 porque venía apagada por defecto (T-407); se sube una sola vez al valor normal.
+            if (v.versionVolumen < VersionVolumen)
+            {
+                int musica = (int)SeccionSonido.Musica;
+                if (volumenes[musica] <= 0f)
+                {
+                    volumenes[musica] = VolumenInicial(SeccionSonido.Musica);
+                }
+                v.versionVolumen = VersionVolumen;
             }
             v.volumenes = volumenes;
             if (!Enum.IsDefined(typeof(NivelApuntadoAsistido), v.apuntadoAsistido))

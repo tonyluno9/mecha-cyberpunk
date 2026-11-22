@@ -5,6 +5,7 @@ using MechaCyberpunk.Core;
 using MechaCyberpunk.Progresion;
 using MechaCyberpunk.Progresion.Guardado;
 using MechaCyberpunk.Progresion.Partida;
+using MechaCyberpunk.Progresion.Sonido;
 using MechaCyberpunk.UI.Guardado;
 using MechaCyberpunk.UI.Kit;
 using MechaCyberpunk.UI.Titulo;
@@ -148,6 +149,8 @@ namespace MechaCyberpunk.UI.Inicio
 
         private void Start()
         {
+            // Tema del menú (MUS_MENU_PRINCIPAL): entra con fundido; si ya sonaba (vienes de otra pantalla del menú) sigue sin reiniciarse.
+            MusicaMenu.Sonar();
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
             if (creacion != null)

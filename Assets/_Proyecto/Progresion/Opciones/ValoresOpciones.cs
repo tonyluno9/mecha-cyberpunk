@@ -22,6 +22,8 @@ namespace MechaCyberpunk.Progresion.Opciones
         public bool tutorial = true;
         /// <summary>Acciones del tutorial que ya se mostraron, separadas por comas (T-441).</summary>
         public string tutorialVisto = "";
+        /// <summary>Versión de los volúmenes: 0 en archivos de antes de la música del menú (la música venía apagada por defecto).</summary>
+        public int versionVolumen;
 
         public ValoresOpciones Copiar()
         {

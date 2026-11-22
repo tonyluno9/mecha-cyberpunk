@@ -59,8 +59,9 @@ namespace MechaCyberpunk.Tests.Progresion
             Assert.AreEqual(SeccionSonido.Interfaz, ReglaCatalogoSonidos.SeccionDe("UI_ACEPTAR"));
             Assert.AreEqual(SeccionSonido.Ambiente, ReglaCatalogoSonidos.SeccionDe("AMB_CALLE_NOCHE"));
             Assert.AreEqual(SeccionSonido.Efectos, ReglaCatalogoSonidos.SeccionDe("ARM_ESC_DISPARO"));
-            Assert.AreEqual(0f, ReglaCatalogoSonidos.VolumenInicial(SeccionSonido.Ambiente));
-            Assert.AreEqual(0f, ReglaCatalogoSonidos.VolumenInicial(SeccionSonido.Musica));
+            // Música del menú (pedido de Tony): ninguna sección arranca apagada; los volúmenes los pone el AudioMixer.
+            Assert.AreEqual(1f, ReglaCatalogoSonidos.VolumenInicial(SeccionSonido.Ambiente));
+            Assert.AreEqual(1f, ReglaCatalogoSonidos.VolumenInicial(SeccionSonido.Musica));
             Assert.AreEqual(1f, ReglaCatalogoSonidos.VolumenInicial(SeccionSonido.Efectos));
         }
 

@@ -170,6 +170,8 @@ namespace MechaCyberpunk.Mundo.Ambiente
             fuente.spatialBlend = 0f;
             fuente.volume = 0f;
             fuente.playOnAwake = false;
+            // Volumen por el AudioMixer: el ambiente va por el grupo de Efectos (deslizador EFECTOS).
+            fuente.outputAudioMixerGroup = Registro<IMezclaAudio>.Actual?.Grupo(SeccionSonido.Ambiente);
             return fuente;
         }
     }
