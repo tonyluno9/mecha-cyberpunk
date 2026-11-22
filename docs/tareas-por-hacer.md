@@ -189,6 +189,7 @@ Comprobar en Play: parejas y grupos platicando de frente en las plazas, el tiang
 (huyen y se agachan); matar a un NPC frente a otro (el otro grita y huye); esperar a que se calmen.
 
 ## T12. Los SKULLS molestan a los civiles
+**HECHA (22-nov, segunda ronda; antes PARCIAL):** la causa era que GrupoAcoso marcaba a los 25 SKULLS como ocupados para siempre; ahora el grupo PRESTA 1–2 pandilleros al evento y los recupera. Escenas completas en la ciudad con SKULLS ("¿Y la cuota de esta semana, jefe?"…) y SNAKES ("Esta calle es nuestra, doña"…) con voces y subtítulos; al intervenir, el agresor se vuelve hostil y su grupo pasa a alerta; con el jugador invulnerable nadie lo mató. BullyingT1633Pruebas 3/3 (+GrupoAcoso 11/11). Registro y capturas en docs/capturas/_tareas/T12/. Pendiente: el empujón físico no se distingue en las capturas; grupos con una pared entre ellos y el civil abortan a los 25 s (se acercan en línea recta, sin ruta).
 **PARCIAL (22-nov, sesión B, T-1624 975ff84): el sistema de escenas y bullying está hecho, pero en Play no se pudo ver un bullying dinámico completo: los 25 SKULLS de la ciudad ya están en sus grupos de acoso fijos (GrupoAcoso, que sí molestan a un civil) y la prueba con SNAKES terminó cuando atacaron al jugador. Forzar con DirectorEscenasBarrio.ForzarEscena("bully_snakes_senora") lejos de ellos.**
 Problema: los pandilleros solo esperan al jugador; deberían hacer la vida difícil a la gente del barrio, como parte de la historia.
 Cómo:
@@ -316,6 +317,7 @@ Comprobar en Play con el registro de T8: subir a 5 estrellas y ver que deja de l
 cápsulas en el orden de la jerarquía.
 
 ## T18. NPCs sentados con la animación de sentado del jugador
+**HECHA (22-nov, merge con T12 en integ/A2-T18-T12):** 11 NPCs sentados con PJ01_Sentado por Humanoid (6 en las 4 bancas del parque, 2 en sillas, 3 en taburetes), cadera alineada al asiento y pies en el piso, los de la misma banca se giran uno hacia el otro; al oír un disparo o una muerte cerca se levantan y huyen. NpcSentadoT1632Pruebas 4/4. Capturas docs/capturas/_tareas/T18/ (parque, otro punto, tras el disparo). No hay clip de levantarse ni de celular sentado: pasa directo a correr.
 Decisión de Tony: para los NPCs sentados en las bancas (y donde haga falta) se usa el clip de SENTADO DEL JUGADOR (PJ01), retargeteado por
 Humanoid a los NPCs. No hace falta un modelo nuevo de civil sentado.
 Cómo: en las 4 bancas sentables del parque y en otras bancas y sillas del mapa (puestos, plazas), poner NPCs (de NP01–NP14 y los demás) sentados

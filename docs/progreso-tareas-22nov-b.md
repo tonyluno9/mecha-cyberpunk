@@ -15,6 +15,6 @@ Lee esta lista y `git log --oneline -15 main`; sigue con la primera tarea que no
 - Paso 0: HECHO (merge cc913e9: tareas nuevas en tareas-por-hacer.md; no había cambios nuevos de Blender).
 - T16: HECHA, merge 45695c3
 - T17: HECHA, merge e6fa324
-- T18: integrando en integ/A2-T18-T12
-- T12: integrando en integ/A2-T18-T12
-- Builds: pendiente
+- T18: HECHA
+- T12: HECHA
+- Builds: en curso
