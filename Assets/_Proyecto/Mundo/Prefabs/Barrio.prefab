@@ -1168,7 +1168,7 @@ GameObject:
   - component: {fileID: 4879540126849316486}
   - component: {fileID: 3318975172136730834}
   - component: {fileID: 7357404858963026175}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: RejaDer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4009,7 +4009,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6473405071145592065}
-  - component: {fileID: 751987780759819653}
+  - component: {fileID: 1347180936959471046}
   m_Layer: 0
   m_Name: Transformador_Poste_13
   m_TagString: Untagged
@@ -4033,8 +4033,8 @@ Transform:
   - {fileID: 8911061044993457123}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &751987780759819653
-BoxCollider:
+--- !u!136 &1347180936959471046
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -4051,9 +4051,11 @@ BoxCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.6, y: 3, z: 0.9}
-  m_Center: {x: 0, y: 1.5, z: -0.2}
+  serializedVersion: 2
+  m_Radius: 0.35
+  m_Height: 7.5019727
+  m_Direction: 0
+  m_Center: {x: -0.1220808, y: 5.134727, z: 0.20605837}
 --- !u!1 &151360739435879522
 GameObject:
   m_ObjectHideFlags: 0
@@ -11231,7 +11233,7 @@ GameObject:
   - component: {fileID: 2819639036258859559}
   - component: {fileID: 6603421348290064893}
   - component: {fileID: 8860263377239719522}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Valla_Obra_Sur
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14635,7 +14637,7 @@ GameObject:
   - component: {fileID: 424816637099187287}
   - component: {fileID: 4187646048870577792}
   - component: {fileID: 6680762515555181177}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Valla
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -16602,7 +16604,7 @@ GameObject:
   - component: {fileID: 394807782054433174}
   - component: {fileID: 947742552687814093}
   - component: {fileID: 6903105252073475433}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Valla_Obra_Oeste
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -16978,8 +16980,8 @@ GameObject:
   m_Component:
   - component: {fileID: 3612160996508853272}
   - component: {fileID: 1177527551197128668}
-  - component: {fileID: 2236153138857476147}
   - component: {fileID: 854972401709467582}
+  - component: {fileID: 2307128724655073147}
   m_Layer: 0
   m_Name: PostePortico
   m_TagString: Untagged
@@ -17010,27 +17012,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 737125753998507171}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!65 &2236153138857476147
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 737125753998507171}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &854972401709467582
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -17080,6 +17061,29 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!136 &2307128724655073147
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 737125753998507171}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.35
+  m_Height: 1
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.000000029802322, z: 0}
 --- !u!1 &737210208000652340
 GameObject:
   m_ObjectHideFlags: 0
@@ -20414,7 +20418,7 @@ GameObject:
   - component: {fileID: 2778845691989371123}
   - component: {fileID: 2625667084682772867}
   - component: {fileID: 9029111404196337297}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Valla
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20793,7 +20797,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6968008370860391319}
-  - component: {fileID: 6131538875208343555}
+  - component: {fileID: 8234566338783011928}
   m_Layer: 0
   m_Name: Transformador_Poste_7
   m_TagString: Untagged
@@ -20817,8 +20821,8 @@ Transform:
   - {fileID: 4685882886180503830}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &6131538875208343555
-BoxCollider:
+--- !u!136 &8234566338783011928
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -20835,9 +20839,11 @@ BoxCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.6, y: 3, z: 0.9}
-  m_Center: {x: 0, y: 1.5, z: -0.2}
+  serializedVersion: 2
+  m_Radius: 0.35
+  m_Height: 7.501972
+  m_Direction: 0
+  m_Center: {x: -0.12207985, y: 5.134727, z: 0.20605801}
 --- !u!1 &911592596982258595
 GameObject:
   m_ObjectHideFlags: 0
@@ -21849,7 +21855,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 212791655172676449}
-  - component: {fileID: 2450392058833284499}
+  - component: {fileID: 6490911779376150222}
   m_Layer: 0
   m_Name: Transformador_Poste_37
   m_TagString: Untagged
@@ -21873,8 +21879,8 @@ Transform:
   - {fileID: 455567972449869719}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &2450392058833284499
-BoxCollider:
+--- !u!136 &6490911779376150222
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -21891,9 +21897,11 @@ BoxCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.6, y: 3, z: 0.9}
-  m_Center: {x: 0, y: 1.5, z: -0.2}
+  serializedVersion: 2
+  m_Radius: 0.35
+  m_Height: 7.501971
+  m_Direction: 0
+  m_Center: {x: -0.12207961, y: 5.134727, z: 0.20605576}
 --- !u!1 &947592151829882819
 GameObject:
   m_ObjectHideFlags: 0
@@ -25790,7 +25798,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1133253921326963783}
-  - component: {fileID: 8147217865491088309}
+  - component: {fileID: 331098408367411777}
   m_Layer: 0
   m_Name: Transformador_Poste_22
   m_TagString: Untagged
@@ -25814,8 +25822,8 @@ Transform:
   - {fileID: 7542342356227476031}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &8147217865491088309
-BoxCollider:
+--- !u!136 &331098408367411777
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -25832,9 +25840,11 @@ BoxCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.6, y: 3, z: 0.9}
-  m_Center: {x: 0, y: 1.5, z: -0.2}
+  serializedVersion: 2
+  m_Radius: 0.35
+  m_Height: 7.501971
+  m_Direction: 0
+  m_Center: {x: -0.12207961, y: 5.134727, z: 0.20605576}
 --- !u!1 &1109737697060315827
 GameObject:
   m_ObjectHideFlags: 0
@@ -25971,7 +25981,7 @@ GameObject:
   - component: {fileID: 7408331777730507766}
   - component: {fileID: 5593062457702522144}
   - component: {fileID: 2219861969799879263}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Valla
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -30877,7 +30887,7 @@ GameObject:
   - component: {fileID: 3031057906746100648}
   - component: {fileID: 6474842433596420351}
   - component: {fileID: 8521532476767544584}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: RejaFrenteDer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -37989,7 +37999,7 @@ GameObject:
   - component: {fileID: 7005617379691776181}
   - component: {fileID: 8174769065840394316}
   - component: {fileID: 8414278866625263937}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SillonAsiento
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -40284,7 +40294,7 @@ GameObject:
   - component: {fileID: 4923352102336686790}
   - component: {fileID: 2290931226484936478}
   - component: {fileID: 6441338397845999509}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Valla
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -41949,8 +41959,8 @@ GameObject:
   m_Component:
   - component: {fileID: 8377873479761063769}
   - component: {fileID: 4313363118730740598}
-  - component: {fileID: 7699681354788360512}
   - component: {fileID: 1835831200725672618}
+  - component: {fileID: 3774516362511237168}
   m_Layer: 0
   m_Name: PostePortico
   m_TagString: Untagged
@@ -41981,27 +41991,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1725528619915573045}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!65 &7699681354788360512
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1725528619915573045}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &1835831200725672618
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -42051,6 +42040,29 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!136 &3774516362511237168
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1725528619915573045}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.35
+  m_Height: 1
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.000000029802322, z: 0}
 --- !u!1 &1734638194917296682
 GameObject:
   m_ObjectHideFlags: 0
@@ -46115,7 +46127,7 @@ GameObject:
   - component: {fileID: 2737459255701068267}
   - component: {fileID: 3995524780573945552}
   - component: {fileID: 3105005600558236460}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Valla
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -57806,7 +57818,7 @@ GameObject:
   - component: {fileID: 4338874332520714494}
   - component: {fileID: 1909142125108651602}
   - component: {fileID: 6507855394790446420}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Valla
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -59940,8 +59952,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7605305083818760042}
   - component: {fileID: 5812417130558265942}
-  - component: {fileID: 265240417754911705}
   - component: {fileID: 3330581477126157582}
+  - component: {fileID: 6356935879255006720}
   m_Layer: 0
   m_Name: PostePortico
   m_TagString: Untagged
@@ -59972,27 +59984,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2433372181256396806}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!65 &265240417754911705
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2433372181256396806}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &3330581477126157582
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -60042,6 +60033,29 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!136 &6356935879255006720
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2433372181256396806}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.35
+  m_Height: 1.0000002
+  m_Direction: 0
+  m_Center: {x: 0.0000042021275, y: 0.000000014901161, z: 0.00000037252903}
 --- !u!1 &2435855861632015962
 GameObject:
   m_ObjectHideFlags: 0
@@ -61253,7 +61267,7 @@ GameObject:
   - component: {fileID: 8502335059176202267}
   - component: {fileID: 2966024656453767535}
   - component: {fileID: 6766321288939610627}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: RejaFrenteDer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -64057,7 +64071,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2889537581095836048}
-  - component: {fileID: 6410299433108302846}
+  - component: {fileID: 2517953838170419817}
   m_Layer: 0
   m_Name: Transformador_Poste_28
   m_TagString: Untagged
@@ -64081,8 +64095,8 @@ Transform:
   - {fileID: 6336946616451715180}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &6410299433108302846
-BoxCollider:
+--- !u!136 &2517953838170419817
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -64099,9 +64113,11 @@ BoxCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.6, y: 3, z: 0.9}
-  m_Center: {x: 0, y: 1.5, z: -0.2}
+  serializedVersion: 2
+  m_Radius: 0.35
+  m_Height: 7.501972
+  m_Direction: 0
+  m_Center: {x: -0.122080326, y: 5.134727, z: 0.2060586}
 --- !u!1 &2636206336627064507
 GameObject:
   m_ObjectHideFlags: 0
@@ -68409,7 +68425,7 @@ GameObject:
   - component: {fileID: 5491647948331233786}
   - component: {fileID: 8862478339586793677}
   - component: {fileID: 5937967650720144201}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Valla
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -72898,7 +72914,7 @@ GameObject:
   - component: {fileID: 2930132150886568473}
   - component: {fileID: 3922207627873921619}
   - component: {fileID: 7877908566239783155}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Reja
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -73098,8 +73114,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2701641950912899089}
   - component: {fileID: 7993675710347045749}
-  - component: {fileID: 1730857367283460843}
   - component: {fileID: 8275902504853735574}
+  - component: {fileID: 5758870810439252359}
   m_Layer: 0
   m_Name: Poste
   m_TagString: Untagged
@@ -73130,27 +73146,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3000419461944941037}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!65 &1730857367283460843
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3000419461944941037}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &8275902504853735574
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -73200,6 +73195,29 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!136 &5758870810439252359
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3000419461944941037}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.35
+  m_Height: 0.99999994
+  m_Direction: 2
+  m_Center: {x: 0.0000008791685, y: 0.000000044703484, z: 0.0000068843365}
 --- !u!1 &3001661518160029824
 GameObject:
   m_ObjectHideFlags: 0
@@ -79856,7 +79874,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5880530628743331482}
-  - component: {fileID: 5119912587860276203}
+  - component: {fileID: 1890651282522609946}
   m_Layer: 0
   m_Name: Transformador_Poste_31
   m_TagString: Untagged
@@ -79880,8 +79898,8 @@ Transform:
   - {fileID: 5260998358769392064}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &5119912587860276203
-BoxCollider:
+--- !u!136 &1890651282522609946
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -79898,9 +79916,11 @@ BoxCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.6, y: 3, z: 0.9}
-  m_Center: {x: 0, y: 1.5, z: -0.2}
+  serializedVersion: 2
+  m_Radius: 0.35
+  m_Height: 7.501971
+  m_Direction: 0
+  m_Center: {x: -0.12207961, y: 5.134727, z: 0.20605576}
 --- !u!1 &3295363004023113387
 GameObject:
   m_ObjectHideFlags: 0
@@ -80978,7 +80998,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6728615059800784590}
-  - component: {fileID: 4619473921470423056}
+  - component: {fileID: 4839175503905866134}
   m_Layer: 0
   m_Name: Transformador_Poste_43
   m_TagString: Untagged
@@ -81002,8 +81022,8 @@ Transform:
   - {fileID: 7543589855531335203}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &4619473921470423056
-BoxCollider:
+--- !u!136 &4839175503905866134
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -81020,9 +81040,11 @@ BoxCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.6, y: 3, z: 0.9}
-  m_Center: {x: 0, y: 1.5, z: -0.2}
+  serializedVersion: 2
+  m_Radius: 0.35
+  m_Height: 7.501972
+  m_Direction: 0
+  m_Center: {x: -0.122079134, y: 5.134727, z: 0.20605503}
 --- !u!1 &3334261917770365643
 GameObject:
   m_ObjectHideFlags: 0
@@ -82792,7 +82814,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3781109756403689856}
-  - component: {fileID: 7490409821986539185}
+  - component: {fileID: 7929159383043058551}
   m_Layer: 0
   m_Name: Transformador_Poste_1
   m_TagString: Untagged
@@ -82816,8 +82838,8 @@ Transform:
   - {fileID: 8355392983263081169}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &7490409821986539185
-BoxCollider:
+--- !u!136 &7929159383043058551
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -82834,9 +82856,11 @@ BoxCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.6, y: 3, z: 0.9}
-  m_Center: {x: 0, y: 1.5, z: -0.2}
+  serializedVersion: 2
+  m_Radius: 0.35
+  m_Height: 7.501971
+  m_Direction: 0
+  m_Center: {x: -0.12207961, y: 5.134727, z: 0.20605576}
 --- !u!1 &3395205726742739855
 GameObject:
   m_ObjectHideFlags: 0
@@ -85950,7 +85974,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4715301739892600318}
-  - component: {fileID: 7782924644034796124}
+  - component: {fileID: 2753693180554613262}
   m_Layer: 0
   m_Name: Transformador_Poste_34
   m_TagString: Untagged
@@ -85974,8 +85998,8 @@ Transform:
   - {fileID: 2216422958908089212}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &7782924644034796124
-BoxCollider:
+--- !u!136 &2753693180554613262
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -85992,9 +86016,11 @@ BoxCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.6, y: 3, z: 0.9}
-  m_Center: {x: 0, y: 1.5, z: -0.2}
+  serializedVersion: 2
+  m_Radius: 0.35
+  m_Height: 7.5019727
+  m_Direction: 0
+  m_Center: {x: -0.12207866, y: 5.134727, z: 0.20605527}
 --- !u!1 &3535989199809246852
 GameObject:
   m_ObjectHideFlags: 0
@@ -88135,7 +88161,7 @@ GameObject:
   - component: {fileID: 7877382826808280965}
   - component: {fileID: 8012048724702695598}
   - component: {fileID: 8216502110373730120}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Valla
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -92954,8 +92980,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1150834644938090834}
   - component: {fileID: 9148876561224772900}
-  - component: {fileID: 4517362351244111458}
   - component: {fileID: 2244466702271325791}
+  - component: {fileID: 542152006890013229}
   m_Layer: 0
   m_Name: Poste
   m_TagString: Untagged
@@ -92986,27 +93012,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3767978329351070467}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!65 &4517362351244111458
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3767978329351070467}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &2244466702271325791
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -93056,6 +93061,29 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!136 &542152006890013229
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3767978329351070467}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.35
+  m_Height: 0.99999994
+  m_Direction: 2
+  m_Center: {x: 0.0000008791685, y: 0.000000044703484, z: 0.0000048577785}
 --- !u!1 &3769263844206141974
 GameObject:
   m_ObjectHideFlags: 0
@@ -96393,8 +96421,8 @@ GameObject:
   m_Component:
   - component: {fileID: 17192386117958068}
   - component: {fileID: 3815672856352831643}
-  - component: {fileID: 8535483742112435486}
   - component: {fileID: 4112590684679010985}
+  - component: {fileID: 3169051141026233089}
   m_Layer: 0
   m_Name: PostePortico
   m_TagString: Untagged
@@ -96425,27 +96453,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3893994200634921889}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!65 &8535483742112435486
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3893994200634921889}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &4112590684679010985
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -96495,6 +96502,29 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!136 &3169051141026233089
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3893994200634921889}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.35
+  m_Height: 1.0000002
+  m_Direction: 0
+  m_Center: {x: -0.000004172325, y: 0.000000014901161, z: -0.0000041872263}
 --- !u!1 &3896922317529481836
 GameObject:
   m_ObjectHideFlags: 0
@@ -102447,7 +102477,7 @@ GameObject:
   - component: {fileID: 3375971811514666808}
   - component: {fileID: 1451160430433815242}
   - component: {fileID: 8090266635840556571}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Reja
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -103273,7 +103303,7 @@ GameObject:
   - component: {fileID: 3963968838173638219}
   - component: {fileID: 102479365543415512}
   - component: {fileID: 388300676568883049}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Valla
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -107665,7 +107695,7 @@ GameObject:
   - component: {fileID: 7368563798449677786}
   - component: {fileID: 3427874147194596650}
   - component: {fileID: 8925499923772891120}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: RejaFrenteIzq
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -108134,7 +108164,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4773117085820155161}
-  - component: {fileID: 6845613690699097244}
+  - component: {fileID: 2363687636476937752}
   m_Layer: 0
   m_Name: Transformador_Poste_4
   m_TagString: Untagged
@@ -108158,8 +108188,8 @@ Transform:
   - {fileID: 5002540562655086669}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &6845613690699097244
-BoxCollider:
+--- !u!136 &2363687636476937752
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -108176,9 +108206,11 @@ BoxCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.6, y: 3, z: 0.9}
-  m_Center: {x: 0, y: 1.5, z: -0.2}
+  serializedVersion: 2
+  m_Radius: 0.35
+  m_Height: 7.501971
+  m_Direction: 0
+  m_Center: {x: -0.12207961, y: 5.134727, z: 0.20605576}
 --- !u!1 &4304963673727602725
 GameObject:
   m_ObjectHideFlags: 0
@@ -115445,7 +115477,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4546253893748976303}
-  - component: {fileID: 5352170895831428171}
+  - component: {fileID: 3623562734110780169}
   m_Layer: 0
   m_Name: Transformador_Poste_19
   m_TagString: Untagged
@@ -115469,8 +115501,8 @@ Transform:
   - {fileID: 2294482139642660994}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &5352170895831428171
-BoxCollider:
+--- !u!136 &3623562734110780169
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -115487,9 +115519,11 @@ BoxCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.6, y: 3, z: 0.9}
-  m_Center: {x: 0, y: 1.5, z: -0.2}
+  serializedVersion: 2
+  m_Radius: 0.35
+  m_Height: 7.5019727
+  m_Direction: 0
+  m_Center: {x: -0.12207794, y: 5.134727, z: 0.20605586}
 --- !u!1 &4669205723594971790
 GameObject:
   m_ObjectHideFlags: 0
@@ -117459,7 +117493,7 @@ GameObject:
   - component: {fileID: 8612863724598093650}
   - component: {fileID: 1035708032678364601}
   - component: {fileID: 3267282803938157673}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SillonAsiento
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -120180,8 +120214,8 @@ GameObject:
   m_Component:
   - component: {fileID: 481500493488492841}
   - component: {fileID: 6140959216723571884}
-  - component: {fileID: 7472601651373064602}
   - component: {fileID: 6862526980843406833}
+  - component: {fileID: 5376751254191038934}
   m_Layer: 0
   m_Name: Poste
   m_TagString: Untagged
@@ -120212,27 +120246,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4825846069784704891}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!65 &7472601651373064602
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4825846069784704891}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &6862526980843406833
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -120282,6 +120295,29 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!136 &5376751254191038934
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4825846069784704891}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.35
+  m_Height: 0.99999994
+  m_Direction: 2
+  m_Center: {x: -0.0000008791685, y: 0.000000044703484, z: 0.0000068843365}
 --- !u!1 &4826345317633770749
 GameObject:
   m_ObjectHideFlags: 0
@@ -120464,7 +120500,7 @@ GameObject:
   - component: {fileID: 8493067926361566192}
   - component: {fileID: 3920125167606662072}
   - component: {fileID: 7242505081779206260}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: RejaAtras
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -125410,8 +125446,8 @@ GameObject:
   m_Component:
   - component: {fileID: 5212899193096193201}
   - component: {fileID: 7973026962928110860}
-  - component: {fileID: 5931434089716004823}
   - component: {fileID: 2864387273405020565}
+  - component: {fileID: 5639909207424680498}
   m_Layer: 0
   m_Name: PostePortico
   m_TagString: Untagged
@@ -125442,27 +125478,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4951864872954263137}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!65 &5931434089716004823
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4951864872954263137}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &2864387273405020565
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -125512,6 +125527,29 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!136 &5639909207424680498
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4951864872954263137}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.35
+  m_Height: 1
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.000000029802322, z: 0}
 --- !u!1 &4952947777808388141
 GameObject:
   m_ObjectHideFlags: 0
@@ -126156,7 +126194,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2352124166870798914}
-  - component: {fileID: 7524614879285823090}
+  - component: {fileID: 8180773280098996398}
   m_Layer: 0
   m_Name: Transformador_Poste_25
   m_TagString: Untagged
@@ -126180,8 +126218,8 @@ Transform:
   - {fileID: 3412743309003544441}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &7524614879285823090
-BoxCollider:
+--- !u!136 &8180773280098996398
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -126198,9 +126236,11 @@ BoxCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.6, y: 3, z: 0.9}
-  m_Center: {x: 0, y: 1.5, z: -0.2}
+  serializedVersion: 2
+  m_Radius: 0.35
+  m_Height: 7.501972
+  m_Direction: 0
+  m_Center: {x: -0.12207723, y: 5.134727, z: 0.2060555}
 --- !u!1 &4976757940996576563
 GameObject:
   m_ObjectHideFlags: 0
@@ -136140,7 +136180,7 @@ GameObject:
   - component: {fileID: 1437550294752523594}
   - component: {fileID: 3262236153459193792}
   - component: {fileID: 6234486151024391840}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: RejaAtras
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -136657,7 +136697,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 645441570886763699}
-  - component: {fileID: 5128678959510779671}
+  - component: {fileID: 5140199536881668568}
   m_Layer: 0
   m_Name: Transformador_Poste_46
   m_TagString: Untagged
@@ -136681,8 +136721,8 @@ Transform:
   - {fileID: 5649778683028022785}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &5128678959510779671
-BoxCollider:
+--- !u!136 &5140199536881668568
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -136699,9 +136739,11 @@ BoxCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.6, y: 3, z: 0.9}
-  m_Center: {x: 0, y: 1.5, z: -0.2}
+  serializedVersion: 2
+  m_Radius: 0.35
+  m_Height: 7.501972
+  m_Direction: 0
+  m_Center: {x: -0.12208414, y: 5.134727, z: 0.20605813}
 --- !u!1 &5365271297083374970
 GameObject:
   m_ObjectHideFlags: 0
@@ -141314,8 +141356,8 @@ GameObject:
   m_Component:
   - component: {fileID: 147984125422745722}
   - component: {fileID: 4579623343061456686}
-  - component: {fileID: 5140787951625675807}
   - component: {fileID: 7330102326930542596}
+  - component: {fileID: 982127199286550075}
   m_Layer: 0
   m_Name: Poste
   m_TagString: Untagged
@@ -141346,27 +141388,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5574277493536706040}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!65 &5140787951625675807
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5574277493536706040}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &7330102326930542596
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -141416,6 +141437,29 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!136 &982127199286550075
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5574277493536706040}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.35
+  m_Height: 0.99999994
+  m_Direction: 2
+  m_Center: {x: -0.0000008791685, y: 0.000000044703484, z: 0.0000048577785}
 --- !u!1 &5575643156647505680
 GameObject:
   m_ObjectHideFlags: 0
@@ -143729,7 +143773,7 @@ GameObject:
   - component: {fileID: 6463142897472426490}
   - component: {fileID: 5951259741965916395}
   - component: {fileID: 1225614750571671748}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Valla
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -145263,7 +145307,7 @@ GameObject:
   - component: {fileID: 7341660760573084096}
   - component: {fileID: 2833705093756269668}
   - component: {fileID: 1482695093053876231}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Valla
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -151350,8 +151394,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4200039939625726713}
   - component: {fileID: 5586745098119685760}
-  - component: {fileID: 6231611386329734726}
   - component: {fileID: 1849676843801266905}
+  - component: {fileID: 1203388670338353338}
   m_Layer: 0
   m_Name: PostePortico
   m_TagString: Untagged
@@ -151382,27 +151426,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5918723543442062709}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!65 &6231611386329734726
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5918723543442062709}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &1849676843801266905
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -151452,6 +151475,29 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!136 &1203388670338353338
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5918723543442062709}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.35
+  m_Height: 1
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.000000029802322, z: 0}
 --- !u!1 &5925807632638486887
 GameObject:
   m_ObjectHideFlags: 0
@@ -153202,7 +153248,7 @@ GameObject:
   - component: {fileID: 6527364400513995036}
   - component: {fileID: 5402805525906903409}
   - component: {fileID: 6235780185342441718}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: RejaFrenteIzq
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -155033,7 +155079,7 @@ GameObject:
   - component: {fileID: 764417419318045213}
   - component: {fileID: 2716146325821599861}
   - component: {fileID: 1790135814034965580}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: RejaIzq
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -157663,7 +157709,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4311754021471723681}
-  - component: {fileID: 8915348447718305237}
+  - component: {fileID: 1298919476830184511}
   m_Layer: 0
   m_Name: Transformador_Poste_10
   m_TagString: Untagged
@@ -157687,8 +157733,8 @@ Transform:
   - {fileID: 2055789473368944155}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &8915348447718305237
-BoxCollider:
+--- !u!136 &1298919476830184511
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -157705,9 +157751,11 @@ BoxCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.6, y: 3, z: 0.9}
-  m_Center: {x: 0, y: 1.5, z: -0.2}
+  serializedVersion: 2
+  m_Radius: 0.35
+  m_Height: 7.501971
+  m_Direction: 0
+  m_Center: {x: -0.12207961, y: 5.134727, z: 0.20605576}
 --- !u!1 &6126371317982607281
 GameObject:
   m_ObjectHideFlags: 0
@@ -158046,7 +158094,7 @@ GameObject:
   - component: {fileID: 8063654346309470850}
   - component: {fileID: 7033966597126952328}
   - component: {fileID: 7986782626739801273}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Valla
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -159141,7 +159189,7 @@ GameObject:
   - component: {fileID: 5131574505036120897}
   - component: {fileID: 6539270530499745924}
   - component: {fileID: 6577707739018726773}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: RejaIzq
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -163142,7 +163190,7 @@ GameObject:
   - component: {fileID: 3464204809847259979}
   - component: {fileID: 721094426599256374}
   - component: {fileID: 5823428682217539522}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Valla
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -164738,7 +164786,7 @@ GameObject:
   - component: {fileID: 4672415956570669789}
   - component: {fileID: 689104060875136577}
   - component: {fileID: 8617837214145123469}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: BarandalNorte
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -171146,7 +171194,7 @@ GameObject:
   - component: {fileID: 2584851685021424475}
   - component: {fileID: 9104429772676378126}
   - component: {fileID: 5206126845851772375}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: RejaFrenteDer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -180768,7 +180816,7 @@ GameObject:
   - component: {fileID: 8400588118947768288}
   - component: {fileID: 4413712864773567392}
   - component: {fileID: 7363949014292740893}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Valla
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -192074,7 +192122,7 @@ GameObject:
   - component: {fileID: 4979047146107644958}
   - component: {fileID: 4989784985843041515}
   - component: {fileID: 9138468386367296652}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Valla
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -192891,7 +192939,7 @@ GameObject:
   - component: {fileID: 7246997836289257729}
   - component: {fileID: 953814873820553915}
   - component: {fileID: 1116308841587001261}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: RejaDer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -194165,7 +194213,7 @@ GameObject:
   - component: {fileID: 1510747397345198754}
   - component: {fileID: 2851531186986616158}
   - component: {fileID: 330629295568252405}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: RejaIzq
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -197714,7 +197762,7 @@ GameObject:
   - component: {fileID: 2768993874969467753}
   - component: {fileID: 6924364723666258851}
   - component: {fileID: 5509342340206417311}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Valla
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -202920,7 +202968,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2011801586863127685}
-  - component: {fileID: 7897731627388697188}
+  - component: {fileID: 3205687181705646057}
   m_Layer: 0
   m_Name: Transformador_Poste_49
   m_TagString: Untagged
@@ -202944,8 +202992,8 @@ Transform:
   - {fileID: 7173967368656169963}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &7897731627388697188
-BoxCollider:
+--- !u!136 &3205687181705646057
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -202962,9 +203010,11 @@ BoxCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.6, y: 3, z: 0.9}
-  m_Center: {x: 0, y: 1.5, z: -0.2}
+  serializedVersion: 2
+  m_Radius: 0.35
+  m_Height: 7.501971
+  m_Direction: 0
+  m_Center: {x: -0.12207961, y: 5.134727, z: 0.20605576}
 --- !u!1 &7880833983865402619
 GameObject:
   m_ObjectHideFlags: 0
@@ -203726,7 +203776,7 @@ GameObject:
   - component: {fileID: 7118856058228150990}
   - component: {fileID: 187536894952924375}
   - component: {fileID: 5588841822438498459}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Valla
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -204705,7 +204755,7 @@ GameObject:
   - component: {fileID: 2731436673038939570}
   - component: {fileID: 8106691235920160444}
   - component: {fileID: 4170244712995128724}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Valla
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -210562,7 +210612,7 @@ GameObject:
   - component: {fileID: 3656190729168903809}
   - component: {fileID: 268780574215484795}
   - component: {fileID: 4753441454976276280}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: RejaFrenteIzq
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -217051,7 +217101,7 @@ GameObject:
   - component: {fileID: 3569914708453271311}
   - component: {fileID: 3898860971098119621}
   - component: {fileID: 867071443131850419}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: BarandalSur
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -220788,7 +220838,7 @@ GameObject:
   - component: {fileID: 9216172131066384495}
   - component: {fileID: 462799862664862119}
   - component: {fileID: 2614934122608321076}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Reja
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -221725,7 +221775,7 @@ GameObject:
   - component: {fileID: 2729092733539590402}
   - component: {fileID: 7886744982312928787}
   - component: {fileID: 5199220839865241081}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: RejaAtras
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -223214,7 +223264,7 @@ GameObject:
   - component: {fileID: 5410766171916487698}
   - component: {fileID: 3297821214998586920}
   - component: {fileID: 6408475083055171057}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Valla
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -225333,7 +225383,7 @@ GameObject:
   - component: {fileID: 3984207899071801652}
   - component: {fileID: 7558341048619642123}
   - component: {fileID: 3201468085233945010}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Valla
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -227491,7 +227541,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6582171331256005900}
-  - component: {fileID: 4212855998041663624}
+  - component: {fileID: 6962118189392742500}
   m_Layer: 0
   m_Name: Transformador_Poste_40
   m_TagString: Untagged
@@ -227515,8 +227565,8 @@ Transform:
   - {fileID: 8880571561790496706}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &4212855998041663624
-BoxCollider:
+--- !u!136 &6962118189392742500
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -227533,9 +227583,11 @@ BoxCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.6, y: 3, z: 0.9}
-  m_Center: {x: 0, y: 1.5, z: -0.2}
+  serializedVersion: 2
+  m_Radius: 0.35
+  m_Height: 7.501972
+  m_Direction: 0
+  m_Center: {x: -0.12208176, y: 5.134727, z: 0.20605563}
 --- !u!1 &8845003876429229002
 GameObject:
   m_ObjectHideFlags: 0
@@ -228097,7 +228149,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8676663112252352403}
-  - component: {fileID: 8179962334359446279}
+  - component: {fileID: 3812534981567276105}
   m_Layer: 0
   m_Name: Transformador_Poste_52
   m_TagString: Untagged
@@ -228121,8 +228173,8 @@ Transform:
   - {fileID: 4989365828341972236}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &8179962334359446279
-BoxCollider:
+--- !u!136 &3812534981567276105
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -228139,9 +228191,11 @@ BoxCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.6, y: 3, z: 0.9}
-  m_Center: {x: 0, y: 1.5, z: -0.2}
+  serializedVersion: 2
+  m_Radius: 0.35
+  m_Height: 7.5019727
+  m_Direction: 0
+  m_Center: {x: -0.12207937, y: 5.134727, z: 0.20605777}
 --- !u!1 &8877826800182723864
 GameObject:
   m_ObjectHideFlags: 0
@@ -231301,7 +231355,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5173744937339818180}
-  - component: {fileID: 4294561568008584659}
+  - component: {fileID: 902836947894384024}
   m_Layer: 0
   m_Name: Transformador_Poste_16
   m_TagString: Untagged
@@ -231325,8 +231379,8 @@ Transform:
   - {fileID: 7557620929204116318}
   m_Father: {fileID: 6390438011546411126}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &4294561568008584659
-BoxCollider:
+--- !u!136 &902836947894384024
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -231343,9 +231397,11 @@ BoxCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.6, y: 3, z: 0.9}
-  m_Center: {x: 0, y: 1.5, z: -0.2}
+  serializedVersion: 2
+  m_Radius: 0.35
+  m_Height: 7.5019727
+  m_Direction: 0
+  m_Center: {x: -0.12207818, y: 5.134727, z: 0.20605527}
 --- !u!1 &8984175964748142281
 GameObject:
   m_ObjectHideFlags: 0
@@ -235298,7 +235354,7 @@ GameObject:
   - component: {fileID: 4797151034647156904}
   - component: {fileID: 3904528729606126499}
   - component: {fileID: 1298766503050944624}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Valla
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -236570,7 +236626,7 @@ GameObject:
   - component: {fileID: 5330369563234564095}
   - component: {fileID: 8101326909001463754}
   - component: {fileID: 3428904972634155365}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: RejaDer
   m_TagString: Untagged
   m_Icon: {fileID: 0}

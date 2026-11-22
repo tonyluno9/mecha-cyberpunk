@@ -1,0 +1,5 @@
+Poste: Poste_Luz en (-127.00, 0.20, -7.60) radio=0.35 altura=7.64 capa=0
+A_npc_pegado_al_poste: hay=True golpea=NPC_Prueba (capa Default) a 8.65 m
+B_pared_en_medio: hay=True golpea=Pared_Prueba (capa Default) a 4.35 m
+C_reja_NoDetieneBalas_en_medio: hay=True golpea=NPC_Prueba (capa Default) a 8.65 m
+Resultado: A pega=True (esperado True), B pega=False (esperado False), C pega=True (esperado True)
