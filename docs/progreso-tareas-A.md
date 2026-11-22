@@ -17,8 +17,10 @@ espaldo-metas-22nov (B ya los subió).
 - T9 muro: HECHA, merge 3c8ccff
 - T4 hitboxes: HECHA, merge 96d66b1
 - T13 tráfico + T6 carros: HECHAS, merge dd7fd55
-- para-sesion-A: aplicando en integ/A-T1606
+- para-sesion-A: HECHA, merge 85a60e6
 - Sesión B: TERMINÓ (docs/progreso-tareas-B.md). Siguen: builds Demo y Juego, reporte docs/reporte-tareas-22nov.md
 - T6 Blender modelos: pendiente
 - T14 realismo: HECHA, merge 4e47779 (+7b180a3 cielo menos naranja)
 - para-sesion-A: pendiente
+
+- Reporte: docs/reporte-tareas-22nov.md. Build Demo cortado por falta de memoria (Claude Code lo detuvo); builds pendientes.
