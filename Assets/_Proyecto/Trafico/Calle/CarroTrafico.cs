@@ -22,9 +22,18 @@ namespace MechaCyberpunk.Trafico.Calle
         private const float SegundosEntrePasaCerca = 4f;
         private const float AlturaDelCentro = 0.45f;
         // T-532: los cruces (nodos con 3 o más calles) se ceden: un carro espera afuera mientras otro que cruza en otra dirección está adentro.
+        // T-1603: el cruce se reserva (ReservaCruces) desde DistanciaReservaCruce m antes del nodo y se suelta RadioSalidaCruce m después de pasarlo.
         private const float RadioCruce = 8f;
-        private const float DistanciaAvisoCruce = 16f;
-        private const float CruceSeCruza = 0.6f;
+        private const float DistanciaReservaCruce = 24f;
+        private const float RadioSalidaCruce = 8f;
+        private const float GiroIzquierdaExclusivo = -0.5f;
+        // T-1603: en una esquina (giro de GiroDeCurvaMinimo grados o más) baja a VelocidadEnCurva m/s en los últimos DistanciaCurva m antes del nodo; frena suave (FrenadoEnCurva m/s²).
+        private const float DistanciaCurva = 14f;
+        private const float GiroDeCurvaMinimo = 30f;
+        private const float VelocidadEnCurva = 6f;
+        private const float FrenadoEnCurva = 8f;
+        // T-1603: un carro chocado se recicla fuera de la vista pasados estos segundos del choque.
+        private const float SegundosAntesDeReciclarChocado = 3f;
         // T-532: lo que no es tráfico (carros estacionados o robados, patrullas, gente, puestos) se ve con un rayo en caja a la altura del cofre.
         private const float AlturaRayo = 0.9f;
         private const int MaxChoques = 8;
@@ -74,6 +83,17 @@ namespace MechaCyberpunk.Trafico.Calle
         private float ultimoChoque = -100f;
         private Renderer carroceria;
 
+        // T-1603: reservas de cruce por red de calles, siguiente tramo planeado, atorones, choques y radio alrededor del jugador.
+        private static readonly Dictionary<GrafoCalles, ReservaCruces> reservasPorGrafo = new Dictionary<GrafoCalles, ReservaCruces>();
+        private int nodoReservado = -1;
+        private int siguienteNodo = -1;
+        private int siguienteDeDestino = -1;
+        private int siguienteDeAnterior = -1;
+        private float velocidadAplicada;
+        private bool atoradoContado;
+        private float reciclarChocadoDesde = -1f;
+        private float radioAlrededor;
+
         private static readonly Color[] ColoresCarroceria =
         {
             new Color(0.75f, 0.1f, 0.1f), new Color(0.1f, 0.35f, 0.75f), new Color(0.9f, 0.75f, 0.1f), new Color(0.15f, 0.55f, 0.35f),
@@ -117,7 +137,14 @@ namespace MechaCyberpunk.Trafico.Calle
         public string Causa { get; private set; } = "libre";
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-        private static void Reiniciar() => Activos.Clear();
+        private static void Reiniciar()
+        {
+            Activos.Clear();
+            reservasPorGrafo.Clear();
+        }
+
+        /// <summary>T-1603: los nodos donde reaparece (reciclado) quedan a este radio (m) del jugador cuando hay alguno así; 0 = en toda la red.</summary>
+        public void FijarRadioAlrededor(float metros) => radioAlrededor = Mathf.Max(0f, metros);
 
         /// <summary>Lo prepara el administrador: números, calles, nodo de salida, azar y cómo saber dónde está el jugador.</summary>
         public void Preparar(ConfigTraficoCalle numeros, GrafoCalles grafo, int nodoInicial, System.Random azarCarro, Func<Vector3?> dondeEstaElJugador)
@@ -323,6 +350,7 @@ namespace MechaCyberpunk.Trafico.Calle
         private void OnDisable()
         {
             Activos.Remove(this);
+            SoltarReserva();
             EventosRuido.Disparo -= AlOirDisparo;
             if (montable != null)
             {
@@ -421,6 +449,7 @@ namespace MechaCyberpunk.Trafico.Calle
                 return NivelChoque.Ninguno;
             }
             ultimoChoque = Time.time;
+            reciclarChocadoDesde = Time.time; // T-1603: se queda detenido y, fuera de la vista, se recicla
             Choques++;
             UltimoChoque = nivel;
             calculo.Detener(ReglaChoqueTrafico.SegundosDetenido(nivel));
@@ -479,6 +508,10 @@ namespace MechaCyberpunk.Trafico.Calle
             float dt = Time.deltaTime;
             Vector3? jugador = posicionJugador?.Invoke();
             SeguirElSuelo(dt);
+            if (reciclarChocadoDesde >= 0f && !EnRefuerzo && ReciclarChocado())
+            {
+                return;
+            }
             if (EnRefuerzo && RefuerzoLlego)
             {
                 return; // T-714: ya llegó y está estacionado
@@ -499,6 +532,11 @@ namespace MechaCyberpunk.Trafico.Calle
                 return;
             }
             float velocidad = calculo.Avanzar(dt, DistanciaAlObstaculo(jugador));
+            if (!EnRefuerzo)
+            {
+                RevisarAtorado();
+                velocidad = LimitarEnCurva(velocidad, dt);
+            }
             if (EnRefuerzo)
             {
                 // T-714: frena suave al acercarse al último nodo (no se clava de golpe).
@@ -530,6 +568,109 @@ namespace MechaCyberpunk.Trafico.Calle
                 MechaCyberpunk.Vehiculos.Carro.CarroViejo viejoPasa = GetComponent<MechaCyberpunk.Vehiculos.Carro.CarroViejo>();
                 Sonidos.ReproducirEn(viejoPasa != null ? viejoPasa.IdPasaCerca : "VEH_PASA_CERCA", transform.position); // T-1534: eléctrico → VEH_ELECTRICO_PASAR
             }
+        }
+
+        // T-1603: cuenta una vez cada atorón de más de EstadisticasTrafico.SegundosAtorado s (el que causa el jugador no cuenta).
+        private void RevisarAtorado()
+        {
+            float segundos = calculo.SegundosBloqueado;
+            if (segundos <= 0f)
+            {
+                atoradoContado = false;
+                return;
+            }
+            if (!atoradoContado && Causa != "jugador" && segundos >= EstadisticasTrafico.SegundosAtorado)
+            {
+                atoradoContado = true;
+                EstadisticasTrafico.AnotarAtorado(name, transform.position, segundos);
+            }
+        }
+
+        // T-1603: un carro que chocó se queda detenido (lo hace el cálculo) y, pasado un rato y sin que nadie lo vea ni haya un conductor afuera, sale de nuevo en otro punto.
+        private bool ReciclarChocado()
+        {
+            if (Time.time - reciclarChocadoDesde < SegundosAntesDeReciclarChocado || EnHuida || EstaSiendoRobado || ConductorAfuera != null)
+            {
+                return false;
+            }
+            if (EnVista(Camera.main))
+            {
+                return false;
+            }
+            reciclarChocadoDesde = -1f;
+            return Reaparecer(false);
+        }
+
+        // T-1603: velocidad según la curvatura: en una esquina baja suave a VelocidadEnCurva; en recta, o si el cálculo ya pide menos, lo que pide el cálculo.
+        private float LimitarEnCurva(float velocidad, float dt)
+        {
+            float limite = float.MaxValue;
+            int siguiente = SiguientePlaneado();
+            if (siguiente >= 0 && siguiente != nodoDestino && nodoAnterior >= 0 && nodoAnterior != nodoDestino && Distancia(eje, calles.Nodo(nodoDestino)) <= DistanciaCurva)
+            {
+                Vector3 entra = calles.Nodo(nodoDestino) - calles.Nodo(nodoAnterior);
+                Vector3 sale = calles.Nodo(siguiente) - calles.Nodo(nodoDestino);
+                entra.y = 0f;
+                sale.y = 0f;
+                if (entra.sqrMagnitude > 0.01f && sale.sqrMagnitude > 0.01f && Vector3.Angle(entra, sale) >= GiroDeCurvaMinimo)
+                {
+                    limite = VelocidadEnCurva;
+                }
+            }
+            if (limite >= velocidad)
+            {
+                velocidadAplicada = velocidad;
+                return velocidad;
+            }
+            velocidadAplicada = velocidadAplicada > limite ? Mathf.MoveTowards(velocidadAplicada, limite, FrenadoEnCurva * dt) : limite;
+            velocidadAplicada = Mathf.Min(velocidadAplicada, velocidad);
+            return velocidadAplicada;
+        }
+
+        // T-1603: el tramo que sigue después del nodo al que va, decidido con anticipación (se mantiene mientras no cambie el tramo actual); en refuerzo, el de su ruta.
+        private int SiguientePlaneado()
+        {
+            if (calles == null)
+            {
+                return -1;
+            }
+            if (EnRefuerzo)
+            {
+                return rutaRefuerzo.Count > 0 ? rutaRefuerzo[0] : -1;
+            }
+            if (azar == null)
+            {
+                return -1;
+            }
+            if (siguienteNodo < 0 || siguienteDeDestino != nodoDestino || siguienteDeAnterior != nodoAnterior)
+            {
+                siguienteNodo = ElegirSiguiente(nodoDestino, nodoAnterior);
+                siguienteDeDestino = nodoDestino;
+                siguienteDeAnterior = nodoAnterior;
+            }
+            return siguienteNodo;
+        }
+
+        private ReservaCruces Reservas
+        {
+            get
+            {
+                if (!reservasPorGrafo.TryGetValue(calles, out ReservaCruces reservas))
+                {
+                    reservas = new ReservaCruces();
+                    reservasPorGrafo[calles] = reservas;
+                }
+                return reservas;
+            }
+        }
+
+        private void SoltarReserva()
+        {
+            if (nodoReservado >= 0 && calles != null)
+            {
+                Reservas.Liberar(nodoReservado, GetInstanceID());
+            }
+            nodoReservado = -1;
         }
 
         // T-1526: defensa: un carro del tráfico que acabe fuera del muro (un hueco, un empujón, una salida vieja) se recicla dentro del muro; si no hay dónde, se apaga y el pool lo vuelve a sacar.
@@ -598,6 +739,7 @@ namespace MechaCyberpunk.Trafico.Calle
             {
                 return;
             }
+            SoltarReserva();
             int nodo = nodoDestino;
             nodoDestino = nodoAnterior;
             nodoAnterior = nodo;
@@ -636,7 +778,7 @@ namespace MechaCyberpunk.Trafico.Calle
                     {
                         return;
                     }
-                    nodoDestino = ElegirSiguiente(llegado, nodoAnterior);
+                    nodoDestino = SiguientePlaneado();
                     nodoAnterior = llegado;
                     haciaNodo = calles.Nodo(nodoDestino) - eje;
                     haciaNodo.y = 0f;
@@ -728,6 +870,7 @@ namespace MechaCyberpunk.Trafico.Calle
             {
                 return false;
             }
+            SoltarReserva();
             EnRefuerzo = true;
             EnHuida = false;
             Ponchado = false;
@@ -900,6 +1043,7 @@ namespace MechaCyberpunk.Trafico.Calle
             {
                 Anotar(ref menor, DistanciaDelante(jugador.Value, adelante, derecha), "jugador");
             }
+            Anotar(ref menor, DistanciaAlSiguienteTramo(), "carro adelante (esquina)");
             Anotar(ref menor, DistanciaAlCruce(), "cruce");
             Anotar(ref menor, DistanciaFisica(adelante), "fisico");
             return menor;
@@ -915,35 +1059,72 @@ namespace MechaCyberpunk.Trafico.Calle
             }
         }
 
-        // T-532: cede el cruce si otro carro que va en otra dirección ya está adentro o llega antes.
+        // T-1603: el de adelante ya dobló la esquina: se ve por la ruta, no en línea recta (un carro en el tramo que sigue, mismo sentido, cuenta metros por el nodo).
+        private float DistanciaAlSiguienteTramo()
+        {
+            int siguiente = SiguientePlaneado();
+            if (siguiente < 0 || siguiente == nodoDestino)
+            {
+                return float.MaxValue;
+            }
+            Vector3 nodo = calles.Nodo(nodoDestino);
+            float haciaElNodo = Distancia(transform.position, nodo);
+            float menor = float.MaxValue;
+            for (int i = 0; i < Activos.Count; i++)
+            {
+                CarroTrafico otro = Activos[i];
+                if (otro == this || otro.nodoAnterior != nodoDestino || otro.nodoDestino != siguiente)
+                {
+                    continue;
+                }
+                float total = haciaElNodo + Distancia(nodo, otro.transform.position) - LargoCarro;
+                if (total <= config.DistanciaFrenado)
+                {
+                    menor = Mathf.Min(menor, Mathf.Max(0f, total));
+                }
+            }
+            return menor;
+        }
+
+        // T-1603: regla de paso por cruce (ReservaCruces): solo pasan juntos los carros del mismo eje; el que gira a la izquierda pasa solo. Espera antes del cruce, nunca en medio.
         private float DistanciaAlCruce()
         {
-            if (calles.Vecinos(nodoDestino).Count < 3)
+            if (nodoReservado >= 0 && nodoReservado != nodoDestino && Distancia(transform.position, calles.Nodo(nodoReservado)) > RadioSalidaCruce)
+            {
+                SoltarReserva(); // ya cruzó
+            }
+            if (calles.Vecinos(nodoDestino).Count < 3 || nodoReservado == nodoDestino)
             {
                 return float.MaxValue;
             }
             Vector3 cruce = calles.Nodo(nodoDestino);
             float mia = Distancia(transform.position, cruce);
-            if (mia <= RadioCruce || mia > DistanciaAvisoCruce)
+            if (mia > DistanciaReservaCruce)
             {
                 return float.MaxValue;
             }
-            for (int i = 0; i < Activos.Count; i++)
+            SoltarReserva(); // si todavía conservaba el cruce anterior
+            Vector3 entra = nodoAnterior >= 0 && nodoAnterior != nodoDestino ? cruce - calles.Nodo(nodoAnterior) : direccion;
+            entra.y = 0f;
+            if (entra.sqrMagnitude < 0.0001f)
             {
-                CarroTrafico otro = Activos[i];
-                if (otro == this || Mathf.Abs(Vector3.Dot(otro.transform.forward, transform.forward)) > CruceSeCruza)
-                {
-                    continue;
-                }
-                float suya = Distancia(otro.transform.position, cruce);
-                bool adentro = suya <= RadioCruce;
-                bool llegaAntes = otro.nodoDestino == nodoDestino && suya < mia;
-                if (adentro || llegaAntes)
-                {
-                    return Mathf.Max(0f, mia - RadioCruce);
-                }
+                entra = direccion;
             }
-            return float.MaxValue;
+            entra.Normalize();
+            bool izquierda = false;
+            int siguiente = SiguientePlaneado();
+            if (!EnRefuerzo && siguiente >= 0 && siguiente != nodoDestino)
+            {
+                Vector3 sale = calles.Nodo(siguiente) - cruce;
+                sale.y = 0f;
+                izquierda = sale.sqrMagnitude > 0.0001f && Vector3.Cross(entra, sale.normalized).y < GiroIzquierdaExclusivo;
+            }
+            if (Reservas.Solicitar(nodoDestino, GetInstanceID(), entra.x, entra.z, izquierda, Time.time))
+            {
+                nodoReservado = nodoDestino;
+                return float.MaxValue;
+            }
+            return mia <= RadioCruce ? float.MaxValue : Mathf.Max(0f, mia - RadioCruce);
         }
 
         // T-532: carros estacionados, robados, patrullas, gente o puestos en el carril (todo lo que tenga collider y no sea este carro).
@@ -982,40 +1163,50 @@ namespace MechaCyberpunk.Trafico.Calle
             }
             int elegido = -1;
             int intentos = calles.Cantidad * 3;
-            for (int i = 0; i < intentos && elegido < 0; i++)
+            for (int pasada = 0; pasada < 2 && elegido < 0; pasada++)
             {
-                int nodo = azar.Next(calles.Cantidad);
-                if (!calles.Dentro(nodo))
+                // T-1603: primero busca sitio alrededor del jugador (radioAlrededor); si no hay, en toda la red.
+                bool cerca = pasada == 0 && radioAlrededor > 0f && jugador.HasValue;
+                for (int i = 0; i < intentos && elegido < 0; i++)
                 {
-                    continue; // T-1526: nunca sale fuera del muro
+                    int nodo = azar.Next(calles.Cantidad);
+                    if (!calles.Dentro(nodo))
+                    {
+                        continue; // T-1526: nunca sale fuera del muro
+                    }
+                    if (soloFinales && calles.Vecinos(nodo).Count != 1)
+                    {
+                        continue;
+                    }
+                    Vector3 p = calles.Nodo(nodo);
+                    if (jugador.HasValue && Distancia(p, jugador.Value) < DistanciaOculta)
+                    {
+                        continue;
+                    }
+                    if (cerca && Distancia(p, jugador.Value) > radioAlrededor)
+                    {
+                        continue;
+                    }
+                    if (PuntoEnVista(camara, p))
+                    {
+                        continue;
+                    }
+                    if (!EspacioLibre.Libre(p, transform))
+                    {
+                        continue; // T-728: ni encima de una moto, un carro robado o estacionado, el jugador o lo que haya
+                    }
+                    if (HayCarroCerca(p))
+                    {
+                        continue; // T-588: no sale encimado a otro
+                    }
+                    elegido = nodo;
                 }
-                if (soloFinales && calles.Vecinos(nodo).Count != 1)
-                {
-                    continue;
-                }
-                Vector3 p = calles.Nodo(nodo);
-                if (jugador.HasValue && Distancia(p, jugador.Value) < DistanciaOculta)
-                {
-                    continue;
-                }
-                if (PuntoEnVista(camara, p))
-                {
-                    continue;
-                }
-                if (!EspacioLibre.Libre(p, transform))
-                {
-                    continue; // T-728: ni encima de una moto, un carro robado o estacionado, el jugador o lo que haya
-                }
-                if (HayCarroCerca(p))
-                {
-                    continue; // T-588: no sale encimado a otro
-                }
-                elegido = nodo;
             }
             if (elegido < 0)
             {
                 return false;
             }
+            SoltarReserva();
             eje = calles.Nodo(elegido);
             nodoAnterior = elegido;
             nodoDestino = ElegirSiguiente(elegido, -1);
