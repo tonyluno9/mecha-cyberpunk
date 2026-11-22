@@ -64,6 +64,30 @@ namespace MechaCyberpunk.Progresion.Sonido
             "MUN_HOLOGRAMA", "MUN_NEON_ZUMBIDO", "AMB_NEON_ALTO", "MUN_PERRO_LADRA", "MUN_AIRE_ACONDICIONADO", "ARM_DISPARO_LEJANO", "UI_TEXTO",
         };
 
+        /// <summary>T-1623: prefijo de las voces de los SKULLS (SKU_AMBIENTE, SKU_INSULTO...).</summary>
+        public const string PrefijoSkulls = "SKU_";
+
+        /// <summary>T-1623: los 13 IDs de voz de los SKULLS (cada uno con todas sus variantes como finales).</summary>
+        public static readonly string[] IdsSkulls =
+        {
+            "SKU_AMBIENTE", "SKU_PROVOCAR", "SKU_ULTIMO_AVISO", "SKU_INSULTO", "SKU_RISA_BURLA", "SKU_GRITO_ALERTA", "SKU_COBERTURA",
+            "SKU_RECARGANDO", "SKU_DOLOR", "SKU_QUEMADO", "SKU_HUIR", "SKU_GANAMOS", "SKU_LO_PERDIMOS",
+        };
+
+        /// <summary>T-1623: se oyen hasta 25 m.</summary>
+        public const float DistanciaVozSkulls = 25f;
+
+        /// <summary>T-1623: mientras habla un SKULL, música y ambiente bajan a este factor.</summary>
+        public const float FactorDuckingVoz = 0.6f;
+
+        /// <summary>T-1623: segundos extra que sigue bajo el ambiente tras terminar la voz (evita subir y bajar entre frases).</summary>
+        public const float ColaDuckingVoz = 0.2f;
+
+        public static bool EsVozSkulls(string id) => id != null && id.StartsWith(PrefijoSkulls, StringComparison.Ordinal);
+
+        /// <summary>T-1623: si la voz baja un poco la música y el ambiente mientras suena.</summary>
+        public static bool BajaPorVoz(string id) => EsVozSkulls(id);
+
         /// <summary>T-1471: variación chica del tono del disparo (±2.5 %).</summary>
         public const float VariacionDisparo = 0.025f;
 
@@ -74,7 +98,7 @@ namespace MechaCyberpunk.Progresion.Sonido
 
         /// <summary>Si el ID es de los que suenan por defecto (los minimos de T-620 y los que regresan en T-977).</summary>
         public static bool EncendidoPorDefecto(string id) =>
-            Array.IndexOf(IdsEncendidos, id) >= 0 || Array.IndexOf(IdsRegresados, id) >= 0 || Array.IndexOf(IdsArmasT1309, id) >= 0
+            Array.IndexOf(IdsEncendidos, id) >= 0 || EsVozSkulls(id) || Array.IndexOf(IdsRegresados, id) >= 0 || Array.IndexOf(IdsArmasT1309, id) >= 0
             || MapaSonidos19nov.EsNuevo(id) || MapaSonidos19nov.Enciende(id); // T-1471: los nuevos y los viejos mapeados
 
         /// <summary>T-1471: los mapeados que no son disparo ni recarga llevan el volumen de su política nueva (UI 0.55, impactos 0.65...), no el parejo de T-620.</summary>
@@ -127,6 +151,7 @@ namespace MechaCyberpunk.Progresion.Sonido
                 || id == "FUE_LOOP_CHICO" || id == "FUE_LOOP_GRANDE" || MapaSonidos20nov.EsInteriorAmbiente(id)) return 200;
             if ((id.StartsWith("ARM_", StringComparison.Ordinal) && id.Contains("_DISPARO")) || id == "DRN_PES_AMETRALLADORA") return 32;
             if (id.StartsWith("HUD_", StringComparison.Ordinal) || id.StartsWith("MIS_", StringComparison.Ordinal)) return 40;
+            if (EsVozSkulls(id)) return 48;
             if (id.StartsWith("PAN_", StringComparison.Ordinal) || id.StartsWith("JUG_", StringComparison.Ordinal) || id.StartsWith("POL_", StringComparison.Ordinal)
                 || id.StartsWith("NPC_", StringComparison.Ordinal) || id.StartsWith("ROB_VOZ", StringComparison.Ordinal) || id == "NOV_CAIDA_Y_ENCENDIDO") return 48;
             if (id.StartsWith("PAS_", StringComparison.Ordinal) || id.StartsWith(PrefijoPaso, StringComparison.Ordinal) || id == "NOV_PASOS_CAMINAR" || id == "NOV_PASOS_CORRER") return 160;
@@ -171,6 +196,8 @@ namespace MechaCyberpunk.Progresion.Sonido
         private static PoliticaSonido ParaBase(string id)
         {
             if (string.IsNullOrEmpty(id)) return SinPolitica;
+            // T-1623: una voz de SKULLS a la vez (la nueva corta la vieja), +-4 % de tono y se oye hasta 25 m.
+            if (EsVozSkulls(id)) return new PoliticaSonido("voz-skulls", 1, 0.9f, 0.04f, 0.05f, DistanciaVozSkulls, 1f, 0.05f);
             if (MapaSonidos20nov.TryFila(id, out TablaMezcla20nov.Fila fila)) return Politica20nov(fila); // T-1531
             if (MapaSonidos19nov.EsNuevo(id)) return ParaNuevo(id);
             if (id.StartsWith("ARM_", StringComparison.Ordinal))

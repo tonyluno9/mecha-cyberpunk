@@ -184,9 +184,25 @@ namespace MechaCyberpunk.IA.APie
                 {
                     return;
                 }
-                if (value && !alerta)
+                if (!value && alerta && !siempreAlerta && !EstaKO && EsSkull)
+                {
+                    // T-1623: el jugador se fue (o murió): lo perdimos / ganamos.
+                    DecirSkull(vidaJugador != null && vidaJugador.EstaKO ? VocesPandilla.Ganamos : VocesPandilla.LoPerdimos);
+                }
+                if (value && !alerta && EsSkull)
+                {
+                    // T-1623: los SKULLS gritan con su voz; el maleante de calle primero provoca (ahí suena PROVOCAR) y grita al empezar a atacar.
+                    if (!EsMaleanteDeCalle)
+                    {
+                        DecirSkull(VocesPandilla.GritoAlerta, true);
+                    }
+                }
+                else if (value && !alerta)
                 {
                     GritarPandillero("PAN_RIVAL_ALERTA");
+                }
+                if (value && !alerta)
+                {
                     // T-624: se burla al verte (Skull_Burla; el jefe, Jefe_Burla).
                     if (visual != null)
                     {
@@ -547,6 +563,14 @@ namespace MechaCyberpunk.IA.APie
             {
                 VolverseHostil(); // T-1528: el jugador respondió
             }
+            if (!modelo.EstaKO && EsSkull && Time.time >= proximoDolor)
+            {
+                // T-1623: se queja al recibir daño (quemado si fue una explosión); no en cada bala.
+                if (DecirSkull(porExplosion ? VocesPandilla.Quemado : VocesPandilla.Dolor))
+                {
+                    proximoDolor = Time.time + SegundosEntreDolor;
+                }
+            }
             if (datos.SeDefiende)
             {
                 // T-1009: si lo golpean o le disparan, pelea contra el jugador un buen rato.
@@ -622,6 +646,7 @@ namespace MechaCyberpunk.IA.APie
 
             ActualizarGrito();
             BuscarJugador();
+            ActualizarVocesSkulls();
             if (conducta != null && conducta.Controla)
             {
                 conducta.Actualizar(this, Time.deltaTime); // T-1106
@@ -722,6 +747,11 @@ namespace MechaCyberpunk.IA.APie
             {
                 return;
             }
+            if (!EsHostil && EsMaleanteDeCalle)
+            {
+                DecirSkull(VocesPandilla.UltimoAviso, true); // T-1623: justo antes de atacar
+            }
+            gritoCombateDado = false;
             hostilFijo = completo;
             // Con completo, SegundosHostil ya cuenta la rampa entera (ver abajo). hostilDesde no puede ser negativo: con menos de 90 s de juego
             // "Time.time - rampa" daba negativo y EsHostil quedaba en falso (los maleantes nunca atacaban).
@@ -767,6 +797,14 @@ namespace MechaCyberpunk.IA.APie
         private void ActualizarProvocando()
         {
             ObjetivoActual = null; // no apunta a nadie: la policía no lo toma por criminal
+            if (Time.time >= proximoProvocar)
+            {
+                // T-1623: se acerca a buscar pleito: "¿qué onda?", cada cierto rato mientras provoca.
+                if (DecirSkull(VocesPandilla.Provocar))
+                {
+                    proximoProvocar = Time.time + SegundosEntreProvocar;
+                }
+            }
             turnos?.Soltar(this);
             pistola?.QuitarAviso();
             Vector3 hacia = (raizJugador != null ? raizJugador.position : hogar) - transform.position;
@@ -779,10 +817,12 @@ namespace MechaCyberpunk.IA.APie
             {
                 Gritar(ReglaProvocacionCalle.Gritos[UnityEngine.Random.Range(0, ReglaProvocacionCalle.Gritos.Length)]);
                 visual?.Burlar();
+                DecirSkull(UnityEngine.Random.value < ProbabilidadRisa ? VocesPandilla.RisaBurla : VocesPandilla.Insulto); // T-1623: la burla
             }
             if (distancia <= ReglaProvocacionCalle.DistanciaEmpujon && Time.time >= proximoEmpujon)
             {
                 proximoEmpujon = Time.time + UnityEngine.Random.Range(ReglaProvocacionCalle.EmpujonMinimo, ReglaProvocacionCalle.EmpujonMaximo);
+                DecirSkull(UnityEngine.Random.value < ProbabilidadRisa ? VocesPandilla.RisaBurla : VocesPandilla.Insulto); // T-1623: al pegarle
                 AnimarGolpe(false); // el que empuja usa el golpe suave; el jugador recibe PJ01_Dano_Empujon (T-1540)
                 EmpujarVisualDelJugador();
                 DaniarJugador(ReglaProvocacionCalle.DanioEmpujon, adelante);
@@ -928,6 +968,7 @@ namespace MechaCyberpunk.IA.APie
             if (modo == ReglaTacticaPandillero.Modo.Huir && modoAnterior != ReglaTacticaPandillero.Modo.Huir)
             {
                 Gritar("¡Me largo!");
+                DecirSkull(VocesPandilla.Huir, true); // T-1623
             }
             if ((datos.EsPolicia || (datos.UsaPistola && !esJefe)) && !policiaYaSeCubrio && tieneCubierta && modo == ReglaTacticaPandillero.Modo.Rodear)
             {
@@ -935,6 +976,10 @@ namespace MechaCyberpunk.IA.APie
                 policiaYaSeCubrio = true;
                 tactica.ForzarCubrirse();
                 modo = ReglaTacticaPandillero.Modo.Cubrirse;
+            }
+            if (modo == ReglaTacticaPandillero.Modo.Cubrirse && modoAnterior != ReglaTacticaPandillero.Modo.Cubrirse)
+            {
+                DecirSkull(VocesPandilla.Cobertura); // T-1623
             }
             modoAnterior = modo;
             bool huyendo = modo == ReglaTacticaPandillero.Modo.Huir;
@@ -950,10 +995,20 @@ namespace MechaCyberpunk.IA.APie
             float segundosAtacando = SegundosHostil;
             entrada.TieneTurno = regla.Atacando || (puedeTirar && tactica.PuedeDisparar && (!limitado || Time.time >= proximoTiroLimitado)
                 && (turnos == null || turnos.Pedir(this)));
+            EstadoPandillero estadoAntes = regla.Estado;
             ReglaPandilleroAPie.Salida salida = regla.Avanzar(Time.deltaTime, entrada);
             if (!regla.Atacando)
             {
                 turnos?.Soltar(this);
+            }
+            if (salida.Impacto && atacable && !gritoCombateDado)
+            {
+                gritoCombateDado = true;
+                DecirSkull(VocesPandilla.GritoAlerta, true); // T-1623: empieza el combate
+            }
+            else if (estadoAntes != EstadoPandillero.Recargando && regla.Estado == EstadoPandillero.Recargando && UnityEngine.Random.value < ProbabilidadRecargando)
+            {
+                DecirSkull(VocesPandilla.Recargando); // T-1623
             }
 
             // T-676: sin línea de vista no hay aviso ni disparo (barricadas y muros).
@@ -1295,6 +1350,7 @@ namespace MechaCyberpunk.IA.APie
             }
             Vector3 punto = raizJugador.position + Vector3.up * AlturaCentroImpacto;
             recibeJugador.RecibirDanio(new InfoDanio(cantidad, TipoDanio.Golpe, punto, direccion, null));
+            DecirSkull(UnityEngine.Random.value < ProbabilidadRisa ? VocesPandilla.RisaBurla : VocesPandilla.Insulto); // T-1623
         }
 
         /// <summary>Le pega a otro objetivo (por ejemplo un rival de otra pandilla) con <paramref name="cantidad"/> de daño.</summary>
@@ -1689,6 +1745,7 @@ namespace MechaCyberpunk.IA.APie
             }
             Vector3 punto = posicionJugador + Vector3.up * AlturaCentroImpacto;
             recibeJugador.RecibirDanio(new InfoDanio(datos.DanioGolpe, TipoDanio.Golpe, punto, transform.forward, null));
+            DecirSkull(UnityEngine.Random.value < ProbabilidadRisa ? VocesPandilla.RisaBurla : VocesPandilla.Insulto); // T-1623
         }
 
         private void ActualizarBrazo()
@@ -1712,6 +1769,57 @@ namespace MechaCyberpunk.IA.APie
         }
 
         private void AlCambiar() => Cambio?.Invoke();
+
+        // ---- T-1623: voces de los SKULLS (VocesPandilla) ----
+
+        private const float ProbabilidadRisa = 0.3f;
+        private const float ProbabilidadRecargando = 0.5f;
+        private const float SegundosEntreProvocar = 6f;
+        private const float SegundosEntreDolor = 1.5f;
+        private float proximoPlaticar = -1f;
+        private float proximoProvocar;
+        private float proximoDolor;
+        private bool gritoCombateDado;
+        private bool jugadorKOVisto;
+
+        /// <summary>T-1623: true si es un pandillero común de los SKULLS (Calaveras): ni policía, ni jefe, ni perro, ni robot de Nova.</summary>
+        public bool EsSkull => datos != null && Pandilla == IdPandilla.Calaveras && !datos.EsPolicia && !datos.JefeCuerpoACuerpo && !datos.PerroRobot && !esJefe
+            && (sonidoNova == null || !sonidoNova.EsRobot);
+
+        private bool DecirSkull(string id, bool prioridad = false) => EsSkull && VocesPandilla.Decir(transform, id, prioridad);
+
+        // Plática ambiental (sin haber visto al jugador), "ganamos" si el jugador cae, y reinicio de los avisos al calmarse.
+        private void ActualizarVocesSkulls()
+        {
+            if (!EsSkull || raizJugador == null)
+            {
+                return;
+            }
+            bool jugadorKO = vidaJugador != null && vidaJugador.EstaKO;
+            if (jugadorKO && !jugadorKOVisto && Alerta)
+            {
+                DecirSkull(VocesPandilla.Ganamos, true);
+            }
+            jugadorKOVisto = jugadorKO;
+            if (!EsHostil)
+            {
+                gritoCombateDado = false;
+            }
+            if (Alerta || Acosando || jugadorKO)
+            {
+                return;
+            }
+            if (proximoPlaticar < 0f)
+            {
+                proximoPlaticar = Time.time + ReglaVocesPandilla.SegundosHastaPlatica(UnityEngine.Random.value);
+                return;
+            }
+            if (Time.time >= proximoPlaticar && DistanciaPlana(transform.position, raizJugador.position) <= VocesPandilla.DistanciaMaxima)
+            {
+                proximoPlaticar = Time.time + ReglaVocesPandilla.SegundosHastaPlatica(UnityEngine.Random.value);
+                DecirSkull(VocesPandilla.Ambiente);
+            }
+        }
 
         // T-597: la voz del pandillero según su género; una de cada cuatro es femenina, repartida por el número de instancia (estable).
         private const int PandillerosPorCadaFemenina = 4;
@@ -1769,6 +1877,7 @@ namespace MechaCyberpunk.IA.APie
         private void AlLlegarAKO()
         {
             turnos?.Soltar(this);
+            EventosRuido.PublicarMuerte(transform.position); // T-1622: los civiles que lo ven gritan y huyen
             if (esJefe)
             {
                 Sonidos.ReproducirEn("PAN_JEFE_CAE", transform.position);

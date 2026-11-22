@@ -45,6 +45,8 @@ namespace MechaCyberpunk.Progresion.Sonido
         private float proximaRevision;
         private float duckHasta;
         private float factorDuck = 1f;
+        private float duckVozHasta;
+        private float factorDuckVoz = 1f;
 
         // T-593: una voz es un sonido puntual que sigue sonando; sirve para limitar cuántas del mismo grupo suenan juntas (por tiempo, no por isPlaying).
         private struct VozActiva
@@ -353,6 +355,8 @@ namespace MechaCyberpunk.Progresion.Sonido
             float relativo = politica.Volumen * (1f - (float)azarTono.NextDouble() * politica.VariacionVolumen);
             f.priority = ReglaMezclaSonidos.Prioridad(id);
             if (ReglaMezclaSonidos.BajaAmbiente(id)) duckHasta = ahora + ReglaMezclaSonidos.SegundosDucking;
+            // T-1623: mientras habla un SKULL baja un poco la música y el ambiente (hasta que termine su voz).
+            if (ReglaMezclaSonidos.BajaPorVoz(id)) duckVozHasta = Mathf.Max(duckVozHasta, ahora + clip.length / Mathf.Max(0.1f, tono) + ReglaMezclaSonidos.ColaDuckingVoz);
             f.clip = clip;
             f.loop = false;
             f.pitch = tono;
@@ -479,20 +483,22 @@ namespace MechaCyberpunk.Progresion.Sonido
             // T-1471: ducking simple: un disparo o una explosión bajan el ambiente 0.3 s (rápido para bajar, suave para volver).
             float metaDuck = Time.unscaledTime < duckHasta ? ReglaMezclaSonidos.FactorDucking : 1f;
             factorDuck = Mathf.MoveTowards(factorDuck, metaDuck, Time.unscaledDeltaTime * (metaDuck < factorDuck ? 8f : 2f));
+            float metaVoz = Time.unscaledTime < duckVozHasta ? ReglaMezclaSonidos.FactorDuckingVoz : 1f;
+            factorDuckVoz = Mathf.MoveTowards(factorDuckVoz, metaVoz, Time.unscaledDeltaTime * (metaVoz < factorDuckVoz ? 6f : 1.5f));
             float paso = Time.unscaledDeltaTime / segundosCruceActual;
             for (int i = 0; i < 2; i++)
             {
                 float meta = i == cruceActivo && idCruce[i] != null ? 1f : 0f;
                 nivelCruce[i] = Mathf.MoveTowards(nivelCruce[i], meta, paso);
                 // T-977: cada ambiente con su nivel; en el cruce de 1 s uno baja mientras el otro sube (nunca dos a todo volumen).
-                cruce[i].volume = nivelCruce[i] * VolumenFinal(SeccionSonido.Ambiente) * ReglaMezclaSonidos.VolumenAmbiente(idCruce[i]) * factorDuck;
+                cruce[i].volume = nivelCruce[i] * VolumenFinal(SeccionSonido.Ambiente) * ReglaMezclaSonidos.VolumenAmbiente(idCruce[i]) * factorDuck * factorDuckVoz;
                 if (meta == 0f && nivelCruce[i] == 0f && cruce[i].isPlaying) cruce[i].Stop();
             }
             foreach (Bucle b in bucles.Values)
             {
                 if (b.sigue != null && b.fuente != null) b.fuente.transform.position = b.sigue.position;
                 // T-1531: el ducking también baja los bucles de ambiente (clima, interiores, objetos); sirenas y fuego no.
-                if (b.fuente != null) b.fuente.volume = VolumenFinal(b.seccion) * b.relativo * b.factor * (b.seccion == SeccionSonido.Ambiente ? factorDuck : 1f);
+                if (b.fuente != null) b.fuente.volume = VolumenFinal(b.seccion) * b.relativo * b.factor * (b.seccion == SeccionSonido.Ambiente ? factorDuck * factorDuckVoz : (b.seccion == SeccionSonido.Musica ? factorDuckVoz : 1f));
             }
         }
     }

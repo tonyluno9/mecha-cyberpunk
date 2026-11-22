@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Trafico.Datos;
+using MechaCyberpunk.Trafico.Testigos;
 using UnityEngine;
 
 namespace MechaCyberpunk.Trafico.Peatones
@@ -45,7 +46,14 @@ namespace MechaCyberpunk.Trafico.Peatones
         public static IReadOnlyList<PeatonMundo> Activos => ActivosLista;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-        private static void Limpiar() => ActivosLista.Clear();
+        private static void Limpiar()
+        {
+            ActivosLista.Clear();
+            cuadroUltimoRadio = -1;
+            ventanaInicio = 0f;
+            reaccionesEnVentana = 0;
+            ultimoDelitoDelJugador = -1000f;
+        }
 
         // Cuerpo del peatón al morir (T-663).
         private const float AlturaCapsula = 1.8f;
@@ -84,6 +92,7 @@ namespace MechaCyberpunk.Trafico.Peatones
                 // T-1305: matar a un civil suma calor (con testigos, lo decide el decorador de calor) si lo hizo el jugador.
                 if (config != null && ReglaCivil.EsAgresionDelJugador(info.Tipo, info.Punto, info.Direccion, jugador, info.Atacante != null))
                 {
+                    RegistrarDelitoDelJugador();
                     Registro<ICalor>.Actual?.Sumar(config.CalorPorMuerte, MotivoCalor.Pelea);
                 }
             }
@@ -146,9 +155,11 @@ namespace MechaCyberpunk.Trafico.Peatones
             objetivo.RecibirDanio(new InfoDanio(config.DanioRevancha, TipoDanio.Golpe, punto, direccion, null));
         }
 
-        private void IniciarHuida(Vector3 origen)
+        private void IniciarHuida(Vector3 origen, bool avisarSusto = true)
         {
             DejarDePlaticar();
+            CancelarLlamada();
+            sobresaltoRestante = 0f;
             if (agachadoRestante > 0f)
             {
                 agachadoRestante = 0f;
@@ -159,7 +170,10 @@ namespace MechaCyberpunk.Trafico.Peatones
             sentidoDecidido = false;
             calculo.MultiplicadorVelocidad = config.MultiplicadorHuida;
             calculo.CancelarEspera();
-            SendMessage(MensajeAsustado, SendMessageOptions.DontRequireReceiver);
+            if (avisarSusto)
+            {
+                SendMessage(MensajeAsustado, SendMessageOptions.DontRequireReceiver);
+            }
         }
 
         /// <summary>Lo mata: cae, queda tirado <see cref="SegundosCuerpo"/> s y se esconde. Cancela cualquier llamada.</summary>
@@ -175,7 +189,12 @@ namespace MechaCyberpunk.Trafico.Peatones
             Muerto = true;
             platicando = false;
             agachadoRestante = 0f;
+            sobresaltoRestante = 0f;
+            pendiente = false;
+            CancelarLlamada();
             Calmar();
+            nerviosoRestante = 0f;
+            EventosRuido.PublicarMuerte(transform.position); // T-1622: los civiles cercanos gritan y huyen
             segundosMuerto = 0f;
             if (capsula != null)
             {
@@ -213,6 +232,10 @@ namespace MechaCyberpunk.Trafico.Peatones
         /// <summary>T-1516: se agacha cubriéndose la cabeza (el puente juega NPC_Agachado_CubriendoCabeza en bucle) y se levanta.</summary>
         public const string MensajeAgachar = "AlAgacharCivil";
         public const string MensajeLevantar = "AlLevantarseCivil";
+        /// <summary>T-1622: grita de miedo al ver una muerte, y llama a la policía con el celular (NPC_LlamarPolicia) o corta la llamada.</summary>
+        public const string MensajeGritar = "AlGritarCivil";
+        public const string MensajeLlamarPolicia = "AlLlamarPoliciaCivil";
+        public const string MensajeDejarLlamarPolicia = "AlDejarDeLlamarPoliciaCivil";
         /// <summary>T-1516: platica (parámetro: 0 o 1, qué clip de plática) y deja de platicar. Se repite cada <see cref="SegundosEntreAvisos"/> s mientras dura.</summary>
         public const string MensajePlaticar = "AlPlaticarCivil";
         public const string MensajeDejarPlaticar = "AlDejarPlaticarCivil";
@@ -354,6 +377,10 @@ namespace MechaCyberpunk.Trafico.Peatones
                 return;
             }
             Muerto = false;
+            nerviosoRestante = 0f;
+            sobresaltoRestante = 0f;
+            llamando = false;
+            pendiente = false;
             desvioPlatica = Vector3.zero;
             visuales = GetComponentsInChildren<Renderer>(true); // T-1409: el visual por zona se crea después del Awake
             vida = config != null ? config.VidaPeaton : vida;
@@ -380,7 +407,7 @@ namespace MechaCyberpunk.Trafico.Peatones
         public bool Detenido { get; private set; }
 
         /// <summary>True mientras corre por haber oído un disparo.</summary>
-        public bool Huyendo => huidaRestante > 0f;
+        public bool Huyendo => huidaRestante > 0f || sobresaltoRestante > 0f;
 
         /// <summary>Lo prepara el grupo: ruta (al menos 2 puntos, en espacio local del padre), números, azar y cómo saber dónde está el jugador (null si no hay).</summary>
         public void Preparar(Vector3[] ruta, ConfigPeatones numeros, System.Random azar, Func<Vector3?> dondeEstaElJugador, float segundosPrevios)
@@ -400,6 +427,8 @@ namespace MechaCyberpunk.Trafico.Peatones
         private void OnEnable()
         {
             EventosRuido.Disparo += AlOirDisparo;
+            EventosRuido.DisparoConRadio += AlOirDisparoConRadio;
+            EventosRuido.Muerte += AlOirMuerte;
             ActivosLista.Add(this);
             RestablecerSiMuerto();
         }
@@ -407,18 +436,121 @@ namespace MechaCyberpunk.Trafico.Peatones
         private void OnDisable()
         {
             EventosRuido.Disparo -= AlOirDisparo;
+            EventosRuido.DisparoConRadio -= AlOirDisparoConRadio;
+            EventosRuido.Muerte -= AlOirMuerte;
             ActivosLista.Remove(this);
+            CancelarLlamada();
+            pendiente = false;
+            sobresaltoRestante = 0f;
             Calmar();
         }
 
         /// <summary>Un disparo en <paramref name="posicion"/>: si está dentro del radio de oído, el peatón huye.</summary>
         public void AlOirDisparo(Vector3 posicion)
         {
+            // T-1622: si quien disparó también publicó DisparoConRadio en este mismo cuadro, ya se atendió con el radio de su arma.
+            if (Time.frameCount == cuadroUltimoRadio && (posicion - posicionUltimoRadio).sqrMagnitude < 0.25f)
+            {
+                return;
+            }
+            if (config == null)
+            {
+                return;
+            }
+            Oir(posicion, config.RadioOirDisparo, TipoRuido.DisparoSimple);
+        }
+
+        // ---------------------------------------------------------------------------------------------------------------------------------------------
+        // T-1622 (T11): reacciones al ruido por evento. Nadie escanea en Update: cada aviso recorre una vez a los peatones activos y hay un tope por segundo.
+        // ---------------------------------------------------------------------------------------------------------------------------------------------
+        private enum TipoRuido { DisparoSimple, DisparoConRadio, Muerte }
+
+        /// <summary>Hasta dónde se ve una muerte aunque no haya línea de vista (m).</summary>
+        public const float RadioVerMuerte = 15f;
+        /// <summary>Hasta dónde se ve una muerte con línea de vista libre (m).</summary>
+        public const float RadioVerMuerteConVista = 40f;
+        /// <summary>Quien se queda a menos de esto del disparo se tira al piso (se agacha) con más probabilidad (m).</summary>
+        public const float RadioDisparoMuyCerca = 10f;
+        public const float ProbabilidadTirarseMuyCerca = 0.6f;
+        public const float ProbabilidadLlamarPolicia = 0.2f;
+        /// <summary>Un civil que llama a la policía lo hace a más de esta distancia del ruido (m): más cerca huye.</summary>
+        public const float DistanciaMinimaParaLlamar = 8f;
+        public const float SegundosSobresalto = 0.4f;
+        public const float SegundosLlamada = 6f;
+        public const float SegundosNerviosoMinimo = 20f;
+        public const float SegundosNerviosoMaximo = 40f;
+        /// <summary>Cuántos peatones reaccionan al instante cada segundo; los demás lo hacen escalonados.</summary>
+        public const int TopeReaccionesPorSegundo = 12;
+        private const float SegundosEntreReaccionesEscalonadas = 0.12f;
+        private const float RadioEvitarPunto = 15f;
+        private const float SegundosVentanaDelito = 20f;
+        private const float DistanciaDisparoDelJugador = 4f;
+        private const float PuntosPorEstrella = 25f;
+        private const int NivelMaximoPorLlamada = 3;
+        private const float AlturaOjos = 1.6f;
+
+        private static int cuadroUltimoRadio = -1;
+        private static Vector3 posicionUltimoRadio;
+        private static float ventanaInicio;
+        private static int reaccionesEnVentana;
+        private static float ultimoDelitoDelJugador = -1000f;
+
+        /// <summary>Cuándo (Time.time) fue el último delito que se atribuye al jugador (disparo suyo o muerte que causó); cuenta para que un civil llame a la policía.</summary>
+        public static float UltimoDelitoDelJugador => ultimoDelitoDelJugador;
+
+        public static void RegistrarDelitoDelJugador() => ultimoDelitoDelJugador = Time.time;
+
+        private PeatonMundo[] corro;
+        private bool pendiente;
+        private float pendienteEn;
+        private Vector3 pendientePos;
+        private float pendienteDist;
+        private TipoRuido pendienteTipo;
+        private float sobresaltoRestante;
+        private Vector3 origenSobresalto;
+        private float nerviosoRestante;
+        private Vector3 puntoEvitado;
+        private bool llamando;
+        private float llamadaRestante;
+        private Vector3 origenLlamada;
+
+        /// <summary>True durante el sobresalto: se detiene, voltea hacia el ruido y enseguida huye.</summary>
+        public bool Sobresaltado => sobresaltoRestante > 0f;
+
+        /// <summary>True mientras habla por el celular con la policía.</summary>
+        public bool LlamandoPolicia => llamando;
+
+        /// <summary>True durante los 20 a 40 s siguientes a una huida: camina normal pero ya no regresa hacia el peligro.</summary>
+        public bool Nervioso => nerviosoRestante > 0f;
+
+        /// <summary>Los que platican en el mismo corro (incluido él): si uno huye por una muerte, huyen todos.</summary>
+        public void AsignarCorro(PeatonMundo[] miembros) => corro = miembros;
+
+        public void AlOirDisparoConRadio(Vector3 posicion, float radio)
+        {
+            cuadroUltimoRadio = Time.frameCount;
+            posicionUltimoRadio = posicion;
+            if (posicionJugador != null)
+            {
+                Vector3? jugador = posicionJugador();
+                if (jugador.HasValue && DistanciaPlano(jugador.Value, posicion) <= DistanciaDisparoDelJugador)
+                {
+                    RegistrarDelitoDelJugador();
+                }
+            }
+            Oir(posicion, radio, TipoRuido.DisparoConRadio);
+        }
+
+        public void AlOirMuerte(Vector3 posicion) => Oir(posicion, RadioVerMuerteConVista, TipoRuido.Muerte);
+
+        private void Oir(Vector3 posicion, float radio, TipoRuido tipo)
+        {
             if (calculo == null || config == null || !isActiveAndEnabled || Muerto)
             {
                 return;
             }
-            if (DistanciaPlano(posicion, transform.position) > config.RadioOirDisparo)
+            float distancia = DistanciaPlano(posicion, transform.position);
+            if (distancia > radio)
             {
                 return;
             }
@@ -426,19 +558,197 @@ namespace MechaCyberpunk.Trafico.Peatones
             {
                 return; // T-1305: pelea y no hace caso del ruido
             }
+            // Tope de reacciones por segundo: las que pasan del tope se escalonan en lugar de caer todas en el mismo cuadro.
+            if (Time.time - ventanaInicio >= 1f)
+            {
+                ventanaInicio = Time.time;
+                reaccionesEnVentana = 0;
+            }
+            reaccionesEnVentana++;
+            if (reaccionesEnVentana > TopeReaccionesPorSegundo)
+            {
+                pendiente = true;
+                pendienteEn = Time.time + (reaccionesEnVentana - TopeReaccionesPorSegundo) * SegundosEntreReaccionesEscalonadas;
+                pendientePos = posicion;
+                pendienteDist = distancia;
+                pendienteTipo = tipo;
+                return;
+            }
+            Reaccionar(posicion, distancia, tipo);
+        }
+
+        private void Reaccionar(Vector3 posicion, float distancia, TipoRuido tipo)
+        {
+            if (Muerto || (regla != null && regla.Estado == EstadoCivil.Revancha))
+            {
+                return;
+            }
+            bool muerte = tipo == TipoRuido.Muerte;
+            if (muerte && distancia > RadioVerMuerte && !LineaDeVista.Libre(transform.position + Vector3.up * AlturaOjos, posicion))
+            {
+                return; // una muerte lejos y tapada no se ve
+            }
+            if (llamando)
+            {
+                if (distancia > RadioDisparoMuyCerca && !muerte)
+                {
+                    return; // sigue con su llamada
+                }
+                CancelarLlamada();
+            }
+            if (muerte)
+            {
+                SendMessage(MensajeGritar, SendMessageOptions.DontRequireReceiver);
+                AlarmarCorro(posicion);
+            }
             if (agachadoRestante > 0f)
             {
                 agachadoRestante = config.SegundosAgachado; // otro tiro: sigue agachado
                 origenAgachado = posicion;
                 return;
             }
-            // T-1516: una parte de los civiles se agacha cubriéndose antes de huir (si ya corría, sigue corriendo).
-            if (huidaRestante <= 0f && azarReaccion != null && config.ProbabilidadAgacharse > 0f && azarReaccion.NextDouble() < config.ProbabilidadAgacharse)
+            if (huidaRestante > 0f)
+            {
+                origenDelRuido = posicion; // ya corría: sigue corriendo
+                return;
+            }
+            double suerte = azarReaccion != null ? azarReaccion.NextDouble() : 1.0;
+            // Algunos sacan el celular a llamar a la policía en vez de huir (solo con aviso de ruido completo, no con el aviso viejo).
+            if (tipo != TipoRuido.DisparoSimple && distancia >= DistanciaMinimaParaLlamar && !sobresaltoActivoPorRuido() && suerte < ProbabilidadLlamarPolicia)
+            {
+                IniciarLlamada(posicion);
+                return;
+            }
+            // T-1516: una parte de los civiles se agacha cubriéndose antes de huir; muy cerca de los tiros, la mayoría.
+            float probabilidadAgacharse = distancia <= RadioDisparoMuyCerca && !muerte ? Mathf.Max(config.ProbabilidadAgacharse, ProbabilidadTirarseMuyCerca) : config.ProbabilidadAgacharse;
+            if (azarReaccion != null && probabilidadAgacharse > 0f && azarReaccion.NextDouble() < probabilidadAgacharse)
             {
                 Agacharse(posicion);
                 return;
             }
-            IniciarHuida(posicion);
+            if (tipo == TipoRuido.DisparoSimple)
+            {
+                IniciarHuida(posicion);
+                return;
+            }
+            IniciarSobresalto(posicion);
+        }
+
+        private bool sobresaltoActivoPorRuido() => sobresaltoRestante > 0f;
+
+        // Se sobresalta: se detiene un instante, voltea hacia el ruido (clip de asustarse) y huye en el sentido contrario.
+        private void IniciarSobresalto(Vector3 posicion)
+        {
+            DejarDePlaticar();
+            origenSobresalto = posicion;
+            sobresaltoRestante = SegundosSobresalto;
+            SendMessage(MensajeAsustado, SendMessageOptions.DontRequireReceiver);
+        }
+
+        private void AtenderSobresalto()
+        {
+            Detenido = true;
+            sobresaltoRestante -= Time.deltaTime;
+            Mirar(origenSobresalto - transform.position);
+            if (sobresaltoRestante <= 0f)
+            {
+                sobresaltoRestante = 0f;
+                IniciarHuida(origenSobresalto, false);
+            }
+        }
+
+        // Su grupo huye entero cuando uno ve una muerte.
+        private void AlarmarCorro(Vector3 posicion)
+        {
+            if (corro == null)
+            {
+                return;
+            }
+            foreach (PeatonMundo otro in corro)
+            {
+                if (otro != null && otro != this && otro.isActiveAndEnabled && !otro.Muerto && otro.calculo != null && otro.config != null && otro.huidaRestante <= 0f && otro.agachadoRestante <= 0f)
+                {
+                    otro.CancelarLlamada();
+                    otro.SendMessage(MensajeGritar, SendMessageOptions.DontRequireReceiver);
+                    otro.IniciarSobresalto(posicion);
+                }
+            }
+        }
+
+        private void IniciarLlamada(Vector3 posicion)
+        {
+            DejarDePlaticar();
+            llamando = true;
+            llamadaRestante = SegundosLlamada;
+            origenLlamada = posicion;
+            SendMessage(MensajeLlamarPolicia, SendMessageOptions.DontRequireReceiver);
+        }
+
+        private void CancelarLlamada()
+        {
+            if (!llamando)
+            {
+                return;
+            }
+            llamando = false;
+            SendMessage(MensajeDejarLlamarPolicia, SendMessageOptions.DontRequireReceiver);
+        }
+
+        private void AtenderLlamada()
+        {
+            Detenido = true;
+            Mirar(origenLlamada - transform.position);
+            llamadaRestante -= Time.deltaTime;
+            if (llamadaRestante > 0f)
+            {
+                return;
+            }
+            CancelarLlamada();
+            // Terminó de llamar: si fue un delito del jugador (y no hay misión protegida), sube una estrella.
+            if (!MisionProtegida.Activa && Time.time - ultimoDelitoDelJugador <= SegundosVentanaDelito)
+            {
+                SubirEstrella();
+            }
+            nerviosoRestante = SegundosNerviosoMinimo;
+            puntoEvitado = origenLlamada;
+        }
+
+        /// <summary>Sube una estrella (25 puntos de calor, motivo Misión: sin el factor de acciones y sin pedir testigos). Tope de 3 estrellas por llamadas de civiles.</summary>
+        public static bool SubirEstrella()
+        {
+            ICalor calor = Registro<ICalor>.Actual;
+            if (calor == null || MisionProtegida.Activa || calor.Nivel >= NivelMaximoPorLlamada)
+            {
+                return false;
+            }
+            float meta = (calor.Nivel + 1) * PuntosPorEstrella;
+            calor.Sumar(Mathf.Max(1f, meta - calor.Valor + 0.01f), MotivoCalor.Mision);
+            return true;
+        }
+
+        // Depuración (se llaman por eval en Play): un disparo de pistola, un rifle o una explosión en un punto, o matar al civil más cercano al jugador.
+        public static void DepurarDisparo(Vector3 posicion, float radio = 25f)
+        {
+            EventosRuido.PublicarDisparoConRadio(posicion, radio);
+            EventosRuido.PublicarDisparo(posicion);
+        }
+
+        /// <summary>Mata al peatón activo más cercano a <paramref name="cerca"/> (publica la muerte: los demás gritan y huyen). Devuelve cuál mató, o null.</summary>
+        public static PeatonMundo DepurarMatarMasCercano(Vector3 cerca)
+        {
+            PeatonMundo mejor = null;
+            float distancia = float.MaxValue;
+            foreach (PeatonMundo p in ActivosLista)
+            {
+                float d = p != null && !p.Muerto ? DistanciaPlano(p.transform.position, cerca) : float.MaxValue;
+                if (d < distancia)
+                {
+                    distancia = d;
+                    mejor = p;
+                }
+            }
+            mejor?.Matar();
+            return mejor;
         }
 
         private void Update()
@@ -465,6 +775,11 @@ namespace MechaCyberpunk.Trafico.Peatones
                 }
                 return;
             }
+            if (pendiente && Time.time >= pendienteEn)
+            {
+                pendiente = false;
+                Reaccionar(pendientePos, pendienteDist, pendienteTipo);
+            }
             if (regla != null && regla.Estado == EstadoCivil.Revancha)
             {
                 AtenderRevancha();
@@ -475,15 +790,31 @@ namespace MechaCyberpunk.Trafico.Peatones
                 AtenderAgachado();
                 return;
             }
+            if (sobresaltoRestante > 0f)
+            {
+                AtenderSobresalto();
+                return;
+            }
+            if (llamando)
+            {
+                AtenderLlamada();
+                return;
+            }
             bool huyendo = huidaRestante > 0f;
             if (huyendo)
             {
                 huidaRestante -= Time.deltaTime;
                 if (huidaRestante <= 0f)
                 {
+                    puntoEvitado = origenDelRuido;
+                    nerviosoRestante = Mathf.Lerp(SegundosNerviosoMinimo, SegundosNerviosoMaximo, azarReaccion != null ? (float)azarReaccion.NextDouble() : 0.5f);
                     Calmar();
                     huyendo = false;
                 }
+            }
+            if (nerviosoRestante > 0f)
+            {
+                nerviosoRestante -= Time.deltaTime;
             }
             Vector3? jugador = posicionJugador?.Invoke();
             if (!huyendo && jugador.HasValue && DistanciaPlano(jugador.Value, transform.position) < config.DistanciaParada)
@@ -498,6 +829,18 @@ namespace MechaCyberpunk.Trafico.Peatones
                 return;
             }
             Detenido = false;
+            // T-1622: tras huir, durante 20 a 40 s no regresa hacia el punto del peligro: si su ruta lo lleva de vuelta, da la vuelta.
+            if (nerviosoRestante > 0f && !huyendo && Time.time >= proximaVuelta && haciaDonde.sqrMagnitude > 0.01f)
+            {
+                Vector3 alPeligro = puntoEvitado - transform.position;
+                alPeligro.y = 0f;
+                if (alPeligro.magnitude < RadioEvitarPunto && Vector3.Dot(haciaDonde, alPeligro) > 0f)
+                {
+                    proximaVuelta = Time.time + SegundosEntreVueltas;
+                    calculo.InvertirSentido();
+                    haciaDonde = -haciaDonde;
+                }
+            }
             if (Time.time >= proximaVuelta && Tapado())
             {
                 proximaVuelta = Time.time + SegundosEntreVueltas;
