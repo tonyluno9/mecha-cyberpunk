@@ -25,12 +25,13 @@ namespace MechaCyberpunk.IA.Barrio
 
         // Medidas (m, s, m/s) que no se balancean: es la coreografía.
         private const float AlturaBoca = 1.7f;
-        private const float DistanciaAbordaje = 1.5f;
+        private const float DistanciaAbordaje = 1.8f;
+        private const float DistanciaAbordajeSegundo = 3f; // el segundo se queda detrás del primero: sus colisionadores se estorban
         private const float VelocidadAcercarse = 2.8f;
         private const float VelocidadRegreso = 1.8f;
         private const float GradosGiroAgresor = 360f;
         private const float SegundosMaximosAcercarse = 25f; // la víctima puede estar hasta a 40 m (hay pocos civiles)
-        private const float SegundosMaximosRegreso = 10f;
+        private const float SegundosMaximosRegreso = 25f; // hasta 40 m a 1.8 m/s
         private const float DistanciaLlegadaHogar = 1.5f;
         private const float SegundosGesto = 1f;
         private const float SegundosMaximosCaido = 5f;
@@ -114,6 +115,8 @@ namespace MechaCyberpunk.IA.Barrio
         {
             if (p != null)
             {
+                // T-1633: si es de un GrupoAcoso (los SKULLS fijos de la ciudad) el grupo lo presta: deja de moverlo y mirar a su civil.
+                p.GetComponentInParent<GrupoAcoso>()?.Prestar(p);
                 p.Acosando = true;
             }
         }
@@ -228,7 +231,7 @@ namespace MechaCyberpunk.IA.Barrio
             return true;
         }
 
-        private static bool Vigente(PandilleroAPie p) => p != null && p.isActiveAndEnabled && !p.EstaKO;
+        private static bool Vigente(PandilleroAPie p) => p != null && p.isActiveAndEnabled && !p.EstaKO && p.Acosando; // sin Acosando alguien lo soltó (su grupo pasó a alerta)
 
         // ---------- bullying: acercarse y cierre ----------
 
@@ -245,8 +248,8 @@ namespace MechaCyberpunk.IA.Barrio
                 Vector3 meta = reparto.Victima.Transform.position;
                 bool llegaron = true;
                 float dt = Time.deltaTime;
-                llegaron &= IrHacia(reparto.Agresor1, meta, dt);
-                llegaron &= IrHacia(reparto.Agresor2, meta, dt);
+                llegaron &= IrHacia(reparto.Agresor1, meta, dt, DistanciaAbordaje);
+                llegaron &= IrHacia(reparto.Agresor2, meta, dt, DistanciaAbordajeSegundo);
                 reparto.Victima.Mirar(reparto.Agresor1.transform.position, dt);
                 if (llegaron)
                 {
@@ -264,7 +267,7 @@ namespace MechaCyberpunk.IA.Barrio
         }
 
         // Camina hacia el punto y para a DistanciaAbordaje. True si ya llegó (o no existe).
-        private static bool IrHacia(PandilleroAPie p, Vector3 meta, float dt)
+        private static bool IrHacia(PandilleroAPie p, Vector3 meta, float dt, float distancia)
         {
             if (p == null)
             {
@@ -272,7 +275,7 @@ namespace MechaCyberpunk.IA.Barrio
             }
             Vector3 d = meta - p.transform.position;
             d.y = 0f;
-            if (d.magnitude <= DistanciaAbordaje)
+            if (d.magnitude <= distancia)
             {
                 Atender(p, meta, dt);
                 return true;
@@ -488,7 +491,16 @@ namespace MechaCyberpunk.IA.Barrio
                 return;
             }
             p.DanioRecibido -= AlDanio;
-            p.Acosando = false;
+            GrupoAcoso prestador = p.GetComponentInParent<GrupoAcoso>();
+            bool eraPrestado = prestador != null && prestador.EsPrestado(p);
+            if (eraPrestado)
+            {
+                prestador.Devolver(p, intervencion); // sin intervención vuelve al acoso (Acosando sigue true); con ella su grupo pasa a alerta
+            }
+            if (!eraPrestado || intervencion)
+            {
+                p.Acosando = false;
+            }
             if (!intervencion || p.EstaKO || !p.isActiveAndEnabled)
             {
                 return;

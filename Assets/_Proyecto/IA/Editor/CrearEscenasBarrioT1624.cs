@@ -146,6 +146,12 @@ namespace MechaCyberpunk.IA.Editor
         [MenuItem("Mecha Cyberpunk/Barrio/Forzar bullying (Play)")]
         private static void MenuBullying() => Debug.Log("[Barrio] " + DirectorEscenasBarrio.ForzarBullying());
 
+        [MenuItem("Mecha Cyberpunk/Barrio/Forzar bullying SKULLS (Play)")]
+        private static void MenuBullyingSkulls() => Debug.Log("[Barrio] " + DirectorEscenasBarrio.ForzarBullying(MechaCyberpunk.Core.IdPandilla.Calaveras));
+
+        [MenuItem("Mecha Cyberpunk/Barrio/Forzar bullying SNAKES (Play)")]
+        private static void MenuBullyingSnakes() => Debug.Log("[Barrio] " + DirectorEscenasBarrio.ForzarBullying(MechaCyberpunk.Core.IdPandilla.Viboras));
+
         [MenuItem("Mecha Cyberpunk/Barrio/Listar escenas (Play)")]
         private static void MenuListar() => DirectorEscenasBarrio.ListarEscenas();
     }

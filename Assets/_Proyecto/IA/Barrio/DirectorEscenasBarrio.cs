@@ -335,7 +335,7 @@ namespace MechaCyberpunk.IA.Barrio
                 foreach (PandilleroAPie p in libres)
                 {
                     float d = (p.transform.position - a1.transform.position).sqrMagnitude;
-                    if (p != a1 && d <= mejor)
+                    if (p != a1 && d <= mejor && PuedenJuntos(a1, p))
                     {
                         mejor = d;
                         a2 = p;
@@ -351,10 +351,31 @@ namespace MechaCyberpunk.IA.Barrio
             };
         }
 
+        // T-1633: libre = en pie, sin pelear con el jugador y de la pandilla de la escena. Los SKULLS fijos de la ciudad están siempre en un
+        // GrupoAcoso (Acosando=true): ese era el motivo de que el bullying nunca encontrara a nadie. Ahora se cuentan si su grupo puede prestarlos
+        // (acosando y con al menos otro compañero que se queda).
         private static bool Libre(PandilleroAPie p, IdPandilla pandilla)
         {
-            return p != null && p.isActiveAndEnabled && !p.EstaKO && !p.Acosando && !p.Alerta && !p.EsHostil && !p.EsJefe && p.Pandilla == pandilla
-                && p.Datos != null && !p.Datos.EsPolicia && !p.Datos.PerroRobot && !p.Datos.JefeCuerpoACuerpo; // cualquier pandillero libre de la pandilla de la escena (los SNAKES de Neón Alto no son maleantes de calle)
+            if (p == null || !p.isActiveAndEnabled || p.EstaKO || p.EsHostil || p.EsJefe || p.Pandilla != pandilla
+                || p.Datos == null || p.Datos.EsPolicia || p.Datos.PerroRobot || p.Datos.JefeCuerpoACuerpo)
+            {
+                return false;
+            }
+            if (p.Acosando)
+            {
+                GrupoAcoso g = p.GetComponentInParent<GrupoAcoso>();
+                return g != null && !g.EsPrestado(p) && g.CupoPrestable >= 1;
+            }
+            // Con el jugador en su territorio los maleantes de calle (SNAKES de Neón Alto incluidos) tienen Alerta pero solo provocan: durante la escena
+            // quedan en Acosando (su IA no los mueve) y no se vuelven hostiles por estar cerca; solo si el jugador interviene.
+            return !p.Alerta || p.EsMaleanteDeCalle;
+        }
+
+        // Dos del mismo GrupoAcoso solo si el grupo conserva a alguien más.
+        private static bool PuedenJuntos(PandilleroAPie a, PandilleroAPie b)
+        {
+            GrupoAcoso g = a.GetComponentInParent<GrupoAcoso>();
+            return g == null || g != b.GetComponentInParent<GrupoAcoso>() || g.CupoPrestable >= 2;
         }
 
         private static AnimacionCivilMundo MasCercano(Vector3 desde, List<AnimacionCivilMundo> lista, AnimacionCivilMundo excepto, float min, float max)
@@ -428,8 +449,21 @@ namespace MechaCyberpunk.IA.Barrio
             return d.ForzarInterno(escena);
         }
 
+        /// <summary>Depuración y pruebas: corta lo que haya y arranca <paramref name="escena"/> (un guion que no tiene que estar en Resources).</summary>
+        public static string ForzarEscena(EscenaBarrio escena)
+        {
+            if (!Application.isPlaying)
+            {
+                return "solo en Play";
+            }
+            return escena == null ? "escena nula" : Asegurar().ForzarInterno(escena);
+        }
+
         /// <summary>Depuración: arranca un bullying al azar que se pueda armar ahora. Devuelve "ok ..." o por qué no.</summary>
-        public static string ForzarBullying()
+        public static string ForzarBullying() => ForzarBullying(null);
+
+        /// <summary>Depuración: como <see cref="ForzarBullying()"/> pero solo de una pandilla (Calaveras = SKULLS, Viboras = SNAKES); null = cualquiera.</summary>
+        public static string ForzarBullying(IdPandilla? pandilla)
         {
             if (!Application.isPlaying)
             {
@@ -439,7 +473,7 @@ namespace MechaCyberpunk.IA.Barrio
             List<EscenaBarrio> bullyings = new List<EscenaBarrio>();
             foreach (EscenaBarrio e in Catalogo())
             {
-                if (e != null && e.Tipo == TipoEscenaBarrio.Bullying)
+                if (e != null && e.Tipo == TipoEscenaBarrio.Bullying && (pandilla == null || e.Pandilla == pandilla.Value))
                 {
                     bullyings.Add(e);
                 }
