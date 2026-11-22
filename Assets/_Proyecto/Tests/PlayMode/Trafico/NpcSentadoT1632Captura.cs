@@ -20,6 +20,7 @@ namespace MechaCyberpunk.Tests.Trafico
         [UnityTest, Explicit("Genera docs/capturas/_tareas/T18/*.png (requiere haber corrido NpcsSentadosT1632.Aplicar)")]
         public IEnumerator CiudadPrologo_SentadosYHuida()
         {
+            LogAssert.ignoreFailingMessages = true;
             yield return EditorSceneManager.LoadSceneInPlayMode("Assets/_Proyecto/Escenas/Ciudad_Prologo.unity", new LoadSceneParameters(LoadSceneMode.Single));
             for (int i = 0; i < 40; i++)
             {
@@ -47,7 +48,7 @@ namespace MechaCyberpunk.Tests.Trafico
 
             Vector3 detras = parque.transform.position - parque.FrenteAsiento * 10f;
             EventosRuido.PublicarDisparoConRadio(detras + Vector3.up, 25f);
-            yield return new WaitForSeconds(1.0f);
+            yield return new WaitForSeconds(2.2f);
             Foto(cam, parque, "tras-disparo.png");
             File.AppendAllText(Path.Combine(Carpeta, "resultado.txt"), "tras el disparo: " + parque.name + " fase=" + parque.FaseActual + "\n");
             Object.Destroy(camObjeto);

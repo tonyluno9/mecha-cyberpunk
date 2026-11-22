@@ -244,6 +244,7 @@ namespace MechaCyberpunk.Trafico.Peatones
             }
             DestruirGrafo();
             animador.applyRootMotion = false;
+            animador.cullingMode = AnimatorCullingMode.AlwaysAnimate;
             playable = AnimationPlayableUtilities.PlayClip(animador, clip, out grafo);
             playable.SetSpeed(Mathf.Max(0.01f, velocidad));
             playable.SetTime(tiempo);
