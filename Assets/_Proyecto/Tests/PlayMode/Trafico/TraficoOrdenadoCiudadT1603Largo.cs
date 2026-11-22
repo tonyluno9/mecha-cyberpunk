@@ -36,6 +36,7 @@ namespace MechaCyberpunk.Tests.Trafico
                 Assert.Less(Time.realtimeSinceStartup, limite, "La ciudad trae el tráfico");
                 yield return null;
             }
+            trafico.CirculanCiviles = true; // T-1630: la ciudad trae los civiles apagados; esta comprobación larga mide el tráfico en movimiento, así que se prende aquí
             yield return new WaitForSecondsRealtime(2f);
             EstadisticasTrafico.Reiniciar();
             EstadisticasTrafico.RegistrarEnArchivo = true;

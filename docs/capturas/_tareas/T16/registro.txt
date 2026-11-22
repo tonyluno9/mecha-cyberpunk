@@ -1,0 +1,11 @@
+T-1630 solo patrullas, Ciudad_Prologo, jugador quieto, 180 s de juego (timeScale 3)
+CirculanCiviles = False; pool de 20; semáforos en la escena: 2; carros estacionados: 57
+t=30 s: patrullas 3, choques entre carros del tráfico 0, paradas en rojo hasta ahora 3
+t=60 s: patrullas 3, choques entre carros del tráfico 0, paradas en rojo hasta ahora 6
+t=90 s: patrullas 3, choques entre carros del tráfico 0, paradas en rojo hasta ahora 9
+t=120 s: patrullas 3, choques entre carros del tráfico 0, paradas en rojo hasta ahora 10
+t=150 s: patrullas 3, choques entre carros del tráfico 0, paradas en rojo hasta ahora 13
+ROBO de un estacionado de la escena: se pudo subir y robar (Estacionado_26_V12 en (-107.4, 0.0, -5.6))
+DELITO junto a una patrulla de ronda: la patrulla deja la ronda y persigue (la ronda veia al jugador: True; EnRonda despues del delito: False; patrullas de persecucion 1)
+FIN: carros civiles del pool en movimiento (máximo a la vez) 0, patrullas vivas (máximo) 3, patrullas en movimiento (promedio por muestra) 1.4, estacionados en movimiento (máximo a la vez) 0, estacionados que se desplazaron más de 0.5 m 0 de 57
+Choques entre carros del tráfico 0, atorados 0; paradas de patrulla en rojo 17 (110 s en total), segundos reales 61

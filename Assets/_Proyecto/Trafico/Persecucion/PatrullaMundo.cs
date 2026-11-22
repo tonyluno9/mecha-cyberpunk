@@ -806,9 +806,29 @@ namespace MechaCyberpunk.Trafico.Persecucion
             velocidadDeseada = 0f;
             puntoDeMira = posicion + cuerpo.rotation * Vector3.forward;
             Conducir(dt);
+            ObedecerSemaforo();
             AplicarCarril(dt);
             FrenarPorObstaculo(dt);
             RevisarAtasco(dt);
+        }
+
+        // T-1630: la patrulla de ronda respeta los semáforos: en rojo (o en ámbar si alcanza a frenar) se detiene antes de la línea de parada y arranca en verde.
+        // Con sirena (búsqueda o persecución), con un criminal a la vista, robada o con el jugador adentro se los pasa.
+        private void ObedecerSemaforo()
+        {
+            if (!EnRonda || Retirando || Robada || ConJugador || cuerpo == null || CriminalVivo())
+            {
+                return;
+            }
+            Vector3 adelante = cuerpo.rotation * Vector3.forward;
+            if (!Calle.RegistroSemaforos.Consultar(posicion, adelante, out Calle.FaseCruce fase, out float metros))
+            {
+                return;
+            }
+            if (Calle.CalculoCruceSemaforo.DebeDetenerse(fase, metros, Rapidez, config.DesaceleracionPlaneada))
+            {
+                velocidadDeseada = Mathf.Min(velocidadDeseada, ConductorCarroIA.VelocidadParaFrenar(metros, 0f, config.DesaceleracionPlaneada));
+            }
         }
 
         // T-1526: una patrulla (ronda, búsqueda o persecución) que acabe fuera del muro se quita en cuanto nadie la ve; el gestor saca otra adentro. Revisa cada segundo.

@@ -144,6 +144,7 @@ namespace MechaCyberpunk.Tests.Trafico
                 Assert.Less(Time.realtimeSinceStartup, espera, "La ciudad trae el tráfico de calle");
                 yield return null;
             }
+            trafico.CirculanCiviles = true; // T-1630: la ciudad trae los civiles apagados; esta prueba mide el tráfico en movimiento, así que se prende aquí
             yield return new WaitForSecondsRealtime(1f);
             Time.timeScale = EscalaDeTiempo;
             Dictionary<CarroTrafico, float> quietos = new Dictionary<CarroTrafico, float>();
