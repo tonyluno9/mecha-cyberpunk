@@ -7,6 +7,7 @@ using MechaCyberpunk.Progresion.Guardado;
 using MechaCyberpunk.Progresion.Partida;
 using MechaCyberpunk.Progresion.Sonido;
 using MechaCyberpunk.UI.Guardado;
+using MechaCyberpunk.UI.Intro;
 using MechaCyberpunk.UI.Kit;
 using MechaCyberpunk.UI.Titulo;
 using UnityEngine;
@@ -99,6 +100,8 @@ namespace MechaCyberpunk.UI.Inicio
         private int ranuraContinuar = -1;
         private float tiempo;
         private bool primerBotonElegido;
+        private bool introEnCurso;
+        private IntroInicio intro;
         private bool controlActivo;
         private bool ayudaDeControl;
         private string rutaPedida;
@@ -118,6 +121,8 @@ namespace MechaCyberpunk.UI.Inicio
         public LogoInicio Logo => logo;
         public FondoCiudad3D Fondo => fondo;
         public int RanuraContinuar => ranuraContinuar;
+        /// <summary>True mientras suena el video del logo (el menú todavía no arranca).</summary>
+        public bool IntroEnCurso => introEnCurso;
         public bool HayPartida => ranuraContinuar >= 0;
         public Canvas Canvas => canvas;
         public Text Ayuda => ayuda;
@@ -149,10 +154,33 @@ namespace MechaCyberpunk.UI.Inicio
 
         private void Start()
         {
-            // Tema del menú (MUS_MENU_PRINCIPAL): entra con fundido; si ya sonaba (vienes de otra pantalla del menú) sigue sin reiniciarse.
-            MusicaMenu.Sonar();
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
+            // T-1646: si hay intro de video, el menú espera a que termine o se salte (sin video queda igual que siempre).
+            intro = GetComponent<IntroInicio>();
+            if (intro != null && intro.DebeReproducir)
+            {
+                introEnCurso = true;
+                grupoMenu.interactable = false;
+                intro.Terminada += AlTerminarIntro;
+                intro.Iniciar();
+                return;
+            }
+            ArrancarMenu();
+        }
+
+        private void AlTerminarIntro()
+        {
+            intro.Terminada -= AlTerminarIntro;
+            introEnCurso = false;
+            grupoMenu.interactable = true;
+            ArrancarMenu();
+        }
+
+        private void ArrancarMenu()
+        {
+            // Tema del menú (MUS_MENU_PRINCIPAL): entra con fundido; si ya sonaba (vienes de otra pantalla del menú) sigue sin reiniciarse.
+            MusicaMenu.Sonar();
             if (creacion != null)
             {
                 creacion.Cerrada += AlCerrarCreacion;
@@ -526,6 +554,10 @@ namespace MechaCyberpunk.UI.Inicio
 
         private void Update()
         {
+            if (introEnCurso)
+            {
+                return;
+            }
             float dt = Time.unscaledDeltaTime;
             tiempo += dt;
             velo.color = new Color(0f, 0f, 0f, 1f - Mathf.SmoothStep(0f, 1f, tiempo / SegundosEntrada));

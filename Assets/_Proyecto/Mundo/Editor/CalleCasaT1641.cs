@@ -303,6 +303,87 @@ namespace MechaCyberpunk.Mundo.Editor
             Object.DestroyImmediate(go);
         }
 
+        public const string RutaPrefabSkulls = "Assets/_Proyecto/Progresion/Historia/Recorrido/Prefabs/Historia_CallejonSkulls.prefab";
+        public const string NombreSkulls = "Historia_CallejonSkulls";
+        private static readonly Vector3 OjoInicio = new Vector3(-55.5f, 1.7f, -77f);
+
+        /// <summary>
+        /// Ronda C de la sesión B: pone el marcador Historia_CallejonSkulls en el callejón de T-1641 (x -86..-54, z≈-59), sobre el piso, en un hueco
+        /// libre, fuera de la vista del punto donde despierta el jugador y con línea recta libre hacia la calle de la casa. Idempotente: borra el anterior.
+        /// Escribe Logs/t1641-skulls.txt y la foto docs/capturas/_tareas/T21/callejon_skulls.png.
+        /// </summary>
+        [MenuItem("Mecha Cyberpunk/T-1641/Colocar callejon SKULLS")]
+        public static void ColocarCallejonSkulls()
+        {
+            var escena = EditorSceneManager.OpenScene(RutaEscena, OpenSceneMode.Single);
+            var sb = new StringBuilder();
+            Transform padre = null;
+            foreach (var mb in Object.FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+            {
+                if (mb == null || mb.GetType().Name != "MarcadorHistoria") { continue; }
+                if (mb.gameObject.name == NombreSkulls) { Object.DestroyImmediate(mb.gameObject); continue; }
+                if (padre == null) { padre = mb.transform.parent; }
+            }
+            Physics.SyncTransforms();
+
+            Vector3 elegido = Vector3.zero;
+            bool hallado = false;
+            float mejor = float.MaxValue;
+            for (float x = -60f; x >= -84f; x -= 0.5f)
+            {
+                for (float dz = -1.5f; dz <= 1.51f; dz += 0.75f)
+                {
+                    float z = ZCentro + dz;
+                    if (!Physics.Raycast(new Vector3(x, 4f, z), Vector3.down, out RaycastHit piso, 6f, ~0, QueryTriggerInteraction.Ignore)) { continue; }
+                    if (piso.point.y < -0.5f || piso.point.y > 0.8f) { continue; }
+                    Vector3 p = piso.point;
+                    // Hueco libre para una persona.
+                    if (Physics.CheckCapsule(p + Vector3.up * 0.5f, p + Vector3.up * 1.7f, 0.45f, ~0, QueryTriggerInteraction.Ignore)) { continue; }
+                    Vector3 pecho = p + Vector3.up * 1.2f;
+                    // Fuera de la vista de donde despierta el jugador.
+                    if (!Physics.Linecast(OjoInicio, pecho, ~0, QueryTriggerInteraction.Ignore)) { continue; }
+                    if (!Physics.Linecast(OjoInicio, p + Vector3.up * 1.8f, ~0, QueryTriggerInteraction.Ignore)) { continue; }
+                    // Línea recta libre hasta la calle de la casa (frente a la boca del callejón).
+                    Vector3 calle = new Vector3(-49f, p.y + 1.2f, ZCentro);
+                    if (Physics.Linecast(pecho, calle, ~0, QueryTriggerInteraction.Ignore)) { continue; }
+                    // Lo más cerca posible de la boca, sin pegarse a ella, y centrado.
+                    float costo = Mathf.Abs(x - (-64f)) + Mathf.Abs(dz) * 2f;
+                    if (costo < mejor) { mejor = costo; elegido = p; hallado = true; }
+                }
+            }
+            if (!hallado)
+            {
+                sb.AppendLine("SIN HUECO: ningún punto del callejón cumple (piso, libre, oculto, línea a la calle).");
+                File.WriteAllText("Logs/t1641-skulls.txt", sb.ToString());
+                Debug.LogError("[Mundo] " + sb);
+                return;
+            }
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(RutaPrefabSkulls);
+            var go = (GameObject)PrefabUtility.InstantiatePrefab(prefab, escena);
+            if (padre != null) { go.transform.SetParent(padre, true); }
+            // Mira hacia la calle de la casa (+X).
+            go.transform.SetPositionAndRotation(elegido, Quaternion.LookRotation(Vector3.right, Vector3.up));
+            sb.AppendLine("Historia_CallejonSkulls en " + elegido.ToString("0.00") + " mirando +X, padre=" + (padre != null ? Ruta(padre) : "(raíz)"));
+            sb.AppendLine("Oculto desde " + OjoInicio + ": si. Linea libre a (-49, y+1.2, " + ZCentro + "): si. Distancia al inicio: " + Vector3.Distance(OjoInicio, elegido).ToString("0.0") + " m");
+            EditorSceneManager.MarkSceneDirty(escena);
+            EditorSceneManager.SaveScene(escena);
+            Directory.CreateDirectory("Logs");
+            File.WriteAllText("Logs/t1641-skulls.txt", sb.ToString());
+            Debug.Log("[Mundo] " + sb);
+
+            Directory.CreateDirectory("docs/capturas/_tareas/T21");
+            var marca = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+            marca.transform.position = elegido + Vector3.up;
+            var mr = marca.GetComponent<Renderer>();
+            var mat = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
+            mat.SetColor("_BaseColor", Color.red);
+            mr.sharedMaterial = mat;
+            Foto("callejon_skulls", new Vector3(-50f, 1.7f, ZCentro), elegido + Vector3.up, 60f);
+            Foto("callejon_skulls_aerea", new Vector3(elegido.x + 6f, 25f, elegido.z - 14f), elegido, 60f);
+            Object.DestroyImmediate(marca);
+            Object.DestroyImmediate(mat);
+        }
+
         public static string Ruta(Transform t)
         {
             string r = t.name;

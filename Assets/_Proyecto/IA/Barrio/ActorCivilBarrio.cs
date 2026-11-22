@@ -110,7 +110,7 @@ namespace MechaCyberpunk.IA.Barrio
             if (!Visual.Empujar())
             {
                 Visual.Herir(direccion);
-                civil.transform.position += direccion * DeslizamientoEmpujon;
+                DesplazamientoSeguro.Mover(civil.transform, direccion, DeslizamientoEmpujon); // T-1643: sin atravesar paredes
             }
         }
 

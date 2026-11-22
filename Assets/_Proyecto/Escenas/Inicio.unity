@@ -492,6 +492,7 @@ GameObject:
   m_Component:
   - component: {fileID: 936283836}
   - component: {fileID: 936283835}
+  - component: {fileID: 936283837}
   m_Layer: 0
   m_Name: MenuInicio
   m_TagString: Untagged
@@ -528,6 +529,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &936283837
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 936283834}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63879127ed4a44f89adfcac7349d496a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.UI::MechaCyberpunk.UI.Intro.IntroInicio
+  config: {fileID: 11400000, guid: 6bafa88c4b6913b40bf2ddfa94a07b8a, type: 2}
 --- !u!1 &1141018469
 GameObject:
   m_ObjectHideFlags: 0
@@ -714,6 +728,7 @@ MonoBehaviour:
   distanciaMinima: 2
   distanciaMaxima: 40
   segundosCruce: 1
+  segundosCruceBarrio: 3
   segundosRevision: 0.5
 --- !u!1 &1750627832
 GameObject:
