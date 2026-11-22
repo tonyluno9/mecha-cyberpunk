@@ -1518,6 +1518,83 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 851663d10a9f98e4483091a5cffb3ea2, type: 3}
     provisionales:
     - {fileID: 8300000, guid: 1ad537206dbcb4148bba664150b55ce0, type: 3}
+  - id: SKU_AMBIENTE
+    finales:
+    - {fileID: 8300000, guid: 1169d5d079c68594092c8b833f651609, type: 3}
+    - {fileID: 8300000, guid: 8c06d07d65f8fb9409036fa57a7cb30e, type: 3}
+    - {fileID: 8300000, guid: d0ee73c6309da8b4286eca95d1a605d0, type: 3}
+    - {fileID: 8300000, guid: 1b22e20d5b8bfa34796f42422bdf0faf, type: 3}
+    provisionales: []
+  - id: SKU_COBERTURA
+    finales:
+    - {fileID: 8300000, guid: d277fd5b28a00d94f901d17412d7093a, type: 3}
+    - {fileID: 8300000, guid: d8788282a5c69c7439ce06dda4a9d5ec, type: 3}
+    provisionales: []
+  - id: SKU_DOLOR
+    finales:
+    - {fileID: 8300000, guid: 1957f33eeff2f154fbe3286d02baf29d, type: 3}
+    - {fileID: 8300000, guid: c4413b7a43a8fbe4597c17e69d460dc4, type: 3}
+    provisionales: []
+  - id: SKU_GANAMOS
+    finales:
+    - {fileID: 8300000, guid: c889537569813a847aa3997649e17563, type: 3}
+    - {fileID: 8300000, guid: 651955150219e644b8fa2987c6b783ed, type: 3}
+    provisionales: []
+  - id: SKU_GRITO_ALERTA
+    finales:
+    - {fileID: 8300000, guid: a8962d1ea3dadca449386722e3430a4e, type: 3}
+    - {fileID: 8300000, guid: d393a20238fe7c24eb61cade181923e2, type: 3}
+    - {fileID: 8300000, guid: f6af3ead73cd42049a8969604c8e7dc2, type: 3}
+    - {fileID: 8300000, guid: ad8c77dd748ef324895c377f9ca051f3, type: 3}
+    - {fileID: 8300000, guid: fb30ab1b0cca48147b5f2a16ffe6d6af, type: 3}
+    provisionales: []
+  - id: SKU_HUIR
+    finales:
+    - {fileID: 8300000, guid: 744c627c83864d548b97dfc173a87472, type: 3}
+    - {fileID: 8300000, guid: 12aa2df9899cafe46b397fe69185387f, type: 3}
+    provisionales: []
+  - id: SKU_INSULTO
+    finales:
+    - {fileID: 8300000, guid: 080f84b09f35d694f80241ea1f70c4aa, type: 3}
+    - {fileID: 8300000, guid: 546a0069ba139f34cbed4fb75a7e5b29, type: 3}
+    - {fileID: 8300000, guid: ee3e320a351d27d4184a2615b7c842bf, type: 3}
+    - {fileID: 8300000, guid: 1f69cb7e0a6999640aea294e6e308e9d, type: 3}
+    provisionales: []
+  - id: SKU_LO_PERDIMOS
+    finales:
+    - {fileID: 8300000, guid: 913e6a33936bf674a822b1e5e556de3f, type: 3}
+    - {fileID: 8300000, guid: 9546bca90fbcb2d4da07c5a9ae3fdfcc, type: 3}
+    - {fileID: 8300000, guid: 618f107ff5df42944acd04bd62816065, type: 3}
+    provisionales: []
+  - id: SKU_PROVOCAR
+    finales:
+    - {fileID: 8300000, guid: ae05e0a19afedea4d93e687944c96b18, type: 3}
+    - {fileID: 8300000, guid: d54aa7f9db9766b499175bc0f31df636, type: 3}
+    - {fileID: 8300000, guid: 9d6718a87925dcb44bbb105974b29891, type: 3}
+    - {fileID: 8300000, guid: 9712c248e2b84f64586e13cf284c3535, type: 3}
+    - {fileID: 8300000, guid: 99332bb4b1d2dcf43a64209cf82284b4, type: 3}
+    - {fileID: 8300000, guid: d104b8ca06772a547ba4da7012e2d809, type: 3}
+    provisionales: []
+  - id: SKU_QUEMADO
+    finales:
+    - {fileID: 8300000, guid: 10db9a0b0bd4da0488782816f4e2a174, type: 3}
+    - {fileID: 8300000, guid: 4703dd8d952d319428308a3f15bb7d0e, type: 3}
+    provisionales: []
+  - id: SKU_RECARGANDO
+    finales:
+    - {fileID: 8300000, guid: 7737bda5106538f4e9df8951b3b43a82, type: 3}
+    - {fileID: 8300000, guid: e7488203e85e6c644bb40fe460ab5003, type: 3}
+    provisionales: []
+  - id: SKU_RISA_BURLA
+    finales:
+    - {fileID: 8300000, guid: f6e3d65be4c37f14da605fb2ff165b16, type: 3}
+    provisionales: []
+  - id: SKU_ULTIMO_AVISO
+    finales:
+    - {fileID: 8300000, guid: c25a6a3278cd2044ea739e1e3e619109, type: 3}
+    - {fileID: 8300000, guid: 11540353f0227a844a7db3c5bded4cd6, type: 3}
+    - {fileID: 8300000, guid: c6867c3b13e58e44498497527904070b, type: 3}
+    provisionales: []
   interruptores:
   - id: AMB_AZOTEA_CIUDAD
     encendido: 1
@@ -2050,6 +2127,32 @@ MonoBehaviour:
   - id: ROB_SERVOS
     encendido: 1
   - id: ROB_VOZ_ALERTA
+    encendido: 1
+  - id: SKU_AMBIENTE
+    encendido: 1
+  - id: SKU_COBERTURA
+    encendido: 1
+  - id: SKU_DOLOR
+    encendido: 1
+  - id: SKU_GANAMOS
+    encendido: 1
+  - id: SKU_GRITO_ALERTA
+    encendido: 1
+  - id: SKU_HUIR
+    encendido: 1
+  - id: SKU_INSULTO
+    encendido: 1
+  - id: SKU_LO_PERDIMOS
+    encendido: 1
+  - id: SKU_PROVOCAR
+    encendido: 1
+  - id: SKU_QUEMADO
+    encendido: 1
+  - id: SKU_RECARGANDO
+    encendido: 1
+  - id: SKU_RISA_BURLA
+    encendido: 1
+  - id: SKU_ULTIMO_AVISO
     encendido: 1
   - id: TIE_COMPRAR
     encendido: 1

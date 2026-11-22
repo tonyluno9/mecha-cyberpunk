@@ -20,6 +20,7 @@ namespace MechaCyberpunk.Progresion.Sonido
             {
                 case "PAN": return SeccionSonido.Voces;
                 case "NPC": return SeccionSonido.Voces; // T-1531
+                case "SKU": return SeccionSonido.Voces; // T-1623
                 case "AMB": return SeccionSonido.Ambiente;
                 case "CLI": return SeccionSonido.Ambiente; // T-1531
                 case "OBJ": return SeccionSonido.Ambiente; // T-1531

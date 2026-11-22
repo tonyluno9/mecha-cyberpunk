@@ -90,6 +90,7 @@ namespace MechaCyberpunk.Progresion.Sonido
             }
             foreach (string id in ReglaMezclaSonidos.IdsEncendidos) ids.Add(id);
             foreach (string id in ReglaMezclaSonidos.IdsRegresados) ids.Add(id);
+            foreach (string id in ReglaMezclaSonidos.IdsSkulls) ids.Add(id); // T-1623
             foreach (string id in MapaSonidos19nov.IdsNuevos) ids.Add(id);
             foreach (MapaSonidos19nov.Par par in MapaSonidos19nov.Pares)
             {

@@ -56,6 +56,8 @@ namespace MechaCyberpunk.Progresion.Editor
             {
                 Leer(CarpetaAudio + "/" + carpeta, nuevas, false);
             }
+            // T-1623: las voces de los SKULLS (19_Voces/SKULLS).
+            Leer(CarpetaAudio + "/19_Voces/SKULLS", nuevas, false);
             // Música del menú principal (MUS_MENU_PRINCIPAL) en Assets/Arte/Audio/Musica.
             Leer(CarpetaAudio + "/" + CarpetaMusica, nuevas, false);
             // Los archivos que ya no se usan (POL_RADIO_DESPACHO_01/02) siguen en Assets pero no entran al catalogo: el ID suena con su alias.
