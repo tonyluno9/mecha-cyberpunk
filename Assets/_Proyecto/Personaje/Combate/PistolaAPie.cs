@@ -3,6 +3,7 @@ using MechaCyberpunk.Core;
 using MechaCyberpunk.Personaje.Jugador;
 using MechaCyberpunk.Personaje.Movimiento;
 using MechaCyberpunk.Personaje.Vida;
+using MechaCyberpunk.Personaje.Visual;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -320,6 +321,7 @@ namespace MechaCyberpunk.Personaje.Combate
                     return;
                 }
                 bool pidio = !controlador.EntradaBloqueada && (d.Automatica ? atacar.action.IsPressed() : atacar.action.WasPressedThisFrame());
+                pidio = EsperarArmaEnPose(pidio, enCarro, actual);
                 bool sigueRafaga = pidio && activa == ArmaAPie.Fusil && actual.Balas > 0;
                 if (colaRafaga.Avanzar(dispararEsteFrame, sigueRafaga))
                 {
@@ -353,6 +355,75 @@ namespace MechaCyberpunk.Personaje.Combate
                 especiales.Soltar();
             }
             ActualizarVisual();
+        }
+
+        // ---------- T-1561: sacar -> apuntar -> disparar ----------
+
+        [Tooltip("T-1561: disparar con el arma guardada primero la saca y apunta; el tiro sale cuando la animación llega a la pose. Apagado, el tiro sale al instante (como antes).")]
+        [SerializeField] private bool sacarAntesDeDisparar;
+
+        private VisualPersonaje visualJugador;
+        private float disparoPedidoHasta = -1f;
+        private float esperandoDesde = -1f;
+
+        /// <summary>T-1561: el disparo con el arma guardada espera a que se saque y llegue a la pose de apuntar.</summary>
+        public bool SacarAntesDeDisparar
+        {
+            get => sacarAntesDeDisparar;
+            set => sacarAntesDeDisparar = value;
+        }
+
+        /// <summary>T-1561: segundos que lleva esperando el arma en la pose para disparar (0 si no espera).</summary>
+        public float SegundosEsperandoArma => esperandoDesde >= 0f && Time.time < disparoPedidoHasta ? Time.time - esperandoDesde : 0f;
+
+        // Devuelve si el disparo pedido sale este cuadro. El disparo pedido con el arma guardada se recuerda ReglasTransicionesT1561.SegundosRecordarDisparo s y sale al llegar a la pose.
+        private bool EsperarArmaEnPose(bool pidio, bool enCarro, CargadorPistola actual)
+        {
+            if (!sacarAntesDeDisparar || enCarro)
+            {
+                return pidio;
+            }
+            if (visualJugador == null)
+            {
+                visualJugador = GetComponentInChildren<VisualPersonaje>(false);
+            }
+            if (visualJugador == null || !visualJugador.isActiveAndEnabled || visualJugador.Cubierto || actual.Recargando)
+            {
+                disparoPedidoHasta = -1f;
+                return pidio;
+            }
+            bool pendiente = Time.time < disparoPedidoHasta;
+            if (!pidio && !pendiente)
+            {
+                esperandoDesde = -1f;
+                return false;
+            }
+            if (!pendiente)
+            {
+                esperandoDesde = Time.time;
+            }
+            if (pidio)
+            {
+                disparoPedidoHasta = Time.time + ReglasTransicionesT1561.SegundosRecordarDisparo;
+            }
+            bool listo = ReglasTransicionesT1561.PuedeDisparar(visualJugador.ArmaEnPose, false, AccionPersonaje.Locomocion, Time.time - esperandoDesde);
+            if (!listo)
+            {
+                visualJugador.SacarArma();
+                return false;
+            }
+            disparoPedidoHasta = -1f;
+            return true;
+        }
+
+        /// <summary>T-1561: corta la recarga del arma en la mano (daño recibido o echar a correr con un arma larga): no repone balas.</summary>
+        public void CancelarRecargaActual()
+        {
+            CargadorPistola actual = cargador;
+            if (actual != null && actual.Recargando)
+            {
+                actual.CancelarRecarga();
+            }
         }
 
         // T-1324: sin balas en el cargador no se apunta: se intenta recargar primero (si hay reserva). El rayo de plasma ya en marcha no se corta.

@@ -70,13 +70,11 @@ namespace MechaCyberpunk.Tests.Sonido
         }
 
         [Test]
-        public void Fundidos_YCruceDelBucle()
+        public void Fundidos()
         {
             Assert.AreEqual(0.5f, ReglaMusicaMenu.Fundir(0f, 1f, 0.75f, 1.5f), 1e-4f, "entra en 1.5 s");
             Assert.AreEqual(1f, ReglaMusicaMenu.Fundir(0.9f, 1f, 1f, 1.5f), 1e-4f, "no se pasa");
             Assert.AreEqual(0f, ReglaMusicaMenu.Fundir(0.3f, 0f, 1f, 1.6f), 1e-4f);
-            Assert.IsFalse(ReglaMusicaMenu.TocaCruce(30f, 40.42f, 2.5f));
-            Assert.IsTrue(ReglaMusicaMenu.TocaCruce(38f, 40.42f, 2.5f), "el cruce empieza 2.5 s antes del final");
             Assert.Less(MusicaMenu.SegundosSalida, 2.2f, "se apaga antes que el mínimo de la pantalla de carga");
         }
 

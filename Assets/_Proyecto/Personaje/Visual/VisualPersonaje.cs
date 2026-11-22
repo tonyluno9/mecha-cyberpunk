@@ -81,6 +81,10 @@ namespace MechaCyberpunk.Personaje.Visual
         private static readonly int IdAterrizajeRodada = Animator.StringToHash(ReglasAnimacion.AterrizajeRodada);
         private static readonly int IdPreparandoSalto = Animator.StringToHash(ReglasAnimacion.PreparandoSalto);
         private static readonly int IdEnGuardia = Animator.StringToHash(ReglasAnimacion.EnGuardia);
+        private static readonly int IdSentado = Animator.StringToHash(ReglasTransicionesT1561.ParametroSentado);
+        private static readonly int IdColgado = Animator.StringToHash(ReglasTransicionesT1561.ParametroColgado);
+        private static readonly int IdGranada = Animator.StringToHash(ReglasAnimacion.Granada);
+        private static readonly int IdInterrumpir = Animator.StringToHash(ReglasAnimacion.Interrumpir);
         private static readonly int IdGesto = Animator.StringToHash(ReglasAnimacion.Gesto);
         private static readonly int IdGestoTipo = Animator.StringToHash(ReglasAnimacion.GestoTipo);
         private static readonly int IdManejando = Animator.StringToHash(ReglasAnimacion.Manejando);
@@ -336,8 +340,27 @@ namespace MechaCyberpunk.Personaje.Visual
                     MotivoDanio = MotivoDanioVisual.Normal; // T-1540: el motivo solo vale para la caída que sigue
                 }
                 caido = value;
+                if (value)
+                {
+                    ApagarBrazosYArma();
+                }
                 Aplicar();
             }
+        }
+
+        // T-1561: al morir o caer la capa de brazos va a peso 0 de golpe (sin que floten unos puños o un arma) y el arma se guarda.
+        private void ApagarBrazosYArma()
+        {
+            granadaHasta = float.NegativeInfinity;
+            subirGuardiaHasta = float.NegativeInfinity;
+            armaLevantadaHasta = 0f;
+            pesoArriba = 0f;
+            int capa = IndiceCapaArriba();
+            if (animador != null && capa >= 0)
+            {
+                animador.SetLayerWeight(capa, 0f);
+            }
+            PonerArmaEnMano(false);
         }
 
         /// <summary>Agachado caminando (con rifle).</summary>
@@ -405,6 +428,10 @@ namespace MechaCyberpunk.Personaje.Visual
             if (caido || gesto == GestoVisual.Ninguno || animador == null || !Tiene(IdGesto, AnimatorControllerParameterType.Trigger))
             {
                 return false;
+            }
+            if (ReglasTransicionesT1561.InteraccionGuardaArma(gesto))
+            {
+                GuardarArmaYSalirDePelea(); // T-1561: antes de una interacción se guarda el arma y se sale de pelea
             }
             if (Tiene(IdGestoTipo, AnimatorControllerParameterType.Int))
             {
@@ -511,6 +538,26 @@ namespace MechaCyberpunk.Personaje.Visual
         /// </summary>
         public void SerSacado(float segundos)
         {
+            // T-1561: con el clip NPC_SacadoDelCarro_Huir configurado, arranca 18 cuadros (0.75 s) después que el del jugador y se juega a su rapidez (sacado, cae, se levanta y huye).
+            ConfigClipsNpcT1561 npc = ConfigClipsNpcT1561.Actual;
+            if (npc != null && npc.SacadoDelCarroHuir != null && animador != null)
+            {
+                if (GetComponent<ReproductorClipUnico>() == null)
+                {
+                    gameObject.AddComponent<ReproductorClipUnico>();
+                }
+                // Con Update activo espera el retraso (temporizador en Update, sin corrutina); si el objeto está apagado arranca de una vez (como antes).
+                if (isActiveAndEnabled)
+                {
+                    clipSacadoPendiente = npc.SacadoDelCarroHuir;
+                    sacadoEn = Time.time + ReglasTransicionesT1561.SegundosRetrasoConductor;
+                }
+                else
+                {
+                    GetComponent<ReproductorClipUnico>().Reproducir(animador, npc.SacadoDelCarroHuir, 1f);
+                }
+                return;
+            }
             ConfigAnimacionParkour config = ConfigAnimacionParkour.Actual;
             if (config == null || config.ConductorSerSacado == null || animador == null || segundos <= 0f)
             {
@@ -522,6 +569,24 @@ namespace MechaCyberpunk.Personaje.Visual
                 reproductor = gameObject.AddComponent<ReproductorClipUnico>();
             }
             reproductor.Reproducir(animador, config.ConductorSerSacado, config.ConductorSerSacado.length / segundos);
+        }
+
+        private AnimationClip clipSacadoPendiente;
+        private float sacadoEn;
+
+        private void AvanzarSacadoPendiente()
+        {
+            if (clipSacadoPendiente == null || Time.time < sacadoEn)
+            {
+                return;
+            }
+            AnimationClip clip = clipSacadoPendiente;
+            clipSacadoPendiente = null;
+            ReproductorClipUnico reproductor = GetComponent<ReproductorClipUnico>();
+            if (reproductor != null && animador != null)
+            {
+                reproductor.Reproducir(animador, clip, 1f);
+            }
         }
 
         /// <summary>Lo levanta (igual que <see cref="Caido"/> = false).</summary>
@@ -605,6 +670,7 @@ namespace MechaCyberpunk.Personaje.Visual
         public void Golpear(bool fuerte)
         {
             ultimoGolpe = Time.time;
+            guardiaCancelada = false; // T-1561: un golpe nuevo vuelve a armar la guardia (si no corre)
             CortarReaccion(); // T-675 con la capa aditiva de T-735: un golpe de puños corta el estremecimiento, no se encima
             golpeAlterno = fuerte ? 2 : 1 - golpeAlterno % 2;
             if (animador != null && Tiene(IdGolpeTipo, AnimatorControllerParameterType.Int))
@@ -621,7 +687,200 @@ namespace MechaCyberpunk.Personaje.Visual
         public bool GuardiaTrasGolpe { get; set; }
 
         /// <summary>True mientras el personaje está en guardia de puños: con <see cref="GuardiaTrasGolpe"/>, sin arma levantada y poco después de su último golpe.</summary>
-        public bool EnGuardia => GuardiaTrasGolpe && !caido && TipoArmaAnimador == TipoArmaVisual.Ninguna && Time.time - ultimoGolpe < ReglasAnimacion.SegundosGuardiaPunos;
+        public bool EnGuardia => GuardiaTrasGolpe && !caido && TipoArmaAnimador == TipoArmaVisual.Ninguna
+            && (Time.time < subirGuardiaHasta
+                || (!guardiaCancelada && Time.time - ultimoGolpe < ReglasAnimacion.SegundosGuardiaPunos && ReglasTransicionesT1561.GuardiaPermitida(velocidad, PidiendoCorrer)));
+
+        // ---------- T-1561: modo pelea, armas y transiciones con lógica ----------
+
+        /// <summary>T-1561: el jugador mantiene Shift (la pone AnimacionJugador). Con él no hay guardia de puños y el arma larga se guarda.</summary>
+        public bool PidiendoCorrer { get; set; }
+
+        private bool guardiaCancelada;
+        private float subirGuardiaHasta = float.NegativeInfinity;
+        private float subirGuardiaDesde = float.NegativeInfinity;
+        private float interrumpirHasta = float.NegativeInfinity;
+        private float granadaHasta = float.NegativeInfinity;
+        private static readonly int HashPunosGuardia = Animator.StringToHash("PunosGuardia");
+        private static readonly int HashPistolaSacar = Animator.StringToHash("PistolaSacar");
+        private static readonly int HashRifleSacar = Animator.StringToHash("RifleSacar");
+        /// <summary>Fracción del clip de sacar el arma a partir de la cual cuenta como arma en la pose.</summary>
+        private const float FraccionSacarListo = 0.8f;
+
+        /// <summary>T-1561: True si los brazos ya están en la guardia de puños (la capa de arriba juega PunosGuardia).</summary>
+        public bool GuardiaArriba
+        {
+            get
+            {
+                int capa = IndiceCapaArriba();
+                return capa >= 0 && animador.GetCurrentAnimatorStateInfo(capa).shortNameHash == HashPunosGuardia && !animador.IsInTransition(capa);
+            }
+        }
+
+        /// <summary>T-1561: pide subir la guardia antes de golpear corriendo (~0.2 s, ver ReglasTransicionesT1561.SegundosSubirGuardia).</summary>
+        public void SubirGuardia()
+        {
+            if (Time.time >= subirGuardiaHasta)
+            {
+                subirGuardiaDesde = Time.time;
+            }
+            subirGuardiaHasta = Time.time + ReglasTransicionesT1561.SegundosSubirGuardia + ReglasTransicionesT1561.MezclaCorta + 0.3f;
+            guardiaCancelada = false;
+            Aplicar();
+        }
+
+        /// <summary>T-1561: segundos desde que se pidió subir la guardia.</summary>
+        public float SegundosSubiendoGuardia => Time.time - subirGuardiaDesde;
+
+        /// <summary>
+        /// T-1561: guarda el arma y sale del modo pelea (guardia de puños). Antes de beber, tocar un botón, abrir una puerta, recoger, sentarse, acostarse, colgarse, subir al carro
+        /// o a la moto. Con el arma guardada la capa de arriba juega Guardar y el arma desaparece con el evento de Guardar.
+        /// </summary>
+        public void GuardarArmaYSalirDePelea()
+        {
+            armaLevantadaHasta = 0f;
+            subirGuardiaHasta = float.NegativeInfinity;
+            guardiaCancelada = true;
+            granadaHasta = float.NegativeInfinity;
+            Aplicar();
+        }
+
+        /// <summary>
+        /// T-1561: saca el arma sin disparar (lo hace PistolaAPie cuando se pide un disparo con el arma guardada): el Animator juega Sacar y luego apuntar.
+        /// Se llama mientras se espera: mantiene el arma levantada.
+        /// </summary>
+        public void SacarArma()
+        {
+            armaLevantadaHasta = Mathf.Max(armaLevantadaHasta, Time.time + SegundosArmaTrasAccion);
+            Aplicar();
+        }
+
+        /// <summary>
+        /// T-1561: el arma está en la mano, ya terminó de sacarse (o apunta) y la capa de brazos está en la pose de apuntar o de reposo con arma: el disparo real puede salir.
+        /// </summary>
+        public bool ArmaEnPose
+        {
+            get
+            {
+                if (!ArmaLevantada || !ArmaEnMano)
+                {
+                    return false;
+                }
+                int capa = IndiceCapaArriba();
+                if (capa < 0)
+                {
+                    return true;
+                }
+                AnimatorStateInfo actual = animador.GetCurrentAnimatorStateInfo(capa);
+                bool sacando = actual.shortNameHash == HashPistolaSacar || actual.shortNameHash == HashRifleSacar;
+                if (sacando)
+                {
+                    return actual.normalizedTime >= FraccionSacarListo;
+                }
+                if (animador.IsInTransition(capa))
+                {
+                    int siguiente = animador.GetNextAnimatorStateInfo(capa).shortNameHash;
+                    return siguiente != HashPistolaSacar && siguiente != HashRifleSacar;
+                }
+                return actual.shortNameHash != HashVacio;
+            }
+        }
+
+        /// <summary>
+        /// T-1561: corta golpe, recarga o lanzamiento en la capa de brazos (daño recibido): la capa vuelve a su estado de reposo y el estremecimiento lo pone la capa de daño.
+        /// </summary>
+        public void Interrumpir()
+        {
+            granadaHasta = float.NegativeInfinity;
+            if (animador != null && Tiene(IdInterrumpir, AnimatorControllerParameterType.Trigger))
+            {
+                animador.SetTrigger(IdInterrumpir);
+                interrumpirHasta = Time.time + 0.3f;
+            }
+        }
+
+        /// <summary>
+        /// T-1561: lanza la granada con el clip de pie o agachado (capa de brazos, rapidez <see cref="ReglasTransicionesT1561.RapidezGranada"/>). Quien llama suelta la granada
+        /// <see cref="ReglasTransicionesT1561.SegundosHastaSoltarGranada"/> segundos después. Devuelve false si el Animator no tiene el disparador (sin controlador base).
+        /// </summary>
+        public bool LanzarGranada(bool agachadoAlLanzar)
+        {
+            if (caido || animador == null || !Tiene(IdGranada, AnimatorControllerParameterType.Trigger))
+            {
+                return false;
+            }
+            float gesto = ReglasTransicionesT1561.SegundosGestoGranada(agachadoAlLanzar);
+            armaLevantadaHasta = Mathf.Max(armaLevantadaHasta, Time.time + gesto);
+            granadaHasta = Time.time + gesto;
+            Aplicar();
+            animador.SetTrigger(IdGranada);
+            return true;
+        }
+
+        /// <summary>T-1561: True mientras dura el gesto de la granada (con él la capa de brazos no se apaga aunque esté agachado).</summary>
+        public bool GranadaEnCurso => Time.time < granadaHasta;
+
+        /// <summary>T-1561: gestos nuevos del jugador. Beber y camilla bloquean el movimiento mientras duran (ReglaBloqueoAnimacion).</summary>
+        public bool Beber() => Gestear(GestoVisual.Beber);
+        public bool Sentarse() => Gestear(GestoVisual.Sentarse);
+        public bool Colgarse() => Gestear(GestoVisual.Colgarse);
+
+        private bool sentado;
+        private bool colgado;
+
+        /// <summary>T-1561: sentado (PJ01_Sentado en bucle) mientras sea true; al apagarlo vuelve a Idle. Prenderlo lanza el gesto Sentarse.</summary>
+        public bool Sentado
+        {
+            get => sentado;
+            set
+            {
+                bool nuevo = value && !sentado;
+                sentado = value;
+                if (nuevo) { Sentarse(); }
+                Aplicar();
+            }
+        }
+
+        /// <summary>T-1561: colgado de un borde (PJ01_Colgado_Idle en bucle) mientras sea true. Prenderlo lanza el gesto Colgarse; <see cref="SubirDeColgado"/> lo sube al borde.</summary>
+        public bool Colgado
+        {
+            get => colgado;
+            set
+            {
+                bool nuevo = value && !colgado;
+                colgado = value;
+                if (nuevo) { Colgarse(); }
+                Aplicar();
+            }
+        }
+
+        public bool AcostarseEnCamilla() => Gestear(GestoVisual.CamillaAcostarse);
+        public bool SubirDeColgado() => Gestear(GestoVisual.ColgadoSubir);
+
+        /// <summary>T-1561 (contrato con T-1560): el E16 bloquea y tambalea con un golpe fuerte. Dispara GestoTipo 19; el estado lo agrega T-1560. Si el controlador no lo tiene no pasa nada.</summary>
+        public bool BloquearGolpeFuerte() => Gestear(GestoVisual.BloquearTambaleo);
+
+        // Cada cuadro: Shift saca del modo pelea; correr con arma larga la guarda; un disparador de interrupción que nadie consumió se retira.
+        private void ActualizarModoT1561()
+        {
+            if (ReglasTransicionesT1561.DebeSalirDePelea(PidiendoCorrer))
+            {
+                guardiaCancelada = true;
+            }
+            if (PidiendoCorrer && !apuntando && ArmaLevantada
+                && ReglasTransicionesT1561.AccionAlCorrer(tipoArma) == AccionArmaAlCorrer.GuardarYCorrer)
+            {
+                armaLevantadaHasta = 0f;
+            }
+            if (interrumpirHasta > 0f && Time.time >= interrumpirHasta)
+            {
+                interrumpirHasta = float.NegativeInfinity;
+                if (animador != null && Tiene(IdInterrumpir, AnimatorControllerParameterType.Trigger))
+                {
+                    animador.ResetTrigger(IdInterrumpir);
+                }
+            }
+        }
 
         // T-675: el siguiente golpe espera a que acabe la animación del anterior; la reacción al daño se corta con un golpe o un esquive.
         private const float EsperaDisparador = 0.08f;
@@ -794,6 +1053,8 @@ namespace MechaCyberpunk.Personaje.Visual
             {
                 LeerEstadoDelPadre(Time.deltaTime);
             }
+            ActualizarModoT1561();
+            AvanzarSacadoPendiente();
             Aplicar();
             CorregirArmaEnMano();
             if (congelado)
@@ -867,11 +1128,8 @@ namespace MechaCyberpunk.Personaje.Visual
             segundosGestoPendiente = Mathf.Max(0f, segundosGestoPendiente - dt);
             segundosPitarPendiente = Mathf.Max(0f, segundosPitarPendiente - dt);
             // Sentado al volante la capa de arriba solo se usa para pitar (los brazos al claxon); si no, taparía el volante con la pose del arma.
-            float objetivo = cubierto || caido || (agachado && !apuntando) || viendoTelefono || EnGesto ? 0f : 1f;
-            if (manejando)
-            {
-                objetivo = Pitando ? 1f : 0f;
-            }
+            // T-1561: también se apaga en el aire (sin armas ni puños flotando) y vuelve al aterrizar; la granada agachado mantiene los brazos.
+            float objetivo = ReglasTransicionesT1561.PesoObjetivoCapaArriba(caido, cubierto, agachado, apuntando, GranadaEnCurso, viendoTelefono, EnGesto, enSuelo || ForzarSuelo, manejando, manejando && Pitando);
             pesoArriba = Mathf.MoveTowards(pesoArriba, objetivo, rapidezCapaArriba * dt);
             animador.SetLayerWeight(capaArriba, pesoArriba);
 
@@ -1154,6 +1412,8 @@ namespace MechaCyberpunk.Personaje.Visual
             Poner(IdEnGuardia, EnGuardia);
             Poner(IdArmaLargaEquipada, tipoArma == TipoArmaVisual.ArmaLarga);
             Poner(IdRapidezGolpe, rapidezGolpes);
+            Poner(IdSentado, sentado);
+            Poner(IdColgado, colgado);
             Poner(IdPreparandoSalto, PreparandoSalto);
             Poner(IdRapidezSaltoInicio, RapidezSaltoInicio);
             Poner(IdRapidezSaltoAterrizaje, RapidezSaltoAterrizaje);

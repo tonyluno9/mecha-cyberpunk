@@ -175,6 +175,11 @@ namespace MechaCyberpunk.Personaje.Jugador
                 velocidadHasta = Mathf.Max(velocidadHasta, Time.time + c.SegundosVelocidad);
                 controlador.FactorExtraVelocidad = factorVelocidad;
             }
+            if (c.SegundosVelocidad > 0f && c.FactorVelocidad > 1f)
+            {
+                // T-1561: la bebida energética se bebe con PJ01_Beber (guarda el arma y sale de pelea antes; bloquea el movimiento mientras dura).
+                GetComponentInChildren<MechaCyberpunk.Personaje.Visual.VisualPersonaje>(false)?.Beber();
+            }
             ReglaSonidoConsumible.Sonar(c.Id); // T-1474: sonido propio de cada consumible (antes UI_ACEPTAR)
             Usado?.Invoke(c);
             return true;

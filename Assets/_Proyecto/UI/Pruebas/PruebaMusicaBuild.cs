@@ -118,7 +118,7 @@ namespace MechaCyberpunk.UI.Pruebas
             yield return Foto("1_opciones_audio");
             Linea("  opciones abiertas: " + Estado() + "; tiempo de la pista " + tiempoAntes.ToString("0.0") + " -> " + MusicaMenu.Actual.TiempoPista.ToString("0.0") + " s (sigue, no vuelve a 0)");
 
-            Linea("Bucle (el tema dura 40.4 s; cruce de " + MusicaMenu.SegundosCruce + " s):");
+            Linea("Bucle (el tema dura 40.4 s; loop normal, como lo hizo Tony):");
             float inicio = Time.realtimeSinceStartup;
             while (MusicaMenu.Actual != null && MusicaMenu.Actual.Vueltas == vueltasAntes && Time.realtimeSinceStartup - inicio < MaximoBucle)
             {

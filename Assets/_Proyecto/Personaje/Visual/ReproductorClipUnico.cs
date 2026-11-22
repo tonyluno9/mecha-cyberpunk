@@ -49,6 +49,63 @@ namespace MechaCyberpunk.Personaje.Visual
             return true;
         }
 
+        // T-1561: mezcla entre el clip que ya juega y el nuevo (platicar o discutir a asustarse: no de golpe).
+        private AnimationMixerPlayable mezclador;
+        private AnimationClipPlayable viejo;
+        private AnimationClip clipViejo;
+        private bool bucleViejo;
+        private bool hayViejo;
+        private float mezclaTranscurrida;
+        private float mezclaTotal;
+
+        /// <summary>
+        /// T-1561: igual que <see cref="Reproducir(Animator, AnimationClip, float, bool)"/>, pero si ya jugaba un clip lo desvanece mientras entra el nuevo durante
+        /// <paramref name="segundosMezcla"/> (0.2 s es lo normal). Sin clip anterior, o con 0 s, entra de golpe como siempre.
+        /// </summary>
+        public bool Reproducir(Animator sobre, AnimationClip nuevo, float rapidez, bool repetir, float segundosMezcla)
+        {
+            bool desdeClip = segundosMezcla > 0f && vivo && grafo.IsValid() && playable.IsValid() && sobre == animador && clip != null && nuevo != null;
+            if (!desdeClip)
+            {
+                return Reproducir(sobre, nuevo, rapidez, repetir);
+            }
+            AnimationClip clipAnterior = clip;
+            double tiempoAnterior = playable.GetTime();
+            float rapidezAnterior = (float)playable.GetSpeed();
+            bool bucleAnterior = bucle;
+            Detener();
+            animador = sobre;
+            rootMotionPrevio = animador.applyRootMotion;
+            animador.applyRootMotion = false;
+            grafo = PlayableGraph.Create("ReproductorClipUnico");
+            grafo.SetTimeUpdateMode(DirectorUpdateMode.GameTime);
+            AnimationPlayableOutput salida = AnimationPlayableOutput.Create(grafo, "ClipUnico", animador);
+            mezclador = AnimationMixerPlayable.Create(grafo, 2);
+            viejo = AnimationClipPlayable.Create(grafo, clipAnterior);
+            viejo.SetTime(tiempoAnterior);
+            viejo.SetSpeed(rapidezAnterior);
+            playable = AnimationClipPlayable.Create(grafo, nuevo);
+            playable.SetSpeed(Mathf.Max(0.01f, rapidez));
+            grafo.Connect(viejo, 0, mezclador, 0);
+            grafo.Connect(playable, 0, mezclador, 1);
+            mezclador.SetInputWeight(0, 1f);
+            mezclador.SetInputWeight(1, 0f);
+            salida.SetSourcePlayable(mezclador);
+            grafo.Play();
+            clip = nuevo;
+            bucle = repetir;
+            vivo = true;
+            clipViejo = clipAnterior;
+            bucleViejo = bucleAnterior;
+            hayViejo = true;
+            mezclaTranscurrida = 0f;
+            mezclaTotal = segundosMezcla;
+            return true;
+        }
+
+        /// <summary>T-1561: True mientras el clip nuevo todavía se está mezclando con el anterior.</summary>
+        public bool Mezclando => vivo && hayViejo;
+
         /// <summary>Corta el clip y devuelve el control al controlador del Animator.</summary>
         public void Detener()
         {
@@ -56,6 +113,7 @@ namespace MechaCyberpunk.Personaje.Visual
             {
                 return;
             }
+            hayViejo = false;
             vivo = false;
             if (grafo.IsValid())
             {
@@ -73,6 +131,21 @@ namespace MechaCyberpunk.Personaje.Visual
             if (!vivo)
             {
                 return;
+            }
+            if (hayViejo && mezclador.IsValid())
+            {
+                mezclaTranscurrida += Time.deltaTime;
+                float peso = Mathf.Clamp01(mezclaTranscurrida / Mathf.Max(0.01f, mezclaTotal));
+                mezclador.SetInputWeight(0, 1f - peso);
+                mezclador.SetInputWeight(1, peso);
+                if (bucleViejo && viejo.IsValid() && clipViejo != null && viejo.GetTime() >= clipViejo.length)
+                {
+                    viejo.SetTime(viejo.GetTime() % clipViejo.length);
+                }
+                if (peso >= 1f)
+                {
+                    hayViejo = false;
+                }
             }
             if (!playable.IsValid())
             {

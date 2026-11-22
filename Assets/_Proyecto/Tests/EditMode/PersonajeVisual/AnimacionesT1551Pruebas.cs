@@ -43,8 +43,9 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
         {
             Assert.AreEqual("PJ01_Muerte_Frente", Fila("Jugador", "Muerte_Adelante"));
             Assert.AreEqual("PJ01_Muerte_Espaldas", Fila("Jugador", "Muerte_Atras"));
-            Assert.AreEqual("NPC_Muerte_Frente", Fila("NPC", "Muerte_Adelante"));
-            Assert.AreEqual("NPC_Muerte_Espaldas", Fila("NPC", "Muerte_Atras"));
+            // decisión de Tony 21-nov (T-1560): los NPC usan las mismas muertes que el jugador (NPC_Muerte_* descartadas).
+            Assert.AreEqual("PJ01_Muerte_Frente", Fila("NPC", "Muerte_Adelante"));
+            Assert.AreEqual("PJ01_Muerte_Espaldas", Fila("NPC", "Muerte_Atras"));
             Assert.AreEqual("Guardia_Muerte", Fila("Guardias", "Muerte_Adelante"));
             CollectionAssert.DoesNotContain(AnimacionesT1551.PapelesConMuertesT1551, "Jugador");
             CollectionAssert.DoesNotContain(AnimacionesT1551.PapelesConMuertesT1551, "NPC");

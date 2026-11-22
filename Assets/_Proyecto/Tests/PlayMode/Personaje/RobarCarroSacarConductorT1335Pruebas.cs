@@ -21,7 +21,7 @@ namespace MechaCyberpunk.Tests.Personaje
     {
         private const string RutaConfigTrafico = "Assets/_Proyecto/Trafico/Datos/ConfigTraficoCalle_Trafico.asset";
         private const string RutaPrefabCarro = "Assets/_Proyecto/Trafico/Prefabs/CarroTrafico_V02.prefab";
-        private const float MaxSegundos = 8f;
+        private const float MaxSegundos = 12f; // T-1561: SacarConductor v4 dura 4 s a su rapidez natural
 
         private readonly List<GameObject> extras = new List<GameObject>();
         private CarroTrafico carro;
@@ -97,7 +97,11 @@ namespace MechaCyberpunk.Tests.Personaje
             ConfigAnimacionParkour config = ConfigAnimacionParkour.Actual;
             float inicioJugador = -1f;
             float inicioConductor = -1f;
-            float tope = Time.time + 1f;
+            // T-1561 (decisión de Tony, 21-nov): con ConfigClipsNpcT1561 el conductor juega NPC_SacadoDelCarro_Huir y arranca 0.75 s (18 cuadros) DESPUÉS del clip del jugador.
+            ConfigClipsNpcT1561 npc = ConfigClipsNpcT1561.Actual;
+            bool conductorRetrasado = npc != null && npc.SacadoDelCarroHuir != null;
+            AnimationClip clipConductor = conductorRetrasado ? npc.SacadoDelCarroHuir : config.ConductorSerSacado;
+            float tope = Time.time + 1.6f;
             bool alineado = false;
             float distancia = 0f;
             float angulo = 180f;
@@ -107,7 +111,12 @@ namespace MechaCyberpunk.Tests.Personaje
                 {
                     inicioJugador = Time.time;
                 }
-                if (inicioConductor < 0f && repConductor.ClipActual == config.ConductorSerSacado)
+                // T-1561: el conductor recibe su ReproductorClipUnico al ser sacado (después de empezar la prueba): se busca cada cuadro.
+                if (repConductor == null)
+                {
+                    repConductor = conductor.GetComponentInChildren<ReproductorClipUnico>();
+                }
+                if (inicioConductor < 0f && repConductor != null && repConductor.ClipActual == clipConductor)
                 {
                     inicioConductor = Time.time;
                 }
@@ -147,7 +156,16 @@ namespace MechaCyberpunk.Tests.Personaje
 
             Assert.GreaterOrEqual(inicioJugador, 0f, "El jugador juega PJ01_Carro_SacarConductor");
             Assert.GreaterOrEqual(inicioConductor, 0f, "El conductor juega PJ01_Conductor_SerSacado");
-            Assert.AreEqual(inicioJugador, inicioConductor, 0.1f, "Los dos clips empiezan juntos");
+            if (conductorRetrasado)
+            {
+                // El conductor arranca después que el jugador (0.75 s con el objeto activo; ya no antes).
+                Assert.GreaterOrEqual(inicioConductor, inicioJugador - 0.1f, "El del conductor no arranca antes que el del jugador");
+                Assert.LessOrEqual(inicioConductor - inicioJugador, ReglasTransicionesT1561.SegundosRetrasoConductor + 0.2f);
+            }
+            else
+            {
+                Assert.AreEqual(inicioJugador, inicioConductor, 0.1f, "Los dos clips empiezan juntos");
+            }
             Assert.IsTrue(alineado, "Se midió la alineación");
             Assert.Less(distancia, 0.35f, "El jugador queda junto al punto de la puerta (" + distancia.ToString("F2") + " m)");
             Assert.Less(angulo, 25f, "Y mira hacia el carro (" + angulo.ToString("F1") + " grados)");

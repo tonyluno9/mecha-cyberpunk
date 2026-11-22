@@ -74,9 +74,9 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
         [TestCase("Loco_SaltoAire", "PJ01_Salto_Aire")]
         [TestCase("Loco_SaltoAterrizaje", "PJ01_Salto_Aterrizaje")]
         [TestCase("Loco_Caida", "PJ01_Loco_Caida")]
-        [TestCase("Punos_GolpeIzq", "PJ01_Golpe2_Gancho")] // T-1506
-        [TestCase("Punos_GolpeDer", "PJ01_Golpe1_Directo")] // T-1506
-        [TestCase("Punos_Fuerte", "PJ01_Punos_Fuerte")]
+        [TestCase("Punos_GolpeIzq", "PJ01_Golpe_Izq")] // decisión de Tony 21-nov (T-1560); antes PJ01_Golpe2_Gancho
+        [TestCase("Punos_GolpeDer", "PJ01_Golpe_Der")] // decisión de Tony 21-nov (T-1560); antes PJ01_Golpe1_Directo
+        [TestCase("Punos_Fuerte", "PJ01_Golpe_Protesis")] // decisión de Tony 21-nov (T-1560); PJ01_Punos_Fuerte descartado
         [TestCase("Muerte_Adelante", "PJ01_Muerte_Frente")] // T-1506
         [TestCase("Muerte_Atras", "PJ01_Muerte_Espaldas")] // T-1506
         [TestCase("Muerte_Desmayo", "PJ01_Muerte_Desmayo")]
@@ -137,7 +137,12 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
             foreach (string guid in AssetDatabase.FindAssets("t:Model", new[] { ConstructorControladorBase.CarpetaClipsPJ01 }))
             {
                 var importer = (ModelImporter)AssetImporter.GetAtPath(AssetDatabase.GUIDToAssetPath(guid));
-                Assert.AreEqual(EscalaPJ01, importer.globalScale, 1e-4f, importer.assetPath);
+                // T-1560 (decisión de Tony 21-nov): los clips con el esqueleto propio del robot llevan la escala de su personaje, no la de PJ01.
+                string nombreClip = System.IO.Path.GetFileNameWithoutExtension(importer.assetPath);
+                if (!TablaClipsT1560.ClipsConRigPropio.Contains(nombreClip) && !ClipsRobotsNovaT1553.TieneRigPropio(nombreClip))
+                {
+                    Assert.AreEqual(EscalaPJ01, importer.globalScale, 1e-4f, importer.assetPath);
+                }
                 Assert.AreEqual(ModelImporterAnimationType.Human, importer.animationType, importer.assetPath);
             }
         }
