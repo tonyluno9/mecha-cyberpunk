@@ -139,9 +139,12 @@ Shader "MechaCyberpunk/CieloRealista"
                 float alfa = alfaDegradado;
 
                 // Estrellas tenues: celdas en la direccion, solo arriba (las nubes las cubren despues).
-                float3 celda = floor(d * _DensidadEstrellas);
+                // Punto pequeño en el centro de la celda (no la celda entera, que se veía como nieve).
+                float3 pc = d * _DensidadEstrellas;
+                float3 celda = floor(pc);
                 float azar = Hash31(celda);
-                float estrella = step(0.9975, azar) * smoothstep(0.12, 0.4, d.y);
+                float centro = length(frac(pc) - 0.5);
+                float estrella = step(0.9975, azar) * (1.0 - smoothstep(0.06, 0.16, centro)) * smoothstep(0.12, 0.4, d.y);
                 float titilar = 0.65 + 0.35 * sin(_Time.y * (1.5 + azar * 40.0) + azar * 100.0);
                 rgb += half3(0.8, 0.88, 1.0) * estrella * titilar * _FuerzaEstrellas * noche;
 
@@ -163,7 +166,7 @@ Shader "MechaCyberpunk/CieloRealista"
                 // Iluminacion desde abajo: los bordes y la parte baja de la capa (cerca del horizonte) reciben la luz de la ciudad.
                 float borde = nube * (1.0 - nube) * 4.0;
                 float luzCiudad = saturate(borde * 0.7 + (1.0 - arriba) * 0.65 - nube * 0.25 * arriba);
-                half3 nocheNube = lerp(_ColorNubesNoche.rgb, _TinteNubes.rgb * 0.55, luzCiudad * luzCiudad);
+                half3 nocheNube = lerp(_ColorNubesNoche.rgb, _TinteNubes.rgb * 0.38, luzCiudad * luzCiudad);
                 half3 diaNube = _ColorNubesDia.rgb * (0.82 + 0.18 * densidad);
                 half3 colorNube = lerp(diaNube, nocheNube, noche);
                 float opacidad = lerp(_OpacidadNubesDia, _OpacidadNubesNoche, noche);
