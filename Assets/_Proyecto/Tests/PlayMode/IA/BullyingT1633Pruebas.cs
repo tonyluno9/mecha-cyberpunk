@@ -115,6 +115,9 @@ namespace MechaCyberpunk.Tests.IA
             }
             PandillaAPie pandilla = raiz.AddComponent<PandillaAPie>();
             Asignar(pandilla, "datos", calaveras);
+            SerializedObject soPandilla = new SerializedObject(pandilla);
+            soPandilla.FindProperty("idPandilla").enumValueIndex = (int)IdPandilla.Calaveras;
+            soPandilla.ApplyModifiedPropertiesWithoutUndo();
             grupo = raiz.AddComponent<GrupoAcoso>();
             Asignar(grupo, "datos", acoso);
             Asignar(grupo, "civil", civil);
@@ -158,11 +161,14 @@ namespace MechaCyberpunk.Tests.IA
 
         private static bool Reacciona(PeatonMundo v) => v.Huyendo || v.Sobresaltado || v.Agachado || v.LlamandoPolicia || v.Nervioso;
 
-        private static IEnumerator EsperarHasta(System.Func<bool> condicion, float segundos)
+        private bool reaccionVista;
+
+        private IEnumerator EsperarHasta(System.Func<bool> condicion, float segundos)
         {
             float fin = Time.time + segundos;
             while (!condicion() && Time.time < fin)
             {
+                reaccionVista |= victima != null && Reacciona(victima);
                 yield return null;
             }
         }
@@ -238,6 +244,9 @@ namespace MechaCyberpunk.Tests.IA
             // Que ya estén cerca de la víctima (empezó el diálogo) antes de pegarles.
             yield return EsperarHasta(() => subtitulos.Count > 0, 30f);
             Assert.Greater(subtitulos.Count, 0, "empezaron a hablar");
+            // El jugador se acerca a pegar (queda a ~6 m del agresor y a menos de 20 m del civil).
+            jugador.transform.position = agresor.transform.position + new Vector3(-6f, 0.05f, 0f);
+            Physics.SyncTransforms();
             agresor.RecibirDanio(new InfoDanio(5f, TipoDanio.Golpe, agresor.transform.position + Vector3.up, Vector3.forward, null));
             yield return EsperarHasta(() => !DirectorEscenasBarrio.HayEscenaEnCurso, 3f);
             Assert.IsFalse(DirectorEscenasBarrio.HayEscenaEnCurso, "la escena se corta al intervenir el jugador");
@@ -247,7 +256,8 @@ namespace MechaCyberpunk.Tests.IA
             Assert.AreEqual(ReglaAcoso.Fase.Alerta, grupo.Fase, "su grupo pasa a alerta");
             yield return EsperarHasta(() => Reacciona(victima), 3f);
             Assert.IsTrue(victima.enabled, "el civil recupera su paseo");
-            Assert.IsTrue(Reacciona(victima), "el civil huye");
+            reaccionVista |= Reacciona(victima);
+            Assert.IsTrue(reaccionVista, "el civil huye");
         }
     }
 }

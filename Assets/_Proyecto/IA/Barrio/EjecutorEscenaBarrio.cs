@@ -25,7 +25,8 @@ namespace MechaCyberpunk.IA.Barrio
 
         // Medidas (m, s, m/s) que no se balancean: es la coreografía.
         private const float AlturaBoca = 1.7f;
-        private const float DistanciaAbordaje = 1.5f;
+        private const float DistanciaAbordaje = 1.8f;
+        private const float DistanciaAbordajeSegundo = 3f; // el segundo se queda detrás del primero: sus colisionadores se estorban
         private const float VelocidadAcercarse = 2.8f;
         private const float VelocidadRegreso = 1.8f;
         private const float GradosGiroAgresor = 360f;
@@ -247,8 +248,8 @@ namespace MechaCyberpunk.IA.Barrio
                 Vector3 meta = reparto.Victima.Transform.position;
                 bool llegaron = true;
                 float dt = Time.deltaTime;
-                llegaron &= IrHacia(reparto.Agresor1, meta, dt);
-                llegaron &= IrHacia(reparto.Agresor2, meta, dt);
+                llegaron &= IrHacia(reparto.Agresor1, meta, dt, DistanciaAbordaje);
+                llegaron &= IrHacia(reparto.Agresor2, meta, dt, DistanciaAbordajeSegundo);
                 reparto.Victima.Mirar(reparto.Agresor1.transform.position, dt);
                 if (llegaron)
                 {
@@ -266,7 +267,7 @@ namespace MechaCyberpunk.IA.Barrio
         }
 
         // Camina hacia el punto y para a DistanciaAbordaje. True si ya llegó (o no existe).
-        private static bool IrHacia(PandilleroAPie p, Vector3 meta, float dt)
+        private static bool IrHacia(PandilleroAPie p, Vector3 meta, float dt, float distancia)
         {
             if (p == null)
             {
@@ -274,7 +275,7 @@ namespace MechaCyberpunk.IA.Barrio
             }
             Vector3 d = meta - p.transform.position;
             d.y = 0f;
-            if (d.magnitude <= DistanciaAbordaje)
+            if (d.magnitude <= distancia)
             {
                 Atender(p, meta, dt);
                 return true;
