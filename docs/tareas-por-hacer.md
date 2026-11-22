@@ -324,3 +324,99 @@ Cómo: en las 4 bancas sentables del parque y en otras bancas y sillas del mapa 
 con ese clip, alineados al asiento (cadera sobre el asiento, pies en el piso, mirando al frente), con variaciones pequeñas (algunos con el
 celular, platicando de frente si son dos — T11). Cuando oyen balazos se levantan y huyen (T11).
 Comprobar: capturas de NPCs sentados en el parque y en otro punto, bien alineados al asiento, y que se levanten y huyan al disparar.
+
+## T19. Detalles que quedaron de T12, T17 y T18 (22-nov tarde)
+1. T12: el empujón al civil no se ve claro; que la animación de empujar y la caída del civil se vean completas y de frente. Los pandilleros que
+   tienen una pared entre ellos y el civil cancelan la escena a los 25 s porque caminan en línea recta: que rodeen por la banqueta (ruta o NavMesh
+   sencillo) o que solo elijan civiles a los que puedan llegar sin obstáculos.
+2. T17: el aviso "NOVA INTERVIENE" se ve pequeño y pálido: más grande, centrado, con el estilo del HUD (turquesa/blanco, glitch suave de entrada) y
+   un sonido propio de alarma corporativa (si no hay, usar el más grave del catálogo de Nova y anotar que falta uno propio). Reescribir la prueba
+   vieja RespuestaNovaT1304Pruebas para la llegada progresiva de T8/T17.
+3. T18: al oír balazos, el NPC sentado se levanta con un clip de levantarse (usa el de PJ01 de levantarse de la silla/camilla o uno de Mixamo que
+   ya exista) y después huye; que no pase directo de sentado a correr.
+4. Carro fuera del muro: aparece uno en (-20, -127.8) y cae del mapa. Encontrar qué sistema lo genera (carros estacionados, spawn de persecución
+   o algún prefab viejo) y que nada genere vehículos fuera del muro; agregar a la prueba de T9 que no haya vehículos fuera del muro tras 3 minutos.
+Comprobar cada punto en Play con una captura.
+
+---
+# NUEVAS (22-nov noche, prueba de Tony del build de las 13:51)
+Le gustó (NO se toca): empezar con la cinemática del recuerdo y caer/levantarse en la calle; las físicas de choque de los carros; las luces de
+la patrulla buena (la de docs/capturas/patrulla-buena-22nov.png).
+
+## T20. Intro del juego: video del logo
+Al abrir el juego, después del logo de Unity: se reproduce el video del logo de CyberCity "pintándose" (Tony lo deja en la raíz del proyecto o en
+imageassets/logo/; búscalo por nombre con "logo" y extensión .mp4/.mov/.webm; si no está, deja todo listo con un VideoClip vacío y anótalo).
+Al terminar el video: suena el sonido tecnológico que ya usa el menú (el del logo/intro, UI_LOGO_INTRO o el que suena al abrir el menú), entra la
+música del menú con su fade y aparece el menú. Se puede saltar con Enter/clic. Pantalla completa, sin deformar (con su proporción).
+
+## T21. Calle de la casa del jugador y primer encuentro con los SKULLS
+1. Quita a la chica que está parada en medio de la calle frente a la casa del jugador (y cualquier NPC que estorbe ahí al empezar).
+2. La calle de al lado de la casa no tiene la textura del suelo: ponle su asfalto y banquetas como las demás calles.
+3. Paso 3 de la historia (lo molestan): los dos SKULLS salen del CALLEJÓN / calle que está JUSTO A LA VUELTA de la casa del jugador (no de otro
+   lado). Caminan hacia él LENTO, platicando entre ellos (voz SKU_AMBIENTE con subtítulo). Cuando el jugador se acerca, se le ponen enfrente, le
+   dicen algo, lo EMPUJAN y lo TIRAN (clip de empujón de ellos + derribo del jugador); el jugador no puede hacer nada (como ya está) y ellos se
+   van CORRIENDO. Arregla la animación del empujón para que se vea clara: de frente, con contacto, y el jugador cae en sincronía.
+Comprobar: Nueva partida → levantarse → caminar → los SKULLS salen del callejón de al lado y pasa todo como arriba. Capturas.
+
+## T22. Charcos y texturas de calles y banquetas en TODA la ciudad
+1. Charcos: en muchas calles (por ejemplo la de la casa) no se ven aunque suena el agua al pisar. Recorre todas las calles y haz que los
+   charcos se vean en todas donde suena agua (mismo sistema que en las calles donde sí se ven bien); y que donde no se ve charco tampoco suene
+   agua.
+2. Calles con texturas raras o sin textura: revisa calle por calle y deja el mismo asfalto (T03 / T07) con sus líneas, sin estirarse ni
+   repetirse feo.
+3. Banquetas hechas con formas básicas (cubos): está bien usar la forma básica, pero con TEXTURA de banqueta de concreto (T01_Banqueta,
+   T09_ConcretoManchado) bien escalada, con su bordillo. Ninguna banqueta ni superficie gris lisa.
+4. Barrido de primitivos que queden sin textura en cualquier parte: todos con material real.
+Comprobar: capturas de 6 calles distintas (incluida la de la casa) con charcos visibles y texturas correctas.
+
+## T23. NPCs que atraviesan modelos
+Revisa que los NPCs (peatones, pandilleros, policías) no atraviesen paredes, puestos, carros estacionados ni otros objetos: que caminen por
+banquetas y rutas libres, con colisión o evitación contra obstáculos, y que no aparezcan dentro de objetos. Corrige los puntos donde pase.
+
+## T24. Carros: todos con el modelo ORIGINAL de Tripo, menos la patrulla buena
+Decisión de Tony: los carros que pasaron por Blender están bugueados. Para TODOS los carros civiles (V01a, V01b, V02–V09, V12–V24, motos) usa el
+modelo TAL CUAL se descargó de Tripo (los zips de imageassets/modelos3d y modelos-nuevos/nuevos-17nov), aunque las ruedas no giren. Que sigan
+siendo funcionales (se manejan, chocan, se roban, explotan), con escala real.
+La ÚNICA excepción es la patrulla de la foto docs/capturas/patrulla-buena-22nov.png (identifícala comparando con los prefabs de patrulla): esa se
+queda como está, con sus puertas que se abren y sus luces.
+Agrega a TODOS los carros las luces de la patrulla buena (faros delanteros y calaveras traseras encendidas de noche, como las de ella) y sus
+físicas de choque.
+
+## T25. Policía: arreglos
+1. La patrulla buena de la foto NO se comporta como patrulla: puedes robarla, dispararle y no pasa nada (no sube el calor, no recibe daño).
+   Configúrala como patrulla de verdad (mismo componente y datos que las demás patrullas): robarla y dispararle suben estrellas, recibe daño
+   y explota. Revisa que TODAS las patrullas reciban daño de balas y explosiones (hoy hay una a la que se le dispara y no le pasa nada).
+2. Solo 2 patrullas patrullando a la vez (no 3).
+3. Atropellar a un policía (y a cualquier NPC): sale volando con física (ragdoll o derribo con impulso) y cae; hoy no le pasa nada.
+4. Policías que disparan hacia otro lado y aun así le hacen daño al jugador: el daño solo se aplica si la bala realmente le pega al jugador
+   (raycast desde el arma del policía hacia donde apunta); corrige la puntería y la dirección del disparo.
+5. QUITAR EL ARRESTO: la policía ya no puede arrestar al jugador. Elimina la opción de arresto (la pantalla ARRESTADO queda sin usarse); la
+   policía solo persigue y dispara.
+
+## T26. SKULLS: confrontación con advertencias, sin perseguir como locos
+1. Bajarles la sensibilidad: al pasar cerca de su zona NO se te echan encima. Primero te advierten durante unos 20 s (se acercan un poco, te
+   gritan, te provocan); si te alejas, dejan de seguirte y regresan a su lugar. Solo si los ignoras y te quedas, o si los atacas, empieza la pelea.
+2. Frases: una cada ~5 s, sin encimarse (una sola voz a la vez en todo el grupo), con subtítulo.
+3. Una cosa a la vez: o caminan o hacen la animación de provocación/pelea; mientras hacen la animación de provocar se quedan QUIETOS (no
+   avanzan deslizándose).
+4. Cuando están pegados a ti, lo único que hacen es empujarte y tirarte. La pelea de verdad (golpes, armas) empieza solo cuando TÚ les pegas.
+5. Si te alejas lo suficiente, dejan de perseguirte.
+
+## T27. Reglas de confrontación por facción (documento + implementación)
+Escribe docs/confrontacion.md con las reglas de cada facción y aplícalas en su IA:
+- SKULLS y SNAKES: como T26 (advertencia → empujón → pelea solo si el jugador ataca; dejan de seguir al alejarse; los SNAKES un poco más
+  agresivos: sacan el arma antes).
+- Civiles: nunca atacan; huyen (T11).
+- Policía: solo por delitos; avisa con altavoz, persigue y dispara; sin arresto (T25); se retira al llegar Nova (T17).
+- Nova: no advierten; solo aparecen con 5 estrellas o en la historia; atacan directo; caen en cápsula (T7, T17).
+- Guardias de lugares (tiendas, casino, armería): advierten si sacas el arma dentro y solo atacan si disparas.
+Cada facción con su distancia de detección, tiempo de advertencia, cuándo empieza la pelea y cuándo se rinde/deja de seguir, en un
+ScriptableObject por facción para que Tony lo ajuste.
+
+## T28. Sonido de los pasos
+A Tony no le gusta el sonido actual de los pasos. Cámbialo por los mejores clips de pasos del catálogo (05_Pasos), más suaves y realistas,
+con volumen más bajo que los efectos fuertes, variación de pitch y volumen, y uno distinto por piso. Que suene un paso por pisada (ya está
+sincronizado) sin doblarse.
+
+## T29. Quitar los civiles sentados
+Decisión de Tony: quita TODOS los NPCs sentados de la ciudad (los de T18). El código de sentarse se queda, solo que nadie aparece sentado.
