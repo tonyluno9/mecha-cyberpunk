@@ -83,6 +83,7 @@ Cómo:
 Comprobar: en Play, provocar, pelear, recargar, herir, quemar y escapar de un grupo de SKULLS; anotar qué voz sonó en cada momento.
 
 ## T6. Importar todo lo que entregue el chat de Blender
+**Modelos y carros (sesión A): HECHA, merge dd7fd55.** V01a/V01b/V05 por piezas reimportados y Carro_* rearmados sin Cristal_* (largos 4.41/4.41/4.43 m, 0 referencias nulas); ya no había carros viejos de una malla en Ciudad_Prologo. Captura docs/capturas/_tareas/T6/carros-nuevos.png. Falla vieja ajena: Patrulla_ConservaSirenaRoboYGps (busca Asiento_Conductor). Anchos de V01a (2.37) y V05 (2.50) algo grandes. Las animaciones las conectó la sesión B.
 Cómo:
 1. Leer imageassets/blender/_REVISION/BITACORA.md, imageassets/blender/_REVISION_TONY/ (REVISION.md, ANIMACIONES_FALTAN.md) y los
    docs/tareas-unity-*.md: todo lo entregado después del último reporte se importa y se conecta.
@@ -204,6 +205,7 @@ Comprobar en Play: caminar por el territorio de los SKULLS hasta ver uno de esto
 la caída se vean bien, que suenen las voces, que el civil huya, y que al intervenir los pandilleros cambien hacia el jugador. Capturas.
 
 ## T13. Tráfico ordenado: rutas fijas, sin choques ni amontonamientos
+**HECHA (sesión A, 22-nov, merge dd7fd55):** reserva de cruces (ReservaCruces), seguimiento por ruta (parada 6 m, frenado 16 m), 20 carros de día / 15 de noche reciclados lejos y fuera de la vista, destrabar a los 5 s (forzado 7 s), EstadisticasTrafico. 3 min en Ciudad_Prologo: 0 atorados >8 s, máx. 19 vivos, 4 choques todos en un mismo cruce (x≈-47, z≈-2.4) que falta revisar. Pruebas TraficoOrdenadoT1603 3/3 PlayMode, TraficoCallePruebas 8/8, ChoqueTraficoT703 5/5. Capturas docs/capturas/_tareas/T13/. Los carros no huyen ante el caos (frenan y retoman).
 Problema: los carros del tráfico se chocan, se amontonan, se atoran (uno se echa para atrás, otro para adelante) y hacen un desastre que se ve
 mal. Además se sienten como tráfico infinito sin orden.
 Cómo:
