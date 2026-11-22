@@ -96,7 +96,7 @@ namespace MechaCyberpunk.IA.APie
             Vector3 haciaBoca = origen - cuerpo;
             if (haciaBoca.sqrMagnitude > 0.0001f)
             {
-                int n = Physics.RaycastNonAlloc(cuerpo, haciaBoca.normalized, impactos, haciaBoca.magnitude, ~0, QueryTriggerInteraction.Ignore);
+                int n = Physics.RaycastNonAlloc(cuerpo, haciaBoca.normalized, impactos, haciaBoca.magnitude, MechaCyberpunk.Personaje.Combate.ReglaImpactoBala.MascaraBala, QueryTriggerInteraction.Ignore);
                 for (int i = 0; i < n; i++)
                 {
                     Collider c = impactos[i].collider;
@@ -108,7 +108,7 @@ namespace MechaCyberpunk.IA.APie
                     return false;
                 }
             }
-            int cantidad = Physics.RaycastNonAlloc(origen, direccion, impactos, distancia + 0.5f, ~0, QueryTriggerInteraction.Ignore);
+            int cantidad = Physics.RaycastNonAlloc(origen, direccion, impactos, distancia + 0.5f, MechaCyberpunk.Personaje.Combate.ReglaImpactoBala.MascaraBala, QueryTriggerInteraction.Ignore);
             float mejor = float.MaxValue;
             bool llegaAlJugador = true;
             for (int i = 0; i < cantidad; i++)
