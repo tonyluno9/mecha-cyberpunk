@@ -28,3 +28,12 @@ Todo está en main con merge --no-ff y push. Lo que hay que colocar en el mapa e
 ## Cómo seguir si se corta
 1. `cd .sesiones/s2`, `git status`, rama `integ/B22`.
 2. Compilar con Unity cerrado (batch), probar por clase, commit con add explícito, merge a main con commit-tree (memoria merge-a-main-sin-checkout).
+
+---
+# Ronda C de B (22-nov noche): T25, T26, T27, T21.3, T19 (1-3), T28
+B trabaja en `.sesiones/s2`, rama `integ/B22` (al día con main 5b68ef3). Ramas: T-1650 policía (T25), T-1651 confrontación (T26+T27),
+T-1652 empujones (T21.3 + T19.1), T-1653 detalles T19 (T19.2 + T19.3), T-1654 pasos (T28). Cuatro subagentes Sonnet escribiendo en s2.
+- T25: código en curso
+- T26+T27: código en curso
+- T21.3 + T19.1: código en curso
+- T19.2 + T19.3 + T28: código en curso

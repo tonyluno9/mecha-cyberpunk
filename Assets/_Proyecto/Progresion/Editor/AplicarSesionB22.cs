@@ -24,6 +24,9 @@ namespace MechaCyberpunk.Progresion.Editor
             "MechaCyberpunk.IA.Editor.CrearEscenasBarrioT1624.Aplicar",
             "MechaCyberpunk.UI.Editor.CreadorPantallaOpciones.Crear",
             "MechaCyberpunk.Progresion.Recorrido.Editor.CreadorRecorrido.Aplicar",
+            "MechaCyberpunk.Trafico.Editor.AplicarPoliciaT25.Aplicar",
+            "MechaCyberpunk.IA.Editor.AplicarConfrontacionT1651.Aplicar",
+            "MechaCyberpunk.Progresion.Editor.AplicarPasosT1654.Aplicar",
         };
 
         [MenuItem("Mecha Cyberpunk/Sesión B 22-nov/Aplicar todo")]

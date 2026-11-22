@@ -53,9 +53,9 @@ namespace MechaCyberpunk.IA.APie
 
         /// <summary>
         /// Dispara al pecho del jugador: devuelve true si el daño llegó. <paramref name="objetivo"/> es quien recibe el daño.
-        /// Los muros bloquean el tiro; los demás pandilleros no.
+        /// Los muros bloquean el tiro; los demás pandilleros no. T25: con <paramref name="direccionReal"/> el rayo va hacia allá y solo hay daño si pega en el objetivo.
         /// </summary>
-        public bool Disparar(Vector3 origen, Vector3 pecho, IRecibeDanio objetivo, float danio, float probabilidad, bool lineaVerificada = false)
+        public bool Disparar(Vector3 origen, Vector3 pecho, IRecibeDanio objetivo, float danio, float probabilidad, bool lineaVerificada = false, Vector3? direccionReal = null)
         {
             avisando = false;
             Disparos++;
@@ -64,7 +64,13 @@ namespace MechaCyberpunk.IA.APie
             Vector3 hacia = pecho - origen;
             float distancia = hacia.magnitude;
             Vector3 direccion = distancia > 0.001f ? hacia / distancia : transform.forward;
-            Vector3 punto = pecho;
+            if (direccionReal.HasValue && direccionReal.Value.sqrMagnitude > 0.0001f)
+            {
+                // T25: el rayo sale hacia donde de verdad apunta el arma (con su dispersión): si no pega en el jugador, no hay daño.
+                direccion = direccionReal.Value.normalized;
+                lineaVerificada = false;
+            }
+            Vector3 punto = origen + direccion * distancia;
             bool libre = lineaVerificada || HayLinea(origen, direccion, distancia, objetivo, out punto);
             // T-421: si el jugador está agachado tras una cubierta del otro lado, la bala pega en ella.
             if (libre && objetivo is IProtegeDeBalas protegido && protegido.ProtegeDe(origen, out Vector3 puntoCubierta))

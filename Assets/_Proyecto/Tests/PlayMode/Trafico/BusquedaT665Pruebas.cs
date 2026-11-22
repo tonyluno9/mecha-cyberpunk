@@ -219,6 +219,7 @@ namespace MechaCyberpunk.Tests.Trafico
         }
 
         [UnityTest]
+        [Ignore("T25: la policía ya no arresta.")]
         public IEnumerator UnaPatrullaCerca_QueTeVe_ConElJugadorQuieto_TeArresta()
         {
             yield return null;

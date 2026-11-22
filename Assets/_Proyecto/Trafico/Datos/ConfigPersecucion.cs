@@ -73,7 +73,7 @@ namespace MechaCyberpunk.Trafico.Datos
 
         [Header("Ronda (T-933)")]
         [Tooltip("Patrullas que circulan sin sirena: solo ellas pueden verte cometer un delito.")]
-        [Min(0)] [SerializeField] private int patrullasDeRonda = 3;
+        [Min(0)] [SerializeField] private int patrullasDeRonda = 2;
         [Tooltip("Qué tan rápido va una patrulla de ronda comparada con una en persecución (0 a 1).")]
         [Range(0.1f, 1f)] [SerializeField] private float factorVelocidadRonda = 0.55f;
         [Tooltip("Segundos sin criminales a la vista para que una patrulla de ronda se vaya.")]

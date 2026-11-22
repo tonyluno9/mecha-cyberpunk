@@ -2154,6 +2154,7 @@ GameObject:
   - component: {fileID: 1521339158663052114}
   - component: {fileID: 4219015749473496969}
   - component: {fileID: 8918451709741386386}
+  - component: {fileID: 1049193298108777638}
   m_Layer: 0
   m_Name: PatrullaCamioneta
   m_TagString: Untagged
@@ -2297,7 +2298,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed0c4dad6a518ff4a8bc9e2716982682, type: 3}
   m_Name: 
   m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Carro.CarroEstacionado
-  calorAlRobar: 30
+  calorAlRobar: 55
   tinte: {r: 0, g: 0, b: 0, a: 0}
   esTuyo: 0
 --- !u!114 &8918451709741386386
@@ -2318,6 +2319,19 @@ MonoBehaviour:
   anguloPuerta: 70
   anguloCofre: 55
   gradosPorSegundo: 260
+--- !u!114 &1049193298108777638
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8312916960480169960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aeb56dd04ed30a345a781727b62ac4d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MechaCyberpunk.Vehiculos::MechaCyberpunk.Vehiculos.Carro.DanioCarro
+  config: {fileID: 0}
 --- !u!1 &8643500711063864687
 GameObject:
   m_ObjectHideFlags: 0

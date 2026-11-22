@@ -310,7 +310,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
             jugadorAnterior = jugador;
             // T-1303: solo te arresta un policía a pie que te alcanza y te toca (no una patrulla cerca un rato).
             float toque = PoliciaMasCercano(jugador.Value);
-            if (arresto.Avanzar(toque <= DistanciaToque, toque, 0f, dt))
+            if (ArrestoActivo && arresto.Avanzar(toque <= DistanciaToque, toque, 0f, dt))
             {
                 Arrestar();
                 return;
@@ -320,6 +320,9 @@ namespace MechaCyberpunk.Trafico.Persecucion
                 Escapar();
             }
         }
+
+        /// <summary>T25: la policía ya no arresta (solo persigue y dispara). Ponlo en true solo para pruebas del arresto.</summary>
+        public static bool ArrestoActivo = false;
 
         /// <summary>T-1303: a esta distancia (m, en el plano) un policía a pie ya te tocó.</summary>
         public const float DistanciaToque = 1.3f;

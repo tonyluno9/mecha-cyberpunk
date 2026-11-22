@@ -191,6 +191,7 @@ namespace MechaCyberpunk.Tests
         }
 
         [UnityTest]
+        [Ignore("T25: la policía ya no arresta.")]
         public IEnumerator Arresto_ConDinero_MuestraPantallaCobra25PorCientoYTeLlevaACasa()
         {
             Preparar(1000);
@@ -217,6 +218,7 @@ namespace MechaCyberpunk.Tests
         }
 
         [UnityTest]
+        [Ignore("T25: la policía ya no arresta.")]
         public IEnumerator Arresto_SinDinero_NoCobraNadaPeroTeLlevaACasa()
         {
             Preparar(0);
