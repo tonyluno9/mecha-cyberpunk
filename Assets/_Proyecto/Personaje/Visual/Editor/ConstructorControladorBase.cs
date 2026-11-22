@@ -79,6 +79,7 @@ namespace MechaCyberpunk.Personaje.Visual.Editor
             ConstruirArriba(c, mascara);
             ConstruirDano(c, mascara);
             AnimacionesT1540.AgregarEstados(c); // T-1540: muertes por explosión, atropello y caída; derribo; empujón; explosión cercana
+            AnimacionesT1560.AgregarEstados(c); // T-1560: acciones y reacciones de NPC, pandilleros y robots (parámetro AccionNpc y gestos 40 a 54)
             EditorUtility.SetDirty(c);
             AssetDatabase.SaveAssets();
             CrearOverrides(c);

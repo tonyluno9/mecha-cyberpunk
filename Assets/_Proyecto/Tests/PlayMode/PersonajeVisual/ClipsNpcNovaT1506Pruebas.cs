@@ -75,8 +75,8 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
             yield return null;
             civil.RegistrarGolpe(-civil.transform.forward);
             civil.Caido = true;
-            yield return Hasta(() => Reproduce(civil.Animador, 0, "NPC_Muerte_Frente") || Reproduce(civil.Animador, 0, "NPC_Muerte_Espaldas") || Reproduce(civil.Animador, 0, "PJ01_Muerte_Desmayo"),
-                "NPC_Muerte_* o el desmayo");
+            yield return Hasta(() => Reproduce(civil.Animador, 0, "PJ01_Muerte_Frente") || Reproduce(civil.Animador, 0, "PJ01_Muerte_Espaldas") || Reproduce(civil.Animador, 0, "PJ01_Muerte_Desmayo"),
+                "PJ01_Muerte_* o el desmayo (decisión de Tony 21-nov: el NPC muere como el jugador)");
         }
 
         [UnityTest]

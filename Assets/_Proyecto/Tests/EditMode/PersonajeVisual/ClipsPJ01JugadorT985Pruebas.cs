@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using MechaCyberpunk.Personaje.Visual;
 using MechaCyberpunk.Personaje.Visual.Editor;
 using NUnit.Framework;
 using UnityEditor;
@@ -86,7 +87,10 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
             foreach ((string estado, string clip) in tabla) { sb.AppendLine(estado + " -> " + clip); }
             Debug.Log(sb.ToString());
 
-            string[] noPJ01 = tabla.Where(t => !t.Clip.StartsWith(ConstructorControladorBase.PrefijoClipPJ01)).Select(t => t.Estado + " -> " + t.Clip).ToArray();
+            // T-1560: los estados de NPC, pandilleros y robots (EstadosNpcT1560) viven en el mismo controlador base; el jugador no los usa y su clip puede ser NPC_*, E15_* o E16_*.
+            var estadosNpc = new HashSet<string>(EstadosNpcT1560.Nombres);
+            string[] noPJ01 = tabla.Where(t => !t.Clip.StartsWith(ConstructorControladorBase.PrefijoClipPJ01) && !estadosNpc.Contains(t.Estado.Substring(t.Estado.LastIndexOf('/') + 1)))
+                .Select(t => t.Estado + " -> " + t.Clip).ToArray();
             string[] todos = ClipsDeLaCarpeta();
             var usados = new HashSet<string>(tabla.Select(t => t.Clip));
             // T-1484: el paso normal del jugador es el trote; los clips de caminar de PJ01 los usan los NPC.
@@ -94,10 +98,14 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
             // T-1506: PJ01_Moto_Manejar quedó reemplazado por PJ01_Manejar_Moto (estado MotoManejar); solo queda como fila vieja en los overrides.
             // T-1550 (decisión de Tony del 20-nov): PJ01_Sprint ya no se usa (lo reemplaza PJ01_CorrerRapido); el archivo se queda.
             var reemplazados = new HashSet<string> { "PJ01_Moto_Manejar", "PJ01_Sprint" };
+            // decisión de Tony 21-nov (T-1560): descartados PJ01_Golpe1_Directo, PJ01_Golpe2_Gancho y PJ01_Punos_Fuerte; los clips de Mixamo del 21-nov que Tony todavía compara con los actuales
+            // (rifle caminando, saltos, lanzar, granadas, recargas, sacar y guardar el fusil) se importan pero su estado lo decide T-1561 o Tony.
+            reemplazados.UnionWith(new[] { "PJ01_Golpe1_Directo", "PJ01_Golpe2_Gancho", "PJ01_Punos_Fuerte", "PJ01_Rifle_CaminarMixamo", "PJ01_Salto_AdelanteMixamo", "PJ01_Salto_B_Mixamo", "PJ01_Lanzar",
+                "PJ01_Granada_Agachado", "PJ01_Granada_DePie", "PJ01_Recargar_A", "PJ01_Recargar_B", "PJ01_Rifle_Sacar", "PJ01_Rifle_Guardar", "PJ01_Escalera_SubirMixamo", "PJ01_Parkour_SaltarBardaMixamo" });
             string[] sinUsar = todos.Where(n => !usados.Contains(n) && !soloNpc.Contains(n) && !reemplazados.Contains(n)).ToArray();
             Debug.Log("[T-985] clips no PJ01: " + noPJ01.Length + "; PJ01 sin usar: " + sinUsar.Length + " de " + todos.Length);
 
-            Assert.AreEqual(121, todos.Length, "La carpeta de clips debe tener los 121 PJ01_* (T-1550: +1, PJ01_CorrerRapido; T-1505 y T-1506: +17 de Blender del 19-nov; Blender 21-nov: +4 Salto_Correr; T-1540: +6 borradores del 21-nov)");
+            Assert.AreEqual(154, todos.Length, "La carpeta de clips debe tener los 154 PJ01_* (121 de antes + 33 de Blender y Mixamo del 21-nov, T-1560)");
             Assert.IsEmpty(noPJ01, "Clips que no son PJ01 en el jugador:\n" + string.Join("\n", noPJ01));
             Assert.IsEmpty(sinUsar, "PJ01 sin ningún estado:\n" + string.Join("\n", sinUsar));
         }

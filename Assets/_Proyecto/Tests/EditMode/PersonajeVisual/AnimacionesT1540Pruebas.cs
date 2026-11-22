@@ -199,11 +199,12 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
         [Test]
         public void TablaPorPapel_Jugador_ConservaPunosGuardia_YLosDemasUsanLaBurlaOriginalYElDanoPJ01()
         {
-            Assert.AreEqual("PJ01_Punos_Guardia", Fila("Jugador", "Skull_Burla"), "el jugador no se burla; T-985 exige PJ01 en él");
+            // decisión de Tony 21-nov (T-1560): la burla de todos los papeles, jugador incluido, es PJ01_Burla.
+            Assert.AreEqual("PJ01_Burla", Fila("Jugador", "Skull_Burla"));
             Assert.AreEqual("PJ01_Dano_Frente", Fila("Jugador", "Pistola_Dano_Frente"));
             foreach (string papel in new[] { "Aliados", "SKULLS", "SNAKES", "Guardias", "Robots", "Profes", "Jefe", "NPC" })
             {
-                Assert.AreEqual("Skull_Burla", Fila(papel, "Skull_Burla"), papel);
+                Assert.AreEqual("PJ01_Burla", Fila(papel, "Skull_Burla"), papel); // decisión de Tony 21-nov
             }
             foreach (string papel in new[] { "Aliados", "SKULLS", "SNAKES", "Guardias", "Robots", "Profes", "Jefe" })
             {
@@ -328,15 +329,15 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
             }
         }
 
-        [TestCase("Jugador", "Skull_Burla", "PJ01_Punos_Guardia")]
-        [TestCase("Aliados", "Skull_Burla", "Skull_Burla")]
-        [TestCase("NPC", "Skull_Burla", "Skull_Burla")]
-        [TestCase("SKULLS", "Skull_Burla", "Skull_Burla")]
-        [TestCase("SNAKES", "Skull_Burla", "Skull_Burla")]
-        [TestCase("Guardias", "Skull_Burla", "Skull_Burla")]
-        [TestCase("Robots", "Skull_Burla", "Skull_Burla")]
-        [TestCase("Profes", "Skull_Burla", "Skull_Burla")]
-        [TestCase("Jefe", "Skull_Burla", "Skull_Burla")]
+        [TestCase("Jugador", "Skull_Burla", "PJ01_Burla")]
+        [TestCase("Aliados", "Skull_Burla", "PJ01_Burla")]
+        [TestCase("NPC", "Skull_Burla", "PJ01_Burla")]
+        [TestCase("SKULLS", "Skull_Burla", "PJ01_Burla")]
+        [TestCase("SNAKES", "Skull_Burla", "PJ01_Burla")]
+        [TestCase("Guardias", "Skull_Burla", "PJ01_Burla")]
+        [TestCase("Robots", "Skull_Burla", "PJ01_Burla")]
+        [TestCase("Profes", "Skull_Burla", "PJ01_Burla")]
+        [TestCase("Jefe", "Skull_Burla", "PJ01_Burla")]
         [TestCase("Aliados", "Pistola_Dano_Frente", "PJ01_Dano_Frente")]
         [TestCase("Aliados", "Pistola_Dano_Espalda", "PJ01_Dano_Espalda")]
         [TestCase("SKULLS", "Pistola_Dano_Frente", "PJ01_Dano_Frente")]
@@ -364,7 +365,7 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
         [TestCase("E18", "Pistola_Dano_Frente", "PJ01_Dano_Frente")]
         [TestCase("Hacker", "Pistola_Dano_Espalda", "PJ01_Dano_Espalda")]
         [TestCase("NPC_Mujer", "Pistola_Dano_Frente", "NPC_Balazo_Frente")]
-        [TestCase("NPC_Celular", "Skull_Burla", "Skull_Burla")]
+        [TestCase("NPC_Celular", "Skull_Burla", "PJ01_Burla")]
         public void OverrideExtra_TieneLoDeT1540(string nombre, string clipBase, string esperado)
         {
             Assert.AreEqual(esperado, Valores(ClipsNpcNovaT1506.RutaOverrideExtra(nombre))[clipBase]);

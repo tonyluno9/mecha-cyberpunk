@@ -43,8 +43,10 @@ namespace MechaCyberpunk.Tests.PersonajeVisual
         {
             AnimatorController c = Base();
             string[] baseE = Estados(c.layers[0].stateMachine);
-            foreach (string e in ReglasAnimacion.EstadosBase) { CollectionAssert.Contains(baseE, e); }
-            Assert.AreEqual(ReglasAnimacion.EstadosBase.Length, baseE.Length);
+            // T-1560: la capa base también lleva los estados de NPC, pandilleros y robots (EstadosNpcT1560).
+            string[] esperados = ReglasAnimacion.EstadosBase.Concat(EstadosNpcT1560.Nombres).ToArray();
+            foreach (string e in esperados) { CollectionAssert.Contains(baseE, e); }
+            Assert.AreEqual(esperados.Length, baseE.Length);
             string[] arribaE = Estados(c.layers[1].stateMachine);
             foreach (string e in ReglasAnimacion.EstadosArriba) { CollectionAssert.Contains(arribaE, e); }
             Assert.AreEqual(ReglasAnimacion.EstadosArriba.Length, arribaE.Length);
