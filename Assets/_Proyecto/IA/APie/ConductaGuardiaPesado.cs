@@ -338,6 +338,7 @@ namespace MechaCyberpunk.IA.APie
             ReglaCanonE16.Parametros c = canon.Config;
             Vector3 origen = p.transform.position + Vector3.up * AlturaBocaCanon;
             disparosCanonHechos++;
+            EventosRuido.PublicarDisparoConRadio(origen, 40f); // T-1622: el cañón se oye como un rifle
             EventosRuido.PublicarDisparo(origen);
             Vector3 frente = p.transform.forward;
             frente.y = 0f;

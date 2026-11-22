@@ -59,6 +59,7 @@ namespace MechaCyberpunk.IA.APie
         {
             avisando = false;
             Disparos++;
+            EventosRuido.PublicarDisparoConRadio(origen, 25f); // T-1622: pistola
             EventosRuido.PublicarDisparo(origen);
             Vector3 hacia = pecho - origen;
             float distancia = hacia.magnitude;

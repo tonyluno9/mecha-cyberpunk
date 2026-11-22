@@ -298,9 +298,25 @@ namespace MechaCyberpunk.Personaje.Visual
             {
                 return;
             }
-            girar.rotation = Quaternion.RotateTowards(girar.rotation, Quaternion.LookRotation(hacia.normalized, Vector3.up), GradosPorSegundoMirar * dt);
+            // T-1622: el cuerpo puede mirar distinto que la raíz (clip con orientación original): se gira la raíz lo que haga falta para que el cuerpo quede de frente.
+            segundosPlaticando += dt;
+            if (!frenteMedido && hayGrafo && segundosPlaticando >= SegundosAntesDeMedirFrente)
+            {
+                frenteMedido = true;
+                if (FrenteCuerpo.Medir(animador, girar, out float desvio) && Mathf.Abs(desvio) >= FrenteCuerpo.DesvioMinimo)
+                {
+                    correccionFrente = desvio;
+                }
+            }
+            Quaternion meta = Quaternion.LookRotation(hacia.normalized, Vector3.up) * Quaternion.Euler(0f, -correccionFrente, 0f);
+            girar.rotation = Quaternion.RotateTowards(girar.rotation, meta, GradosPorSegundoMirar * dt);
             giroOriginal = girar.rotation;
         }
+
+        private const float SegundosAntesDeMedirFrente = 0.7f;
+        private float segundosPlaticando;
+        private bool frenteMedido;
+        private float correccionFrente;
 
         // T-534: si el jugador está cerca y quieto un momento, se voltea hacia él; al irse, vuelve a lo suyo. Devuelve true mientras mira.
         private bool Mirar(float dt)

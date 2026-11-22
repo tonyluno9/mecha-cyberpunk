@@ -250,6 +250,7 @@ namespace MechaCyberpunk.Personaje.Habilidades
                 Vector3 salida = (Vector3.up * 1.2f + transform.forward * 0.6f + (i % 2 == 0 ? transform.right : -transform.right) * 0.35f).normalized;
                 MisilAPie.Lanzar(Hombro(), salida * cfg.VelocidadMisil, blanco, punto, cfg, transform.root);
                 MisilesLanzados++;
+                EventosRuido.PublicarDisparoConRadio(transform.position, 60f); // T-1622: misil
                 EventosRuido.PublicarDisparo(transform.position);
                 if (cfg.SegundosEntreMisiles > 0f)
                 {

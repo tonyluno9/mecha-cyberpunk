@@ -115,6 +115,12 @@ namespace MechaCyberpunk.IA.APie
         public void AlMorirCivil(Vector3 direccion)
         {
             muerto = true;
+            if (Visual != null && accionPlaticaPuesta)
+            {
+                EstadosNpcT1560.PonerAccion(Visual.Animador, AccionNpcT1560.Ninguna);
+                accionPlaticaPuesta = false;
+            }
+            RestaurarFrente();
             if (Visual != null)
             {
                 ReproductorClipUnico bucle = Visual.GetComponent<ReproductorClipUnico>();
@@ -189,20 +195,120 @@ namespace MechaCyberpunk.IA.APie
         /// <summary>T-1516: el civil se queda platicando (variante 0 o 1): clip de plática en bucle.</summary>
         public void AlPlaticarCivil(int variante)
         {
-            ConfigClipsNovaNpc config = ConfigClipsNovaNpc.Actual;
-            if (config != null)
+            VisualPersonaje v = Visual;
+            if (v == null || v.Animador == null || v.Caido || muerto)
             {
-                JugarEnBucle(variante % 2 == 0 ? config.Platicar1 : config.Platicar2);
+                return;
             }
+            if (Time.time < proximoCambioPlatica && (accionPlaticaPuesta || Reproductor().Repite))
+            {
+                return;
+            }
+            proximoCambioPlatica = Time.time + Mathf.Lerp(SegundosMinimosEntrePlaticas, SegundosMaximosEntrePlaticas, Mathf.Abs(Mathf.Sin(GetInstanceID() * 12.9898f + contadorPlatica * 78.233f)));
+            int indice = ((variante * 3 + contadorPlatica) % AccionesPlatica.Length + AccionesPlatica.Length) % AccionesPlatica.Length;
+            contadorPlatica++;
+            ReproductorClipUnico reproductor = Reproductor();
+            if (reproductor.Repite)
+            {
+                reproductor.Detener();
+            }
+            if (EstadosNpcT1560.PonerAccion(v.Animador, AccionesPlatica[indice]))
+            {
+                bool primera = !accionPlaticaPuesta;
+                accionPlaticaPuesta = true;
+                if (!primera && Mathf.Abs(Mathf.Sin(GetInstanceID() * 3.7f + contadorPlatica)) < ProbabilidadSenalar)
+                {
+                    EstadosNpcT1560.Gestear(v, contadorPlatica % 2 == 0 ? GestoNpcT1560.Senalar : GestoNpcT1560.Senalar2);
+                }
+            }
+            else
+            {
+                ConfigClipsNovaNpc config = ConfigClipsNovaNpc.Actual;
+                if (config != null)
+                {
+                    JugarEnBucle((variante + contadorPlatica) % 2 == 0 ? config.Platicar1 : config.Platicar2);
+                }
+            }
+            if (isActiveAndEnabled)
+            {
+                StartCoroutine(CorregirFrente(++medicionFrente));
+            }
+        }
+
+        // T-1622: variedad de plática (Platicar A-D y Discutir 1-3 del controlador base; sin AccionNpc usa los dos clips de siempre) y giro de frente.
+        private static readonly AccionNpcT1560[] AccionesPlatica =
+        {
+            AccionNpcT1560.PlaticarA, AccionNpcT1560.PlaticarB, AccionNpcT1560.PlaticarC, AccionNpcT1560.PlaticarD,
+            AccionNpcT1560.Discutir1, AccionNpcT1560.Discutir2, AccionNpcT1560.Discutir3,
+        };
+        private const float SegundosMinimosEntrePlaticas = 7f;
+        private const float SegundosMaximosEntrePlaticas = 14f;
+        private const float ProbabilidadSenalar = 0.3f;
+        private const float SegundosAntesDeMedirFrente = 0.7f;
+        private const float SegundosEntreGritos = 2.5f;
+        private float proximoCambioPlatica;
+        private int contadorPlatica;
+        private bool accionPlaticaPuesta;
+        private float correccionFrente;
+        private int medicionFrente;
+        private float proximoGrito;
+
+        // Espera a que la pose se asiente y gira el visual lo que el cuerpo se desvíe de la raíz (que ya mira a su pareja): arregla "platican de espaldas".
+        private System.Collections.IEnumerator CorregirFrente(int cual)
+        {
+            yield return new WaitForSeconds(SegundosAntesDeMedirFrente);
+            VisualPersonaje v = Visual;
+            if (cual != medicionFrente || v == null || v.Animador == null || muerto || v.Caido)
+            {
+                yield break;
+            }
+            if (FrenteCuerpo.Medir(v.Animador, transform, out float grados) && Mathf.Abs(grados) >= FrenteCuerpo.DesvioMinimo)
+            {
+                v.transform.Rotate(0f, -grados, 0f, Space.World);
+                correccionFrente -= grados;
+            }
+        }
+
+        private void RestaurarFrente()
+        {
+            medicionFrente++;
+            if (Mathf.Abs(correccionFrente) > 0.01f && Visual != null)
+            {
+                Visual.transform.Rotate(0f, -correccionFrente, 0f, Space.World);
+            }
+            correccionFrente = 0f;
         }
 
         public void AlDejarPlaticarCivil()
         {
+            RestaurarFrente();
+            if (accionPlaticaPuesta)
+            {
+                accionPlaticaPuesta = false;
+                if (Visual != null)
+                {
+                    EstadosNpcT1560.PonerAccion(Visual.Animador, AccionNpcT1560.Ninguna);
+                }
+            }
+            proximoCambioPlatica = 0f;
             ConfigClipsNovaNpc config = ConfigClipsNovaNpc.Actual;
             if (config != null)
             {
                 DetenerSiJuega(config.Platicar1, config.Platicar2);
             }
+        }
+
+        /// <summary>T-1622: grita de miedo (no hay voz de miedo en el catálogo: usa la voz de dolor de hombre o mujer; no más de un grito cada 2.5 s).</summary>
+        public void AlGritarCivil()
+        {
+            if (Time.time < proximoGrito || muerto)
+            {
+                return;
+            }
+            proximoGrito = Time.time + SegundosEntreGritos;
+            PeatonVariado peaton = GetComponent<PeatonVariado>();
+            string nombre = peaton != null ? peaton.NombreVisual : name;
+            Sonidos.ReproducirEn(ReglaSonidoNpc.IdDolor(nombre, GetInstanceID()), transform.position + Vector3.up * 1.5f);
         }
 
         /// <summary>T-1516: se agacha cubriéndose la cabeza (bucle) hasta que se levanta.</summary>
@@ -228,6 +334,8 @@ namespace MechaCyberpunk.IA.APie
         public void AlRevivirCivil()
         {
             muerto = false;
+            RestaurarFrente();
+            accionPlaticaPuesta = false;
             postura?.Reiniciar();
             if (Visual != null)
             {

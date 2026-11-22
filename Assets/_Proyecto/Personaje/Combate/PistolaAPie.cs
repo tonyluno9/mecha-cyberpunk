@@ -107,6 +107,24 @@ namespace MechaCyberpunk.Personaje.Combate
 
         public static bool EsDeFuego(ArmaAPie arma) => arma != ArmaAPie.Punos;
 
+        /// <summary>T-1622: hasta dónde se oye el tiro de esta arma (m): 25 pistola, revólver y subfusil; 40 escopeta, fusil, sniper y plasma; 60 lanzagranadas.</summary>
+        public static float RadioRuido(ArmaAPie arma)
+        {
+            switch (arma)
+            {
+                case ArmaAPie.Escopeta:
+                case ArmaAPie.Fusil:
+                case ArmaAPie.Sniper:
+                case ArmaAPie.RiflePlasma:
+                    return 40f;
+                case ArmaAPie.Lanzagranadas:
+                case ArmaAPie.Granada:
+                    return 60f;
+                default:
+                    return 25f;
+            }
+        }
+
         private static int Indice(ArmaAPie arma) => arma == ArmaAPie.Punos ? (int)ArmaAPie.Pistola : (int)arma;
 
         /// <summary>T-991: el cargador de un arma de fuego (la rueda muestra las balas de cada una), o null si no la tiene.</summary>
@@ -475,6 +493,7 @@ namespace MechaCyberpunk.Personaje.Combate
         /// <summary>T-1013: avisa del disparo de un arma especial (fogonazo, retroceso, ruido, calor y Disparo) como los tiros de bala.</summary>
         public void AvisarDisparoEspecial(ArmaAPie arma, Vector3 boca)
         {
+            EventosRuido.PublicarDisparoConRadio(boca, RadioRuido(arma));
             EventosRuido.PublicarDisparo(boca);
             SumarCalor();
             inicioRetroceso = Time.time;
@@ -652,6 +671,7 @@ namespace MechaCyberpunk.Personaje.Combate
             IGuarida guarida = Registro<IGuarida>.Actual;
             float multiplicadorGuarida = 1f + (guarida != null ? guarida.BonoDanioArmas : 0f);
             Sonidos.Reproducir(IdDisparo(arma)); // T-1472: el disparo del jugador suena en 2D
+            EventosRuido.PublicarDisparoConRadio(origen, RadioRuido(arma));
             EventosRuido.PublicarDisparo(origen);
             RaycastHit tapa = default;
             bool tapada = !desdeCarro && BocaTapada(origen, out tapa);

@@ -112,6 +112,7 @@ namespace MechaCyberpunk.Personaje.Visual
             posicionInicial = transform.position;
             posicionFinal = posicionInicial + Vector3.up * ElevacionTirado;
             progreso = 0f;
+            MechaCyberpunk.Core.EventosRuido.PublicarMuerte(transform.position); // T-1622
             Murio?.Invoke(this);
         }
 

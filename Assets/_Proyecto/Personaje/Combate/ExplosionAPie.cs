@@ -85,6 +85,7 @@ namespace MechaCyberpunk.Personaje.Combate
             {
                 Sonidos.ReproducirEn(Sonido, centro);
             }
+            EventosRuido.PublicarDisparoConRadio(centro, 60f); // T-1622: explosión
             EventosRuido.PublicarDisparo(centro);
             Efecto(centro, radio, cfg);
             return danados;

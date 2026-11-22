@@ -106,6 +106,19 @@ namespace MechaCyberpunk.Trafico.Peatones
                 peaton.gameObject.SetActive(false);
                 peatones.Add(peaton);
             }
+            // T-1622: cada corro sabe quiénes son los suyos (si uno ve una muerte, huyen todos).
+            foreach ((int primero, int tam) in corros)
+            {
+                var miembros = new PeatonMundo[tam];
+                for (int k = 0; k < tam; k++)
+                {
+                    miembros[k] = peatones[primero + k];
+                }
+                foreach (PeatonMundo miembro in miembros)
+                {
+                    miembro.AsignarCorro(miembros);
+                }
+            }
             CrearPeatonesDeZonas();
         }
 
