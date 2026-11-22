@@ -17,4 +17,4 @@ Lee esta lista y `git log --oneline -15 main`; sigue con la primera tarea que no
 - T17: HECHA, merge e6fa324
 - T18: HECHA
 - T12: HECHA
-- Builds: en curso
+- Builds: HECHOS (Demo 13:51, Juego 13:52, Result: Success; Demo probado). Reporte: docs/reporte-tareas-22nov-b.md. TERMINADO.
