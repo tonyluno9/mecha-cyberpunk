@@ -15,8 +15,9 @@ No tocar el contenido de los FBX de Blender: solo importación (.meta), controla
 | Tarea | Qué | Estado |
 | --- | --- | --- |
 | Música | Tony: el tema empalma solo; se quita el cruce y queda loop normal | hecho en código, falta build |
-| T-1560 | Parte 1: importación clip por clip (avatar, escala, rango, raíz, loop, compresión), overrides de Tony, estados de clips sin estado (no acciones del jugador) | por lanzar |
-| T-1561 | Parte 2: transiciones con lógica (capas, modos, armas, granada, daño/muerte, saltos, carro, interacciones, NPC) y estados de acciones del jugador | por lanzar |
+| T-1560 | Parte 1: importación clip por clip (avatar, escala, rango, raíz, loop, compresión), overrides de Tony, estados de clips sin estado (no acciones del jugador) | lanzada (wt24) |
+| T-1561 | Parte 2: transiciones con lógica (capas, modos, armas, granada, daño/muerte, saltos, carro, interacciones, NPC) y estados de acciones del jugador | lanzada (wt24) |
 | Final | Pruebas en Play con capturas, builds, reporte-anim-21nov.md | pendiente |
 
 ## Bitácora
+- Lanzadas T-1560 (importación/overrides/estados NPC-robots) y T-1561 (transiciones/estados de acciones del jugador) en wt24/.
