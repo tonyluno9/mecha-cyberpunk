@@ -58,7 +58,7 @@ namespace MechaCyberpunk.Trafico.Editor
         private const float GrosorLente = 0.01f;
         // Estacionados.
         private const float MargenAlCruce = 20f;
-        private const float LargoMinimoDeTramo = 30f;
+        private const float LargoMinimoDeTramo = 10f;
         private const float MaximaDiagonal = 0.1f;
         private const float AlturaRayo = 1f;
         private const float AlcanceRayo = 2.5f;
@@ -570,6 +570,13 @@ namespace MechaCyberpunk.Trafico.Editor
             GameObject carro = (GameObject)PrefabUtility.InstantiatePrefab(prefab, grupo);
             carro.name = PrefijoEstacionado + numero + "_" + codigo;
             carro.transform.SetPositionAndRotation(centro, Quaternion.LookRotation(eje * lado));
+            // Mientras se coloca, el carro no estorba a sus propios rayos: capa Ignore Raycast (se restaura al final).
+            Transform[] partes = carro.GetComponentsInChildren<Transform>(true);
+            int[] capas = partes.Select(t => t.gameObject.layer).ToArray();
+            foreach (Transform t in partes)
+            {
+                t.gameObject.layer = 2;
+            }
             Physics.SyncTransforms();
             bool alLargoDeX = Mathf.Abs(eje.x) > 0.5f;
             Bounds b = Medidas(carro);
@@ -617,6 +624,11 @@ namespace MechaCyberpunk.Trafico.Editor
                 motivo = "choca con " + otro.name;
                 return 0f;
             }
+            for (int k = 0; k < partes.Length; k++)
+            {
+                partes[k].gameObject.layer = capas[k];
+            }
+            Physics.SyncTransforms();
             return 2f * mitadLargo;
         }
 

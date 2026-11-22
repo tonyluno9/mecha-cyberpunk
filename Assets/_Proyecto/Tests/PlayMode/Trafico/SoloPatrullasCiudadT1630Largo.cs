@@ -24,13 +24,13 @@ namespace MechaCyberpunk.Tests.Trafico
         private const float SegundosEntreMuestras = 0.5f;
         private const float SegundosEntreLineas = 30f;
         private const float SegundosPrimeraCaptura = 50f;
-        private const float SegundosEntreCapturas = 70f;
+        private const float SegundosEntreCapturas = 35f;
         private const float VelocidadEnMovimiento = 1f;
         private const float VelocidadParada = 0.3f;
         private const float VelocidadEstacionadoMovido = 0.5f;
         private const int MaximoDePatrullas = 4;
         private const float TopeSegundosReales = 600f;
-        private const int Capturas = 2;
+        private const int Capturas = 3;
         private const string Carpeta = "docs/capturas/_tareas/T16/";
 
         [UnityTest, Explicit("Larga: 3 minutos de juego en Ciudad_Prologo")]
@@ -51,7 +51,8 @@ namespace MechaCyberpunk.Tests.Trafico
             }
             yield return new WaitForSecondsRealtime(2f);
             EstadisticasTrafico.Reiniciar();
-            CarroEstacionado[] estacionados = Object.FindObjectsByType<CarroEstacionado>(FindObjectsSortMode.None);
+            // Solo los de la escena (Estacionado_N): las patrullas y los CarroRobable_N que nacen en juego también llevan CarroEstacionado.
+            CarroEstacionado[] estacionados = System.Array.FindAll(Object.FindObjectsByType<CarroEstacionado>(FindObjectsSortMode.None), e => e.name.StartsWith("Estacionado_"));
             Vector3[] posiciones = new Vector3[estacionados.Length];
             for (int i = 0; i < estacionados.Length; i++)
             {
@@ -68,6 +69,7 @@ namespace MechaCyberpunk.Tests.Trafico
             int capturas = 0;
             float realInicio = Time.realtimeSinceStartup;
             int muestras = 0;
+            int avisos = 0;
             int sumaPatrullasMoviendose = 0;
             int maxPatrullas = 0;
             int maxCivilesMoviendose = 0;
@@ -85,7 +87,15 @@ namespace MechaCyberpunk.Tests.Trafico
                     int civiles = 0;
                     foreach (CarroTrafico c in CarroTrafico.Activos)
                     {
-                        civiles += c != null && c.Velocidad > VelocidadEnMovimiento ? 1 : 0;
+                        // El CarroAsaltante es del sistema de asaltos (T-728), no tráfico civil.
+                        if (c != null && c.Velocidad > VelocidadEnMovimiento && !c.name.StartsWith("CarroAsaltante"))
+                        {
+                            civiles++;
+                            if (avisos++ < 6)
+                            {
+                                sb.AppendLine("  (t=" + (Time.time - inicio).ToString("0") + ") civil del pool en movimiento: " + c.name + " en " + c.transform.position.ToString("0.0") + " a " + c.Velocidad.ToString("0.0") + " m/s");
+                            }
+                        }
                     }
                     maxCivilesMoviendose = Mathf.Max(maxCivilesMoviendose, civiles);
                     int patrullas = 0;
@@ -106,13 +116,24 @@ namespace MechaCyberpunk.Tests.Trafico
                         muestrasParadasEnRojo += paradaEnRojo ? 1 : 0;
                         enRojo[p] = paradaEnRojo;
                     }
+                    if (patrullas > MaximoDePatrullas && avisos++ < 12)
+                    {
+                        sb.AppendLine("  (t=" + (Time.time - inicio).ToString("0") + ") " + patrullas + " patrullas vivas; en ronda " + System.Linq.Enumerable.Count(PatrullaMundo.Activas, q => q != null && q.EnRonda));
+                    }
                     maxPatrullas = Mathf.Max(maxPatrullas, patrullas);
                     sumaPatrullasMoviendose += patrullasMoviendose;
                     int movidos = 0;
                     foreach (CarroEstacionado e in estacionados)
                     {
                         Rigidbody cuerpo = e != null ? e.GetComponent<Rigidbody>() : null;
-                        movidos += cuerpo != null && !cuerpo.isKinematic && cuerpo.linearVelocity.magnitude > VelocidadEstacionadoMovido ? 1 : 0;
+                        if (cuerpo != null && !cuerpo.isKinematic && cuerpo.linearVelocity.magnitude > VelocidadEstacionadoMovido)
+                        {
+                            movidos++;
+                            if (avisos++ < 12)
+                            {
+                                sb.AppendLine("  (t=" + (Time.time - inicio).ToString("0") + ") estacionado en movimiento: " + e.name + " en " + e.transform.position.ToString("0.0") + " a " + cuerpo.linearVelocity.magnitude.ToString("0.0") + " m/s");
+                            }
+                        }
                     }
                     maxEstacionadosMoviendose = Mathf.Max(maxEstacionadosMoviendose, movidos);
                 }
@@ -131,6 +152,58 @@ namespace MechaCyberpunk.Tests.Trafico
                 yield return null;
             }
             Time.timeScale = 1f;
+            // Robar un carro estacionado de la escena.
+            int robo = 0;
+            string detalleRobo = "no encontré estacionados";
+            foreach (CarroEstacionado e in estacionados)
+            {
+                CarroViejo viejo = e != null ? e.GetComponent<CarroViejo>() : null;
+                if (viejo != null)
+                {
+                    robo = viejo.IntentarSubir(null) ? 1 : -1;
+                    detalleRobo = e.name + " en " + e.transform.position.ToString("0.0");
+                    break;
+                }
+            }
+            sb.AppendLine("ROBO de un estacionado de la escena: " + (robo == 1 ? "se pudo subir y robar" : "NO se pudo") + " (" + detalleRobo + ")");
+            // Delito junto a una patrulla de ronda: debe dejar la ronda y perseguir.
+            GestorPersecucion gestor = Object.FindFirstObjectByType<GestorPersecucion>();
+            int persecucion = 0;
+            string detallePersecucion = "sin gestor";
+            if (gestor != null && Registro<IJugador>.Actual != null && Registro<ICalor>.Actual != null)
+            {
+                float espera = Time.realtimeSinceStartup + 40f;
+                while (Time.realtimeSinceStartup < espera && gestor.Rondas.Count == 0)
+                {
+                    yield return null;
+                }
+                PatrullaMundo ronda = gestor.Rondas.Count > 0 ? gestor.Rondas[0] : null;
+                if (ronda == null)
+                {
+                    detallePersecucion = "no había patrulla de ronda";
+                }
+                else
+                {
+                    Vector3[] desplazamientos = { ronda.transform.forward * 14f, ronda.transform.right * 8f, -ronda.transform.right * 8f, ronda.transform.forward * 8f, ronda.transform.forward * 25f };
+                    bool vePuntoAntes = false;
+                    foreach (Vector3 desplazamiento in desplazamientos)
+                    {
+                        Registro<IJugador>.Actual.Colocar(new Pose(ronda.transform.position + desplazamiento, Quaternion.identity));
+                        Physics.SyncTransforms();
+                        yield return null;
+                        vePuntoAntes = ronda.VeElPunto(Registro<IJugador>.Actual.Raiz.position);
+                        if (vePuntoAntes)
+                        {
+                            break;
+                        }
+                    }
+                    Registro<ICalor>.Actual.Sumar(20f, MotivoCalor.Pelea);
+                    yield return new WaitForSeconds(0.5f);
+                    persecucion = !ronda.EnRonda ? 1 : -1;
+                    detallePersecucion = "la ronda veia al jugador: " + vePuntoAntes + "; EnRonda despues del delito: " + ronda.EnRonda + "; patrullas de persecucion " + gestor.Patrullas;
+                }
+            }
+            sb.AppendLine("DELITO junto a una patrulla de ronda: " + (persecucion == 1 ? "la patrulla deja la ronda y persigue" : "NO arrancó la persecución") + " (" + detallePersecucion + ")");
             int desplazados = 0;
             for (int i = 0; i < estacionados.Length; i++)
             {
@@ -176,8 +249,21 @@ namespace MechaCyberpunk.Tests.Trafico
             GameObject camObjeto = new GameObject("CamCapturaSemaforo");
             Camera cam = camObjeto.AddComponent<Camera>();
             cam.farClipPlane = 400f;
-            camObjeto.transform.position = elegido.transform.position + new Vector3(8f, 28f, -18f);
-            camObjeto.transform.LookAt(elegido.transform.position);
+            if (numero >= 3 && elegido.Postes.Count > 0)
+            {
+                // De cerca: un poste que manda, visto desde donde lo ven los carros que llegan (las luces miran contra el sentido).
+                SemaforoCruce.Poste poste = elegido.Postes[0];
+                Vector3 foco = poste.Transform.position + Vector3.up * 3.4f;
+                camObjeto.transform.position = foco - poste.Sentido.normalized * 7f + Vector3.up * 0.2f;
+                camObjeto.transform.LookAt(foco);
+                camObjeto.transform.position += camObjeto.transform.right * 1f;
+                camObjeto.transform.LookAt(foco);
+            }
+            else
+            {
+                camObjeto.transform.position = elegido.transform.position + new Vector3(8f, 28f, -18f);
+                camObjeto.transform.LookAt(elegido.transform.position);
+            }
             yield return null;
             RenderTexture rt = new RenderTexture(1280, 720, 24);
             cam.targetTexture = rt;
@@ -189,7 +275,7 @@ namespace MechaCyberpunk.Tests.Trafico
             RenderTexture.active = null;
             cam.targetTexture = null;
             Directory.CreateDirectory(Carpeta);
-            File.WriteAllBytes(Carpeta + "cruce-" + numero + ".png", img.EncodeToPNG());
+            File.WriteAllBytes(Carpeta + (numero >= 3 ? "semaforo-cerca-" : "cruce-") + numero + ".png", img.EncodeToPNG());
             Debug.Log("[Prueba] captura " + numero + " del cruce en " + elegido.transform.position + ": eje X " + elegido.Fase(0) + ", eje Z " + elegido.Fase(1));
             Object.Destroy(img);
             Object.Destroy(rt);
