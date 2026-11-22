@@ -300,6 +300,7 @@ Comprobar: 3 minutos mirando la ciudad: solo patrullas circulando, que se detien
 estacionado; cometer un delito junto a una patrulla que patrulla y que empiece la persecución.
 
 ## T17. Escalada final: con el máximo de estrellas la policía se retira y solo llega Nova (progresivo)
+**HECHA (22-nov, merge e6fa324):** modo Nova a 5 estrellas (ReglaEscaladaRespuesta.ModoNova): aviso NOVA INTERVIENE en el HUD con el sonido de llegada de Nova, no se genera policía nueva y la que había se retira (solo se destruye lejos y fuera de cámara), Nova llega en cápsulas por jerarquía con tope de 3 vivos; drones de Nova en cápsula (gancho EventosRespuesta.CapsulaDron). Registro en docs/capturas/_tareas/T17/registro.txt: NOVA INTERVIENE a 27.6 s; E15 37.7 s, E18 80.5 s, drones 115 s, perro 125 s, E16 170.7 s; máx. 3 vivos. Pruebas 24/24 EditMode, 3/3 PlayMode. Pendiente: RespuestaNovaT1304Pruebas.CuatroEstrellas_LlegaNova espera la llegada vieja (3 guardias + 1 pesado de golpe) que T8 ya cambió; el aviso se ve pequeño y pálido.
 Decisión de Tony: si llegas al máximo de estrellas es porque la policía no pudo frenarte; entonces deja de llegar policía y empiezan a llegar
 SOLO los Nova, de forma progresiva. Ajusta el director de respuesta de T8.
 Cómo:
