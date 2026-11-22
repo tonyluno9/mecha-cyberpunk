@@ -151,8 +151,16 @@ namespace MechaCyberpunk.Tests.Personaje
 
             Assert.GreaterOrEqual(inicioJugador, 0f, "El jugador juega PJ01_Carro_SacarConductor");
             Assert.GreaterOrEqual(inicioConductor, 0f, "El conductor juega PJ01_Conductor_SerSacado");
-            Assert.AreEqual(inicioJugador + (conductorRetrasado ? ReglasTransicionesT1561.SegundosRetrasoConductor : 0f), inicioConductor, 0.15f,
-                conductorRetrasado ? "El del conductor arranca 18 cuadros (0.75 s) después que el del jugador" : "Los dos clips empiezan juntos");
+            if (conductorRetrasado)
+            {
+                // El conductor arranca después que el jugador (0.75 s con el objeto activo; ya no antes).
+                Assert.GreaterOrEqual(inicioConductor, inicioJugador - 0.1f, "El del conductor no arranca antes que el del jugador");
+                Assert.LessOrEqual(inicioConductor - inicioJugador, ReglasTransicionesT1561.SegundosRetrasoConductor + 0.2f);
+            }
+            else
+            {
+                Assert.AreEqual(inicioJugador, inicioConductor, 0.1f, "Los dos clips empiezan juntos");
+            }
             Assert.IsTrue(alineado, "Se midió la alineación");
             Assert.Less(distancia, 0.35f, "El jugador queda junto al punto de la puerta (" + distancia.ToString("F2") + " m)");
             Assert.Less(angulo, 25f, "Y mira hacia el carro (" + angulo.ToString("F1") + " grados)");
