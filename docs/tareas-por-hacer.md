@@ -46,6 +46,7 @@ Cómo:
 Comprobar: cada uno en Play con captura.
 
 ## T4. Balas que pegan en postes y objetos en vez del personaje (hitboxes)
+**HECHA (sesión A, 22-nov, merge 96d66b1):** capa 8 NoDetieneBalas (cables, toldos, letreros colgantes, rejas), postes en cápsula vertical, cajas ajustadas (colliders grandes 43→0, salvo 3 botes con MeshCollider); BalasHitboxesT1602Pruebas 4/4, ArmasT1324EditPruebas 8/8; docs/capturas/_tareas/T4/resultado.txt (pega al NPC junto al poste; la pared detiene). Las PNG de batchmode se ven mal: probar en el juego.
 Problema: si un civil o enemigo está junto a un poste u otro objeto y le disparas, la bala pega en el poste y no al personaje. Los colliders de
 muchos objetos del mapa son más grandes que su modelo.
 Cómo:
@@ -129,6 +130,7 @@ Comprobar en Play con un registro (hora, tipo, nivel, vivos) en consola o docs: 
 de 3); llegar a más de 5 estrellas y matar a cada Nova (cae uno, luego otro tras su tiempo, nunca una lluvia); ver el orden de la jerarquía.
 
 ## T9. Muro perimetral completo y bien unido; nada afuera
+**HECHA (sesión A, 22-nov, merge 3c8ccff):** 12 huecos torre-puerta rellenos con MU01, torre flotante bajada, 904 objetos de afuera borrados (escena 53→32 MB); 3552 raycasts cada 1 m sin hueco; pruebas MuroPerimetroT1601Pruebas 3/3; capturas en docs/capturas/_tareas/T9/. Falta: probar a mano salir en carro y saltando.
 Problema: el muro que rodea la ciudad tiene tramos mal unidos (huecos, encimados, desniveles) y todavía hay cosas afuera.
 Cómo:
 1. Recorre TODO el perímetro del muro (los 4 lados, las 4 esquinas y las 6 puertas) con un script que siga el borde y reporte cada unión:
