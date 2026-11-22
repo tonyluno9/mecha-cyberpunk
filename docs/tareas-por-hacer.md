@@ -350,6 +350,7 @@ Al terminar el video: suena el sonido tecnológico que ya usa el menú (el del l
 música del menú con su fade y aparece el menú. Se puede saltar con Enter/clic. Pantalla completa, sin deformar (con su proporción).
 
 ## T21. Calle de la casa del jugador y primer encuentro con los SKULLS
+**Puntos 1 y 2 HECHOS (sesión A, merge 96afae0):** la chica era Doña Lupe (GTA_T406/DonaLupe) en medio del asfalto a (-45.5,0,-77): movida a la banqueta de enfrente (-40.6,0.2,-73.5). El callejón de la vuelta de la casa (x -86..-54, z≈-59, entrada a 18 m al norte de la puerta) no tenía asfalto: ahora tiene asfalto, raya amarilla doble y bordillos (raíz T1641_CalleCasa). Prueba CalleCasaT1641Pruebas 1/1. Capturas docs/capturas/_tareas/T21/. El punto 3 es de la sesión B.
 1. Quita a la chica que está parada en medio de la calle frente a la casa del jugador (y cualquier NPC que estorbe ahí al empezar).
 2. La calle de al lado de la casa no tiene la textura del suelo: ponle su asfalto y banquetas como las demás calles.
 3. Paso 3 de la historia (lo molestan): los dos SKULLS salen del CALLEJÓN / calle que está JUSTO A LA VUELTA de la casa del jugador (no de otro
@@ -419,6 +420,7 @@ con volumen más bajo que los efectos fuertes, variación de pitch y volumen, y 
 sincronizado) sin doblarse.
 
 ## T29. Quitar los civiles sentados
+**HECHA (22-nov noche, merge a2a1a1e):** quitados los 20 NPCs sentados de Ciudad_Prologo (16 de NpcsSentados_T1632 y 4 Sentado_T1542 del parque); quedan 0. El código y las bancas sentables se quedan (no volver a correr NpcsSentadosT1632.Aplicar ni el de T1542). Prueba SinSentadosT1640Pruebas 1/1. Capturas docs/capturas/_tareas/T29/.
 Decisión de Tony: quita TODOS los NPCs sentados de la ciudad (los de T18). El código de sentarse se queda, solo que nadie aparece sentado.
 
 ---

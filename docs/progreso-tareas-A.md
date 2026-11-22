@@ -31,11 +31,11 @@ Sesión B en .sesiones/s2: T19 (1-3), T21 punto 3, T25, T26, T27, T28. A es la �
 Ramas de A: T-1640 sin sentados (T29), T-1641 calle casa (T21), T-1642 charcos y texturas (T22), T-1643 NPCs colisión (T23, wt23A/T1602-hitboxes),
 T-1644 carros Tripo (T24, wt23A/T1604-blender-modelos), T-1645 carro fuera del muro (T19.4, wt23A/T1603-trafico), T-1646 intro video (T20, wt23A/T1605-realismo).
 Paso 0: HECHO (389475c). No hay video del logo en la carpeta (solo PNG en imageassets/logo).
-- T29: en curso
-- T21: pendiente
-- T22: pendiente
-- T23: código en curso
-- T24: código en curso
-- T19.4: código en curso
-- T20: código en curso
+- T29: HECHA, merge a2a1a1e
+- T21 (1-2): HECHA, merge 96afae0
+- T22: en curso en la carpeta principal (rama tony/T-1642-charcos)
+- T23: código listo (0fcacd3), falta integrar
+- T24: código listo (b711288), falta integrar
+- T19.4: código listo (d5f0d67), falta integrar
+- T20: código listo (07c88ed), falta integrar; Tony dejó videologo.mp4 en la raíz: moverlo a Assets/Arte/Video/ (LFS) al integrar
 - Builds y reporte docs/reporte-tareas-22nov-c.md: pendiente
