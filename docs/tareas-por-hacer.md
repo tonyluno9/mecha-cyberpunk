@@ -420,3 +420,14 @@ sincronizado) sin doblarse.
 
 ## T29. Quitar los civiles sentados
 Decisión de Tony: quita TODOS los NPCs sentados de la ciudad (los de T18). El código de sentarse se queda, solo que nadie aparece sentado.
+
+---
+# EN ESPERA (no se hacen hasta que Tony lo diga)
+
+## E1. Pantallas de carga nuevas con el estilo del tráiler — ESPERAR A QUE TERMINE EL TRÁILER
+NO se hace todavía: depende del tráiler que se está generando con IA. Cuando Tony diga que el tráiler terminó:
+1. Sacar frames del video del tráiler (los mejores momentos) para usarlos como pantallas de carga nuevas.
+2. Mejorar las imágenes de carga actuales (L01–L06 de imageassets/ui/carga/) para que queden con mejor calidad y más apegadas al estilo de
+   animación del tráiler (las regenera el chat de arte usando frames del tráiler como referencia).
+3. Pasar todas por un upscaler para que queden en alta calidad (al menos 1920x1080, idealmente 4K).
+4. Meterlas en la pantalla de carga minimalista que ya existe (sin deformar, con el logo del menú).
