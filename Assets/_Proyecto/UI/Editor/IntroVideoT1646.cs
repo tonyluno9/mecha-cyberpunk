@@ -162,6 +162,8 @@ namespace MechaCyberpunk.UI.Editor
         private static void AgregarASceneInicio(ConfigIntro config)
         {
             EditorSceneManager.OpenScene(EscenaInicio.Ruta, OpenSceneMode.Single);
+            // Abrir la escena descarga los assets sin referencias: el ConfigIntro recién creado se vuelve a cargar del disco.
+            config = AssetDatabase.LoadAssetAtPath<ConfigIntro>(RutaConfig);
             MenuInicio menu = Object.FindFirstObjectByType<MenuInicio>();
             if (menu == null)
             {
