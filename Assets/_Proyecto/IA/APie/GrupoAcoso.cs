@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.IA.Datos;
 using UnityEngine;
@@ -28,10 +29,64 @@ namespace MechaCyberpunk.IA.APie
         private bool danioPendiente;
         private bool danioDesdeArriba;
         private Vector3 centroCivil;
+        private bool forzarDeteccion;
+        // T-1633: pandilleros que una escena del barrio (bullying a otro civil) tomó prestados; el grupo ya no los mueve ni los mira.
+        private readonly HashSet<PandilleroAPie> prestados = new HashSet<PandilleroAPie>();
 
         public ReglaAcoso.Fase Fase => regla != null ? regla.Actual : ReglaAcoso.Fase.Acosando;
         public CivilAcosado Civil => civil;
         public DatosAcoso Datos => datos;
+
+        /// <summary>T-1633: cuántos pandilleros se pueden prestar ahora (el grupo siempre conserva al menos uno en pie y solo presta mientras acosa).</summary>
+        public int CupoPrestable
+        {
+            get
+            {
+                if (regla == null || regla.Actual != ReglaAcoso.Fase.Acosando || civil == null || civil.Huyendo || civil.Terminado)
+                {
+                    return 0;
+                }
+                int libres = 0;
+                foreach (PandilleroAPie p in pandilleros)
+                {
+                    if (Activo(p))
+                    {
+                        libres++;
+                    }
+                }
+                return Mathf.Max(0, libres - 1);
+            }
+        }
+
+        public bool EsPrestado(PandilleroAPie p) => p != null && prestados.Contains(p);
+
+        /// <summary>T-1633: una escena del barrio toma a <paramref name="p"/> (sigue con Acosando=true para que su IA no lo mueva). False si no se puede.</summary>
+        public bool Prestar(PandilleroAPie p)
+        {
+            if (!Activo(p) || CupoPrestable < 1)
+            {
+                return false;
+            }
+            prestados.Add(p);
+            return true;
+        }
+
+        /// <summary>T-1633: la escena terminó. Con <paramref name="alertar"/> (el jugador intervino) todo el grupo pasa a alerta; si no, <paramref name="p"/> vuelve al acoso.</summary>
+        public void Devolver(PandilleroAPie p, bool alertar)
+        {
+            if (p == null || !prestados.Remove(p))
+            {
+                return;
+            }
+            if (alertar)
+            {
+                forzarDeteccion = true;
+            }
+            else if (regla != null && regla.Actual == ReglaAcoso.Fase.Acosando && !p.EstaKO)
+            {
+                p.Acosando = true;
+            }
+        }
 
         /// <summary>Para pruebas: cambia el azar (antes del primer Update).</summary>
         public void InyectarAzar(Func<float> fuente)
@@ -115,12 +170,13 @@ namespace MechaCyberpunk.IA.APie
             }
             ReglaAcoso.Entrada entrada = new ReglaAcoso.Entrada
             {
-                JugadorDetectado = detectado,
+                JugadorDetectado = detectado || forzarDeteccion,
                 DanioRecibido = danioPendiente,
                 JugadorDesdeArriba = danioDesdeArriba,
                 TodosVencidos = grupo.TodosVencidos
             };
             danioPendiente = false;
+            forzarDeteccion = false;
             ReglaAcoso.Salida salida = regla.Avanzar(dt, entrada);
 
             if (salida.EntroSorpresa)
@@ -153,6 +209,9 @@ namespace MechaCyberpunk.IA.APie
 
         // Otros sistemas (o las pruebas) pueden destruir a un pandillero: se cuenta como que ya no está.
         private static bool EnPie(PandilleroAPie p) => p != null && p.gameObject.activeSelf && !p.EstaKO;
+
+        // En pie y no prestado a una escena del barrio: los gestos y la mirada del acoso solo cuentan con estos.
+        private bool Activo(PandilleroAPie p) => EnPie(p) && !prestados.Contains(p);
 
         private PandilleroAPie PrimeroEnPie()
         {
@@ -214,7 +273,7 @@ namespace MechaCyberpunk.IA.APie
         {
             foreach (PandilleroAPie p in pandilleros)
             {
-                if (!EnPie(p))
+                if (!Activo(p))
                 {
                     continue;
                 }
@@ -247,7 +306,7 @@ namespace MechaCyberpunk.IA.APie
             float menor = float.MaxValue;
             foreach (PandilleroAPie p in pandilleros)
             {
-                if (!EnPie(p))
+                if (!Activo(p))
                 {
                     continue;
                 }
@@ -276,7 +335,7 @@ namespace MechaCyberpunk.IA.APie
             int vivos = 0;
             foreach (PandilleroAPie p in pandilleros)
             {
-                if (EnPie(p))
+                if (Activo(p))
                 {
                     vivos++;
                 }
@@ -288,7 +347,7 @@ namespace MechaCyberpunk.IA.APie
             int elegido = Mathf.Min(vivos - 1, Mathf.FloorToInt(azar() * vivos));
             foreach (PandilleroAPie p in pandilleros)
             {
-                if (EnPie(p) && elegido-- == 0)
+                if (Activo(p) && elegido-- == 0)
                 {
                     return p;
                 }
@@ -302,7 +361,7 @@ namespace MechaCyberpunk.IA.APie
             for (int i = 0; i < pandilleros.Length; i++)
             {
                 PandilleroAPie p = pandilleros[i];
-                if (!EnPie(p))
+                if (!Activo(p))
                 {
                     continue;
                 }

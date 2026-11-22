@@ -30,7 +30,7 @@ namespace MechaCyberpunk.IA.Barrio
         private const float VelocidadRegreso = 1.8f;
         private const float GradosGiroAgresor = 360f;
         private const float SegundosMaximosAcercarse = 25f; // la víctima puede estar hasta a 40 m (hay pocos civiles)
-        private const float SegundosMaximosRegreso = 10f;
+        private const float SegundosMaximosRegreso = 25f; // hasta 40 m a 1.8 m/s
         private const float DistanciaLlegadaHogar = 1.5f;
         private const float SegundosGesto = 1f;
         private const float SegundosMaximosCaido = 5f;
@@ -114,6 +114,8 @@ namespace MechaCyberpunk.IA.Barrio
         {
             if (p != null)
             {
+                // T-1633: si es de un GrupoAcoso (los SKULLS fijos de la ciudad) el grupo lo presta: deja de moverlo y mirar a su civil.
+                p.GetComponentInParent<GrupoAcoso>()?.Prestar(p);
                 p.Acosando = true;
             }
         }
@@ -228,7 +230,7 @@ namespace MechaCyberpunk.IA.Barrio
             return true;
         }
 
-        private static bool Vigente(PandilleroAPie p) => p != null && p.isActiveAndEnabled && !p.EstaKO;
+        private static bool Vigente(PandilleroAPie p) => p != null && p.isActiveAndEnabled && !p.EstaKO && p.Acosando; // sin Acosando alguien lo soltó (su grupo pasó a alerta)
 
         // ---------- bullying: acercarse y cierre ----------
 
@@ -488,7 +490,16 @@ namespace MechaCyberpunk.IA.Barrio
                 return;
             }
             p.DanioRecibido -= AlDanio;
-            p.Acosando = false;
+            GrupoAcoso prestador = p.GetComponentInParent<GrupoAcoso>();
+            bool eraPrestado = prestador != null && prestador.EsPrestado(p);
+            if (eraPrestado)
+            {
+                prestador.Devolver(p, intervencion); // sin intervención vuelve al acoso (Acosando sigue true); con ella su grupo pasa a alerta
+            }
+            if (!eraPrestado || intervencion)
+            {
+                p.Acosando = false;
+            }
             if (!intervencion || p.EstaKO || !p.isActiveAndEnabled)
             {
                 return;
