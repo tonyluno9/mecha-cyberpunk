@@ -11,6 +11,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
     /// T-1007: la llanta de cada rueda de V01a, V01b, V05 y la patrulla mide casi lo que su hueco (el paso de rueda medido en la malla de la carrocería, sin llantas),
     /// y toca el piso. En las motos V07 y V08 el hueco es el de la llanta horneada que se borró (C19 viene sin llanta horneada: sin hueco que medir).
     /// </summary>
+    [Ignore("T-1644: los carros civiles vuelven al modelo original de Tripo (sin piezas de Blender)")]
     public class RuedasAlHuecoT1007Pruebas
     {
         private const float PisoTolerancia = 0.02f;

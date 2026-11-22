@@ -12,6 +12,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
     /// T-1312: V02, V03, V04, V06, V09, V10 y la moto C19 con las ruedas de Blender: un vehículo que avanza hace girar sus ruedas sobre el eje X y las
     /// ruedas tocan el piso. Con CAPTURAR_T1312=1 deja una captura de lado y una de 3/4 de cada uno en docs/capturas/t-1312/.
     /// </summary>
+    [Ignore("T-1644: los carros civiles vuelven al modelo original de Tripo (sin piezas de Blender)")]
     public class RuedasBlenderT1312Pruebas
     {
         private const float PasoMetros = 0.15f;

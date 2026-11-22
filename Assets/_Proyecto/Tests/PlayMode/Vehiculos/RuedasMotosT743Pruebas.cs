@@ -13,6 +13,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
     /// T-743: las motos V07, V08 y C19 jugando con entrada simulada: las dos llantas rueden con W y al revés con S, solo la delantera dobla con A y D,
     /// la moto sigue andando igual (suspensión con las cuatro anclas, aceleración) y las llantas se inclinan con ella. Capturas con CAPTURAR_S1=1.
     /// </summary>
+    [Ignore("T-1644: los carros civiles vuelven al modelo original de Tripo (sin piezas de Blender)")]
     public class RuedasMotosT743Pruebas : InputTestFixture
     {
         private static readonly string[] Codigos = { "V07", "V08", "C19" };

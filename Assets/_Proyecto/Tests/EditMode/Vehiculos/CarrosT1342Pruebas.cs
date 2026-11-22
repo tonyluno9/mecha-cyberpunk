@@ -8,6 +8,7 @@ using UnityEngine;
 namespace MechaCyberpunk.Tests.Vehiculos
 {
     /// <summary>T-1342: los carros V12 a V24 con piezas de Blender: tamaño, ruedas, bisagras de puertas y cofre y cristales transparentes.</summary>
+    [Ignore("T-1644: los carros civiles vuelven al modelo original de Tripo (sin piezas de Blender)")]
     public class CarrosT1342Pruebas
     {
         private static string[] Codigos() => CreadorCarrosT1342.Carros.Select(c => c.codigo).ToArray();

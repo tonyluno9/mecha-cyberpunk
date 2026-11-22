@@ -42,6 +42,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
         }
 
         [Test]
+        [Ignore("T-1644: los carros civiles vuelven al modelo original de Tripo (sin piezas de Blender)")]
         public void Cristales_UsanElMaterialTransparente([ValueSource(nameof(CarrosConCristal))] string codigo)
         {
             Material cristal = AssetDatabase.LoadAssetAtPath<Material>(PiezasCarroT1342.RutaCristal);
@@ -57,6 +58,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
         }
 
         [Test]
+        [Ignore("T-1644: los carros civiles vuelven al modelo original de Tripo (sin piezas de Blender)")]
         public void Largo_EstaEntreTresYSeisMetros([ValueSource(nameof(Carros))] string codigo)
         {
             Transform visual = Visual(Prefab(codigo));
@@ -68,6 +70,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
         }
 
         [Test]
+        [Ignore("T-1644: los carros civiles vuelven al modelo original de Tripo (sin piezas de Blender)")]
         public void Ruedas_LasCuatroGiranSinNulos([ValueSource(nameof(Carros))] string codigo)
         {
             RuedasVisualesCarro ruedas = Prefab(codigo).GetComponent<RuedasVisualesCarro>();
@@ -81,6 +84,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
         }
 
         [Test]
+        [Ignore("T-1644: los carros civiles vuelven al modelo original de Tripo (sin piezas de Blender)")]
         public void Cofre_V01aV01bV05_TienenBisagraConSuCofre([Values("V01a", "V01b", "V05")] string codigo)
         {
             Transform bisagra = Visual(Prefab(codigo)).Find("Bisagra_Cofre");
@@ -104,6 +108,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
         }
 
         [Test]
+        [Ignore("T-1644: los carros civiles vuelven al modelo original de Tripo (sin piezas de Blender)")]
         public void Motos_TienenPrefabYDosRuedasQueGiranSinNulos([ValueSource(nameof(Motos))] string codigo)
         {
             GameObject prefab = Prefab(codigo);
@@ -119,6 +124,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
         }
 
         [Test]
+        [Ignore("T-1644: los carros civiles vuelven al modelo original de Tripo (sin piezas de Blender)")]
         public void Motos_ElCuerpoEsElDelFbxNuevo([ValueSource(nameof(Motos))] string codigo)
         {
             var datos = CreadorCarrosT1343.Motos.First(m => m.codigo == codigo);
@@ -130,6 +136,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
         }
 
         [Test]
+        [Ignore("T-1644: los carros civiles vuelven al modelo original de Tripo (sin piezas de Blender)")]
         public void Motos_ConLargoPedido_MidenElLargoA5Porciento([ValueSource(nameof(MotosConLargo))] string codigo)
         {
             float largo = CreadorCarrosT1343.Motos.First(m => m.codigo == codigo).largo;
@@ -138,6 +145,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
         }
 
         [Test]
+        [Ignore("T-1644: los carros civiles vuelven al modelo original de Tripo (sin piezas de Blender)")]
         public void Motos_V07V08_ConservanUnLargoDeMoto([Values("V07", "V08")] string codigo)
         {
             float medido = CreadorCarrosT511.LimitesExactos(Visual(Prefab(codigo)).Find("Visual").gameObject).size.z;

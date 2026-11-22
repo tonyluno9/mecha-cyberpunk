@@ -12,6 +12,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
     /// T-1007: con el carro en el mundo, las cuatro llantas miden lo mismo que el radio de RuedasVisualesCarro y su parte baja toca el piso (y = 0).
     /// Captura de lado de cada carro y moto en docs/capturas/t1007/ (con CAPTURAR_S1=1).
     /// </summary>
+    [Ignore("T-1644: los carros civiles vuelven al modelo original de Tripo (sin piezas de Blender)")]
     public class RuedasHuecoT1007Pruebas
     {
         private const float Tolerancia = 0.015f;
