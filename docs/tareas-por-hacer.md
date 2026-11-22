@@ -381,6 +381,7 @@ Revisa que los NPCs (peatones, pandilleros, policías) no atraviesen paredes, pu
 banquetas y rutas libres, con colisión o evitación contra obstáculos, y que no aparezcan dentro de objetos. Corrige los puntos donde pase.
 
 ## T24. Carros: todos con el modelo ORIGINAL de Tripo, menos la patrulla buena
+**HECHA (22-nov noche, merge 36e6964):** la patrulla buena es PA01 (Trafico/Prefabs/Patrulla.prefab) y no se tocó (ni PA02/V10/V11). 21 carros civiles (V01a–V06, V09, V12–V24) y 5 motos (V07, V08, C19, MT01, MT02) con la malla original de Tripo, a escala real (4.3–5.2 m los autos; camiones V16–V19 más grandes), enderezados (V02/V03 venían girados), sin piezas de Blender; siguen manejándose, chocando, robándose y explotando; LucesCarro (faros y calaveras de noche) y la física de PA01 en todos. Los 57 estacionados quedaron bien alineados. CarrosTripoT1644Pruebas 132/132. Capturas docs/capturas/_tareas/T24/. Pendiente: 6 fallas de PlayMode esperan calor ≥25 al robar y ahora da 15 (cambio de T-1528, no de los modelos); ~30 pruebas viejas de piezas de Blender quedaron [Ignore].
 Decisión de Tony: los carros que pasaron por Blender están bugueados. Para TODOS los carros civiles (V01a, V01b, V02–V09, V12–V24, motos) usa el
 modelo TAL CUAL se descargó de Tripo (los zips de imageassets/modelos3d y modelos-nuevos/nuevos-17nov), aunque las ruedas no giren. Que sigan
 siendo funcionales (se manejan, chocan, se roban, explotan), con escala real.
