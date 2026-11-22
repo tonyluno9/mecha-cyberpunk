@@ -115,6 +115,8 @@ namespace MechaCyberpunk.Personaje.Movimiento
         public bool SaltoBloqueado { get; set; }
         public bool CursorBloqueado => cursorBloqueado;
         public bool ControlActivo => controlActivo;
+        /// <summary>T-1628: la entrada de movimiento (WASD) de este cuadro; cero si no hay acción. La usa quien se levanta al moverse (sentado).</summary>
+        public Vector2 LeerMovimiento() => mover != null ? mover.action.ReadValue<Vector2>() : Vector2.zero;
         /// <summary>T-1327: True mientras un carro lo tiró y está en el suelo o levantándose (AtropelloJugador): no ataca ni salta ni camina.</summary>
         public bool Derribado { get; set; }
 

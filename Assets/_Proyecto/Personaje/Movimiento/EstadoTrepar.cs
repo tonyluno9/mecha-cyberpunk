@@ -5,6 +5,8 @@ namespace MechaCyberpunk.Personaje.Movimiento
     {
         Libre,
         EnEscalera,
-        Agarre
+        Agarre,
+        /// <summary>T-1628: colgado de un borde con las manos (espera subir o soltarse).</summary>
+        Colgado
     }
 }

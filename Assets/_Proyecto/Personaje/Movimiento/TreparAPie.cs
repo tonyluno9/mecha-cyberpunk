@@ -159,6 +159,9 @@ namespace MechaCyberpunk.Personaje.Movimiento
                 case EstadoTrepar.EnEscalera:
                     ActualizarEscalera(dt, entrada.y, pulsoSaltar);
                     break;
+                case EstadoTrepar.Colgado:
+                    ActualizarColgado(dt, entrada, pulsoSaltar);
+                    break;
                 case EstadoTrepar.Agarre:
                     ActualizarAgarre(dt);
                     break;
@@ -203,6 +206,11 @@ namespace MechaCyberpunk.Personaje.Movimiento
             }
             if ((manual || automatico) && IntentarAgarre(out Vector3 destino, out float segundos))
             {
+                if (QuiereColgarse(destino))
+                {
+                    IniciarColgado(destino);
+                    return;
+                }
                 // T-1310: un borde alto se trepa con el clip de PJ01 y el agarre dura lo que el clip.
                 ConfigAnimacionParkour parkour = ConfigAnimacionParkour.Actual;
                 if (parkour != null && parkour.TreparBorde != null && destino.y - transform.position.y >= parkour.AlturaMinimaBorde)
@@ -565,6 +573,110 @@ namespace MechaCyberpunk.Personaje.Movimiento
             return hay;
         }
 
+        // ---------- Colgarse (T-1628) ----------
+
+        private Vector3 colgadoInicio;
+        private Vector3 colgadoPos;
+        private Vector3 colgadoDestino;
+        private float segundosColgado;
+        private bool esperarSoltarAdelante;
+
+        /// <summary>T-1628: True mientras está colgado de un borde (PJ01_Colgado_Idle).</summary>
+        public bool Colgado => regla.Estado == EstadoTrepar.Colgado;
+
+        private bool QuiereColgarse(Vector3 destino)
+        {
+            float alturaBorde = destino.y - config.MargenSuperficie - transform.position.y;
+            VisualPersonaje v = visual != null ? visual : (visual = GetComponentInChildren<VisualPersonaje>(true));
+            return ReglaColgarse.DebeColgarse(config.ColgarseActivo, v != null && v.PuedeColgarse, alturaBorde, config.AlturaMinimaColgarse, config.AlturaMaximaAgarre);
+        }
+
+        private void IniciarColgado(Vector3 destino)
+        {
+            Vector3 frente = transform.forward;
+            colgadoPos = ReglaColgarse.PosicionColgado(destino, frente, cc.radius, config.MargenSuperficie, config.DistanciaParedColgado, config.AlturaManosColgado);
+            ComenzarColgado(destino, colgadoPos);
+        }
+
+        private void ComenzarColgado(Vector3 destino, Vector3 pos)
+        {
+            if (regla.Estado == EstadoTrepar.Libre)
+            {
+                Suspender();
+            }
+            colgadoPos = pos;
+            colgadoInicio = transform.position;
+            colgadoDestino = destino;
+            segundosColgado = 0f;
+            esperarSoltarAdelante = true;
+            regla.IniciarColgado();
+            visual.Colgado = true;
+            Debug.Log("[Personaje] Se cuelga de un borde a " + (destino.y - pos.y).ToString("F2") + " m sobre sus pies.", this);
+        }
+
+        private void ActualizarColgado(float dt, Vector2 entrada, bool pulsoSaltar)
+        {
+            segundosColgado += dt;
+            float t = Mathf.Clamp01(segundosColgado / config.SegundosEntradaColgado);
+            transform.position = Vector3.Lerp(colgadoInicio, colgadoPos, t);
+            if (esperarSoltarAdelante && entrada.y <= UmbralSoltarTecla)
+            {
+                esperarSoltarAdelante = false;
+            }
+            AccionColgado accion = ReglaColgarse.Decidir(segundosColgado, config.SegundosEntradaColgado, config.SegundosMinimosColgado,
+                pulsoSaltar, !esperarSoltarAdelante && entrada.y > UmbralAdelante, entrada.y < -UmbralAdelante);
+            if (accion == AccionColgado.Subir)
+            {
+                SubirDeColgado();
+            }
+            else if (accion == AccionColgado.Soltar)
+            {
+                SoltarDeColgado();
+            }
+        }
+
+        /// <summary>T-1628: sube al borde desde colgado con PJ01_Colgado_Subir.</summary>
+        public void SubirDeColgado()
+        {
+            if (!Colgado)
+            {
+                return;
+            }
+            Debug.Log("[Personaje] Sube al borde desde colgado.", this);
+            visual.Colgado = false;
+            visual.SubirDeColgado();
+            IniciarAgarre(colgadoDestino, config.SegundosSubirDeColgado);
+        }
+
+        /// <summary>T-1628: se suelta del borde y cae.</summary>
+        public void SoltarDeColgado()
+        {
+            if (!Colgado)
+            {
+                return;
+            }
+            Debug.Log("[Personaje] Se suelta del borde.", this);
+            Terminar(Vector3.zero);
+        }
+
+        /// <summary>T-1628 (depuración): se cuelga ya. Usa el borde de enfrente si lo hay; si no, uno imaginario justo delante a la altura de las manos.</summary>
+        public bool ForzarColgarse()
+        {
+            VisualPersonaje v = visual != null ? visual : (visual = GetComponentInChildren<VisualPersonaje>(true));
+            if (v == null || Colgado)
+            {
+                return false;
+            }
+            Vector3 destino;
+            if (!IntentarAgarre(out destino, out _))
+            {
+                destino = transform.position + transform.forward * (cc.radius * 2f + config.DistanciaParedColgado) + Vector3.up * (config.AlturaManosColgado + config.MargenSuperficie);
+            }
+            Vector3 pos = ReglaColgarse.PosicionColgado(destino, transform.forward, cc.radius, config.MargenSuperficie, config.DistanciaParedColgado, config.AlturaManosColgado);
+            ComenzarColgado(destino, pos);
+            return true;
+        }
+
         // ---------- Entrar y salir del control propio ----------
 
         private void Suspender()
@@ -580,6 +692,10 @@ namespace MechaCyberpunk.Personaje.Movimiento
         private void Terminar(Vector3 empuje)
         {
             regla.Soltar();
+            if (visual != null && visual.Colgado)
+            {
+                visual.Colgado = false;
+            }
             saltandoBarda = false;
             if (reproductor != null)
             {
