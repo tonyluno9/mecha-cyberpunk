@@ -669,7 +669,7 @@ namespace MechaCyberpunk.Vehiculos.Editor
         }
 
         // Instancias de prefabs viejos (de Assets/Arte/Vehiculos/Prefabs) que no están dentro de otra instancia de prefab.
-        private static List<GameObject> InstanciasViejas(IEnumerable<GameObject> raices, out int dentroDeOtraInstancia)
+        public static List<GameObject> InstanciasViejas(IEnumerable<GameObject> raices, out int dentroDeOtraInstancia)
         {
             List<GameObject> lista = new List<GameObject>();
             dentroDeOtraInstancia = 0;
@@ -705,7 +705,7 @@ namespace MechaCyberpunk.Vehiculos.Editor
             return InstanciasViejas(raices, out _).Count;
         }
 
-        private static bool ReemplazarViejos(IEnumerable<GameObject> raices, bool aplicar, StringBuilder sb)
+        public static bool ReemplazarViejos(IEnumerable<GameObject> raices, bool aplicar, StringBuilder sb)
         {
             List<GameObject> viejos = InstanciasViejas(raices, out int anidados);
             sb.AppendLine("\tinstancias de carros viejos de una pieza: " + viejos.Count + (anidados > 0 ? " (y " + anidados + " dentro de otra instancia de prefab: se arreglan editando ese prefab)" : ""));

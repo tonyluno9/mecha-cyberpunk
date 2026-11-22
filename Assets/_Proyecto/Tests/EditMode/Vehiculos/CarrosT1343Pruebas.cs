@@ -19,6 +19,9 @@ namespace MechaCyberpunk.Tests.Vehiculos
         // Solo los que tienen prefab (V11 no tiene Carro_V11 todavía).
         private static string[] Carros() => CreadorCarrosT1343.CarrosT1312.Concat(CreadorCarrosT1343.CarrosAnteriores).Where(CreadorCarrosT1343.ExistePrefab).ToArray();
 
+        // T-1604: V01a, V01b y V05 vienen de Blender sin Cristal_* (el vidrio va en la carrocería).
+        private static string[] CarrosConCristal() => Carros().Where(c => !ModelosBlenderT1604.Codigos.Contains(c)).ToArray();
+
         private static string[] MotosConLargo() => CreadorCarrosT1343.Motos.Where(m => m.largo > 0f).Select(m => m.codigo).ToArray();
 
         private static string[] Motos() => CreadorCarrosT1343.Motos.Select(m => m.codigo).ToArray();
@@ -39,7 +42,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
         }
 
         [Test]
-        public void Cristales_UsanElMaterialTransparente([ValueSource(nameof(Carros))] string codigo)
+        public void Cristales_UsanElMaterialTransparente([ValueSource(nameof(CarrosConCristal))] string codigo)
         {
             Material cristal = AssetDatabase.LoadAssetAtPath<Material>(PiezasCarroT1342.RutaCristal);
             Assert.IsNotNull(cristal, "CristalCarro.mat");
