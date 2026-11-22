@@ -45,6 +45,12 @@ namespace MechaCyberpunk.IA.APie
         /// </summary>
         public static CaidaNova Iniciar(GameObject objeto, bool porGravedad)
         {
+            // T-1621: los refuerzos que llegan del cielo (porGravedad = true, desde RespuestaNova) ahora bajan dentro de una cápsula CP01 en el piso; la caída vieja
+            // (Caida_Aire/Aterrizaje/Levantarse) queda para los que no llevan cápsula (guardias humanos, E12) o no tienen espacio libre arriba. Con la cápsula devuelve null.
+            if (porGravedad && CapsulaCaida.IntentarDesdeCielo(objeto))
+            {
+                return null;
+            }
             ConfigClipsNovaNpc config = ConfigClipsNovaNpc.Actual;
             if (objeto == null || config == null || config.CaidaAire == null || config.CaidaAterrizaje == null || config.CaidaLevantarse == null)
             {

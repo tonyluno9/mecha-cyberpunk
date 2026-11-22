@@ -156,6 +156,9 @@ namespace MechaCyberpunk.Trafico.Persecucion
             // T-1303: el arresto es por contacto: a lo más DistanciaToque m y unos instantes (la configuración puede pedir menos, no más).
             arresto = new ReglaArresto(Mathf.Min(config.DistanciaArresto, DistanciaToque), Mathf.Min(config.SegundosArresto, SegundosToque), float.MaxValue);
             zona = new ZonaBusqueda(busqueda);
+            DirectorRespuesta.DeclararDisponible(TipoRespuesta.Dron, prefabDron != null); // T-1620
+            DirectorRespuesta.DeclararDisponible(TipoRespuesta.Patrulla, prefabPatrulla != null);
+            DirectorRespuesta.DeclararDisponible(TipoRespuesta.Camioneta, prefabCamioneta != null);
         }
 
         private void OnEnable()
@@ -235,6 +238,12 @@ namespace MechaCyberpunk.Trafico.Persecucion
             retirandose.RemoveAll(c => c == null || (c is PatrullaMundo robada && robada.Robada));
             patrullas.RemoveAll(p => p == null || p.Robada || p.Destruida); // T-707: una patrulla que el jugador se robó ya no es de la policía: llega otra
             drones.RemoveAll(d => d == null); // T-730: un dron derribado ya no cuenta
+            DirectorRespuesta.DeclararDisponible(TipoRespuesta.Camioneta, prefabCamioneta != null);
+            DirectorRespuesta.Avanzar(Time.time, EstrellasBusqueda.De(calor)); // T-1620
+            if (MisionProtegida.Activa)
+            {
+                MantenerMisionProtegida();
+            }
             for (int i = 0; i < drones.Count; i++)
             {
                 drones[i].AsignarOrbita(i, drones.Count); // T-938: cada dron su punto
@@ -254,7 +263,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
             if (reintentoSalida <= 0f)
             {
                 reintentoSalida = SegundosReintentoSalida;
-                if (patrullas.Count < PatrullasPedidas(calor.Nivel))
+                if (patrullas.Count < PatrullasPedidas(calor.Nivel) || drones.Count < DronesPedidos(calor.Nivel))
                 {
                     Reconciliar(calor.Nivel); // T-664: las patrullas que no pudieron salir sin verse lo intentan de nuevo
                 }
@@ -461,29 +470,91 @@ namespace MechaCyberpunk.Trafico.Persecucion
             nivelDespachado = nivel;
             patrullas.RemoveAll(p => p == null || p.Robada || p.Destruida); // T-707
             ActualizarBusqueda(nivel);
+            DirectorRespuesta.Avanzar(Time.time, EstrellasBusqueda.De(calor)); // T-1620: la jerarquía y los topes salen del director
             int dronesPedidos = DronesPedidos(nivel);
             int patrullasPedidas = PatrullasPedidas(nivel);
-            while (drones.Count < dronesPedidos)
+            // Lo que ya no cabe con estas estrellas (o por una misión protegida) se retira: primero los drones, que son de un nivel más alto.
+            Retirar(drones, DirectorRespuesta.PermiteMantener(TipoRespuesta.Dron) ? dronesPedidos : 0);
+            while (drones.Count < dronesPedidos && DirectorRespuesta.PuedeGenerar(TipoRespuesta.Dron))
             {
                 CrearDron(dronesPedidos);
             }
-            Retirar(drones, dronesPedidos);
+            Retirar(patrullas, DirectorRespuesta.PermiteMantener(TipoRespuesta.Patrulla) ? patrullasPedidas : 0);
             while (patrullas.Count < patrullasPedidas)
             {
-                PatrullaMundo adoptada = SacarRonda();
+                bool camioneta = prefabCamioneta != null && calor != null && CalculoPersecucion.UsaCamioneta(EstrellasBusqueda.De(calor), patrullas.Count, calculo.Patrullas(calor.Nivel))
+                    && DirectorRespuesta.PuedeGenerar(TipoRespuesta.Camioneta);
+                if (!camioneta && !DirectorRespuesta.PuedeGenerar(TipoRespuesta.Patrulla))
+                {
+                    break; // T-1620: en cooldown o en el tope: la reposición llega después, no de golpe
+                }
+                PatrullaMundo adoptada = camioneta ? null : SacarRonda();
                 if (adoptada != null)
                 {
                     adoptada.Alertar();
                     adoptada.Intercepta = patrullas.Count % 2 == 1;
                     patrullas.Add(adoptada);
+                    RegistrarPatrulla(TipoRespuesta.Patrulla, adoptada);
                     continue;
                 }
-                if (!CrearPatrulla())
+                if (!CrearPatrulla(camioneta))
                 {
                     break; // T-598: sin calles no hay patrulla; sin este corte el ciclo no terminaba
                 }
             }
-            Retirar(patrullas, patrullasPedidas);
+        }
+
+        private static void RegistrarPatrulla(TipoRespuesta tipo, PatrullaMundo patrulla)
+        {
+            DirectorRespuesta.Registrar(tipo, patrulla.gameObject, () =>
+                patrulla == null || patrulla.Retirando ? EstadoUnidad.Retirada : patrulla.Destruida || patrulla.Robada ? EstadoUnidad.Muerta : EstadoUnidad.Viva);
+        }
+
+        // T-1620: misión protegida: el calor se congela en 0 y lo que ya estaba se va sin desaparecer a la vista (se borra fuera de la vista o en una cinemática).
+        private void MantenerMisionProtegida()
+        {
+            if (calor != null && calor.Valor > 0f)
+            {
+                calor.Borrar(); // baja el nivel a 0: Reconciliar retira patrullas y drones manejando o volando
+            }
+            for (int i = rondas.Count - 1; i >= 0; i--)
+            {
+                PatrullaMundo ronda = rondas[i];
+                if (ronda != null)
+                {
+                    ronda.Retirar();
+                    retirandose.Add(ronda);
+                }
+                rondas.RemoveAt(i);
+            }
+            bool cinematica = CinematicaEnCurso.Activa;
+            Camera camara = Camera.main;
+            if (cinematica)
+            {
+                for (int i = retirandose.Count - 1; i >= 0; i--)
+                {
+                    if (retirandose[i] != null)
+                    {
+                        Destroy(retirandose[i].gameObject);
+                    }
+                    retirandose.RemoveAt(i);
+                }
+            }
+            List<GameObject> policias = PatrullaMundo.PoliciasAPieLista;
+            for (int i = policias.Count - 1; i >= 0; i--)
+            {
+                GameObject policia = policias[i];
+                if (policia == null)
+                {
+                    policias.RemoveAt(i);
+                }
+                else if (cinematica || !ReglaVistaPolicia.LoVe(camara, policia.transform.position, AlcanceCamara))
+                {
+                    DirectorRespuesta.MarcarRetirado(policia);
+                    Destroy(policia);
+                    policias.RemoveAt(i);
+                }
+            }
         }
 
         // T-587: los que sobran no desaparecen a la vista: se van por la calle (o por el aire) y se borran solos al salir de la vista.
@@ -494,6 +565,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
                 int ultimo = lista.Count - 1;
                 T quien = lista[ultimo];
                 lista.RemoveAt(ultimo);
+                DirectorRespuesta.MarcarRetirado(quien.gameObject); // T-1620: retirar no es una baja
                 if (quien is PatrullaMundo patrulla)
                 {
                     patrulla.Retirar();
@@ -538,12 +610,18 @@ namespace MechaCyberpunk.Trafico.Persecucion
             }
             drones.Add(dron);
             dron.AsignarOrbita(indice, total);
+            DirectorRespuesta.Registrar(TipoRespuesta.Dron, dron.gameObject, () =>
+                dron == null || dron.EstaCayendo ? EstadoUnidad.Muerta : dron.Retirando ? EstadoUnidad.Retirada : EstadoUnidad.Viva);
         }
 
         // T-933: mantiene las patrullas de ronda: si falta alguna sale otra, siempre lejos y fuera de la vista.
         private void MantenerRondas(float dt)
         {
             rondas.RemoveAll(p => p == null || p.Robada || p.Retirando || !p.EnRonda);
+            if (MisionProtegida.Activa)
+            {
+                return; // T-1620: misión protegida: no salen rondas nuevas
+            }
             reintentoRonda -= dt;
             if (reintentoRonda > 0f || config == null || calculo == null || prefabPatrulla == null || rondas.Count >= config.PatrullasDeRonda)
             {
@@ -586,7 +664,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
             return mejor;
         }
 
-        private bool CrearPatrulla()
+        private bool CrearPatrulla(bool camioneta)
         {
             if (calles == null)
             {
@@ -603,12 +681,12 @@ namespace MechaCyberpunk.Trafico.Persecucion
                 return false; // T-664: ahora no hay por dónde salir sin que se vea; se reintenta en Update
             }
             // T-1322: con 5 estrellas las que pasan de las del nivel son camionetas (si hay prefab). T-1499: desde 3 estrellas, una de cada dos.
-            bool extra = CalculoPersecucion.UsaCamioneta(EstrellasBusqueda.De(calor), patrullas.Count, calculo.Patrullas(calor.Nivel));
-            PatrullaMundo molde = extra && prefabCamioneta != null ? prefabCamioneta : prefabPatrulla;
+            PatrullaMundo molde = camioneta && prefabCamioneta != null ? prefabCamioneta : prefabPatrulla; // T-1620: lo decide Reconciliar con el director
             PatrullaMundo patrulla = Instantiate(molde, transform);
             patrulla.Preparar(calculo, config, calles, salida, PosicionDelJugador);
             patrulla.Intercepta = patrullas.Count % 2 == 1; // T-587: cada segunda patrulla corta el paso
             patrullas.Add(patrulla);
+            RegistrarPatrulla(camioneta ? TipoRespuesta.Camioneta : TipoRespuesta.Patrulla, patrulla);
             return true;
         }
 

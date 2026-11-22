@@ -271,6 +271,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
             policia.name = "Policia_" + (i + 1);
             policias.Add(policia);
             PoliciasAPieLista.Add(policia);
+            DirectorRespuesta.Registrar(TipoRespuesta.PoliciaAPie, policia); // T-1620
         }
 
         // T-1202: cada policía sentado se baja por su lado. De golpe (explosión o robo) aparece ya afuera, junto a su puerta.

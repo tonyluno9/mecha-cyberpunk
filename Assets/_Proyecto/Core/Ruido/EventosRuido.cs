@@ -20,11 +20,20 @@ namespace MechaCyberpunk.Core
 
         public static void PublicarArmaSacada(Vector3 posicion) => ArmaSacada?.Invoke(posicion);
 
+        /// <summary>T-1622 (T11): disparo o explosión con radio de oído (~25 m pistola, ~40 m rifle o escopeta, ~60 m explosión).
+        /// Quien publica <see cref="PublicarDisparo"/> puede publicar también este con su radio; los NPCs lo usan para reaccionar.</summary>
+        public static event Action<Vector3, float> DisparoConRadio;
+        public static void PublicarDisparoConRadio(Vector3 posicion, float radio) => DisparoConRadio?.Invoke(posicion, radio);
+        /// <summary>T-1622 (T11): alguien (NPC, enemigo, policía) murió en esta posición; los NPCs cercanos gritan y huyen.</summary>
+        public static event Action<Vector3> Muerte;
+        public static void PublicarMuerte(Vector3 posicion) => Muerte?.Invoke(posicion);
         /// <summary>Quita a todos los suscriptores. Para pruebas y para limpiar al entrar a Play.</summary>
         public static void LimpiarSuscriptores()
         {
             Disparo = null;
             ArmaSacada = null;
+            DisparoConRadio = null;
+            Muerte = null;
         }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
