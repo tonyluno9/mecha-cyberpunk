@@ -130,7 +130,15 @@ namespace MechaCyberpunk.IA.APie
             mantenerHasta = Time.time + SegundosMantenerPorDisparo;
         }
 
-        private void AlRecibirDanio(PandilleroAPie p, InfoDanio info) => ProvocarPorDisparo();
+        private void AlRecibirDanio(PandilleroAPie p, InfoDanio info)
+        {
+            ProvocarPorDisparo();
+            // T-1561: un golpe fuerte lo hace tambalear (GestoTipo BloquearTambaleo = 19; el estado E16_Bloquear_Tambaleo lo agrega T-1560). Solo el E16: el E15 (ConductaEliteNova) no bloquea.
+            if (p != null && p.Visual != null && !p.EstaKO && ReglasTransicionesT1561.GolpeFuerteParaRobot(info.Cantidad, p.Maxima))
+            {
+                p.Visual.BloquearGolpeFuerte();
+            }
+        }
 
         private void AlOirDisparo(Vector3 donde)
         {

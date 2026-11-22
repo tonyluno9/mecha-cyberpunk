@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Personaje.Movimiento;
+using MechaCyberpunk.Personaje.Visual;
 using UnityEngine;
 
 namespace MechaCyberpunk.Personaje.Combate
@@ -226,8 +227,65 @@ namespace MechaCyberpunk.Personaje.Combate
         private DatosArma datosPendientes;
         private bool pulsadoPendiente;
 
+        // ---- T-1561: la granada se suelta en el cuadro del lanzamiento, no al apretar ----
+
+        private VisualPersonaje visualGranada;
+        private CubiertaYRodada cubiertaGranada;
+        private bool granadaPendiente;
+        private float granadaEn;
+        private ArmaAPie armaGranada;
+        private DatosArma datosGranada;
+
+        /// <summary>T-1561: True entre apretar y soltar la granada (la animación de lanzar está en curso y la granada sigue en la mano).</summary>
+        public bool GranadaEnLaMano => granadaPendiente;
+
+        /// <summary>T-1561: segundos que faltan para que la mano suelte la granada (0 si no hay lanzamiento).</summary>
+        public float SegundosParaSoltar => granadaPendiente ? Mathf.Max(0f, granadaEn - Time.time) : 0f;
+
+        // Arranca el lanzamiento con PJ01_Granada_DePie o PJ01_Granada_Agachado; sin Animator con el disparador, la granada sale al instante como antes.
+        private void IniciarGranada(ArmaAPie arma, DatosArma d)
+        {
+            if (visualGranada == null)
+            {
+                visualGranada = GetComponentInChildren<VisualPersonaje>(false);
+            }
+            if (cubiertaGranada == null)
+            {
+                cubiertaGranada = GetComponent<CubiertaYRodada>();
+            }
+            bool agachado = cubiertaGranada != null && cubiertaGranada.AgachadoLibre;
+            if (visualGranada == null || !visualGranada.isActiveAndEnabled || !visualGranada.LanzarGranada(agachado))
+            {
+                LanzarGranada(arma, d);
+                return;
+            }
+            granadaPendiente = true;
+            granadaEn = Time.time + ReglasTransicionesT1561.SegundosHastaSoltarGranada(agachado);
+            armaGranada = arma;
+            datosGranada = d;
+        }
+
+        private void AvanzarGranada()
+        {
+            if (!granadaPendiente)
+            {
+                return;
+            }
+            if (visualGranada == null || visualGranada.Caido || !visualGranada.GranadaEnCurso)
+            {
+                granadaPendiente = false; // el daño, la muerte o un cambio de arma cortaron el lanzamiento: la granada no sale
+                return;
+            }
+            if (Time.time >= granadaEn)
+            {
+                granadaPendiente = false;
+                LanzarGranada(armaGranada, datosGranada);
+            }
+        }
+
         private void LateUpdate()
         {
+            AvanzarGranada();
             if (!pendiente)
             {
                 // T-1309: un cuadro sin el plasma en la mano (dejó de apuntar o soltó el arma) corta la carga y su chispeo.
@@ -263,9 +321,9 @@ namespace MechaCyberpunk.Personaje.Combate
                 case TipoDisparoArma.Lanzada:
                     ApagarPlasma();
                     DibujarArco(arma, d);
-                    if (flanco && cargador.IntentarDisparar())
+                    if (flanco && !granadaPendiente && cargador.IntentarDisparar())
                     {
-                        LanzarGranada(arma, d);
+                        IniciarGranada(arma, d);
                     }
                     break;
                 case TipoDisparoArma.Rayo:
@@ -280,6 +338,7 @@ namespace MechaCyberpunk.Personaje.Combate
         /// <summary>Sin arma especial en la mano: se esconde el arco y se corta el plasma.</summary>
         public void Soltar()
         {
+            granadaPendiente = false;
             pendiente = false;
             pulsadoAntes = false;
             if (arco != null)

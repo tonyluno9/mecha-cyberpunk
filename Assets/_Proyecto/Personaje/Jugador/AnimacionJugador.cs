@@ -232,6 +232,7 @@ namespace MechaCyberpunk.Personaje.Jugador
                 ActualizarMira(apuntando);
                 if (apuntando != apuntandoAntes) { visual.Apuntando = apuntando; apuntandoAntes = apuntando; }
                 if (tipoArma != tipoArmaAntes) { visual.TipoArma = tipoArma; tipoArmaAntes = tipoArma; }
+                visual.PidiendoCorrer = controlador.PidiendoCorrer; // T-1561: Shift saca del modo pelea y guarda el arma larga
                 ActualizarCaido(ko, Time.deltaTime);
                 EscalonesVisual escalones = detectorEscalones.Tipo > 0 ? EscalonesVisual.Subiendo : detectorEscalones.Tipo < 0 ? EscalonesVisual.Bajando : EscalonesVisual.Ninguno;
                 if (escalones != escalonesAntes) { visual.Escalones = escalones; escalonesAntes = escalones; }
@@ -275,6 +276,12 @@ namespace MechaCyberpunk.Personaje.Jugador
                 }
             }
             recargandoAntes = recargando;
+            // T-1561: echar a correr con una recarga en curso: la pistola sigue con PJ01_Pistola_RecargarCaminar (la capa de brazos); un arma larga cancela la recarga y se guarda.
+            if (visual != null && recargando && controlador.PidiendoCorrer && !ReglasTransicionesT1561.RecargaSigueAlCorrer(tipoArma))
+            {
+                pistola.CancelarRecargaActual();
+                visual.Interrumpir();
+            }
         }
 
         // T-681: al apuntar, el cañón del arma en la mano mira al punto que marca el centro de la cámara de juego.
@@ -319,6 +326,10 @@ namespace MechaCyberpunk.Personaje.Jugador
             }
             if (visual != null)
             {
+                if (visual.GranadaEnCurso)
+                {
+                    return; // T-1561: la granada ya juega su propia animación de lanzar; el retroceso de la pistola no la corta
+                }
                 visual.Disparar();
             }
             else
@@ -332,6 +343,13 @@ namespace MechaCyberpunk.Personaje.Jugador
             if (visual == null || objetivo != null || vida == null || (info.Punto - (transform.position + Vector3.up * AlturaCentro)).sqrMagnitude > DistanciaImpacto * DistanciaImpacto)
             {
                 return;
+            }
+            // T-1561: un golpe de cierta fuerza corta el puño, la recarga y el lanzamiento en curso (vuelven a su reposo); apuntar sigue (la capa de daño estremece la pose).
+            if (ReglasTransicionesT1561.DanoInterrumpe(info.Cantidad, vida.Maxima))
+            {
+                visual.Interrumpir();
+                golpe?.InterrumpirPorDano();
+                pistola?.CancelarRecargaActual();
             }
             // T-1540: una explosión elige entre tambaleo, derribo (y levantarse) y muerte volando; un golpe vertical hacia abajo que mata es una caída de altura.
             // El motivo se deja antes de que ActualizarCaido ponga Caido (ahí se elige el clip de muerte).

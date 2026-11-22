@@ -82,6 +82,21 @@ namespace MechaCyberpunk.Personaje.Visual
         ExplosionCercana = 13,
         /// <summary>T-1540: la explosión lo derriba (PJ01_Derribo_Explosion) y se levanta boca arriba.</summary>
         DerriboExplosion = 14,
+        /// <summary>T-1561: beber una bebida energética (PJ01_Beber). Bloquea el movimiento mientras dura.</summary>
+        Beber = 15,
+        /// <summary>T-1561: sentarse (PJ01_Sentado, bucle mientras siga el gesto; sin disparador en el juego todavía).</summary>
+        Sentarse = 16,
+        /// <summary>T-1561: acostarse en la camilla del Doc (PJ01_Camilla_Acostarse).</summary>
+        CamillaAcostarse = 17,
+        /// <summary>T-1561: subir al borde desde colgado (PJ01_Colgado_Subir).</summary>
+        ColgadoSubir = 18,
+        /// <summary>
+        /// T-1561 (contrato con T-1560): el E16 tambalea al recibir un golpe fuerte. El estado E16_Bloquear_Tambaleo lo agrega T-1560 en el controlador (transición Any State con
+        /// trigger Gesto y GestoTipo = 19); T-1561 solo dispara el gesto (<see cref="VisualPersonaje.BloquearGolpeFuerte"/>). El E15 no lo usa.
+        /// </summary>
+        BloquearTambaleo = 19,
+        /// <summary>T-1561: colgarse de un borde (PJ01_Colgado_Idle, en bucle mientras Colgado siga prendido; ColgadoSubir lo suelta).</summary>
+        Colgarse = 20,
     }
 
     /// <summary>
@@ -118,6 +133,10 @@ namespace MechaCyberpunk.Personaje.Visual
         public const string EnGuardia = "EnGuardia";
         /// <summary>T-1310: el jugador lleva un arma larga (aunque no apunte). Con ella, cubrirse usa PJ01_CoberturaRifle_* en vez de los de pistola.</summary>
         public const string ArmaLargaEquipada = "ArmaLargaEquipada";
+        /// <summary>T-1561: trigger de la capa de brazos para lanzar la granada (PJ01_Granada_DePie o PJ01_Granada_Agachado según <see cref="Agachado"/>).</summary>
+        public const string Granada = "Granada";
+        /// <summary>T-1561: trigger de la capa de brazos que corta golpe, recarga o lanzamiento al recibir daño y la deja en su estado de reposo.</summary>
+        public const string Interrumpir = "Interrumpir";
         /// <summary>T-985: segundos que el jugador sigue en guardia tras su último golpe de puños.</summary>
         public const float SegundosGuardiaPunos = 2.5f;
         /// <summary>Tiempo normalizado fijo del estado CoberturaMantener (la última pose de entrar).</summary>

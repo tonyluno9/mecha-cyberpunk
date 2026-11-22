@@ -150,7 +150,7 @@ namespace MechaCyberpunk.Personaje.Combate
                 return;
             }
             bool enCombo = combo.Paso >= 0 && !combo.EsGolpeFinal;
-            bool animacionLibre = enCombo || !AnimacionOcupada();
+            bool animacionLibre = (enCombo || !AnimacionOcupada()) && GuardiaListaParaGolpear();
             if (combo.Avanzar(dt, ciclo.Fase, ciclo.Progreso, animacionLibre))
             {
                 ciclo.Reiniciar();
@@ -271,6 +271,46 @@ namespace MechaCyberpunk.Personaje.Combate
             {
                 girando = false;
             }
+        }
+
+        // T-1561 (decisión de Tony, 21-nov): golpear corriendo primero sube la guardia (0.2 s) y luego golpea. Parado o caminando despacio el golpe sale de una vez.
+        private float esperaGuardia;
+
+        private bool GuardiaListaParaGolpear()
+        {
+            if (!combo.HayBuffer)
+            {
+                esperaGuardia = 0f;
+                return true;
+            }
+            if (visual == null)
+            {
+                visual = GetComponentInChildren<VisualPersonaje>(true);
+            }
+            if (visual == null || !visual.gameObject.activeInHierarchy)
+            {
+                return true;
+            }
+            float rapidez = controlador.Velocidad.magnitude;
+            bool arriba = visual.GuardiaArriba;
+            if (!ReglasTransicionesT1561.NecesitaSubirGuardia(rapidez, arriba))
+            {
+                esperaGuardia = 0f;
+                return true;
+            }
+            visual.SubirGuardia();
+            esperaGuardia += Time.deltaTime;
+            return ReglasTransicionesT1561.GuardiaLista(rapidez, arriba, esperaGuardia);
+        }
+
+        /// <summary>T-1561: el daño recibido corta el golpe en curso y el siguiente del combo (vuelve a Listo).</summary>
+        public void InterrumpirPorDano()
+        {
+            ciclo?.Reiniciar();
+            combo?.Reiniciar();
+            girando = false;
+            acercamientoPendiente = 0f;
+            MoverPuno();
         }
 
         private bool AnimacionOcupada()

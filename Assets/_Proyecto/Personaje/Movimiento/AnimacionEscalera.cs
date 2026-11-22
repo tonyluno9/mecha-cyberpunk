@@ -61,6 +61,8 @@ namespace MechaCyberpunk.Personaje.Movimiento
 
         private void AlEntrar()
         {
+            // T-1561: antes de subir a la escalera se guarda el arma y se sale de pelea.
+            GetComponentInChildren<VisualPersonaje>(true)?.GuardarArmaYSalirDePelea();
             inicioEntrar = Time.time;
             inicioSalirAbajo = -1f;
         }

@@ -44,6 +44,13 @@ namespace MechaCyberpunk.Tests.Personaje
             jugador = Object.Instantiate(prefab, new Vector3(0f, 0.05f, 0f), Quaternion.identity);
             controlador = jugador.GetComponent<ControladorAPie>();
             jugadorAPie = jugador.GetComponent<JugadorAPie>();
+            // T-1561 (decisión de Tony, 21-nov): en el juego disparar con el arma guardada primero la saca y apunta (el prefab lo trae encendido tras TransicionesT1561.Aplicar).
+            // Las pruebas viejas disparan al instante con el clic: aquí se apaga, y TransicionesT1561Pruebas lo vuelve a encender donde se prueba.
+            MechaCyberpunk.Personaje.Combate.PistolaAPie pistolaBase = jugador.GetComponent<MechaCyberpunk.Personaje.Combate.PistolaAPie>();
+            if (pistolaBase != null)
+            {
+                pistolaBase.SacarAntesDeDisparar = false;
+            }
             // T-684: las pruebas de daño de Personaje miden la vida; el escudo se prueba aparte (EscudoT684Pruebas).
             jugador.GetComponent<MechaCyberpunk.Personaje.Vida.EscudoJugador>()?.Iniciar(0f, 0f, 0f);
 
