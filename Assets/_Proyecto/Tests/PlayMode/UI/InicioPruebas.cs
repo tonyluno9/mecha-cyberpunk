@@ -342,27 +342,18 @@ namespace MechaCyberpunk.Tests.UI
         }
 
         [UnityTest]
-        public IEnumerator NuevaPartida_AbreCreacionEmpezarPideCargarCiudad_EscRegresa()
+        public IEnumerator NuevaPartida_VaDirectoALaCarga_SinCreacion()
         {
+            // Pedido de Tony (inicio de partida): NUEVA PARTIDA ya no abre la creación de personaje; carga la ciudad con el personaje por defecto.
             MenuInicio menu = null;
             yield return CargarInicio(m => menu = m);
             yield return Pulsar(teclado.enterKey);
-            Assert.AreEqual(EstadoInicio.Creacion, menu.Estado, "JUGAR abre la creación de personaje");
-            Assert.IsTrue(menu.Creacion.Abierta);
-            yield return new WaitForSecondsRealtime(0.6f);
-            Capturar("06-creacion");
-            yield return Pulsar(teclado.escapeKey);
-            Assert.AreEqual(EstadoInicio.Principal, menu.Estado, "Esc regresa al menú");
-            Assert.IsFalse(menu.Creacion.Abierta);
-            yield return EsperarHasta(() => menu.Nueva.EstaElegido, "JUGAR elegido al volver", 3f);
-
-            yield return Pulsar(teclado.enterKey);
-            Assert.IsTrue(menu.Creacion.Abierta);
-            menu.Creacion.Empezar.Pulsar();
             yield return null;
-            Assert.AreEqual(FlujoPartida.RutaEscena, menu.RutaPedida, "EMPEZAR pide cargar la ciudad");
-            Assert.AreEqual(AccionPartida.Nueva, FlujoPartida.Pendiente, "Como partida nueva");
-            Assert.IsTrue(PantallaCargando.Visible, "Sale la pantalla de carga");
+            Assert.AreEqual(EstadoInicio.Cargando, menu.Estado, "JUGAR va directo a la carga");
+            Assert.IsTrue(menu.Creacion == null || !menu.Creacion.Abierta, "la creación no se abre");
+            Assert.AreEqual(FlujoPartida.RutaEscena, menu.RutaPedida, "pide cargar la ciudad");
+            Assert.AreEqual(AccionPartida.Nueva, FlujoPartida.Pendiente, "como partida nueva");
+            Assert.IsTrue(PantallaCargando.Visible, "sale la pantalla de carga");
         }
 
         [UnityTest]

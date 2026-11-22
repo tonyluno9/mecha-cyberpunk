@@ -402,17 +402,13 @@ namespace MechaCyberpunk.UI.Inicio
             {
                 return;
             }
-            if (creacion == null)
-            {
-                Estado = EstadoInicio.Cargando;
-                BloquearMenu();
-                PantallaCargando.Mostrar();
-                FlujoPartida.IrANuevaPartida();
-                return;
-            }
-            Estado = EstadoInicio.Creacion;
-            panelPrincipal.Fijar(false);
-            creacion.Abrir();
+            // Pedido de Tony (inicio de partida): NUEVA PARTIDA va directo a la pantalla de carga y empieza con el personaje por defecto
+            // levantándose en la calle. La pantalla de creación (creacion) sigue en el proyecto, fuera de este flujo.
+            Debug.Log("[UI] NUEVA PARTIDA: directo a la carga, personaje por defecto.");
+            Estado = EstadoInicio.Cargando;
+            BloquearMenu();
+            PantallaCargando.Mostrar();
+            FlujoPartida.IrANuevaPartida();
         }
 
         private void AlCerrarCreacion()

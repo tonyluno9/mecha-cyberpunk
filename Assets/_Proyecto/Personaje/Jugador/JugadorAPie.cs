@@ -27,6 +27,12 @@ namespace MechaCyberpunk.Personaje.Jugador
         [Min(0.1f)] [SerializeField] private float alturaBusquedaPiso = 1.5f;
         [Tooltip("Al cargar, hasta qué distancia hacia abajo se busca el piso (m).")]
         [Min(0.1f)] [SerializeField] private float distanciaBusquedaPiso = 4f;
+        [Tooltip("Bug de CONTINUAR: si la posición guardada no es válida, radio (m) en el que se busca el punto seguro más cercano.")]
+        [Min(0f)] [SerializeField] private float radioPuntoSeguro = 12f;
+        [Tooltip("Separación (m) entre los puntos que se prueban al buscar el punto seguro.")]
+        [Min(0.25f)] [SerializeField] private float pasoPuntoSeguro = 1.5f;
+        [Tooltip("Debajo de esta altura (m, mundo) un piso ya está fuera del mapa.")]
+        [SerializeField] private float alturaMinimaMapa = -20f;
 
         private CharacterController controlador;
         private ControladorAPie controladorAPie;
@@ -46,6 +52,11 @@ namespace MechaCyberpunk.Personaje.Jugador
 
         /// <summary>El montable en el que va el jugador, o null si va a pie.</summary>
         public IMontable MontableActual { get; private set; }
+        private RedSeguridadJugador red;
+        /// <summary>Por qué se descartó la última posición guardada (Valida si se usó).</summary>
+        public ReglaPosicionSegura.Motivo UltimaCargaMotivo { get; private set; } = ReglaPosicionSegura.Motivo.Valida;
+        /// <summary>True si la última carga movió al jugador a un punto distinto del guardado (el seguro más cercano).</summary>
+        public bool UltimaCargaCorregida { get; private set; }
 
         /// <summary>Se dispara al cambiar de modo, con el modo nuevo.</summary>
         public event Action<ModoJugador> ModoCambio;
@@ -54,6 +65,11 @@ namespace MechaCyberpunk.Personaje.Jugador
         {
             controlador = GetComponent<CharacterController>();
             controladorAPie = GetComponent<ControladorAPie>();
+            red = GetComponent<RedSeguridadJugador>();
+            if (red == null)
+            {
+                red = gameObject.AddComponent<RedSeguridadJugador>();
+            }
             armas = GetComponent<ArmasAPie>();
             if (camara == null)
             {
@@ -218,13 +234,29 @@ namespace MechaCyberpunk.Personaje.Jugador
             {
                 return;
             }
-            Pose pose = new Pose(SobreElPiso(leida.posicion), Quaternion.Euler(0f, leida.giro, 0f));
+            // Bug de CONTINUAR: partidas viejas guardaron puntos que ya no existen (el cuarto, las zonas de la expansión, fuera del muro).
+            // Solo se usa un punto con piso sólido, dentro del mapa y libre; si no, el más cercano que lo sea; si no, el inicio de la escena.
+            Physics.SyncTransforms();
+            UltimaCargaMotivo = Evaluar(leida.posicion, out Vector3 piso);
+            UltimaCargaCorregida = false;
+            if (UltimaCargaMotivo != ReglaPosicionSegura.Motivo.Valida)
+            {
+                if (!BuscarPuntoSeguro(leida.posicion, out piso))
+                {
+                    Debug.LogWarning("[Personaje] La posición guardada " + leida.posicion.ToString("F1") + " no sirve (" + UltimaCargaMotivo + ") y no hay punto seguro cerca: aparece en el inicio.", this);
+                    return;
+                }
+                UltimaCargaCorregida = true;
+                Debug.LogWarning("[Personaje] La posición guardada " + leida.posicion.ToString("F1") + " no sirve (" + UltimaCargaMotivo + "): aparece en el punto seguro " + piso.ToString("F1") + ".", this);
+            }
+            Pose pose = new Pose(piso, Quaternion.Euler(0f, leida.giro, 0f));
             AparicionJugador aparicion = GetComponent<AparicionJugador>();
             if (aparicion != null)
             {
                 aparicion.Cancelar();
             }
             Colocar(pose);
+            red.FijarSeguro(pose);
             bool hayArma = Enum.TryParse(leida.arma, out ArmaAPie arma);
             if (isActiveAndEnabled)
             {
@@ -246,13 +278,38 @@ namespace MechaCyberpunk.Personaje.Jugador
             }
         }
 
-        // El piso más cercano bajo el punto (sin contar al jugador); si no hay, el punto tal cual.
-        private Vector3 SobreElPiso(Vector3 punto)
+        /// <summary>Mide un punto para aparecer: piso debajo, altura, dentro del mapa y si el jugador cabe. Devuelve el punto en el piso.</summary>
+        public ReglaPosicionSegura.Motivo Evaluar(Vector3 punto, out Vector3 enPiso)
+        {
+            bool hayPiso = BuscarPiso(punto, out enPiso);
+            ITerritorio territorio = Registro<ITerritorio>.Actual;
+            bool dentro = territorio == null || !string.IsNullOrEmpty(territorio.ZonaEn(enPiso));
+            bool libre = hayPiso && Cabe(enPiso);
+            return ReglaPosicionSegura.Evaluar(hayPiso, enPiso.y, alturaMinimaMapa, dentro, libre);
+        }
+
+        /// <summary>El punto válido más cercano a <paramref name="punto"/> (hasta radioPuntoSeguro m).</summary>
+        public bool BuscarPuntoSeguro(Vector3 punto, out Vector3 seguro)
+        {
+            foreach (Vector3 candidato in ReglaPosicionSegura.Candidatos(punto, radioPuntoSeguro, pasoPuntoSeguro))
+            {
+                if (Evaluar(candidato, out seguro) == ReglaPosicionSegura.Motivo.Valida)
+                {
+                    return true;
+                }
+            }
+            seguro = punto;
+            return false;
+        }
+
+        // El piso sólido más cercano bajo el punto, sin contar al jugador ni triggers.
+        private bool BuscarPiso(Vector3 punto, out Vector3 piso)
         {
             RaycastHit[] golpes = Physics.RaycastAll(punto + Vector3.up * alturaBusquedaPiso, Vector3.down,
                 alturaBusquedaPiso + distanciaBusquedaPiso, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore);
             float mejor = float.MaxValue;
-            Vector3 resultado = punto;
+            piso = punto;
+            bool hay = false;
             foreach (RaycastHit golpe in golpes)
             {
                 if (golpe.collider.transform.root == transform.root || golpe.distance >= mejor)
@@ -260,9 +317,27 @@ namespace MechaCyberpunk.Personaje.Jugador
                     continue;
                 }
                 mejor = golpe.distance;
-                resultado = golpe.point;
+                piso = golpe.point;
+                hay = true;
             }
-            return resultado;
+            return hay;
+        }
+
+        // Si la cápsula del jugador cabe parada en ese punto del piso (sin chocar con paredes, carros ni muebles).
+        private bool Cabe(Vector3 piso)
+        {
+            float radio = controlador != null ? controlador.radius : 0.4f;
+            float alto = controlador != null ? controlador.height : 1.8f;
+            Vector3 abajo = piso + Vector3.up * (radio + 0.05f);
+            Vector3 arriba = piso + Vector3.up * Mathf.Max(radio + 0.05f, alto - radio);
+            foreach (Collider c in Physics.OverlapCapsule(abajo, arriba, radio * 0.95f, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
+            {
+                if (c.transform.root != transform.root)
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
         // Se guarda la velocidad del montable en cada paso de física, antes de que corra la física: es la de antes de un choque.
