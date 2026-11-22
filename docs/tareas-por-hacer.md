@@ -285,6 +285,7 @@ minutos por los barrios contando cuántas escenas aparecen solas. Capturas de ca
 # NUEVAS (22-nov, después de la prueba de las 15 tareas)
 
 ## T16. Tráfico: los civiles ya no manejan, solo patrullas patrullando (y con semáforos)
+**HECHA (22-nov, merge 45695c3):** civiles en movimiento apagados (TraficoCalle.circulanCiviles=false), 57 carros estacionados junto al bordillo (a ≥20 m de los cruces), 3 patrullas de ronda que se paran en rojo, semáforos SemaforoCruce con 4 ES01 en cada uno de los 2 cruces de la red. 3 min en la ciudad: 0 choques, 0 atorados, 17 paradas en rojo, estacionados quietos; robar un estacionado funciona y un delito junto a la ronda arranca la persecución. Pruebas 13/13 EditMode, 4/4 y 8/8 PlayMode. Capturas docs/capturas/_tareas/T16/. Visto aparte: un CarroRobable_17 que nace en (-20, -127.8), fuera del muro, se cae del mapa (otro sistema).
 Decisión de Tony: para acabar con los choques y amontonamientos, los carros civiles ya NO circulan.
 Cómo:
 1. Los carros civiles quedan solo ESTACIONADOS junto a la banqueta (quietos, bien alineados, sin encimarse ni salir a la calle); el jugador

@@ -13,8 +13,8 @@ Lee esta lista y `git log --oneline -15 main`; sigue con la primera tarea que no
 
 ## Estado
 - Paso 0: HECHO (merge cc913e9: tareas nuevas en tareas-por-hacer.md; no había cambios nuevos de Blender).
-- T16: código en curso
-- T17: código en curso
-- T18: código en curso
-- T12: código en curso
+- T16: HECHA, merge 45695c3
+- T17: código listo (408f71c); integrando en integ/A2-T17
+- T18: código listo (7564ea9)
+- T12: código listo (0e635ef)
 - Builds: pendiente
