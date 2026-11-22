@@ -17,7 +17,7 @@ Shader "MechaCyberpunk/CieloRealista"
         _Suavidad ("Suavidad del borde de las nubes", Range(0.02, 0.6)) = 0.22
         _Escala ("Escala de las nubes", Float) = 0.9
         _Velocidad ("Velocidad de las nubes (uv/s)", Vector) = (0.006, 0.003, 0, 0)
-        _OpacidadNubesNoche ("Opacidad de las nubes de noche", Range(0, 1)) = 0.8
+        _OpacidadNubesNoche ("Opacidad de las nubes de noche", Range(0, 1)) = 0.7
         _OpacidadNubesDia ("Opacidad de las nubes de dia", Range(0, 1)) = 0.45
         _DirLuna ("Direccion a la luna", Vector) = (0.35, 0.55, 0.45, 0)
         _TamanoLuna ("Tamano de la luna (radio, rad)", Range(0.005, 0.1)) = 0.03
@@ -163,7 +163,7 @@ Shader "MechaCyberpunk/CieloRealista"
                 // Iluminacion desde abajo: los bordes y la parte baja de la capa (cerca del horizonte) reciben la luz de la ciudad.
                 float borde = nube * (1.0 - nube) * 4.0;
                 float luzCiudad = saturate(borde * 0.7 + (1.0 - arriba) * 0.65 - nube * 0.25 * arriba);
-                half3 nocheNube = lerp(_ColorNubesNoche.rgb, _TinteNubes.rgb * 0.9, luzCiudad * luzCiudad);
+                half3 nocheNube = lerp(_ColorNubesNoche.rgb, _TinteNubes.rgb * 0.55, luzCiudad * luzCiudad);
                 half3 diaNube = _ColorNubesDia.rgb * (0.82 + 0.18 * densidad);
                 half3 colorNube = lerp(diaNube, nocheNube, noche);
                 float opacidad = lerp(_OpacidadNubesDia, _OpacidadNubesNoche, noche);

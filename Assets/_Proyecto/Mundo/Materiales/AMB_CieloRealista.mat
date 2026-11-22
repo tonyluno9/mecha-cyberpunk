@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: AMB_CieloRealista
+  m_Shader: {fileID: 4800000, guid: 7c1e5a90b3d44f6e8a2d19f0c64b8e31, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: 2860
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs: []
+    m_Ints: []
+    m_Floats:
+    - _Cobertura: 0.5
+    - _DensidadEstrellas: 180
+    - _Escala: 0.9
+    - _FuerzaEstrellas: 0.7
+    - _FuerzaGradiente: 0.55
+    - _FuerzaLuna: 1.4
+    - _Noche: 1
+    - _OpacidadNubesDia: 0.45
+    - _OpacidadNubesNoche: 0.8
+    - _Suavidad: 0.22
+    - _TamanoLuna: 0.03
+    m_Colors:
+    - _ColorCenit: {r: 0.012, g: 0.025, b: 0.10999996, a: 1}
+    - _ColorHorizonte: {r: 0.23999995, g: 0.089999996, b: 0.33999997, a: 1}
+    - _ColorNubesDia: {r: 0.86, g: 0.89, b: 0.95, a: 1}
+    - _ColorNubesNoche: {r: 0.04, g: 0.044999972, b: 0.089999996, a: 1}
+    - _DirLuna: {r: 0.35, g: 0.55, b: 0.45, a: 0}
+    - _TinteNubes: {r: 1, g: 0.45, b: 0.14999998, a: 1}
+    - _Velocidad: {r: 0.006, g: 0.003, b: 0, a: 0}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1
