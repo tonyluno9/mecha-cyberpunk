@@ -838,3 +838,141 @@ Los NPC (NP01-NP14), la mesera robot R01 (65 huesos mixamorig) y el hacker usan 
 - 2026-11-20: Tony aprobó E16 caminar con escudo. Exportado Assets/Arte/Personajes/PJ01/Clips/E16_CaminarEscudo.fbx (45 frames, loop) + copia en nova_clips.
 
 - 2026-11-20: E18 aprobado por Tony. Brazos ya no atraviesan el torso (brazos más abiertos + antebrazos ajustados), golpe con puños cerrados. Exportados en Assets/Arte/Personajes/PJ01/Clips/: E18_Caminar.fbx (32f), E18_Correr.fbx (21f), E18_Golpe_Der.fbx (49f) + copias en nova_clips.
+
+- 2026-11-21: Tony aprobó PJ01_Muerte_Frente_v2 (impacto de Muerte_Frente + desplome de Muerte_Desmayo, 51 f, termina en el piso). Reemplaza Assets/.../PJ01_Muerte_Frente.fbx (mismo .meta; revisar lastFrame=51 en Unity). Respaldo: respaldos/PJ01_Muerte_Frente_ANTES.fbx
+
+- 2026-11-21: Tony aprobó PJ01_Muerte_Explosion (v2, cuerpo suelto: brazos abiertos y sacudiéndose en el aire, rebote de cabeza y extremidades al caer). 56 f, toca piso f18, termina en el piso. Exportado a Assets/Arte/Personajes/PJ01/Clips/PJ01_Muerte_Explosion.fbx (nuevo, sin estado en Unity aún).
+
+- 2026-11-21: Tony aprobó PJ01_Muerte_Atropello (v2, cuerpo suelto). 54 f, impacto f1, toca piso f15, termina en el piso. Exportado a Assets/Arte/Personajes/PJ01/Clips/PJ01_Muerte_Atropello.fbx (nuevo).
+
+- 2026-11-21: Tony aprobó PJ01_Muerte_CaidaAltura (v2: reciclada de PJ01_Muerte_Frente_v2 acelerada + rebote ligero). 46 f, impacto f1, pecho en piso f14, termina en el piso. Exportado a Assets/.../PJ01_Muerte_CaidaAltura.fbx (nuevo).
+
+- 2026-11-21: Tony aprobó PJ01_Derribo_Explosion (v2 cuerpo suelto, 40 f, toca piso f14, termina en el piso) y PJ01_Dano_Levantarse_BocaArriba v2 (mismo levantarse hasta f49, luego baja los brazos y termina en Idle_PiesNaturales en vez de guardia; 88 f, antes 109). Exportados a Assets/.../PJ01/Clips. Levantarse reemplaza el anterior (mismo .meta: revisar lastFrame=88). Respaldo: respaldos/PJ01_Dano_Levantarse_BocaArriba_ANTES.fbx
+
+- 2026-11-21: Tony aprobó PJ01_Dano_Empujon (26 f, empujón f2, retrocede 0.55 m, termina de pie). Exportado a Assets/.../PJ01/Clips (nuevo).
+
+- 2026-11-21: Tony aprobó PJ01_Dano_ExplosionCercana (30 f, sacudida f4-5, termina de pie). Exportado a Assets/.../PJ01/Clips (nuevo). Con esto quedan aprobados los 7 clips de muerte/daño de PJ01 de la noche.
+
+- 2026-11-21: Tony aprobó NPC_Balazo_Frente/Espalda v2: mismo cuerpo, brazos al 75% del idle (ya no levantan las manos). 25 f cada uno (antes 2-26). Reemplazan Assets/.../PJ01/Clips/NPC_Balazo_*.fbx (mismo .meta: revisar rango 1-25). Respaldos en respaldos/NPC_Balazo_*_ANTES.fbx
+
+- 2026-11-21: Tony aprobó NPC_Dano_Izquierda/Derecha (nuevos, desde K_DanoIzq/Der de PJ01 con golpe más rápido, pecho y cabeza más doblados). Exportados a Assets/.../PJ01/Clips. En Override_NPC* reemplazan a PJ01_Dano_Izquierda/Derecha.
+
+- 2026-11-21: DECISIÓN TONY: los NPCs usan las MISMAS muertes que el jugador (PJ01_Muerte_Frente, PJ01_Muerte_Espaldas, PJ01_Muerte_Desmayo, PJ01_Muerte_Explosion, PJ01_Muerte_Atropello, PJ01_Muerte_CaidaAltura). En Unity: en Override_NPC, _NPC_Celular, _NPC_Mayor, _NPC_Mujer cambiar NPC_Muerte_Frente/Espaldas por las de PJ01. NPC_Muerte_Lado descartada (no se exporta).
+
+- 2026-11-21: Tony aprobó el conductor sacado del carro: PJ01_Conductor_SerSacado v2 (cae directo al salir, sin quedarse parado; 74 f, termina en el piso; reemplaza, respaldo en respaldos/) y NPC_SacadoDelCarro_Huir (nuevo, 174 f: sacado f1-38, cae f39-74, se levanta boca abajo x1.5 f85-144, huye corriendo f145-174, termina corriendo -> pasar a Loco_Correr/NPC_Huir_Corriendo). Sincronizar con PJ01_Carro_SacarConductor.
+
+- 2026-11-21: Tony aprobó caída del cielo propia de E15 y E16 (caída del E18 pasada a cada rig; E16 más lento y pesado; pose de héroe sostenida 1 s; malla sin atravesar el piso). Exportados en Assets/.../PJ01/Clips y nova_clips: E15_Caida_Aire (25 f), E15_Caida_Aterrizaje (61 f), E15_Caida_Levantarse (41 f), E16_Caida_Aire (25 f), E16_Caida_Aterrizaje (71 f), E16_Caida_Levantarse (49 f). En Unity: Override_E15/E16 Loco_Caida -> *_Caida_Aire, Loco_SaltoAterrizaje -> *_Caida_Aterrizaje, + levantarse (hoy usan Guardia_Caida_*).
+
+- 2026-11-21: Tony aprobó muerte igual para E15 y E16: la muerte original del E16 (se desploma, sin mover el arma) pasada a cada rig, rodillas sin abrirse al caer, malla sin atravesar el piso. 71 f, termina en el piso. Reemplaza E15_Muerte.fbx y E16_Muerte.fbx (mismo .meta: revisar rango 1-71). Respaldos en respaldos/E15_Muerte_ANTES.fbx, E16_Muerte_ANTES.fbx. Variantes (chispas, explosión, de rodillas) no se piden por ahora.
+
+- 2026-11-21: PJ01_Carro_SacarConductor v4 (Tony: 'déjalo así, al final se corrige'). Frames 1-17 = paso de Carro_Entrar; 18-33 segundo paso; jala y avienta igual que antes (lo avienta ~f64); dos pasos atrás al jalar (47-67) y dos para acomodarse (66-92), post-aventón x1.5; termina en la pose 1 de Carro_Entrar. 98 f (antes 69). SINCRONÍA EN UNITY: el clip del conductor (NPC_SacadoDelCarro_Huir) debe arrancar 18 frames (0.75 s) DESPUÉS del de PJ01. Al terminar (f98) pasar directo a PJ01_Carro_Entrar. Pendiente de pulir al final. Respaldo: respaldos/PJ01_Carro_SacarConductor_ANTES.fbx
+
+- 2026-11-21: Tony aprobó provocar de pandilleros: PJ01_Burla (de Skull_Burla, 50 f) y PJ01_Presumir (de Nova_Flexing, 141 f), pasados al rig de PJ01. En Unity: en TODOS los overrides, Skull_Burla -> PJ01_Burla y Nova_Flexing -> PJ01_Presumir (hoy los dos apuntan a PJ01_Punos_Guardia). Jefe_Burla.fbx es FBX ASCII, no se pudo abrir.
+
+- 2026-11-21 (Mixamo): Tony aprobó PJ01_Pandillero_Burla1 (de 'Taunt', 50 f). Provocar.
+
+- 2026-11-21 (Mixamo): Tony aprobó PJ01_Pandillero_Burla2 (de 'Taunt_1_v2', 156 f). Brazos abiertos 14°. Provocar.
+
+- 2026-11-21 (Mixamo): Tony aprobó PJ01_Pandillero_BurlaGesto (de 'Taunt_Gesture_v4', 110 f). Piernas enderezadas (+5 cm cadera), mitad de velocidad, entra desde idle y termina en Idle_PiesNaturales en vez de jorobarse (gesto de cortar cabeza f13-80).
+
+- 2026-11-21: PENDIENTE (Tony): arreglar las animaciones de pelea del jugador PJ01.
+
+- 2026-11-21 (Mixamo): Tony aprobó PJ01_Pandillero_Gritar (de 'Yelling', 236 f). Provocar / retar.
+
+- 2026-11-21 (Mixamo): Tony aprobó PJ01_Pandillero_Empujar (de 'Push_v4', 23 f). Solo el final del Push de Mixamo (f190-241), en su lugar, entra desde idle y vuelve directo a idle, acelerado x1.6. 23 f.
+
+- 2026-11-21 (Mixamo): Tony aprobó PJ01_Pandillero_Patada (de 'Mma_Kick_v3', 61 f). Entra desde idle; patada f7-32 (pie arriba f19); vuelve a idle lento f33-55. 61 f.
+
+- 2026-11-21 (Mixamo): Tony aprobó PJ01_Pandillero_SacarArma (de 'Drawing_Gun_v3', 99 f). Saca el arma amenazando (f7-61), sostiene, vuelve a idle lento (f69-92). 99 f.
+
+- 2026-11-21 (Mixamo): Tony aprobó PJ01_Pandillero_HeridoArrastrandose (de 'Crawling_v2', 55 f). Malla sin atravesar el piso (se metía 10 cm). Loop; avanza (root motion en el clip).
+
+- 2026-11-21 (Mixamo): Tony aprobó E20_Golpe_Brazo (Mutant Punch en el rig del E20 Matón Skulls, 34 f). Exportado a Assets/.../PJ01/Clips/E20_Golpe_Brazo.fbx.
+
+- 2026-11-21 (Mixamo): Tony aprobó NPC_LlamarPolicia (de 'Talking_On_Phone', 1166 f). Original de Mixamo SIN cambios (Tony). Uso: un NPC llama a la policía y acusa al jugador cuando mata a alguien. 1166 f, loop. Ya no se usa para el radio del policía.
+
+- 2026-11-21 (Mixamo): Tony aprobó PJ01_Senalar (de 'Pointing_Forward_v3', 70 f). Señalar/ordenar (policía y NPCs). Brazos abiertos 12°, sin la postura intermedia, entra y sale directo a idle. 70 f.
+
+- 2026-11-21 (Mixamo): Tony aprobó PJ01_Recargar_A (de 'Reload', 124 f). Recarga de Mixamo sin cambios; Tony no dijo para qué arma: asignar en Unity (escopeta/fusil/francotirador). 124 f.
+
+- 2026-11-21 (Mixamo): Tony aprobó PJ01_Recargar_B (de 'Reloading', 100 f). Segunda recarga de Mixamo sin cambios; asignar arma en Unity. 100 f.
+
+- 2026-11-21 (Mixamo): Tony aprobó PJ01_Rifle_Sacar (de 'Rifle_Pull_Out', 62 f). Sacar arma larga (cambiar de arma). Sin cambios. 62 f.
+
+- 2026-11-21 (Mixamo): Tony aprobó PJ01_Rifle_Guardar (de 'Rifle_Put_Away_v2', 64 f). Guardar arma larga; pasa directo a idle desde f50. 64 f.
+
+- 2026-11-21 (Mixamo): Tony aprobó PJ01_Granada_Agachado (de 'Throw_Grenade', 106 f). Lanzar granada AGACHADO. Falta una versión de pie (revisar Toss Grenade / Throw). 106 f.
+
+- 2026-11-21 (Mixamo): Tony aprobó PJ01_Granada_DePie (de 'Toss_Grenade', 97 f). Lanzar granada de pie. 97 f.
+
+- 2026-11-21 (Mixamo): Tony aprobó PJ01_Lanzar (de 'Throw_v3', 67 f). Lanzar objeto/rápido. Brazos abiertos 12°, entra y sale a idle (suelta ~f28). 67 f.
+
+- 2026-11-21 (Mixamo): Tony aprobó PJ01_Rifle_CaminarMixamo (de 'Walk_With_Rifle', 34 f). Caminar con fusil (ciclo, loop). 34 f. Comparar con PJ01_Rifle_Caminar actual.
+
+- 2026-11-21 (Mixamo): Tony aprobó PJ01_Beber (de 'Drinking_v3', 178 f). Bebida energética. Brazos abiertos 14°; lata (mano izq.) al lado de la boca, separada de la cara, f100-155; entra y sale a idle (sale desde f160). 178 f.
+
+- 2026-11-21 (Mixamo): Tony aprobó PJ01_Arrestado_Arrodillarse (de 'Kneel', 325 f). Uso: ser arrestado (se arrodilla). Sin cambios. 325 f.
+
+- 2026-11-21 (Mixamo): Tony aprobó PJ01_Sentado (de 'Sitting_Idle_v2', 90 f). Sentado en reposo (banca). Manos separadas de las piernas (+3.5 cm, abiertas). 90 f, loop.
+
+- 2026-11-21 (Mixamo): Tony aprobó PJ01_Camilla_Acostarse (de 'Lying_Down', 173 f). Silla/camilla del Doc: sentado en la orilla y se acuesta boca arriba (cadera a altura de camilla ~0.80 m reales). 173 f, termina acostado.
+
+- 2026-11-21 (Mixamo): Tony aprobó PJ01_Colgado_Idle (de 'Hanging_Idle', 142 f). Colgado de un borde (loop). 142 f.
+
+- 2026-11-21 (Mixamo): Tony aprobó PJ01_Colgado_Subir (de 'Climbing', 116 f). Desde colgado sube al borde. 116 f.
+
+- 2026-11-21 (Mixamo): Tony aprobó PJ01_Escalera_SubirMixamo (de 'Climbing_Up_Wall_v2', 61 f). Subir escalera de mano del juego (largueros ±0.30 m, peldaño cada 0.30 m, 0.13 m de la pared). Centrado en la escalera, manos y pies fijos en peldaños. Sube ~1.15 m por ciclo (root motion). 61 f, loop. Comparar con PJ01_Escalera_Subir actual.
+
+- 2026-11-21 (Mixamo): Tony aprobó PJ01_Parkour_SaltarBardaMixamo (de 'Jump_Over_v2', 48 f). Saltar barda; tramo en el aire acelerado x1.9 (f3-27). 48 f. Comparar con PJ01_Parkour_SaltarBarda actual.
+
+- 2026-11-21 (Mixamo): Tony aprobó PJ01_Salto_AdelanteMixamo (de 'Jump_v2', 29 f). Jump de Mixamo reproducido al revés (último→primer frame) para que salte hacia adelante. 29 f.
+
+- 2026-11-21 (Mixamo): Tony aprobó PJ01_Salto_B_Mixamo (de 'Jump_1', 31 f). Variante de salto sin cambios. 31 f.
+
+- 2026-11-21 (Mixamo): Tony aprobó PJ01_Caerse (de 'Falling_Down_v2', 69 f). Caerse al piso (caer de la moto / derribado). Malla sin atravesar el piso. 69 f, termina en el piso.
+
+- 2026-11-21 (Mixamo): Tony aprobó PJ01_Rendirse (de 'Defeat_v3', 144 f). Derrota / rendirse de rodillas. Brazos abiertos 14° y manos separadas de piernas y cuerpo. 144 f, termina de rodillas.
+
+- 2026-11-21 (Mixamo): Tony aprobó PJ01_Herido_Idle (de 'Injured_Idle_v2', 281 f). Herido de pie (venda / jefe herido / NPC lastimado). Brazos abiertos 14° y manos separadas del cuerpo y piernas. 281 f, loop.
+
+- 2026-11-21 (Mixamo): Tony aprobó para ROBOTS (E15/E16, rig propio): E15_Herido_Idle, E15_Cojear, E16_Herido_Idle, E16_Cojear (Injured Idle con brazos separados 281 f loop; Injured Walk = cojear dañado 50 f loop). En Assets/.../PJ01/Clips y nova_clips.
+
+- 2026-11-21 (Mixamo): Tony aprobó NPC_Herido_PedirAyuda (de 'Injured_Wave_Idle', 153 f). Para CIVILES: herido haciendo señas pidiendo ayuda. Sin cambios. 153 f, loop.
+
+- 2026-11-21 (Mixamo): Tony aprobó NPC_Discutir_1 (de 'Standing_Arguing', 625 f). Discutir de pie. Sin cambios. 625 f, loop.
+
+- 2026-11-21 (Mixamo): Tony aprobó NPC_Discutir_2 (de 'Standing_Arguing_1_v2', 625 f). Discutir de pie v2. Brazos abiertos 14° y manos separadas del cuerpo. 625 f, loop.
+
+- 2026-11-21 (Mixamo): Tony aprobó NPC_Discutir_3 (de 'Standing_Arguing_2_v2', 625 f). Discutir de pie v3. Brazos separados del cuerpo. 625 f, loop.
+
+- 2026-11-21 (Mixamo): Tony aprobó NPC_Senalar (de 'Pointing_v2', 109 f). Desde idle, solo brazo derecho hace la seña. Grupo NPC.
+
+- 2026-11-21 (Mixamo): Tony aprobó NPC_Senalar_2 (de 'Pointing_1_v2', 84 f). Brazos separados. Grupo NPC.
+
+- 2026-11-21 (Mixamo): Tony aprobó NPC_Platicar_A (de 'Talking_v2', 179 f). Manos separadas de la pierna. Grupo NPC.
+
+- 2026-11-21 (Mixamo): Tony aprobó NPC_Platicar_B (de 'Talking_1_v2', 119 f). Manos separadas. Grupo NPC.
+
+- 2026-11-21 (Mixamo): Tony aprobó NPC_Platicar_C (de 'Talking_2_v2', 114 f). Manos separadas. Grupo NPC.
+
+- 2026-11-21 (Mixamo): Tony aprobó NPC_Platicar_D (de 'Talking_3_v2', 309 f). Manos separadas. Grupo NPC.
+
+- 2026-11-21 (Mixamo): Tony aprobó NPC_Celular_Caminando (de 'Talking_Phone_Pacing_v2', 1268 f). Hablando por celular caminando; manos separadas. Grupo NPC.
+
+- 2026-11-21 (Mixamo): Tony aprobó NPC_Mensajear_Caminando_1 (de 'Texting_And_Walking', 100 f). Sin cambios. Grupo NPC.
+
+- 2026-11-21 (Mixamo): Tony aprobó NPC_Mensajear_Caminando_2 (de 'Walking_While_Texting_v2', 121 f). Brazos separados. Grupo NPC.
+
+- 2026-11-21 (Mixamo): Tony aprobó NPC_Caminar_Casual (de 'Walking_v2', 50 f). Caminar casual (ver si sirve); brazo derecho separado. Grupo NPC.
+
+- 2026-11-21 (Mixamo): Tony aprobó NPC_Caminar_Circulo (de 'Walk_In_Circle_v2', 522 f). Manos separadas. Grupo NPC.
+
+- 2026-11-21 (Mixamo): Tony aprobó NPC_Teclear (de 'Typing', 495 f). Sin cambios (Hacker). Grupo NPC.
+
+- 2026-11-21 (Mixamo): Tony aprobó NPC_Voltear_Atras (de 'Looking_Behind_v2', 122 f). Hacker voltea a ver al jugador; manos separadas. Grupo NPC.
+
+- 2026-11-21 (Mixamo): Tony aprobó NPC_Trabajar_Aparato (de 'Working_On_Device_v2', 194 f). Doc/Tino trabajando; manos separadas. Grupo NPC.
+
+- 2026-11-21 (Mixamo): Tony aprobó SOLO para el E16 (grande): E16_Bloquear_Tambaleo (Standing Block React Large) y E16_Encenderse (Sword And Shield Power Up). El E15 (pequeño humanoide) NO usa estas. 'Rugir' (Mutant Roaring) DESCARTADO para todos.
+
+- 2026-11-21 PELEA PJ01 (Tony): DESCARTADOS PJ01_Golpe1_Directo, PJ01_Golpe2_Gancho y PJ01_Punos_Fuerte (malos). Se quedan: PJ01_Punos_Guardia (sin cambio), PJ01_Golpe_Der (Punos_GolpeDer, 49 f), PJ01_Golpe_Izq (Punos_GolpeIzq con todo el brazo girado 35° hacia arriba en el impacto f13, misma inercia, 44 f), PJ01_Golpe_Protesis (Protesis_Golpe, empieza y termina en guardia para bucle, 49 f). EN UNITY Override_Jugador: Punos_GolpeDer -> PJ01_Golpe_Der, Punos_GolpeIzq -> PJ01_Golpe_Izq, Punos_Fuerte -> PJ01_Golpe_Protesis.

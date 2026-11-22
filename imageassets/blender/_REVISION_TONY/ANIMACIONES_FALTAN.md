@@ -178,3 +178,10 @@ Ponerlas en `imageassets/blender/_mixamo/` y yo las paso a cada rig.
 - **Nova/robots humanoides:** Stagger (Hit Reaction Big), Death From Explosion, Super Hero Landing (caída del cielo), Kneeling Death.
 - **Jefe:** Boss Intro (Roaring / Flexing), Heavy Attack (x2), Injured Idle.
 - **Perro E17 (cuadrúpedo):** Mixamo no tiene cuadrúpedos; hay que animarlo en su rig o conseguir paquete de animal.
+
+
+## PENDIENTES AGREGADOS POR TONY (21-nov tarde)
+| Pendiente | Estado | Nota |
+|---|---|---|
+| Arreglar las animaciones de pelea del jugador (PJ01: golpes, guardia, patada) | PENDIENTE | Pedido de Tony durante la revisión de Mixamo. |
+| Pulir pasos de PJ01_Carro_SacarConductor (f30-98) | PENDIENTE | Tony: 'déjalo así, al final se corrige'. |
