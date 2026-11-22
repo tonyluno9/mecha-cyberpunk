@@ -19,3 +19,11 @@ mejor si A lo pone en `Ciudad_Prologo.unity` (o en el prefab de la zona que toqu
 ## Nota
 - Las cápsulas de los drones de Nova (DR01, DR02_a, DR04_a, E13) están listas (`CapsulaCaida.LanzarDron`), pero el spawn de drones de persecución
   sigue saliendo como antes: no se enganchó.
+
+## Ronda C (22-nov noche)
+| Qué | Prefab | Dónde | Por qué |
+| --- | --- | --- | --- |
+| Salida de los SKULLS del paso 3 | `Assets/_Proyecto/Progresion/Historia/Recorrido/Prefabs/Historia_CallejonSkulls.prefab` | En el callejón o calle JUSTO a la vuelta de la casa del jugador, sobre el piso, en un hueco libre y fuera de la vista de donde despierta, con línea recta libre hacia la calle de la casa | T21 punto 3: los dos SKULLS salen de ahí y caminan hacia el jugador en línea recta (sin NavMesh). Sin el marcador se usa un punto de respaldo a 15-20 m de `Inicio_Calle`, a un lado, que puede quedar en un lugar raro. |
+
+- T25: no toqué los prefabs de Vehiculos/Prefabs (los está cambiando T24); la patrulla buena es `Trafico/Prefabs/Patrulla.prefab` (cuerpo PA01). PatrullaMundo
+  agrega DanioCarro al arrancar, así que si T24 cambia el modelo de alguna patrulla sigue recibiendo daño.

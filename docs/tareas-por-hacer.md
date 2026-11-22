@@ -326,6 +326,7 @@ celular, platicando de frente si son dos — T11). Cuando oyen balazos se levant
 Comprobar: capturas de NPCs sentados en el parque y en otro punto, bien alineados al asiento, y que se levanten y huyan al disparar.
 
 ## T19. Detalles que quedaron de T12, T17 y T18 (22-nov tarde)
+**Puntos 1-3 HECHOS (22-nov noche, sesión B, T-1652 3f7d52a y T-1653 cded5bb): empujón de frente y solo civiles con camino libre (pasan las pruebas de bullying de SKULLS y SNAKES); NOVA INTERVIENE a 108 pt turquesa, centrado, con glitch y sonido ROB_PES_LLEGADA (FALTA una alarma corporativa propia en el catálogo); RespuestaNovaT1304Pruebas reescrita y pasando; el sentado se levanta antes de huir, pero NO hay clip de levantarse de sentado (se endereza con NPC_Asustarse; pedir PJ01_Sentado_Levantarse a Blender). El punto 4 es de A.**
 1. T12: el empujón al civil no se ve claro; que la animación de empujar y la caída del civil se vean completas y de frente. Los pandilleros que
    tienen una pared entre ellos y el civil cancelan la escena a los 25 s porque caminan en línea recta: que rodeen por la banqueta (ruta o NavMesh
    sencillo) o que solo elijan civiles a los que puedan llegar sin obstáculos.
@@ -350,6 +351,7 @@ Al terminar el video: suena el sonido tecnológico que ya usa el menú (el del l
 música del menú con su fade y aparece el menú. Se puede saltar con Enter/clic. Pantalla completa, sin deformar (con su proporción).
 
 ## T21. Calle de la casa del jugador y primer encuentro con los SKULLS
+**Punto 3 HECHO (22-nov noche, sesión B, T-1652 3f7d52a): salen del callejón, platican con subtítulo, se plantan de frente, empujan y tiran al jugador en el contacto y se van corriendo (capturas en docs/capturas/_tareas/T21). Falta colocar el marcador Historia_CallejonSkulls (docs/para-sesion-A.md).**
 **Puntos 1 y 2 HECHOS (sesión A, merge 96afae0):** la chica era Doña Lupe (GTA_T406/DonaLupe) en medio del asfalto a (-45.5,0,-77): movida a la banqueta de enfrente (-40.6,0.2,-73.5). El callejón de la vuelta de la casa (x -86..-54, z≈-59, entrada a 18 m al norte de la puerta) no tenía asfalto: ahora tiene asfalto, raya amarilla doble y bordillos (raíz T1641_CalleCasa). Prueba CalleCasaT1641Pruebas 1/1. Capturas docs/capturas/_tareas/T21/. El punto 3 es de la sesión B.
 1. Quita a la chica que está parada en medio de la calle frente a la casa del jugador (y cualquier NPC que estorbe ahí al empezar).
 2. La calle de al lado de la casa no tiene la textura del suelo: ponle su asfalto y banquetas como las demás calles.
@@ -384,6 +386,7 @@ Agrega a TODOS los carros las luces de la patrulla buena (faros delanteros y cal
 físicas de choque.
 
 ## T25. Policía: arreglos
+**HECHA (22-nov noche, sesión B, T-1650 798047d): 2 patrullas de ronda, toda patrulla recibe daño y sube 2 estrellas al dispararle o robarla, atropello lanza a los NPCs, el policía solo daña si la bala pega, sin arresto. El vuelo del atropello no se distingue bien en la captura (2 NPCs en impulso medidos).**
 1. La patrulla buena de la foto NO se comporta como patrulla: puedes robarla, dispararle y no pasa nada (no sube el calor, no recibe daño).
    Configúrala como patrulla de verdad (mismo componente y datos que las demás patrullas): robarla y dispararle suben estrellas, recibe daño
    y explota. Revisa que TODAS las patrullas reciban daño de balas y explosiones (hoy hay una a la que se le dispara y no le pasa nada).
@@ -395,6 +398,7 @@ físicas de choque.
    policía solo persigue y dispara.
 
 ## T26. SKULLS: confrontación con advertencias, sin perseguir como locos
+**HECHA (22-nov noche, sesión B, T-1651 38b2bd4): advierten 20 s quietos a 5 m, un orador a la vez con subtítulo, luego solo empujan y tiran; pelean solo si atacas; dejan de seguir al alejarte.**
 1. Bajarles la sensibilidad: al pasar cerca de su zona NO se te echan encima. Primero te advierten durante unos 20 s (se acercan un poco, te
    gritan, te provocan); si te alejas, dejan de seguirte y regresan a su lugar. Solo si los ignoras y te quedas, o si los atacas, empieza la pelea.
 2. Frases: una cada ~5 s, sin encimarse (una sola voz a la vez en todo el grupo), con subtítulo.
@@ -404,6 +408,7 @@ físicas de choque.
 5. Si te alejas lo suficiente, dejan de perseguirte.
 
 ## T27. Reglas de confrontación por facción (documento + implementación)
+**HECHA (22-nov noche, sesión B, T-1651 38b2bd4): docs/confrontacion.md y un ConfigConfrontacion por facción en IA/Resources/Confrontacion (policía y Nova solo documentan los valores que ya usan).**
 Escribe docs/confrontacion.md con las reglas de cada facción y aplícalas en su IA:
 - SKULLS y SNAKES: como T26 (advertencia → empujón → pelea solo si el jugador ataca; dejan de seguir al alejarse; los SNAKES un poco más
   agresivos: sacan el arma antes).
@@ -415,6 +420,7 @@ Cada facción con su distancia de detección, tiempo de advertencia, cuándo emp
 ScriptableObject por facción para que Tony lo ajuste.
 
 ## T28. Sonido de los pasos
+**HECHA (22-nov noche, sesión B, T-1654 feec588): 36 clips nuevos de pasos parejos, volumen 0.40, tono ±8 %, volumen ±20 %, uno por piso; asfalto y banqueta comparten el de concreto.**
 A Tony no le gusta el sonido actual de los pasos. Cámbialo por los mejores clips de pasos del catálogo (05_Pasos), más suaves y realistas,
 con volumen más bajo que los efectos fuertes, variación de pitch y volumen, y uno distinto por piso. Que suene un paso por pisada (ya está
 sincronizado) sin doblarse.

@@ -37,3 +37,16 @@ T-1652 empujones (T21.3 + T19.1), T-1653 detalles T19 (T19.2 + T19.3), T-1654 pa
 - T26+T27: código en curso
 - T21.3 + T19.1: código en curso
 - T19.2 + T19.3 + T28: código en curso
+
+## B TERMINÓ la ronda C (22-nov noche) — merge 46cae5f en main
+| Tarea | Rama | Estado | Nota |
+| --- | --- | --- | --- |
+| T25 policía | tony/T-1650-policia | HECHA | 2 rondas, daño y estrellas en toda patrulla, atropello con impulso, puntería real, sin arresto |
+| T26 SKULLS confrontación | tony/T-1651-confrontacion | HECHA | |
+| T27 reglas por facción | tony/T-1651-confrontacion | HECHA | docs/confrontacion.md |
+| T21 punto 3 | tony/T-1652-empujones | HECHA | falta colocar Historia_CallejonSkulls (A) |
+| T19 punto 1 | tony/T-1652-empujones | HECHA | pruebas de bullying en verde |
+| T19 punto 2 | tony/T-1653-detalles-t19 | HECHA | falta una alarma corporativa propia en el catálogo |
+| T19 punto 3 | tony/T-1653-detalles-t19 | HECHA con reserva | no existe clip de levantarse de sentado |
+| T28 pasos | tony/T-1654-pasos | HECHA | |
+Unity de B cerrado. La sesión A ya puede hacer el build.
