@@ -36,4 +36,4 @@ Paso 0: HECHO (389475c). No hay video del logo en la carpeta (solo PNG en imagea
 - T22: HECHA, merge 88a04e9. El subagente Sonnet se cortó por el límite semanal (vuelve el 26-nov 2 a. m.): se siguió con subagentes Opus.
 - T23, T19.4, T20 y marcador del callejón (-64,0.2,-59): HECHOS, merge 9b27d39 (T20 falta verlo en el build)
 - T24: HECHA, merge 36e6964 (+ T-1647 toldos y corro fuera de la ruta de peatones)
-- Builds y reporte docs/reporte-tareas-22nov-c.md: en curso (B terminó, merge 46cae5f)
+- Builds: HECHOS (Demo 17:07, Juego 17:09, Result: Success; Demo probado). Reporte: docs/reporte-tareas-22nov-c.md. RONDA C TERMINADA.
