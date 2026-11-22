@@ -19,6 +19,10 @@ namespace MechaCyberpunk.Progresion.Sonido
         public const float SegundosSalida = 1.6f;
         /// <summary>Cruce entre el final y el inicio del tema (s).</summary>
         public const float SegundosCruce = 2.5f;
+        /// <summary>Lo más que avanza un fundido en un cuadro (s), aunque el cuadro dure más (carga de escena).</summary>
+        public const float PasoMaximo = 0.05f;
+        /// <summary>Tras Play, cuánto esperar (s) antes de fiarse de AudioSource.time.</summary>
+        public const float SegundosConfiable = 1f;
 
         private static MusicaMenu actual;
 
@@ -29,12 +33,16 @@ namespace MechaCyberpunk.Progresion.Sonido
         private float segundosFundido = SegundosEntrada;
         private float cruce = 1f;
         private bool cruzando;
+        // Reloj propio de cada copia (segundos desde que empezó): con Streaming, AudioSource.time no es fiable justo después de Play.
+        private readonly float[] reloj = new float[2];
 
         public static MusicaMenu Actual => actual;
         /// <summary>True si suena o está entrando (no si está apagada o bajando).</summary>
         public static bool Sonando => actual != null && actual.objetivo > 0f;
         public float Nivel => nivel;
         public AudioSource FuenteActiva => fuentes != null ? fuentes[activa] : null;
+        /// <summary>Segundos que lleva la copia activa del tema (posición del audio).</summary>
+        public float TiempoPista => fuentes != null ? fuentes[activa].time : 0f;
         public int Vueltas { get; private set; }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -106,6 +114,7 @@ namespace MechaCyberpunk.Progresion.Sonido
                 cruce = 1f;
                 fuentes[activa].time = 0f;
                 fuentes[activa].Play();
+                reloj[activa] = 0f;
             }
         }
 
@@ -119,7 +128,9 @@ namespace MechaCyberpunk.Progresion.Sonido
 
         private void Update()
         {
-            float dt = Time.unscaledDeltaTime;
+            float dtReal = Time.unscaledDeltaTime;
+            // Al cargar escenas hay cuadros de varios segundos: los fundidos avanzan como mucho un paso por cuadro para no saltarse.
+            float dt = Mathf.Min(dtReal, PasoMaximo);
             nivel = ReglaMusicaMenu.Fundir(nivel, objetivo, dt, segundosFundido);
             if (nivel <= 0f && objetivo <= 0f)
             {
@@ -129,12 +140,26 @@ namespace MechaCyberpunk.Progresion.Sonido
             }
             AudioSource principal = fuentes[activa];
             AudioSource otra = fuentes[1 - activa];
-            if (!cruzando && principal.isPlaying && ReglaMusicaMenu.TocaCruce(principal.time, principal.clip.length, SegundosCruce))
+            reloj[activa] += dtReal;
+            reloj[1 - activa] += dtReal;
+            if (!cruzando && !principal.isPlaying && reloj[activa] >= SegundosConfiable)
+            {
+                // Se terminó sin cruce (un cuadro muy largo): vuelve a empezar ya, nunca queda en silencio.
+                principal.time = 0f;
+                principal.Play();
+                reloj[activa] = 0f;
+                Vueltas++;
+            }
+            // El punto del bucle sale del audio (AudioSource.time), pero solo cuando la copia ya lleva un rato sonando: justo después de
+            // Play, con Streaming, el tiempo puede venir viejo.
+            bool listo = reloj[activa] >= SegundosConfiable;
+            if (!cruzando && listo && principal.isPlaying && ReglaMusicaMenu.TocaCruce(principal.time, principal.clip.length, SegundosCruce))
             {
                 cruzando = true;
                 cruce = 0f;
                 otra.time = 0f;
                 otra.Play();
+                reloj[1 - activa] = 0f;
             }
             if (cruzando)
             {

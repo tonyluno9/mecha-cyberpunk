@@ -28,7 +28,10 @@ namespace MechaCyberpunk.UI.Inicio
         /// <summary>T-726: las filas de controles con las teclas reales de las acciones del Input System (no texto fijo).</summary>
         public static string TextoControles => ReglaControlesInicio.Texto(TeclaReal);
         public static readonly string[] TextosPestanas = { "GRÁFICOS", "AUDIO", "CONTROLES" };
-        public static readonly string[] TextosVolumen = { "VOLUMEN GENERAL", "EFECTOS", "VOCES", "AMBIENTE", "MÚSICA", "INTERFAZ" };
+        /// <summary>Pedido de Tony (volumen): cuatro deslizadores por el AudioMixer, en este orden. Ambiente e Interfaz van por Efectos.</summary>
+        public static readonly string[] TextosVolumen = { "VOLUMEN GENERAL", "MÚSICA", "EFECTOS", "VOCES" };
+        /// <summary>La sección de cada deslizador de <see cref="TextosVolumen"/>.</summary>
+        public static readonly SeccionSonido[] SeccionesVolumen = { SeccionSonido.General, SeccionSonido.Musica, SeccionSonido.Efectos, SeccionSonido.Voces };
         public static readonly string[] TextosCalidad = { "BAJO", "MEDIO", "ALTO" };
         public static readonly string[] TextosApuntado = { "APAGADO", "SUAVE", "FUERTE" };
 
@@ -198,7 +201,7 @@ namespace MechaCyberpunk.UI.Inicio
             pantallaCompleta.Cambio += f => { if (!refrescando) Servicio?.FijarPantallaCompleta(f.Activo); };
             for (int i = 0; i < volumenes.Length; i++)
             {
-                SeccionSonido seccion = (SeccionSonido)i;
+                SeccionSonido seccion = SeccionesVolumen[i];
                 volumenes[i].Cambio += f => { if (!refrescando) Servicio?.FijarVolumen(seccion, f.Valor); };
             }
             sensibilidad.Cambio += f => { if (!refrescando) Servicio?.FijarSensibilidad(f.Valor); };
@@ -316,7 +319,7 @@ namespace MechaCyberpunk.UI.Inicio
             pantallaCompleta.FijarActivo(s.PantallaCompleta);
             for (int i = 0; i < volumenes.Length; i++)
             {
-                volumenes[i].FijarValor(s.Volumen((SeccionSonido)i));
+                volumenes[i].FijarValor(s.Volumen(SeccionesVolumen[i]));
             }
             sensibilidad.FijarValor(s.Sensibilidad);
             invertirY.FijarActivo(s.InvertirY);
