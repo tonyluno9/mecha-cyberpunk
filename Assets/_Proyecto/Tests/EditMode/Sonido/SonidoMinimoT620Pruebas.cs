@@ -50,7 +50,7 @@ namespace MechaCyberpunk.Tests.Sonido
         {
             CatalogoSonidos c = AssetDatabase.LoadAssetAtPath<CatalogoSonidos>(RutaCatalogo);
             Assert.IsNotNull(c);
-            Assert.AreEqual(24, ReglaMezclaSonidos.IdsEncendidos.Length); // T-729: sin el silbido de la bala rozando (el silbato de la policía)
+            Assert.AreEqual(25, ReglaMezclaSonidos.IdsEncendidos.Length); // T-729: sin el silbido de la bala rozando; +MUS_MENU_PRINCIPAL (música del menú)
             int encendidos = 0;
             foreach (CatalogoSonidos.Interruptor i in c.Interruptores)
             {

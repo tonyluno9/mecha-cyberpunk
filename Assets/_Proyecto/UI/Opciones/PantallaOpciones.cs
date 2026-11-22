@@ -32,7 +32,10 @@ namespace MechaCyberpunk.UI.Opciones
         public static readonly string[] TextosApuntado = { "APAGADO", "SUAVE", "FUERTE" };
         public static readonly string[] TextosCalidad = { "BAJO", "MEDIO", "ALTO" };
         // En el orden de SeccionSonido.
+        /// <summary>Texto de cada sección, en el orden de SeccionSonido (Ambiente e Interfaz no tienen deslizador: van por Efectos).</summary>
         public static readonly string[] TextosVolumen = { "VOLUMEN GENERAL", "EFECTOS", "VOCES", "AMBIENTE", "MÚSICA", "INTERFAZ" };
+        /// <summary>Los deslizadores que se ven, en este orden (pedido de Tony: general, música, efectos y voces, por el AudioMixer).</summary>
+        public static readonly SeccionSonido[] SeccionesVisibles = { SeccionSonido.General, SeccionSonido.Musica, SeccionSonido.Efectos, SeccionSonido.Voces };
 
         [Header("Medidas (px a 1920x1080)")]
         [Tooltip("Separación entre filas (px); menos que la de los botones para que las 12 quepan en 1080.")]
@@ -60,6 +63,7 @@ namespace MechaCyberpunk.UI.Opciones
         public MenuCyberfix Menu => menu;
         public DeslizadorCyberfix Sensibilidad => sensibilidad;
         public ConmutadorCyberfix InvertirY => invertirY;
+        /// <summary>El deslizador de una sección (null si la sección no tiene deslizador propio).</summary>
         public DeslizadorCyberfix Volumen(SeccionSonido seccion) => volumenes[(int)seccion];
         public SelectorCyberfix Apuntado => apuntado;
         public SelectorCyberfix Calidad => calidad;
@@ -79,7 +83,7 @@ namespace MechaCyberpunk.UI.Opciones
             Vector2 fila = e.TamanoFila;
             float altoTitulo = e.Tamano(RolTexto.Encabezado) + relleno;
             float altoAyuda = e.AltoFilaHud;
-            int cantidadFilas = 7 + TextosVolumen.Length;
+            int cantidadFilas = 7 + SeccionesVisibles.Length;
             Canvas canvas = KitUI.CrearCanvas(transform, "CanvasOpciones", OrdenCanvas);
             contenido = canvas.gameObject;
             KitUI.CrearFondoPantalla(canvas.transform, "FondoPantalla");
@@ -112,8 +116,9 @@ namespace MechaCyberpunk.UI.Opciones
             apuntado = KitUI.CrearSelector(panel, TextoApuntado, TextosApuntado, (int)NivelApuntadoAsistido.Suave, null);
             Fila(apuntado, ref y);
             volumenes = new DeslizadorCyberfix[TextosVolumen.Length];
-            for (int i = 0; i < TextosVolumen.Length; i++)
+            foreach (SeccionSonido seccionVisible in SeccionesVisibles)
             {
+                int i = (int)seccionVisible;
                 volumenes[i] = KitUI.CrearDeslizador(panel, TextosVolumen[i], 0f, 1f, ReglaOpciones.PasoVolumen, ReglaOpciones.VolumenPorDefecto, null);
                 Fila(volumenes[i], ref y);
             }
@@ -156,6 +161,10 @@ namespace MechaCyberpunk.UI.Opciones
             invertirY.CambioValor += v => Servicio?.FijarInvertirY(v);
             for (int i = 0; i < volumenes.Length; i++)
             {
+                if (volumenes[i] == null)
+                {
+                    continue;
+                }
                 SeccionSonido seccion = (SeccionSonido)i;
                 volumenes[i].CambioValor += v => Servicio?.FijarVolumen(seccion, v);
             }
@@ -243,7 +252,10 @@ namespace MechaCyberpunk.UI.Opciones
             invertirY.Configurar(s.InvertirY);
             for (int i = 0; i < volumenes.Length; i++)
             {
-                volumenes[i].FijarValor(s.Volumen((SeccionSonido)i));
+                if (volumenes[i] != null)
+                {
+                    volumenes[i].FijarValor(s.Volumen((SeccionSonido)i));
+                }
             }
             apuntado.Configurar(TextosApuntado, (int)s.ApuntadoAsistido);
             calidad.Configurar(TextosCalidad, (int)s.Calidad);

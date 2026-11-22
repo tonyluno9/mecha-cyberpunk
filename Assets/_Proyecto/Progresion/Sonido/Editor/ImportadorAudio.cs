@@ -21,6 +21,8 @@ namespace MechaCyberpunk.Progresion.Sonido.Editor
             // Las carpetas numeradas (01_UI .. 18_Radio_Musica) son de ImportarSonidos19nov/20nov, con sus reglas por duración,
             // mono/estéreo y precarga. Antes esta regla general corría al final y las dejaba todas en CompressedInMemory y mono.
             if (partes.Length == 2 && partes[0].Length > 2 && char.IsDigit(partes[0][0]) && char.IsDigit(partes[0][1]) && partes[0][2] == '_') return null;
+            // La música (Assets/Arte/Audio/Musica: MUS_MENU_PRINCIPAL) va estéreo y en Streaming: la configura ImportarMusicaMenu.
+            if (partes.Length == 2 && partes[0] == "Musica") return null;
             return partes.Length == 2 ? partes[0] : null;
         }
 

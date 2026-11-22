@@ -148,8 +148,10 @@ namespace MechaCyberpunk.Tests.Sonido
             yield return null;
             AudioSource fuente = objeto.transform.Find("Bucle_VEH_FRENO_DERRAPE").GetComponent<AudioSource>();
             Assert.IsTrue(fuente.loop);
-            float seccion = g.Volumen(SeccionSonido.General) * g.Volumen(SeccionSonido.Efectos) * g.Catalogo.Ganancia(SeccionSonido.Efectos);
+            // Los deslizadores ya los aplica el AudioMixer (grupo Efectos); la fuente lleva solo su mezcla y su volumen relativo.
+            float seccion = g.Catalogo.Ganancia(SeccionSonido.Efectos);
             Assert.AreEqual(ReglaMezclaSonidos.Para("VEH_FRENO_DERRAPE").Volumen * seccion, fuente.volume, 0.01f, "con su volumen relativo");
+            Assert.AreEqual("Efectos", fuente.outputAudioMixerGroup != null ? fuente.outputAudioMixerGroup.name : "(sin grupo)", "pasa por el grupo Efectos");
             g.DetenerBucle(bucle);
             yield return null;
             Assert.IsFalse(g.IdsSonando().Contains("VEH_FRENO_DERRAPE"), "se corta al terminar el derrape");

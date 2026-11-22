@@ -20,7 +20,8 @@ namespace MechaCyberpunk.Tests.Progresion
             Assert.AreEqual(0.8f, defecto.volumenes[(int)SeccionSonido.General], Tolerancia);
             Assert.AreEqual(0.8f, defecto.volumenes[(int)SeccionSonido.Efectos], Tolerancia);
             Assert.AreEqual(0.8f, defecto.volumenes[(int)SeccionSonido.Ambiente], Tolerancia, "T-442: el ambiente suena por defecto");
-            Assert.AreEqual(0f, defecto.volumenes[(int)SeccionSonido.Musica], Tolerancia);
+            // Música del menú (pedido de Tony): la música ya no arranca apagada.
+            Assert.AreEqual(ReglaOpciones.VolumenPorDefecto, defecto.volumenes[(int)SeccionSonido.Musica], Tolerancia);
             Assert.AreEqual(CalidadGrafica.Media, defecto.calidad, "T-978: MEDIO por defecto");
             Assert.AreEqual(0, defecto.resolucionAncho);
             Assert.IsTrue(defecto.pantallaCompleta);

@@ -1,5 +1,6 @@
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Progresion;
+using MechaCyberpunk.Progresion.Sonido;
 using MechaCyberpunk.UI.Inicio;
 using MechaCyberpunk.UI.Kit;
 using UnityEngine;
@@ -76,6 +77,8 @@ namespace MechaCyberpunk.UI.Titulo
             {
                 return actual;
             }
+            // La música del menú baja con fundido durante la carga y se apaga antes de que empiece el juego.
+            MusicaMenu.Apagar();
             GameObject raiz = new GameObject("PantallaCargando");
             DontDestroyOnLoad(raiz);
             actual = raiz.AddComponent<PantallaCargando>();
