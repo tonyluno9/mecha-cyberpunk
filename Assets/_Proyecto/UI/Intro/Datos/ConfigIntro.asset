@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77bb7c409cd14ee4b72a6c491c395b72, type: 3}
+  m_Name: ConfigIntro
+  m_EditorClassIdentifier: MechaCyberpunk.UI::MechaCyberpunk.UI.Intro.ConfigIntro
+  videoLogo: {fileID: 32900000, guid: c335c140cddc5d94c9cceda9e4bcc105, type: 3}
+  segundosMaximoPreparar: 8
+  colorFondo: {r: 0, g: 0, b: 0, a: 1}
