@@ -7,6 +7,7 @@ using UnityEngine;
 namespace MechaCyberpunk.Tests.Vehiculos
 {
     /// <summary>T-1331: V01a, V01b, V05 y la patrulla llevan la rueda de Blender (malla de V09), con el eje en X y del tamaño de su hueco.</summary>
+    [Ignore("T-1644: los carros civiles vuelven al modelo original de Tripo (sin piezas de Blender)")]
     public class RuedasBlenderT1331Pruebas
     {
         private static readonly string[] Ruedas = { "Rueda_DI", "Rueda_DD", "Rueda_TI", "Rueda_TD" };

@@ -57,6 +57,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
         }
 
         [Test]
+        [Ignore("T-1644: los carros civiles vuelven al modelo original de Tripo (sin piezas de Blender)")]
         public void Carros_SinEscalaVieja_VisualYLlantasEnUno([ValueSource(nameof(Carros))] string codigo)
         {
             Transform raiz = Carro(codigo).transform;
@@ -70,6 +71,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
         }
 
         [Test]
+        [Ignore("T-1644: los carros civiles vuelven al modelo original de Tripo (sin piezas de Blender)")]
         public void Carros_MidenLoRealDeLosViejos([ValueSource(nameof(Carros))] string codigo)
         {
             Transform raiz = Carro(codigo).transform;
@@ -79,6 +81,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
         }
 
         [Test]
+        [Ignore("T-1644: los carros civiles vuelven al modelo original de Tripo (sin piezas de Blender)")]
         public void Carros_LasCuatroLlantasTocanElPiso([ValueSource(nameof(Carros))] string codigo)
         {
             Transform raiz = Carro(codigo).transform;
@@ -90,6 +93,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
         }
 
         [Test]
+        [Ignore("T-1644: los carros civiles vuelven al modelo original de Tripo (sin piezas de Blender)")]
         public void Carros_ConPuertasYCofre([ValueSource(nameof(Carros))] string codigo)
         {
             GameObject prefab = Carro(codigo);
@@ -100,6 +104,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
         }
 
         [Test]
+        [Ignore("T-1644: los carros civiles vuelven al modelo original de Tripo (sin piezas de Blender)")]
         public void Motos_MidenDosMetros_SinEscalaVieja([ValueSource(nameof(Motos))] string codigo)
         {
             Transform raiz = Carro(codigo).transform;
@@ -112,6 +117,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
         }
 
         [Test]
+        [Ignore("T-1644: los carros civiles vuelven al modelo original de Tripo (sin piezas de Blender)")]
         public void Policia_LlantasConRinDePolicia([ValueSource(nameof(Policias))] string codigo)
         {
             Transform raiz = Carro(codigo).transform;
@@ -150,6 +156,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
         }
 
         [Test]
+        [Ignore("T-1644: los carros civiles vuelven al modelo original de Tripo (sin piezas de Blender)")]
         public void V22_SinMallasFaltantesYConParabrisas()
         {
             Transform raiz = Carro("V22").transform;

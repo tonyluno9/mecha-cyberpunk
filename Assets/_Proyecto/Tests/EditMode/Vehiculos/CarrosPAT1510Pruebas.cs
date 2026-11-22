@@ -15,7 +15,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
     /// </summary>
     public class CarrosPAT1510Pruebas
     {
-        private static readonly string[] Codigos = { "PA01", "PA02", "V22" };
+        private static readonly string[] Codigos = { "PA01", "PA02" }; // T-1644: V22 vuelve al modelo de Tripo
         private const string RutaPatrulla = "Assets/_Proyecto/Trafico/Prefabs/Patrulla.prefab";
         private const string RutaCamioneta = "Assets/_Proyecto/Trafico/Prefabs/PatrullaCamioneta.prefab";
         private const float MargenLargo = 0.12f;
@@ -177,6 +177,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
         }
 
         [Test]
+        [Ignore("T-1644: los carros civiles vuelven al modelo original de Tripo (sin piezas de Blender)")]
         public void V22_UsaElFbxNuevoYSusRuedasSeparadas()
         {
             GameObject prefab = Cargar(CarrosPAT1510.RutaPrefab("V22"));
@@ -206,6 +207,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
         }
 
         [Test]
+        [Ignore("T-1644: los carros civiles vuelven al modelo original de Tripo (sin piezas de Blender)")]
         public void Suspension_ConLaLlantaEnElPisoElAnclaQuedaAlturaDeReposo()
         {
             int revisados = 0;

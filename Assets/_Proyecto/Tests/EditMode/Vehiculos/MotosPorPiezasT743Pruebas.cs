@@ -11,6 +11,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
     /// T-743: las motos V07, V08 y C19 con dos llantas RU02 (Ruedas_T743/Rueda_Del y Rueda_Tras, cada una Direccion/Giro/Modelo), sin puertas, y con
     /// todo lo demás de antes: colliders, cámara, asiento, puntos del conductor y el caballete que ManejoMoto quita al manejar.
     /// </summary>
+    [Ignore("T-1644: los carros civiles vuelven al modelo original de Tripo (sin piezas de Blender)")]
     public class MotosPorPiezasT743Pruebas
     {
         private static readonly string[] Codigos = { "V07", "V08", "C19" };

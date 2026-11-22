@@ -57,6 +57,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
         }
 
         [Test]
+        [Ignore("T-1644: los carros civiles vuelven al modelo original de Tripo (sin piezas de Blender)")]
         public void Prefab_TieneLasPiezasConSusNombres([ValueSource(nameof(Codigos))] string codigo)
         {
             Transform raiz = Carro(codigo).transform;
@@ -78,6 +79,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
         }
 
         [Test]
+        [Ignore("T-1644: los carros civiles vuelven al modelo original de Tripo (sin piezas de Blender)")]
         public void Prefab_MismoTamanoDeAntes_ConLosPiesEnElPiso([ValueSource(nameof(Codigos))] string codigo)
         {
             Transform raiz = Carro(codigo).transform;
@@ -93,6 +95,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
         }
 
         [Test]
+        [Ignore("T-1644: los carros civiles vuelven al modelo original de Tripo (sin piezas de Blender)")]
         public void Prefab_MismosCollidersDeCubos_SinMallaDeChoque([ValueSource(nameof(Codigos))] string codigo)
         {
             Transform raiz = Carro(codigo).transform;
@@ -106,6 +109,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
         }
 
         [Test]
+        [Ignore("T-1644: los carros civiles vuelven al modelo original de Tripo (sin piezas de Blender)")]
         public void SinPuertas_NiPiezasNiScriptsFaltantes([ValueSource(nameof(Codigos))] string codigo)
         {
             // T-1380/T-1397 (19-nov, a propósito): V01a, V01b y V05 volvieron a tener puertas y cofre con bisagra (PuertasCarro); antes (T-972) no tenían.
@@ -131,6 +135,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
         }
 
         [Test]
+        [Ignore("T-1644: los carros civiles vuelven al modelo original de Tripo (sin piezas de Blender)")]
         public void Puertas_SinVidrio_ConMaterialesDeLasPiezas([ValueSource(nameof(Codigos))] string codigo)
         {
             Transform visual = Carro(codigo).transform.Find("Visual_T511");
@@ -149,6 +154,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
         }
 
         [Test]
+        [Ignore("T-1644: los carros civiles vuelven al modelo original de Tripo (sin piezas de Blender)")]
         public void Ruedas_CadaLlantaTieneElPivoteEnSuCentroYElRadioDeLaTabla([ValueSource(nameof(Codigos))] string codigo)
         {
             Transform raiz = Carro(codigo).transform;
@@ -167,6 +173,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
         }
 
         [Test]
+        [Ignore("T-1644: los carros civiles vuelven al modelo original de Tripo (sin piezas de Blender)")]
         public void Ruedas_LasCuatroLlevanElComponenteConLasDelanterasParaDoblar([ValueSource(nameof(Codigos))] string codigo)
         {
             GameObject carro = Carro(codigo);
@@ -219,6 +226,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
         }
 
         [Test]
+        [Ignore("T-1644: los carros civiles vuelven al modelo original de Tripo (sin piezas de Blender)")]
         public void Trafico_LosCarrosDeLaCalleHeredanLasPiezas([Values("V01a", "V01b")] string codigo)
         {
             GameObject prefab = Cargar("Assets/_Proyecto/Trafico/Prefabs/CarroTrafico_" + codigo + ".prefab");
@@ -261,6 +269,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
         }
 
         [Test]
+        [Ignore("T-1644: los carros civiles vuelven al modelo original de Tripo (sin piezas de Blender)")]
         public void LosOtrosCarros_LlevanLasRuedasDeBlenderT1312([Values("V02", "V03", "V04", "V06", "V09", "V10")] string codigo)
         {
             // T-1312: estos carros ya llevan carrocería y ruedas separadas de Blender (antes seguían con su modelo de una malla).

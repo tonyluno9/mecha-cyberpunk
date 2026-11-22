@@ -12,6 +12,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
     /// T-940: las llantas RU01 de V01a, V01b, V05 y la patrulla llenan el paso de rueda. Captura lateral por carro
     /// (docs/capturas/ui-ruedas-&lt;carro&gt;.png con CAPTURAR_UI=1) y comprueba que la llanta toca el piso y que RuedasVisualesCarro.Radio coincide.
     /// </summary>
+    [Ignore("T-1644: los carros civiles vuelven al modelo original de Tripo (sin piezas de Blender)")]
     public class RuedasPorCarroT940Pruebas
     {
         private static readonly string[] Rutas =
