@@ -56,6 +56,8 @@ namespace MechaCyberpunk.Personaje.Interaccion
 
         /// <summary>Se dispara cuando el jugador pulsa E dentro de un montable que todavía no puede dejar.</summary>
         public event Action BajarNegado;
+        /// <summary>T-1628: True el cuadro en que se pulsó E. Lo usa quien se levanta con E (sentado), porque aquí no hay candidato con el control suspendido.</summary>
+        public bool PulsoInteractuar => interactuar != null && interactuar.action.WasPressedThisFrame();
 
         private void Awake()
         {

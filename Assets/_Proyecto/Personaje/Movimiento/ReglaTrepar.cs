@@ -63,6 +63,15 @@ namespace MechaCyberpunk.Personaje.Movimiento
             return false;
         }
 
+        /// <summary>T-1628: pasa a colgado (sin tiempo propio: lo cuenta TreparAPie).</summary>
+        public void IniciarColgado()
+        {
+            Estado = EstadoTrepar.Colgado;
+            Progreso = 0f;
+            tiempoAgarre = 0f;
+            segundosAgarre = 0f;
+        }
+
         public void Soltar()
         {
             Estado = EstadoTrepar.Libre;

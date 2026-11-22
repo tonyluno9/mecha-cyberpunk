@@ -20,6 +20,7 @@ TODAS, en orden, con estas reglas:
 ---
 
 ## T1. Brazos del E18 en pose T (avatar)
+**HECHA (22-nov, sesión B, T-1626 f5ecbbf): avatar del E18 en T por código; brazos del avatar 0.0/0.0°; E18 caminando en Play (docs/capturas/_tareas/T1).**
 Problema: los brazos del avatar del E18 quedan ~20° abajo de la pose T desde que Blender corrigió su rig. Tony NO lo hace a mano.
 Cómo:
 1. Script de editor que reimporte Assets/Arte/Personajes/E18_EliteNova/E18_EliteNova_a.fbx y rehaga su avatar desde la T-pose: leer el
@@ -30,6 +31,7 @@ Cómo:
 Comprobar: en Play, el E18 camina, corre y golpea con los brazos a su altura, sin codos metidos en el torso. Pasa la prueba de brazos del E18.
 
 ## T2. Conductor robado: huir cuando termina su animación
+**HECHA (22-nov, sesión B, T-1627 4d9df2b): el conductor huye al terminar su clip; usa NPC_SacadoDelCarro_Corto (3.04 s); pasan las pruebas de robo T705 y T1335 (la de T1335 miraba solo 1.6 s; el clip del conductor arranca 0.75 s después del del jugador).**
 Problema: al robar un carro, el script de tráfico hace huir al conductor a los ~3 s y su clip PJ01_Conductor_SerSacado dura 7.25 s.
 Cómo: en el script de tráfico (el código es de Tony, se puede cambiar), que el conductor huya cuando termine el clip (leer su duración o un evento
 al final). Si Blender ya entregó la versión corta (~3 s), usarla y ajustar el tiempo a ella.
@@ -37,6 +39,7 @@ Comprobar: robar un carro: lo jalan, cae, se levanta y huye, sin cortar la anima
 del conductor: revisar si mira el estado o el clip correcto).
 
 ## T3. Estados sin disparador
+**HECHA (22-nov, sesión B, T-1622 y T-1628 f9fea2e): sentarse (Banca_Sentable, E), camilla al despertar, colgarse de bordes a 1.8-2.3 m y NPC que llama a la policía (T11). Falta colocar bancas y el punto Clinica_Camilla en el mapa (docs/para-sesion-A.md).**
 Problema: sentarse, camilla, colgarse y "NPC llama a la policía" tienen su estado en el controlador pero nada los activa.
 Cómo:
 - Sentarse: el jugador junto a una banca o silla interactuable (E) se sienta; NPCs sentados en las bancas de las plazas.
@@ -62,6 +65,7 @@ Comprobar: en Play, un civil y un enemigo parados pegados a un poste, un farol, 
 a una pared o carro con alguien detrás: no le pega. Captura de cada caso.
 
 ## T5. Voces de los SKULLS
+**HECHA (22-nov, sesión B, T-1623 f3a02f3): 38 WAV, 13 IDs SKU_*, cola sin dos a la vez, 3D a 25 m en el grupo Voces, baja la música; los 13 momentos sonaron en Play ([VozSkulls]).**
 Archivos: 37 WAV en "3d sonidos/19_Voces/SKULLS/" (leer su LEEME.md e INDICE_SKULLS.csv). "3d sonidos" sigue en .gitignore.
 Cómo:
 1. Copiar a Assets/Arte/Audio/19_Voces/SKULLS/ (Git LFS). Importar: 3D, mono, Decompress On Load, grupo Voces del AudioMixer.
@@ -92,6 +96,7 @@ Cómo:
 Comprobar: diagnóstico de clips y controladores en 0 problemas, y cada clip nuevo visto en Play.
 
 ## T7. Cápsula de caída de Nova (CP01) — ver documento propio
+**HECHA (22-nov, sesión B, T-1621 9008cd1): cápsula CP01 con holograma; E16, E17 y dron vistos en Play (docs/capturas/_tareas/T7). Drones de persecución aún sin enganchar a la cápsula.**
 El chat de Blender hizo la cápsula y Tony la aprobó. TODO el detalle (archivos, escalas por enemigo, línea de tiempo, efecto holográfico,
 implementación y pruebas) está en docs/tareas/pendientes/T-capsulas-caida-nova-22nov.md: sigue ese documento al pie de la letra.
 Resumen: los Nova (E15, E16, E18, perro E17 y drones DR01, DR02_a, DR04_a, E13) llegan en la cápsula CP01 escalada a su tamaño: cae, rebota,
@@ -100,6 +105,7 @@ y pasa a su IA. Se combina con T8: el director de respuesta decide CUÁNDO y QUI
 Ya no se usan las imágenes CP01/CP02 del chat de arte ni Tripo para esto.
 
 ## T8. Escalada lógica de enemigos: sin oleadas infinitas, con jerarquía y tiempos
+**HECHA (22-nov, sesión B, T-1620 e1f849a): director de respuesta en Core/Respuesta con ConfigRespuesta; registro en docs/capturas/_tareas/T8 (patrulla repuesta ~30 s, máx. 3, jerarquía en orden, Nova de a uno). El tope total de 8 lo llenan las unidades bajas: si se quiere que lleguen más Nova, bajar topes de policía en ConfigRespuesta.**
 Problema: llegan demasiados enemigos de golpe. Al destruir una patrulla empiezan a llegar patrullas sin fin; con Nova es peor: cae uno, lo matas y
 empiezan a caer infinitos, y los perros salen todos juntos. No tiene lógica: en la vida real no mandan 1000 soldados; mandan uno, y si no te
 detiene, mandan otro, cada vez más fuerte.
@@ -149,6 +155,7 @@ Comprobar: capturas de las 4 esquinas, las 6 puertas y una vista aérea completa
 varios puntos.
 
 ## T10. El juego sigue la historia nueva (con huecos para las cinemáticas de IA)
+**HECHA (22-nov, sesión B, T-1625 910f567): recorrido de 19 pasos con cinemáticas pendientes C01-C09. Visto en Play: C01 dura lo previsto, paso 3 completo, paso 12 protegido (calor 0, la patrulla se va manejando). No comprobado en Play: VideoClip de prueba, pasos 15-19 y CONTINUARÁ (el paso 14 espera hablar con el Hacker). Marcadores a colocar en docs/para-sesion-A.md.**
 Detalle completo en docs/tarea-historia-en-juego.md (léelo entero antes de empezar). Resumen:
 1. Sistema `CinematicaPendiente` + `DatosCinematica`: en cada momento donde irá un video de IA, pantalla negra "CINEMÁTICA · <NOMBRE>" con
    lo que pasa y una barra, que dura exactamente lo que durará el video y se puede saltar; si se le pone el VideoClip, reproduce el video.
@@ -161,6 +168,7 @@ Detalle completo en docs/tarea-historia-en-juego.md (léelo entero antes de empe
 Comprobar: lo de la sección 10.4 del documento de detalle.
 
 ## T11. NPCs vivos: platican de frente y reaccionan a los balazos y a las muertes
+**HECHA (22-nov, sesión B, T-1622 d9bc6f5): platican de frente (0° de desvío medido) alternando clips, oyen balazos por radio, ven muertes, huyen, se agachan, se calman y algunos llaman a la policía. No hay voz de miedo en el catálogo: gritan con NPC_*_DOLOR.**
 Problema: los NPCs que platican se ponen de espaldas entre ellos y se ve rarísimo; y no reaccionan a los balazos ni a que maten a alguien a su lado.
 Cómo:
 1. PLATICAR DE FRENTE: al formar una pareja o grupo que platica, cada NPC se gira para mirar al otro (en grupo, hacia el centro), con una
@@ -180,6 +188,7 @@ Comprobar en Play: parejas y grupos platicando de frente en las plazas, el tiang
 (huyen y se agachan); matar a un NPC frente a otro (el otro grita y huye); esperar a que se calmen.
 
 ## T12. Los SKULLS molestan a los civiles
+**PARCIAL (22-nov, sesión B, T-1624 975ff84): el sistema de escenas y bullying está hecho, pero en Play no se pudo ver un bullying dinámico completo: los 25 SKULLS de la ciudad ya están en sus grupos de acoso fijos (GrupoAcoso, que sí molestan a un civil) y la prueba con SNAKES terminó cuando atacaron al jugador. Forzar con DirectorEscenasBarrio.ForzarEscena("bully_snakes_senora") lejos de ellos.**
 Problema: los pandilleros solo esperan al jugador; deberían hacer la vida difícil a la gente del barrio, como parte de la historia.
 Cómo:
 1. De vez en cuando (cada 1–3 min por grupo, solo en su territorio y si el jugador está cerca para verlo), un pandillero o dos eligen a un civil
@@ -241,6 +250,7 @@ Cómo:
 Comprobar: capturas antes y después en los mismos puntos (K20–K34), lado a lado con su referencia _final, y tabla de fps.
 
 ## T15. Vida entre NPCs: diálogos con subtítulos, bullying de las pandillas y escenas del barrio (amplía T12)
+**HECHA (22-nov, sesión B, T-1624 975ff84): subtítulos (panel y opción en el menú), 13 guiones EscenaBarrio y docs/dialogos-barrio.md; escenas normales completas en Play. El bullying dinámico, como en T12.**
 Objetivo: que el barrio se sienta vivo y que se note que los SKULLS y los SNAKES abusan de la gente normal.
 Cómo:
 1. SUBTÍTULOS: sistema de subtítulos para cualquier línea de voz del mundo (abajo al centro, letra fina, nombre o tipo del que habla en color

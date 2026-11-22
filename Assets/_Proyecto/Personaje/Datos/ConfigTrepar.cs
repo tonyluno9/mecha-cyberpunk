@@ -51,6 +51,36 @@ namespace MechaCyberpunk.Personaje
         [Tooltip("Desnivel máximo entre los puntos de apoyo de los pies arriba (m). Un pretil delgado no da apoyo.")]
         [Min(0.01f)] [SerializeField] private float toleranciaApoyo = 0.15f;
 
+        [Header("Colgarse (T-1628)")]
+        [Tooltip("Si es verdadero, un borde alto a la altura de las manos cuelga al jugador (PJ01_Colgado_Idle) en vez de treparse de un tirón.")]
+        [SerializeField] private bool colgarseActivo = true;
+
+        [Tooltip("Altura mínima del borde sobre los pies para colgarse de él (m). Más bajo se trepa directo.")]
+        [Min(0.5f)] [SerializeField] private float alturaMinimaColgarse = 1.8f;
+
+        [Tooltip("Altura de las manos sobre los pies en la pose colgada (m): los pies quedan esta distancia bajo el borde.")]
+        [Min(0.5f)] [SerializeField] private float alturaManosColgado = 2f;
+
+        [Tooltip("Separación de los pies a la pared al colgarse (m).")]
+        [Min(0f)] [SerializeField] private float distanciaParedColgado = 0.2f;
+
+        [Tooltip("Lo que tarda en llegar a la pose colgada desde donde saltó (s).")]
+        [Min(0.05f)] [SerializeField] private float segundosEntradaColgado = 0.35f;
+
+        [Tooltip("Tiempo colgado antes de aceptar subir o soltarse (s).")]
+        [Min(0f)] [SerializeField] private float segundosMinimosColgado = 0.5f;
+
+        [Tooltip("Lo que dura subir al borde desde colgado (s): PJ01_Colgado_Subir (116 cuadros a 30 fps) a 1.5x.")]
+        [Min(0.2f)] [SerializeField] private float segundosSubirDeColgado = 2.4f;
+
+        public bool ColgarseActivo => colgarseActivo;
+        public float AlturaMinimaColgarse => alturaMinimaColgarse;
+        public float AlturaManosColgado => alturaManosColgado;
+        public float DistanciaParedColgado => distanciaParedColgado;
+        public float SegundosEntradaColgado => segundosEntradaColgado;
+        public float SegundosMinimosColgado => segundosMinimosColgado;
+        public float SegundosSubirDeColgado => segundosSubirDeColgado;
+
         public float VelocidadEscalera => velocidadEscalera;
         public float VelocidadTubo => velocidadTubo;
         public float AlturaMinimaAgarre => alturaMinimaAgarre;

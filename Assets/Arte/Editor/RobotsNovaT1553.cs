@@ -113,6 +113,8 @@ namespace MechaCyberpunk.Arte.Editor
             sb.AppendLine("  brazos tras rehacer (elevación L/R): " + Formato(despues) + (BrazosEnT(despues) ? " (en T)" : " (FUERA DE T: hacer a mano Rig, Configure, Pose, Enforce T-Pose, Apply en E18_EliteNova_a.fbx)"));
             Avatar avatar = AssetDatabase.LoadAllAssetsAtPath(ClipsRobotsNovaT1553.RutaModeloE18).OfType<Avatar>().FirstOrDefault();
             sb.AppendLine("  avatar: " + (avatar == null ? "NO HAY" : (avatar.isValid && avatar.isHuman ? "válido y humanoide" : "INVÁLIDO")));
+            // T-1626 (T1): el modelo trae los brazos ~20° abajo; se fuerza la pose T en la descripción (Enforce T-Pose por código).
+            sb.Append(AvatarE18EnT1626.ForzarT());
             return sb.ToString();
         }
 

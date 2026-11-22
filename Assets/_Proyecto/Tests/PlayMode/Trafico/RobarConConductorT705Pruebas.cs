@@ -121,6 +121,14 @@ namespace MechaCyberpunk.Tests.Trafico
             }
         }
 
+        // T-1627 (T2): con el clip completo del conductor (sacado, cae, se levanta) huye cuando termina el clip; si no hay clip, los tiempos de siempre.
+        private static float EsperaHuida(GameObject conductor, float sinClip)
+        {
+            ConductorRobado c = conductor != null ? conductor.GetComponent<ConductorRobado>() : null;
+            float falta = c != null ? c.SegundosHastaHuir : -1f;
+            return falta > 0f ? falta + 0.3f : sinClip;
+        }
+
         private static IEnumerator Esperar(float segundos)
         {
             float fin = Time.time + segundos;
@@ -207,7 +215,7 @@ namespace MechaCyberpunk.Tests.Trafico
             Assert.Less(maximaAltura, 0.35f, "Va por el suelo, no vuela (" + maximaAltura.ToString("F2") + " m)");
             Assert.IsTrue(fases.Tirado, "Sigue tirado un momento");
             Capturar(conductor.transform, "s1c-T-705-conductor-en-el-suelo.png");
-            yield return Esperar(ConductorRobado.SegundosCaido + ConductorRobado.SegundosLevantarse);
+            yield return Esperar(EsperaHuida(conductor, ConductorRobado.SegundosCaido + ConductorRobado.SegundosLevantarse));
             Assert.IsFalse(fases.Tirado, "Se levantó");
             Assert.IsTrue(fases.Fase == ConductorRobado.FaseConductor.Asustado || fases.Fase == ConductorRobado.FaseConductor.Huyendo, "Y está asustado o ya huye");
             Capturar(conductor.transform, "s1c-T-705-conductor-asustado.png");
@@ -221,7 +229,7 @@ namespace MechaCyberpunk.Tests.Trafico
             Assert.IsTrue(Robar());
             GameObject conductor = GameObject.Find(CarroTrafico.NombreConductorRobado);
             Assert.IsNotNull(conductor);
-            yield return Esperar(ConductorRobado.SegundosCaido + ConductorRobado.SegundosLevantarse + 0.5f);
+            yield return Esperar(EsperaHuida(conductor, ConductorRobado.SegundosCaido + ConductorRobado.SegundosLevantarse) + 0.5f);
             Assert.IsNotNull(conductor.GetComponent<ConductorHuye>(), "Ya no llama por teléfono: al levantarse sale corriendo");
             Assert.AreEqual(0f, real.Valor, 0.001f, "Ningún policía lo vio: no hay persecución");
         }
@@ -238,7 +246,7 @@ namespace MechaCyberpunk.Tests.Trafico
             float maxima = 0f;
             float ultima = 0f;
             bool huyo = false;
-            float fin = Time.time + ConductorRobado.SegundosCaido + ConductorRobado.SegundosLevantarse + 4f;
+            float fin = Time.time + EsperaHuida(conductor, ConductorRobado.SegundosCaido + ConductorRobado.SegundosLevantarse) + 4f;
             while (conductor != null && Time.time < fin)
             {
                 maxima = Mathf.Max(maxima, conductor.transform.position.y);
