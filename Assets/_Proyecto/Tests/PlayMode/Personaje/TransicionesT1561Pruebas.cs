@@ -59,6 +59,7 @@ namespace MechaCyberpunk.Tests.Personaje
         private IEnumerator Correr(float segundos)
         {
             Press(teclado.wKey);
+            yield return null; // dos Press en el mismo cuadro: el segundo estado del teclado tapaba la W
             Press(teclado.leftShiftKey);
             yield return Esperar(segundos);
         }
@@ -172,17 +173,16 @@ namespace MechaCyberpunk.Tests.Personaje
             pistola.SacarAntesDeDisparar = true;
             Assert.IsFalse(visual.ArmaEnMano, "La pistola está guardada");
             int disparos = 0;
-            pistola.Disparo += () => disparos++;
+            bool poseAlDisparar = false;
+            pistola.Disparo += () => { disparos++; poseAlDisparar = visual.ArmaEnPose; };
             bool vioSacar = false;
 
             float clic = Time.time;
             yield return Clic();
             float tiro = -1f;
-            bool poseAntesDelTiro = false;
             while (Time.time < clic + 2f && tiro < 0f)
             {
                 vioSacar |= ArribaEn("PistolaSacar");
-                poseAntesDelTiro = visual.ArmaEnPose;
                 yield return null;
                 if (disparos > 0)
                 {
@@ -192,7 +192,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.IsTrue(vioSacar, "Primero juega Pistola_Sacar");
             Assert.Greater(tiro, 0f, "El tiro termina saliendo");
             Assert.Greater(tiro - clic, 0.2f, "No sale en el frame del clic (" + (tiro - clic).ToString("F2") + " s)");
-            Assert.IsTrue(poseAntesDelTiro || tiro - clic >= ReglasTransicionesT1561.SegundosMaximosSacar - 0.1f, "El disparo real sale con el arma ya en la pose");
+            Assert.IsTrue(poseAlDisparar || tiro - clic >= ReglasTransicionesT1561.SegundosMaximosSacar - 0.1f, "El disparo real sale con el arma ya en la pose");
             Assert.AreEqual(1, disparos, "Un clic, un tiro");
         }
 
@@ -264,6 +264,7 @@ namespace MechaCyberpunk.Tests.Personaje
 
             float clic = Time.time;
             yield return Clic();
+            yield return null; // el disparo de las armas especiales se procesa en LateUpdate
             Assert.IsTrue(especiales.GranadaEnLaMano, "Con el controlador de T-1561 la granada espera al cuadro del lanzamiento (¿se corrió TransicionesT1561.Aplicar?)");
             yield return null;
             Assert.IsNull(especiales.UltimoProyectil, "No sale al apretar");

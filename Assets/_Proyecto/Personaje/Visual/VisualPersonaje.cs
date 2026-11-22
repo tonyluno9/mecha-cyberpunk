@@ -540,13 +540,22 @@ namespace MechaCyberpunk.Personaje.Visual
         {
             // T-1561: con el clip NPC_SacadoDelCarro_Huir configurado, arranca 18 cuadros (0.75 s) después que el del jugador y se juega a su rapidez (sacado, cae, se levanta y huye).
             ConfigClipsNpcT1561 npc = ConfigClipsNpcT1561.Actual;
-            if (npc != null && npc.SacadoDelCarroHuir != null && animador != null && isActiveAndEnabled)
+            if (npc != null && npc.SacadoDelCarroHuir != null && animador != null)
             {
                 if (GetComponent<ReproductorClipUnico>() == null)
                 {
                     gameObject.AddComponent<ReproductorClipUnico>();
                 }
-                StartCoroutine(SacarConductorConRetraso(npc.SacadoDelCarroHuir));
+                // Con Update activo espera el retraso (temporizador en Update, sin corrutina); si el objeto está apagado arranca de una vez (como antes).
+                if (isActiveAndEnabled)
+                {
+                    clipSacadoPendiente = npc.SacadoDelCarroHuir;
+                    sacadoEn = Time.time + ReglasTransicionesT1561.SegundosRetrasoConductor;
+                }
+                else
+                {
+                    GetComponent<ReproductorClipUnico>().Reproducir(animador, npc.SacadoDelCarroHuir, 1f);
+                }
                 return;
             }
             ConfigAnimacionParkour config = ConfigAnimacionParkour.Actual;
@@ -562,19 +571,22 @@ namespace MechaCyberpunk.Personaje.Visual
             reproductor.Reproducir(animador, config.ConductorSerSacado, config.ConductorSerSacado.length / segundos);
         }
 
-        private System.Collections.IEnumerator SacarConductorConRetraso(AnimationClip clip)
+        private AnimationClip clipSacadoPendiente;
+        private float sacadoEn;
+
+        private void AvanzarSacadoPendiente()
         {
-            yield return new WaitForSeconds(ReglasTransicionesT1561.SegundosRetrasoConductor);
-            if (animador == null)
+            if (clipSacadoPendiente == null || Time.time < sacadoEn)
             {
-                yield break;
+                return;
             }
+            AnimationClip clip = clipSacadoPendiente;
+            clipSacadoPendiente = null;
             ReproductorClipUnico reproductor = GetComponent<ReproductorClipUnico>();
-            if (reproductor == null)
+            if (reproductor != null && animador != null)
             {
-                reproductor = gameObject.AddComponent<ReproductorClipUnico>();
+                reproductor.Reproducir(animador, clip, 1f);
             }
-            reproductor.Reproducir(animador, clip, 1f);
         }
 
         /// <summary>Lo levanta (igual que <see cref="Caido"/> = false).</summary>
@@ -1042,6 +1054,7 @@ namespace MechaCyberpunk.Personaje.Visual
                 LeerEstadoDelPadre(Time.deltaTime);
             }
             ActualizarModoT1561();
+            AvanzarSacadoPendiente();
             Aplicar();
             CorregirArmaEnMano();
             if (congelado)
