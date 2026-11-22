@@ -362,6 +362,7 @@ música del menú con su fade y aparece el menú. Se puede saltar con Enter/clic
 Comprobar: Nueva partida → levantarse → caminar → los SKULLS salen del callejón de al lado y pasa todo como arriba. Capturas.
 
 ## T22. Charcos y texturas de calles y banquetas en TODA la ciudad
+**HECHA (22-nov noche, merge 88a04e9):** la causa: 92 charcos eran decals T508_CharcoSutil casi invisibles que sí sonaban a agua; pasaron al agua de T-1503 (mismo objeto para ver y sonar), 6 tapados por losas subidos, 5 nuevos (callejón y calle de la casa). 400 materiales sin textura → 0 (metal, revoque, lona, madera según tipo, conservando color). 25 bordillos con T09 en las banquetas de cubo. El asfalto de las calles ya era uniforme (T535). CallesTexturasT1642Pruebas 5/5. Capturas antes/después en docs/capturas/_tareas/T22/. Pendiente: ~5 charcos quedan bajo carros estacionados o puestos; no se probó el sonido en Play.
 1. Charcos: en muchas calles (por ejemplo la de la casa) no se ven aunque suena el agua al pisar. Recorre todas las calles y haz que los
    charcos se vean en todas donde suena agua (mismo sistema que en las calles donde sí se ven bien); y que donde no se ve charco tampoco suene
    agua.
