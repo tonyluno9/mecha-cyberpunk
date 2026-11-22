@@ -4210,3 +4210,197 @@ The FIRST attached image is the target look of our game: match its illustrated a
 ```
 Use the FIRST attached image for the art style and color mood of our game, and the other images (our previous city maps) for the illustrated top-down map style. Our city has only 4 districts inside a tall wall that surrounds it completely; there are no empty lots or gaps between districts: blocks touch each other and the style changes gradually. Draw the final full-screen city map seen from directly above, like the pause-menu map of an open-world game, at night colors. Layout: NOVA top-left (cold blue, white towers, the big tower and a small refinery), NEÓN ALTO top-right (magenta, dense tall buildings and the casino), SUBURBIOS bottom-left (warm orange, small attached houses), EL MERCADO bottom-right (yellow, the tianguis street and a plaza). Short blocks touching each other everywhere with no gaps, streets, alleys and a few plazas. A thick wall surrounds the whole city with 6 gates spread along it and watchtowers at the four corners. OUTSIDE the wall there is nothing: plain dark. The ONLY text on the map, in thin capital letters for the districts and small thin labels with small round icons for the places, spelled exactly: "NOVA", "NEÓN ALTO", "SUBURBIOS", "EL MERCADO", "Casa", "Doc", "Tino", "El Canepa", "Tianguis", "Mercado de armas", "Casino VivaCoin", "Torre Nova". Casa, Doc, Tino and El Canepa are close to each other inside Suburbios (El Canepa across the street from Casa). No legend, no compass text, no other words.
 ```
+
+
+# Parte 35 — Pedido 21-nov mediodía: fachadas con entrada, mapa real (desde capturas del juego), refinería y detalles
+
+Lote: `lote_21nov_c.json` · script: `generar_21nov_c.ps1` (fase 1 fachadas, fase 2 mapa real, fase 3 refinería y detalles).
+
+## FC01a — FC01_Clandestino_a (fase 1)
+- **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `K05_EsquinaBarrio.png` · **Medida:** 10 × 12 × 7 m · **Tripo:** Smart Mesh P2 · 12,000 caras · 2K
+
+```
+Use the attached image ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents and magenta neon; Nova is clean white with cold blue light); do not copy the scene. Original design, nothing copied. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: A complete building: the full front facade, the roof and one side wall clearly visible. The entrance is a real OPEN doorway with visible depth, about 2.5 m high and 2 m wide, with a dark interior inside it (no door blocking it), so a player can walk in. an underground fight club: an old two-story warehouse of concrete and corrugated metal, windows boarded up, the open entrance with concrete steps going DOWN into the dark, a metal shutter half raised above it, a red bulb over the door, thick cables, abstract graffiti shapes, a red neon sign shaped like a fist (no letters).
+```
+
+## FC02a — FC02_Bar_a (fase 1)
+- **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `K05_EsquinaBarrio.png` · **Medida:** 8 × 10 × 7 m · **Tripo:** Smart Mesh P2 · 12,000 caras · 2K
+
+```
+Use the attached image ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents and magenta neon; Nova is clean white with cold blue light); do not copy the scene. Original design, nothing copied. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: A complete building: the full front facade, the roof and one side wall clearly visible. The entrance is a real OPEN doorway with visible depth, about 2.5 m high and 2 m wide, with a dark interior inside it (no door blocking it), so a player can walk in. a two-story neighborhood cyberpunk bar: the open entrance with saloon-style swinging half doors pushed open and a strip curtain, a window glowing with warm light, a magenta and turquoise neon sign shaped like a cocktail glass (no letters), a corrugated metal awning, a balcony on the upper floor.
+```
+
+## FC03a — FC03_MercadoNegro_a (fase 1)
+- **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `K10_CalleMercado.png` · **Medida:** 8 × 10 × 7 m · **Tripo:** Smart Mesh P2 · 12,000 caras · 2K
+
+```
+Use the attached image ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents and magenta neon; Nova is clean white with cold blue light); do not copy the scene. Original design, nothing copied. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: A complete building: the full front facade, the roof and one side wall clearly visible. The entrance is a real OPEN doorway with visible depth, about 2.5 m high and 2 m wide, with a dark interior inside it (no door blocking it), so a player can walk in. a discreet two-story black market front that looks like an abandoned shop: a metal shutter raised halfway, and behind it an open entrance lit with green light inside, security cameras, metal grilles on the windows, crates stacked by the door, a small green neon sign with an abstract shape (no letters).
+```
+
+## K20F — K20_Suburbios_CallePrincipal_final (fase 2)
+- **Adjuntar:** `K20_Suburbios_CallePrincipal_juego.png`, `K01_Barrio_HUDnuevo.png`
+
+```
+The FIRST attached image is a screenshot of our game as it is built now. Keep EXACTLY its camera angle, framing and layout: the same position of streets, sidewalks, buildings, poles, the wall and the existing signs (such as "EL CANEPA"); do not move or remove buildings and do not invent new streets. The SECOND attached image is the target quality and art style: redraw the screenshot as a finished illustration at that level, as if it were a polished screenshot of the same game. Add detail: illustrated thin outlines; facades with texture, windows, metal shutters, air conditioning units, water tanks, potted plants, small neon signs without text, corrugated metal awnings, abstract graffiti; cables hanging between poles and houses; cars parked along the curb; people walking and chatting; small litter. Wet ground with puddles reflecting orange sodium light and magenta and turquoise neon; light blue fog. REMOVE the grey text bar at the top of the screenshot and REMOVE the player character in the foreground. Behind the wall only the night sky. No HUD, no new text except signs that already exist. 
+```
+
+## K21F — K21_Suburbios_Callejon_final (fase 2)
+- **Adjuntar:** `K21_Suburbios_Callejon_juego.png`, `K01_Barrio_HUDnuevo.png`
+
+```
+The FIRST attached image is a screenshot of our game as it is built now. Keep EXACTLY its camera angle, framing and layout: the same position of streets, sidewalks, buildings, poles, the wall and the existing signs (such as "EL CANEPA"); do not move or remove buildings and do not invent new streets. The SECOND attached image is the target quality and art style: redraw the screenshot as a finished illustration at that level, as if it were a polished screenshot of the same game. Add detail: illustrated thin outlines; facades with texture, windows, metal shutters, air conditioning units, water tanks, potted plants, small neon signs without text, corrugated metal awnings, abstract graffiti; cables hanging between poles and houses; cars parked along the curb; people walking and chatting; small litter. Wet ground with puddles reflecting orange sodium light and magenta and turquoise neon; light blue fog. REMOVE the grey text bar at the top of the screenshot and REMOVE the player character in the foreground. Behind the wall only the night sky. No HUD, no new text except signs that already exist. 
+```
+
+## K22F — K22_Suburbios_ClinicaTaller_final (fase 2)
+- **Adjuntar:** `K22_Suburbios_ClinicaTaller_juego.png`, `K01_Barrio_HUDnuevo.png`
+
+```
+The FIRST attached image is a screenshot of our game as it is built now. Keep EXACTLY its camera angle, framing and layout: the same position of streets, sidewalks, buildings, poles, the wall and the existing signs (such as "EL CANEPA"); do not move or remove buildings and do not invent new streets. The SECOND attached image is the target quality and art style: redraw the screenshot as a finished illustration at that level, as if it were a polished screenshot of the same game. Add detail: illustrated thin outlines; facades with texture, windows, metal shutters, air conditioning units, water tanks, potted plants, small neon signs without text, corrugated metal awnings, abstract graffiti; cables hanging between poles and houses; cars parked along the curb; people walking and chatting; small litter. Wet ground with puddles reflecting orange sodium light and magenta and turquoise neon; light blue fog. REMOVE the grey text bar at the top of the screenshot and REMOVE the player character in the foreground. Behind the wall only the night sky. No HUD, no new text except signs that already exist. 
+```
+
+## K23F — K23_Mercado_Tianguis_final (fase 2)
+- **Adjuntar:** `K23_Mercado_Tianguis_juego.png`, `K01_Barrio_HUDnuevo.png`
+
+```
+The FIRST attached image is a screenshot of our game as it is built now. Keep EXACTLY its camera angle, framing and layout: the same position of streets, sidewalks, buildings, poles, the wall and the existing signs (such as "EL CANEPA"); do not move or remove buildings and do not invent new streets. The SECOND attached image is the target quality and art style: redraw the screenshot as a finished illustration at that level, as if it were a polished screenshot of the same game. Add detail: illustrated thin outlines; facades with texture, windows, metal shutters, air conditioning units, water tanks, potted plants, small neon signs without text, corrugated metal awnings, abstract graffiti; cables hanging between poles and houses; cars parked along the curb; people walking and chatting; small litter. Wet ground with puddles reflecting orange sodium light and magenta and turquoise neon; light blue fog. REMOVE the grey text bar at the top of the screenshot and REMOVE the player character in the foreground. Behind the wall only the night sky. No HUD, no new text except signs that already exist. 
+```
+
+## K24F — K24_Mercado_Plaza_final (fase 2)
+- **Adjuntar:** `K24_Mercado_Plaza_juego.png`, `K01_Barrio_HUDnuevo.png`
+
+```
+The FIRST attached image is a screenshot of our game as it is built now. Keep EXACTLY its camera angle, framing and layout: the same position of streets, sidewalks, buildings, poles, the wall and the existing signs (such as "EL CANEPA"); do not move or remove buildings and do not invent new streets. The SECOND attached image is the target quality and art style: redraw the screenshot as a finished illustration at that level, as if it were a polished screenshot of the same game. Add detail: illustrated thin outlines; facades with texture, windows, metal shutters, air conditioning units, water tanks, potted plants, small neon signs without text, corrugated metal awnings, abstract graffiti; cables hanging between poles and houses; cars parked along the curb; people walking and chatting; small litter. Wet ground with puddles reflecting orange sodium light and magenta and turquoise neon; light blue fog. REMOVE the grey text bar at the top of the screenshot and REMOVE the player character in the foreground. Behind the wall only the night sky. No HUD, no new text except signs that already exist. 
+```
+
+## K25F — K25_Mercado_Armas_final (fase 2)
+- **Adjuntar:** `K25_Mercado_Armas_juego.png`, `K01_Barrio_HUDnuevo.png`
+
+```
+The FIRST attached image is a screenshot of our game as it is built now. Keep EXACTLY its camera angle, framing and layout: the same position of streets, sidewalks, buildings, poles, the wall and the existing signs (such as "EL CANEPA"); do not move or remove buildings and do not invent new streets. The SECOND attached image is the target quality and art style: redraw the screenshot as a finished illustration at that level, as if it were a polished screenshot of the same game. Add detail: illustrated thin outlines; facades with texture, windows, metal shutters, air conditioning units, water tanks, potted plants, small neon signs without text, corrugated metal awnings, abstract graffiti; cables hanging between poles and houses; cars parked along the curb; people walking and chatting; small litter. Wet ground with puddles reflecting orange sodium light and magenta and turquoise neon; light blue fog. REMOVE the grey text bar at the top of the screenshot and REMOVE the player character in the foreground. Behind the wall only the night sky. No HUD, no new text except signs that already exist. 
+```
+
+## K26F — K26_NeonAlto_Casino_final (fase 2)
+- **Adjuntar:** `K26_NeonAlto_Casino_juego.png`, `K01_Barrio_HUDnuevo.png`
+
+```
+The FIRST attached image is a screenshot of our game as it is built now. Keep EXACTLY its camera angle, framing and layout: the same position of streets, sidewalks, buildings, poles, the wall and the existing signs (such as "EL CANEPA"); do not move or remove buildings and do not invent new streets. The SECOND attached image is the target quality and art style: redraw the screenshot as a finished illustration at that level, as if it were a polished screenshot of the same game. Add detail: illustrated thin outlines; facades with texture, windows, metal shutters, air conditioning units, water tanks, potted plants, small neon signs without text, corrugated metal awnings, abstract graffiti; cables hanging between poles and houses; cars parked along the curb; people walking and chatting; small litter. Wet ground with puddles reflecting orange sodium light and magenta and turquoise neon; light blue fog. REMOVE the grey text bar at the top of the screenshot and REMOVE the player character in the foreground. Behind the wall only the night sky. No HUD, no new text except signs that already exist. Add the big marquee of the VivaCoin casino on its building with a row of bulbs around it, with the text "VIVACOIN" spelled exactly, in gold and magenta. 
+```
+
+## K27F — K27_NeonAlto_Calle_final (fase 2)
+- **Adjuntar:** `K27_NeonAlto_Calle_juego.png`, `K01_Barrio_HUDnuevo.png`
+
+```
+The FIRST attached image is a screenshot of our game as it is built now. Keep EXACTLY its camera angle, framing and layout: the same position of streets, sidewalks, buildings, poles, the wall and the existing signs (such as "EL CANEPA"); do not move or remove buildings and do not invent new streets. The SECOND attached image is the target quality and art style: redraw the screenshot as a finished illustration at that level, as if it were a polished screenshot of the same game. Add detail: illustrated thin outlines; facades with texture, windows, metal shutters, air conditioning units, water tanks, potted plants, small neon signs without text, corrugated metal awnings, abstract graffiti; cables hanging between poles and houses; cars parked along the curb; people walking and chatting; small litter. Wet ground with puddles reflecting orange sodium light and magenta and turquoise neon; light blue fog. REMOVE the grey text bar at the top of the screenshot and REMOVE the player character in the foreground. Behind the wall only the night sky. No HUD, no new text except signs that already exist. 
+```
+
+## K28F — K28_Nova_Avenida_final (fase 2)
+- **Adjuntar:** `K28_Nova_Avenida_juego.png`, `K01_Barrio_HUDnuevo.png`
+
+```
+The FIRST attached image is a screenshot of our game as it is built now. Keep EXACTLY its camera angle, framing and layout: the same position of streets, sidewalks, buildings, poles, the wall and the existing signs (such as "EL CANEPA"); do not move or remove buildings and do not invent new streets. The SECOND attached image is the target quality and art style: redraw the screenshot as a finished illustration at that level, as if it were a polished screenshot of the same game. Add detail: illustrated thin outlines; facades with texture, windows, metal shutters, air conditioning units, water tanks, potted plants, small neon signs without text, corrugated metal awnings, abstract graffiti; cables hanging between poles and houses; cars parked along the curb; people walking and chatting; small litter. Wet ground with puddles reflecting orange sodium light and magenta and turquoise neon; light blue fog. REMOVE the grey text bar at the top of the screenshot and REMOVE the player character in the foreground. Behind the wall only the night sky. No HUD, no new text except signs that already exist. 
+```
+
+## K29F — K29_Nova_Refineria_final (fase 2)
+- **Adjuntar:** `K29_Nova_Refineria_juego.png`, `K01_Barrio_HUDnuevo.png`
+
+```
+The FIRST attached image is a screenshot of our game as it is built now. Keep EXACTLY its camera angle, framing and layout: the same position of streets, sidewalks, buildings, poles, the wall and the existing signs (such as "EL CANEPA"); do not move or remove buildings and do not invent new streets. The SECOND attached image is the target quality and art style: redraw the screenshot as a finished illustration at that level, as if it were a polished screenshot of the same game. Add detail: illustrated thin outlines; facades with texture, windows, metal shutters, air conditioning units, water tanks, potted plants, small neon signs without text, corrugated metal awnings, abstract graffiti; cables hanging between poles and houses; cars parked along the curb; people walking and chatting; small litter. Wet ground with puddles reflecting orange sodium light and magenta and turquoise neon; light blue fog. REMOVE the grey text bar at the top of the screenshot and REMOVE the player character in the foreground. Behind the wall only the night sky. No HUD, no new text except signs that already exist. In the place the refinery occupies in the screenshot, turn it into a real Nova refinery: cylindrical white storage tanks, thick pipes on racks, tall stacks releasing steam, catwalks with railings and red warning lights. 
+```
+
+## K30F — K30_Cruce_Suburbios_Mercado_final (fase 2)
+- **Adjuntar:** `K30_Cruce_Suburbios_Mercado_juego.png`, `K01_Barrio_HUDnuevo.png`
+
+```
+The FIRST attached image is a screenshot of our game as it is built now. Keep EXACTLY its camera angle, framing and layout: the same position of streets, sidewalks, buildings, poles, the wall and the existing signs (such as "EL CANEPA"); do not move or remove buildings and do not invent new streets. The SECOND attached image is the target quality and art style: redraw the screenshot as a finished illustration at that level, as if it were a polished screenshot of the same game. Add detail: illustrated thin outlines; facades with texture, windows, metal shutters, air conditioning units, water tanks, potted plants, small neon signs without text, corrugated metal awnings, abstract graffiti; cables hanging between poles and houses; cars parked along the curb; people walking and chatting; small litter. Wet ground with puddles reflecting orange sodium light and magenta and turquoise neon; light blue fog. REMOVE the grey text bar at the top of the screenshot and REMOVE the player character in the foreground. Behind the wall only the night sky. No HUD, no new text except signs that already exist. 
+```
+
+## K31F — K31_Cruce_NeonAlto_Nova_final (fase 2)
+- **Adjuntar:** `K31_Cruce_NeonAlto_Nova_juego.png`, `K01_Barrio_HUDnuevo.png`
+
+```
+The FIRST attached image is a screenshot of our game as it is built now. Keep EXACTLY its camera angle, framing and layout: the same position of streets, sidewalks, buildings, poles, the wall and the existing signs (such as "EL CANEPA"); do not move or remove buildings and do not invent new streets. The SECOND attached image is the target quality and art style: redraw the screenshot as a finished illustration at that level, as if it were a polished screenshot of the same game. Add detail: illustrated thin outlines; facades with texture, windows, metal shutters, air conditioning units, water tanks, potted plants, small neon signs without text, corrugated metal awnings, abstract graffiti; cables hanging between poles and houses; cars parked along the curb; people walking and chatting; small litter. Wet ground with puddles reflecting orange sodium light and magenta and turquoise neon; light blue fog. REMOVE the grey text bar at the top of the screenshot and REMOVE the player character in the foreground. Behind the wall only the night sky. No HUD, no new text except signs that already exist. 
+```
+
+## K32F — K32_Muro_Calle_final (fase 2)
+- **Adjuntar:** `K32_Muro_Calle_juego.png`, `K01_Barrio_HUDnuevo.png`
+
+```
+The FIRST attached image is a screenshot of our game as it is built now. Keep EXACTLY its camera angle, framing and layout: the same position of streets, sidewalks, buildings, poles, the wall and the existing signs (such as "EL CANEPA"); do not move or remove buildings and do not invent new streets. The SECOND attached image is the target quality and art style: redraw the screenshot as a finished illustration at that level, as if it were a polished screenshot of the same game. Add detail: illustrated thin outlines; facades with texture, windows, metal shutters, air conditioning units, water tanks, potted plants, small neon signs without text, corrugated metal awnings, abstract graffiti; cables hanging between poles and houses; cars parked along the curb; people walking and chatting; small litter. Wet ground with puddles reflecting orange sodium light and magenta and turquoise neon; light blue fog. REMOVE the grey text bar at the top of the screenshot and REMOVE the player character in the foreground. Behind the wall only the night sky. No HUD, no new text except signs that already exist. 
+```
+
+## K33F — K33_Muro_Puerta_final (fase 2)
+- **Adjuntar:** `K33_Muro_Puerta_juego.png`, `K01_Barrio_HUDnuevo.png`
+
+```
+The FIRST attached image is a screenshot of our game as it is built now. Keep EXACTLY its camera angle, framing and layout: the same position of streets, sidewalks, buildings, poles, the wall and the existing signs (such as "EL CANEPA"); do not move or remove buildings and do not invent new streets. The SECOND attached image is the target quality and art style: redraw the screenshot as a finished illustration at that level, as if it were a polished screenshot of the same game. Add detail: illustrated thin outlines; facades with texture, windows, metal shutters, air conditioning units, water tanks, potted plants, small neon signs without text, corrugated metal awnings, abstract graffiti; cables hanging between poles and houses; cars parked along the curb; people walking and chatting; small litter. Wet ground with puddles reflecting orange sodium light and magenta and turquoise neon; light blue fog. REMOVE the grey text bar at the top of the screenshot and REMOVE the player character in the foreground. Behind the wall only the night sky. No HUD, no new text except signs that already exist. 
+```
+
+## K34F — K34_Muro_Esquina_final (fase 2)
+- **Adjuntar:** `K34_Muro_Esquina_juego.png`, `K01_Barrio_HUDnuevo.png`
+
+```
+The FIRST attached image is a screenshot of our game as it is built now. Keep EXACTLY its camera angle, framing and layout: the same position of streets, sidewalks, buildings, poles, the wall and the existing signs (such as "EL CANEPA"); do not move or remove buildings and do not invent new streets. The SECOND attached image is the target quality and art style: redraw the screenshot as a finished illustration at that level, as if it were a polished screenshot of the same game. Add detail: illustrated thin outlines; facades with texture, windows, metal shutters, air conditioning units, water tanks, potted plants, small neon signs without text, corrugated metal awnings, abstract graffiti; cables hanging between poles and houses; cars parked along the curb; people walking and chatting; small litter. Wet ground with puddles reflecting orange sodium light and magenta and turquoise neon; light blue fog. REMOVE the grey text bar at the top of the screenshot and REMOVE the player character in the foreground. Behind the wall only the night sky. No HUD, no new text except signs that already exist. 
+```
+
+## M14 — M14_MapaReal (fase 2)
+- **Adjuntar:** `MAPA_juego_aerea.png`, `K01_Barrio_HUDnuevo.png`, `M11_MapaCiudad.png`
+
+```
+The FIRST attached image is an aerial capture of our game's city as it is built. Keep EXACTLY its layout: the same blocks, streets, towers and wall, in the same places and the same framing. The SECOND image is our art style and the THIRD our map style: redraw it as a finished illustrated city at night in that style: detailed rooftops with water tanks and antennas, lit streets, neon colors by district, the wall with its watchtowers. Outside the wall there is nothing, only darkness. No HUD, no text, no labels.
+```
+
+## RF02a — RF02_TanqueRefineria_a (fase 3)
+- **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `K06_CalleNova.png` · **Medida:** 14 m diámetro × 12 m alto · **Tripo:** Smart Mesh P2 · 10,000 caras · 2K
+
+```
+Use the attached image ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents and magenta neon; Nova is clean white with cold blue light); do not copy the scene. Original design, nothing copied. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a large white cylindrical storage tank of the Nova refinery with a spiral staircase with a solid railing wrapping around it, blue stripes, a small platform on top.
+```
+
+## RF03a — RF03_TorreDestilacion_a (fase 3)
+- **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `K06_CalleNova.png` · **Medida:** 30 m de alto · **Tripo:** HD · 12,000 caras · 2K
+
+```
+Use the attached image ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents and magenta neon; Nova is clean white with cold blue light); do not copy the scene. Original design, nothing copied. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a tall distillation tower of the Nova refinery: a tall white column with thick pipes running along it, ring platforms with solid railings at several levels, red warning lights.
+```
+
+## RF04a — RF04_Tuberias_a (fase 3)
+- **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `K06_CalleNova.png` · **Medida:** 12 m de tramo × 4 m alto · **Tripo:** Smart Mesh P2 · 10,000 caras · 2K
+
+```
+Use the attached image ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents and magenta neon; Nova is clean white with cold blue light); do not copy the scene. Original design, nothing copied. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a section of industrial pipes on steel support racks: several thick white and grey pipes running in parallel, with big valve wheels and flanges, blue bands.
+```
+
+## RF05a — RF05_Chimenea_a (fase 3)
+- **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `K06_CalleNova.png` · **Medida:** 35 m de alto · **Tripo:** Smart Mesh P2 · 8,000 caras · 2K
+
+```
+Use the attached image ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents and magenta neon; Nova is clean white with cold blue light); do not copy the scene. Original design, nothing copied. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a tall industrial chimney stack, white with blue and red bands, a ladder cage, a red warning light on top.
+```
+
+## MQ01a — MQ01_MarquesinaCasino_a (fase 3)
+- **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `L10_LetreroVivaCoin.png` · **Medida:** 10 × 3 m · fondo 2 m · **Tripo:** HD · 12,000 caras · 2K
+
+```
+Use the attached image ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents and magenta neon; Nova is clean white with cold blue light); do not copy the scene. Original design, nothing copied. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no other text. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: the big marquee canopy of the VivaCoin casino: a deep illuminated marquee box with rows of round warm bulbs all around its edges, gold and magenta panels, and the word "VIVACOIN" spelled EXACTLY, letter by letter, in big gold letters with a magenta glow on the front. Mounting brackets on the back.
+```
+
+## TL02a — TL02_Toldo_a (fase 3)
+- **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `K02_Tianguis.png` · **Medida:** 3 × 2 × 2.4 m · **Tripo:** Smart Mesh P2 · 6,000 caras · 2K
+
+```
+Use the attached image ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents and magenta neon; Nova is clean white with cold blue light); do not copy the scene. Original design, nothing copied. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a market stall awning: a colorful tarp (pink, yellow and turquoise panels) stretched over a simple chunky metal frame with four legs.
+```
+
+## TL03a — TL03_LonaTianguis_a (fase 3)
+- **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `K02_Tianguis.png` · **Medida:** 12 × 4 × 3 m · **Tripo:** Smart Mesh P2 · 8,000 caras · 2K
+
+```
+Use the attached image ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients, worn Mexican cyberpunk megacity with turquoise and orange accents and magenta neon; Nova is clean white with cold blue light); do not copy the scene. Original design, nothing copied. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow, no text, no letters, no numbers, no logos. Nothing thin or dangling: cables, rails and bars are thick and chunky. View: 3/4 view from the front left, slightly from above. Subject: a large striped tarp canopy to cover a market aisle: a long rectangular tarp with wide colored stripes, slightly sagging, held by a light chunky metal frame with posts at the corners and the middle.
+```
+
+## GR01a — GR01_Grafiti_a (fase 3)
+- **Adjuntar:** `K01_Barrio_HUDnuevo.png`, `K05_EsquinaBarrio.png`
+
+```
+Use the attached images ONLY for the colors and mood. A sheet with 4 separate colorful abstract graffiti pieces arranged in a 2 by 2 grid with space between them, drawn flat and straight on, spray paint style with outlines, drips and highlights, NO letters, NO words, NO brands, NO symbols of real groups: only abstract shapes, waves, eyes and characters. Everything around them is PURE BLACK (#000000).
+```
