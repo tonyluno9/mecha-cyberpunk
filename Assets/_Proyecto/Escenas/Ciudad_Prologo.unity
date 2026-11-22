@@ -276997,6 +276997,68 @@ Light:
   m_LightUnit: 1
   m_LuxAtDistance: 1
   m_EnableSpotReflector: 1
+--- !u!1001 &517966312
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 813955943}
+    m_Modifications:
+    - target: {fileID: 650292592827836773, guid: 4feee11a880137647ae8f6b57129b788, type: 3}
+      propertyPath: m_Name
+      value: Historia_CallejonSkulls
+      objectReference: {fileID: 0}
+    - target: {fileID: 3456076338471177403, guid: 4feee11a880137647ae8f6b57129b788, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -64
+      objectReference: {fileID: 0}
+    - target: {fileID: 3456076338471177403, guid: 4feee11a880137647ae8f6b57129b788, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3456076338471177403, guid: 4feee11a880137647ae8f6b57129b788, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -59
+      objectReference: {fileID: 0}
+    - target: {fileID: 3456076338471177403, guid: 4feee11a880137647ae8f6b57129b788, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 3456076338471177403, guid: 4feee11a880137647ae8f6b57129b788, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3456076338471177403, guid: 4feee11a880137647ae8f6b57129b788, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 3456076338471177403, guid: 4feee11a880137647ae8f6b57129b788, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3456076338471177403, guid: 4feee11a880137647ae8f6b57129b788, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3456076338471177403, guid: 4feee11a880137647ae8f6b57129b788, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3456076338471177403, guid: 4feee11a880137647ae8f6b57129b788, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 4feee11a880137647ae8f6b57129b788, type: 3}
+--- !u!4 &517966313 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3456076338471177403, guid: 4feee11a880137647ae8f6b57129b788, type: 3}
+  m_PrefabInstance: {fileID: 517966312}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &518432670
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -423660,6 +423722,7 @@ Transform:
   - {fileID: 838641602}
   - {fileID: 1495345419}
   - {fileID: 193749324}
+  - {fileID: 517966313}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &814044292
@@ -977599,6 +977662,10 @@ PrefabInstance:
     - target: {fileID: 1514861999079374832, guid: e9bf9ddd7420c974e99e1a11e3c8bfae, type: 3}
       propertyPath: m_Name
       value: CarroRobable_17
+      objectReference: {fileID: 0}
+    - target: {fileID: 1514861999079374832, guid: e9bf9ddd7420c974e99e1a11e3c8bfae, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1752589332972084301, guid: e9bf9ddd7420c974e99e1a11e3c8bfae, type: 3}
       propertyPath: m_IsActive
