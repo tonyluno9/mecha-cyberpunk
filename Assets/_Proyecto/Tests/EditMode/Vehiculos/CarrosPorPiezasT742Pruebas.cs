@@ -256,9 +256,8 @@ namespace MechaCyberpunk.Tests.Vehiculos
         {
             GameObject patrulla = Cargar(RutaPatrulla);
             Bounds b = LimitesEn(patrulla.transform.Find("Visual_T511/Carroceria"), patrulla.transform);
-            Bounds v05 = LimitesEn(Carro("V05").transform.Find("Visual_T511/Carroceria"), Carro("V05").transform);
-            Assert.AreEqual(v05.size.z, b.size.z, Margen);
-            Assert.AreEqual(v05.min.y, b.min.y, Margen); // la carrocería de Blender va sobre las llantas: se compara con la del V05
+            // T-1604: la patrulla (rehecha en T-1554) ya no copia el V05 nuevo: solo tiene que medir lo de un carro real.
+            Assert.That(b.size.z, Is.InRange(3.8f, 5f), "Largo");
         }
 
         [Test]

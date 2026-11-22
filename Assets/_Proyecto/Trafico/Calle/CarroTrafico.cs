@@ -92,6 +92,7 @@ namespace MechaCyberpunk.Trafico.Calle
         private float velocidadAplicada;
         private bool atoradoContado;
         private float reciclarChocadoDesde = -1f;
+        private string ultimoFisico = "";
         private float radioAlrededor;
 
         private static readonly Color[] ColoresCarroceria =
@@ -582,7 +583,7 @@ namespace MechaCyberpunk.Trafico.Calle
             if (!atoradoContado && Causa != "jugador" && segundos >= EstadisticasTrafico.SegundosAtorado)
             {
                 atoradoContado = true;
-                EstadisticasTrafico.AnotarAtorado(name, transform.position, segundos);
+                EstadisticasTrafico.AnotarAtorado(name + " (" + Causa + (Causa == "fisico" ? ": " + ultimoFisico : "") + ")", transform.position, segundos);
             }
         }
 
@@ -725,7 +726,7 @@ namespace MechaCyberpunk.Trafico.Calle
                 Causa = "libre";
                 return true;
             }
-            if (seVe && calculo.SegundosBloqueado >= config.SegundosDestrabarForzado)
+            if (calculo.SegundosBloqueado >= config.SegundosDestrabarForzado) // T-1603: si no pudo reaparecer, da la vuelta se vea o no
             {
                 DarVuelta();
             }
@@ -1140,7 +1141,11 @@ namespace MechaCyberpunk.Trafico.Calle
                 {
                     continue;
                 }
-                menor = Mathf.Min(menor, choques[i].distance);
+                if (choques[i].distance < menor)
+                {
+                    menor = choques[i].distance;
+                    ultimoFisico = c.transform.root.name + "/" + c.name;
+                }
             }
             return menor;
         }

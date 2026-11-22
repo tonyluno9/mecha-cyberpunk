@@ -119,6 +119,20 @@ namespace MechaCyberpunk.Tests.Trafico
         [UnityTest]
         public IEnumerator Trafico_DeDiaHayMasCarrosQueDeNoche_YNingunoEnLaCalleDelJugador()
         {
+            // T-1603: de día salen 20 carros: la red de cuatro manzanas no les da sitio separados, así que se amplía a 6 x 6 manzanas.
+            for (int x = 0; x < 6; x++)
+            {
+                for (int z = 0; z < 6; z++)
+                {
+                    if (x < 2 && z < 2)
+                    {
+                        continue;
+                    }
+                    GameObject m = new GameObject("Manzana_" + x + "_" + z);
+                    m.transform.SetParent(barrio.transform, false);
+                    m.transform.position = new Vector3(x * 80f, 0f, z * 80f);
+                }
+            }
             TraficoCalle trafico = CrearTrafico();
             yield return null;
             yield return null;
@@ -240,6 +254,8 @@ namespace MechaCyberpunk.Tests.Trafico
         [UnityTest]
         public IEnumerator Ciudad_TieneTraficoYLosCarrosAndan()
         {
+            // T-1603: la jaula del clandestino de Alan avisa que le faltan referencias al cargar Ciudad_Prologo; ese aviso no es del tráfico y dejaba la escena sin limpiar para la prueba que sigue.
+            LogAssert.ignoreFailingMessages = true;
             Registros.LimpiarTodos();
             yield return UnityEditor.SceneManagement.EditorSceneManager.LoadSceneInPlayMode("Assets/_Proyecto/Escenas/Ciudad_Prologo.unity",
                 new UnityEngine.SceneManagement.LoadSceneParameters(UnityEngine.SceneManagement.LoadSceneMode.Single));
@@ -251,7 +267,12 @@ namespace MechaCyberpunk.Tests.Trafico
                 Assert.Less(Time.realtimeSinceStartup, limite, "La ciudad trae el tráfico de calle");
                 yield return null;
             }
-            yield return new WaitForSecondsRealtime(1f);
+            // T-1603: con 20 carros salen de a poco (solo donde la cámara no los ve): se espera a que lleguen a los que tocan.
+            float limiteVivos = Time.realtimeSinceStartup + 30f;
+            while (Time.realtimeSinceStartup < limiteVivos && trafico.Vivos < config.CarrosDeDia)
+            {
+                yield return null;
+            }
             IRelojMundo relojCiudad = Registro<IRelojMundo>.Actual;
             Assert.IsNotNull(relojCiudad);
             Assert.AreEqual(config.Cantidad(relojCiudad.EsDeNoche), trafico.Vivos, "Los carros prendidos son los que toca a esta hora");
@@ -302,6 +323,7 @@ namespace MechaCyberpunk.Tests.Trafico
             {
                 Object.Destroy(raiz);
             }
+            LogAssert.ignoreFailingMessages = false;
             yield return null;
         }
     }

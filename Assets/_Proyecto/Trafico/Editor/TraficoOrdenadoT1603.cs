@@ -6,7 +6,7 @@ namespace MechaCyberpunk.Trafico.Editor
 {
     /// <summary>
     /// T-1603: deja los números del tráfico ordenado en ConfigTraficoCalle_Trafico.asset (la que usa Ciudad_Prologo): 20 carros de día y 15 de noche (15 a 25 vivos alrededor del jugador),
-    /// seguimiento a 6 m como mínimo (frena desde 16 m), y atorados que salen en otro punto a los 5 s si nadie los ve (12 s aunque se vean). No toca la escena: los campos nuevos de TraficoCalle
+    /// seguimiento a 6 m como mínimo (frena desde 16 m), y atorados que salen en otro punto a los 5 s si nadie los ve (7 s aunque se vean, para que ninguno pase de 8 s). No toca la escena: los campos nuevos de TraficoCalle
     /// (radioAlrededor, radioReciclar) ya salen con su valor por omisión. Idempotente.
     /// Batchmode: -executeMethod MechaCyberpunk.Trafico.Editor.TraficoOrdenadoT1603.Aplicar
     /// </summary>
@@ -19,7 +19,7 @@ namespace MechaCyberpunk.Trafico.Editor
         public const float DistanciaParada = 6f;
         public const float Frenado = 10f;
         public const float SegundosParaDestrabar = 5f;
-        public const float SegundosDestrabarForzado = 12f;
+        public const float SegundosDestrabarForzado = 7f;
 
         [MenuItem("Mecha Cyberpunk/T-1603/Aplicar config del tráfico ordenado")]
         public static void Aplicar()

@@ -12,14 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ba63c5a8ca3dd545928c787e9551f23, type: 3}
   m_Name: ConfigTraficoCalle_Trafico
   m_EditorClassIdentifier: MechaCyberpunk.Trafico::MechaCyberpunk.Trafico.Datos.ConfigTraficoCalle
-  carrosDeDia: 6
-  carrosDeNoche: 3
+  carrosDeDia: 20
+  carrosDeNoche: 15
   velocidadMinima: 8
   velocidadMaxima: 12
   aceleracion: 3
-  frenado: 9
-  distanciaFrenado: 14
-  distanciaParada: 5
+  frenado: 10
+  distanciaFrenado: 16
+  distanciaParada: 6
   separacionCarril: 2.4
   giroMaximo: 150
   margenNodo: 3
@@ -28,3 +28,5 @@ MonoBehaviour:
   radioSusto: 45
   segundosSusto: 3
   distanciaPasaCerca: 6
+  segundosParaDestrabar: 5
+  segundosDestrabarForzado: 7

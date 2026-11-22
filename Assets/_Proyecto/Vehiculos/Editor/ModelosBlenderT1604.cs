@@ -286,7 +286,8 @@ namespace MechaCyberpunk.Vehiculos.Editor
             Scene escena = EditorSceneManager.OpenScene(RutaEscena, OpenSceneMode.Additive);
             try
             {
-                foreach (GameObject go in VehiculosT1554.InstanciasViejas(escena.GetRootGameObjects(), out int anidados))
+                int anidados;
+                foreach (GameObject go in VehiculosT1554.InstanciasViejas(escena.GetRootGameObjects(), out anidados))
                 {
                     string ruta = AssetDatabase.GetAssetPath(PrefabUtility.GetCorrespondingObjectFromSource(go));
                     string reemplazo = VehiculosT1554.RutaDeReemplazo(ruta);
