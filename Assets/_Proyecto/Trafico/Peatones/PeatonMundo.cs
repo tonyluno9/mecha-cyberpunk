@@ -37,6 +37,26 @@ namespace MechaCyberpunk.Trafico.Peatones
         private float proximaVuelta;
         private Vector3 haciaDonde;
 
+        // T-1643 (T23): la ruta es una línea fija, así que se pregunta cada 0.1 s si la cápsula cabe un poco más adelante (paredes, puestos, carros). Si no
+        // cabe, primero rodea el estorbo moviéndose de lado y, si no se puede, da la vuelta. Al aparecer dentro de un objeto se adelanta por la ruta.
+        private const float SegundosEntreRevisiones = 0.1f;
+        private const float AnticipoRevision = 0.6f;
+        private const float SegundosMaximosRodeando = 3f;
+        private const int PasosParaReubicar = 40;
+        private const float SegundosPorPasoReubicar = 1f;
+        private static readonly float[] LateralesParaRodear = { 0.6f, -0.6f, 1.2f, -1.2f };
+        private float proximaRevision;
+        private bool ocupadoAdelante;
+        private float evasion;
+        private float metaEvasion;
+        private float segundosRodeando;
+
+        /// <summary>Veces que lo bloqueó algo sólido por delante (T-1643).</summary>
+        public int Bloqueos { get; private set; }
+
+        /// <summary>Veces que tuvo que adelantarse por la ruta porque apareció dentro de un objeto (T-1643).</summary>
+        public int Reubicaciones { get; private set; }
+
         /// <summary>Vueltas que dio por encontrarse algo en el camino (T-534).</summary>
         public int Vueltas { get; private set; }
 
@@ -431,6 +451,7 @@ namespace MechaCyberpunk.Trafico.Peatones
             EventosRuido.Muerte += AlOirMuerte;
             ActivosLista.Add(this);
             RestablecerSiMuerto();
+            ReubicarSiOcupado();
         }
 
         private void OnDisable()
@@ -841,7 +862,8 @@ namespace MechaCyberpunk.Trafico.Peatones
                     haciaDonde = -haciaDonde;
                 }
             }
-            if (Time.time >= proximaVuelta && Tapado())
+            RevisarPaso();
+            if (Time.time >= proximaVuelta && (Tapado() || ocupadoAdelante) && !RodearEstorbo())
             {
                 proximaVuelta = Time.time + SegundosEntreVueltas;
                 calculo.InvertirSentido();
@@ -926,6 +948,94 @@ namespace MechaCyberpunk.Trafico.Peatones
             return false;
         }
 
+        private Vector3 AdelanteEnPlano()
+        {
+            Vector3 adelante = haciaDonde;
+            adelante.y = 0f;
+            return adelante.sqrMagnitude < 0.01f ? Vector3.zero : adelante.normalized;
+        }
+
+        // Cada 0.1 s: ¿cabe la cápsula un poco más adelante? Y si iba rodeando algo, ¿ya puede volver al centro de la banqueta?
+        private void RevisarPaso()
+        {
+            if (Time.time < proximaRevision)
+            {
+                return;
+            }
+            proximaRevision = Time.time + SegundosEntreRevisiones;
+            Vector3 adelante = AdelanteEnPlano();
+            if (adelante == Vector3.zero)
+            {
+                ocupadoAdelante = false;
+                return;
+            }
+            Vector3 pos = transform.position;
+            ocupadoAdelante = !MovimientoSeguro.Libre(pos + adelante * AnticipoRevision, transform);
+            if (ocupadoAdelante)
+            {
+                Bloqueos++;
+            }
+            else if (metaEvasion != 0f)
+            {
+                Vector3 lateral = Vector3.Cross(Vector3.up, adelante);
+                if (MovimientoSeguro.Libre(pos - lateral * evasion + adelante * AnticipoRevision, transform)
+                    && MovimientoSeguro.Libre(pos - lateral * evasion, transform))
+                {
+                    metaEvasion = 0f;
+                    segundosRodeando = 0f;
+                }
+            }
+        }
+
+        // True si lo rodea (se mueve de lado) en vez de dar la vuelta.
+        private bool RodearEstorbo()
+        {
+            if (metaEvasion != 0f)
+            {
+                segundosRodeando += Time.deltaTime;
+                if (segundosRodeando < SegundosMaximosRodeando)
+                {
+                    return true;
+                }
+                metaEvasion = 0f;
+                segundosRodeando = 0f;
+                return false;
+            }
+            Vector3 adelante = AdelanteEnPlano();
+            if (adelante == Vector3.zero)
+            {
+                return false;
+            }
+            Vector3 lateral = Vector3.Cross(Vector3.up, adelante);
+            Vector3 pos = transform.position;
+            foreach (float c in LateralesParaRodear)
+            {
+                if (MovimientoSeguro.Libre(pos + lateral * c, transform) && MovimientoSeguro.Libre(pos + lateral * c + adelante * AnticipoRevision, transform))
+                {
+                    metaEvasion = evasion + c;
+                    segundosRodeando = 0f;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        // Al activarse dentro de un objeto: avanza por su ruta hasta un sitio libre.
+        private void ReubicarSiOcupado()
+        {
+            if (calculo == null || puntos == null)
+            {
+                return;
+            }
+            Physics.SyncTransforms();
+            for (int i = 0; i < PasosParaReubicar && !MovimientoSeguro.Libre(transform.position, transform); i++)
+            {
+                calculo.Avanzar(SegundosPorPasoReubicar);
+                Colocar();
+                Reubicaciones++;
+            }
+        }
+
         private bool Tapado()
         {
             Vector3 adelante = haciaDonde;
@@ -962,12 +1072,14 @@ namespace MechaCyberpunk.Trafico.Peatones
             Vector3 mundo = haciaDonde;
             mundo.y = 0f;
             Vector3 metaPlatica = Vector3.zero;
+            Vector3 derechaLocal = Vector3.zero;
             if (mundo.sqrMagnitude > 0.01f && transform.parent != null)
             {
                 // Camina por su derecha, en espacio local del padre.
                 Vector3 derecha = transform.parent.InverseTransformDirection(Vector3.Cross(Vector3.up, mundo.normalized));
                 derecha.y = 0f;
                 derecha.Normalize();
+                derechaLocal = derecha;
                 desvio = Vector3.MoveTowards(desvio, platicando ? Vector3.zero : derecha * DesvioLateral, VelocidadDesvio * Time.deltaTime);
                 if (platicando)
                 {
@@ -977,7 +1089,8 @@ namespace MechaCyberpunk.Trafico.Peatones
                 }
             }
             desvioPlatica = Vector3.MoveTowards(desvioPlatica, metaPlatica, VelocidadDesvio * Time.deltaTime);
-            transform.localPosition = posRuta + desvio + desvioPlatica;
+            evasion = Mathf.MoveTowards(evasion, metaEvasion, VelocidadDesvio * Time.deltaTime);
+            transform.localPosition = posRuta + desvio + desvioPlatica + derechaLocal * evasion;
         }
 
         private void Mirar(Vector3 direccion)
