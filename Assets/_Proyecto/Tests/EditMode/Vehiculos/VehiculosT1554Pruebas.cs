@@ -88,6 +88,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
         }
 
         [Test]
+        [Ignore("T-1644: los carros civiles vuelven al modelo original de Tripo (sin piezas de Blender)")]
         public void Grandes_LlantaTocaElPisoConElResorteEnReposo([ValueSource(typeof(VehiculosT1554), nameof(VehiculosT1554.Grandes))] (string codigo, float escala) g)
         {
             GameObject raiz = PrefabUtility.LoadPrefabContents(VehiculosT1554.RutaPrefab(g.codigo));
@@ -106,6 +107,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
         }
 
         [Test]
+        [Ignore("T-1644: los carros civiles vuelven al modelo original de Tripo (sin piezas de Blender)")]
         public void Grandes_RuedasVisualesEnMetrosDelMundo([ValueSource(typeof(VehiculosT1554), nameof(VehiculosT1554.Grandes))] (string codigo, float escala) g)
         {
             GameObject raiz = PrefabUtility.LoadPrefabContents(VehiculosT1554.RutaPrefab(g.codigo));
@@ -122,6 +124,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
         }
 
         [Test]
+        [Ignore("T-1644: los carros civiles vuelven al modelo original de Tripo (sin piezas de Blender)")]
         public void Grandes_AsientoYCamaraAlturaDelModeloYPuertaAUnMetro([ValueSource(typeof(VehiculosT1554), nameof(VehiculosT1554.Grandes))] (string codigo, float escala) g)
         {
             GameObject raiz = PrefabUtility.LoadPrefabContents(VehiculosT1554.RutaPrefab(g.codigo));

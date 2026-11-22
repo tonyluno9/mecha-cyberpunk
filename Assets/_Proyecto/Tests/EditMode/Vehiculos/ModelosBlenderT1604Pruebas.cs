@@ -22,6 +22,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
         }
 
         [Test]
+        [Ignore("T-1644: los carros civiles vuelven al modelo original de Tripo (sin piezas de Blender)")]
         public void Ruedas_Cuatro([ValueSource(nameof(Codigos))] string codigo)
         {
             RuedasVisualesCarro ruedas = Prefab(codigo).GetComponent<RuedasVisualesCarro>();
@@ -36,6 +37,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
         }
 
         [Test]
+        [Ignore("T-1644: los carros civiles vuelven al modelo original de Tripo (sin piezas de Blender)")]
         public void PuertasYCofre_ConBisagraYPieza([ValueSource(nameof(Codigos))] string codigo)
         {
             Transform visual = Prefab(codigo).transform.Find(CreadorCarrosPiezasT742.NombreVisual);
@@ -49,6 +51,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
         }
 
         [Test]
+        [Ignore("T-1644: los carros civiles vuelven al modelo original de Tripo (sin piezas de Blender)")]
         public void SinCristal_NiReferenciasRotas([ValueSource(nameof(Codigos))] string codigo)
         {
             GameObject prefab = Prefab(codigo);
@@ -59,6 +62,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
         }
 
         [Test]
+        [Ignore("T-1644: los carros civiles vuelven al modelo original de Tripo (sin piezas de Blender)")]
         public void Largo_EntreTresOchoYCincoMetros([ValueSource(nameof(Codigos))] string codigo)
         {
             Transform visual = Prefab(codigo).transform.Find(CreadorCarrosPiezasT742.NombreVisual);
@@ -68,6 +72,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
         }
 
         [Test]
+        [Ignore("T-1644: los carros civiles vuelven al modelo original de Tripo (sin piezas de Blender)")]
         public void Cajas_NoSalenDeLaCarroceria([ValueSource(nameof(Codigos))] string codigo)
         {
             GameObject prefab = Prefab(codigo);

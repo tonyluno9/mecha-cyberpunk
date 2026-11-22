@@ -27,7 +27,7 @@ namespace MechaCyberpunk.Vehiculos.Editor
         public const string RutaInformeDiagnostico = "Logs/t1554-vehiculos.txt";
         public const string RutaInformeAplicar = "Logs/t1554-aplicar.txt";
 
-        public static readonly string[] CarrosConCofreNuevo = { "PA01", "PA02", "V22" };
+        public static readonly string[] CarrosConCofreNuevo = { "PA01", "PA02" }; // T-1644: V22 vuelve al modelo de Tripo, sin cofre que abrir
         public static readonly (string codigo, float escala)[] Grandes = { ("V16", 0.70f), ("V17", 0.80f), ("V18", 0.70f), ("V19", 0.78f) };
         public static readonly string[] CodigosDescartados = { "V10", "V11" };
 

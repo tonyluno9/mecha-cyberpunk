@@ -13,6 +13,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
     /// T-742: V01a, V01b y V05 por piezas, jugando con entrada simulada: las llantas giran con la velocidad, las delanteras doblan con A y D, las
     /// traseras no y la física sigue igual de siempre. Sin puertas desde T-972.
     /// </summary>
+    [Ignore("T-1644: los carros civiles vuelven al modelo original de Tripo (sin piezas de Blender)")]
     public class RuedasPuertasT742Pruebas : InputTestFixture
     {
         private static readonly string[] Codigos = { "V01a", "V01b", "V05" };

@@ -15,7 +15,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
     /// </summary>
     public class PatrullasPAT1510PlayPruebas
     {
-        private static readonly string[] Codigos = { "PA01", "PA02", "V22", "V05", "V06", "V11" };
+        private static readonly string[] Codigos = { "PA01", "PA02", "V11" };
         private const float SegundosParaAsentarse = 3f;
         private const float MaximoHundido = 0.10f;
         private const float MaximoFlotando = 0.30f;
