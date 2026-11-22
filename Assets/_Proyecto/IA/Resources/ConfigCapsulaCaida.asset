@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d3080cd7cb0c6548a6f6047301f12d8, type: 3}
+  m_Name: ConfigCapsulaCaida
+  m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.Datos.ConfigCapsulaCaida
+  prefabCapsula: {fileID: 4095992375345100447, guid: fc0e5b609fae92c45921beb52f5062c4, type: 3}
+  salidaE15: {fileID: -623603649343465320, guid: b1c50042c037077448f20f388e99aec2, type: 3}
+  salidaE16: {fileID: -623603649343465320, guid: f0f30fedd4523674185e471e38a0b7fb, type: 3}
+  salidaE18: {fileID: -623603649343465320, guid: b15ab6343ca97a04a880db5f944519a5, type: 3}
+  salidaE17: {fileID: -623603649343465320, guid: 16a8bb857abcd5447ab1ac0995af7050, type: 3}
+  prefabsPrueba:
+  - {fileID: 6943037423706142203, guid: 5556e22a1fc93a94f811118cfc795a47, type: 3}
+  - {fileID: 49357360277950522, guid: a733b9839dfb7904ab74abadba601d70, type: 3}
+  - {fileID: 4760734436653670961, guid: d368387af25a9754fa471061353c68ea, type: 3}
+  - {fileID: 8487699510449971724, guid: 64a8b9248c6b15449b51199c8ac5c98d, type: 3}
+  - {fileID: 7145531209595269329, guid: 840ee2ec5032fdd469e42082ceaa8530, type: 3}
+  - {fileID: 4071485984450003096, guid: cba0419ee01811c45bda839a655a4548, type: 3}
+  - {fileID: 1855244310054476333, guid: 2cf82bd86ad233c4f8344fa087968e47, type: 3}
+  - {fileID: 2890503708066785737, guid: 5fd80201c1b70b44b905fff4c81133f7, type: 3}
