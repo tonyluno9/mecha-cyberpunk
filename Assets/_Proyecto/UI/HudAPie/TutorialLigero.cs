@@ -295,7 +295,8 @@ namespace MechaCyberpunk.UI.Hud
                 case AccionTutorial.Escudo:
                     return escudo != null && escudo.Maximo > 0f;
                 case AccionTutorial.Habilidades:
-                    return habilidades != null && (habilidades.Nivel(HabilidadProtesis.Piernas) > 0 || habilidades.Nivel(HabilidadProtesis.Brazos) > 0
+                    // T-1658: mientras corre el tutorial de prótesis en pasos, este aviso genérico no sale encima.
+                    return !MechaCyberpunk.UI.Clinica.PrimeraVisitaClinica.TutorialPendiente && habilidades != null && (habilidades.Nivel(HabilidadProtesis.Piernas) > 0 || habilidades.Nivel(HabilidadProtesis.Brazos) > 0
                         || habilidades.Nivel(HabilidadProtesis.Cabeza) > 0);
                 case AccionTutorial.Apuntar:
                 case AccionTutorial.Disparar:

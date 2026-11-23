@@ -59,6 +59,7 @@ namespace MechaCyberpunk.UI.Clinica
         private int piezaRevelando = -1;
         private float avanceRevelar;
         private float ensamble;
+        private bool ensambleLento; // T-1658: el implante se dibuja despacio de abajo arriba, sin viajar desde fuera
         private MaterialPropertyBlock bloque;
         private ConfigPantallaClinica config;
         private RenderTexture textura;
@@ -91,6 +92,12 @@ namespace MechaCyberpunk.UI.Clinica
         public Renderer Render => render;
         /// <summary>T-896: true mientras el barrido revela un implante.</summary>
         public bool Revelando => piezaRevelando >= 0;
+        /// <summary>T-1658: segundos que dura (o duró) el ensamble en curso: el lento de piernas y brazos o el normal.</summary>
+        public float DuracionEnsambleActual { get; private set; }
+        /// <summary>T-1658: de 0 a 1, cuánto del implante recién instalado ya está dibujado (1 si no hay ensamble). Para depurar en Play.</summary>
+        public float ProgresoDibujado => Ensamblando ? 1f - ensamble : 1f;
+        /// <summary>T-1658: true mientras el ensamble en curso es el lento (dibujado progresivo).</summary>
+        public bool EnsambleLento => ensambleLento && Ensamblando;
         /// <summary>T-896: true mientras el implante se ensambla al instalarlo.</summary>
         public bool Ensamblando => tweenEnsamble != null && tweenEnsamble.IsActive() && tweenEnsamble.IsPlaying();
         /// <summary>T-896: el nivel de la pieza que se ve en ese espacio (0 = ninguna).</summary>
@@ -196,9 +203,12 @@ namespace MechaCyberpunk.UI.Clinica
         /// T-896: el implante recién instalado llega de lejos, se acomoda en el cuerpo y destella; luego avisa <paramref name="alTerminar"/>.
         /// Sin pieza visible (sistema nervioso) solo destella.
         /// </summary>
-        public void Ensamblar(EspacioImplante espacio, IReadOnlyList<int> niveles, Action alTerminar)
+        public void Ensamblar(EspacioImplante espacio, IReadOnlyList<int> niveles, Action alTerminar, float duracionLenta = 0f)
         {
             MostrarImplantes(niveles, espacio, 0);
+            // T-1658: con una duración lenta (piernas y brazos) la pieza se queda en su lugar y se va dibujando de abajo arriba.
+            ensambleLento = duracionLenta > 0f;
+            DuracionEnsambleActual = ensambleLento ? duracionLenta : (config != null ? config.DuracionEnsamble : 0f);
             int i = (int)espacio;
             CancelarRevelar();
             tweenEnsamble?.Kill();
@@ -209,6 +219,11 @@ namespace MechaCyberpunk.UI.Clinica
                 return;
             }
             Transform pieza = piezas[i].transform;
+            if (ensambleLento)
+            {
+                pieza.localPosition = Vector3.zero;
+                pieza.localScale = Vector3.one;
+            }
             Vector3 centroLocal = centros[i] - render.GetComponent<MeshFilter>().sharedMesh.bounds.center;
             float escala = cuerpo.localScale.x > 0f ? cuerpo.localScale.x : 1f;
             Vector3 fuera = (centroLocal.sqrMagnitude > MinimoDireccion ? centroLocal.normalized : Vector3.up) * (config.DistanciaEnsamble / escala);
@@ -217,11 +232,14 @@ namespace MechaCyberpunk.UI.Clinica
             tweenEnsamble = DOTween.To(() => ensamble, v =>
                 {
                     ensamble = v;
-                    pieza.localPosition = fuera * v;
-                    pieza.localScale = Vector3.one * (1f + v * EscalaEnsamble);
+                    if (!ensambleLento)
+                    {
+                        pieza.localPosition = fuera * v;
+                        pieza.localScale = Vector3.one * (1f + v * EscalaEnsamble);
+                    }
                     Pintar();
-                }, 0f, config.DuracionEnsamble)
-                .SetEase(Ease.OutCubic).SetUpdate(true).SetTarget(this)
+                }, 0f, ensambleLento ? duracionLenta : config.DuracionEnsamble)
+                .SetEase(ensambleLento ? Ease.Linear : Ease.OutCubic).SetUpdate(true).SetTarget(this)
                 .OnComplete(() =>
                 {
                     Destellar();
@@ -475,8 +493,9 @@ namespace MechaCyberpunk.UI.Clinica
                 return;
             }
             bool revelando = i == piezaRevelando;
+            bool dibujando = ensambleLento && ensamble > 0f && Ensamblando && i == (int)elegido; // T-1658
             Bounds b = pieza.bounds;
-            bool barriendo = revelando || (ensamble > 0f && Ensamblando && i == (int)elegido);
+            bool barriendo = revelando || dibujando || (ensamble > 0f && Ensamblando && i == (int)elegido);
             pieza.GetPropertyBlock(bloque);
             bloque.SetColor(IdColor, TrazoH10.Amarillo);
             bloque.SetFloat(IdResalte, 0f);
@@ -485,7 +504,7 @@ namespace MechaCyberpunk.UI.Clinica
             bloque.SetVector(IdBarridoDir, Vector3.up);
             bloque.SetFloat(IdBarridoPos, Mathf.Lerp(b.min.y - MargenBarrido, b.max.y + MargenBarrido, revelando ? avanceRevelar : 1f - ensamble));
             bloque.SetFloat(IdBarridoFuerza, barriendo ? 1f : 0f);
-            bloque.SetFloat(IdRevelar, revelando ? 1f : 0f);
+            bloque.SetFloat(IdRevelar, revelando || dibujando ? 1f : 0f);
             pieza.SetPropertyBlock(bloque);
         }
 
@@ -503,6 +522,7 @@ namespace MechaCyberpunk.UI.Clinica
             tweenEnsamble?.Kill();
             tweenEnsamble = null;
             ensamble = 0f;
+            ensambleLento = false;
             for (int i = 0; i < Espacios; i++)
             {
                 piezas[i] = null;

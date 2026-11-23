@@ -96,7 +96,7 @@ namespace MechaCyberpunk.Personaje.Combate
             }
             sensacion.Configurar(config);
             recargaActual = datos.RecargaGolpe;
-            ciclo = new CicloGolpe(datos.PreparacionGolpe, recargaActual);
+            ciclo = new CicloGolpe(datos.PreparacionGolpe * ReglasAnimacion.EscalaTiempoGolpe, recargaActual * ReglasAnimacion.EscalaTiempoGolpe);
             if (puno != null)
             {
                 posicionReposo = puno.localPosition;
@@ -153,6 +153,7 @@ namespace MechaCyberpunk.Personaje.Combate
             bool animacionLibre = (enCombo || !AnimacionOcupada()) && GuardiaListaParaGolpear();
             if (combo.Avanzar(dt, ciclo.Fase, ciclo.Progreso, animacionLibre))
             {
+                AjustarRecarga(); // T-1658: BRAZOS activa o no cambia la rapidez entre golpes del combo
                 ciclo.Reiniciar();
                 ciclo.IntentarGolpear();
                 IniciarAutoGiro();
@@ -342,15 +343,45 @@ namespace MechaCyberpunk.Personaje.Combate
             return ReglaDanioPunos.Danio(total, config.MultiplicadorPunosContraEnemigos, objetivo != null && objetivo.GetComponentInParent<ILecturaRival>() != null);
         }
 
+        private float factorRapidezActual = 1f;
+        /// <summary>T-1658: rapidez extra del golpe ahora (1 normal; con BRAZOS activa, el factor de la config).</summary>
+        public float FactorRapidezActual => factorRapidezActual;
+
         private void AjustarRecarga()
         {
             DatosArma punos = DatosPunos();
             float recarga = punos != null ? punos.Recarga : datos.RecargaGolpe;
-            if (!Mathf.Approximately(recarga, recargaActual))
+            float factor = Habilidades != null ? Habilidades.FactorRapidezGolpe : 1f;
+            if (!Mathf.Approximately(recarga, recargaActual) || !Mathf.Approximately(factor, factorRapidezActual))
             {
                 recargaActual = recarga;
-                ciclo = new CicloGolpe(datos.PreparacionGolpe, recarga);
+                factorRapidezActual = factor;
+                float escala = ReglasAnimacion.EscalaTiempoGolpe / factor; // T-1657: golpe 0.75x más lento; T-1658: BRAZOS lo acelera
+                ciclo = new CicloGolpe(datos.PreparacionGolpe * escala, recarga * escala);
+                if (visual == null)
+                {
+                    visual = GetComponentInChildren<VisualPersonaje>(true);
+                }
+                if (visual != null)
+                {
+                    visual.RapidezGolpes = ReglasAnimacion.RapidezGolpeJugador * factor;
+                }
             }
+        }
+
+        /// <summary>Depuración (T-1657/T-1658): tiempos del golpe y rapidez de los clips. Invocable por reflexión desde Play.</summary>
+        public static string DepurarGolpe()
+        {
+            GolpeAPie g = FindAnyObjectByType<GolpeAPie>();
+            if (g == null)
+            {
+                return "[Personaje] No hay GolpeAPie en escena.";
+            }
+            VisualPersonaje v = g.GetComponentInChildren<VisualPersonaje>(true);
+            return "[Personaje] GolpeAPie: fase=" + g.Fase + " rapidezClips=" + (v != null ? v.RapidezGolpes.ToString("0.000") : "sin visual")
+                + " (base " + ReglasAnimacion.RapidezGolpeJugador.ToString("0.000") + ") factorBrazos=" + g.factorRapidezActual.ToString("0.00")
+                + " preparacion=" + (g.datos.PreparacionGolpe * ReglasAnimacion.EscalaTiempoGolpe / g.factorRapidezActual).ToString("0.000")
+                + "s recarga=" + (g.recargaActual * ReglasAnimacion.EscalaTiempoGolpe / g.factorRapidezActual).ToString("0.000") + "s";
         }
 
         private void Impactar()
@@ -368,9 +399,13 @@ namespace MechaCyberpunk.Personaje.Combate
                 // T-992: con BRAZOS activa el golpe empuja a lo que tenga cuerpo con física.
                 float empuje = Habilidades != null ? Habilidades.EmpujeGolpe : 0f;
                 Rigidbody cuerpo = empuje > 0f && objetivo is Component componente ? componente.GetComponentInParent<Rigidbody>() : null;
-                if (cuerpo != null)
+                if (cuerpo != null && !cuerpo.isKinematic)
                 {
-                    cuerpo.AddForce(direccion.normalized * empuje, ForceMode.VelocityChange);
+                    // T-1658: un cuerpo pesado (carro) solo se mueve unos centímetros; no sale volando.
+                    bool pesado = cuerpo.mass >= Habilidades.MasaCuerpoPesado;
+                    float velocidad = pesado ? Habilidades.EmpujeCuerpoPesado : empuje;
+                    Vector3 plano = Vector3.ProjectOnPlane(direccion, Vector3.up);
+                    cuerpo.AddForce((pesado ? plano : direccion).normalized * velocidad, ForceMode.VelocityChange);
                 }
             }
             if (objetivo == null)

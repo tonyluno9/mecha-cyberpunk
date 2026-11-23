@@ -336,6 +336,11 @@ namespace MechaCyberpunk.Progresion.Apoyo
             {
                 return false;
             }
+            // T-1658: en la primera visita primero el Doc inyecta el suero y abre el menú de prótesis; la camilla se habilita después.
+            if (MechaCyberpunk.UI.Clinica.PrimeraVisitaClinica.Pendiente)
+            {
+                return false;
+            }
             VidaAPie vida = jugador.GetComponentInChildren<VidaAPie>();
             ICartera cartera = Registro<ICartera>.Actual;
             if (vida == null || cartera == null)

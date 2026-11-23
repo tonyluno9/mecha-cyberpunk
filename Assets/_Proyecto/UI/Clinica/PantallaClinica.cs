@@ -365,18 +365,20 @@ namespace MechaCyberpunk.UI.Clinica
                     // Lo recién instalado ya se ve en verde y el dinero ya bajó mientras se desvanece.
                     EspacioImplante elegido = (EspacioImplante)indice;
                     PintarHolograma(servicio.Opcion(elegido), servicio.ImplanteInstalado(elegido));
-                    // T-896: el implante se ensambla, destella y entonces la pantalla se va.
-                    desvanecer += config.DuracionEnsamble;
                     conector.gameObject.SetActive(false);
                     foreach (RectTransform linea in lineasEspacio)
                     {
                         linea.gameObject.SetActive(false);
                     }
+                    // T-896: el implante se ensambla, destella y entonces la pantalla se va.
+                    // T-1658: PIERNAS y BRAZOS se dibujan muy despacio mientras suena el taladro (el sonido lo pide SonidosEventos al instalar).
+                    float lenta = ConfigPantallaClinica.InstalacionLenta(elegido) ? config.DuracionInstalacionLenta : 0f;
                     holograma.Ensamblar(elegido, nivelesInstalados, () =>
                     {
                         destello = 1f;
                         textoInstalando.gameObject.SetActive(true);
-                    });
+                    }, lenta);
+                    desvanecer += holograma.EnsambleLento ? config.DuracionInstalacionLenta : config.DuracionEnsamble;
                 }
                 else
                 {
