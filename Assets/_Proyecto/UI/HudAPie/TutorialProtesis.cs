@@ -8,25 +8,22 @@ using MechaCyberpunk.UI.Kit;
 using MechaCyberpunk.UI.Rueda;
 using MechaCyberpunk.Combate.Golpe;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace MechaCyberpunk.UI.Hud
 {
     /// <summary>
-    /// T-1658: tutorial en pantalla de las prótesis, en pasos, al salir a la calle tras la primera visita al Doc (<see cref="PrimeraVisitaClinica.TutorialPendiente"/>):
+    /// T-1658 y T-62: tutorial en pantalla de las prótesis, en pasos, al salir a la calle tras la primera visita al Doc (<see cref="PrimeraVisitaClinica.TutorialPendiente"/>):
     /// mantener TAB, activar PIERNAS y correr, activar BRAZOS y golpear. Cada paso avanza cuando el jugador lo hace (<see cref="ReglaTutorialProtesis"/>).
-    /// Lo agrega <see cref="HudAPie"/>; construye su canvas, más arriba y más grande que el aviso del <see cref="TutorialLigero"/>.
+    /// El aviso de cada paso sale UNA sola vez en una ventana al centro con ENTENDIDO (<see cref="VentanaAviso"/>); al completar el tutorial se marca
+    /// <see cref="AvisosUnicos.Protesis"/> (se guarda en la partida) y ya no vuelve a salir. Lo agrega <see cref="HudAPie"/>.
     /// </summary>
     public class TutorialProtesis : MonoBehaviour
     {
-        public const int OrdenCanvas = 14;
-        private const float MargenAbajo = 150f;
-        private static readonly Vector2 TamanoCuadro = new Vector2(1100f, 90f);
         private const float RapidezMinimaCorrer = 0.5f;
+        private const string PrefijoPaso = "protesis_paso_";
 
         private readonly ReglaTutorialProtesis regla = new ReglaTutorialProtesis();
-        private GameObject cuadro;
-        private Text texto;
+        private string ultimoTexto = string.Empty;
         private Transform raiz;
         private ControladorAPie controlador;
         private GolpeAPie golpe;
@@ -35,26 +32,16 @@ namespace MechaCyberpunk.UI.Hud
         private bool activoAntes;
 
         public ReglaTutorialProtesis Regla => regla;
-        public bool Visible => cuadro != null && cuadro.activeSelf;
-        public string TextoActual => texto != null ? texto.text : string.Empty;
-
-        private void Awake()
-        {
-            Canvas canvas = KitUI.CrearCanvas(transform, "CanvasTutorialProtesis", OrdenCanvas);
-            RectTransform panel = KitUI.CrearImagen(canvas.transform, "Aviso", new Color(0.02f, 0.02f, 0.05f, 0.7f)).rectTransform;
-            KitUI.Colocar(panel, new Vector2(0.5f, 0f), new Vector2(0f, MargenAbajo), TamanoCuadro);
-            KitUI.CrearBorde(panel, 1.5f, KitUI.Estilo.Turquesa);
-            cuadro = panel.gameObject;
-            texto = KitUI.CrearTexto(panel, "Texto", RolTexto.Ayuda, TextAnchor.MiddleCenter);
-            KitUI.Estirar(texto.rectTransform);
-            texto.color = KitUI.Estilo.Turquesa;
-            texto.fontSize = 24;
-            cuadro.SetActive(false);
-        }
+        public bool Visible => VentanaAviso.Abierta && VentanaAviso.TextoActual == ultimoTexto;
+        public string TextoActual => ultimoTexto;
 
         private void Update()
         {
             IJugador jugador = Registro<IJugador>.Actual;
+            if (AvisosUnicos.YaVisto(AvisosUnicos.Protesis))
+            {
+                PrimeraVisitaClinica.TerminarTutorial();
+            }
             bool enJuego = PrimeraVisitaClinica.TutorialPendiente && jugador != null && jugador.Raiz != null && jugador.Modo == ModoJugador.APie
                 && !FlujoPartida.EnTitulo && !Pausa.Activa && PilaPantallas.Vacia;
             if (!enJuego)
@@ -86,6 +73,7 @@ namespace MechaCyberpunk.UI.Hud
             PrimeraVisitaClinica.PasoTutorial = regla.Paso;
             if (regla.Paso == PasoTutorialProtesis.Hecho)
             {
+                AvisosUnicos.Marcar(AvisosUnicos.Protesis);
                 PrimeraVisitaClinica.TerminarTutorial();
                 Ocultar();
                 return;
@@ -94,20 +82,19 @@ namespace MechaCyberpunk.UI.Hud
             string aviso = regla.Texto(tecla, tienePiernas, tieneBrazos);
             if (string.IsNullOrEmpty(aviso))
             {
-                cuadro.SetActive(false);
                 return;
             }
-            texto.text = aviso;
-            cuadro.SetActive(true);
+            ultimoTexto = aviso;
+            // T-62: cada paso se avisa una sola vez, en la ventana del centro.
+            if (!VentanaAviso.Abierta && AvisosUnicos.Marcar(PrefijoPaso + (int)regla.Paso))
+            {
+                VentanaAviso.Mostrar(aviso);
+            }
         }
 
         private void Ocultar()
         {
             activoAntes = false;
-            if (cuadro != null && cuadro.activeSelf)
-            {
-                cuadro.SetActive(false);
-            }
         }
 
         /// <summary>Depuración (invocable por reflexión en Play): el paso del tutorial de prótesis y su texto.</summary>
