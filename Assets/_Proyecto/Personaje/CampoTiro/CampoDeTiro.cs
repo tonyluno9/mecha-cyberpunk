@@ -45,6 +45,11 @@ namespace MechaCyberpunk.CampoTiro
         private static float inclinacionPrevia;
         private static ArmaAPie armaPrevia;
         private static bool nieblaPrevia;
+        private static Color colorNieblaPrevio;
+        private static FogMode modoNieblaPrevio;
+        private static float densidadNieblaPrevia;
+        private static readonly Color ColorNiebla = new Color(0.01f, 0.02f, 0.04f, 1f);
+        private const float DensidadNiebla = 0.035f;
         private static bool volverAlBanco;
         private static bool proteccionMia;
         private static CursorLockMode cursorPrevio;
@@ -188,7 +193,8 @@ namespace MechaCyberpunk.CampoTiro
             GameObject prefab = datos != null ? datos.Visual(tipo) : null;
             foreach (Vector3 local in ReglaCampoTiro.Posiciones(CuantosElegidos, distancia))
             {
-                objetivos.Add(ObjetivoTiro.Crear(sala.transform, tipo, prefab, sala.transform.position + local, Quaternion.LookRotation(Vector3.back, Vector3.up)));
+                Vector3 base3 = sala.transform.position + local + Vector3.up * ReglaCampoTiro.AlturaPlataforma(tipo);
+                objetivos.Add(ObjetivoTiro.Crear(sala.transform, tipo, prefab, base3, Quaternion.LookRotation(Vector3.back, Vector3.up), datos));
             }
             menu?.Refrescar();
             return true;
@@ -272,7 +278,8 @@ namespace MechaCyberpunk.CampoTiro
             }
             return "dentro=" + EstaDentro + " transicion=" + EnTransicion + " menu=" + MenuAbierto + " arma=" + (armas != null ? armas.ArmaActiva : ArmaElegida) +
                    " objetivos=" + ReglaCampoTiro.Nombre(TipoElegido) + " x" + objetivos.Count + " " + DistanciaElegida + " listos=" + listos + " caidos=" + caidos +
-                   " danio=" + Mathf.RoundToInt(DanioTotal) + " disparos=" + Disparos + " aciertos=" + Aciertos + " precision=" + Mathf.RoundToInt(Precision * 100f) + "%";
+                   " danio=" + Mathf.RoundToInt(DanioTotal) + " disparos=" + Disparos + " aciertos=" + Aciertos + " precision=" + Mathf.RoundToInt(Precision * 100f) + "%" +
+                   " clip=" + (objetivos.Count > 0 && objetivos[0] != null ? objetivos[0].ClipActual : "") + " letrero=" + (SalaCampoTiro.UltimaTerminal != null && SalaCampoTiro.UltimaTerminal.LetreroVisible);
         }
 
         /// <summary>El texto del marcador de la esquina.</summary>
@@ -349,7 +356,14 @@ namespace MechaCyberpunk.CampoTiro
             inclinacionPrevia = controlador.Inclinacion;
             armaPrevia = armas.ArmaActiva;
             nieblaPrevia = RenderSettings.fog;
-            RenderSettings.fog = false;
+            colorNieblaPrevio = RenderSettings.fogColor;
+            modoNieblaPrevio = RenderSettings.fogMode;
+            densidadNieblaPrevia = RenderSettings.fogDensity;
+            // Niebla oscura suave: la cuadrícula holográfica se pierde a lo lejos.
+            RenderSettings.fog = true;
+            RenderSettings.fogMode = FogMode.ExponentialSquared;
+            RenderSettings.fogColor = ColorNiebla;
+            RenderSettings.fogDensity = DensidadNiebla;
             JugadorAPie.GuardadoFijo = (posicionPrevia, rotacionPrevia.eulerAngles.y, armaPrevia);
             if (datos == null)
             {
@@ -387,6 +401,7 @@ namespace MechaCyberpunk.CampoTiro
             PonerObjetivos(TipoElegido, CuantosElegidos, DistanciaElegida);
             menu.Mostrar(false);
             menu.MostrarMarcador(true);
+            corredor.Destello(); // aparición holográfica del jugador
             if (conFundido)
             {
                 yield return corredor.Fundir(0f, SegundosFundido);
@@ -467,6 +482,9 @@ namespace MechaCyberpunk.CampoTiro
             }
             JugadorAPie.GuardadoFijo = null;
             RenderSettings.fog = nieblaPrevia;
+            RenderSettings.fogColor = colorNieblaPrevio;
+            RenderSettings.fogMode = modoNieblaPrevio;
+            RenderSettings.fogDensity = densidadNieblaPrevia;
             foreach (ObjetivoTiro objetivo in objetivos)
             {
                 if (objetivo != null)

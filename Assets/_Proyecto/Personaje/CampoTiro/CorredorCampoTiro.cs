@@ -13,7 +13,11 @@ namespace MechaCyberpunk.CampoTiro
     {
         public const int OrdenFundido = 31000;
 
+        private const float SegundosDestello = 0.5f;
+        private static readonly Color ColorDestello = new Color(0.6f, 1f, 1f, 0.55f);
+
         private Image negro;
+        private Image destello;
         private float alfa;
         private int version;
 
@@ -27,6 +31,27 @@ namespace MechaCyberpunk.CampoTiro
             negro = KitUI.CrearImagen(canvas.transform, "Negro", new Color(0f, 0f, 0f, 0f));
             KitUI.Estirar(negro.rectTransform);
             negro.raycastTarget = false;
+            destello = KitUI.CrearImagen(canvas.transform, "Destello", new Color(0f, 0f, 0f, 0f));
+            KitUI.Estirar(destello.rectTransform);
+            destello.raycastTarget = false;
+            destello.transform.SetAsFirstSibling(); // debajo del negro: el destello se ve al abrirse el fundido
+        }
+
+        /// <summary>T85: destello cian que se apaga en medio segundo (aparición holográfica del jugador). No bloquea nada.</summary>
+        public void Destello() => StartCoroutine(RutinaDestello());
+
+        private IEnumerator RutinaDestello()
+        {
+            float t = 0f;
+            while (t < SegundosDestello)
+            {
+                Color c = ColorDestello;
+                c.a *= 1f - t / SegundosDestello;
+                destello.color = c;
+                yield return null;
+                t += Time.unscaledDeltaTime;
+            }
+            destello.color = new Color(0f, 0f, 0f, 0f);
         }
 
         private void Update()

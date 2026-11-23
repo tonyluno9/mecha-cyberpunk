@@ -20,6 +20,10 @@ namespace MechaCyberpunk.CampoTiro
         public const float ZInicioJugador = -10f;
         public const float MargenPared = 1f;
         public const float MargenBarrera = 0.9f;
+        /// <summary>Dónde está la terminal de configuración (locales a la sala), a un lado del jugador.</summary>
+        public const float XTerminal = 3.2f;
+        public const float ZTerminal = -9f;
+        public const float MetrosLetrero = 2.5f;
 
         public static int LimitarCuantos(int cuantos) => Mathf.Clamp(cuantos, MinimoObjetivos, MaximoObjetivos);
 
@@ -46,6 +50,9 @@ namespace MechaCyberpunk.CampoTiro
             }
         }
 
+        /// <summary>Altura (m) de la plataforma bajo el objetivo: los bajos (perro) se suben para que los costales no los tapen.</summary>
+        public static float AlturaPlataforma(TipoObjetivoTiro tipo) => tipo == TipoObjetivoTiro.Perro ? 0.9f : 0f;
+
         public static string Nombre(TipoObjetivoTiro tipo)
         {
             switch (tipo)
@@ -69,6 +76,13 @@ namespace MechaCyberpunk.CampoTiro
                 posiciones[i] = new Vector3((i - (n - 1) * 0.5f) * SeparacionObjetivos, 0f, z);
             }
             return posiciones;
+        }
+
+        /// <summary>True si el jugador está a menos de MetrosLetrero (en el plano) de la terminal.</summary>
+        public static bool EstaCercaDeLaTerminal(Vector3 jugador, Vector3 terminal)
+        {
+            jugador.y = terminal.y;
+            return (jugador - terminal).sqrMagnitude <= MetrosLetrero * MetrosLetrero;
         }
 
         public static bool DebeReaparecer(float segundosCaido) => segundosCaido >= SegundosReaparicion;
