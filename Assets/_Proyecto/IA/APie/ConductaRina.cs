@@ -97,7 +97,15 @@ namespace MechaCyberpunk.IA.APie
                 case Fase.Libre:
                     if (distancia > alcance * 0.9f)
                     {
-                        p.MoverPlano(dir * p.Datos.Velocidad);
+                        // T-1714: lejos, cada miembro va a su propio punto del anillo del rival; ya cerca, se arrima al rival por su lado.
+                        Vector3 camino = dir;
+                        if (distancia > ReglaSeparacionPandilla.AnilloMax)
+                        {
+                            Vector3 aPunto = ReglaSeparacionPandilla.PuntoAnillo(rival.transform.position, rina.IndiceDe(p)) - p.transform.position;
+                            aPunto.y = 0f;
+                            camino = aPunto.sqrMagnitude > 0.0001f ? aPunto.normalized : dir;
+                        }
+                        p.MoverPlano(camino * p.Datos.Velocidad);
                     }
                     else
                     {

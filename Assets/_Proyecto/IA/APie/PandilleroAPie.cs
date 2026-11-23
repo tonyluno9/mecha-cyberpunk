@@ -780,6 +780,36 @@ namespace MechaCyberpunk.IA.APie
             return resultado;
         }
 
+        private static readonly List<Vector3> vecinosSeparacion = new List<Vector3>(16);
+
+        // T-1714: separación suave entre pandilleros (y bajarse de encima de otro): sin esto se apilan en un punto y flotan sobre las cápsulas.
+        private void LateUpdate()
+        {
+            if (controlador == null || !controlador.enabled || modelo == null || modelo.EstaKO)
+            {
+                return;
+            }
+            vecinosSeparacion.Clear();
+            Vector3 yo = transform.position;
+            foreach (PandilleroAPie otro in Activos)
+            {
+                if (otro != this && otro != null && otro.controlador != null && !otro.EstaKO
+                    && (otro.transform.position - yo).sqrMagnitude < ReglaSeparacionPandilla.RadioSeparacion * ReglaSeparacionPandilla.RadioSeparacion)
+                {
+                    vecinosSeparacion.Add(otro.transform.position);
+                }
+            }
+            if (vecinosSeparacion.Count == 0)
+            {
+                return;
+            }
+            Vector3 empuje = ReglaSeparacionPandilla.Empuje(yo, vecinosSeparacion, GetInstanceID());
+            if (empuje.sqrMagnitude > 0f)
+            {
+                controlador.Move(empuje * Time.deltaTime);
+            }
+        }
+
         private void Update()
         {
             if (modelo == null)

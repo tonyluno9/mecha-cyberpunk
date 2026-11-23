@@ -29,6 +29,13 @@ namespace MechaCyberpunk.IA.APie
         public PandillaAPie BandoA => bandoA;
         public PandillaAPie BandoB => bandoB;
         public IReadOnlyList<PandilleroAPie> Miembros => miembros;
+
+        /// <summary>T-1714: el lugar de <paramref name="p"/> entre los miembros (para repartir los puntos del anillo del rival); 0 si no está.</summary>
+        public int IndiceDe(PandilleroAPie p)
+        {
+            int i = miembros.IndexOf(p);
+            return i < 0 ? 0 : i;
+        }
         private float ultimoGrito = -100f;
 
         /// <summary>Un miembro pide su turno para gritar: true (y queda anotado) solo si pasó <see cref="ReglaRina.SeparacionGritos"/> desde el último grito de la riña.</summary>
