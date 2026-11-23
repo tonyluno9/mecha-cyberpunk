@@ -107,7 +107,7 @@ namespace MechaCyberpunk.Personaje.Combate
         }
 
         // T-733: la pistola no se ve aunque esté seleccionada; solo aparece mientras se apunta (o justo después de disparar o recargar).
-        // T-734: aparece con el evento de Pistola_Sacar (0.30 s) y desaparece con el de Pistola_Guardar (0.53 s): VisualPersonaje.ArmaEnMano. Las demás armas se ven siempre que están en la mano.
+        // T-734: aparece con el evento de Pistola_Sacar (0.30 s) y desaparece con el de Pistola_Guardar (0.53 s): VisualPersonaje.ArmaEnMano. T-60: las armas largas también.
         private void LateUpdate()
         {
             if (visualJugador == null)
@@ -119,6 +119,9 @@ namespace MechaCyberpunk.Personaje.Combate
             {
                 pistolaVisible = visible;
                 Mostrar(visualPistola, ArmaAPie.Pistola, pistolaVisible);
+                Mostrar(visualEscopeta, ArmaAPie.Escopeta, pistolaVisible); // T-60
+                Mostrar(visualFusil, ArmaAPie.Fusil, pistolaVisible);
+                Mostrar(visualSniper, ArmaAPie.Sniper, pistolaVisible);
                 // T-1014: el revólver y la granada usan la pose de pistola: también aparecen con el evento de sacar.
                 MostrarNuevas();
             }
@@ -228,9 +231,9 @@ namespace MechaCyberpunk.Personaje.Combate
             golpe.ArmaActiva = armaActiva;
             Mostrar(visualPunos, ArmaAPie.Punos);
             Mostrar(visualPistola, ArmaAPie.Pistola, pistolaVisible);
-            Mostrar(visualEscopeta, ArmaAPie.Escopeta);
-            Mostrar(visualFusil, ArmaAPie.Fusil);
-            Mostrar(visualSniper, ArmaAPie.Sniper);
+            Mostrar(visualEscopeta, ArmaAPie.Escopeta, pistolaVisible);
+            Mostrar(visualFusil, ArmaAPie.Fusil, pistolaVisible);
+            Mostrar(visualSniper, ArmaAPie.Sniper, pistolaVisible);
             MostrarNuevas();
         }
 
@@ -239,7 +242,7 @@ namespace MechaCyberpunk.Personaje.Combate
             for (int i = 0; visualesNuevas != null && i < visualesNuevas.Length; i++)
             {
                 ArmaAPie arma = (ArmaAPie)((int)PrimeraNueva + i);
-                Mostrar(visualesNuevas[i], arma, !ReglasArmaAPie.UsaPoseDePistola(arma) || pistolaVisible);
+                Mostrar(visualesNuevas[i], arma, pistolaVisible); // T-60: toda arma (también las largas) aparece al sacar y desaparece al guardar
             }
         }
 
