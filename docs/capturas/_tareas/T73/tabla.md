@@ -17,3 +17,14 @@ Francotirador (daño al cuerpo 40/44/48/52 niveles 0-3; no mata al cuerpo a un p
 
 Nota: el revólver (55) a la cabeza hace 110 y mata al pandillero de uno (el encargo solo fija la pistola); el policía necesita 2 tiros de revólver a la cabeza.
 Prueba: `DanioCabezaT73Pruebas` (EditMode).
+
+## Verificacion en Play (23-nov, verificador A)
+
+Pandillero de Pandilla_Calaveras_1 (vida 60), dano de pistola 25 con la misma cuenta que `PistolaAPie.Impactar` (`ReglaZonaDanio.EsCabeza` sobre su CharacterController a 1.78 m + `Multiplicador(cabeza, Pistola)` + `RecibirDanio`):
+
+| Tiro | Cabeza | Dano | Vida despues | KO |
+| --- | --- | --- | --- | --- |
+| 1 | si, x2 | 50 | 10 | no |
+| 2 | si, x2 | 50 | 0 | si |
+
+Nota: el raycast fisico no encontro el CharacterController del pandillero desde fuera (Physics.Raycast y cc.Raycast sin impacto con el pandillero en movimiento), asi que no se probo el disparo real de la pistola, solo la misma llamada.
