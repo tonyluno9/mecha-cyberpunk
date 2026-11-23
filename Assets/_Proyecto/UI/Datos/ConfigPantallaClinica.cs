@@ -124,8 +124,8 @@ namespace MechaCyberpunk.UI
         [SerializeField] private float duracionRevelar = 0.7f;
         [Min(0.05f)] [Tooltip("Lo que tarda el implante en ensamblarse al instalarlo (s).")]
         [SerializeField] private float duracionEnsamble = 0.9f;
-        [Min(0.5f)] [Tooltip("T-1658: lo que tarda en dibujarse, de abajo arriba y en su lugar, el holograma de PIERNAS o BRAZOS al instalarlos (s). Dura lo que el taladro de instalación (IMP_INSTALAR_TALADRO, 6.9 s).")]
-        [SerializeField] private float duracionInstalacionLenta = 7f;
+        [Min(0.5f)] [Tooltip("T-1658: lo que tarda en dibujarse, de abajo arriba y en su lugar, el holograma de PIERNAS o BRAZOS al instalarlos (s). T56: unos 3.5 s con el taladro (IMP_INSTALAR_TALADRO).")]
+        [SerializeField] private float duracionInstalacionLenta = 3.5f;
         [Min(0f)] [Tooltip("Qué tan lejos del cuerpo empieza el implante al ensamblarse (m).")]
         [SerializeField] private float distanciaEnsamble = 0.45f;
         [Tooltip("Dónde se arma el set del holograma, lejos de la ciudad (m). Distinto del banco de armas.")]

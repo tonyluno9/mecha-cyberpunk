@@ -43,14 +43,14 @@ namespace MechaCyberpunk.Progresion.Sonido
             public float Segundos { get; }
         }
 
-        /// <summary>Instalar un implante con el Doc: el taladro (6.9 s) con un clic al empezar, dos pitidos de sinapsis casi al terminar y el clic final.</summary>
+        /// <summary>Instalar un implante con el Doc: el taladro con un clic al empezar, dos pitidos de sinapsis casi al terminar y el clic final (T56: todo en unos 3.5 s, lo que tarda el holograma).</summary>
         public static IReadOnlyList<Paso> InstalarImplante { get; } = new[]
         {
             new Paso(Taladro, 0f),
             new Paso(Clic, 0.2f),
-            new Paso(Sinapsis, 6.2f),
-            new Paso(Sinapsis, 6.8f),
-            new Paso(Clic, 7.4f),
+            new Paso(Sinapsis, 2.9f),
+            new Paso(Sinapsis, 3.2f),
+            new Paso(Clic, 3.6f),
         };
 
         /// <summary>Si toca un tic del temporizador: la misión tiene límite (quedan segundos), faltan <see cref="UmbralTemporizador"/> o menos y pasó el intervalo desde el último.</summary>
