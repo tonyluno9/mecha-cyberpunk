@@ -13,7 +13,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
         [Test]
         public void Duplicados_ElMismoModeloPegadoSeQuita_UnoDistintoNo()
         {
-            var carros = new List<CarroEstacionadoDato> { C(0, "V02", 500f, 500f), C(1, "V02", 503f, 500f), C(2, "V03", 504f, 500f), C(3, "V02", 520f, 500f) };
+            var carros = new List<CarroEstacionadoDato> { C(0, "V02", 500f, 500f, true), C(1, "V02", 503f, 500f), C(2, "V03", 504f, 500f, true), C(3, "V02", 520f, 500f) };
             HashSet<int> quitar = ReglaMitadCarrosT1705.Quitar(carros, 0f, 0f);
             Assert.IsTrue(quitar.Contains(1), "V02 a 3 m del V02");
             Assert.IsFalse(quitar.Contains(0));
