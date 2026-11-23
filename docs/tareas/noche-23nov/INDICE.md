@@ -6,7 +6,7 @@ Le gustó (NO se toca): el logo, las opciones, levantarse del suelo al inicio, l
 | Tarea | Título | Sesión | Estado |
 |---|---|---|---|
 | T50 | [Créditos y Cargar partida con el menú nuevo](T50.md) | B | pendiente |
-| T51 | [Quitar la ruta / rastro de misiones](T51.md) | B | pendiente |
+| T51 | [Quitar la ruta / rastro de misiones](T51.md) | B | HECHA |
 | T52 | [SKULLS del inicio: a media calle, de frente y se van corriendo](T52.md) | B (lo del mapa lo coloca A) | HECHA |
 | T53 | [Todos los humanos usan EXACTAMENTE las animaciones del jugador](T53.md) | B | HECHA |
 | T54 | [Reducir los carros estacionados a la mitad](T54.md) | A | pendiente |
@@ -14,15 +14,15 @@ Le gustó (NO se toca): el logo, las opciones, levantarse del suelo al inicio, l
 | T56 | [Prótesis: holograma más rápido y en su lugar; mismas animaciones con y sin prótesis](T56.md) | B | pendiente |
 | T57 | [Menú de prótesis (Tab) con el cuerpo holográfico](T57.md) | B | pendiente |
 | T58 | [Estela al caer con las piernas: efecto de humo](T58.md) | B | pendiente |
-| T59 | [Tino vende las armas y las mejora; fuera la armería](T59.md) | B (quitar armería del mapa: A) | pendiente |
+| T59 | [Tino vende las armas y las mejora; fuera la armería](T59.md) | B (quitar armería del mapa: A) | HECHA |
 | T60 | [Guardar el arma: que desaparezca de la mano](T60.md) | B | pendiente |
-| T62 | [Avisos del tutorial en una ventana central con 'Entendido'; máquina expendedora con ratón](T62.md) | B | pendiente |
+| T62 | [Avisos del tutorial en una ventana central con 'Entendido'; máquina expendedora con ratón](T62.md) | B | HECHA |
 | T63 | [Consumibles: usarlos mientras corres, con sonido, y que curen](T63.md) | B | pendiente |
 | T64 | [Quitar el sonido al hacer una kill](T64.md) | B | HECHA |
 | T65 | [Eliminar TODOS los sonidos viejos de la primera versión](T65.md) | B | HECHA |
 | T66 | [Misión 'Libera el Tianguis': enemigo escondido que no deja terminar](T66.md) | A | pendiente |
 | T67 | [Enemigos marcados en el minimapa y el mapa](T67.md) | A | pendiente |
-| T68 | [Siempre de noche; día o noche solo desde Ajustes](T68.md) | B | pendiente |
+| T68 | [Siempre de noche; día o noche solo desde Ajustes](T68.md) | B | HECHA |
 | T69 | [Tinacos flotando y primitivos restantes: barrido automático](T69.md) | A | HECHA (23-nov, merge 23ce0f9): 27 flotantes → 0 tinacos/aires/antenas/cajas (19 bajados a su techo); quedan 6 justificados (elevador del taller y 5 candiles del casino). Primitivos 1615 → 1607: se apagaron 8 franjas de cubo sin textura; el resto son arquitectura con textura, neones, calcomanías de calle y cielo. Listas y captura en docs/capturas/_tareas/T69/. |
 | T70 | [Charcos que se ven como manchas blancas](T70.md) | A | pendiente |
 | T71 | [Civil tirado en la calle del mercado](T71.md) | A | pendiente |

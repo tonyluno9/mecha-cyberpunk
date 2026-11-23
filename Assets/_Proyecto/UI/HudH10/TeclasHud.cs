@@ -65,6 +65,13 @@ namespace MechaCyberpunk.UI.Hud
                 if (binding.path.StartsWith("<Keyboard>", System.StringComparison.Ordinal)
                     || binding.path.StartsWith("<Mouse>", System.StringComparison.Ordinal))
                 {
+                    // T-1757: una letra o número se nombra por su ruta; la distribución del teclado a veces da otro signo ("." en vez de E).
+                    string ruta = binding.effectivePath ?? binding.path;
+                    string tecla = ruta.Substring(ruta.LastIndexOf('/') + 1);
+                    if (ruta.StartsWith("<Keyboard>/", System.StringComparison.Ordinal) && tecla.Length == 1 && char.IsLetterOrDigit(tecla[0]))
+                    {
+                        return tecla.ToUpperInvariant();
+                    }
                     return Nombre(accion.GetBindingDisplayString(i));
                 }
             }

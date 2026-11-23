@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using MechaCyberpunk.Core;
@@ -116,6 +117,33 @@ namespace MechaCyberpunk.UI.Tiendas
         private void AlSalir()
         {
             Cerrar(false);
+        }
+
+        /// <summary>
+        /// T-59: Tino vende las armas desde su banco. Abre la pantalla de este mostrador sin horario ni control propio (quien la abre congela y devuelve el
+        /// control; <see cref="PestanasBancoTino"/>). <paramref name="alSalir"/> avisa Esc o SALIR.
+        /// </summary>
+        public void MostrarPantalla(Action alSalir, string titulo = null)
+        {
+            // T-1755: el mostrador de armas del CIC puede estar apagado en la escena (ya no se usa suelto): Tino abre su pantalla igual.
+            if (tienda == null || pantalla == null)
+            {
+                return;
+            }
+            pantalla.Mostrar(tienda, enVenta, alSalir, compra, aceptaFavorDescuento);
+            if (titulo != null)
+            {
+                pantalla.PonerTitulo(titulo);
+            }
+        }
+
+        /// <summary>T-59: cierra la pantalla abierta con <see cref="MostrarPantalla"/>.</summary>
+        public void OcultarPantalla()
+        {
+            if (pantalla != null)
+            {
+                pantalla.Ocultar();
+            }
         }
 
         // La E que cierra es la misma que abre: el control vuelve un cuadro después para que no reabra la pantalla (D-tony-67).

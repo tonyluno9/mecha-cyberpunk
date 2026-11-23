@@ -79,6 +79,10 @@ namespace MechaCyberpunk.Progresion.Opciones
             {
                 v.calidad = CalidadPorDefecto;
             }
+            if (!Enum.IsDefined(typeof(MomentoDelDia), v.momentoDia))
+            {
+                v.momentoDia = ReglaMomentoDia.PorDefecto;
+            }
             if (v.tutorialVisto == null)
             {
                 v.tutorialVisto = "";

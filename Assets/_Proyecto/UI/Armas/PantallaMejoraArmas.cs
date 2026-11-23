@@ -39,6 +39,7 @@ namespace MechaCyberpunk.UI.Armas
         private const float XTextoPieza = 138f;
         private const string RutaIconosPieza = "Menus/Pieza_";
         private const string RutaIconosCategoria = "Menus/Cat_";
+        private const float SegundosDobleClic = 0.4f;
         private const string TextoFiltroVacio = "NINGUNA ARMA CON ESTE FILTRO";
         private const string TituloFicha = "ESTADO ACTUAL";
         private const string TituloTrasCompra = "TE QUEDARÍA";
@@ -153,6 +154,8 @@ namespace MechaCyberpunk.UI.Armas
         private Text textoTrasCompra;
         private Text textoProgreso;
         private FiltroArmas filtro;
+        private PiezaArma ultimaPiezaClic;
+        private float ultimoClicPieza = float.NegativeInfinity;
         private ArmaAPie? categoria;
         private GameObject contenido;
         private RectTransform listaArmas;
@@ -1254,7 +1257,19 @@ namespace MechaCyberpunk.UI.Armas
                 KitUI.Colocar(f.Fondo.rectTransform, new Vector2(0.5f, 1f), new Vector2(0f, y), new Vector2(ancho, AltoFilaPieza));
                 Button boton = f.Fondo.gameObject.AddComponent<Button>();
                 boton.transition = Selectable.Transition.None;
-                boton.onClick.AddListener(() => ElegirPieza(p, true));
+                // T-59: un clic elige la pieza y un doble clic (dos clics seguidos sobre la misma) la instala.
+                boton.onClick.AddListener(() =>
+                {
+                    bool doble = p == ultimaPiezaClic && Time.unscaledTime - ultimoClicPieza <= SegundosDobleClic;
+                    ultimaPiezaClic = p;
+                    ultimoClicPieza = Time.unscaledTime;
+                    ElegirPieza(p, true);
+                    if (doble && visible)
+                    {
+                        ultimoClicPieza = float.NegativeInfinity;
+                        Comprar();
+                    }
+                });
                 HoverH10.Agregar(f.Fondo.gameObject, f.Fondo.transform.Find("Linea").GetComponent<Image>(), TrazoH10.TurquesaTenue, TrazoH10.Turquesa);
                 Image bordePieza = TrazoH10.Imagen(f.Fondo.transform, "Elegida", TrazoH10.Turquesa, TrazoH10.Linea);
                 TrazoH10.Estirar(bordePieza.rectTransform);

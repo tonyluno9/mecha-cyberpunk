@@ -34,6 +34,9 @@ namespace MechaCyberpunk.UI.Inicio
         public static readonly SeccionSonido[] SeccionesVolumen = { SeccionSonido.General, SeccionSonido.Musica, SeccionSonido.Efectos, SeccionSonido.Voces };
         public static readonly string[] TextosCalidad = { "BAJO", "MEDIO", "ALTO" };
         public static readonly string[] TextosApuntado = { "APAGADO", "SUAVE", "FUERTE" };
+        /// <summary>T68: en el orden de <see cref="MomentoDelDia"/>.</summary>
+        public static readonly string[] TextosMomentoDia = { "NOCHE", "DÍA" };
+        public const string TextoMomentoDia = "MOMENTO DEL DÍA";
 
         private const float AnchoPanel = 1000f;
         private const float AltoPanel = 860f;
@@ -50,6 +53,7 @@ namespace MechaCyberpunk.UI.Inicio
         [SerializeField] private FilaOpcion calidad;
         [SerializeField] private FilaOpcion resolucion;
         [SerializeField] private FilaOpcion pantallaCompleta;
+        [SerializeField] private FilaOpcion momentoDia;
         [SerializeField] private FilaOpcion[] volumenes = new FilaOpcion[0];
         [SerializeField] private FilaOpcion sensibilidad;
         [SerializeField] private FilaOpcion invertirY;
@@ -71,6 +75,8 @@ namespace MechaCyberpunk.UI.Inicio
         public FilaOpcion Calidad => calidad;
         public FilaOpcion Resolucion => resolucion;
         public FilaOpcion PantallaCompleta => pantallaCompleta;
+        /// <summary>T68: MOMENTO DEL DÍA (NOCHE / DÍA).</summary>
+        public FilaOpcion MomentoDia => momentoDia;
         public FilaOpcion[] Volumenes => volumenes;
         public FilaOpcion Sensibilidad => sensibilidad;
         public FilaOpcion InvertirY => invertirY;
@@ -140,6 +146,7 @@ namespace MechaCyberpunk.UI.Inicio
             panel.calidad = Fila(panel.contenidos[0], ref y, f => FilaOpcion.CrearSelector(f, "Calidad", "CALIDAD", TextosCalidad, (int)ReglaOpciones.CalidadPorDefecto, false));
             panel.resolucion = Fila(panel.contenidos[0], ref y, f => FilaOpcion.CrearSelector(f, "Resolucion", "RESOLUCIÓN", new[] { "1920 x 1080" }, 0, false));
             panel.pantallaCompleta = Fila(panel.contenidos[0], ref y, f => FilaOpcion.CrearConmutador(f, "PantallaCompleta", "PANTALLA COMPLETA", true));
+            panel.momentoDia = Fila(panel.contenidos[0], ref y, f => FilaOpcion.CrearSelector(f, "MomentoDia", TextoMomentoDia, TextosMomentoDia, (int)ReglaMomentoDia.PorDefecto, true));
 
             y = 0f;
             panel.volumenes = new FilaOpcion[TextosVolumen.Length];
@@ -199,6 +206,7 @@ namespace MechaCyberpunk.UI.Inicio
             calidad.Cambio += f => { if (!refrescando) Servicio?.FijarCalidad((CalidadGrafica)f.Indice); };
             resolucion.Cambio += AlCambiarResolucion;
             pantallaCompleta.Cambio += f => { if (!refrescando) Servicio?.FijarPantallaCompleta(f.Activo); };
+            momentoDia.Cambio += f => { if (!refrescando) Servicio?.FijarMomentoDia((MomentoDelDia)f.Indice); };
             for (int i = 0; i < volumenes.Length; i++)
             {
                 SeccionSonido seccion = SeccionesVolumen[i];
@@ -247,7 +255,7 @@ namespace MechaCyberpunk.UI.Inicio
         {
             return new[]
             {
-                new[] { calidad, resolucion, pantallaCompleta },
+                new[] { calidad, resolucion, pantallaCompleta, momentoDia },
                 volumenes,
                 new[] { sensibilidad, invertirY, apuntado, tutorial },
             };
@@ -317,6 +325,7 @@ namespace MechaCyberpunk.UI.Inicio
                 resolucion.FijarOpciones(textos, elegida);
             }
             pantallaCompleta.FijarActivo(s.PantallaCompleta);
+            momentoDia.FijarIndice((int)s.MomentoDia);
             for (int i = 0; i < volumenes.Length; i++)
             {
                 volumenes[i].FijarValor(s.Volumen(SeccionesVolumen[i]));

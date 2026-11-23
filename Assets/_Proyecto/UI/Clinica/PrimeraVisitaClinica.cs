@@ -1,3 +1,4 @@
+using MechaCyberpunk.Progresion.Partida;
 using UnityEngine;
 
 namespace MechaCyberpunk.UI.Clinica
@@ -38,7 +39,8 @@ namespace MechaCyberpunk.UI.Clinica
                 return;
             }
             Pendiente = false;
-            TutorialPendiente = true;
+            // T-62: si el tutorial ya se completó (queda guardado en la partida) no vuelve a salir aunque se repita el paso de la historia.
+            TutorialPendiente = !AvisosUnicos.YaVisto(AvisosUnicos.Protesis);
             PasoTutorial = PasoTutorialProtesis.AbrirMenu;
         }
 
