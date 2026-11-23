@@ -341,8 +341,19 @@ namespace MechaCyberpunk.Progresion.Recorrido
                 p = PasoRecorrido.Libre;
             }
             Debug.Log("[Historia] Reanuda el recorrido en el paso " + (int)p + " (" + p + ")");
-            IrA(p);
+            reanudando = true;
+            try
+            {
+                IrA(p);
+            }
+            finally
+            {
+                reanudando = false;
+            }
         }
+
+        // Al reanudar una partida guardada se vuelve a entrar al paso: lo que ya se cobró (el dinero del maletín) no se da otra vez.
+        private bool reanudando;
 
         // ---------- Guardado ----------
 
@@ -612,8 +623,11 @@ namespace MechaCyberpunk.Progresion.Recorrido
             {
                 Reloj()?.Pausar(false);
             }
-            Registro<ICartera>.Actual?.Abonar(TablaRecorrido.DineroMaletin, MotivoDinero.Mision);
-            Avisar(TablaRecorrido.AvisoMaletin + Moneda.Texto(TablaRecorrido.DineroMaletin), MechaCyberpunk.UI.Hud.TipoAviso.Dinero);
+            if (!reanudando)
+            {
+                Registro<ICartera>.Actual?.Abonar(TablaRecorrido.DineroMaletin, MotivoDinero.Mision);
+                Avisar(TablaRecorrido.AvisoMaletin + Moneda.Texto(TablaRecorrido.DineroMaletin), MechaCyberpunk.UI.Hud.TipoAviso.Dinero);
+            }
             PersonajeApoyo doc = viejo != null ? viejo.Doc : null;
             if (doc == null)
             {
