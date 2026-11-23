@@ -201,8 +201,9 @@ namespace MechaCyberpunk.Tests.IA
             Assert.IsTrue(civilSujeto, "durante la escena el civil estaba sujeto (sin paseo)");
             Assert.IsTrue(victima.enabled, "al terminar recupera su paseo");
             Assert.IsTrue(reacciono, "el civil reacciona y huye al soltarlo");
-            Assert.GreaterOrEqual(subtitulos.Count, 3, "las líneas salen con subtítulo");
-            Assert.AreEqual("SKULL", subtitulos[0].Hablante);
+            // T-1655 (T32): los SKULLS ya no hablan ni ponen subtítulo; solo queda la línea de la víctima.
+            Assert.IsFalse(subtitulos.Exists(s => s.Hablante == "SKULL"), "los SKULLS no ponen subtítulo");
+            Assert.GreaterOrEqual(subtitulos.Count, 1, "la víctima sí habla");
             Assert.AreEqual(0, Prestados(), "los pandilleros regresan al grupo");
             Assert.AreEqual(ReglaAcoso.Fase.Acosando, grupo.Fase, "el grupo sigue acosando a su civil");
             foreach (PandilleroAPie p in pandilleros)
