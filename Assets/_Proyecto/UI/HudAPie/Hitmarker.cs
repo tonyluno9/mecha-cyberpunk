@@ -110,7 +110,11 @@ namespace MechaCyberpunk.UI.Hud
                 rayas[i].color = color;
                 rayas[i].enabled = murio || i < RayasDiagonales;
             }
-            Sonidos.Reproducir(SonidosMarcaImpacto.Id(murio)); // T-1486: sonido distinto al pegar y al matar
+            string sonido = SonidosMarcaImpacto.Id(murio); // T64: al matar no hay sonido de confirmación (id null)
+            if (!string.IsNullOrEmpty(sonido))
+            {
+                Sonidos.Reproducir(sonido);
+            }
             raiz.localScale = Vector3.one * (murio ? EscalaMuerte : 1f);
             canvas.enabled = true;
         }
