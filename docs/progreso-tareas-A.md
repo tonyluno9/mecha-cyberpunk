@@ -54,3 +54,14 @@ Escenas: los subagentes trabajan de uno en uno en la carpeta principal (Unity ba
 - Sesión B: TERMINÓ (2579abf). Pide en para-sesion-A ronda D: Historia_EsperaSkulls, expendedora entre CIC y Tianguis, PuntoTrepar a azoteas, (opcional) vendedores y drones.
 - T38+E3: HECHA, merge 5f2c0d5. T45: HECHA, merge fde5981. T47: HECHA, merge 93f3e24. para-sesion-A ronda D: HECHO, merge 29e3705.
 - Builds: HECHOS (Demo 21:27, Juego 21:29, Result: Success; prueba de inicio del Demo bien). Reporte: docs/reporte-tareas-23nov.md. RONDA D TERMINADA.
+
+---
+# Noche del 23-nov (docs/tareas/noche-23nov/INDICE.md): T69, T66, T72, T71, T70, T54, T67, T73, T75, T74, para-sesion-A, T76
+Sesión B en .sesiones/s2. A es la única que edita escenas. Ramas de A: T-1700 en adelante (T-1700 T69, T-1701 T66, T-1702 T72, T-1703 T71, T-1704 T70,
+T-1705 T54, T-1706 T67, T-1707 T73, T-1708 T75, T-1709 T74, T-1710 para-sesion-A, T-1711 T76).
+- Paso 0: HECHO (f564ed1: T-1690 roce de ropa sin guardar + tony/blender-23nov con .meta y tareas).
+- Código sin compilar (worktree D:/wt-mecha/codigoA, ramas desde main f564ed1): T-1707 cabeza ×2 (5f98f85), T-1708 atropellar (ya existía, prueba 9ed6c10),
+  T-1706 minimapa (708f90a, toca Core TipoMarcaMapa), T-1702 refinería tope 4 y 60 s/80 m (5d6089d), T-1701 Tianguis código (e3a2048), T-1709 ZonaGlitch (bc5b9e9),
+  T-1704 shader charco (28cd272), T-1703 limpiar cuerpos (f258def), T-1705 MitadCarrosT1705.Aplicar (3928d1b). T76: NO QUEDÓ (carros de una sola malla, nota a5ce912 en T-1711).
+- T69: en curso en la carpeta principal (T-1700).
+- Falta: compilar todo junto en integ, correr filtros, Aplicar de T54, colocar zonas glitch (T74), puntos del Tianguis a la vista (T66), Play y capturas.
