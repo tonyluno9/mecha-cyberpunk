@@ -37,13 +37,13 @@ namespace MechaCyberpunk.IA.Editor
             Crear(new Valores
             {
                 Nombre = "Config_Skulls", Hablante = "SKULL", Color = new Color(1f, 0.25f, 0.8f), Pelea = CuandoPelea.SoloSiElJugadorAtaca,
-                Deteccion = 20f, Advertencia = 20f, Quedarse = 8f, DejarSeguir = 14f, Retirada = 3f, Acercamiento = 2.2f, Velocidad = 1.2f,
+                Deteccion = 20f, Advertencia = 20f, Quedarse = 8f, DejarSeguir = 14f, Retirada = 3f, Acercamiento = 2.2f, Velocidad = 1.62f,
                 Frases = 5f, Gesto = 2.2f, SacaArma = false, EntreEmpujones = 4f, ParaTirar = 2, MaxEmpujones = 4, Danio = 1f
             });
             Crear(new Valores
             {
                 Nombre = "Config_Snakes", Hablante = "SNAKE", Color = new Color(0.6f, 1f, 0.2f), Pelea = CuandoPelea.SoloSiElJugadorAtaca,
-                Deteccion = 20f, Advertencia = 20f, Quedarse = 8f, DejarSeguir = 14f, Retirada = 3f, Acercamiento = 2.2f, Velocidad = 1.2f,
+                Deteccion = 20f, Advertencia = 20f, Quedarse = 8f, DejarSeguir = 14f, Retirada = 3f, Acercamiento = 2.2f, Velocidad = 1.62f,
                 Frases = 4.5f, Gesto = 2f, SacaArma = true, EntreEmpujones = 3.5f, ParaTirar = 2, MaxEmpujones = 5, Danio = 1f
             });
             Crear(new Valores
@@ -87,7 +87,7 @@ namespace MechaCyberpunk.IA.Editor
             so.FindProperty("segundosCerca").floatValue = v.Advertencia;
             so.FindProperty("distanciaCerca").floatValue = v.Quedarse;
             so.FindProperty("distanciaDejarDeSeguir").floatValue = v.DejarSeguir;
-            so.FindProperty("velocidadCaminar").floatValue = v.Velocidad > 0f ? v.Velocidad : 1.2f;
+            so.FindProperty("velocidadCaminar").floatValue = v.Velocidad > 0f ? v.Velocidad : 1.62f;
             so.FindProperty("segundosRetirada").floatValue = v.Retirada;
             so.FindProperty("distanciaAcercamiento").floatValue = Mathf.Max(0.5f, v.Acercamiento);
             so.FindProperty("segundosEntreFrases").floatValue = v.Frases;
