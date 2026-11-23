@@ -7,7 +7,7 @@ Le gustó (NO se toca): comprar y mejorar armas con Tino en la misma tienda; los
 | T80 | [El aviso de 'Mantén TAB' sale al inicio: debe salir solo después de instalar la prótesis](T80.md) | B | HECHA |
 | T81 | [BUG GRAVE: el juego se queda en cámara lenta después del menú de Tab](T81.md) | B | HECHA |
 | T82 | [SKULLS del inicio y TODOS los NPCs: caminar y correr con la animación y la velocidad del jugador](T82.md) | B | HECHA |
-| T83 | [Candados del inicio: dejar usar los carros camino al Doc](T83.md) | B | pendiente |
+| T83 | [Candados del inicio: dejar usar los carros camino al Doc](T83.md) | B | HECHA |
 | T84 | [Tienda de Tino: tutorial guiado con un solo botón resaltado; arreglar el botón SALIR](T84.md) | B | HECHA |
 | T85 | [Campo de tiro: cubo holográfico, barrera en línea, maniquíes bien parados y terminal con E](T85.md) | B | pendiente |
 | T86 | [Quitar los números de daño: solo barras de vida](T86.md) | B | pendiente |

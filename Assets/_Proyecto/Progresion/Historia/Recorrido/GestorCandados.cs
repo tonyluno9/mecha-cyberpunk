@@ -27,12 +27,12 @@ namespace MechaCyberpunk.Progresion.Recorrido
             public readonly bool Tiendas;
             public readonly string TiendaAbierta;
 
-            public Candados(bool todo, string tiendaAbierta)
+            public Candados(bool todo, string tiendaAbierta, bool roboCarros)
             {
                 Policia = todo;
                 Pandillas = todo;
                 Nova = todo;
-                RoboCarros = todo;
+                RoboCarros = roboCarros;
                 Tiendas = todo;
                 TiendaAbierta = tiendaAbierta;
             }
@@ -51,17 +51,19 @@ namespace MechaCyberpunk.Progresion.Recorrido
                 case PasoRecorrido.Maletin:
                 case PasoRecorrido.Ranura:
                 case PasoRecorrido.Decision:
+                    return new Candados(true, string.Empty, true); // empujón y cinemáticas: tampoco carros
+                // T-83: desde que decide quedarse (el dinero) ya puede usar carros; lo demás sigue bloqueado hasta el mundo libre.
                 case PasoRecorrido.UsarProtesis:
                 case PasoRecorrido.Chica:
-                    return new Candados(true, string.Empty);
+                    return new Candados(true, string.Empty, false);
                 case PasoRecorrido.Dinero:
                 case PasoRecorrido.Suero:
-                    return new Candados(true, CandadosMundo.TiendaDoc);
+                    return new Candados(true, CandadosMundo.TiendaDoc, false);
                 case PasoRecorrido.Armas:
                 case PasoRecorrido.Inventor:
-                    return new Candados(true, CandadosMundo.TiendaTino);
+                    return new Candados(true, CandadosMundo.TiendaTino, false);
                 default:
-                    return new Candados(false, string.Empty); // Ninguno (recorrido viejo), GuerraSkulls en adelante y Libre
+                    return new Candados(false, string.Empty, false); // Ninguno (recorrido viejo), GuerraSkulls en adelante y Libre
             }
         }
 

@@ -18,15 +18,23 @@ namespace MechaCyberpunk.Tests
         [TestCase(PasoRecorrido.Maletin)]
         [TestCase(PasoRecorrido.Ranura)]
         [TestCase(PasoRecorrido.Decision)]
+        public void EmpujonYCinematicas_TodoBloqueado(PasoRecorrido paso)
+        {
+            GestorCandados.Candados c = GestorCandados.CandadosPara(paso);
+            Assert.IsTrue(c.Policia && c.Pandillas && c.Nova && c.RoboCarros && c.Tiendas, paso.ToString());
+        }
+
+        // T-83: desde que decide quedarse ya puede usar carros; policía, pandillas, NOVA y tiendas siguen bloqueadas.
         [TestCase(PasoRecorrido.Dinero)]
         [TestCase(PasoRecorrido.Suero)]
         [TestCase(PasoRecorrido.UsarProtesis)]
         [TestCase(PasoRecorrido.Armas)]
         [TestCase(PasoRecorrido.Chica)]
-        public void TramoGuiado_TodoBloqueado(PasoRecorrido paso)
+        public void CaminoAlDoc_CarrosLibresLoDemasBloqueado(PasoRecorrido paso)
         {
             GestorCandados.Candados c = GestorCandados.CandadosPara(paso);
-            Assert.IsTrue(c.Policia && c.Pandillas && c.Nova && c.RoboCarros && c.Tiendas, paso.ToString());
+            Assert.IsTrue(c.Policia && c.Pandillas && c.Nova && c.Tiendas, paso.ToString());
+            Assert.IsFalse(c.RoboCarros, paso.ToString());
         }
 
         [TestCase(PasoRecorrido.GuerraSkulls)]
@@ -56,7 +64,7 @@ namespace MechaCyberpunk.Tests
         [Test]
         public void Aplicar_PoneYQuitaLosCandadosDelMundo()
         {
-            GestorCandados.Aplicar(PasoRecorrido.UsarProtesis);
+            GestorCandados.Aplicar(PasoRecorrido.Molestan);
             Assert.IsTrue(CandadosMundo.Policia && CandadosMundo.RoboCarros && CandadosMundo.Pandillas && CandadosMundo.Nova);
             Assert.IsTrue(MisionProtegida.Activa);
             GestorCandados.Aplicar(PasoRecorrido.GuerraSkulls);
