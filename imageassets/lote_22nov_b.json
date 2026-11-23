@@ -1,0 +1,316 @@
+{
+ "version": 1,
+ "resolution": "1k",
+ "variantes_por_defecto": 1,
+ "carpeta_salida": "imageassets",
+ "trabajos": [
+  {
+   "id": "T02B",
+   "archivo": "T02_Banqueta",
+   "fase": 1,
+   "salida": "imageassets/calle/T02_Banqueta.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image ONLY for the art style and colors. A seamless tileable texture seen straight from above (orthographic, flat, no perspective), filling the entire square image edge to edge, even flat lighting, no objects, no text. The left and right edges and the top and bottom edges must continue seamlessly. Stylized hand-painted game texture, no photorealistic noise. Subject: a Mexican neighborhood concrete sidewalk made of square slabs (exactly a 3 by 3 grid of equal slabs) with clearly marked joint lines, dark stains, flattened chewing gum spots, fine cracks and worn edges.",
+   "uso": "Textura (60 cm por losa)"
+  },
+  {
+   "id": "T11",
+   "archivo": "T11_Charco",
+   "fase": 1,
+   "salida": "imageassets/calle/T11_Charco.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached image ONLY for the art style and colors. A seamless tileable texture seen straight from above (orthographic, flat, no perspective), filling the entire square image edge to edge, even flat lighting, no objects, no text. The left and right edges and the top and bottom edges must continue seamlessly. Stylized hand-painted game texture, no photorealistic noise. Subject: dark asphalt with several irregular puddles: the water is a darker glossy area with soft light reflections, surrounded by damp darker edges fading into dry asphalt.",
+   "uso": "Textura"
+  },
+  {
+   "id": "TN01a",
+   "archivo": "TN01_TorreNova_a",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/nuevos-22nov/TN01_TorreNova_a.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K06_CalleNova.png",
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png"
+   ],
+   "aspect_ratio": "9:16",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is our Nova district and the SECOND our game's look: match their illustrated art style EXACTLY. 9:16, no HUD, no text, no logos. Scene at night over the city: the tower of the Nova corporation, extremely tall and slender, seeming to reach the sky and rising far above all the other buildings, clean white with lines of cold blue light running up its whole height, a top with an antenna and a bright light, and at its base a glass lobby with a wide monumental staircase; the city lights and blue fog around its base.",
+   "uso": "Referencia de look"
+  },
+  {
+   "id": "TN02a",
+   "archivo": "TN02_TorreNova_a",
+   "fase": 2,
+   "salida": "imageassets/modelos-nuevos/nuevos-22nov/TN02_TorreNova_a.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/modelos-nuevos/nuevos-22nov/TN01_TorreNova_a.png",
+    "imageassets/referencias/look/K06_CalleNova.png"
+   ],
+   "aspect_ratio": "9:16",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients; Mexican cyberpunk megacity; Nova is clean white with cold blue light). Original design, nothing copied, no real brands. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow. No text, no logos. The FIRST attached image shows our Nova tower: draw EXACTLY the same tower (same shape, proportions, white panels, blue light lines, top antenna, glass lobby and staircase) as a standalone 3D game object, complete from the base to the antenna. View: 3/4 view from the front, slightly from below so the whole height fits.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "~250 m de alto (escalar en Unity)"
+  },
+  {
+   "id": "LT05a",
+   "archivo": "LT05_PantallaAnuncio_a",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/nuevos-22nov/LT05_PantallaAnuncio_a.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png",
+    "imageassets/pantallas/pantalla-h-bebida.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients; Mexican cyberpunk megacity; Nova is clean white with cold blue light). Original design, nothing copied, no real brands. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow. No text, no logos, no brand. View: straight from the front with a very slight angle so its thickness and mounting brackets are visible. Subject: a rectangular LED facade screen with a thick metal frame and mounting brackets, showing a generic energy drink advertisement: a glowing green can with lightning shapes and splashes, no words, no brand.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 6000,
+    "textura": "2K"
+   },
+   "medida": "4 × 2.25 m · fondo 0.3 m"
+  },
+  {
+   "id": "LT06a",
+   "archivo": "LT06_LetreroVertical_a",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/nuevos-22nov/LT06_LetreroVertical_a.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png",
+    "imageassets/letreros/L11_LetreroHotel.png"
+   ],
+   "aspect_ratio": "9:16",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients; Mexican cyberpunk megacity; Nova is clean white with cold blue light). Original design, nothing copied, no real brands. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow. No text, no letters, no logos. View: straight from the front with a very slight angle so its thickness and mounting brackets are visible. Subject: a tall vertical neon blade sign for a hotel or bar on a dark metal box with wall brackets, glowing magenta and turquoise neon tubes forming abstract shapes (stars, waves, a cocktail glass), no letters.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 10000,
+    "textura": "2K"
+   },
+   "medida": "1 × 4 m · fondo 0.4 m"
+  },
+  {
+   "id": "LT07a",
+   "archivo": "LT07_LetreroTaqueria_a",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/nuevos-22nov/LT07_LetreroTaqueria_a.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients; Mexican cyberpunk megacity; Nova is clean white with cold blue light). Original design, nothing copied, no real brands. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow. The only text is the word \"TACOS\", spelled EXACTLY like that. View: straight from the front with a very slight angle so its thickness and mounting brackets are visible. Subject: a neon taco shop sign on a dark metal backing with brackets: the word \"TACOS\" in thick red neon letters with a yellow neon outline, and a small neon taco shape.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 10000,
+    "textura": "2K"
+   },
+   "medida": "2.5 × 1 m · fondo 0.2 m"
+  },
+  {
+   "id": "LT08a",
+   "archivo": "LT08_LetreroFarmacia_a",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/nuevos-22nov/LT08_LetreroFarmacia_a.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients; Mexican cyberpunk megacity; Nova is clean white with cold blue light). Original design, nothing copied, no real brands. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow. No text, no letters, no numbers, no logos. View: straight from the front with a very slight angle so its thickness and mounting brackets are visible. Subject: an illuminated green pharmacy cross sign: a big glowing green cross light box with a thin white edge, mounted on a wall bracket, with a small glowing ring of lights around it suggesting 24 hours (no numbers).",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 6000,
+    "textura": "2K"
+   },
+   "medida": "1 × 1 m · fondo 0.2 m"
+  },
+  {
+   "id": "LT09a",
+   "archivo": "LT09_AnuncioNova_a",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/nuevos-22nov/LT09_AnuncioNova_a.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K06_CalleNova.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients; Mexican cyberpunk megacity; Nova is clean white with cold blue light). Original design, nothing copied, no real brands. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow. No text, no letters, no numbers. View: straight from the front with a very slight angle so its thickness and mounting brackets are visible. Subject: a Nova corporation advertising panel: a clean white rectangular panel with a thin frame and a support post or wall brackets, showing an abstract blue logo shape (a minimal geometric star or ring, invented, no letters) and soft blue light lines.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 6000,
+    "textura": "2K"
+   },
+   "medida": "3 × 1.5 m"
+  },
+  {
+   "id": "TN01b",
+   "archivo": "TN01_TorreNova_b",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/nuevos-22nov/TN01_TorreNova_b.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K06_CalleNova.png",
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png"
+   ],
+   "aspect_ratio": "9:16",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "The FIRST attached image is our Nova district and the SECOND our game's look: match their illustrated art style EXACTLY. 9:16, no HUD, no text, no logos. Scene at night over the city: the tower of the Nova corporation, extremely tall and slender, seeming to reach the sky and rising far above all the other buildings, clean white with lines of cold blue light running up its whole height, a top with an antenna and a bright light, and at its base a glass lobby with a wide monumental staircase; the city lights and blue fog around its base. VARIANT B: make a clearly different design from the most obvious version: different proportions, different placement of colors and details, while keeping the same description.",
+   "uso": "Referencia de look"
+  },
+  {
+   "id": "TN02b",
+   "archivo": "TN02_TorreNova_b",
+   "fase": 2,
+   "salida": "imageassets/modelos-nuevos/nuevos-22nov/TN02_TorreNova_b.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/modelos-nuevos/nuevos-22nov/TN01_TorreNova_b.png",
+    "imageassets/referencias/look/K06_CalleNova.png"
+   ],
+   "aspect_ratio": "9:16",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients; Mexican cyberpunk megacity; Nova is clean white with cold blue light). Original design, nothing copied, no real brands. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow. No text, no logos. The FIRST attached image shows our Nova tower: draw EXACTLY the same tower (same shape, proportions, white panels, blue light lines, top antenna, glass lobby and staircase) as a standalone 3D game object, complete from the base to the antenna. View: 3/4 view from the front, slightly from below so the whole height fits.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 12000,
+    "textura": "2K"
+   },
+   "medida": "~250 m de alto (escalar en Unity)"
+  },
+  {
+   "id": "LT05b",
+   "archivo": "LT05_PantallaAnuncio_b",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/nuevos-22nov/LT05_PantallaAnuncio_b.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png",
+    "imageassets/pantallas/pantalla-h-bebida.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients; Mexican cyberpunk megacity; Nova is clean white with cold blue light). Original design, nothing copied, no real brands. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow. No text, no logos, no brand. View: straight from the front with a very slight angle so its thickness and mounting brackets are visible. Subject: a rectangular LED facade screen with a thick metal frame and mounting brackets, showing a generic energy drink advertisement: a glowing green can with lightning shapes and splashes, no words, no brand. VARIANT B: make a clearly different design from the most obvious version: different proportions, different placement of colors and details, while keeping the same description.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 6000,
+    "textura": "2K"
+   },
+   "medida": "4 × 2.25 m · fondo 0.3 m"
+  },
+  {
+   "id": "LT06b",
+   "archivo": "LT06_LetreroVertical_b",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/nuevos-22nov/LT06_LetreroVertical_b.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png",
+    "imageassets/letreros/L11_LetreroHotel.png"
+   ],
+   "aspect_ratio": "9:16",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients; Mexican cyberpunk megacity; Nova is clean white with cold blue light). Original design, nothing copied, no real brands. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow. No text, no letters, no logos. View: straight from the front with a very slight angle so its thickness and mounting brackets are visible. Subject: a tall vertical neon blade sign for a hotel or bar on a dark metal box with wall brackets, glowing magenta and turquoise neon tubes forming abstract shapes (stars, waves, a cocktail glass), no letters. VARIANT B: make a clearly different design from the most obvious version: different proportions, different placement of colors and details, while keeping the same description.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 10000,
+    "textura": "2K"
+   },
+   "medida": "1 × 4 m · fondo 0.4 m"
+  },
+  {
+   "id": "LT07b",
+   "archivo": "LT07_LetreroTaqueria_b",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/nuevos-22nov/LT07_LetreroTaqueria_b.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients; Mexican cyberpunk megacity; Nova is clean white with cold blue light). Original design, nothing copied, no real brands. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow. The only text is the word \"TACOS\", spelled EXACTLY like that. View: straight from the front with a very slight angle so its thickness and mounting brackets are visible. Subject: a neon taco shop sign on a dark metal backing with brackets: the word \"TACOS\" in thick red neon letters with a yellow neon outline, and a small neon taco shape. VARIANT B: make a clearly different design from the most obvious version: different proportions, different placement of colors and details, while keeping the same description.",
+   "tripo": {
+    "modo": "HD",
+    "caras": 10000,
+    "textura": "2K"
+   },
+   "medida": "2.5 × 1 m · fondo 0.2 m"
+  },
+  {
+   "id": "LT08b",
+   "archivo": "LT08_LetreroFarmacia_b",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/nuevos-22nov/LT08_LetreroFarmacia_b.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K01_Barrio_HUDnuevo.png"
+   ],
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients; Mexican cyberpunk megacity; Nova is clean white with cold blue light). Original design, nothing copied, no real brands. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow. No text, no letters, no numbers, no logos. View: straight from the front with a very slight angle so its thickness and mounting brackets are visible. Subject: an illuminated green pharmacy cross sign: a big glowing green cross light box with a thin white edge, mounted on a wall bracket, with a small glowing ring of lights around it suggesting 24 hours (no numbers). VARIANT B: make a clearly different design from the most obvious version: different proportions, different placement of colors and details, while keeping the same description.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 6000,
+    "textura": "2K"
+   },
+   "medida": "1 × 1 m · fondo 0.2 m"
+  },
+  {
+   "id": "LT09b",
+   "archivo": "LT09_AnuncioNova_b",
+   "fase": 1,
+   "salida": "imageassets/modelos-nuevos/nuevos-22nov/LT09_AnuncioNova_b.png",
+   "endpoint": "google/nano-banana-2.1/edit",
+   "referencias": [
+    "imageassets/referencias/look/K06_CalleNova.png"
+   ],
+   "aspect_ratio": "16:9",
+   "resolution": "1k",
+   "variantes": 1,
+   "prompt": "Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients; Mexican cyberpunk megacity; Nova is clean white with cold blue light). Original design, nothing copied, no real brands. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow. No text, no letters, no numbers. View: straight from the front with a very slight angle so its thickness and mounting brackets are visible. Subject: a Nova corporation advertising panel: a clean white rectangular panel with a thin frame and a support post or wall brackets, showing an abstract blue logo shape (a minimal geometric star or ring, invented, no letters) and soft blue light lines. VARIANT B: make a clearly different design from the most obvious version: different proportions, different placement of colors and details, while keeping the same description.",
+   "tripo": {
+    "modo": "Smart Mesh P2",
+    "caras": 6000,
+    "textura": "2K"
+   },
+   "medida": "3 × 1.5 m"
+  }
+ ]
+}

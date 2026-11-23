@@ -444,3 +444,128 @@ NO se hace todavía: depende del tráiler que se está generando con IA. Cuando 
    animación del tráiler (las regenera el chat de arte usando frames del tráiler como referencia).
 3. Pasar todas por un upscaler para que queden en alta calidad (al menos 1920x1080, idealmente 4K).
 4. Meterlas en la pantalla de carga minimalista que ya existe (sin deformar, con el logo del menú).
+
+---
+# NUEVAS (22-nov noche, prueba de Tony del build de las 17:07)
+Capturas de Tony en docs/capturas/_prueba-22nov-noche/ (01 a 08).
+Le gustó (NO se toca): la cinemática del recuerdo; los charcos y sus reflejos ahora; caminar, Shift y saltar; que no puedas correr sin salir de
+la pose de golpe; los carros de Tripo (se ven bien); que la ciudad y la iluminación se ven muy bien; el cielo (hermoso); que el juego empiece de
+noche; el muro unido con fachadas de casas; que los NPCs caminen de frente y te miren; los aviones que pasan; los subtítulos ABAJO de la pantalla
+(no sobre los enemigos); el golpe más duro con el implante de brazos; las explosiones de carro; que con disparos ya vengan las patrullas; los
+guardias de Nova frente al casino; el edificio ejecutivo con LEDs a lo lejos.
+
+## T30. Inicio: aparecer tirado justo después de la cinemática
+Después de la cinemática C01 el jugador ya está TIRADO en el suelo y se levanta (no cae desde arriba). Las cinemáticas reales (videos) las va
+a pasar Tony; dejar listo su espacio (T10).
+
+## T31. SKULLS del inicio (paso 3 de la historia): caminar bien y frenarte donde estés
+1. SIN VOZ: no dicen nada (Tony dirá después qué audios usan). Subtítulos tampoco.
+2. Su CAMINAR se ve raro y deforme: que usen el mismo caminar bueno del jugador (PJ01_Caminar retargeteado) o uno bueno de Mixamo, sin
+   deslizarse, con la velocidad del clip.
+3. Salen del callejón a la vuelta de la casa y se paran a MEDIA CALLE, enfrente, esperando. Cuando el jugador empieza a caminar, vienen hacia él
+   (cruzando la calle con cuidado, sin atravesar nada), se le paran ENFRENTE donde lo encuentren y lo empujan y tiran en ESE punto, desde el
+   ángulo en que lo reciban (no hace falta acomodarse de lado). Lo demás como está (no te dejan moverte, te tiran, se van).
+
+## T32. Audio: quitar voces de SKULLS, regresar los pasos y quitar el siseo
+1. Quita las voces de los SKULLS a TODOS (T5 y T15): no suenan hasta que Tony diga qué audio usar. Los subtítulos de las escenas del barrio se
+   quedan solo donde no son SKULLS... (si es más simple, apaga también los subtítulos de los SKULLS).
+2. PASOS: regresa los pasos al sonido que tenían ANTES de T28 (Tony los arreglará él). Se escucha un SISEO de fondo al caminar que salió con el
+   cambio: encuentra qué lo produce (clip con ruido, loop de pasos, ambiente nuevo) y quítalo.
+3. Más adelante Tony ajustará el volumen de las voces; no tocar ahora.
+
+## T33. Golpe del jugador un poco más lento
+El golpe del personaje sale demasiado rápido: baja la velocidad de reproducción de los clips de golpe 1 y 2 (y del golpe con prótesis) para que
+se vea el impacto, sin cambiar el daño. El salto queda como está (posible cambio después, ver E2).
+
+## T34. Clínica del Doc: primera visita guiada e instalación lenta del implante
+1. En la PRIMERA visita no se puede usar la camilla/silla (misma tecla que hablar con el Doc y confunde): primero el Doc inyecta el suero y abre
+   el menú de prótesis; la camilla se habilita después.
+2. En el menú de prótesis, al instalar las PIERNAS: el holograma de la pierna se va DIBUJANDO muy lento en la misma interfaz mientras suena el
+   taladro de instalación. Igual con los BRAZOS.
+3. Al salir a la calle, tutorial en pantalla: "Mantén TAB para abrir el menú de prótesis, mueve el ratón a la que quieres y haz clic / suelta TAB
+   para activarla" → "Activa las PIERNAS y corre para probarlas" → "Activa los BRAZOS y golpea para probarlos".
+4. Quita la explosión al caer con el implante de piernas.
+5. Implante de brazos: golpe más rápido (ya está más fuerte) y al golpear un carro lo mueve unos centímetros (impulso pequeño, no lo saca volando).
+
+## T35. Muro: unir los muros con las torres
+Entre los tramos del muro y las torres junto a las puertas quedan rendijas que parecen salidas (captura 06). Unir TODAS las torres con sus muros
+sin ninguna separación visible ni pasable.
+
+## T36. Siempre de noche
+El juego se queda de NOCHE todo el tiempo hasta la misión de después de "la chica" (paso 11 de la historia); después de esa misión se podrá
+pasar a día. Por ahora: noche fija, sin ciclo de día.
+
+## T37. Limpieza: fuera primitivos, cosas inventadas y todo lo de afuera del muro
+1. Quita el "bar" improvisado (sillitas con una persona que atiende) y TODO lo que se armó con formas básicas: el modelo raro en medio de la calle
+   (captura 01) y arregla el suelo de esa calle; el panel blanco (captura 05); el edificio blanco liso (captura 02); cualquier caja o panel liso.
+2. Techos: quita lo que se inventó en los techos, tinacos y objetos flotando (captura 07), y cualquier objeto encima de otro.
+3. Afuera del muro: paredes raras y cualquier cosa que quede, FUERA.
+4. Casino VivaCoin: quita los 2 edificios enteros que hay dentro del casino; la entrada debe ser solo la puerta corrediza y entras directo al casino
+   (hoy hay un pasillo raro, captura 08); la fachada de afuera tiene una forma básica con textura fea y un "poste" primitivo en la entrada: quítalos y
+   usa modelos reales (marquesina MQ01, letreros, fachadas). Si falta un modelo, anótalo para pedirlo al chat de arte.
+5. Usa los modelos que ya existen; si algo no tiene modelo, déjalo anotado en docs/assets-faltan.md en vez de inventarlo.
+
+## T38. Banquetas con textura propia
+Las banquetas tienen textura de calle. Usa la textura nueva de banqueta que va a generar el chat de arte (T02_Banqueta en imageassets/calle/,
+cuando llegue; mientras, la mejor de banqueta que exista), bien escalada, con bordillo de concreto, en TODAS las banquetas.
+
+## T39. Quitar subir a los techos
+Quita la posibilidad de subir a los techos (trepar / parkour a azoteas). Colgarse de bordes bajos y saltar bardas se queda si no lleva al techo.
+
+## T40. NPCs: de espaldas, tirados, raros; aviones y drones sin atravesar
+1. Siguen NPCs de espaldas al platicar o parados raros (captura 02): revisa todos los grupos y que se miren de frente.
+2. NPC tirado bugueado en la calle (captura 03): que no aparezcan NPCs acostados sin razón.
+3. NPCs "trabajando" que se ven raros: revisar sus animaciones o quitarlos.
+4. Robot de Nova encimado sobre otro cuerpo (captura 04): que no aparezcan encimados.
+5. Aviones que pasan y drones que vigilan: que no atraviesen paredes, edificios ni el muro (rutas por encima o con evitación).
+
+## T41. Confrontación de pandilleros (revisión de T26)
+No atacan de primeras. Primero te VEN de lejos y te miran. Si te quedas cerca unos 20 s, UNO solo se acerca caminando lento. Si sigues ahí, te
+empuja. Si le pegas a ese uno, entonces vienen los demás. Si te alejas en cualquier momento, se acaba. Sin voces por ahora (T32).
+
+## T42. Policía y escalada (revisión de T8/T17)
+1. Al dispararle a una patrulla, TODAS las patrullas cercanas prenden luces y sirena y van por ti; no debe haber patrullas que se queden quietas o
+   "haciéndose tontas".
+2. Los policías no mueren de 2 balazos: súbeles la vida (que aguanten varios tiros).
+3. Nova llega solo después de matar al menos 10 policías y de que hayan llegado las camionetas; el orden: patrullas → camionetas → (10 policías
+   muertos) → primero los humanoides de Nova SIN armadura → luego los de armadura → luego el resto de la jerarquía.
+4. Patrullas que se chocan entre ellas: evitarlo.
+
+## T43. Barra de vida sobre los enemigos
+Todos los enemigos con una barra de vida pequeña sobre la cabeza (solo cuando están en combate o recibieron daño); los jefes con una barra grande
+arriba de la pantalla con su nombre.
+
+## T44. Tutorial e historia: guía y orden
+1. Guía: una ruta marcada (línea en el minimapa y en el piso o flecha) hacia cada objetivo de la historia.
+2. Después de vencer a los SKULLS y tener la pistola: "Mantén la RUEDA del ratón y elige la pistola para equiparla".
+3. Máquinas expendedoras: hoy no se puede comprar; que se pueda (consumibles) y que el tutorial lo pida antes de las peleas con pandilleros
+   ("Tengo hambre…" → compra en la máquina).
+4. Orden de la historia (corregir T10 donde haga falta): Doc (suero e implantes) → mercado de armas: compras, y el vendedor dice algo como
+   "¿Por qué tan baratas? Porque son de aquí. Conozco a un viejo que te las deja de otro planeta, pero cobra caro. ¿Traes dinero?" → vas con
+   TINO, que al hablarle dice "Acércate, te mejoramos el arma" → al salir chocas con la chica (C06).
+5. Lo del maletín: el orden actual (empujón → cinemática del robo del maletín → abrirlo → ranura → decisión → dinero) está bien; solo confirmar que
+   el dinero llega después de la decisión.
+
+## T45. Menos carros y carros quemados
+1. Menos carros: quedarse con los básicos (sedanes, compactos, pickups, taxi) y el TUNEADO con NEÓN debajo. Fuera tráileres, camiones y la
+   mayoría de camionetas y deportivos (algún deportivo suelto está bien).
+2. Los carros nuevos al explotar se ven negros/quemados (material quemado) como los demás.
+
+## T46. Drones de Nova inmunes con efecto holográfico
+Los drones de Nova que patrullan, al recibir balazos, muestran un escudo/efecto holográfico (destello cian donde pega la bala) para que se entienda
+que son inmunes; no reciben daño de armas normales.
+
+## T47. Torre de Nova y letreros LED
+1. La torre de Nova grande de las referencias (la que parece llegar al cielo) debe verse EN la ciudad, no solo al fondo: integrarla cuando llegue
+   su modelo (lo genera el chat de arte y Tripo).
+2. Más anuncios y letreros en edificios; los letreros de neón/LED de los edificios con neón deben iluminar de verdad (emisión + luz).
+
+## T48. Menú de pausa con la interfaz nueva
+En pausa, Opciones, Cargar y Guardar abren el menú ANTIGUO: que usen la interfaz moderna del menú principal.
+
+---
+# EN ESPERA (agregado 22-nov noche)
+## E2. Salto: posible cambio de animación después (Tony lo decide).
+## E3. Charcos: una textura que parezca más charco (cuando se haga, junto con T38).
+## E4. Cinemáticas reales: Tony pasará los videos para cada cinemática de T10.
+## E5. Día: después de la misión de la chica (paso 11) se podrá pasar a de día.
