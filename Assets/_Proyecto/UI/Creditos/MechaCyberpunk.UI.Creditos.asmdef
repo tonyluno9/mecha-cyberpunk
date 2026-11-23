@@ -1,7 +1,7 @@
 {
     "name": "MechaCyberpunk.UI.Creditos",
     "rootNamespace": "MechaCyberpunk.UI.Creditos",
-    "references": ["MechaCyberpunk.Core", "MechaCyberpunk.UI", "UnityEngine.UI", "Unity.InputSystem"],
+    "references": ["MechaCyberpunk.Core", "MechaCyberpunk.UI", "MechaCyberpunk.Progresion", "UnityEngine.UI", "Unity.InputSystem"],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

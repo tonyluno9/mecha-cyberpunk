@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using MechaCyberpunk.Core;
+using MechaCyberpunk.Progresion.Sonido;
 using MechaCyberpunk.UI.Kit;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -19,6 +20,7 @@ namespace MechaCyberpunk.UI.Creditos
         public const int OrdenCanvas = 80;
         public const string TextoAyuda = "↑ ↓ O RUEDA MOVER · ESC VOLVER";
         public const string SonidoCancelar = "UI_CANCELAR";
+        private const int TamanoTituloCreditos = 72;
 
         [Header("Medidas (px a 1920x1080)")]
         [Tooltip("Ancho del panel.")]
@@ -39,6 +41,10 @@ namespace MechaCyberpunk.UI.Creditos
         [Min(0f)] [SerializeField] private float pasoRueda = 0.5f;
         [Tooltip("Segundos que el automático espera después de mover a mano.")]
         [Min(0f)] [SerializeField] private float pausaManual = 2f;
+        [Tooltip("T50: fracción de la velocidad automática con la que arranca el desplazamiento (0 a 1); luego acelera suave hasta 1.")]
+        [Range(0f, 1f)] [SerializeField] private float arranqueSuave = 0.3f;
+        [Tooltip("T50: segundos que tarda en llegar a la velocidad completa.")]
+        [Min(0.01f)] [SerializeField] private float segundosArranque = 0.5f;
 
         private Action alCerrar;
         private RectTransform viewport;
@@ -48,6 +54,8 @@ namespace MechaCyberpunk.UI.Creditos
         private float desplazamiento;
         private float reanudaEn;
         private bool abierta;
+        private float rampa;
+        private bool musicaYaSonaba;
 
         public bool Abierta => abierta;
         /// <summary>Cuánto se ha subido el texto (px); 0 deja el principio pegado arriba del marco.</summary>
@@ -70,6 +78,10 @@ namespace MechaCyberpunk.UI.Creditos
         public void Mostrar(string texto, Action alCerrarPantalla)
         {
             alCerrar = alCerrarPantalla;
+            // T50: la música del menú suena con los créditos (si ya sonaba, sigue sin reiniciarse; si no, al cerrar se apaga).
+            musicaYaSonaba = MusicaMenu.Sonando;
+            MusicaMenu.Sonar();
+            rampa = arranqueSuave;
             Armar(CreditosTexto.Parsear(texto));
             abierta = true;
             cuadroAbierto = Time.frameCount;
@@ -86,14 +98,15 @@ namespace MechaCyberpunk.UI.Creditos
             float altoTitulo = 0f; // el título CRÉDITOS es la primera línea del texto
             float altoAyuda = e.AltoFilaHud;
             Canvas canvas = KitUI.CrearCanvas(transform, "CanvasCreditos", OrdenCanvas);
-            KitUI.CrearFondoPantalla(canvas.transform, "FondoPantalla");
+            Image velo = KitUI.CrearFondoPantalla(canvas.transform, "FondoPantalla");
+            velo.color = TrazoH10.ConAlfa(TrazoH10.FondoPantalla, 0.93f);
             RectTransform panel = KitUI.CrearPanel(canvas.transform, "Panel", new Vector2(anchoPanel, altoPanel));
             Image fondo = panel.GetComponent<Image>();
             if (fondo != null)
             {
-                Color c = fondo.color;
-                c.a = 1f;
-                fondo.color = c;
+                // T50: el panel del menú nuevo (H10): cristal con su línea fina, casi opaco para que el juego de atrás no estorbe la lectura.
+                VestidoH10.Panel(fondo);
+                fondo.color = TrazoH10.ConAlfa(TrazoH10.FondoPanel, 0.96f);
             }
 
             float altoViewport = altoPanel - 3f * relleno - altoTitulo - altoAyuda;
@@ -128,35 +141,45 @@ namespace MechaCyberpunk.UI.Creditos
             Text ayuda = KitUI.CrearTexto(panel, "Ayuda", RolTexto.Ayuda, TextAnchor.MiddleCenter);
             KitUI.Colocar(ayuda.rectTransform, new Vector2(0.5f, 0f), new Vector2(0f, relleno), new Vector2(anchoPanel, altoAyuda));
             ayuda.text = TextoAyuda;
-            ayuda.color = e.Turquesa;
+            ayuda.color = TrazoH10.TextoTenue;
+            VestidoH10.Fuente(panel);
         }
 
         private Text CrearLinea(Transform padre, LineaCredito linea, EstiloCyberfix e)
         {
+            // T50: colores y tamaños del menú nuevo (TrazoH10): títulos y secciones en turquesa, la lista en blanco y el resto tenue.
             RolTexto rol = RolTexto.Texto;
-            Color color = e.Texto;
+            Color color = TrazoH10.TextoTenue;
+            int tamano = TrazoH10.TamanoDato;
             switch (linea.Tipo)
             {
                 case TipoLineaCredito.Titulo:
                     rol = RolTexto.Titulo;
-                    color = e.Naranja;
+                    color = TrazoH10.Turquesa;
+                    tamano = TamanoTituloCreditos;
                     break;
                 case TipoLineaCredito.Seccion:
                     rol = RolTexto.Encabezado;
-                    color = e.Naranja;
+                    color = TrazoH10.Turquesa;
+                    tamano = TrazoH10.TamanoTitulo;
                     break;
                 case TipoLineaCredito.Subseccion:
                     rol = RolTexto.Boton;
-                    color = e.Turquesa;
+                    color = TrazoH10.Amarillo;
+                    tamano = TrazoH10.TamanoSeccion;
                     break;
                 case TipoLineaCredito.Lista:
                     rol = RolTexto.Boton;
+                    color = TrazoH10.Texto;
+                    tamano = TrazoH10.TamanoFila;
                     break;
             }
             Text t = KitUI.CrearTexto(padre, "Linea", rol, TextAnchor.UpperCenter);
             t.horizontalOverflow = HorizontalWrapMode.Wrap;
             t.verticalOverflow = VerticalWrapMode.Overflow;
             t.color = color;
+            t.font = TrazoH10.Fuente;
+            t.fontSize = tamano;
             t.text = linea.Texto;
             if (linea.Tipo == TipoLineaCredito.Espacio)
             {
@@ -210,11 +233,14 @@ namespace MechaCyberpunk.UI.Creditos
             if (Mathf.Abs(manual) > 0.0001f)
             {
                 reanudaEn = Time.unscaledTime + pausaManual;
+                rampa = arranqueSuave;
                 Fijar(desplazamiento + manual);
             }
             else if (Time.unscaledTime >= reanudaEn)
             {
-                Fijar(desplazamiento + velocidadAuto * dt);
+                // T50: el desplazamiento automático acelera suave (al abrir y al reanudar tras mover a mano) en vez de arrancar de golpe.
+                rampa = Mathf.MoveTowards(rampa, 1f, dt / segundosArranque);
+                Fijar(desplazamiento + velocidadAuto * rampa * dt);
             }
         }
 
@@ -234,6 +260,10 @@ namespace MechaCyberpunk.UI.Creditos
                 return;
             }
             abierta = false;
+            if (!musicaYaSonaba)
+            {
+                MusicaMenu.Apagar();
+            }
             Sonidos.Reproducir(SonidoCancelar);
             PilaPantallas.Cerrar(this);
             Action callback = alCerrar;
