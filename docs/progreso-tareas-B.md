@@ -79,3 +79,12 @@ Notas:
 - Merge: el primer merge (297f1e0) llevó a main todas las ramas a la vez por error (usé la punta de integ/B23); los merges siguientes de T-1656 a T-1660 quedaron vacíos. Todo el código está en main.
 - Pruebas: EditMode de las clases nuevas 106/106 (con el arreglo de ReglaEscudoDron); PlayMode Bullying 3/3, ProvocacionCalle y RespuestaNovaT1304 en verde. MenusCyberfixPruebas falla 2 por un error de la escena de Arena ("Faltan referencias en JaulaClandestino"), no por B.
 - No se hizo build. Unity de B cerrado. La sesión A ya puede hacer el build.
+
+---
+# Ronda E de B (23-nov noche): T50-T53, T55-T60, T62-T65, T68 (docs/tareas/noche-23nov/)
+B trabaja en `.sesiones/s2`, rama `integ/B24` (desde main f564ed1). Restos viejos de s2 guardados en `tony/B-restos-23nov` (no se mergea).
+Subagentes Sonnet escriben código en s2 sin git ni Unity; Opus compila, prueba, hace una rama `tony/T-17xx-*` por tarea, merge --no-ff a main y push.
+Si se corta: `cd .sesiones/s2`, `git status`, `git log --oneline main | grep T-17`, y seguir con las que falten según la tabla de abajo.
+
+| Tarea | Rama | Estado |
+| --- | --- | --- |

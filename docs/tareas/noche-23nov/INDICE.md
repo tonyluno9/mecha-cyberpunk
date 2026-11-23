@@ -10,7 +10,7 @@ Le gustó (NO se toca): el logo, las opciones, levantarse del suelo al inicio, l
 | T52 | [SKULLS del inicio: a media calle, de frente y se van corriendo](T52.md) | B (lo del mapa lo coloca A) | pendiente |
 | T53 | [Todos los humanos usan EXACTAMENTE las animaciones del jugador](T53.md) | B | pendiente |
 | T54 | [Reducir los carros estacionados a la mitad](T54.md) | A | pendiente |
-| T55 | [Verificar que ya no suena el roce de ropa (T49)](T55.md) | B | pendiente |
+| T55 | [Verificar que ya no suena el roce de ropa (T49)](T55.md) | B | HECHA |
 | T56 | [Prótesis: holograma más rápido y en su lugar; mismas animaciones con y sin prótesis](T56.md) | B | pendiente |
 | T57 | [Menú de prótesis (Tab) con el cuerpo holográfico](T57.md) | B | pendiente |
 | T58 | [Estela al caer con las piernas: efecto de humo](T58.md) | B | pendiente |

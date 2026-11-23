@@ -49,11 +49,6 @@ namespace MechaCyberpunk.Personaje.Movimiento
         /// <summary>T-1489: en cada paso que suena, con la posición, el ID del paso y si corría (para la salpicadura de los charcos).</summary>
         public event System.Action<Vector3, string, bool> PasoDado;
         private const float SegundosMinimosAire = 0.25f;
-        // T-442: la respiración se oye tras correr este rato seguido y no más seguido que cada tanto.
-        private const float SegundosParaRespirar = 4f;
-        private const float SegundosEntreRespiras = 10f;
-        private float tiempoCorriendo;
-        private float proximaRespira;
         private float tiempoAire;
 
         [SerializeField] private DatosPersonaje datos;
@@ -122,6 +117,10 @@ namespace MechaCyberpunk.Personaje.Movimiento
 
         // T-992: las habilidades de prótesis suman su multiplicador temporal encima de los implantes (1 si no hay o no están activas).
         private bool saltoSuper; // T-1535: el salto en curso lo dio el exo
+
+        /// <summary>T-58: el salto en curso lo dio el exo con las piernas activas (sigue en true cuando suena Aterrizo).</summary>
+        public bool SaltoSuperEnCurso => saltoSuper;
+
         private MechaCyberpunk.Personaje.Habilidades.HabilidadesProtesis habilidades;
         private MechaCyberpunk.Personaje.Habilidades.HabilidadesProtesis Habilidades =>
             habilidades != null ? habilidades : (habilidades = GetComponent<MechaCyberpunk.Personaje.Habilidades.HabilidadesProtesis>());
@@ -423,14 +422,7 @@ namespace MechaCyberpunk.Personaje.Movimiento
                 PasoDado?.Invoke(transform.position, UltimoIdPaso, corriendoAhora);
             }
             tiempoAire = enPiso ? 0f : tiempoAire + dt;
-            bool corriendo = enPiso && velocidad.sqrMagnitude > UmbralPaso * UmbralPaso && quiereCorrer;
-            tiempoCorriendo = corriendo ? tiempoCorriendo + dt : 0f;
-            if (tiempoCorriendo >= SegundosParaRespirar && Time.time >= proximaRespira)
-            {
-                proximaRespira = Time.time + SegundosEntreRespiras;
-                tiempoCorriendo = 0f;
-                Sonidos.Reproducir(VozJugador.Id("JUG_CORRER_RESPIRA"));
-            }
+            // T55: sin la respiración al correr (JUG_CORRER_RESPIRA era un sonido de la primera versión).
             bool moviendo = enPiso && velocidad.sqrMagnitude > UmbralPaso * UmbralPaso;
             if (moviendo && !estabaMoviendo)
             {
