@@ -469,7 +469,9 @@ namespace MechaCyberpunk.Mundo.Editor
                 }
                 foreach (Collider c in raiz.GetComponentsInChildren<Collider>(false))
                 {
-                    if (c.enabled && c.isTrigger && c.gameObject.activeInHierarchy && Mathf.Max(c.bounds.size.x, c.bounds.size.z) <= LadoMaximoReserva)
+                    // T-1680: la sala de un interior (ZonaInterior) es espacio de juego aunque sea grande (el casino mide 25x30 m): no es hueco que rellenar.
+                    if (c.enabled && c.isTrigger && c.gameObject.activeInHierarchy
+                        && (Mathf.Max(c.bounds.size.x, c.bounds.size.z) <= LadoMaximoReserva || c.GetComponent<MechaCyberpunk.Mundo.Lugares.ZonaInterior>() != null))
                     {
                         Bounds rb = c.bounds;
                         rb.Expand(2f);
