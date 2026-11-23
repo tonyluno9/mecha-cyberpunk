@@ -746,7 +746,7 @@ ModelImporter:
       scale: {x: 1, y: 1, z: 1}
     - name: L_Calf
       parentName: L_Thigh
-      position: {x: -0.000000022542663, y: 0.38314715, z: 0.0000000717453}
+      position: {x: -0.000000022542663, y: 0.38314715, z: 0.00000007174529}
       rotation: {x: 0.00596848, y: 0.09550375, z: 0.10087723, w: 0.9902864}
       scale: {x: 1, y: 1, z: 0.99999994}
     - name: L_Foot
@@ -766,12 +766,12 @@ ModelImporter:
       scale: {x: 1, y: 0.99999994, z: 1}
     - name: L_CalfTwist02
       parentName: L_CalfTwist01
-      position: {x: 0.000000008754431, y: 0.2003837, z: -0.00000006522052}
+      position: {x: 0.00000000875443, y: 0.2003837, z: -0.00000006522052}
       rotation: {x: 0.00000003306195, y: -0.000000043190084, z: -0.000000008614734, w: 1}
       scale: {x: 0.99999994, y: 1, z: 1}
     - name: L_KneeShareBone
       parentName: L_Calf
-      position: {x: -0.0031744079, y: 0.00027161808, z: 0.0018354753}
+      position: {x: -0.0031744079, y: 0.00027161808, z: 0.0018354752}
       rotation: {x: -0.3162032, y: 0.61954707, z: 0.60256445, w: 0.39127105}
       scale: {x: 1, y: 0.9999999, z: 0.99999994}
     - name: L_ThighTwist01
@@ -841,7 +841,7 @@ ModelImporter:
       scale: {x: 1, y: 1, z: 1}
     - name: Spine02
       parentName: Spine01
-      position: {x: 0.000000003439868, y: 0.11529867, z: 3.1771819e-10}
+      position: {x: 0.0000000034398677, y: 0.11529867, z: 3.1771819e-10}
       rotation: {x: 0.0064627826, y: 0.045503676, z: -0.045503758, w: 0.9979063}
       scale: {x: 1, y: 1, z: 1}
     - name: IMP05_Salida
@@ -896,7 +896,7 @@ ModelImporter:
       scale: {x: 0.99999994, y: 0.99999994, z: 1}
     - name: L_ForearmTwist01
       parentName: L_Forearm
-      position: {x: -0.000010327603, y: 0.104852945, z: 0.00001550752}
+      position: {x: -0.000010327603, y: 0.10485294, z: 0.00001550752}
       rotation: {x: 0.00007609752, y: 0.000006460119, z: 0.00004932289, w: 1}
       scale: {x: 1, y: 0.99999994, z: 1}
     - name: L_ForearmTwist02
