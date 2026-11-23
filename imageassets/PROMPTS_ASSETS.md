@@ -4427,3 +4427,62 @@ Use the attached image ONLY for the color mood (cold blue). A ground impact effe
 ```
 The FIRST attached image is our closed Nova drop pod: keep EXACTLY the same pod, shape, armor, colors, fins, thrusters and base, the same view and the same plain flat pure white background, no ground, no people, no text. Show it OPEN and EMPTY: the front doors swung fully open to the sides (still attached at their hinges), revealing a dark interior with padded support harness frames where a soldier stood, cold blue lights inside, and a little white vapor drifting out of the opening.
 ```
+
+
+# Parte 37 — Pedido 22-nov noche: texturas T02_Banqueta y T11, torre Nova TN01/TN02, letreros LT05–LT09
+
+Lote: `lote_22nov_b.json` · script: `generar_22nov_b.ps1` (fase 1 todo menos TN02; fase 2 TN02 desde TN01).
+
+## T02B — T02_Banqueta (fase 1)
+
+```
+Use the attached image ONLY for the art style and colors. A seamless tileable texture seen straight from above (orthographic, flat, no perspective), filling the entire square image edge to edge, even flat lighting, no objects, no text. The left and right edges and the top and bottom edges must continue seamlessly. Stylized hand-painted game texture, no photorealistic noise. Subject: a Mexican neighborhood concrete sidewalk made of square slabs (exactly a 3 by 3 grid of equal slabs) with clearly marked joint lines, dark stains, flattened chewing gum spots, fine cracks and worn edges.
+```
+
+## T11 — T11_Charco (fase 1)
+
+```
+Use the attached image ONLY for the art style and colors. A seamless tileable texture seen straight from above (orthographic, flat, no perspective), filling the entire square image edge to edge, even flat lighting, no objects, no text. The left and right edges and the top and bottom edges must continue seamlessly. Stylized hand-painted game texture, no photorealistic noise. Subject: dark asphalt with several irregular puddles: the water is a darker glossy area with soft light reflections, surrounded by damp darker edges fading into dry asphalt.
+```
+
+## TN01a — TN01_TorreNova_a (fase 1)
+
+```
+The FIRST attached image is our Nova district and the SECOND our game's look: match their illustrated art style EXACTLY. 9:16, no HUD, no text, no logos. Scene at night over the city: the tower of the Nova corporation, extremely tall and slender, seeming to reach the sky and rising far above all the other buildings, clean white with lines of cold blue light running up its whole height, a top with an antenna and a bright light, and at its base a glass lobby with a wide monumental staircase; the city lights and blue fog around its base.
+```
+
+## TN02a — TN02_TorreNova_a (fase 2)
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients; Mexican cyberpunk megacity; Nova is clean white with cold blue light). Original design, nothing copied, no real brands. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow. No text, no logos. The FIRST attached image shows our Nova tower: draw EXACTLY the same tower (same shape, proportions, white panels, blue light lines, top antenna, glass lobby and staircase) as a standalone 3D game object, complete from the base to the antenna. View: 3/4 view from the front, slightly from below so the whole height fits.
+```
+
+## LT05a — LT05_PantallaAnuncio_a (fase 1)
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients; Mexican cyberpunk megacity; Nova is clean white with cold blue light). Original design, nothing copied, no real brands. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow. No text, no logos, no brand. View: straight from the front with a very slight angle so its thickness and mounting brackets are visible. Subject: a rectangular LED facade screen with a thick metal frame and mounting brackets, showing a generic energy drink advertisement: a glowing green can with lightning shapes and splashes, no words, no brand.
+```
+
+## LT06a — LT06_LetreroVertical_a (fase 1)
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients; Mexican cyberpunk megacity; Nova is clean white with cold blue light). Original design, nothing copied, no real brands. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow. No text, no letters, no logos. View: straight from the front with a very slight angle so its thickness and mounting brackets are visible. Subject: a tall vertical neon blade sign for a hotel or bar on a dark metal box with wall brackets, glowing magenta and turquoise neon tubes forming abstract shapes (stars, waves, a cocktail glass), no letters.
+```
+
+## LT07a — LT07_LetreroTaqueria_a (fase 1)
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients; Mexican cyberpunk megacity; Nova is clean white with cold blue light). Original design, nothing copied, no real brands. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow. The only text is the word "TACOS", spelled EXACTLY like that. View: straight from the front with a very slight angle so its thickness and mounting brackets are visible. Subject: a neon taco shop sign on a dark metal backing with brackets: the word "TACOS" in thick red neon letters with a yellow neon outline, and a small neon taco shape.
+```
+
+## LT08a — LT08_LetreroFarmacia_a (fase 1)
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients; Mexican cyberpunk megacity; Nova is clean white with cold blue light). Original design, nothing copied, no real brands. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow. No text, no letters, no numbers, no logos. View: straight from the front with a very slight angle so its thickness and mounting brackets are visible. Subject: an illuminated green pharmacy cross sign: a big glowing green cross light box with a thin white edge, mounted on a wall bracket, with a small glowing ring of lights around it suggesting 24 hours (no numbers).
+```
+
+## LT09a — LT09_AnuncioNova_a (fase 1)
+
+```
+Use the attached images ONLY for the art style, colors and level of detail of our game (illustrated, thin outlines, soft hand-painted gradients; Mexican cyberpunk megacity; Nova is clean white with cold blue light). Original design, nothing copied, no real brands. Stylized game asset with chunky simplified shapes, large clean bevels, no photorealistic noise. A single object alone, complete and fully visible with empty space around it, centered, isolated on a plain flat pure white background: no ground, no people, no other objects, soft even studio lighting, no cast shadow. No text, no letters, no numbers. View: straight from the front with a very slight angle so its thickness and mounting brackets are visible. Subject: a Nova corporation advertising panel: a clean white rectangular panel with a thin frame and a support post or wall brackets, showing an abstract blue logo shape (a minimal geometric star or ring, invented, no letters) and soft blue light lines.
+```
