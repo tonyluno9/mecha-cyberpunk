@@ -69,6 +69,10 @@ namespace MechaCyberpunk.UI.Hud
             bool golpea = brazos && golpe != null && golpe.Fase != FaseGolpe.Listo;
             bool tienePiernas = habilidades != null && habilidades.Nivel(HabilidadProtesis.Piernas) > 0;
             bool tieneBrazos = habilidades != null && habilidades.Nivel(HabilidadProtesis.Brazos) > 0;
+            if (!tienePiernas && !tieneBrazos)
+            {
+                return; // T-80: sin ninguna prótesis instalada no hay nada que enseñar (el aviso de TAB sale tras instalar las piernas con el Doc)
+            }
             regla.Avanzar(abrio, piernas, corre, brazos, golpea, tienePiernas);
             PrimeraVisitaClinica.PasoTutorial = regla.Paso;
             if (regla.Paso == PasoTutorialProtesis.Hecho)
