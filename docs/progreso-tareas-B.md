@@ -88,3 +88,29 @@ Si se corta: `cd .sesiones/s2`, `git status`, `git log --oneline main | grep T-1
 
 | Tarea | Rama | Estado |
 | --- | --- | --- |
+| T55 sin roce ni loops | tony/T-1750-sin-loops | HECHA |
+| T65 sonidos viejos | tony/T-1751-sonidos-viejos | HECHA |
+| T64 sin sonido de kill | tony/T-1752-sin-sonido-kill | HECHA |
+| T53 humanos como el jugador | tony/T-1753-humanos-como-jugador | HECHA (parcial: SKULLS sin arma y guardias pesados de Nova, ver T53.md) |
+| T52 SKULLS del inicio | tony/T-1754-skulls-inicio | HECHA |
+| T59 Tino vende y mejora | tony/T-1755-tino-avisos-ruta-noche | HECHA |
+| T60 guardar el arma | tony/T-1756-guardar-arma | HECHA |
+| T62 avisos en ventana, expendedora con ratón | tony/T-1755-tino-avisos-ruta-noche | HECHA |
+| T63 consumibles | tony/T-1758-consumibles | HECHA |
+| T56 holograma de prótesis | tony/T-1759-protesis-holograma | HECHA |
+| T57 menú Tab con el cuerpo | tony/T-1760-menu-tab-cuerpo | HECHA |
+| T58 humo al caer | tony/T-1761-humo-piernas | HECHA |
+| T50 Créditos y Cargar | tony/T-1762-menus-nuevos | HECHA |
+| T51 sin ruta | tony/T-1755-tino-avisos-ruta-noche | HECHA |
+| T68 siempre de noche | tony/T-1755-tino-avisos-ruta-noche | HECHA |
+
+## B TERMINÓ la ronda E (23-nov noche)
+Las 15 tareas de B quedaron HECHAS y en main (último merge 6117f14 + este de docs). Detalle de cada una en su documento de docs/tareas/noche-23nov/ y capturas de la VENTANA del juego (con HUD) en docs/capturas/_tareas/T5x/ y T6x/.
+Notas:
+- T59, T62, T51 y T68 comparten DirectorRecorrido: van en una sola rama (un commit por tarea) y un solo merge.
+- Pruebas: EditMode de las clases de la ronda 157/157 sobre el main final; PlayMode MinimapaRutaGps, VentanaAvisoT62, ControlesT1329, PantallaCreditos, ProvocacionCalleT1528 en verde. Fallan por cosas previas: GuardadoRanuras.RecorridoGuardarYCargar y PersonajesApoyo.RecorridoProfes (error de escena de Arena "Faltan referencias en JaulaClandestino") e ImplanteLocomocionPJ01T739 (espera clips con nombres viejos aun sin implante).
+- Para la sesión A (docs/para-sesion-A.md, ronda E): abrir paso entre la expendedora y la patrulla estacionada a la salida del callejón de los SKULLS; letrero y entrada de la armería, SIN borrar MostradorMercadoNegro (el COMPRAR de Tino usa su lista).
+- Ojo: al probar en el editor se escribió el autoguardado (23 NOV 02:48, paso 12) en la carpeta de partidas del juego; la ranura 1 de Tony quedó intacta. La opción MOMENTO DEL DÍA quedó otra vez en NOCHE.
+- Ver en el build (no se pudo con teclado en el editor sin foco): usar consumibles corriendo (T63), súper salto con humo (T58) y oír que ya no hay siseo, ni "¡hey!", ni sonido de kill (T55, T65, T64).
+- No se hizo build. Unity de B cerrado.
+
