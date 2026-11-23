@@ -11,8 +11,15 @@ namespace MechaCyberpunk.Core
     /// </summary>
     public static class MisionProtegida
     {
-        public static bool Activa { get; private set; }
-        public static bool NovaPermitida { get; private set; }
+        private static bool activaPorMision;
+        private static bool novaPorMision;
+
+        /// <summary>True con una misión protegida activa o con el candado de policía de la historia (<see cref="CandadosMundo.Policia"/>, T-78).</summary>
+        public static bool Activa => activaPorMision || CandadosMundo.Policia;
+
+        /// <summary>NOVA sí responde: solo si la misión lo permite y el candado de NOVA (<see cref="CandadosMundo.Nova"/>) no está puesto.</summary>
+        public static bool NovaPermitida => novaPorMision && !CandadosMundo.Nova;
+
         public static string Motivo { get; private set; } = string.Empty;
 
         /// <summary>Se avisa en cada cambio de <see cref="Activa"/>.</summary>
@@ -20,18 +27,18 @@ namespace MechaCyberpunk.Core
 
         public static void Activar(string motivo, bool novaPermitida = false)
         {
-            bool antes = Activa;
-            Activa = true;
-            NovaPermitida = novaPermitida;
+            bool antes = activaPorMision;
+            activaPorMision = true;
+            novaPorMision = novaPermitida;
             Motivo = motivo ?? string.Empty;
             if (!antes) Cambio?.Invoke(true);
         }
 
         public static void Desactivar()
         {
-            if (!Activa) return;
-            Activa = false;
-            NovaPermitida = false;
+            if (!activaPorMision) return;
+            activaPorMision = false;
+            novaPorMision = false;
             Motivo = string.Empty;
             Cambio?.Invoke(false);
         }
@@ -39,8 +46,8 @@ namespace MechaCyberpunk.Core
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void Reiniciar()
         {
-            Activa = false;
-            NovaPermitida = false;
+            activaPorMision = false;
+            novaPorMision = false;
             Motivo = string.Empty;
             Cambio = null;
         }

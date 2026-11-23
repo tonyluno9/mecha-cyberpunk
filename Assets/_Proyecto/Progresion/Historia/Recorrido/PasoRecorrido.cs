@@ -26,6 +26,8 @@ namespace MechaCyberpunk.Progresion.Recorrido
         JefeFinal = 17,
         Puertas = 18,
         Fin = 19,
-        Libre = 20
+        Libre = 20,
+        /// <summary>T-78: tras instalar las piernas del Doc, usarlas (Tab, PIERNAS, correr). Va entre Suero y Armas; el número es 21 para no mover los pasos guardados y los saltos de las pruebas (el orden lo da <see cref="GestorCandados.Siguiente"/>).</summary>
+        UsarProtesis = 21
     }
 }

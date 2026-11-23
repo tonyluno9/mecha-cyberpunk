@@ -294,9 +294,9 @@ namespace MechaCyberpunk.IA.APie
             get => alerta || Provocado || (percepcion != null && percepcion.Activa);
             set
             {
-                if (Acosando)
+                if (Acosando || (value && CandadosMundo.Pandillas))
                 {
-                    return;
+                    return; // T-78: con el candado de pandillas nadie pasa a alerta contra el jugador (los SKULLS de la historia van como Acosando)
                 }
                 if (!value && alerta && !siempreAlerta && !EstaKO && EsSkull)
                 {
@@ -1967,6 +1967,10 @@ namespace MechaCyberpunk.IA.APie
 
         private bool EsAtacable()
         {
+            if (CandadosMundo.Pandillas && !Acosando)
+            {
+                return false; // T-78: inicio guiado: nadie ataca al jugador
+            }
             // T-933: la policía solo va contra el jugador si lo están buscando.
             ICalor calor = Registro<ICalor>.Actual;
             if (datos != null && datos.EsPolicia && calor != null && calor.Nivel <= 0)
