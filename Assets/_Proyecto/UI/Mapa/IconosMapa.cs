@@ -27,6 +27,8 @@ namespace MechaCyberpunk.UI.Mapa
         private const float FraccionPuntoMarcado = 0.35f;
         private const float FraccionEnemigo = 0.45f;
         private const float FraccionJefe = 0.75f;
+        /// <summary>T-1706: color del punto de la policía a pie en el minimapa y el mapa grande.</summary>
+        public static readonly Color ColorPolicia = new Color(0.25f, 0.55f, 1f, 1f);
         private const float BaseTecho = 0.15f;
         private const float AnchoTecho = 0.95f;
         private const float AnchoCuerpo = 0.6f;
@@ -74,9 +76,26 @@ namespace MechaCyberpunk.UI.Mapa
         {
             switch (tipo)
             {
-                case TipoMarcaMapa.Enemigo: return lado * FraccionEnemigo;
+                case TipoMarcaMapa.Enemigo:
+                case TipoMarcaMapa.Policia:
+                case TipoMarcaMapa.Nova:
+                    return lado * FraccionEnemigo;
                 case TipoMarcaMapa.Jefe: return lado * FraccionJefe;
                 default: return lado;
+            }
+        }
+
+        /// <summary>T-1706: true si la marca es una persona hostil (enemigo, jefe, policía o Nova): sale como punto y lleva barra de vida.</summary>
+        public static bool EsEnemigo(TipoMarcaMapa tipo) => tipo == TipoMarcaMapa.Enemigo || tipo == TipoMarcaMapa.Jefe || tipo == TipoMarcaMapa.Policia || tipo == TipoMarcaMapa.Nova;
+
+        /// <summary>T-1706: color del punto de un enemigo: rojo (enemigo y jefe), azul (policía) o el violeta de Nova.</summary>
+        public static Color ColorPunto(TipoMarcaMapa tipo, Color rojo)
+        {
+            switch (tipo)
+            {
+                case TipoMarcaMapa.Policia: return ColorPolicia;
+                case TipoMarcaMapa.Nova: return FormatoTerritorio.ColorDe(IdPandilla.Nova);
+                default: return rojo;
             }
         }
 
@@ -84,8 +103,8 @@ namespace MechaCyberpunk.UI.Mapa
         public static Image Crear(Transform padre, TipoMarcaMapa tipo, float lado)
         {
             EstiloCyberfix e = KitUI.Estilo;
-            bool esEnemigo = tipo == TipoMarcaMapa.Enemigo || tipo == TipoMarcaMapa.Jefe;
-            Image fondo = Pieza(padre, "Marca_" + tipo, Circulo, esEnemigo ? e.Enemigo : e.Contorno, Tamano(tipo, lado));
+            bool esEnemigo = EsEnemigo(tipo);
+            Image fondo = Pieza(padre, "Marca_" + tipo, Circulo, esEnemigo ? ColorPunto(tipo, e.Enemigo) : e.Contorno, Tamano(tipo, lado));
             Outline borde = fondo.gameObject.AddComponent<Outline>();
             borde.effectColor = esEnemigo ? e.Contorno : e.Texto;
             borde.effectDistance = Vector2.one * (esEnemigo ? GrosorContornoPunto : 1f);

@@ -293,10 +293,28 @@ namespace MechaCyberpunk.IA.APie
         /// <summary>Lo llama <see cref="JefePandilla"/> en su Awake.</summary>
         public void MarcarComoJefe() => esJefe = true;
 
-        // ---- IMarcaMapa (T-409): sale en el minimapa mientras está activo y en pie ----
-        TipoMarcaMapa IMarcaMapa.Tipo => esJefe ? TipoMarcaMapa.Jefe : TipoMarcaMapa.Enemigo;
+        // ---- IMarcaMapa (T-409, T-1706): jefe, policía (azul), Nova (violeta) o enemigo (rojo). Sale si está en pie y es de misión (siempre) o está a menos de 60 m y en pelea (la policía, siempre que esté cerca) ----
+        TipoMarcaMapa IMarcaMapa.Tipo => esJefe ? TipoMarcaMapa.Jefe : datos != null && datos.EsPolicia ? TipoMarcaMapa.Policia : EsDeNova ? TipoMarcaMapa.Nova : TipoMarcaMapa.Enemigo;
         Vector3 IMarcaMapa.Posicion => transform.position;
-        bool IMarcaMapa.Visible => isActiveAndEnabled && !EstaKO;
+        bool IMarcaMapa.Visible => isActiveAndEnabled && !EstaKO && ReglaMarcaEnemigo.Sale(DeMision, EnPeleaParaMapa, DistanciaAlJugador);
+
+        /// <summary>T-1706: true si es de Nova (su pandilla o su modelo con sonidos de Nova).</summary>
+        public bool EsDeNova => pandillaPropia == IdPandilla.Nova || (Grupo != null && Grupo.Pandilla == IdPandilla.Nova) || sonidoNova != null;
+
+        /// <summary>T-1706: de una misión (su grupo está en modo misión o de guion) o jefe: sale siempre en el mapa.</summary>
+        public bool DeMision => esJefe || (Grupo != null && (Grupo.ModoMision || Grupo.EsDeGuion));
+
+        private bool EnPeleaParaMapa => (datos != null && datos.EsPolicia) || EsHostil || Alerta || ObjetivoActual != null;
+
+        private float DistanciaAlJugador
+        {
+            get
+            {
+                IJugador jugador = Registro<IJugador>.Actual;
+                return jugador != null && jugador.Raiz != null ? Vector3.Distance(jugador.Raiz.position, transform.position) : float.MaxValue;
+            }
+        }
+
         public float Actual => modelo != null ? modelo.Actual : 0f;
         public float Maxima => modelo != null ? modelo.Maxima : 0f;
         public bool EstaKO => modelo != null && modelo.EstaKO;

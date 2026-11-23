@@ -4,6 +4,7 @@ using System.Text;
 using MechaCyberpunk.Combate.Lectura;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.UI.Kit;
+using MechaCyberpunk.UI.Mapa;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -161,7 +162,7 @@ namespace MechaCyberpunk.UI.Hud
             for (int i = 0; i < marcas.Count; i++)
             {
                 IMarcaMapa marca = marcas[i];
-                if (marca == null || (marca.Tipo != TipoMarcaMapa.Enemigo && marca.Tipo != TipoMarcaMapa.Jefe) || Existe(marca))
+                if (marca == null || !IconosMapa.EsEnemigo(marca.Tipo) || Existe(marca))
                 {
                     continue;
                 }
