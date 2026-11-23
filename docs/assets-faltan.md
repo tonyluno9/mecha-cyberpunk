@@ -171,3 +171,13 @@ Barrido de nuevos-17nov, 18nov y 19nov contra Assets (por código, prefab y refe
 | NP01-NP06 (Tripo, nuevos-17nov) | Solo el zip sin rig; sin FBX en Assets. Esperan el rig de Blender (NP07-NP14 ya llegaron). No se importan estáticos |
 | Sin 3D, solo PNG | CC03_CasaCerro, CH03_EdificioColonial, NV01_NaveTransporte, V11 (ya hay Carro_V11 de Blender), W10 (ya hay), ED01_b, ED02_b, ED03_a, ED04_a, ED05_b, ED06_b, ED07_b, ED09_a, ED10_b, ED11_b, ED12_b, MU02_b, MU03_b, CB04_b, PA01_b, PA02_b, DR03_b, DR04_b, E17_b, E18_b, ML06, NP10_b, NP12_b, SK01 |
 | Enemigo que lanza granadas | No existe en IA/: solo el jugador usa la granada |
+
+## 22-nov noche (A) - T37 limpieza (T-1680)
+
+| Falta | Para qué / qué quedó mientras |
+| --- | --- |
+| MQ01_MarquesinaCasino | Solo está el zip en imageassets/modelos-nuevos/nuevos-21nov-b/ (sin importar a Assets). La entrada del casino quedó con el letrero L10 real y fachada de módulos NV01; la marquesina de cubos se apagó |
+| Fachada propia del casino VivaCoin (edificio de 2-3 pisos) | El cascarón de cubos con textura pintada se apagó (su collider se queda) y se vistió con módulos NV01_FachadaOficinas; un modelo de casino propio se vería mejor |
+| Fachadas reales del Bar El Fox, el Clandestino, el Mercado Negro y la casa del jugador | Siguen siendo cascarones de cubos con textura (Barrio/Manzana_N/Lugar_*: Fachada, Cuerpo, Dintel, Marco_T536). Quedan en la lista blanca de LimpiezaT1680 como PENDIENTE |
+| Cuerpo del edificio del CIC (Edificio_7/Cuerpo_T531) y del taller mecánico (S2n_TallerMecanico/Cuerpo) | Cajas con textura de edificio detrás de sus fachadas; PENDIENTE en la lista blanca |
+| Mesas de los puestos del tianguis (GTA_T407) | Las mesas y postes de cubos se apagaron; los vendedores (NP10) traen su carrito. Si se quieren mesas: un modelo de mesa de tianguis |
