@@ -13,9 +13,10 @@ namespace MechaCyberpunk.Trafico.Datos
         public static readonly (string nombre, string[] carros, float mezcla)[] Zonas =
         {
             ("Deshuesadero", new[] { "V20", "V21" }, 0.7f),
-            ("NeonAlto", new[] { "V22", "V23", "V24", "V12" }, 0.5f),
+            // T-1683 (T45): menos carros: fuera V16 a V18 (microbús, camión, tráiler) y V22 a V24 (superdeportivos); queda un deportivo (V12).
+            ("NeonAlto", new[] { "V12" }, 0.5f),
             ("LasLomas", new[] { "V15", "V13" }, 0.7f),
-            ("Avenida", new[] { "V16", "V17", "V18", "V13", "V14", "V09" }, 0.4f),
+            ("Avenida", new[] { "V13", "V14", "V09" }, 0.4f),
             // T-1482: se quitaron del mapa Malecón, Puerto, Autopista y Cerro (revertir mapa 19-nov). Sus carros (V03, V04, V01a, V01b, V02 ya salen en la lista general;
             // las motos MT01 y MT02 pasan a los Extras) siguen en los 4 barrios.
         };
@@ -26,11 +27,14 @@ namespace MechaCyberpunk.Trafico.Datos
         /// </summary>
         public static readonly string[] Extras = { "V12", "V13", "V14", "V19", "V20", "V21", "MT01", "MT02" };
 
-        /// <summary>Carros nuevos de T-1342/T-1343 que tienen que aparecer en el tráfico (T-1554: V10 y V11 se descartaron).</summary>
+        /// <summary>Carros nuevos de T-1342/T-1343 que tienen que aparecer en el tráfico (T-1554: V10 y V11 se descartaron; T-1683: V16 a V18 y V22 a V24 también).</summary>
         public static readonly string[] CarrosNuevos =
         {
-            "V12", "V13", "V14", "V15", "V16", "V17", "V18", "V19", "V20", "V21", "V22", "V23", "V24", "MT01", "MT02",
+            "V12", "V13", "V14", "V15", "V19", "V20", "V21", "MT01", "MT02",
         };
+
+        /// <summary>T-1683 (T45): modelos que ya no salen en el tráfico (los prefabs siguen en disco). Lo mismo que MenosCarrosT1683.CodigosExcluidos.</summary>
+        public static readonly string[] Excluidos = { "V01b", "V16", "V17", "V18", "V22", "V23", "V24" };
 
         /// <summary>Motos que ganan prefab de tráfico en T-1389a.</summary>
         public static readonly string[] MotosNuevas = { "MT01", "MT02" };
