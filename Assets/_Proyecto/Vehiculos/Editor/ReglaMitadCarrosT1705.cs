@@ -113,16 +113,15 @@ namespace MechaCyberpunk.Vehiculos.Editor
             while (vivos.Count > meta)
             {
                 IGrouping<(int, int), CarroEstacionadoDato> llena = vivos.Where(c => !enCasa.Contains(c.Id)).GroupBy(Celda).OrderByDescending(g => g.Count()).FirstOrDefault();
-                if (llena == null || llena.Count() < 2)
+                // Con una celda con 2 o más se quita de ahí; si cada carro está solo en su celda, de todos los que quedan (el modelo más repetido primero).
+                IEnumerable<CarroEstacionadoDato> opciones = llena != null && llena.Count() >= 2 ? llena : vivos.Where(c => !enCasa.Contains(c.Id));
+                List<CarroEstacionadoDato> lista = opciones.Where(c => !c.Intocable).ToList();
+                if (lista.Count == 0)
                 {
                     break;
                 }
-                string repetido = llena.GroupBy(c => c.Modelo).OrderByDescending(g => g.Count()).First().Key;
-                CarroEstacionadoDato salir = llena.Where(c => !c.Intocable).OrderBy(c => c.Modelo == repetido ? 0 : 1).ThenBy(c => EsNeon(c.Modelo) ? 1 : 0).ThenBy(c => c.Id).FirstOrDefault();
-                if (salir.Modelo == null)
-                {
-                    break;
-                }
+                string repetido = vivos.GroupBy(c => c.Modelo).OrderByDescending(g => g.Count()).First().Key;
+                CarroEstacionadoDato salir = lista.OrderBy(c => EsNeon(c.Modelo) ? 1 : 0).ThenBy(c => c.Modelo == repetido ? 0 : 1).ThenBy(c => c.Id).First();
                 quitar.Add(salir.Id);
                 vivos.RemoveAll(c => c.Id == salir.Id);
             }
