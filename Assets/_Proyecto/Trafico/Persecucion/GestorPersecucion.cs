@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Trafico.Calle;
 using MechaCyberpunk.Trafico.Datos;
@@ -26,6 +27,10 @@ namespace MechaCyberpunk.Trafico.Persecucion
         private const float SeparacionDeSalida = 20f;
         private const float AlcanceCamara = 400f;
         private const float SegundosReintentoSalida = 0.5f;
+        /// <summary>T-1660: al dispararle a una patrulla (o con la búsqueda en marcha), las patrullas a esta distancia del jugador (m) prenden sirena y van por él.</summary>
+        public const float RadioAlertaPatrullas = 120f;
+        /// <summary>T-1660: una camioneta cuenta como llegada al estar a esta distancia (m) del jugador, ir directo o haber bajado a sus policías.</summary>
+        public const float DistanciaLlegadaCamioneta = 35f;
 
         [SerializeField] private ConfigPersecucion config;
         [SerializeField] private DronMundo prefabDron;
@@ -55,6 +60,22 @@ namespace MechaCyberpunk.Trafico.Persecucion
         private readonly List<PatrullaMundo> patrullas = new List<PatrullaMundo>();
         // T-933: las patrullas que circulan sin búsqueda; son las únicas que pueden verte cometer un delito.
         private readonly List<PatrullaMundo> rondas = new List<PatrullaMundo>();
+        // T-1660: las rondas que se alertaron por la búsqueda (más de las que pide el nivel): persiguen y se retiran al acabar la búsqueda o en modo Nova.
+        private readonly List<PatrullaMundo> alertadas = new List<PatrullaMundo>();
+        private readonly List<PatrullaMundo> camionetas = new List<PatrullaMundo>();
+        private readonly HashSet<PatrullaMundo> camionetasLlegaron = new HashSet<PatrullaMundo>();
+
+        /// <summary>T-1660: el gestor vivo (para <see cref="DepurarEscalada"/>).</summary>
+        public static GestorPersecucion Actual { get; private set; }
+
+        /// <summary>T-1660: policías a pie muertos en esta búsqueda; vuelve a 0 al perder la persecución.</summary>
+        public int PoliciasMuertos => DirectorRespuesta.PoliciasMuertos;
+
+        /// <summary>T-1660: camionetas que ya llegaron junto al jugador en esta búsqueda; vuelve a 0 al perder la persecución.</summary>
+        public int CamionetasLlegadas => camionetasLlegaron.Count;
+
+        /// <summary>T-1660: las rondas alertadas que persiguen ahora.</summary>
+        public IReadOnlyList<PatrullaMundo> Alertadas => alertadas;
         private const float SegundosEntreRondas = 5f;
         private float reintentoRonda;
 
@@ -163,6 +184,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
 
         private void OnEnable()
         {
+            Actual = this;
             Registro<ICalor>.Agregado += Enlazar;
             Registro<ICalor>.Quitado += Desenlazar;
             EventosLugares.JugadorEntro += AlEntrarALugar;
@@ -195,6 +217,10 @@ namespace MechaCyberpunk.Trafico.Persecucion
 
         private void OnDisable()
         {
+            if (Actual == this)
+            {
+                Actual = null;
+            }
             Registro<ICalor>.Agregado -= Enlazar;
             Registro<ICalor>.Quitado -= Desenlazar;
             PararSirenaMuro(); // T-1533
@@ -237,6 +263,8 @@ namespace MechaCyberpunk.Trafico.Persecucion
         {
             retirandose.RemoveAll(c => c == null || (c is PatrullaMundo robada && robada.Robada));
             patrullas.RemoveAll(p => p == null || p.Robada || p.Destruida); // T-707: una patrulla que el jugador se robó ya no es de la policía: llega otra
+            alertadas.RemoveAll(p => p == null || p.Robada || p.Destruida || p.Retirando);
+            camionetas.RemoveAll(p => p == null);
             drones.RemoveAll(d => d == null); // T-730: un dron derribado ya no cuenta
             DirectorRespuesta.DeclararDisponible(TipoRespuesta.Camioneta, prefabCamioneta != null);
             DirectorRespuesta.Avanzar(Time.time, EstrellasBusqueda.De(calor)); // T-1620
@@ -256,15 +284,22 @@ namespace MechaCyberpunk.Trafico.Persecucion
                 valorAnterior = calor != null ? calor.Valor : 0f;
                 jugadorAnterior = null;
                 arresto.Reiniciar();
+                if (camionetasLlegaron.Count > 0)
+                {
+                    camionetasLlegaron.Clear(); // T-1660: perdiste la persecución: la cuenta para Nova empieza de cero
+                    DirectorRespuesta.PonerCamionetasLlegadas(0);
+                }
                 return;
             }
+            AlertarRondasCercanas();
+            ContarCamionetasLlegadas();
             float dt = Time.deltaTime;
             reintentoSalida -= dt;
             if (reintentoSalida <= 0f)
             {
                 reintentoSalida = SegundosReintentoSalida;
                 if (patrullas.Count < PatrullasPedidas(calor.Nivel) || drones.Count < DronesPedidos(calor.Nivel)
-                    || (DirectorRespuesta.ModoNova && patrullas.Count > 0)) // T-1631: NOVA INTERVIENE: las patrullas que queden se retiran
+                    || (DirectorRespuesta.ModoNova && (patrullas.Count > 0 || alertadas.Count > 0))) // T-1631: NOVA INTERVIENE: las patrullas que queden se retiran
                 {
                     Reconciliar(calor.Nivel); // T-664: las patrullas que no pudieron salir sin verse lo intentan de nuevo
                 }
@@ -484,6 +519,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
                 CrearDron(dronesPedidos);
             }
             Retirar(patrullas, DirectorRespuesta.PermiteMantener(TipoRespuesta.Patrulla) ? patrullasPedidas : 0);
+            Retirar(alertadas, nivel > 0 && DirectorRespuesta.PermiteMantener(TipoRespuesta.Patrulla) ? alertadas.Count : 0); // T-1660: las alertadas se van al acabar la búsqueda o al entrar Nova
             while (patrullas.Count < patrullasPedidas)
             {
                 bool camioneta = prefabCamioneta != null && calor != null && CalculoPersecucion.UsaCamioneta(EstrellasBusqueda.De(calor), patrullas.Count, calculo.Patrullas(calor.Nivel))
@@ -671,9 +707,9 @@ namespace MechaCyberpunk.Trafico.Persecucion
         private void MantenerRondas(float dt)
         {
             rondas.RemoveAll(p => p == null || p.Robada || p.Retirando || !p.EnRonda);
-            if (MisionProtegida.Activa || DirectorRespuesta.ModoNova)
+            if (MisionProtegida.Activa || DirectorRespuesta.ModoNova || (calor != null && calor.Nivel > 0))
             {
-                return; // T-1620: misión protegida (T-1631: y NOVA INTERVIENE): no salen rondas nuevas
+                return; // T-1660: con la búsqueda en marcha tampoco salen rondas nuevas (los refuerzos vienen de Reconciliar). T-1620: misión protegida (T-1631: y NOVA INTERVIENE): no salen rondas nuevas
             }
             reintentoRonda -= dt;
             if (reintentoRonda > 0f || config == null || calculo == null || prefabPatrulla == null || rondas.Count >= config.PatrullasDeRonda)
@@ -693,6 +729,84 @@ namespace MechaCyberpunk.Trafico.Persecucion
             PatrullaMundo ronda = Instantiate(prefabPatrulla, transform);
             ronda.PrepararRonda(calculo, config, calles, salida, PosicionDelJugador);
             rondas.Add(ronda);
+        }
+
+        // T-1660: con la búsqueda en marcha (por ejemplo al dispararle a una patrulla) TODAS las rondas a menos de RadioAlertaPatrullas m del jugador prenden luces y sirena y van por él;
+        // las que ya cuentan como perseguidoras del nivel quedan en "patrullas", el resto en "alertadas". Ninguna se queda dando la vuelta de ronda.
+        private void AlertarRondasCercanas()
+        {
+            if (DirectorRespuesta.ModoNova || MisionProtegida.Activa)
+            {
+                return; // en modo Nova la policía se retira
+            }
+            Vector3? jugador = PosicionDelJugador();
+            if (!jugador.HasValue)
+            {
+                return;
+            }
+            IReadOnlyList<PatrullaMundo> activas = PatrullaMundo.Activas;
+            for (int i = activas.Count - 1; i >= 0; i--)
+            {
+                PatrullaMundo p = activas[i];
+                if (p == null || !p.EnRonda || !p.PuedeAlertarse || DistanciaPlano(p.transform.position, jugador.Value) > RadioAlertaPatrullas)
+                {
+                    continue;
+                }
+                p.Alertar();
+                rondas.Remove(p);
+                if (!patrullas.Contains(p))
+                {
+                    alertadas.Add(p);
+                }
+            }
+        }
+
+        // T-1660: una camioneta "llegó" al estar cerca del jugador, ir directo o haber bajado a sus policías; la cuenta no baja si después la matan.
+        private void ContarCamionetasLlegadas()
+        {
+            Vector3? jugador = PosicionDelJugador();
+            if (jugador.HasValue)
+            {
+                foreach (PatrullaMundo c in camionetas)
+                {
+                    if (c != null && !c.Robada && !camionetasLlegaron.Contains(c)
+                        && (c.PoliciasBajaron || c.VaDirecto || DistanciaPlano(c.transform.position, jugador.Value) <= DistanciaLlegadaCamioneta))
+                    {
+                        camionetasLlegaron.Add(c);
+                    }
+                }
+            }
+            DirectorRespuesta.PonerCamionetasLlegadas(camionetasLlegaron.Count);
+        }
+
+        /// <summary>
+        /// T-1660: estado de la escalada para comprobar en Play (invocable por reflexión): estrellas, policías muertos, camionetas llegadas, fase de Nova y cada patrulla con su estado.
+        /// También lo escribe en consola.
+        /// </summary>
+        public static string DepurarEscalada()
+        {
+            StringBuilder texto = new StringBuilder();
+            GestorPersecucion g = Actual;
+            int nivel = DirectorRespuesta.NivelDesbloqueado;
+            bool abierta = DirectorRespuesta.PuertaNovaAbierta;
+            ParametrosRespuesta numeros = DirectorRespuesta.Parametros;
+            texto.Append("[Escalada] estrellas ").Append(g != null && g.calor != null ? EstrellasBusqueda.De(g.calor) : 0)
+                .Append(" | policias muertos ").Append(DirectorRespuesta.PoliciasMuertos).Append('/').Append(numeros.PoliciasMuertosParaNova)
+                .Append(" | camionetas llegadas ").Append(g != null ? g.CamionetasLlegadas : 0).Append('/').Append(DirectorRespuesta.Regla.CamionetasRequeridas)
+                .Append(" | nova ").Append(abierta ? "ABIERTA" : "cerrada").Append(" fase: ").Append(ReglaPuertaNova.NombreFase(nivel, abierta))
+                .Append(" (nivel ").Append(nivel).Append(", modoNova ").Append(DirectorRespuesta.ModoNova).Append(')');
+            int n = 0;
+            foreach (PatrullaMundo p in PatrullaMundo.Activas)
+            {
+                if (p != null)
+                {
+                    n++;
+                    texto.Append("\n  patrulla ").Append(n).Append(": ").Append(p.Estado());
+                }
+            }
+            string resultado = texto.ToString();
+            Debug.Log(resultado);
+            return resultado;
         }
 
         // T-933: la patrulla de ronda más cercana al jugador deja la ronda; null si no hay.
@@ -739,6 +853,10 @@ namespace MechaCyberpunk.Trafico.Persecucion
             patrulla.Preparar(calculo, config, calles, salida, PosicionDelJugador);
             patrulla.Intercepta = patrullas.Count % 2 == 1; // T-587: cada segunda patrulla corta el paso
             patrullas.Add(patrulla);
+            if (camioneta)
+            {
+                camionetas.Add(patrulla);
+            }
             RegistrarPatrulla(camioneta ? TipoRespuesta.Camioneta : TipoRespuesta.Patrulla, patrulla);
             return true;
         }

@@ -88,6 +88,7 @@ namespace MechaCyberpunk.Tests
             config.ConfigurarNaves(new[] { nave }, 2, Soldados);
             respuesta = new GameObject("RespuestaNovaNave").AddComponent<RespuestaNova>();
             respuesta.Configurar(config);
+            DirectorRespuesta.DepurarForzarPuertaNova(true); // T-1660: estas pruebas son de Nova, no de su puerta
             Physics.SyncTransforms();
         }
 

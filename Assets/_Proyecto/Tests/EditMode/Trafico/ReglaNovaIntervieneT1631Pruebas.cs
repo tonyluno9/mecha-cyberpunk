@@ -10,6 +10,8 @@ namespace MechaCyberpunk.Tests
         private static ReglaEscaladaRespuesta Crear(Action<ParametrosRespuesta> ajustar = null)
         {
             ParametrosRespuesta numeros = ParametrosRespuesta.PorOmision();
+            numeros.PoliciasMuertosParaNova = 0; // T-1660: estas pruebas no son de la puerta de Nova (esa va en ReglaPuertaNovaT1660Pruebas)
+            numeros.CamionetasParaNova = 0;
             if (ajustar != null)
             {
                 ajustar(numeros);
@@ -175,6 +177,8 @@ namespace MechaCyberpunk.Tests
         public void Director_PublicaNovaIntervieneUnaVezPorEntrada()
         {
             ParametrosRespuesta numeros = ParametrosRespuesta.PorOmision();
+            numeros.PoliciasMuertosParaNova = 0; // T-1660: estas pruebas no son de la puerta de Nova (esa va en ReglaPuertaNovaT1660Pruebas)
+            numeros.CamionetasParaNova = 0;
             numeros.Registrar = false;
             DirectorRespuesta.Configurar(numeros);
             int avisos = 0;
@@ -204,6 +208,8 @@ namespace MechaCyberpunk.Tests
         public void Parametros_NuevosTienenValoresDeOmision()
         {
             ParametrosRespuesta p = ParametrosRespuesta.PorOmision();
+            p.PoliciasMuertosParaNova = 0; // T-1660: estas pruebas no son de la puerta de Nova (esa va en ReglaPuertaNovaT1660Pruebas)
+            p.CamionetasParaNova = 0;
             Assert.AreEqual(5, p.EstrellasModoNova);
             Assert.AreEqual(3, p.TopeNovaVivos);
             Assert.AreEqual(2, p.PerdidasNovaParaSubir);

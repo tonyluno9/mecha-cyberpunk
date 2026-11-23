@@ -8,6 +8,8 @@ namespace MechaCyberpunk.Tests
         private static ReglaEscaladaRespuesta Crear()
         {
             ParametrosRespuesta numeros = ParametrosRespuesta.PorOmision();
+            numeros.PoliciasMuertosParaNova = 0; // T-1660: estas pruebas no son de la puerta de Nova (esa va en ReglaPuertaNovaT1660Pruebas)
+            numeros.CamionetasParaNova = 0;
             numeros.EstrellasModoNova = 0; // T-1631: estas pruebas son de la escalada de T8; el modo "NOVA INTERVIENE" se prueba en ReglaNovaIntervieneT1631Pruebas
             return new ReglaEscaladaRespuesta(numeros, new System.Random(1));
         }

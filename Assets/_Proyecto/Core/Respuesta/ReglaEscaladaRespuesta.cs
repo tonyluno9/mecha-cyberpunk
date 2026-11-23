@@ -24,6 +24,8 @@ namespace MechaCyberpunk.Core
         private int perdidasDelNivel;
         private bool mision;
         private bool novaPermitida;
+        private bool puertaNova;
+        private int camionetasLlegadas;
 
         public ReglaEscaladaRespuesta(ParametrosRespuesta parametros, Random azar = null)
         {
@@ -40,6 +42,21 @@ namespace MechaCyberpunk.Core
         }
 
         public int Estrellas { get; private set; }
+
+        /// <summary>T-1660: cuántas camionetas ya llegaron junto al jugador en esta búsqueda (lo dice quien las maneja).</summary>
+        public int CamionetasLlegadas { get => camionetasLlegadas; set => camionetasLlegadas = Math.Max(0, value); }
+
+        /// <summary>T-1660: policías a pie muertos en esta búsqueda (se reinicia al perder las estrellas).</summary>
+        public int PoliciasMuertos => perdidas[(int)TipoRespuesta.PoliciaAPie];
+
+        /// <summary>T-1660: camionetas que hay que esperar antes de Nova (0 si no hay modelo de camioneta).</summary>
+        public int CamionetasRequeridas => ReglaPuertaNova.CamionetasRequeridas(disponible[(int)TipoRespuesta.Camioneta], p.CamionetasParaNova);
+
+        /// <summary>T-1660: True si Nova ya puede llegar (10 policías muertos y las camionetas llegadas; una misión protegida que permite a Nova la abre). Se queda abierta hasta perder las estrellas.</summary>
+        public bool PuertaNovaAbierta => puertaNova || PuertaForzada || (mision && novaPermitida);
+
+        /// <summary>T-1660: para pruebas y depuración: abre la puerta de Nova sin cumplir las condiciones.</summary>
+        public bool PuertaForzada { get; set; }
 
         /// <summary>
         /// T-1631 (T17): "NOVA INTERVIENE". Con las estrellas del máximo (sin misión protegida y con algo de NOVA para generar) no se pide policía nueva, la que hay se
@@ -130,7 +147,7 @@ namespace MechaCyberpunk.Core
         public bool PermitidoPorMision(TipoRespuesta tipo) => !mision || (novaPermitida && EsNova(tipo));
 
         /// <summary>True si el tipo todavía puede estar en pie con las estrellas y la misión de ahora (para retirar primero los niveles altos).</summary>
-        public bool PermiteMantener(TipoRespuesta tipo) => Estrellas > 0 && PermitidoPorMision(tipo) && !BloqueadoPorModoNova(tipo) && NivelDe(tipo) <= NivelMaximoPara(Estrellas);
+        public bool PermiteMantener(TipoRespuesta tipo) => Estrellas > 0 && PermitidoPorMision(tipo) && !BloqueadoPorModoNova(tipo) && NivelDe(tipo) <= TopeDeNivel(Estrellas);
 
         // T-1631: en modo Nova no entra policía; el dron solo entra cuando ya se desbloqueó su nivel de NOVA.
         private bool BloqueadoPorModoNova(TipoRespuesta tipo)
@@ -163,7 +180,11 @@ namespace MechaCyberpunk.Core
                 vivos[i] = vivosActuales != null && i < vivosActuales.Length ? vivosActuales[i] : 0;
             }
             Estrellas = estrellas;
-            ModoNova = estrellas > 0 && !misionActiva && p.EstrellasModoNova > 0 && estrellas >= p.EstrellasModoNova && HayNovaQueGenerar();
+            if (estrellas > 0 && !puertaNova)
+            {
+                puertaNova = ReglaPuertaNova.Abierta(PoliciasMuertos, p.PoliciasMuertosParaNova, camionetasLlegadas, CamionetasRequeridas);
+            }
+            ModoNova = estrellas > 0 && !misionActiva && p.EstrellasModoNova > 0 && estrellas >= p.EstrellasModoNova && PuertaNovaAbierta && HayNovaQueGenerar();
             if (estrellas <= 0)
             {
                 Reiniciar();
@@ -175,7 +196,7 @@ namespace MechaCyberpunk.Core
                 desdeNivel = ahora;
                 perdidasDelNivel = 0;
             }
-            int tope = NivelMaximoPara(estrellas);
+            int tope = TopeDeNivel(estrellas);
             if (NivelDesbloqueado > tope)
             {
                 NivelDesbloqueado = tope; // perdiste estrellas: los niveles altos se cierran primero
@@ -197,8 +218,17 @@ namespace MechaCyberpunk.Core
             }
         }
 
+        // T-1660: con la puerta cerrada la escalada se queda en la policía (niveles 1 a 3); Nova solo entra cuando se abre.
+        private int TopeDeNivel(int estrellas)
+        {
+            int tope = NivelMaximoPara(estrellas);
+            return PuertaNovaAbierta ? tope : Math.Min(tope, PrimerNivelNova - 1);
+        }
+
         private void Reiniciar()
         {
+            puertaNova = false;
+            camionetasLlegadas = 0;
             NivelDesbloqueado = 0;
             perdidasDelNivel = 0;
             Array.Clear(perdidas, 0, perdidas.Length);
@@ -261,7 +291,7 @@ namespace MechaCyberpunk.Core
         public bool PuedeGenerar(TipoRespuesta tipo, float ahora)
         {
             int nivel = NivelDe(tipo);
-            if (NivelDesbloqueado <= 0 || nivel > NivelDesbloqueado || nivel > NivelMaximoPara(Estrellas)
+            if (NivelDesbloqueado <= 0 || nivel > NivelDesbloqueado || nivel > TopeDeNivel(Estrellas)
                 || !disponible[(int)tipo] || !PermitidoPorMision(tipo) || BloqueadoPorModoNova(tipo))
             {
                 return false;
