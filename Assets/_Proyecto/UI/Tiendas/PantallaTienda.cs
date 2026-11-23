@@ -287,6 +287,15 @@ namespace MechaCyberpunk.UI.Tiendas
                 alSalir?.Invoke();
                 return;
             }
+            if (MechaCyberpunk.UI.Armas.PestanasBancoTino.TutorialGuiado && MechaCyberpunk.UI.Armas.PestanasBancoTino.Abierto)
+            {
+                // T-84: tutorial guiado de Tino: flechas y Enter no se saltan el guion (solo el ratón sobre el control resaltado).
+                if (modoMercado && mercado != null)
+                {
+                    mercado.Atender();
+                }
+                return;
+            }
             // T-1326: el arma 3D de El Mercado se gira con el ratón (arrastrar, rueda) o con Q/E.
             if (modoMercado && mercado != null)
             {

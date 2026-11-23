@@ -362,6 +362,12 @@ namespace MechaCyberpunk.UI.Armas
                 alSalir?.Invoke();
                 return;
             }
+            if (PestanasBancoTino.TutorialGuiado)
+            {
+                // T-84: con el tutorial guiado solo se avanza con el ratón sobre el control resaltado: flechas y Enter no se saltan el guion.
+                GirarConRaton();
+                return;
+            }
             if (armas.Count > 0)
             {
                 if (izquierda.WasPressedThisFrame())
