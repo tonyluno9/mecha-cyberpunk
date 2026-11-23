@@ -401,11 +401,16 @@ namespace MechaCyberpunk.IA.Barrio
             {
                 ultimaPosicion = quien.position;
             }
-            if (!string.IsNullOrEmpty(l.Texto))
+            bool callaSkull = !VocesPandilla.VocesSkullsActivas && EsLineaSkull(l); // T-1655: sin voz ni subtítulo de SKULLS
+            if (!string.IsNullOrEmpty(l.Texto) && !callaSkull)
             {
                 Subtitulos.Publicar(l.Hablante, l.Texto, boca, duracion, ColorDe(l));
             }
-            if (l.Audio != null)
+            if (callaSkull)
+            {
+                // sin voz
+            }
+            else if (l.Audio != null)
             {
                 AudioSource.PlayClipAtPoint(l.Audio, boca, Mathf.Clamp01(Sonidos.Volumen(SeccionSonido.Voces)));
             }
@@ -443,6 +448,11 @@ namespace MechaCyberpunk.IA.Barrio
                 default:
                     return reparto.Persona1 != null ? reparto.Persona1.Transform : null;
             }
+        }
+
+        private static bool EsLineaSkull(LineaBarrio l)
+        {
+            return (l.Quien == RolBarrio.Agresor1 || l.Quien == RolBarrio.Agresor2) && !l.Hablante.StartsWith("SNAKE");
         }
 
         private static Color ColorDe(LineaBarrio l)

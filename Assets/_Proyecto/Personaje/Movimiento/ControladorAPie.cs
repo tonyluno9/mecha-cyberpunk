@@ -409,10 +409,7 @@ namespace MechaCyberpunk.Personaje.Movimiento
             if (enPiso && tiempoAire > SegundosMinimosAire && (saltoSuper || ReglaSonidosJugador.DebeSonarAterrizaje(alturaMaximaAire - transform.position.y)))
             {
                 Sonidos.ReproducirEn(ReglaSonidosJugador.Aterrizaje, transform.position);
-                if (saltoSuper)
-                {
-                    Sonidos.ReproducirEn(MechaCyberpunk.Personaje.Habilidades.ReglaSonidoExo.OndaAterrizaje, transform.position); // T-1535: aterrizaje del súper salto = JUG_ATERRIZAJE + EXP_ONDA
-                }
+                // T-1658: sin explosión (EXP_ONDA) al caer con el implante de piernas; solo el golpe normal del aterrizaje.
             }
             if (enPiso && tiempoAire > SegundosMinimosAire)
             {

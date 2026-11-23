@@ -48,6 +48,13 @@ namespace MechaCyberpunk.Personaje
         [Tooltip("Multiplica el tiempo de recarga del arma mientras dura (0.4 = recarga en 40 % del tiempo).")]
         [Range(0.05f, 1f)] [SerializeField] private float factorTiempoRecarga = 0.4f;
 
+        [Tooltip("T-1658: con BRAZOS el golpe es más rápido que el normal (ya ralentizado en T33): multiplica la rapidez de la animación y acorta preparación y recarga. 1.2 = a 0.9x de la rapidez de antes de T33.")]
+        [Range(1f, 2f)] [SerializeField] private float factorRapidezGolpe = 1.2f;
+        [Tooltip("T-1658: masa (kg) desde la cual un cuerpo con física cuenta como pesado (un carro) y recibe el empuje pequeño en vez del normal.")]
+        [Min(1f)] [SerializeField] private float masaCuerpoPesado = 150f;
+        [Tooltip("T-1658: impulso (m/s) al golpear con BRAZOS un cuerpo pesado, como un carro: lo mueve unos centímetros sin sacarlo volando.")]
+        [Min(0f)] [SerializeField] private float empujeCuerpoPesado = 0.6f;
+
         [Header("LÁSER (T-1017)")]
         [Tooltip("Daño por segundo del brazo láser a todo lo que toca (puntos/s).")]
         [Min(0f)] [SerializeField] private float danioLaser = 80f;
@@ -89,6 +96,9 @@ namespace MechaCyberpunk.Personaje
         public float FactorGolpe => factorGolpe;
         public float EmpujeGolpe => empujeGolpe;
         public float FactorTiempoRecarga => factorTiempoRecarga;
+        public float FactorRapidezGolpe => factorRapidezGolpe;
+        public float MasaCuerpoPesado => masaCuerpoPesado;
+        public float EmpujeCuerpoPesado => empujeCuerpoPesado;
         public InputActionAsset Controles => controles;
         public float DanioLaser => danioLaser;
         public float AlcanceLaser => alcanceLaser;

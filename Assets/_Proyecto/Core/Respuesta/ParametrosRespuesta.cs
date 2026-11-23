@@ -33,6 +33,10 @@ namespace MechaCyberpunk.Core
         public int NivelDronNova = 6;
         [Tooltip("T-1631: un policía a pie que se retira solo desaparece si está al menos a esta distancia del jugador y fuera de su vista (m).")]
         public float MetrosMinimosRetiroPolicia = 15f;
+        [Tooltip("T-1660: policías a pie que hay que matar en la búsqueda antes de que llegue Nova (0 = sin esa condición).")]
+        public int PoliciasMuertosParaNova = 10;
+        [Tooltip("T-1660: camionetas que deben haber llegado antes de que llegue Nova (0 = sin esa condición; sin modelo de camioneta no se espera).")]
+        public int CamionetasParaNova = 1;
         [Tooltip("Escribe una línea [Respuesta] en consola por cada unidad que sale o se retira.")]
         public bool Registrar = true;
 

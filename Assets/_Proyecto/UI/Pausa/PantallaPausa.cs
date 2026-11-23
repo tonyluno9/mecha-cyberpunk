@@ -85,6 +85,7 @@ namespace MechaCyberpunk.UI.MenuPausa
 
         private PantallaRanuras ranuras;
         private PantallaOpciones pantallaOpciones;
+        private OpcionesModernasPausa opcionesModernas;
         private BotonCyberfix volverA;
         private ControladorAPie controlCongelado;
         private float escalaPrevia = 1f;
@@ -110,6 +111,11 @@ namespace MechaCyberpunk.UI.MenuPausa
                 if (ranuras == null)
                 {
                     ranuras = FindFirstObjectByType<PantallaRanuras>(FindObjectsInactive.Include);
+                    if (ranuras == null)
+                    {
+                        // T48: la misma pantalla de ranuras que usa el menú principal (se arma sola con el kit).
+                        ranuras = new GameObject("PantallaRanuras").AddComponent<PantallaRanuras>();
+                    }
                     if (ranuras != null)
                     {
                         ranuras.Cerrada += AlCerrarEncima;
@@ -133,6 +139,21 @@ namespace MechaCyberpunk.UI.MenuPausa
                     }
                 }
                 return pantallaOpciones;
+            }
+        }
+
+        /// <summary>T48: las opciones modernas (las del menú principal) que abre OPCIONES; se crean la primera vez.</summary>
+        public OpcionesModernasPausa OpcionesModernas
+        {
+            get
+            {
+                if (opcionesModernas == null)
+                {
+                    opcionesModernas = new GameObject("OpcionesModernasPausa").AddComponent<OpcionesModernasPausa>();
+                    opcionesModernas.transform.SetParent(transform, false);
+                    opcionesModernas.Cerrada += AlCerrarEncima;
+                }
+                return opcionesModernas;
             }
         }
 
@@ -363,6 +384,10 @@ namespace MechaCyberpunk.UI.MenuPausa
             {
                 pantallaOpciones.Cerrada -= AlCerrarEncima;
             }
+            if (opcionesModernas != null)
+            {
+                opcionesModernas.Cerrada -= AlCerrarEncima;
+            }
         }
 
         private void Update()
@@ -409,7 +434,7 @@ namespace MechaCyberpunk.UI.MenuPausa
             }
             PilaPantallas.Abrir(this);
             confirmar.SetActive(false);
-            opciones.interactable = PantallaOpciones != null;
+            opciones.interactable = true;
             contenido.SetActive(true);
             RefrescarDatos();
             AnimH10.EntrarPanel(panelOpciones, new Vector2(-AnimH10.DesplazamientoEntrada, 0f));
@@ -435,6 +460,10 @@ namespace MechaCyberpunk.UI.MenuPausa
             if (pantallaOpciones != null && pantallaOpciones.Abierta)
             {
                 pantallaOpciones.Cerrar();
+            }
+            if (opcionesModernas != null && opcionesModernas.Abierta)
+            {
+                opcionesModernas.Cerrar();
             }
             confirmar.SetActive(false);
             contenido.SetActive(false);
@@ -467,14 +496,39 @@ namespace MechaCyberpunk.UI.MenuPausa
 
         private void AbrirOpciones()
         {
-            PantallaOpciones pantalla = PantallaOpciones;
-            if (pantalla == null)
-            {
-                return;
-            }
+            // T48: la interfaz moderna del menú principal, no la pantalla vieja del kit.
             volverA = opciones;
-            pantalla.Abrir();
+            OpcionesModernas.Abrir();
             menu.enabled = false;
+        }
+
+        /// <summary>T48: qué pantalla está abierta encima de la pausa y de qué tipo (moderna o antigua). Invocable por reflexión.</summary>
+        public static string DepurarPausa()
+        {
+            PantallaPausa pausa = FindFirstObjectByType<PantallaPausa>(FindObjectsInactive.Include);
+            if (pausa == null)
+            {
+                return "[Pausa] sin PantallaPausa en la escena";
+            }
+            string pantalla = "ninguna (menú de pausa)";
+            if (pausa.opcionesModernas != null && pausa.opcionesModernas.Abierta)
+            {
+                pantalla = "OPCIONES (moderna: PanelOpcionesInicio)";
+            }
+            else if (pausa.pantallaOpciones != null && pausa.pantallaOpciones.Abierta)
+            {
+                pantalla = "OPCIONES (antigua: PantallaOpciones)";
+            }
+            else if (pausa.ranuras != null && pausa.ranuras.Abierta)
+            {
+                pantalla = (pausa.ranuras.Modo == ModoRanuras.Guardar ? "GUARDAR" : "CARGAR") + " (moderna: PantallaRanuras del menú principal)";
+            }
+            else if (pausa.ConfirmacionAbierta)
+            {
+                pantalla = "SALIR (confirmación)";
+            }
+            return "[Pausa] abierta=" + pausa.Abierta + " pantalla=" + pantalla + " timeScale=" + Time.timeScale
+                + " cursorVisible=" + Cursor.visible + " lock=" + Cursor.lockState;
         }
 
         // Las ranuras o las opciones se cerraron (VOLVER, Esc o guardar): la pausa vuelve a su menú, con el botón que las abrió elegido.

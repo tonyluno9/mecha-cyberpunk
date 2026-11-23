@@ -31,11 +31,15 @@ namespace MechaCyberpunk.Core
         private static float ultimoAhora = float.NaN;
         private static int ultimasEstrellas = -1;
         private static bool modoNovaPrevio;
+        private static int camionetasLlegadas;
+        private static bool puertaForzada;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void Reiniciar()
         {
             modoNovaPrevio = false;
+            camionetasLlegadas = 0;
+            puertaForzada = false;
             entradas.Clear();
             Array.Clear(declarados, 0, declarados.Length);
             Array.Clear(existen, 0, existen.Length);
@@ -109,6 +113,15 @@ namespace MechaCyberpunk.Core
         /// <summary>T-1631: unidades de NOVA vivas que cuentan para el tope de modo Nova.</summary>
         public static int NovaVivos => Regla.NovaVivos;
 
+        /// <summary>T-1660: quien maneja las camionetas (GestorPersecucion) avisa cuántas ya llegaron junto al jugador; Nova no llega sin ellas.</summary>
+        public static void PonerCamionetasLlegadas(int cuantas) => camionetasLlegadas = Mathf.Max(0, cuantas);
+
+        /// <summary>T-1660: policías a pie muertos en esta búsqueda (se reinicia al perder las estrellas).</summary>
+        public static int PoliciasMuertos => Regla.PoliciasMuertos;
+
+        /// <summary>T-1660: True si Nova ya puede llegar (policías muertos y camionetas llegadas).</summary>
+        public static bool PuertaNovaAbierta => Regla.PuertaNovaAbierta;
+
         public static int NivelDe(TipoRespuesta tipo) => ReglaEscaladaRespuesta.NivelDe(tipo);
 
         /// <summary>Avanza el tiempo del director: cuenta vivos, bajas y retiradas y desbloquea niveles. Varias llamadas en el mismo instante valen una.</summary>
@@ -151,6 +164,8 @@ namespace MechaCyberpunk.Core
                     Escribir("retiro", e.Tipo, ahora);
                 }
             }
+            Regla.CamionetasLlegadas = camionetasLlegadas;
+            Regla.PuertaForzada = puertaForzada;
             Regla.Avanzar(ahora, estrellas, mision, nova, cuenta);
             AvisarCambioDeModoNova(ahora);
         }
@@ -241,6 +256,9 @@ namespace MechaCyberpunk.Core
         }
 
         // ----- Depuración para comprobar en Play (se llaman por eval) -----
+
+        /// <summary>T-1660: abre (o cierra) la puerta de Nova a la fuerza, sin matar a 10 policías ni esperar las camionetas. Para pruebas y para comprobar a Nova en Play; <see cref="Configurar"/> la cierra.</summary>
+        public static void DepurarForzarPuertaNova(bool abierta) => puertaForzada = abierta;
 
         /// <summary>Sube las estrellas de búsqueda hasta las dadas (sirve para comprobar la escalada).</summary>
         public static void DepurarSubirEstrellas(int estrellas)

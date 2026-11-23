@@ -29,6 +29,12 @@ namespace MechaCyberpunk.IA.APie
 
         private const float AlturaBoca = 1.6f;
 
+        /// <summary>
+        /// T-1655 (T32): interruptor general de las voces y los subtítulos de los SKULLS. En false (por ahora, hasta que Tony diga qué voz va)
+        /// no suena ninguna voz SKU_* ni sale ningún subtítulo ni grito de un SKULL. Para volver a prenderlas, ponlo en true.
+        /// </summary>
+        public static bool VocesSkullsActivas { get; set; } = false;
+
         private static readonly ReglaVocesPandilla Cola = new ReglaVocesPandilla();
 
         /// <summary>El último ID que sonó (para pruebas y depuración).</summary>
@@ -55,7 +61,7 @@ namespace MechaCyberpunk.IA.APie
         /// </summary>
         public static bool Decir(Transform hablante, string idSku, bool prioridad = false)
         {
-            if (hablante == null || string.IsNullOrEmpty(idSku))
+            if (!VocesSkullsActivas || hablante == null || string.IsNullOrEmpty(idSku))
             {
                 return false;
             }
@@ -75,7 +81,7 @@ namespace MechaCyberpunk.IA.APie
         /// <summary>Depuración: suena ya, sin cola ni distancia (para comprobar el ID en Play).</summary>
         public static void Forzar(Transform hablante, string idSku)
         {
-            if (hablante == null || string.IsNullOrEmpty(idSku))
+            if (!VocesSkullsActivas || hablante == null || string.IsNullOrEmpty(idSku))
             {
                 return;
             }

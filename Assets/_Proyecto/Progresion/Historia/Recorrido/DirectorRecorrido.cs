@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.IO;
+using System.Text;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Economia;
 using MechaCyberpunk.IA.APie;
@@ -51,6 +52,10 @@ namespace MechaCyberpunk.Progresion.Recorrido
         private const float SegundosFin = 5f;
         private const float SegundosEnNegroLevantarse = 1.8f;
         private const int RespetoPorSkull = 10;
+        private const float SegundosFraseTino = 3f;
+        private const float SegundosFraseVendedor = 8f;
+        private const float SegundosAvisoRueda = 20f;
+        private const float SegundosAvisoMaquina = 25f;
         private const float AlturaRanura = 3f;
         private const float AnchoRanura = 3.2f;
         private const float GrosorRanura = 0.5f;
@@ -60,6 +65,7 @@ namespace MechaCyberpunk.Progresion.Recorrido
         private class DatosGuardados
         {
             public string paso;
+            public bool hambre;
         }
 
         public static DirectorRecorrido Actual { get; private set; }
@@ -96,6 +102,9 @@ namespace MechaCyberpunk.Progresion.Recorrido
         private DirectorPandillas viejo;
         private ServicioHistoria historia;
         private MolestiaSkulls molestia;
+        private float inicioDespierta = float.MaxValue;
+        // T-1656: los SKULLS salen poco después de que despierta (ya de pie), para esperarlo a media calle antes de que se aleje.
+        private const float SegundosHastaMolestia = 6f;
         private GameObject ranuraCerrada;
         private RecintoJefe recinto;
         private bool jefeMostrado;
@@ -105,6 +114,10 @@ namespace MechaCyberpunk.Progresion.Recorrido
         private Vector3 inicioAdelante = Vector3.forward;
         private bool inicioConocido;
         private bool sinMarcadorAvisado;
+        // T-1662 (T44): el paso del hambre (comprar en una máquina antes de las peleas con pandilleros) y el aviso de la rueda de armas.
+        private bool hambreResuelta;
+        private bool ruedaAvisada;
+        private Expendedora maquinaHambre;
 
         // ---------- Arranque ----------
 
@@ -184,6 +197,45 @@ namespace MechaCyberpunk.Progresion.Recorrido
             return true;
         }
 
+        /// <summary>T-1662: depuración. Paso actual, objetivo, distancia al objetivo y si la ruta del piso está visible (invocable por reflexión).</summary>
+        public static string DepurarHistoria()
+        {
+            DirectorRecorrido d = Actual;
+            if (d == null)
+            {
+                return "[Historia] sin director (recorrido viejo o título)";
+            }
+            IObjetivos objetivos = Registro<IObjetivos>.Actual;
+            string objetivo = objetivos != null && objetivos.HayObjetivo ? objetivos.Actual.Texto : "(ninguno)";
+            GuiaHistoria guia = GuiaHistoria.Actual;
+            return "[Historia] paso=" + (int)d.paso + " " + d.paso + " sub=" + d.sub + " objetivo=\"" + objetivo + "\" hambreResuelta=" + d.hambreResuelta
+                + " ruedaAvisada=" + d.ruedaAvisada + " guia: " + (guia != null ? guia.Estado() : "sin guía")
+                + " avisoTutorial=\"" + (AvisoTutorialHistoria.Actual != null && AvisoTutorialHistoria.Actual.Visible ? AvisoTutorialHistoria.Actual.TextoActual : "") + "\"";
+        }
+
+        /// <summary>T-1662: depuración de las máquinas expendedoras: cuántas hay, si venden, dónde y a qué distancia del jugador.</summary>
+        public static string DepurarExpendedora()
+        {
+            Transform jugador = JugadorRaiz();
+            StringBuilder sb = new StringBuilder("[Expendedoras]");
+            Expendedora[] todas = FindObjectsByType<Expendedora>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+            sb.Append(" venden=").Append(todas.Length);
+            foreach (Expendedora e in todas)
+            {
+                sb.Append(" | ").Append(e.name).Append(" en ").Append(e.transform.position.ToString("F0"));
+                if (jugador != null)
+                {
+                    sb.Append(" a ").Append(Plano(jugador.position, e.Posicion).ToString("F0")).Append(" m");
+                }
+                sb.Append(" ofertas=").Append(e.EnVenta.Count).Append(" abierta=").Append(e.PantallaAbierta);
+            }
+            if (DirectorRecorrido.Actual != null && Actual.maquinaHambre != null)
+            {
+                sb.Append(" | maquina del hambre: ").Append(Actual.maquinaHambre.name);
+            }
+            return sb.ToString();
+        }
+
         private void Awake()
         {
             if (Actual != null && Actual != this)
@@ -201,6 +253,11 @@ namespace MechaCyberpunk.Progresion.Recorrido
             if (prologo != null)
             {
                 prologo.enabled = false;
+            }
+            if (GetComponent<GuiaHistoria>() == null)
+            {
+                gameObject.AddComponent<GuiaHistoria>();
+                gameObject.AddComponent<AvisoTutorialHistoria>();
             }
             datos = Resources.Load<DatosRecorrido>(DatosRecorrido.NombreRecurso);
             if (datos == null)
@@ -268,7 +325,7 @@ namespace MechaCyberpunk.Progresion.Recorrido
 
         // ---------- Guardado ----------
 
-        public string Guardar() => JsonUtility.ToJson(new DatosGuardados { paso = paso.ToString() });
+        public string Guardar() => JsonUtility.ToJson(new DatosGuardados { paso = paso.ToString(), hambre = hambreResuelta });
 
         public void Cargar(string texto)
         {
@@ -288,6 +345,7 @@ namespace MechaCyberpunk.Progresion.Recorrido
             }
             paso = leido;
             cargada = true;
+            hambreResuelta = leidos.hambre;
             if (iniciado && !saltado)
             {
                 Reanudar();
@@ -331,6 +389,8 @@ namespace MechaCyberpunk.Progresion.Recorrido
                 Destroy(molestia);
                 molestia = null;
             }
+            Expendedora.Compra -= AlComprarEnMaquina;
+            maquinaHambre = null;
             StopAllCoroutines();
             MisionProtegida.Desactivar();
         }
@@ -340,6 +400,15 @@ namespace MechaCyberpunk.Progresion.Recorrido
             paso = nuevo;
             sub = 0;
             jefeMostrado = false;
+            // T-1658: de recibir el dinero del maletín a salir del menú de prótesis del suero, la camilla del Doc no se usa; al terminar sale el tutorial de prótesis.
+            if (nuevo >= PasoRecorrido.Dinero && nuevo <= PasoRecorrido.Suero)
+            {
+                MechaCyberpunk.UI.Clinica.PrimeraVisitaClinica.Iniciar();
+            }
+            else
+            {
+                MechaCyberpunk.UI.Clinica.PrimeraVisitaClinica.Terminar();
+            }
             Debug.Log("[Historia] Paso " + (int)nuevo + ": " + nuevo);
             PasoCambio?.Invoke(nuevo);
             ActualizarMundo();
@@ -410,10 +479,12 @@ namespace MechaCyberpunk.Progresion.Recorrido
             {
                 PonerNoche();
                 ColocarEnElInicio();
+                PegarJugadorAlSuelo();
                 VisualPersonaje visual = VisualDelJugador();
+                ControlDelJugador()?.ActivarControl(false);
                 if (visual != null)
                 {
-                    visual.Caido = true;
+                    DejarTiradoEnElSuelo(visual);
                 }
                 paso = PasoRecorrido.Despierta; // el paso 2 ya cuenta mientras se levanta
             }, () =>
@@ -426,6 +497,7 @@ namespace MechaCyberpunk.Progresion.Recorrido
         // 2. Despierta en la calle, frente a su casa de Suburbios (sin cuarto, decisión de Tony).
         private void EntrarDespierta()
         {
+            inicioDespierta = Time.time;
             Fijar(TablaRecorrido.ObjetivoSalir, PosicionMolestia());
             GuardarPartida();
         }
@@ -438,7 +510,7 @@ namespace MechaCyberpunk.Progresion.Recorrido
             molestia = gameObject.AddComponent<MolestiaSkulls>();
             molestia.Terminada += AlTerminarMolestia;
             float distancia = datos != null ? datos.DistanciaAparicionSkulls : 10f;
-            if (datos == null || !molestia.Iniciar(datos.PrefabsSkull, distancia, PosicionCallejonSkulls()))
+            if (datos == null || !molestia.Iniciar(datos.PrefabsSkull, distancia, PosicionCallejonSkulls(), PosicionEsperaSkulls()))
             {
                 Debug.LogWarning("[Historia] No se pudo armar la escena de los SKULLS (faltan los prefabs en DatosRecorrido o el jugador): se sigue con la historia.");
                 AlTerminarMolestia();
@@ -568,7 +640,62 @@ namespace MechaCyberpunk.Progresion.Recorrido
                 return;
             }
             Fijar(TablaRecorrido.ObjetivoInventor, inventor.Posicion);
-            inventor.DarRegalo(() => IrA(PasoRecorrido.Inventor));
+            // T-1662: TINO dice su frase (subtítulo) y la cinemática del arma mejorada entra un momento después.
+            inventor.DarRegalo(() =>
+            {
+                inventor.DarRegalo(null);
+                inventor.Decir(TablaRecorrido.FraseTino);
+                StartCoroutine(IrAInventorTrasFrase());
+            });
+        }
+
+        private IEnumerator IrAInventorTrasFrase()
+        {
+            yield return new WaitForSecondsRealtime(SegundosFraseTino);
+            if (paso == PasoRecorrido.Armas)
+            {
+                IrA(PasoRecorrido.Inventor);
+            }
+        }
+
+        // T-1662: acabas de comprar el arma: el vendedor del mercado dice su frase y sale el aviso de la rueda de armas.
+        private void AlComprarArma()
+        {
+            MostradorTienda armas = BuscarMostradorArmas();
+            Vector3 boca = (armas != null ? armas.Posicion : JugadorRaiz() != null ? JugadorRaiz().position : Vector3.zero) + Vector3.up * 1.6f;
+            Subtitulos.Publicar(TablaRecorrido.NombreVendedor, TablaRecorrido.FraseVendedor, boca, SegundosFraseVendedor, new Color(1f, 0.8f, 0.2f));
+            AvisarRueda();
+        }
+
+        /// <summary>T-1662: "MANTÉN RUEDA Y ELIGE LA PISTOLA PARA EQUIPARLA", con la tecla real de la acción Rueda (botón central del ratón). Una vez.</summary>
+        private void AvisarRueda()
+        {
+            if (ruedaAvisada)
+            {
+                return;
+            }
+            ruedaAvisada = true;
+            AvisoTutorialHistoria aviso = AvisoTutorialHistoria.Actual;
+            if (aviso != null)
+            {
+                string tecla = MechaCyberpunk.UI.Hud.TeclasHud.Texto(MechaCyberpunk.UI.Hud.TeclasHud.Buscar("Rueda"), "RUEDA (clic)");
+                aviso.Mostrar(string.Format(TablaRecorrido.AvisoRueda, tecla.ToUpperInvariant()), SegundosAvisoRueda, true);
+            }
+        }
+
+        private static MostradorTienda BuscarMostradorArmas()
+        {
+            foreach (MostradorTienda m in FindObjectsByType<MostradorTienda>(FindObjectsInactive.Exclude, FindObjectsSortMode.None))
+            {
+                foreach (DatosObjeto objeto in m.EnVenta)
+                {
+                    if (objeto is DatosArma)
+                    {
+                        return m;
+                    }
+                }
+            }
+            return null;
         }
 
         // 10. C05 EL INVENTOR: la pistola mejorada.
@@ -602,9 +729,74 @@ namespace MechaCyberpunk.Progresion.Recorrido
         {
             MisionProtegida.Activar("historia: guerra con los SKULLS", false);
             Prender(viejo != null ? viejo.GruposNeon : null, false);
+            if (!hambreResuelta && IniciarHambre())
+            {
+                Prender(viejo != null ? viejo.GruposTianguis : null, false); // antes de la pelea: "Tengo hambre..."
+                GuardarPartida();
+                return;
+            }
+            ComenzarGuerraSkulls();
+        }
+
+        private void ComenzarGuerraSkulls()
+        {
+            sub = 1;
+            hambreResuelta = true;
             Prender(viejo != null ? viejo.GruposTianguis : null, true);
             Fijar(TablaRecorrido.ObjetivoTianguis, PosicionGrupos(viejo != null ? viejo.GruposTianguis : null));
+            if (!ruedaAvisada)
+            {
+                AvisarRueda(); // por si llegó a la guerra sin ver el aviso (partida cargada)
+            }
             GuardarPartida();
+        }
+
+        // T-1662: el paso del hambre. false si no hay ninguna máquina que venda (entonces se sigue sin él).
+        private bool IniciarHambre()
+        {
+            Transform jugador = JugadorRaiz();
+            Expendedora cerca = null;
+            float mejor = float.MaxValue;
+            foreach (Expendedora e in FindObjectsByType<Expendedora>(FindObjectsInactive.Exclude, FindObjectsSortMode.None))
+            {
+                float d = jugador != null ? Plano(jugador.position, e.Posicion) : 0f;
+                if (d < mejor)
+                {
+                    mejor = d;
+                    cerca = e;
+                }
+            }
+            if (cerca == null)
+            {
+                Debug.LogWarning("[Historia] No hay máquinas expendedoras que vendan en la escena: se salta el paso del hambre.");
+                return false;
+            }
+            sub = 0;
+            maquinaHambre = cerca;
+            Expendedora.Compra -= AlComprarEnMaquina;
+            Expendedora.Compra += AlComprarEnMaquina;
+            Fijar(TablaRecorrido.ObjetivoComer, cerca.Posicion);
+            Vector3 boca = (jugador != null ? jugador.position : cerca.Posicion) + Vector3.up * 1.6f;
+            Subtitulos.Publicar("YO", TablaRecorrido.PensamientoHambre, boca, 3.5f, new Color(0.7f, 1f, 0.95f));
+            AvisoTutorialHistoria aviso = AvisoTutorialHistoria.Actual;
+            if (aviso != null)
+            {
+                string tecla = MechaCyberpunk.UI.Hud.TeclasHud.Texto(MechaCyberpunk.UI.Hud.TeclasHud.Buscar("Interactuar"), "E");
+                aviso.Mostrar(string.Format(TablaRecorrido.AvisoMaquina, tecla.ToUpperInvariant()), SegundosAvisoMaquina, false);
+            }
+            return true;
+        }
+
+        private void AlComprarEnMaquina(Expendedora maquina)
+        {
+            Expendedora.Compra -= AlComprarEnMaquina;
+            if (paso != PasoRecorrido.GuerraSkulls || hambreResuelta)
+            {
+                return;
+            }
+            maquinaHambre = null;
+            AvisoTutorialHistoria.Actual?.Quitar();
+            ComenzarGuerraSkulls();
         }
 
         // 13. Guerra con los SNAKES: Neón Alto. Pelea protegida; los SKULLS ya cayeron y no se meten.
@@ -746,7 +938,8 @@ namespace MechaCyberpunk.Progresion.Recorrido
             switch (paso)
             {
                 case PasoRecorrido.Despierta:
-                    if (Plano(jugador.position, PosicionMolestia()) <= RadioMolestia
+                    if (Time.time - inicioDespierta >= SegundosHastaMolestia
+                        || Plano(jugador.position, PosicionMolestia()) <= RadioMolestia
                         || (inicioConocido && Plano(jugador.position, inicioPos) >= MetrosParaMolestia()))
                     {
                         IrA(PasoRecorrido.Molestan);
@@ -764,6 +957,7 @@ namespace MechaCyberpunk.Progresion.Recorrido
                 case PasoRecorrido.Armas:
                     if (sub == 0 && TieneArma())
                     {
+                        AlComprarArma();
                         PasarAlInventor();
                     }
                     break;
@@ -771,6 +965,10 @@ namespace MechaCyberpunk.Progresion.Recorrido
                     ActualizarChica(jugador);
                     break;
                 case PasoRecorrido.GuerraSkulls:
+                    if (sub == 0 && !hambreResuelta)
+                    {
+                        break; // esperando a que compre algo en la máquina
+                    }
                     if (ActualizarConquista(viejo != null ? viejo.ZonaTianguis : "tianguis", viejo != null ? viejo.GruposTianguis : null,
                         TablaRecorrido.ObjetivoJefeSkulls, IdPandilla.Calaveras))
                     {
@@ -953,6 +1151,65 @@ namespace MechaCyberpunk.Progresion.Recorrido
             }
         }
 
+        // T-1656 (T30): tras C01 el jugador ya está TIRADO (la pose final de la caída, sin verla caer) y se levanta con el gesto de siempre.
+        // Se tumba y se manda el animador directo al último cuadro del estado de caída (boca arriba si es posible).
+        private static void DejarTiradoEnElSuelo(VisualPersonaje visual)
+        {
+            visual.Caido = true;
+            Animator animador = visual.Animador;
+            if (animador == null)
+            {
+                return;
+            }
+            string estado;
+            switch (visual.Muerte)
+            {
+                case MuerteVisual.Adelante:
+                    estado = "MuerteAdelante";
+                    break;
+                case MuerteVisual.Desmayo:
+                    estado = "MuerteDesmayo";
+                    break;
+                default:
+                    estado = "MuerteAtras";
+                    break;
+            }
+            int hash = Animator.StringToHash(estado);
+            if (animador.HasState(0, hash))
+            {
+                animador.Play(hash, 0, 0.999f);
+                animador.Update(0f);
+            }
+        }
+
+        // T-1656 (T30): pegado al piso con raycast (ignorando al propio jugador) para que no haya caída desde el aire.
+        private static void PegarJugadorAlSuelo()
+        {
+            Transform j = JugadorRaiz();
+            if (j == null)
+            {
+                return;
+            }
+            RaycastHit[] golpes = Physics.RaycastAll(j.position + Vector3.up * 3f, Vector3.down, 12f, ~0, QueryTriggerInteraction.Ignore);
+            float mejor = float.MaxValue;
+            Vector3 punto = j.position;
+            bool hay = false;
+            foreach (RaycastHit g in golpes)
+            {
+                if (g.collider.transform.IsChildOf(j) || g.distance >= mejor)
+                {
+                    continue;
+                }
+                mejor = g.distance;
+                punto = g.point;
+                hay = true;
+            }
+            if (hay)
+            {
+                Registro<IJugador>.Actual?.Colocar(new Pose(punto + Vector3.up * 0.03f, j.rotation));
+            }
+        }
+
         private IEnumerator Levantarse()
         {
             ControladorAPie control = ControlDelJugador();
@@ -1047,6 +1304,22 @@ namespace MechaCyberpunk.Progresion.Recorrido
             AvisarSinMarcador(MarcadorHistoria.IdCallejonSkulls);
             ConocerInicio();
             if (inicioConocido && MolestiaSkulls.BuscarSalidaRespaldo(inicioPos, inicioAdelante, out Vector3 punto))
+            {
+                return punto;
+            }
+            return null;
+        }
+
+        // T-1656: dónde esperan los SKULLS, a media calle frente a la casa: marcador Historia_EsperaSkulls; respaldo, 5-10 m adelante del Inicio_Calle; null si no hay hueco.
+        private Vector3? PosicionEsperaSkulls()
+        {
+            if (MarcadorHistoria.TryBuscar(MarcadorHistoria.IdEsperaSkulls, out Pose pose))
+            {
+                return pose.position;
+            }
+            AvisarSinMarcador(MarcadorHistoria.IdEsperaSkulls);
+            ConocerInicio();
+            if (inicioConocido && MolestiaSkulls.BuscarEsperaRespaldo(inicioPos, inicioAdelante, out Vector3 punto))
             {
                 return punto;
             }

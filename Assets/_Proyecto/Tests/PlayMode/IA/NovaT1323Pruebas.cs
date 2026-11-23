@@ -88,6 +88,7 @@ namespace MechaCyberpunk.Tests
             Assert.IsNotNull(config, "IA/Resources/ConfigRespuestaNova");
             respuesta = new GameObject("RespuestaNovaPrueba1323").AddComponent<RespuestaNova>();
             respuesta.Configurar(config);
+            DirectorRespuesta.DepurarForzarPuertaNova(true); // T-1660: estas pruebas son de Nova, no de su puerta
         }
 
         [TearDown]

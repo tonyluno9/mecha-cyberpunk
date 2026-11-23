@@ -86,6 +86,11 @@ namespace MechaCyberpunk.Personaje.Habilidades
         public float FactorSalto => Activa(HabilidadProtesis.Piernas) ? config.FactorSalto : 1f;
         public float FactorGolpe => Activa(HabilidadProtesis.Brazos) ? config.FactorGolpe : 1f;
         public float EmpujeGolpe => Activa(HabilidadProtesis.Brazos) ? config.EmpujeGolpe : 0f;
+        /// <summary>T-1658: rapidez extra del golpe con BRAZOS activa (1 si no).</summary>
+        public float FactorRapidezGolpe => Activa(HabilidadProtesis.Brazos) ? config.FactorRapidezGolpe : 1f;
+        /// <summary>T-1658: impulso (m/s) a cuerpos pesados (carros) al golpear con BRAZOS; 0 si no está activa.</summary>
+        public float EmpujeCuerpoPesado => Activa(HabilidadProtesis.Brazos) ? config.EmpujeCuerpoPesado : 0f;
+        public float MasaCuerpoPesado => config.MasaCuerpoPesado;
         public float FactorTiempoRecarga => Activa(HabilidadProtesis.Brazos) ? config.FactorTiempoRecarga : 1f;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]

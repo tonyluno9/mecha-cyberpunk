@@ -26,7 +26,8 @@ namespace MechaCyberpunk.Progresion.Editor
             "MechaCyberpunk.Progresion.Recorrido.Editor.CreadorRecorrido.Aplicar",
             "MechaCyberpunk.Trafico.Editor.AplicarPoliciaT25.Aplicar",
             "MechaCyberpunk.IA.Editor.AplicarConfrontacionT1651.Aplicar",
-            "MechaCyberpunk.Progresion.Editor.AplicarPasosT1654.Aplicar",
+            // T-1655: AplicarPasosT1654 ya no corre (sus pasos tenían un siseo de fondo); los finales de pasos los deja RevertirPasosT1655.
+            "MechaCyberpunk.Progresion.Editor.RevertirPasosT1655.Aplicar",
         };
 
         [MenuItem("Mecha Cyberpunk/Sesión B 22-nov/Aplicar todo")]

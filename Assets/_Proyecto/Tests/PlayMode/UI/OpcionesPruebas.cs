@@ -142,6 +142,7 @@ namespace MechaCyberpunk.Tests.UI
         }
 
         [UnityTest]
+        [Ignore("T48: la pausa abre las opciones modernas (PanelOpcionesInicio); el recorrido con la pantalla vieja ya no aplica desde la pausa")]
         public IEnumerator RecorridoOpciones()
         {
             yield return EditorSceneManager.LoadSceneInPlayMode(RutaEscena, new LoadSceneParameters(LoadSceneMode.Single));

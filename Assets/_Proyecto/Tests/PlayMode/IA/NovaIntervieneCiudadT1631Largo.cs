@@ -69,6 +69,7 @@ namespace MechaCyberpunk.Tests
             float realInicio = Time.realtimeSinceStartup;
             try
             {
+                DirectorRespuesta.DepurarForzarPuertaNova(true); // T-1660: esta prueba es de Nova, no de su puerta
                 DirectorRespuesta.DepurarSubirEstrellas(2);
                 while (Time.time - inicio < SegundosPolicia + SegundosNova)
                 {

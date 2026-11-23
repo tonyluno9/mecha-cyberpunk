@@ -370,6 +370,7 @@ namespace MechaCyberpunk.IA.APie
             bool hayPiso = Physics.Raycast(anclaMundo, Vector3.down, out RaycastHit golpe, DescensoMaximo, ~0, QueryTriggerInteraction.Ignore)
                 && !golpe.collider.transform.IsChildOf(quien.transform) && golpe.normal.y >= 0.7f;
             Vector3 suelo = hayPiso ? golpe.point + Vector3.up * SobrePiso : new Vector3(anclaMundo.x, quien.PuntoFlote.y - config.AlturaFlote + SobrePiso, anclaMundo.z);
+            suelo = HuecoLibreNpc.Buscar(suelo - Vector3.up * SobrePiso) + Vector3.up * SobrePiso; // T40: no baja encima de un cuerpo
             Vector3 mira = jugador.Raiz.position - suelo;
             mira.y = 0f;
             Quaternion giro = mira.sqrMagnitude > 0.01f ? Quaternion.LookRotation(mira) : Quaternion.identity;
@@ -622,7 +623,7 @@ namespace MechaCyberpunk.IA.APie
                 {
                     continue;
                 }
-                punto = golpe.point + Vector3.up * 0.05f;
+                punto = HuecoLibreNpc.Buscar(golpe.point) + Vector3.up * 0.05f; // T40: no aparece encimado de otro cuerpo
                 return true;
             }
             punto = jugador;

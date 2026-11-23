@@ -18,7 +18,7 @@ namespace MechaCyberpunk.IA.Editor
             public string Hablante;
             public Color Color;
             public CuandoPelea Pelea;
-            public float Deteccion, Advertencia, Quedarse, DejarSeguir, Retirada, Acercamiento, Frases, Gesto, EntreEmpujones, Danio;
+            public float Deteccion, Advertencia, Quedarse, DejarSeguir, Retirada, Acercamiento, Frases, Gesto, EntreEmpujones, Danio, Velocidad;
             public bool SacaArma;
             public int ParaTirar, MaxEmpujones;
         }
@@ -37,13 +37,13 @@ namespace MechaCyberpunk.IA.Editor
             Crear(new Valores
             {
                 Nombre = "Config_Skulls", Hablante = "SKULL", Color = new Color(1f, 0.25f, 0.8f), Pelea = CuandoPelea.SoloSiElJugadorAtaca,
-                Deteccion = 12f, Advertencia = 20f, Quedarse = 10f, DejarSeguir = 22f, Retirada = 3f, Acercamiento = 5f,
+                Deteccion = 20f, Advertencia = 20f, Quedarse = 8f, DejarSeguir = 14f, Retirada = 3f, Acercamiento = 2.2f, Velocidad = 1.2f,
                 Frases = 5f, Gesto = 2.2f, SacaArma = false, EntreEmpujones = 4f, ParaTirar = 2, MaxEmpujones = 4, Danio = 1f
             });
             Crear(new Valores
             {
                 Nombre = "Config_Snakes", Hablante = "SNAKE", Color = new Color(0.6f, 1f, 0.2f), Pelea = CuandoPelea.SoloSiElJugadorAtaca,
-                Deteccion = 14f, Advertencia = 14f, Quedarse = 11f, DejarSeguir = 24f, Retirada = 3f, Acercamiento = 4f,
+                Deteccion = 20f, Advertencia = 20f, Quedarse = 8f, DejarSeguir = 14f, Retirada = 3f, Acercamiento = 2.2f, Velocidad = 1.2f,
                 Frases = 4.5f, Gesto = 2f, SacaArma = true, EntreEmpujones = 3.5f, ParaTirar = 2, MaxEmpujones = 5, Danio = 1f
             });
             Crear(new Valores
@@ -84,9 +84,10 @@ namespace MechaCyberpunk.IA.Editor
             so.FindProperty("colorHablante").colorValue = v.Color;
             so.FindProperty("cuandoPelea").enumValueIndex = (int)v.Pelea;
             so.FindProperty("distanciaDeteccion").floatValue = v.Deteccion;
-            so.FindProperty("segundosAdvertencia").floatValue = v.Advertencia;
-            so.FindProperty("distanciaQuedarse").floatValue = v.Quedarse;
+            so.FindProperty("segundosCerca").floatValue = v.Advertencia;
+            so.FindProperty("distanciaCerca").floatValue = v.Quedarse;
             so.FindProperty("distanciaDejarDeSeguir").floatValue = v.DejarSeguir;
+            so.FindProperty("velocidadCaminar").floatValue = v.Velocidad > 0f ? v.Velocidad : 1.2f;
             so.FindProperty("segundosRetirada").floatValue = v.Retirada;
             so.FindProperty("distanciaAcercamiento").floatValue = Mathf.Max(0.5f, v.Acercamiento);
             so.FindProperty("segundosEntreFrases").floatValue = v.Frases;

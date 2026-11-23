@@ -291,7 +291,57 @@ namespace MechaCyberpunk.Trafico.Peatones
             variantePlatica = miembro % 2;
             lugarPlatica = ReglaPlatica.Lugar(miembro, tamano);
             desvioPlatica = lugarPlatica;
+            FijarRumboDeRuta();
             Colocar();
+        }
+
+        // T40: un peatón que nace platicando nunca camina, así que su rumbo valía cero y todo el corro se quedaba apilado en el mismo punto, mirándose de espaldas.
+        // Aquí se toma el rumbo del tramo de ruta donde está para que el corro se acomode a lo largo de la banqueta.
+        private void FijarRumboDeRuta()
+        {
+            if (puntos == null || calculo == null || haciaDonde.sqrMagnitude > 0.01f)
+            {
+                return;
+            }
+            int i = Mathf.Clamp(calculo.Segmento, 0, puntos.Length - 2);
+            Vector3 d = calculo.Sentido > 0 ? puntos[i + 1] - puntos[i] : puntos[i] - puntos[i + 1];
+            d.y = 0f;
+            if (d.sqrMagnitude > 0.0001f)
+            {
+                haciaDonde = transform.parent != null ? transform.parent.TransformDirection(d.normalized) : d.normalized;
+            }
+        }
+
+        /// <summary>T40: depuración. Lista los peatones que platican y no miran a otro del corro (ángulo mayor que 60°), o "ninguno".</summary>
+        public static string DepurarCorrosDeEspaldas()
+        {
+            var sb = new System.Text.StringBuilder();
+            foreach (PeatonMundo p in ActivosLista)
+            {
+                if (p == null || !p.platicando || p.corro == null)
+                {
+                    continue;
+                }
+                float mejor = 180f;
+                foreach (PeatonMundo o in p.corro)
+                {
+                    if (o == null || o == p || !o.isActiveAndEnabled)
+                    {
+                        continue;
+                    }
+                    Vector3 h = o.transform.position - p.transform.position;
+                    h.y = 0f;
+                    if (h.sqrMagnitude > 0.0001f)
+                    {
+                        mejor = Mathf.Min(mejor, Vector3.Angle(p.transform.forward, h));
+                    }
+                }
+                if (mejor > 60f)
+                {
+                    sb.AppendLine(p.name + " no mira a nadie de su corro (" + mejor.ToString("F0") + " grados)");
+                }
+            }
+            return sb.Length == 0 ? "ninguno" : sb.ToString();
         }
 
         private void DejarDePlaticar()
@@ -793,6 +843,10 @@ namespace MechaCyberpunk.Trafico.Peatones
                     foreach (Renderer r in visuales)
                     {
                         r.enabled = false;
+                    }
+                    if (capsula != null)
+                    {
+                        capsula.enabled = false; // T40: el cuerpo ya no se ve, tampoco estorba
                     }
                 }
                 return;

@@ -111,6 +111,28 @@ namespace MechaCyberpunk.Personaje.Visual
         public AnimationClip ClipPlatica => clipPlatica;
         public bool Platicando => hayGrafo;
 
+        /// <summary>T40: depuración. Lista la gente que platica y no tiene pareja, o cuya pareja no la mira de vuelta, o cuyo cuerpo no apunta a su pareja (más de 60°).</summary>
+        public static string DepurarDeEspaldas()
+        {
+            var sb = new System.Text.StringBuilder();
+            foreach (GenteDeBanqueta g in Platicadores)
+            {
+                if (g == null || g.companero == null)
+                {
+                    continue;
+                }
+                Vector3 h = g.companero.transform.position - g.transform.position;
+                h.y = 0f;
+                // El cuerpo mira lo que diga la raíz más la corrección del clip (T-1622): eso es lo que se ve.
+                float ang = h.sqrMagnitude > 0.0001f && g.girar != null ? Vector3.Angle(Quaternion.Euler(0f, g.correccionFrente, 0f) * g.girar.forward, h) : 0f;
+                if (g.companero.companero != g || ang > 60f)
+                {
+                    sb.AppendLine(g.name + " -> " + g.companero.name + (g.companero.companero != g ? " (no es mutua)" : "") + " angulo " + ang.ToString("F0"));
+                }
+            }
+            return sb.Length == 0 ? "ninguno" : sb.ToString();
+        }
+
         /// <summary>T-1332: con quién platica (a quien mira de frente); null si no tiene pareja cerca.</summary>
         public GenteDeBanqueta Companero => companero;
 
@@ -277,19 +299,37 @@ namespace MechaCyberpunk.Personaje.Visual
             if (companero == null || !companero.isActiveAndEnabled)
             {
                 companero = null;
-                float mejor = DistanciaPareja;
-                foreach (GenteDeBanqueta otro in Platicadores)
+                // T40: primero busca entre los que no tienen pareja (o ya la tienen conmigo): así la pareja es mutua y se miran de frente, en vez de
+                // formar cadenas A mira a B, B mira a C. Solo si todos los cercanos están ocupados se une al más cercano.
+                for (int pasada = 0; pasada < 2 && companero == null; pasada++)
                 {
-                    float d = otro != this ? Vector3.Distance(otro.transform.position, transform.position) : float.MaxValue;
-                    if (d < mejor)
+                    float mejor = DistanciaPareja;
+                    foreach (GenteDeBanqueta otro in Platicadores)
                     {
-                        mejor = d;
-                        companero = otro;
+                        if (otro == this || otro == null)
+                        {
+                            continue;
+                        }
+                        bool libre = otro.companero == null || !otro.companero.isActiveAndEnabled || otro.companero == this;
+                        if (pasada == 0 && !libre)
+                        {
+                            continue;
+                        }
+                        float d = Vector3.Distance(otro.transform.position, transform.position);
+                        if (d < mejor)
+                        {
+                            mejor = d;
+                            companero = otro;
+                        }
                     }
                 }
                 if (companero == null)
                 {
                     return;
+                }
+                if (companero.companero == null || !companero.companero.isActiveAndEnabled)
+                {
+                    companero.companero = this;
                 }
             }
             Vector3 hacia = companero.transform.position - transform.position;

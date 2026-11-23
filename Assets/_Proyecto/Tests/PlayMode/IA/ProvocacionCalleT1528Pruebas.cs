@@ -40,7 +40,7 @@ namespace MechaCyberpunk.Tests.IA
             piso.transform.position = new Vector3(0f, -0.5f, 0f);
             piso.transform.localScale = new Vector3(400f, 1f, 400f);
             jugador = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(RutaJugador), new Vector3(0f, 0.05f, 0f), Quaternion.identity);
-            CrearGrupo(12f);
+            CrearGrupo(6f); // T-1659: a menos de 8 m cuenta como estar cerca
         }
 
         public override void TearDown()
@@ -100,7 +100,7 @@ namespace MechaCyberpunk.Tests.IA
             float anterior = vida.Actual;
             float mayorCaida = 0f;
             float menorDistancia = float.MaxValue;
-            float fin = Time.time + 30f; // T-1651 (T26): primero advierten unos 20 s y después empujan
+            float fin = Time.time + 40f; // T-1659: te miran, a los 20 s cerca uno se acerca caminando lento (~1.2 m/s) y empuja
             while (Time.time < fin)
             {
                 yield return null;

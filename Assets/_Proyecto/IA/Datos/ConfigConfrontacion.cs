@@ -25,26 +25,28 @@ namespace MechaCyberpunk.IA.Datos
         [Tooltip("Cuándo pasa de advertir a pelear de verdad.")]
         [SerializeField] private CuandoPelea cuandoPelea = CuandoPelea.SoloSiElJugadorAtaca;
 
-        [Header("Detección y advertencia")]
-        [Tooltip("Te detectan a esta distancia y empiezan a advertir (m). Con 0 no aplica.")]
-        [Min(0f)] [SerializeField] private float distanciaDeteccion = 12f;
-        [Tooltip("Cuánto advierten antes de pasar a empujar si te quedas (s).")]
-        [Min(0f)] [SerializeField] private float segundosAdvertencia = 20f;
-        [Tooltip("Si al acabar la advertencia sigues a esta distancia o menos, cuenta como quedarte (m). Más lejos: se retiran.")]
-        [Min(0f)] [SerializeField] private float distanciaQuedarse = 10f;
-        [Tooltip("Si te alejas más que esto dejan de seguirte y regresan a su lugar (m).")]
-        [Min(0f)] [SerializeField] private float distanciaDejarDeSeguir = 22f;
-        [Tooltip("Mínimo que dura la retirada antes de poder advertirte otra vez (s).")]
+        [Header("Verte, mirarte y acercarse (T-1659)")]
+        [Tooltip("Te ven de lejos y te miran a esta distancia (m). Con 0 no aplica.")]
+        [Min(0f)] [SerializeField] private float distanciaDeteccion = 20f;
+        [Tooltip("Segundos seguidos que debes estar cerca para que UNO se acerque (s).")]
+        [Min(0f)] [UnityEngine.Serialization.FormerlySerializedAs("segundosAdvertencia")] [SerializeField] private float segundosCerca = 20f;
+        [Tooltip("A esta distancia o menos cuenta como estar cerca (m).")]
+        [Min(0f)] [UnityEngine.Serialization.FormerlySerializedAs("distanciaQuedarse")] [SerializeField] private float distanciaCerca = 8f;
+        [Tooltip("Una vez que uno se acerca, si te alejas más que esto se acaba todo y regresan a su lugar (m).")]
+        [Min(0f)] [SerializeField] private float distanciaDejarDeSeguir = 14f;
+        [Tooltip("Mínimo que dura la retirada antes de poder mirarte otra vez (s).")]
         [Min(0f)] [SerializeField] private float segundosRetirada = 3f;
-        [Tooltip("Durante la advertencia se acercan hasta esta distancia y ahí se quedan (m).")]
-        [Min(0.5f)] [SerializeField] private float distanciaAcercamiento = 5f;
+        [Tooltip("El que se acerca llega hasta esta distancia y empieza a empujar (m).")]
+        [Min(0.5f)] [SerializeField] private float distanciaAcercamiento = 2.2f;
+        [Tooltip("Velocidad con la que el que se acerca camina hacia ti (m/s).")]
+        [Min(0.1f)] [SerializeField] private float velocidadCaminar = 1.2f;
 
-        [Header("Frases y gestos")]
+        [Header("Frases y gestos (los guardias aún usan las frases; los de calle ya no hablan al confrontar)")]
         [Tooltip("Una frase cada tanto, una sola voz a la vez en el grupo (s).")]
         [Min(1f)] [SerializeField] private float segundosEntreFrases = 5f;
-        [Tooltip("Lo que se quedan quietos al provocar (animación de burla) o al empujar (s).")]
+        [Tooltip("Lo que se quedan quietos al empujar (s).")]
         [Min(0.2f)] [SerializeField] private float segundosGesto = 2.2f;
-        [Tooltip("Si saca el arma (sin apuntar ni disparar) mientras advierte. Los SNAKES, sí.")]
+        [Tooltip("Si saca el arma (sin apuntar ni disparar) mientras te mira. Los SNAKES, sí.")]
         [SerializeField] private bool sacaArmaEnAdvertencia;
 
         [Header("Empujones (tras la advertencia)")]
@@ -61,8 +63,9 @@ namespace MechaCyberpunk.IA.Datos
         public Color ColorHablante => colorHablante;
         public CuandoPelea CuandoPelea => cuandoPelea;
         public float DistanciaDeteccion => distanciaDeteccion;
-        public float SegundosAdvertencia => segundosAdvertencia;
-        public float DistanciaQuedarse => distanciaQuedarse;
+        public float SegundosCerca => segundosCerca;
+        public float DistanciaCerca => distanciaCerca;
+        public float VelocidadCaminar => velocidadCaminar;
         public float DistanciaDejarDeSeguir => distanciaDejarDeSeguir;
         public float SegundosRetirada => segundosRetirada;
         public float DistanciaAcercamiento => distanciaAcercamiento;

@@ -17,6 +17,12 @@ namespace MechaCyberpunk.UI.Tiendas
     {
         private const float AlturaAviso = 1.0f;
 
+        /// <summary>T-1662 (T44): se avisa cada vez que alguien compra algo en una máquina (la historia lo usa en el paso del hambre).</summary>
+        public static event System.Action<Expendedora> Compra;
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ReiniciarEventos() => Compra = null;
+
         private readonly List<DatosObjeto> enVenta = new List<DatosObjeto>();
         private TiendaBasica tienda;
         private PantallaTienda pantalla;
@@ -35,6 +41,7 @@ namespace MechaCyberpunk.UI.Tiendas
         public void Iniciar(DatosTienda datos, CatalogoObjetos catalogo, PantallaTienda pantallaTienda)
         {
             tienda = new TiendaBasica(datos);
+            tienda.Comprado += _ => Compra?.Invoke(this);
             pantalla = pantallaTienda;
             enVenta.Clear();
             foreach (DatosOferta oferta in tienda.Ofertas)

@@ -30,6 +30,8 @@ namespace MechaCyberpunk.Tests
             Registros.LimpiarTodos();
             escalaAnterior = Time.timeScale;
             ParametrosRespuesta numeros = ParametrosRespuesta.PorOmision();
+            numeros.PoliciasMuertosParaNova = 0; // T-1660: estas pruebas no son de la puerta de Nova (esa va en ReglaPuertaNovaT1660Pruebas)
+            numeros.CamionetasParaNova = 0;
             numeros.Registrar = false;
             DirectorRespuesta.Configurar(numeros);
             GameObject piso = GameObject.CreatePrimitive(PrimitiveType.Cube);

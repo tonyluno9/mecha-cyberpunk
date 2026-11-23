@@ -124,6 +124,8 @@ namespace MechaCyberpunk.UI
         [SerializeField] private float duracionRevelar = 0.7f;
         [Min(0.05f)] [Tooltip("Lo que tarda el implante en ensamblarse al instalarlo (s).")]
         [SerializeField] private float duracionEnsamble = 0.9f;
+        [Min(0.5f)] [Tooltip("T-1658: lo que tarda en dibujarse, de abajo arriba y en su lugar, el holograma de PIERNAS o BRAZOS al instalarlos (s). Dura lo que el taladro de instalación (IMP_INSTALAR_TALADRO, 6.9 s).")]
+        [SerializeField] private float duracionInstalacionLenta = 7f;
         [Min(0f)] [Tooltip("Qué tan lejos del cuerpo empieza el implante al ensamblarse (m).")]
         [SerializeField] private float distanciaEnsamble = 0.45f;
         [Tooltip("Dónde se arma el set del holograma, lejos de la ciudad (m). Distinto del banco de armas.")]
@@ -202,6 +204,10 @@ namespace MechaCyberpunk.UI
 
         public float DuracionRevelar => duracionRevelar;
         public float DuracionEnsamble => duracionEnsamble;
+        public float DuracionInstalacionLenta => duracionInstalacionLenta;
+        /// <summary>T-1658: PIERNAS y BRAZOS se dibujan despacio al instalarlos; los demás espacios usan el ensamble normal.</summary>
+        public static bool InstalacionLenta(MechaCyberpunk.Core.EspacioImplante espacio) =>
+            espacio == MechaCyberpunk.Core.EspacioImplante.Piernas || espacio == MechaCyberpunk.Core.EspacioImplante.Brazos;
         public float DistanciaEnsamble => distanciaEnsamble;
 
         /// <summary>La malla horneada del implante (null si ese espacio y nivel no tienen pieza visible).</summary>

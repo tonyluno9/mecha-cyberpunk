@@ -15,12 +15,13 @@ MonoBehaviour:
   nombreHablante: SKULL
   colorHablante: {r: 1, g: 0.25, b: 0.8, a: 1}
   cuandoPelea: 0
-  distanciaDeteccion: 12
-  segundosAdvertencia: 20
-  distanciaQuedarse: 10
-  distanciaDejarDeSeguir: 22
+  distanciaDeteccion: 20
+  segundosCerca: 20
+  distanciaCerca: 8
+  distanciaDejarDeSeguir: 14
   segundosRetirada: 3
-  distanciaAcercamiento: 5
+  distanciaAcercamiento: 2.2
+  velocidadCaminar: 1.2
   segundosEntreFrases: 5
   segundosGesto: 2.2
   sacaArmaEnAdvertencia: 0

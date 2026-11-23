@@ -43,7 +43,14 @@ namespace MechaCyberpunk.Progresion.Recorrido
         public const string ObjetivoDoc = "VE CON EL DOC";
         public const string ObjetivoMejora = "INSTALA UNA MEJORA CON EL DOC";
         public const string ObjetivoArma = "COMPRA UN ARMA EN EL MERCADO";
-        public const string ObjetivoInventor = "VE CON EL INVENTOR AL CIC";
+        public const string ObjetivoInventor = "VE CON TINO AL CIC";
+        public const string ObjetivoComer = "COMPRA ALGO EN LA MÁQUINA";
+        public const string PensamientoHambre = "Tengo hambre...";
+        public const string AvisoMaquina = "ACÉRCATE A LA MÁQUINA Y PULSA {0}";
+        public const string AvisoRueda = "MANTÉN {0} Y ELIGE LA PISTOLA PARA EQUIPARLA";
+        public const string FraseVendedor = "¿Por qué tan baratas? Porque son de aquí. Conozco a un viejo que te las deja de otro planeta, pero cobra caro. ¿Traes dinero?";
+        public const string FraseTino = "Acércate, te mejoramos el arma.";
+        public const string NombreVendedor = "VENDEDOR";
         public const string ObjetivoTianguis = "LIBERA EL TIANGUIS";
         public const string ObjetivoJefeSkulls = "VENCE AL JEFE DE LOS SKULLS";
         public const string ObjetivoNeon = "VE A NEÓN ALTO";
@@ -86,6 +93,7 @@ namespace MechaCyberpunk.Progresion.Recorrido
             yield return ObjetivoMejora;
             yield return ObjetivoArma;
             yield return ObjetivoInventor;
+            yield return ObjetivoComer;
             yield return ObjetivoTianguis;
             yield return ObjetivoJefeSkulls;
             yield return ObjetivoNeon;

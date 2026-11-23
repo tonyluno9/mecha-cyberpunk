@@ -16,11 +16,12 @@ MonoBehaviour:
   colorHablante: {r: 0.3, g: 0.6, b: 1, a: 1}
   cuandoPelea: 2
   distanciaDeteccion: 0
-  segundosAdvertencia: 0
-  distanciaQuedarse: 0
+  segundosCerca: 0
+  distanciaCerca: 0
   distanciaDejarDeSeguir: 0
   segundosRetirada: 0
   distanciaAcercamiento: 0.5
+  velocidadCaminar: 1.2
   segundosEntreFrases: 6
   segundosGesto: 2
   sacaArmaEnAdvertencia: 1

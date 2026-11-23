@@ -14,6 +14,7 @@ namespace MechaCyberpunk.Progresion.Recorrido
         public const string IdRanura = "Historia_Ranura";
         public const string IdTorre = "Historia_Torre";
         public const string IdCallejonSkulls = "Historia_CallejonSkulls";
+        public const string IdEsperaSkulls = "Historia_EsperaSkulls";
 
         [Tooltip("Historia_Molestia, Historia_Ranura o Historia_Torre.")]
         [SerializeField] private string id = IdMolestia;

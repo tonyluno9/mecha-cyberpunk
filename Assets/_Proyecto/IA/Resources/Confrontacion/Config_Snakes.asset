@@ -15,12 +15,13 @@ MonoBehaviour:
   nombreHablante: SNAKE
   colorHablante: {r: 0.6, g: 1, b: 0.2, a: 1}
   cuandoPelea: 0
-  distanciaDeteccion: 14
-  segundosAdvertencia: 14
-  distanciaQuedarse: 11
-  distanciaDejarDeSeguir: 24
+  distanciaDeteccion: 20
+  segundosCerca: 20
+  distanciaCerca: 8
+  distanciaDejarDeSeguir: 14
   segundosRetirada: 3
-  distanciaAcercamiento: 4
+  distanciaAcercamiento: 2.2
+  velocidadCaminar: 1.2
   segundosEntreFrases: 4.5
   segundosGesto: 2
   sacaArmaEnAdvertencia: 1

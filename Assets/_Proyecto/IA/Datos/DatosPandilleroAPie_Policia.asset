@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: DatosPandilleroAPie_Policia
   m_EditorClassIdentifier: MechaCyberpunk.IA::MechaCyberpunk.IA.Datos.DatosPandilleroAPie
   nombre: "POLIC\xCDA"
-  vidaMaxima: 80
+  vidaMaxima: 140
   danioGolpe: 10
   preparacionGolpe: 0.35
   recargaGolpe: 0.85
@@ -34,6 +34,7 @@ MonoBehaviour:
   esPolicia: 1
   calorAlGolpear: 8
   calorAlMatar: 30
+  provocaAntesDeAtacar: 0
   tamanoPandilla: 3
   maxAtacando: 2
   radioFormacion: 2.5

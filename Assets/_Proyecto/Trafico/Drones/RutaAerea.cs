@@ -31,7 +31,19 @@ namespace MechaCyberpunk.Trafico.Drones
         [SerializeField, Min(0f), Tooltip("Máximo que sube sobre su altura de ruta (m).")] private float desvioMaximo = 40f;
         [SerializeField, Min(2f), Tooltip("Tope de la altura de ruta para que el dron se vea desde la calle (m).")] private float alturaMaxima = 14f;
 
+        [Header("Altura sobre edificios (T40)")]
+        [SerializeField, Tooltip("Si es true, al empezar mide lo más alto que hay bajo su ruta (edificios, muro, torres) y vuela por encima de eso más el margen: nunca atraviesa una pared por un lado.")] private bool sobreEdificios = true;
+        [SerializeField, Min(0f), Tooltip("Margen sobre lo más alto que hay bajo la ruta (m). Incluye la oscilación y el tamaño del dron.")] private float margenSobreEdificios = 4f;
+        [SerializeField, Min(1f), Tooltip("Cada cuántos metros de ruta mide la altura de lo que hay debajo (m).")] private float pasoMuestreo = 6f;
+        [SerializeField, Min(0.1f), Tooltip("Radio de la esfera con que mide hacia abajo (m).")] private float radioMuestreo = 2.5f;
+        [SerializeField, Min(10f), Tooltip("Desde qué altura sobre la ruta empieza a medir hacia abajo (m).")] private float alturaSondeo = 400f;
+        [SerializeField, Min(2f), Tooltip("Tope absoluto de la altura que puede tomar por esto (m).")] private float alturaTope = 250f;
+
         private static readonly RaycastHit[] impactos = new RaycastHit[16];
+        private static readonly RaycastHit[] impactosAbajo = new RaycastHit[64];
+        private float alturaSegura;
+        private bool escaneado;
+        private float segundosParaEscanear = 0.5f;
         private static readonly Collider[] tocados = new Collider[16];
         private ReglaDesvioAereo desvio;
         private CalculoRutaAerea calculo;
@@ -40,7 +52,11 @@ namespace MechaCyberpunk.Trafico.Drones
 
         public float Altura => altura;
         /// <summary>Altura de ruta que se usa: la de la ruta, con el tope <c>alturaMaxima</c> (m).</summary>
-        public float AlturaEfectiva => Mathf.Min(altura, alturaMaxima);
+        public float AlturaEfectiva => Mathf.Max(Mathf.Min(altura, alturaMaxima), alturaSegura);
+        /// <summary>T40: altura mínima (m, sobre el origen del padre) que se calculó para librar lo más alto bajo la ruta; 0 si aún no midió.</summary>
+        public float AlturaSegura => alturaSegura;
+        /// <summary>T40: lo más alto (y del mundo) que se midió bajo la ruta; 0 si aún no midió.</summary>
+        public float TechoBajoRuta { get; private set; }
         /// <summary>Metros que ha subido para rodear un obstáculo.</summary>
         public float Desvio => desvio != null ? desvio.Desvio : 0f;
         public float Velocidad => velocidad;
@@ -59,9 +75,82 @@ namespace MechaCyberpunk.Trafico.Drones
             Aplicar(0f, true);
         }
 
+        // T40: espera medio segundo (que existan los colliders de la ciudad) y mide una vez la altura máxima bajo la ruta.
+        private void EscanearTecho()
+        {
+            escaneado = true;
+            if (!sobreEdificios)
+            {
+                return;
+            }
+            Physics.SyncTransforms();
+            float duracion = calculo.DuracionVuelta;
+            float paso = Mathf.Max(0.1f, pasoMuestreo / calculo.Velocidad);
+            float techo = float.MinValue;
+            for (float t = 0f; t < duracion; t += paso)
+            {
+                Vector3 p = EnMundo(calculo.Muestra(t, fase).Posicion);
+                techo = Mathf.Max(techo, TechoBajo(p));
+            }
+            if (techo == float.MinValue)
+            {
+                return;
+            }
+            TechoBajoRuta = techo;
+            float origenY = transform.parent != null ? transform.parent.position.y : 0f;
+            float minimo = Mathf.Min(techo + margenSobreEdificios - origenY, alturaTope);
+            if (minimo > AlturaEfectiva)
+            {
+                alturaSegura = minimo;
+                calculo = new CalculoRutaAerea(puntos, AlturaEfectiva, velocidad, amplitudOscilacion, periodoOscilacion, alabeoMaximo, alabeoPorGiro);
+                Aplicar(0f, true);
+            }
+        }
+
+        // Y más alta de lo sólido (sin triggers ni cuerpos con Rigidbody) bajo el punto, medida con una esfera desde arriba.
+        private float TechoBajo(Vector3 p)
+        {
+            Vector3 desde = new Vector3(p.x, p.y + alturaSondeo, p.z);
+            int n = Physics.SphereCastNonAlloc(desde, radioMuestreo, Vector3.down, impactosAbajo, alturaSondeo * 2f, ~0, QueryTriggerInteraction.Ignore);
+            float mejor = float.MinValue;
+            for (int i = 0; i < n; i++)
+            {
+                Collider c = impactosAbajo[i].collider;
+                if (c == null || c.transform.IsChildOf(transform) || c.attachedRigidbody != null)
+                {
+                    continue;
+                }
+                mejor = Mathf.Max(mejor, impactosAbajo[i].point.y);
+            }
+            return mejor;
+        }
+
+        /// <summary>T40: depuración. Altura de ruta, techo medido bajo ella y si el dron va por encima (para comprobar que no atraviesa edificios).</summary>
+        public string Depurar() => name + ": ruta " + AlturaEfectiva.ToString("F1") + " m, techo medido " + TechoBajoRuta.ToString("F1") + " m, y real " + transform.position.y.ToString("F1")
+            + (transform.position.y >= TechoBajoRuta + margenSobreEdificios * 0.5f || TechoBajoRuta <= 0f ? " OK" : " BAJO EL TECHO");
+
+        /// <summary>T40: depuración. Una línea por cada ruta aérea de la escena: altura mínima y techo bajo su ruta; marca las que van bajo el techo.</summary>
+        public static string DepurarTodas()
+        {
+            var sb = new System.Text.StringBuilder();
+            foreach (RutaAerea r in FindObjectsByType<RutaAerea>(FindObjectsSortMode.None))
+            {
+                sb.AppendLine(r.Depurar());
+            }
+            return sb.Length == 0 ? "sin rutas aereas" : sb.ToString();
+        }
+
         private void Update()
         {
             float dt = Time.deltaTime;
+            if (!escaneado)
+            {
+                segundosParaEscanear -= dt;
+                if (segundosParaEscanear <= 0f)
+                {
+                    EscanearTecho();
+                }
+            }
             if (!evitaObstaculos)
             {
                 tiempo += dt;

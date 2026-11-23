@@ -51,6 +51,13 @@ namespace MechaCyberpunk.Trafico.Persecucion
         private const float AnchoDePasoPatrullas = 2.8f;
         private const float FactorObstaculoTotal = 0.15f;
         private const float RapidezDeFreno = 3f;
+        // T-1660: que no se choquen entre ellas: separación al ir directo, puntos de destino repartidos y freno si hay otra justo delante (de cualquier lado).
+        private const float RadioSeparacionPatrullas = 9f;
+        private const float FuerzaSeparacionPatrullas = 1.6f;
+        private const float SeparacionDeAcople = 5f;
+        private const float DistanciaMinimaDeAcople = 14f;
+        private const float DistanciaEncimaPatrullas = 7f;
+        private static readonly List<Vector3> posicionesVecinas = new List<Vector3>();
         // T-986: maneja con la física del carro; esto es lo que se mira para quitarla si queda volcada y para no esperar por siempre un obstáculo.
         private const float MinimoArribaVolcada = 0.3f;
         private const float AlturaAlEnderezar = 0.6f; // T-1006
@@ -511,12 +518,30 @@ namespace MechaCyberpunk.Trafico.Persecucion
             }
             EnRonda = false;
             criminalVisto = null;
+            segundosSinCriminal = 0f;
+            rastro.Clear();
+            nodoMeta = -1; // T-1660: sin meta vieja de la ronda: replanea hacia el jugador en el primer paso
             ultimaVista = posicionJugador?.Invoke() ?? posicion;
             if (bucleSirena == Sonidos.SinBucle)
             {
                 bucleSirena = SonidosPolicia.IniciarSirena(transform); // T-1476
             }
+            Sirena(); // T-1660: luces desde ya, no en el siguiente paso de física
         }
+
+        /// <summary>T-1660: True si esta patrulla es de la policía y puede ir por el jugador ahora (no robada, destruida, retirándose ni con el jugador adentro).</summary>
+        public bool PuedeAlertarse => enabled && !Robada && !Destruida && !Retirando && !ConJugador && calculo != null;
+
+        /// <summary>T-1660: una frase con lo que hace (para depurar): ronda, persecución, retirada...; "SIN-RUTA" si no tiene camino ni va directo.</summary>
+        public string Estado()
+        {
+            string que = Destruida ? "destruida" : Robada ? "robada" : !enabled ? "apagada" : Retirando ? "retirandose" : EnRonda ? (AtiendeCriminal ? "ronda-criminal" : "ronda")
+                : VaDirecto ? "directo" : VeAlJugador ? "ve" : "persigue";
+            bool sinRuta = !VaDirecto && !Retirando && (camino.Count == 0 || (nodoMeta < 0 && rastro.Count == 0 && !EnRonda));
+            return name + " " + que + " v=" + Rapidez.ToString("F1") + (SirenaPrendida ? " sirena" : " sinSirena") + (sinRuta ? " SIN-RUTA" : string.Empty) + (PoliciasBajaron ? " bajo" : string.Empty);
+        }
+
+        private bool SirenaPrendida => (luzRoja != null && luzRoja.enabled) || (luzAzul != null && luzAzul.enabled);
 
         /// <summary>T-587: deja de perseguir y se va por la calle al nodo más lejano del jugador; desaparece cuando ya no se ve.</summary>
         public void Retirar()
@@ -944,7 +969,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
             }
             if (VaDirecto)
             {
-                Directo(objetivo, factorVelocidad);
+                Directo(PuntoDeAcople(objetivo), factorVelocidad); // T-1660: cada patrulla a su sitio alrededor del jugador
                 return;
             }
             if (rastro.Count > 0 && Regresar(factorVelocidad))
@@ -1072,6 +1097,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
             {
                 Vector3 recta = hacia / distancia;
                 Vector3 direccion = Esquivar(recta); // T-666: rodea lo que le tapa el paso
+                direccion = SepararDeVecinas(direccion); // T-1660: y se aparta de otra patrulla cercana
                 if (rastro.Count == 0 || Vector3.Distance(rastro[rastro.Count - 1], posicion) >= DistanciaEntreMigas)
                 {
                     if (rastro.Count >= MaximoDeMigas)
@@ -1386,6 +1412,43 @@ namespace MechaCyberpunk.Trafico.Persecucion
             return direccion;
         }
 
+        // T-1660: el punto de destino de esta patrulla: el jugador corrido de lado según su lugar entre las que lo persiguen (el orden es por id, estable).
+        private Vector3 PuntoDeAcople(Vector3 jugador)
+        {
+            int indice = 0;
+            int total = 0;
+            int mio = GetInstanceID();
+            for (int i = 0; i < ActivasLista.Count; i++)
+            {
+                PatrullaMundo p = ActivasLista[i];
+                if (p == null || p.EnRonda || p.Retirando || p.Robada || p.Destruida)
+                {
+                    continue;
+                }
+                total++;
+                if (p != this && p.GetInstanceID() < mio)
+                {
+                    indice++;
+                }
+            }
+            return CalculoSeparacionPatrullas.PuntoDeAcople(posicion, jugador, indice, Mathf.Max(1, total), SeparacionDeAcople, DistanciaMinimaDeAcople);
+        }
+
+        // T-1660: junta dónde están las otras patrullas cercanas y empuja la dirección lejos de ellas.
+        private Vector3 SepararDeVecinas(Vector3 direccion)
+        {
+            posicionesVecinas.Clear();
+            for (int i = 0; i < ActivasLista.Count; i++)
+            {
+                PatrullaMundo otra = ActivasLista[i];
+                if (otra != null && otra != this && !otra.Destruida)
+                {
+                    posicionesVecinas.Add(otra.transform.position);
+                }
+            }
+            return CalculoSeparacionPatrullas.Separar(posicion, direccion, posicionesVecinas, RadioSeparacionPatrullas, FuerzaSeparacionPatrullas);
+        }
+
         // 1 si puede ir a toda velocidad; menos si hay otra patrulla delante (la de atrás frena y se queda a DistanciaMinimaEntrePatrullas)
         // o, en un cruce de caminos, la que tiene menos prioridad cede; 0.15 si un obstáculo le cierra los dos carriles.
         private float FactorDeFreno()
@@ -1415,7 +1478,9 @@ namespace MechaCyberpunk.Trafico.Persecucion
                 float lado = Mathf.Abs(Vector3.Dot(d, transform.right));
                 bool enMiCamino = delante && lado < AnchoDePasoPatrullas;
                 bool cruceDeCaminos = Mathf.Abs(cruce) <= 0.3f;
-                bool cede = (enMiCamino && mismoSentido) || (cruceDeCaminos && distancia < DistanciaMinimaEntrePatrullas * 1.6f && tieneLaPrioridad);
+                // T-1660: otra patrulla justo delante, de frente o de lado, y muy cerca: cede la de menos prioridad (así dos que se miran no se quedan trabadas).
+                bool encima = delante && lado < AnchoDePasoPatrullas && distancia < DistanciaEncimaPatrullas && tieneLaPrioridad;
+                bool cede = encima || (enMiCamino && mismoSentido) || (cruceDeCaminos && distancia < DistanciaMinimaEntrePatrullas * 1.6f && tieneLaPrioridad);
                 if (cede)
                 {
                     float t = Mathf.Clamp01((distancia - DistanciaMinimaEntrePatrullas) / (DistanciaFrenoPatrullas - DistanciaMinimaEntrePatrullas));

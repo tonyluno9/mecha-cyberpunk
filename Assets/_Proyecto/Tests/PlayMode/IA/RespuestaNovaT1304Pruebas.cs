@@ -96,6 +96,8 @@ namespace MechaCyberpunk.Tests
             Assert.IsNotNull(config.JefeFinal, "el jefe final");
             // T-1653: el director de respuesta con tiempos cortos para que la llegada gradual se vea en pocos segundos.
             ParametrosRespuesta numeros = ParametrosRespuesta.PorOmision();
+            numeros.PoliciasMuertosParaNova = 0; // T-1660: estas pruebas no son de la puerta de Nova (esa va en ReglaPuertaNovaT1660Pruebas)
+            numeros.CamionetasParaNova = 0;
             numeros.RetrasoNivelNuevo = 1f;
             numeros.SegundosEntreGenerados = 1.5f;
             numeros.SegundosParaSubir = 3f;
@@ -111,6 +113,7 @@ namespace MechaCyberpunk.Tests
             DirectorRespuesta.Configurar(numeros);
             respuesta = new GameObject("RespuestaNovaPrueba").AddComponent<RespuestaNova>();
             respuesta.Configurar(config);
+            DirectorRespuesta.DepurarForzarPuertaNova(true); // T-1660: estas pruebas son de Nova, no de su puerta
         }
 
         [TearDown]

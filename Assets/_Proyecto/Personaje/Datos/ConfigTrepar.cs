@@ -73,6 +73,16 @@ namespace MechaCyberpunk.Personaje
         [Tooltip("Lo que dura subir al borde desde colgado (s): PJ01_Colgado_Subir (116 cuadros a 30 fps) a 1.5x.")]
         [Min(0.2f)] [SerializeField] private float segundosSubirDeColgado = 2.4f;
 
+        [Header("Sin techos (T-1663)")]
+        [Tooltip("Altura máxima de los pies al terminar un agarre, mantle, colgado o salto de barda, sobre el piso de la calle (m). Más alto (azoteas) se niega.")]
+        [Min(0.5f)] [SerializeField] private float alturaMaximaSobreCalle = 2.5f;
+
+        [Tooltip("Qué tan abajo se busca el piso de la calle bajo los pies del jugador (m).")]
+        [Min(1f)] [SerializeField] private float alcanceBusquedaCalle = 8f;
+
+        public float AlturaMaximaSobreCalle => alturaMaximaSobreCalle;
+        public float AlcanceBusquedaCalle => alcanceBusquedaCalle;
+
         public bool ColgarseActivo => colgarseActivo;
         public float AlturaMinimaColgarse => alturaMinimaColgarse;
         public float AlturaManosColgado => alturaManosColgado;
