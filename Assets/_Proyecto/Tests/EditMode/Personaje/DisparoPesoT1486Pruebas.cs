@@ -126,9 +126,10 @@ namespace MechaCyberpunk.Tests.Personaje
         }
 
         [Test]
-        public void MarcaImpacto_MatarSuenaDistintoQuePegar()
+        public void MarcaImpacto_MatarNoSuenaYPegarSi()
         {
-            Assert.AreNotEqual(SonidosMarcaImpacto.Id(false), SonidosMarcaImpacto.Id(true));
+            // T64: sin sonido de confirmación de kill.
+            Assert.IsNull(SonidosMarcaImpacto.Id(true));
             Assert.AreEqual(SonidosMarcaImpacto.Pegar, SonidosMarcaImpacto.Id(false));
         }
     }

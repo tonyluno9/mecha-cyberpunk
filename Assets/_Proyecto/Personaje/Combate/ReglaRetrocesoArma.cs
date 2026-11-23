@@ -81,11 +81,14 @@ namespace MechaCyberpunk.Personaje.Combate
         }
     }
 
-    /// <summary>T-1486: IDs de sonido de la marca en la mira. Sin archivo propio todavía: se reusan los de HUD (ver docs/tareas/en-curso/T-1486-disparar.md).</summary>
+    /// <summary>
+    /// T-1486: IDs de sonido de la marca en la mira. Sin archivo propio todavía: se reusa el de HUD (ver docs/tareas/en-curso/T-1486-disparar.md).
+    /// T64: al matar no suena nada (<see cref="Matar"/> es null); el sonido de impacto normal se queda.
+    /// </summary>
     public static class SonidosMarcaImpacto
     {
         public const string Pegar = "HUD_NOTIFICACION";
-        public const string Matar = "HUD_LOGRO";
+        public const string Matar = null;
 
         public static string Id(bool mato) => mato ? Matar : Pegar;
     }
