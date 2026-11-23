@@ -959,7 +959,6 @@ namespace MechaCyberpunk.IA.APie
         }
         private float finQuieto = -1f;
         private AtropelloJugador atropelloJugador;
-        private const float DistanciaContactoEmpujon = 2.2f;
         private const float DistanciaEmpujarConfrontacion = 2.6f;
         private const float SegundosGestoEmpujon = 1f;
 
@@ -976,7 +975,7 @@ namespace MechaCyberpunk.IA.APie
             }
         }
 
-        // Una cosa a la vez: o camina, o hace el gesto (burla, empujón) y se queda quieto. No apunta ni dispara: la pelea la empieza el jugador.
+        // T-1659: todos te miran (giran hacia ti). Solo el que se acerca camina lento hacia ti y, al llegar, te empuja. No apuntan ni disparan: la pelea la empieza el jugador. Sin voces.
         private void ActualizarConfrontando(ConfrontacionGrupo conf)
         {
             ObjetivoActual = null; // no apunta a nadie: la policía no lo toma por criminal
@@ -987,8 +986,9 @@ namespace MechaCyberpunk.IA.APie
             float distancia = hacia.magnitude;
             Vector3 adelante = distancia > 0.0001f ? hacia / distancia : transform.forward;
             ConfigConfrontacion config = conf.Config;
+            bool acercador = conf.Acercador == this;
             bool quieto = Time.time < finQuieto;
-            if (!quieto && distancia <= DistanciaEmpujarConfrontacion && conf.TomarEmpujon(this, out bool tira))
+            if (acercador && !quieto && distancia <= DistanciaEmpujarConfrontacion && conf.TomarEmpujon(this, out bool tira))
             {
                 AnimarGolpe(false);
                 EmpujarVisualDelJugador();
@@ -1000,17 +1000,8 @@ namespace MechaCyberpunk.IA.APie
                 finQuieto = Time.time + SegundosGestoEmpujon;
                 quieto = true;
             }
-            if (!quieto && conf.TomarFrase(this, out string idVoz, out string texto))
-            {
-                DecirSkull(idVoz);
-                Gritar(texto);
-                conf.PublicarSubtitulo(transform, texto);
-                visual?.Burlar();
-                finQuieto = Time.time + config.SegundosGesto;
-                quieto = true;
-            }
-            float meta = conf.Fase == ReglaConfrontacion.Fase.Empujon ? DistanciaContactoEmpujon : config.DistanciaAcercamiento;
-            Vector3 deseada = !quieto && distancia > meta ? adelante * Mathf.Min(datos.Velocidad, ReglaProvocacionCalle.VelocidadAcercamiento) : Vector3.zero;
+            Vector3 deseada = acercador && !quieto && distancia > config.DistanciaAcercamiento
+                ? adelante * Mathf.Min(datos.Velocidad, config.VelocidadCaminar) : Vector3.zero;
             MoverProvocando(adelante, deseada, config.SacaArmaEnAdvertencia);
         }
 
@@ -1738,7 +1729,7 @@ namespace MechaCyberpunk.IA.APie
         /// <summary>Muestra un grito corto sobre la cabeza (T-423). Tiene enfriamiento.</summary>
         public void Gritar(string texto)
         {
-            if (Time.time < proximoGrito || string.IsNullOrEmpty(texto))
+            if (Time.time < proximoGrito || string.IsNullOrEmpty(texto) || (EsSkull && !VocesPandilla.VocesSkullsActivas)) // T-1655: los SKULLS no gritan
             {
                 return;
             }
@@ -2009,7 +2000,7 @@ namespace MechaCyberpunk.IA.APie
         // T-1533: un robot de Nova no grita con voz humana (su voz y su muerte suenan por SonidosEnemigoAPie).
         private void GritarPandillero(string id)
         {
-            if (sonidoNova != null && sonidoNova.EsRobot)
+            if ((sonidoNova != null && sonidoNova.EsRobot) || (EsSkull && !VocesPandilla.VocesSkullsActivas))
             {
                 return;
             }

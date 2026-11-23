@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Text;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.IA.Datos;
 using UnityEngine;
@@ -5,41 +7,52 @@ using UnityEngine;
 namespace MechaCyberpunk.IA.APie
 {
     /// <summary>
-    /// T-1651 (T26): la confrontación de un grupo de maleantes de calle (SKULLS o SNAKES). Mide la distancia al jugador, mueve <see cref="ReglaConfrontacion"/>
-    /// y reparte los turnos: una sola frase a la vez (cada <see cref="ConfigConfrontacion.SegundosEntreFrases"/>) y un solo empujón a la vez, siempre del
-    /// miembro más cercano (el orador). Lo crea y lo avanza <see cref="PandillaAPie"/>.
+    /// T-1659 (T41, sobre T-1651): la confrontación de un grupo de maleantes de calle (SKULLS o SNAKES). Mide la distancia al jugador, mueve
+    /// <see cref="ReglaConfrontacion"/> y reparte los papeles: todos miran al jugador; solo el <see cref="Acercador"/> se acerca caminando lento y empuja.
+    /// Ya no hablan al confrontar. Lo crea y lo avanza <see cref="PandillaAPie"/>.
     /// </summary>
     public sealed class ConfrontacionGrupo
     {
+        private static readonly List<ConfrontacionGrupo> todos = new List<ConfrontacionGrupo>();
+        private const float DistanciaExtraContacto = 0.3f;
+
         private readonly PandillaAPie grupo;
         private readonly ConfigConfrontacion config;
         private readonly ReglaConfrontacion regla;
-        private float proximaFrase;
         private float proximoEmpujon;
-        private int contadorFrases;
-        private bool ultimoAvisoDado;
-        private int ultimaFrase = -1;
         private float ultimaDistancia = float.MaxValue;
 
         public ConfigConfrontacion Config => config;
         public ReglaConfrontacion.Fase Fase => regla.Actual;
         public float Distancia => ultimaDistancia;
         public float SegundosEnFase => regla.SegundosEnFase;
+        public float SegundosCerca => regla.SegundosCerca;
         public int Empujones => regla.Empujones;
 
-        /// <summary>El miembro más cercano al jugador: el único que habla y empuja.</summary>
+        /// <summary>El miembro más cercano al jugador ahora mismo.</summary>
         public PandilleroAPie Orador { get; private set; }
 
-        /// <summary>True en Advertencia y Empujon: los pandilleros provocan en vez de volver a su lugar.</summary>
-        public bool EnConfrontacion => regla.Actual == ReglaConfrontacion.Fase.Advertencia || regla.Actual == ReglaConfrontacion.Fase.Empujon;
+        /// <summary>El único que se acerca y empuja (Acercamiento y Empujon); null en las demás fases.</summary>
+        public PandilleroAPie Acercador { get; private set; }
+
+        /// <summary>True en Mirando, Acercamiento y Empujon: los pandilleros te miran en vez de volver a su lugar.</summary>
+        public bool EnConfrontacion => regla.Actual == ReglaConfrontacion.Fase.Mirando || regla.Actual == ReglaConfrontacion.Fase.Acercamiento
+            || regla.Actual == ReglaConfrontacion.Fase.Empujon;
 
         public ConfrontacionGrupo(PandillaAPie grupo, ConfigConfrontacion config)
         {
             this.grupo = grupo;
             this.config = config;
-            regla = new ReglaConfrontacion(new ReglaConfrontacion.Parametros(config.DistanciaDeteccion, config.SegundosAdvertencia, config.DistanciaQuedarse,
-                config.DistanciaDejarDeSeguir, config.SegundosRetirada, config.EmpujonesMaximos));
+            regla = new ReglaConfrontacion(new ReglaConfrontacion.Parametros(config.DistanciaDeteccion, config.SegundosCerca, config.DistanciaCerca,
+                config.DistanciaDejarDeSeguir, config.SegundosRetirada, config.EmpujonesMaximos, config.DistanciaAcercamiento + DistanciaExtraContacto));
+            todos.Add(this);
         }
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void LimpiarRegistro() => todos.Clear();
+
+        /// <summary>Quita este grupo de la lista de depuración (lo llama <see cref="PandillaAPie"/> al destruirse).</summary>
+        public void Olvidar() => todos.Remove(this);
 
         public void Avanzar(float dt, PandilleroAPie[] miembros)
         {
@@ -76,62 +89,45 @@ namespace MechaCyberpunk.IA.APie
             {
                 AlCambiarFase();
             }
+            ElegirAcercador();
+        }
+
+        // El que se acerca es el más cercano cuando empieza el acercamiento y se mantiene; si cae o se apaga, toma su lugar el más cercano.
+        private void ElegirAcercador()
+        {
+            bool acercando = regla.Actual == ReglaConfrontacion.Fase.Acercamiento || regla.Actual == ReglaConfrontacion.Fase.Empujon;
+            if (!acercando)
+            {
+                Acercador = null;
+            }
+            else if (Acercador == null || !Acercador.gameObject.activeSelf || Acercador.EstaKO || Acercador.Acosando)
+            {
+                Acercador = Orador;
+            }
         }
 
         private void AlCambiarFase()
         {
-            float ahora = Time.time;
-            if (regla.Actual == ReglaConfrontacion.Fase.Advertencia)
+            if (regla.Actual == ReglaConfrontacion.Fase.Empujon)
             {
-                proximaFrase = ahora + 0.8f;
-                contadorFrases = 0;
-                ultimoAvisoDado = false;
-            }
-            else if (regla.Actual == ReglaConfrontacion.Fase.Empujon)
-            {
-                proximoEmpujon = ahora + 1.5f;
-                proximaFrase = Mathf.Max(proximaFrase, ahora + 2f);
+                proximoEmpujon = Time.time + 1.5f;
             }
             Debug.Log("[Confrontacion] " + grupo.name + " " + regla.Actual);
         }
 
-        /// <summary>Si le toca hablar a <paramref name="quien"/> ahora (es el orador y pasó el intervalo), devuelve el ID de voz y el texto del subtítulo.</summary>
+        /// <summary>T-1659: los maleantes de calle ya no hablan al confrontar; siempre false (queda por compatibilidad).</summary>
         public bool TomarFrase(PandilleroAPie quien, out string idVoz, out string texto)
         {
             idVoz = null;
             texto = null;
-            if (!EnConfrontacion || quien != Orador || Time.time < proximaFrase)
-            {
-                return false;
-            }
-            proximaFrase = Time.time + config.SegundosEntreFrases;
-            bool snakes = grupo.Pandilla == IdPandilla.Viboras;
-            bool ultimo = regla.Actual == ReglaConfrontacion.Fase.Advertencia && !ultimoAvisoDado && regla.SegundosAdvertenciaRestantes <= config.SegundosEntreFrases;
-            if (ultimo)
-            {
-                ultimoAvisoDado = true;
-                idVoz = VocesPandilla.UltimoAviso;
-                texto = FrasesConfrontacion.Elegir(snakes ? FrasesConfrontacion.UltimoAvisoSnakes : FrasesConfrontacion.UltimoAvisoSkulls, ref ultimaFrase);
-            }
-            else if (regla.Actual == ReglaConfrontacion.Fase.Empujon || contadorFrases % 2 == 1)
-            {
-                idVoz = VocesPandilla.Insulto;
-                texto = FrasesConfrontacion.Elegir(snakes ? FrasesConfrontacion.InsultoSnakes : FrasesConfrontacion.InsultoSkulls, ref ultimaFrase);
-            }
-            else
-            {
-                idVoz = VocesPandilla.Provocar;
-                texto = FrasesConfrontacion.Elegir(snakes ? FrasesConfrontacion.ProvocarSnakes : FrasesConfrontacion.ProvocarSkulls, ref ultimaFrase);
-            }
-            contadorFrases++;
-            return true;
+            return false;
         }
 
-        /// <summary>Si a <paramref name="quien"/> le toca empujar (fase Empujon, es el orador, pasó el intervalo). <paramref name="tira"/> true cada N empujones: además de empujar, te tira.</summary>
+        /// <summary>Si a <paramref name="quien"/> le toca empujar (fase Empujon, es el que se acerca, pasó el intervalo). <paramref name="tira"/> true cada N empujones: además de empujar, te tira.</summary>
         public bool TomarEmpujon(PandilleroAPie quien, out bool tira)
         {
             tira = false;
-            if (regla.Actual != ReglaConfrontacion.Fase.Empujon || quien != Orador || Time.time < proximoEmpujon)
+            if (regla.Actual != ReglaConfrontacion.Fase.Empujon || quien != Acercador || Time.time < proximoEmpujon)
             {
                 return false;
             }
@@ -144,13 +140,32 @@ namespace MechaCyberpunk.IA.APie
         /// <summary>Publica el subtítulo de una frase del grupo.</summary>
         public void PublicarSubtitulo(Transform hablante, string texto)
         {
+            if (!VocesPandilla.VocesSkullsActivas && grupo.Pandilla != IdPandilla.Viboras)
+            {
+                return; // T-1655: sin subtítulos de SKULLS
+            }
             Subtitulos.Publicar(config.NombreHablante, texto, hablante.position + Vector3.up * 1.6f, 0f, config.ColorHablante);
         }
 
         public override string ToString()
         {
-            return grupo.name + " fase=" + regla.Actual + " t=" + regla.SegundosEnFase.ToString("F1") + " dist=" + (ultimaDistancia >= float.MaxValue ? "-" : ultimaDistancia.ToString("F1"))
-                + " empujones=" + regla.Empujones + " orador=" + (Orador != null ? Orador.name : "-");
+            return grupo.name + " fase=" + regla.Actual + " t=" + regla.SegundosEnFase.ToString("F1") + " cerca=" + regla.SegundosCerca.ToString("F1") + "/" + config.SegundosCerca.ToString("F0")
+                + " dist=" + (ultimaDistancia >= float.MaxValue ? "-" : ultimaDistancia.ToString("F1")) + " empujones=" + regla.Empujones
+                + " acercador=" + (Acercador != null ? Acercador.name : "-");
+        }
+
+        /// <summary>Depuración (Play, por reflexión): una línea por grupo con confrontación: fase, segundos cerca, distancia y quién es el que se acerca.</summary>
+        public static string DepurarConfrontacion()
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (ConfrontacionGrupo g in todos)
+            {
+                if (g != null && g.grupo != null && g.grupo.Presentes > 0)
+                {
+                    sb.AppendLine(g.ToString() + " presentes=" + g.grupo.Presentes);
+                }
+            }
+            return sb.Length == 0 ? "sin grupos" : sb.ToString().TrimEnd();
         }
     }
 }

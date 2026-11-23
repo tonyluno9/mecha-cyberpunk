@@ -79,6 +79,9 @@ namespace MechaCyberpunk.IA.APie
             }
         }
 
+        /// <summary>T-1659: depuración (Play, por reflexión): lista todos los grupos con confrontación, su estado y quién es el que se acerca.</summary>
+        public static string DepurarConfrontacion() => ConfrontacionGrupo.DepurarConfrontacion();
+
         /// <summary>Depuración (Play, por eval): el estado de la confrontación del grupo con confrontación más cercano al jugador (o a la cámara), o "sin grupos".</summary>
         public static string EstadoConfrontacionMasCercano()
         {
@@ -238,6 +241,7 @@ namespace MechaCyberpunk.IA.APie
         private void OnDestroy()
         {
             todas.Remove(this);
+            confrontacion?.Olvidar();
             if (pandilleros == null)
             {
                 return;
