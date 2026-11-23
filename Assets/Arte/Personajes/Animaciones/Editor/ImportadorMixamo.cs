@@ -82,6 +82,8 @@ namespace MechaCyberpunk.Arte.Editor
         public const float SegundosEventoSacar = 0.30f;
         public const float SegundosEventoGuardar = 0.53f;
         const float CuadrosPorSegundo = 30f;
+        public const float FraccionSacarRifle = 0.45f;
+        public const float FraccionGuardarRifle = 0.6f;
 
         /// <summary>Los eventos de un clip por su nombre (vacío si no lleva). El tiempo del importador es la fracción del clip (0 a 1).</summary>
         public static AnimationEvent[] EventosDe(string nombre, float primerCuadro, float ultimoCuadro)
@@ -94,6 +96,15 @@ namespace MechaCyberpunk.Arte.Editor
             if (nombre == "Pistola_Guardar")
             {
                 return new[] { new AnimationEvent { functionName = FuncionGuardarPistola, time = SegundosEventoGuardar / largo } };
+            }
+            // T-1756 (T60): las armas largas también aparecen y desaparecen de la mano (fracción del clip: la mano llega al arma / a la espalda).
+            if (nombre == "Rifle_Sacar")
+            {
+                return new[] { new AnimationEvent { functionName = FuncionSacarPistola, time = FraccionSacarRifle } };
+            }
+            if (nombre == "Rifle_Guardar")
+            {
+                return new[] { new AnimationEvent { functionName = FuncionGuardarPistola, time = FraccionGuardarRifle } };
             }
             return new AnimationEvent[0];
         }
