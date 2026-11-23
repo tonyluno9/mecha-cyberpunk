@@ -20,3 +20,6 @@ Paso 0: sin cambios nuevos del chat de Blender (los .blend >100 MB de _REVISION_
 - Teclado simulado NO llega al editor (QueueStateEvent ni keybd_event): pasos que piden teclas se prueban llamando métodos (Usar, Pulsar,
   ExecuteEvents de clic) o con F8 (SaltarAPaso).
 - Pendiente al final: prueba de punta a punta + guardar/Continuar a mitad (candados restaurados), builds uno por uno, reporte-23nov-tarde.md.
+
+## Terminado (23-nov noche)
+T77, T78 y T79 HECHAS en main; prueba final, builds Demo y Juego OK; reporte en docs/reporte-23nov-tarde.md. Unity cerrado.
