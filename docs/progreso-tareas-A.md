@@ -65,3 +65,11 @@ T-1705 T54, T-1706 T67, T-1707 T73, T-1708 T75, T-1709 T74, T-1710 para-sesion-A
   T-1704 shader charco (28cd272), T-1703 limpiar cuerpos (f258def), T-1705 MitadCarrosT1705.Aplicar (3928d1b). T76: NO QUEDÓ (carros de una sola malla, nota a5ce912 en T-1711).
 - T69: en curso en la carpeta principal (T-1700).
 - Falta: compilar todo junto en integ, correr filtros, Aplicar de T54, colocar zonas glitch (T74), puntos del Tianguis a la vista (T66), Play y capturas.
+- T69: HECHA, merge 23ce0f9. Código de las 9 ramas: compila, EditMode 57/57; merge a main 0d5a7f3 (PlayMode SkullsTianguis/Headshot/PandillaAPie fallan igual en main: JaulaClandestino).
+- Escena (T-1712-escena-a23): T54 Aplicar, T66 puntos a la vista, T74 zonas glitch: en curso. Luego: Play con capturas de T67, T70, T71, T72, T73, T75.
+- Escena: merge ffefaee (T54 84→51 estacionados, 2 junto a la casa; T66 causa: 2 de 4 grupos del Tianguis vacíos, ahora 7 SKULLS en la calle; T74 elevador del taller y candil del casino).
+- Verificación en Play (T-1713) en curso. Después: para-sesion-A ronda E (patrulla/expendedora junto a los SKULLS, armería sin letrero dejando MostradorMercadoNegro activo).
+- Ojo: B también usa T-17xx (T-1750+). A usa T-1700..T-1749.
+- Arreglos tras verificar: merge fc93b49 (sin apilarse, Nova/policía en minimapa, zumbido). Marcadas T66, T67, T74, T75 (c450f1d).
+- para-sesion-A ronda E: HECHO, merge b438917. B TERMINÓ su ronda E.
+- Builds: HECHOS (Demo 05:14, Juego 05:17, Result: Success; el Demo arranca 45 s sin excepciones). Reporte: docs/reporte-noche-23nov.md. NOCHE DEL 23-NOV TERMINADA.
