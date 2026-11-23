@@ -232,7 +232,7 @@ namespace MechaCyberpunk.Progresion.Sonido
             {
                 // T-596: pasos bajos, con tono distinto cada vez, y de poco alcance.
                 // T-977: solo los del jugador, una voz y bajitos (debajo de los disparos y las voces).
-                return new PoliticaSonido("paso", 1, 0.40f, 0.08f, 0.15f, 18f, 1f, 0.2f); // T-1654: más suave, con variación de tono y de volumen
+                return new PoliticaSonido("paso", 1, 0.45f, 0.06f, 0.15f, 20f); // T-1655: vuelve a los valores de antes de T-1654
             }
             if (id.StartsWith("VEH_", StringComparison.Ordinal))
             {
@@ -408,7 +408,7 @@ namespace MechaCyberpunk.Progresion.Sonido
             if (id.StartsWith("PAS_", StringComparison.Ordinal))
             {
                 // Igual que JUG_PASO_: grupo "paso", una voz, bajitos, ±6 % de tono y poco alcance.
-                return P("paso", 1, 0.40f, 0.08f, 0.15f, 18f, 0.2f); // T-1654: igual que JUG_PASO_
+                return P("paso", 1, 0.45f, 0.06f, 0.15f, 20f, 0.1f); // T-1655: vuelve a los valores de antes de T-1654
             }
             if (id.StartsWith("UI_", StringComparison.Ordinal)) return P("ui", 2, 0.55f, 0.03f, 0.05f, 0f, 0.05f);
             if (id.StartsWith("CON_", StringComparison.Ordinal)) return P("consumible", 1, 0.6f, 0.03f, 0.3f, 0f, 0.05f);

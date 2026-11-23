@@ -97,7 +97,7 @@ namespace MechaCyberpunk.Tests.Sonido
                 PoliticaSonido p = ReglaMezclaSonidos.Para(id);
                 Assert.AreEqual("paso", p.Grupo, id);
                 Assert.AreEqual(1, p.MaxVoces, id);
-                Assert.That(p.Volumen, Is.InRange(0.35f, 0.45f), id); // T-1654: 0.40
+                Assert.That(p.Volumen, Is.InRange(0.35f, 0.45f), id); // T-1655: 0.45 otra vez
                 Assert.That(p.DistanciaMaxima, Is.InRange(15f, 20f), id);
                 Assert.AreEqual(ReglaMezclaSonidos.Para("JUG_PASO_ASFALTO").VariacionTono, p.VariacionTono, 1e-5f, id + ": igual que JUG_PASO_");
             }
