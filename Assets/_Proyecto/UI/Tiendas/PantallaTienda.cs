@@ -128,6 +128,17 @@ namespace MechaCyberpunk.UI.Tiendas
         /// <summary>True si el mostrador compra algo (la pestaña VENDER existe).</summary>
         public bool PuedeVender => compra.Count > 0;
         public string Titulo => textoTitulo != null ? textoTitulo.text : string.Empty;
+
+        /// <summary>T-1755: cambia el título de arriba (el banco de Tino lo deja vacío: ahí van sus pestañas COMPRAR y MEJORAR).</summary>
+        public void PonerTitulo(string texto)
+        {
+            if (textoTitulo != null)
+            {
+                textoTitulo.text = texto ?? string.Empty;
+            }
+            tituloTienda = texto ?? string.Empty;
+            Pintar();
+        }
         public string Dinero => textoDinero != null ? textoDinero.text : string.Empty;
         public string TextoPestanaComprar => textoPestanaComprar != null ? textoPestanaComprar.text : string.Empty;
         public string TextoPestanaVender => textoPestanaVender != null ? textoPestanaVender.text : string.Empty;
@@ -227,9 +238,10 @@ namespace MechaCyberpunk.UI.Tiendas
         }
 
         // T-1314: en El Mercado el cursor se ve y está libre para elegir con el mouse; al cerrar vuelve a como estaba.
+        // T-62: en cualquier tienda (máquinas expendedoras, CIC) el cursor también se libera para elegir y comprar con el ratón.
         private void LiberarCursor()
         {
-            if (!modoMercado || cursorLiberado)
+            if (cursorLiberado)
             {
                 return;
             }
@@ -866,9 +878,11 @@ namespace MechaCyberpunk.UI.Tiendas
             EventTrigger.Entry clic = new EventTrigger.Entry { eventID = EventTriggerType.PointerClick };
             clic.callback.AddListener(datos =>
             {
+                bool yaElegida = numero == indice;
                 ElegirFila(numero);
-                // T-1492: el doble clic acepta (compra) sin Enter. En El Mercado ya compra el clic sobre la fila elegida.
-                if (datos is PointerEventData puntero && puntero.clickCount >= 2 && !modoMercado && visible && PilaPantallas.EsArriba(this)
+                // T-1492: el doble clic acepta (compra) sin Enter. T-62: fuera de El Mercado, pasar el ratón elige la fila y un clic sobre la elegida también compra.
+                bool doble = datos is PointerEventData puntero && puntero.clickCount >= 2;
+                if ((doble || yaElegida) && !modoMercado && visible && PilaPantallas.EsArriba(this)
                     && pestana == PestanaTienda.Comprar && numero == indice)
                 {
                     Sonidos.Reproducir("UI_ACEPTAR");
@@ -876,6 +890,18 @@ namespace MechaCyberpunk.UI.Tiendas
                 }
             });
             disparador.triggers.Add(clic);
+            if (!modoMercado)
+            {
+                EventTrigger.Entry entrar = new EventTrigger.Entry { eventID = EventTriggerType.PointerEnter };
+                entrar.callback.AddListener(_ =>
+                {
+                    if (numero != indice)
+                    {
+                        ElegirFila(numero);
+                    }
+                });
+                disparador.triggers.Add(entrar);
+            }
 
             Text texto = Instantiate(plantillaFila, caja);
             texto.gameObject.SetActive(true);

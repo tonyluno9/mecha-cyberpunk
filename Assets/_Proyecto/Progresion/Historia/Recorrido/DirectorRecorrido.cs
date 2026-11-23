@@ -13,6 +13,7 @@ using MechaCyberpunk.Personaje.Vida;
 using MechaCyberpunk.Personaje.Visual;
 using MechaCyberpunk.Progresion.Apoyo;
 using MechaCyberpunk.Progresion.Guardado;
+using MechaCyberpunk.Progresion.Opciones;
 using MechaCyberpunk.Progresion.Partida;
 using MechaCyberpunk.Progresion.Prologo;
 using MechaCyberpunk.Progresion.Prologo.Pandillas;
@@ -52,10 +53,6 @@ namespace MechaCyberpunk.Progresion.Recorrido
         private const float SegundosFin = 5f;
         private const float SegundosEnNegroLevantarse = 1.8f;
         private const int RespetoPorSkull = 10;
-        private const float SegundosFraseTino = 3f;
-        private const float SegundosFraseVendedor = 8f;
-        private const float SegundosAvisoRueda = 20f;
-        private const float SegundosAvisoMaquina = 25f;
         private const float AlturaRanura = 3f;
         private const float AnchoRanura = 3.2f;
         private const float GrosorRanura = 0.5f;
@@ -66,6 +63,7 @@ namespace MechaCyberpunk.Progresion.Recorrido
         {
             public string paso;
             public bool hambre;
+            public string avisos;
         }
 
         public static DirectorRecorrido Actual { get; private set; }
@@ -198,7 +196,7 @@ namespace MechaCyberpunk.Progresion.Recorrido
             return true;
         }
 
-        /// <summary>T-1662: depuración. Paso actual, objetivo, distancia al objetivo y si la ruta del piso está visible (invocable por reflexión).</summary>
+        /// <summary>T-1662: depuración. Paso actual, objetivo, distancia al objetivo (invocable por reflexión).</summary>
         public static string DepurarHistoria()
         {
             DirectorRecorrido d = Actual;
@@ -208,9 +206,8 @@ namespace MechaCyberpunk.Progresion.Recorrido
             }
             IObjetivos objetivos = Registro<IObjetivos>.Actual;
             string objetivo = objetivos != null && objetivos.HayObjetivo ? objetivos.Actual.Texto : "(ninguno)";
-            GuiaHistoria guia = GuiaHistoria.Actual;
             return "[Historia] paso=" + (int)d.paso + " " + d.paso + " sub=" + d.sub + " objetivo=\"" + objetivo + "\" hambreResuelta=" + d.hambreResuelta
-                + " ruedaAvisada=" + d.ruedaAvisada + " guia: " + (guia != null ? guia.Estado() : "sin guía")
+                + " ruedaAvisada=" + d.ruedaAvisada
                 + " avisoTutorial=\"" + (AvisoTutorialHistoria.Actual != null && AvisoTutorialHistoria.Actual.Visible ? AvisoTutorialHistoria.Actual.TextoActual : "") + "\"";
         }
 
@@ -255,9 +252,9 @@ namespace MechaCyberpunk.Progresion.Recorrido
             {
                 prologo.enabled = false;
             }
-            if (GetComponent<GuiaHistoria>() == null)
+            // T-51: sin línea de ruta en el piso (se quitó la guía); solo queda el aviso del tutorial.
+            if (GetComponent<AvisoTutorialHistoria>() == null)
             {
-                gameObject.AddComponent<GuiaHistoria>();
                 gameObject.AddComponent<AvisoTutorialHistoria>();
             }
             datos = Resources.Load<DatosRecorrido>(DatosRecorrido.NombreRecurso);
@@ -267,9 +264,17 @@ namespace MechaCyberpunk.Progresion.Recorrido
             }
         }
 
-        private void OnEnable() => Registro<IGuardable>.Agregar(this);
+        private void OnEnable()
+        {
+            Registro<IGuardable>.Agregar(this);
+            AvisosUnicos.Cambio += GuardarPartida; // T-62: un aviso nuevo (o el tutorial de prótesis completo) se guarda en la partida
+        }
 
-        private void OnDisable() => Registro<IGuardable>.Quitar(this);
+        private void OnDisable()
+        {
+            Registro<IGuardable>.Quitar(this);
+            AvisosUnicos.Cambio -= GuardarPartida;
+        }
 
         private void OnDestroy()
         {
@@ -303,6 +308,7 @@ namespace MechaCyberpunk.Progresion.Recorrido
             {
                 if (modoNueva)
                 {
+                    AvisosUnicos.Reiniciar();
                     IrA(PasoRecorrido.Recuerdo);
                 }
                 yield break;
@@ -327,7 +333,7 @@ namespace MechaCyberpunk.Progresion.Recorrido
 
         // ---------- Guardado ----------
 
-        public string Guardar() => JsonUtility.ToJson(new DatosGuardados { paso = paso.ToString(), hambre = hambreResuelta });
+        public string Guardar() => JsonUtility.ToJson(new DatosGuardados { paso = paso.ToString(), hambre = hambreResuelta, avisos = AvisosUnicos.Serializar() });
 
         public void Cargar(string texto)
         {
@@ -348,6 +354,7 @@ namespace MechaCyberpunk.Progresion.Recorrido
             paso = leido;
             cargada = true;
             hambreResuelta = leidos.hambre;
+            AvisosUnicos.Cargar(leidos.avisos); // T-62: los avisos del tutorial que ya salieron no vuelven
             if (iniciado && !saltado)
             {
                 Reanudar();
@@ -622,101 +629,41 @@ namespace MechaCyberpunk.Progresion.Recorrido
             });
         }
 
-        // 9. Comprar un arma en el mercado y luego ir con el Inventor.
+        // 9. T-59: con Tino, en el CIC, comprar el arma (su banco tiene COMPRAR y MEJORAR). En cuanto la tienes, sales a la calle y sigue la chica.
         private void EntrarArmas()
         {
             sub = TieneArma() ? 1 : 0;
+            PersonajeApoyo inventor = viejo != null ? viejo.Inventor : null;
             if (sub == 0)
             {
-                Fijar(TablaRecorrido.ObjetivoArma, PosicionTiendaArmas());
-            }
-            else
-            {
-                PasarAlInventor();
-            }
-            GuardarPartida();
-        }
-
-        private void PasarAlInventor()
-        {
-            sub = 1;
-            PersonajeApoyo inventor = viejo != null ? viejo.Inventor : null;
-            if (inventor == null)
-            {
-                Debug.LogWarning("[Historia] No hay Inventor en la escena: se salta el paso 9.");
-                IrA(PasoRecorrido.Inventor);
+                Fijar(TablaRecorrido.ObjetivoInventor, inventor != null ? inventor.Posicion : PosicionGrupos(viejo != null ? viejo.GruposTianguis : null));
+                GuardarPartida();
                 return;
             }
-            Fijar(TablaRecorrido.ObjetivoInventor, inventor.Posicion);
-            // T-1662: TINO dice su frase (subtítulo) y la cinemática del arma mejorada entra un momento después.
-            inventor.DarRegalo(() =>
-            {
-                inventor.DarRegalo(null);
-                inventor.Decir(TablaRecorrido.FraseTino);
-                StartCoroutine(IrAInventorTrasFrase());
-            });
+            IrA(PasoRecorrido.Chica);
         }
 
-        private IEnumerator IrAInventorTrasFrase()
-        {
-            yield return new WaitForSecondsRealtime(SegundosFraseTino);
-            if (paso == PasoRecorrido.Armas)
-            {
-                IrA(PasoRecorrido.Inventor);
-            }
-        }
-
-        // T-1662: acabas de comprar el arma: el vendedor del mercado dice su frase y sale el aviso de la rueda de armas.
-        private void AlComprarArma()
-        {
-            MostradorTienda armas = BuscarMostradorArmas();
-            Vector3 boca = (armas != null ? armas.Posicion : JugadorRaiz() != null ? JugadorRaiz().position : Vector3.zero) + Vector3.up * 1.6f;
-            Subtitulos.Publicar(TablaRecorrido.NombreVendedor, TablaRecorrido.FraseVendedor, boca, SegundosFraseVendedor, new Color(1f, 0.8f, 0.2f));
-            AvisarRueda();
-        }
-
-        /// <summary>T-1662: "MANTÉN RUEDA Y ELIGE LA PISTOLA PARA EQUIPARLA", con la tecla real de la acción Rueda (botón central del ratón). Una vez.</summary>
+        // T-62: acabas de comprar el arma: sale el aviso de la rueda de armas (una sola vez; espera a que cierres el banco).
         private void AvisarRueda()
         {
-            if (ruedaAvisada)
-            {
-                return;
-            }
             ruedaAvisada = true;
             AvisoTutorialHistoria aviso = AvisoTutorialHistoria.Actual;
             if (aviso != null)
             {
                 string tecla = MechaCyberpunk.UI.Hud.TeclasHud.Texto(MechaCyberpunk.UI.Hud.TeclasHud.Buscar("Rueda"), "RUEDA (clic)");
-                aviso.Mostrar(string.Format(TablaRecorrido.AvisoRueda, tecla.ToUpperInvariant()), SegundosAvisoRueda, true);
-            }
-        }
-
-        private static MostradorTienda BuscarMostradorArmas()
-        {
-            foreach (MostradorTienda m in FindObjectsByType<MostradorTienda>(FindObjectsInactive.Exclude, FindObjectsSortMode.None))
-            {
-                foreach (DatosObjeto objeto in m.EnVenta)
+                if (string.IsNullOrWhiteSpace(tecla))
                 {
-                    if (objeto is DatosArma)
-                    {
-                        return m;
-                    }
+                    tecla = "RUEDA (clic)";
                 }
+                aviso.Mostrar(AvisosUnicos.Rueda, string.Format(TablaRecorrido.AvisoRueda, tecla.ToUpperInvariant()));
             }
-            return null;
         }
 
-        // 10. C05 EL INVENTOR: la pistola mejorada.
+        // 10. Ya no hay cinemática del Inventor (T-59): Tino vende y mejora en su banco. Una partida vieja guardada aquí pasa directo a la chica.
         private void EntrarInventor()
         {
-            PersonajeApoyo inventor = viejo != null ? viejo.Inventor : null;
-            inventor?.DarRegalo(null);
-            Cinematica("C05", () =>
-            {
-                ArsenalJugador arsenal = Registro<ArsenalJugador>.Actual;
-                DatosArma mejora = arsenal != null ? arsenal.DarMejora(ArmaAPie.Pistola) : null;
-                Avisar(mejora != null ? mejora.Nombre.ToUpperInvariant() : TablaRecorrido.AvisoPistola, MechaCyberpunk.UI.Hud.TipoAviso.Bueno);
-            }, () => IrA(PasoRecorrido.Chica));
+            viejo?.Inventor?.DarRegalo(null);
+            IrA(PasoRecorrido.Chica);
         }
 
         // 11. C06 LA CHICA al salir del CIC la primera vez (al alejarse del Inventor).
@@ -754,7 +701,7 @@ namespace MechaCyberpunk.Progresion.Recorrido
             Fijar(TablaRecorrido.ObjetivoTianguis, PosicionGrupos(viejo != null ? viejo.GruposTianguis : null));
             if (!ruedaAvisada)
             {
-                AvisarRueda(); // por si llegó a la guerra sin ver el aviso (partida cargada)
+                AvisarRueda(); // por si llegó a la guerra sin ver el aviso; AvisosUnicos evita repetirlo
             }
             GuardarPartida();
         }
@@ -790,7 +737,11 @@ namespace MechaCyberpunk.Progresion.Recorrido
             if (aviso != null)
             {
                 string tecla = MechaCyberpunk.UI.Hud.TeclasHud.Texto(MechaCyberpunk.UI.Hud.TeclasHud.Buscar("Interactuar"), "E");
-                aviso.Mostrar(string.Format(TablaRecorrido.AvisoMaquina, tecla.ToUpperInvariant()), SegundosAvisoMaquina, false);
+                if (string.IsNullOrWhiteSpace(tecla))
+                {
+                    tecla = "E"; // T-1757: sin texto de la tecla salía "PULSA ."
+                }
+                aviso.Mostrar(AvisosUnicos.Maquina, string.Format(TablaRecorrido.AvisoMaquina, tecla.ToUpperInvariant()));
             }
             return true;
         }
@@ -966,8 +917,8 @@ namespace MechaCyberpunk.Progresion.Recorrido
                 case PasoRecorrido.Armas:
                     if (sub == 0 && TieneArma())
                     {
-                        AlComprarArma();
-                        PasarAlInventor();
+                        AvisarRueda();
+                        IrA(PasoRecorrido.Chica);
                     }
                     break;
                 case PasoRecorrido.Chica:
@@ -1125,9 +1076,14 @@ namespace MechaCyberpunk.Progresion.Recorrido
         private void PonerNoche()
         {
             IRelojMundo reloj = Reloj();
-            if (reloj != null && (!reloj.EsDeNoche || ReglaNocheFija.HayQueVolver(reloj.Hora)))
+            // T68: con MOMENTO DEL DÍA = Día la historia también transcurre de día; con Noche (por defecto) todo igual que antes.
+            MomentoDelDia momento = ReglaMomentoDia.Actual;
+            bool volver = reloj != null && (momento == MomentoDelDia.Noche
+                ? !reloj.EsDeNoche || ReglaNocheFija.HayQueVolver(reloj.Hora)
+                : ReglaMomentoDia.HayQueVolver(momento, reloj.Hora, reloj.HoraAmanecer, reloj.HoraAnochecer));
+            if (volver)
             {
-                reloj.AvanzarHasta(HoraNoche);
+                reloj.AvanzarHasta(momento == MomentoDelDia.Noche ? HoraNoche : ReglaMomentoDia.HoraDe(momento));
             }
             if (NocheFijaAhora())
             {
@@ -1139,7 +1095,9 @@ namespace MechaCyberpunk.Progresion.Recorrido
         // sigue como antes (la historia la pide).
         private bool NocheFijaAhora()
         {
-            return ReglaNocheFija.Aplica(paso) || (paso >= PasoRecorrido.Despierta && paso <= PasoRecorrido.Decision);
+            // T68: con el momento en Día no se fija la noche (AplicadorMomentoDia mantiene el reloj de día).
+            return ReglaMomentoDia.Actual == MomentoDelDia.Noche
+                && (ReglaNocheFija.Aplica(paso) || (paso >= PasoRecorrido.Despierta && paso <= PasoRecorrido.Decision));
         }
 
         // T-1685: cada frame, y en cuanto el reloj avisa que cambió de franja, lo regresa a la noche si algo lo movió (dormir, la clínica, cargar
@@ -1213,7 +1171,7 @@ namespace MechaCyberpunk.Progresion.Recorrido
 
         // T-1656 (T30): tras C01 el jugador ya está TIRADO (la pose final de la caída, sin verla caer) y se levanta con el gesto de siempre.
         // Se tumba y se manda el animador directo al último cuadro del estado de caída (boca arriba si es posible).
-        private static void DejarTiradoEnElSuelo(VisualPersonaje visual)
+        internal static void DejarTiradoEnElSuelo(VisualPersonaje visual)
         {
             visual.Caido = true;
             Animator animador = visual.Animador;
@@ -1415,21 +1373,6 @@ namespace MechaCyberpunk.Progresion.Recorrido
             AvisarSinMarcador(MarcadorHistoria.IdTorre);
             Transform j = JugadorRaiz();
             return j != null ? j.position + j.forward * 200f : Vector3.zero;
-        }
-
-        private Vector3 PosicionTiendaArmas()
-        {
-            foreach (MostradorTienda m in FindObjectsByType<MostradorTienda>(FindObjectsInactive.Exclude, FindObjectsSortMode.None))
-            {
-                foreach (DatosObjeto objeto in m.EnVenta)
-                {
-                    if (objeto is DatosArma)
-                    {
-                        return m.Posicion;
-                    }
-                }
-            }
-            return PosicionGrupos(viejo != null ? viejo.GruposTianguis : null);
         }
 
         private Vector3 PosicionJefe(string zona, GameObject[] grupos)

@@ -266,9 +266,10 @@ namespace MechaCyberpunk.Tests.Progresion
             {
                 Assert.AreEqual("HABLAR CON TINO", inventor.Texto);
                 yield return Pulsar(teclado.eKey);
-                // T-702: la frase de Tino sale de sus datos (su primera frase manda al banco), no se copia.
-                StringAssert.Contains(inventor.Datos.Frases[0], inventor.UltimoTexto, "Tino te manda al banco");
+                // T-59: hablar con Tino abre su banco (COMPRAR / MEJORAR); Esc lo cierra.
+                Assert.IsTrue(PestanasBancoTino.Abierto, "Hablar con Tino abre el banco");
                 Assert.Less(Vector3.Distance(bancoArmas.Posicion, Buscar("Lugar_CIC").position), 8f, "El banco está en el CIC");
+                PestanasBancoTino.Cerrar();
                 yield return new WaitForSecondsRealtime(0.3f);
             }
             else

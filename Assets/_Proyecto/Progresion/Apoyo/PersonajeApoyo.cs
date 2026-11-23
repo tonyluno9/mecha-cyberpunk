@@ -2,6 +2,7 @@ using System;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.IA.APie;
 using MechaCyberpunk.Personaje.Vida;
+using MechaCyberpunk.UI.Armas;
 using MechaCyberpunk.UI.Clinica;
 using MechaCyberpunk.UI.Historia;
 using MechaCyberpunk.UI.Tiendas;
@@ -75,6 +76,8 @@ namespace MechaCyberpunk.Progresion.Apoyo
         }
 
         private MostradorClinica clinica;
+        private bool quitadosInteractuables;
+        private float proximaBusquedaBanco;
         private float proximaBusquedaClinica;
 
         // La clínica de I+D+I está en el Barrio; EL DOC la quita de las interacciones sueltas y la abre él.
@@ -134,6 +137,18 @@ namespace MechaCyberpunk.Progresion.Apoyo
             }
         }
 
+        // T-59: el mostrador de armas y el banco de trabajo ya no se ofrecen sueltos; se busca hasta encontrarlos (la ciudad los carga después).
+        private void Update()
+        {
+            if (!(datos != null && datos.Servicio == ServicioApoyo.Mejoras && mostrador == null) || quitadosInteractuables
+                || Time.unscaledTime < proximaBusquedaBanco)
+            {
+                return;
+            }
+            proximaBusquedaBanco = Time.unscaledTime + 2f;
+            quitadosInteractuables = PestanasBancoTino.QuitarInteractuables();
+        }
+
         private void LateUpdate()
         {
             if (letrero == null)
@@ -185,8 +200,11 @@ namespace MechaCyberpunk.Progresion.Apoyo
                         }
                         else
                         {
-                            // T-814: las mejoras se compran en el banco de trabajo (BancoArmas); su primera frase lo dice.
-                            Decir(datos.Frases.Length > 0 ? datos.Frases[0] : "Acércate al banco de trabajo para mejorar tu arma.");
+                            // T-59: hablar con Tino abre su banco (COMPRAR armas y balas, MEJORAR las que tengas). Sin banco en la escena solo platica.
+                            if (!PestanasBancoTino.Abrir())
+                            {
+                                Decir(datos.Frases.Length > 0 ? datos.Frases[0] : "Hoy no hay armas.");
+                            }
                         }
                         break;
                     case ServicioApoyo.Curar:
