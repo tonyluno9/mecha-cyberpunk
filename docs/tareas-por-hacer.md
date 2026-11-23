@@ -573,6 +573,7 @@ Los drones de Nova que patrullan, al recibir balazos, muestran un escudo/efecto 
 que son inmunes; no reciben daño de armas normales.
 
 ## T47. Torre de Nova y letreros LED
+**HECHA (22-nov, merge 93f3e24):** torre TN01 de 470 m (3.2x el edificio más alto, 145.5 m) en el recinto de Nova, con la escalinata hacia Historia_Torre, franja cian emisiva, luces y haz arriba; se ve desde la casa y el centro. 22 letreros nuevos (LT05/06/07/09) pegados a fachadas, cada uno con su luz, y emisión encendida en los neones que la tenían apagada (fotos en docs/capturas/_tareas/T47).
 1. La torre de Nova grande de las referencias (la que parece llegar al cielo) debe verse EN la ciudad, no solo al fondo: integrarla cuando llegue
    su modelo (lo genera el chat de arte y Tripo).
 2. Más anuncios y letreros en edificios; los letreros de neón/LED de los edificios con neón deben iluminar de verdad (emisión + luz).
