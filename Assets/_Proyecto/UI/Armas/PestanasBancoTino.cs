@@ -71,7 +71,7 @@ namespace MechaCyberpunk.UI.Armas
         public static Func<string> BloqueoSalida { get; set; }
 
         /// <summary>La línea de lo que falta para poder salir (pruebas); vacía si no hay bloqueo.</summary>
-        public static string LineaFalta => actual != null && actual.textoFalta != null && actual.textoFalta.gameObject.activeSelf ? actual.textoFalta.text : string.Empty;
+        public static string LineaFalta => actual != null && actual.cajaFalta != null && actual.cajaFalta.activeSelf ? actual.textoFalta.text : string.Empty;
 
         private MostradorTienda mostrador;
         private BancoArmas banco;
@@ -86,6 +86,7 @@ namespace MechaCyberpunk.UI.Armas
         private Text textoComprar;
         private Text textoMejorar;
         private Text textoFalta;
+        private GameObject cajaFalta;
         private RectTransform barraPestanas;
 
         /// <summary>True mientras el banco de Tino está abierto.</summary>
@@ -217,12 +218,18 @@ namespace MechaCyberpunk.UI.Armas
             CrearPestana(barra, "Comprar", TextoComprar, 0f, false, out textoComprar, out lineaComprar);
             CrearPestana(barra, "Mejorar", TextoMejorar, TamanoPestana.x + SeparacionPestanas, true, out textoMejorar, out lineaMejorar);
             barraPestanas = barra;
+            // Abajo al centro, con fondo y marco propios: arriba quedaba detrás del letrero del CIC y no se leía.
             RectTransform falta = TrazoH10.Nodo(canvas.transform, "LineaFalta");
-            TrazoH10.Colocar(falta, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -(MargenArriba + TamanoPestana.y + 10f)), new Vector2(900f, 44f));
-            textoFalta = TrazoH10.Etiqueta(falta, "Texto", string.Empty, TrazoH10.TamanoFila, TrazoH10.Coral, TextAnchor.MiddleCenter);
+            TrazoH10.Colocar(falta, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 120f), new Vector2(760f, 64f));
+            Image fondoFalta = TrazoH10.Imagen(falta, "Fondo", TrazoH10.ConAlfa(TrazoH10.FondoPantalla, 0.95f), TrazoH10.Relleno);
+            TrazoH10.Estirar(fondoFalta.rectTransform);
+            Image marcoFalta = TrazoH10.Imagen(falta, "Marco", TrazoH10.Coral, TrazoH10.Linea);
+            TrazoH10.Estirar(marcoFalta.rectTransform);
+            textoFalta = TrazoH10.Etiqueta(falta, "Texto", string.Empty, TrazoH10.TamanoSeccion, TrazoH10.Coral, TextAnchor.MiddleCenter);
             TrazoH10.Estirar(textoFalta.rectTransform);
             VestidoH10.Fuente(falta);
-            textoFalta.gameObject.SetActive(false);
+            cajaFalta = falta.gameObject;
+            cajaFalta.SetActive(false);
         }
 
         // T-78: crea los botones extra que se registraron y aún no tienen objeto (a la derecha de MEJORAR) y muestra solo los visibles.
@@ -349,8 +356,8 @@ namespace MechaCyberpunk.UI.Armas
             if (abierto && textoFalta != null)
             {
                 string falta = TextoFalta();
-                textoFalta.text = falta;
-                textoFalta.gameObject.SetActive(falta.Length > 0);
+                textoFalta.text = falta.Length > 0 ? "PARA SALIR: " + falta : string.Empty;
+                cajaFalta.SetActive(falta.Length > 0);
             }
         }
 

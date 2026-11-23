@@ -29,7 +29,8 @@ namespace MechaCyberpunk.Progresion.Recorrido
         /// <summary>Igual que <see cref="Aplica(PasoRecorrido)"/> con el interruptor como parámetro (pruebas).</summary>
         public static bool Aplica(PasoRecorrido paso, bool activa)
         {
-            return activa && paso >= PrimerPasoDeNoche && paso <= UltimoPasoDeNoche;
+            // T-78: UsarProtesis (21) va entre Suero y Armas aunque su número sea mayor que Libre.
+            return activa && ((paso >= PrimerPasoDeNoche && paso <= UltimoPasoDeNoche) || paso == PasoRecorrido.UsarProtesis);
         }
 
         /// <summary>
