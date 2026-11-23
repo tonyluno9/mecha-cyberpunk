@@ -79,6 +79,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: MechaCyberpunk.Personaje.Visual::MechaCyberpunk.Personaje.Visual.VisualPersonaje
   animador: {fileID: 146047872992812836}
   leerDelPadre: 1
+  comoJugador: 1
   suavizadoVelocidad: 12
   velocidadClipCaminar: 1.4
   velocidadClipCorrer: 5
@@ -209,11 +210,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -592967147869340760, guid: 1538d4fbcdfb35d4bb8e6a41c074f0b4, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.045292463
+      value: 0.045292467
       objectReference: {fileID: 0}
     - target: {fileID: -592967147869340760, guid: 1538d4fbcdfb35d4bb8e6a41c074f0b4, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.029038765
+      value: -0.029038766
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 1538d4fbcdfb35d4bb8e6a41c074f0b4, type: 3}
       propertyPath: m_Name
@@ -221,16 +222,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3862357670391762498, guid: 1538d4fbcdfb35d4bb8e6a41c074f0b4, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.031378902
+      value: 0.031378906
       objectReference: {fileID: 0}
     - target: {fileID: 3862357670391762498, guid: 1538d4fbcdfb35d4bb8e6a41c074f0b4, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.06881286
+      value: 0.06881287
       objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: 1538d4fbcdfb35d4bb8e6a41c074f0b4, type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 22100000, guid: 376c1eeada4a54444b163cca75ab4e54, type: 2}
+      objectReference: {fileID: 22100000, guid: b104d62b84b456847886eba9a27903f7, type: 2}
     - target: {fileID: 5866666021909216657, guid: 1538d4fbcdfb35d4bb8e6a41c074f0b4, type: 3}
       propertyPath: m_ApplyRootMotion
       value: 0

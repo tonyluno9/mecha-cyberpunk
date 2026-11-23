@@ -144,6 +144,86 @@ namespace MechaCyberpunk.IA.APie
         private const float AdelanteBoca = 0.4f;
         private const int ArmaPistola = 1;
 
+        // ---- T-53: reglas de arma como el jugador (sacar, cargador, recargar, guardar) ----
+
+        /// <summary>T-53: velocidad máxima (m/s) al moverse con el arma en pose de apuntar o sacándola: el rango de caminar apuntando del jugador (1.6 a 2).</summary>
+        public const float VelocidadMaxApuntando = 1.8f;
+        private const float SegundosRecargaEnemigo = 2.2f;
+        private const float SegundosMaxSacarEnemigo = 1.2f;
+        private const float SegundosParaGuardarEnemigo = 3f;
+        private const int PerdigonesEscopetaEnemigo = 5;
+        private const float FraccionDanioPerdigon = 0.4f;
+        private ReglaArmaEnemigo reglaArma;
+
+        /// <summary>T-53: el arma de este enemigo (null si no usa pistola o no tiene visual).</summary>
+        public ReglaArmaEnemigo ReglaArma => reglaArma;
+
+        /// <summary>
+        /// T-53: elige el arma. Los SKULLS de calle varían (pistola, escopeta, subfusil); los demás usan pistola, o escopeta si sus datos lanzan varios perdigones.
+        /// <paramref name="azar"/> es un número de 0 a 1 (inyectable para las pruebas).
+        /// </summary>
+        public static TipoArmaEnemigo ElegirArma(bool esSkull, int perdigonesDatos, float azar)
+        {
+            if (perdigonesDatos > 1)
+            {
+                return TipoArmaEnemigo.Escopeta;
+            }
+            if (!esSkull)
+            {
+                return TipoArmaEnemigo.Pistola;
+            }
+            return azar < 0.5f ? TipoArmaEnemigo.Pistola : azar < 0.75f ? TipoArmaEnemigo.Subfusil : TipoArmaEnemigo.Escopeta;
+        }
+
+        private static MechaCyberpunk.Personaje.Combate.ArmaAPie ArmaDelJugador(TipoArmaEnemigo tipo)
+        {
+            switch (tipo)
+            {
+                case TipoArmaEnemigo.Escopeta: return MechaCyberpunk.Personaje.Combate.ArmaAPie.Escopeta;
+                case TipoArmaEnemigo.Subfusil: return MechaCyberpunk.Personaje.Combate.ArmaAPie.Subfusil;
+                default: return MechaCyberpunk.Personaje.Combate.ArmaAPie.Pistola;
+            }
+        }
+
+        private void IniciarArmaT53()
+        {
+            if (visual == null || datos == null || datos.JefeCuerpoACuerpo || datos.PerroRobot || !(datos.UsaPistola || datos.EsPolicia))
+            {
+                return;
+            }
+            TipoArmaEnemigo tipo = ElegirArma(EsSkull && !esJefe, datos.Perdigones, UnityEngine.Random.value);
+            reglaArma = new ReglaArmaEnemigo(tipo, SegundosRecargaEnemigo, SegundosMaxSacarEnemigo, SegundosParaGuardarEnemigo);
+        }
+
+        // Avanza el ciclo del arma y pide al visual sacar, recargar o dejar caer el arma (que se guarda sola cuando se deja de sostener).
+        private void AvanzarArmaT53(bool enPelea, Vector3 boca)
+        {
+            ReglaArmaEnemigo.Salida s = reglaArma.Avanzar(Time.deltaTime, enPelea, visual.ArmaEnPose);
+            MechaCyberpunk.Personaje.Combate.ArmaAPie arma = ArmaDelJugador(reglaArma.Tipo);
+            if (s.EmpezoSacar)
+            {
+                string id = MechaCyberpunk.Personaje.Combate.SonidosArmasT1472.IdSacar(arma);
+                if (!string.IsNullOrEmpty(id))
+                {
+                    Sonidos.ReproducirEn(id, boca);
+                }
+            }
+            if (s.EmpezoRecargar)
+            {
+                visual.Recargar(SegundosRecargaEnemigo);
+                Sonidos.ReproducirEn(MechaCyberpunk.Personaje.Combate.SonidosArmasT1472.IdRecarga(arma), boca);
+            }
+            visual.TipoArma = reglaArma.Tipo == TipoArmaEnemigo.Pistola ? TipoArmaVisual.Pistola : TipoArmaVisual.ArmaLarga;
+            if (s.Guardar)
+            {
+                visual.GuardarArmaYSalirDePelea();
+            }
+            else if (reglaArma.ArmaFuera)
+            {
+                visual.SacarArma(); // mantiene el arma levantada mientras pelea
+            }
+        }
+
         /// <summary>Los pandilleros activos (T-405): los aliados los buscan aquí.</summary>
         public static readonly List<PandilleroAPie> Activos = new List<PandilleroAPie>();
 
@@ -428,6 +508,7 @@ namespace MechaCyberpunk.IA.APie
                 }
                 animador = GetComponentInChildren<Animator>(true);
                 visual = GetComponentInChildren<VisualPersonaje>(true);
+                IniciarArmaT53();
                 piezasModelo = GetComponentsInChildren<Renderer>(true);
             }
             else if (datos.JefeCuerpoACuerpo)
@@ -930,13 +1011,17 @@ namespace MechaCyberpunk.IA.APie
                 Quaternion meta = Quaternion.LookRotation(adelante, Vector3.up);
                 transform.rotation = Quaternion.RotateTowards(transform.rotation, meta, datos.VelocidadGiro * Time.deltaTime);
             }
+            if (armaSacada && deseada.magnitude > VelocidadMaxApuntando)
+            {
+                deseada = deseada.normalized * VelocidadMaxApuntando; // T-1753 (T53): con el arma fuera camina apuntando, no trota
+            }
             velocidadVertical = controlador.isGrounded ? -1f : velocidadVertical + Gravedad * Time.deltaTime;
             Vector3 mover = deseada;
             mover.y = velocidadVertical;
             controlador.Move(mover * Time.deltaTime);
             if (animador != null)
             {
-                animador.SetFloat(IdVelocidad, deseada.magnitude);
+                animador.SetFloat(IdVelocidad, ReglaAnimacionPolicia.VelocidadVista(new Vector2(controlador.velocity.x, controlador.velocity.z).magnitude, deseada.magnitude));
                 PonerEnPiso();
                 if (visual != null)
                 {
@@ -1196,9 +1281,15 @@ namespace MechaCyberpunk.IA.APie
                 DistanciaAlPunto = DistanciaPlana(transform.position, hogar),
                 JugadorAtacable = atacable && !huyendo
             };
+            bool armaLista = true;
+            if (reglaArma != null && visual != null)
+            {
+                AvanzarArmaT53(atacable && !huyendo, boca); // T-53: sacar, cargador, recargar y guardar como el jugador
+                armaLista = reglaArma.PuedeDisparar;
+            }
             bool limitado = EsMaleanteDeCalle; // T-1528: daño, precisión y cadencia limitados al empezar a atacar (suben con el tiempo)
             float segundosAtacando = SegundosHostil;
-            entrada.TieneTurno = regla.Atacando || (puedeTirar && tactica.PuedeDisparar && (!limitado || Time.time >= proximoTiroLimitado)
+            entrada.TieneTurno = regla.Atacando || (puedeTirar && armaLista && tactica.PuedeDisparar && (!limitado || Time.time >= proximoTiroLimitado)
                 && (turnos == null || turnos.Pedir(this)));
             EstadoPandillero estadoAntes = regla.Estado;
             ReglaPandilleroAPie.Salida salida = regla.Avanzar(Time.deltaTime, entrada);
@@ -1239,8 +1330,23 @@ namespace MechaCyberpunk.IA.APie
                     proximoTiroLimitado = Time.time + ReglaProvocacionCalle.RecargaExtra(segundosAtacando);
                 }
                 DanioDeLaPolicia = datos.EsPolicia; // T-729: lo que caiga por este disparo no suma búsqueda al jugador
-                Sonidos.ReproducirEn(MechaCyberpunk.Personaje.Combate.SonidosArmasT1472.IdDisparoEnemigo(datos.Perdigones), boca); // T-1472: el disparo enemigo, en 3D
-                for (int perdigon = 0; perdigon < datos.Perdigones; perdigon++)
+                int perdigonesTiro = datos.Perdigones;
+                if (reglaArma != null && visual != null)
+                {
+                    // T-53: el mismo ID de sonido del arma del jugador (pistola, escopeta, subfusil), en 3D; la escopeta lanza varios perdigones de menos daño.
+                    reglaArma.RegistrarDisparo();
+                    Sonidos.ReproducirEn(MechaCyberpunk.Personaje.Combate.SonidosArmasT1472.IdDisparo(ArmaDelJugador(reglaArma.Tipo)), boca);
+                    if (reglaArma.Tipo == TipoArmaEnemigo.Escopeta && datos.Perdigones <= 1)
+                    {
+                        perdigonesTiro = PerdigonesEscopetaEnemigo;
+                        danioTiro *= FraccionDanioPerdigon;
+                    }
+                }
+                else
+                {
+                    Sonidos.ReproducirEn(MechaCyberpunk.Personaje.Combate.SonidosArmasT1472.IdDisparoEnemigo(datos.Perdigones), boca); // T-1472: el disparo enemigo, en 3D
+                }
+                for (int perdigon = 0; perdigon < perdigonesTiro; perdigon++)
                 {
                     pistola.Disparar(boca, pecho, recibe, danioTiro, probabilidad, false, datos.EsPolicia ? DireccionRealDeTiro(boca, pecho) : (Vector3?)null);
                 }
@@ -1313,6 +1419,10 @@ namespace MechaCyberpunk.IA.APie
                 // T-1494: buscando en su última posición conocida: gira mirando alrededor.
                 mirada = Quaternion.Euler(0f, GradosBusqueda * Time.deltaTime, 0f) * transform.forward;
             }
+            if (reglaArma != null && (apuntando || reglaArma.Fase == FaseArmaEnemigo.Sacando || (reglaArma.ArmaFuera && atacable && !huyendo)) && deseada.magnitude > VelocidadMaxApuntando)
+            {
+                deseada = deseada.normalized * VelocidadMaxApuntando; // T-53: apuntando o sacando el arma camina apuntando (1.6 a 2 m/s), no corre
+            }
             if (datos.EsPolicia && deseada.magnitude > VelocidadCaminarPolicia + 0.5f && regla.Estado != EstadoPandillero.Preparando)
             {
                 mirada = deseada; // T-1303: corriendo mira hacia donde corre (no corre de lado ni de espaldas)
@@ -1332,7 +1442,7 @@ namespace MechaCyberpunk.IA.APie
             {
                 // T-1321: el policía anima con la velocidad real del cuerpo (caminar apuntando, sin deslizarse).
                 float velocidadAnimada = deseada.magnitude;
-                if (datos.EsPolicia)
+                if (datos.EsPolicia || visual != null)
                 {
                     Vector3 real = controlador.velocity;
                     velocidadAnimada = ReglaAnimacionPolicia.VelocidadVista(new Vector2(real.x, real.z).magnitude, velocidadAnimada);
@@ -1345,7 +1455,7 @@ namespace MechaCyberpunk.IA.APie
                     visual.Agachado = tieneCubierta && modo == ReglaTacticaPandillero.Modo.Cubrirse && !huyendo
                         && DistanciaPlana(transform.position, puntoCubierta) <= LlegadaCubierta + 0.5f;
                     visual.Apuntando = apuntando;
-                    visual.TipoArma = TipoArmaVisual.Pistola;
+                    visual.TipoArma = reglaArma != null && reglaArma.Tipo != TipoArmaEnemigo.Pistola ? TipoArmaVisual.ArmaLarga : TipoArmaVisual.Pistola;
                 }
                 else
                 {

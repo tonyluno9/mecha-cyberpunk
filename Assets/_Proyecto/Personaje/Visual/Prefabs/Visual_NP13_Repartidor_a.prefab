@@ -48,6 +48,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: MechaCyberpunk.Personaje.Visual::MechaCyberpunk.Personaje.Visual.VisualPersonaje
   animador: {fileID: 8970471800976952869}
   leerDelPadre: 1
+  comoJugador: 1
   suavizadoVelocidad: 12
   velocidadClipCaminar: 1.2
   velocidadClipCorrer: 5
@@ -206,7 +207,7 @@ PrefabInstance:
     - target: {fileID: 5866666021909216657, guid: c4987aba2a5d626469bc4fc70f16ee6b, type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 22100000, guid: a996e2c8d36c11f4d8be96ccdfd5847e, type: 2}
+      objectReference: {fileID: 22100000, guid: b104d62b84b456847886eba9a27903f7, type: 2}
     - target: {fileID: 5866666021909216657, guid: c4987aba2a5d626469bc4fc70f16ee6b, type: 3}
       propertyPath: m_ApplyRootMotion
       value: 0
