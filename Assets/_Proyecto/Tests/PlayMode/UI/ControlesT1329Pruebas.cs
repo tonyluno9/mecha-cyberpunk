@@ -121,8 +121,7 @@ namespace MechaCyberpunk.Tests.UI
             Assert.IsTrue(RuedaHabilidadesExo.Abierta, "Mantener Tab abre la rueda del EXO");
             Assert.IsFalse(RuedaArmasObjetos.Abierta);
             Assert.AreEqual(0.25f, Time.timeScale, 0.001f);
-            float angulo = RuedaHabilidadesExo.AnguloDe(HabilidadProtesis.Brazos) * Mathf.Deg2Rad;
-            Set(raton.delta, new Vector2(Mathf.Sin(angulo), Mathf.Cos(angulo)) * MechaCyberpunk.UI.Rueda.ReglaRuedaArmas.RadioMaximo);
+            Set(raton.delta, RuedaHabilidadesExo.PosicionDe(HabilidadProtesis.Brazos)); // T-57: el cursor cae sobre la zona BRAZOS de la silueta
             yield return Cuadros();
             Assert.AreEqual((int)HabilidadProtesis.Brazos, ruedaExo.Resaltada, "Mover el ratón hacia BRAZOS la resalta");
             Press(raton.leftButton);

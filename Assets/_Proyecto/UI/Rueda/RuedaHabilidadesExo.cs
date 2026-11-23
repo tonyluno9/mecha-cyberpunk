@@ -13,8 +13,9 @@ using UnityEngine.UI;
 namespace MechaCyberpunk.UI.Rueda
 {
     /// <summary>
-    /// T-1329: la rueda de habilidades del EXO. Se mantiene Tab (acción "RuedaExo"), el tiempo baja a 0.25 y el ratón mueve un cursor virtual hacia la
-    /// habilidad (piernas, brazos, cabeza, láser, misiles); el clic izquierdo (acción "RuedaExoElegir") la activa. Al soltar Tab se cierra. Ya no hay una
+    /// T-1329 y T-57: el menú de habilidades del EXO. Se mantiene Tab (acción "RuedaExo"), el tiempo baja a 0.25 y al centro aparece una silueta holográfica
+    /// del cuerpo con las zonas PIERNAS, BRAZOS y CABEZA (y LÁSER y MISILES a un lado). El ratón mueve un cursor virtual; la zona bajo el cursor se ilumina y
+    /// muestra su nombre y estado; el clic izquierdo (acción "RuedaExoElegir") o soltar Tab sobre ella la activa. Las zonas sin implante se ven apagadas. Ya no hay una
     /// tecla suelta por habilidad. No abre a la vez que la rueda de armas (botón medio). Reusa la lógica de sectores de <see cref="ReglaRuedaArmas"/>.
     /// La agrega <see cref="HudAPie"/> al nacer y arma su canvas en código con los colores del HUD H10.
     /// </summary>
@@ -24,7 +25,8 @@ namespace MechaCyberpunk.UI.Rueda
         public const string NombreAccion = "RuedaExo";
         public const string NombreAccionElegir = "RuedaExoElegir";
 
-        private const float RadioIcono = 280f;
+        /// <summary>T-57: hasta dónde llega el cursor virtual desde el centro (px de referencia), en cada eje.</summary>
+        public static readonly Vector2 LimiteCursor = new Vector2(520f, 340f);
         private static readonly Vector2 TamanoCasilla = new Vector2(250f, 96f);
 
         private static readonly Color Turquesa = new Color(0.30f, 0.92f, 0.90f, 1f);
@@ -39,6 +41,8 @@ namespace MechaCyberpunk.UI.Rueda
         {
             public RectTransform Raiz;
             public Image Fondo;
+            public Image[] Partes;
+            public Image[] Lineas;
             public Text Nombre;
             public Text Estado;
         }
@@ -48,7 +52,6 @@ namespace MechaCyberpunk.UI.Rueda
         private static int aperturas;
         private static int activaciones;
 
-        private readonly List<int> disposicion = new List<int>();
         private readonly List<Casilla> casillas = new List<Casilla>();
         private Canvas canvas;
         private GameObject raiz;
@@ -58,6 +61,7 @@ namespace MechaCyberpunk.UI.Rueda
         private InputAction accionElegir;
         private bool estabaPulsada;
         private bool clicEstabaPulsado;
+        private bool activadaEnEstaApertura;
         private Vector2 movimientoPendiente;
         private Vector2 cursor;
         private int resaltada = -1;
@@ -88,15 +92,60 @@ namespace MechaCyberpunk.UI.Rueda
 
         public bool Armada => raiz != null;
 
-        /// <summary>La posición en pantalla (px de referencia desde el centro, +y arriba) de la casilla de esa habilidad.</summary>
+        /// <summary>T-57: el centro de la zona (px de referencia desde el centro, +y arriba): sobre la silueta, o la casilla de LÁSER y MISILES.</summary>
         public static Vector2 PosicionDe(HabilidadProtesis h)
         {
-            float rad = ReglaRuedaArmas.AnguloDeSector((int)h, Cantidad) * Mathf.Deg2Rad;
-            return new Vector2(Mathf.Sin(rad), Mathf.Cos(rad)) * RadioIcono;
+            switch (h)
+            {
+                case HabilidadProtesis.Piernas: return new Vector2(37f, -150f);
+                case HabilidadProtesis.Brazos: return new Vector2(89f, 66f);
+                case HabilidadProtesis.Cabeza: return new Vector2(0f, 247f);
+                case HabilidadProtesis.Laser: return new Vector2(-380f, 120f);
+                default: return new Vector2(-380f, -20f);
+            }
         }
 
-        /// <summary>El ángulo (° en el sentido del reloj desde arriba) del sector de la habilidad.</summary>
-        public static float AnguloDe(HabilidadProtesis h) => ReglaRuedaArmas.AnguloDeSector((int)h, Cantidad);
+        // Dónde se escribe el nombre y el estado de cada zona.
+        private static Vector2 PosicionEtiqueta(HabilidadProtesis h)
+        {
+            switch (h)
+            {
+                case HabilidadProtesis.Piernas: return new Vector2(320f, -140f);
+                case HabilidadProtesis.Brazos: return new Vector2(320f, 66f);
+                case HabilidadProtesis.Cabeza: return new Vector2(320f, 247f);
+                default: return PosicionDe(h);
+            }
+        }
+
+        // Las partes de la silueta de cada zona: centro y tamaño (px de referencia).
+        private static (Vector2 centro, Vector2 tamano)[] Partes(HabilidadProtesis h)
+        {
+            switch (h)
+            {
+                // T-1760: regiones de los sprites del cuerpo del HUD (139x353) escalados a la silueta de 236x600 px.
+                case HabilidadProtesis.Piernas: return new[] { (new Vector2(-37f, -150f), new Vector2(64f, 280f)), (new Vector2(37f, -150f), new Vector2(64f, 280f)) };
+                case HabilidadProtesis.Brazos: return new[] { (new Vector2(-89f, 66f), new Vector2(62f, 257f)), (new Vector2(89f, 66f), new Vector2(62f, 257f)) };
+                case HabilidadProtesis.Cabeza: return new[] { (new Vector2(0f, 247f), new Vector2(110f, 110f)) };
+                default: return new[] { (PosicionDe(h), TamanoCasilla) };
+            }
+        }
+
+        /// <summary>La zona bajo un punto del cursor (valor de <see cref="HabilidadProtesis"/>) o -1 (T-57).</summary>
+        public static int ZonaEn(Vector2 punto)
+        {
+            for (int i = 0; i < Cantidad; i++)
+            {
+                foreach ((Vector2 centro, Vector2 tamano) parte in Partes((HabilidadProtesis)i))
+                {
+                    Vector2 d = punto - parte.centro;
+                    if (Mathf.Abs(d.x) <= parte.tamano.x * 0.5f && Mathf.Abs(d.y) <= parte.tamano.y * 0.5f)
+                    {
+                        return i;
+                    }
+                }
+            }
+            return -1;
+        }
 
         private static int Cantidad => System.Enum.GetValues(typeof(HabilidadProtesis)).Length;
 
@@ -203,13 +252,21 @@ namespace MechaCyberpunk.UI.Rueda
             }
             if (!PuedeSeguir() || !pulsada)
             {
+                // T-57: soltar Tab sobre una zona la activa (si el clic no la activó ya).
+                if (!pulsada && PuedeSeguir() && !activadaEnEstaApertura && resaltada >= 0 && habilidades != null
+                    && habilidades.Pulsar((HabilidadProtesis)resaltada))
+                {
+                    activaciones++;
+                    Sonidos.Reproducir("UI_SELECCIONAR");
+                }
                 Cerrar();
                 return;
             }
-            cursor = ReglaRuedaArmas.MoverCursor(cursor, movimientoPendiente);
+            cursor = new Vector2(Mathf.Clamp(cursor.x + movimientoPendiente.x, -LimiteCursor.x, LimiteCursor.x),
+                Mathf.Clamp(cursor.y + movimientoPendiente.y, -LimiteCursor.y, LimiteCursor.y));
             movimientoPendiente = Vector2.zero;
             int antes = resaltada;
-            resaltada = ReglaRuedaArmas.CasillaResaltada(cursor, disposicion, Elegible);
+            resaltada = ZonaEn(cursor);
             if (resaltada >= 0 && resaltada != antes)
             {
                 Sonidos.Reproducir("UI_MOVER"); // T-1535: la rueda suena al pasar de una habilidad a otra
@@ -217,6 +274,7 @@ namespace MechaCyberpunk.UI.Rueda
             if (clicNuevo && resaltada >= 0 && habilidades != null && habilidades.Pulsar((HabilidadProtesis)resaltada))
             {
                 activaciones++;
+                activadaEnEstaApertura = true;
                 Sonidos.Reproducir("UI_SELECCIONAR"); // T-1535: elegir la habilidad (los servos los pide la propia habilidad)
             }
             Dibujar();
@@ -266,6 +324,8 @@ namespace MechaCyberpunk.UI.Rueda
             cursor = Vector2.zero;
             movimientoPendiente = Vector2.zero;
             resaltada = -1;
+            activadaEnEstaApertura = false;
+            Sonidos.Reproducir(RuedaArmasObjetos.IdCamaraLenta); // T-57: el mismo sonido de cámara lenta que la rueda de armas
             raiz.SetActive(true);
             Dibujar();
         }
@@ -283,6 +343,7 @@ namespace MechaCyberpunk.UI.Rueda
             }
             Time.fixedDeltaTime = fixedAnterior;
             raiz.SetActive(false);
+            Sonidos.Reproducir(RuedaArmasObjetos.IdCamaraLentaSalir);
             if (controlador != null)
             {
                 controlador.EntradaBloqueada = false;
@@ -297,20 +358,30 @@ namespace MechaCyberpunk.UI.Rueda
         {
             for (int i = 0; i < casillas.Count; i++)
             {
-                HabilidadProtesis h = (HabilidadProtesis)disposicion[i];
+                HabilidadProtesis h = (HabilidadProtesis)i;
                 Casilla c = casillas[i];
                 bool tiene = Elegible(i);
                 bool resalto = i == resaltada;
                 EstadoHabilidad estado = habilidades != null ? habilidades.Estado(h) : EstadoHabilidad.Lista;
                 Color color = !tiene ? Gris : estado == EstadoHabilidad.Activa ? Amarillo : estado == EstadoHabilidad.Recargando ? Rosa : Turquesa;
                 c.Fondo.color = resalto ? FondoResaltada : FondoCasilla;
+                Color parte = !tiene ? new Color(Gris.r, Gris.g, Gris.b, 0.18f) : resalto ? new Color(Amarillo.r, Amarillo.g, Amarillo.b, 0.75f) : new Color(color.r, color.g, color.b, 0.4f);
+                foreach (Image p in c.Partes)
+                {
+                    p.color = parte;
+                }
+                Color linea = !tiene ? new Color(Gris.r, Gris.g, Gris.b, 0.45f) : resalto ? Amarillo : new Color(color.r, color.g, color.b, 0.95f);
+                foreach (Image l in c.Lineas)
+                {
+                    l.color = linea;
+                }
                 c.Nombre.color = resalto ? Amarillo : color;
                 c.Estado.color = resalto ? Amarillo : color;
                 c.Nombre.text = NombreDe(h);
                 c.Estado.text = !tiene ? "SIN IMPLANTE" : estado == EstadoHabilidad.Activa ? "ACTIVA" : estado == EstadoHabilidad.Recargando ? "RECARGANDO" : "LISTA";
             }
             punto.anchoredPosition = cursor;
-            textoCentro.text = resaltada < 0 ? "MUEVE EL RATÓN Y HAZ CLIC\nSUELTA TAB PARA CERRAR" : NombreDe((HabilidadProtesis)resaltada);
+            textoCentro.text = resaltada < 0 ? "ELIGE UNA ZONA: CLIC O SUELTA TAB" : NombreDe((HabilidadProtesis)resaltada);
         }
 
         private void Armar()
@@ -325,13 +396,28 @@ namespace MechaCyberpunk.UI.Rueda
             fondo.raycastTarget = false;
             KitUI.Estirar(fondo.rectTransform);
 
-            textoCentro = Texto(Nuevo(raiz.transform, "Centro", Vector2.zero, new Vector2(420f, 120f)), 30, Amarillo);
+            textoCentro = Texto(Nuevo(raiz.transform, "Centro", new Vector2(0f, -400f), new Vector2(900f, 60f)), 30, Amarillo);
+
+            // T-1760 (T57): la silueta holográfica es la misma del muñequito del HUD (sprites de ConfigHudH10), grande al centro.
+            ConfigHudH10 cfg = ConfigHudH10.Actual;
+            RectTransform silueta = Nuevo(raiz.transform, "Silueta", Vector2.zero, TamanoSilueta);
+            CapaCuerpo(silueta, "TorsoRelleno", cfg != null ? cfg.CuerpoRelleno(ZonaCuerpoH10.Torso) : null, new Color(Turquesa.r, Turquesa.g, Turquesa.b, 0.15f));
+            CapaCuerpo(silueta, "TorsoLinea", cfg != null ? cfg.CuerpoLinea(ZonaCuerpoH10.Torso) : null, new Color(Turquesa.r, Turquesa.g, Turquesa.b, 0.7f));
 
             for (int i = 0; i < Cantidad; i++)
             {
-                disposicion.Add(i);
+                HabilidadProtesis h = (HabilidadProtesis)i;
                 Casilla c = new Casilla();
-                c.Raiz = Nuevo(raiz.transform, "Casilla" + i, PosicionDe((HabilidadProtesis)i), TamanoCasilla);
+                bool propia = h == HabilidadProtesis.Laser || h == HabilidadProtesis.Misiles;
+                c.Partes = new Image[0];
+                c.Lineas = new Image[0];
+                if (!propia)
+                {
+                    ZonaCuerpoH10 zona = h == HabilidadProtesis.Piernas ? ZonaCuerpoH10.Piernas : h == HabilidadProtesis.Brazos ? ZonaCuerpoH10.Brazos : ZonaCuerpoH10.Cabeza;
+                    c.Partes = new[] { CapaCuerpo(silueta, "Relleno" + zona, cfg != null ? cfg.CuerpoRelleno(zona) : null, Turquesa) };
+                    c.Lineas = new[] { CapaCuerpo(silueta, "Linea" + zona, cfg != null ? cfg.CuerpoLinea(zona) : null, Turquesa) };
+                }
+                c.Raiz = Nuevo(raiz.transform, "Casilla" + i, PosicionEtiqueta(h), TamanoCasilla);
                 c.Fondo = c.Raiz.gameObject.AddComponent<Image>();
                 c.Fondo.raycastTarget = false;
                 c.Fondo.color = FondoCasilla;
@@ -344,6 +430,19 @@ namespace MechaCyberpunk.UI.Rueda
             punto = (RectTransform)KitUI.CrearRombo(raiz.transform, "Cursor", 18f, Blanco).rectTransform.parent;
             punto.anchorMin = punto.anchorMax = new Vector2(0.5f, 0.5f);
             raiz.SetActive(false);
+        }
+
+        private static readonly Vector2 TamanoSilueta = new Vector2(236f, 600f);
+
+        // Una capa del cuerpo a tamaño completo de la silueta (todas las capas del HUD comparten el mismo lienzo de 139x353).
+        private static Image CapaCuerpo(RectTransform silueta, string nombre, Sprite sprite, Color color)
+        {
+            Image im = KitUI.CrearImagen(silueta, nombre, color);
+            im.sprite = sprite;
+            im.preserveAspect = true;
+            im.raycastTarget = false;
+            KitUI.Estirar(im.rectTransform);
+            return im;
         }
 
         private static RectTransform Nuevo(Transform padre, string nombre, Vector2 posicion, Vector2 tamano)
