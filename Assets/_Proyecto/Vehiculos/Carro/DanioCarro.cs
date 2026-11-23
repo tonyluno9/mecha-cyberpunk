@@ -602,18 +602,124 @@ namespace MechaCyberpunk.Vehiculos.Carro
         private void Ennegrecer()
         {
             // T-1201: la chatarra queda quemada entera (antes solo la malla "Carroceria", que los carros de tráfico no tienen).
-            foreach (Renderer render in GetComponentsInChildren<Renderer>(true))
+            // T-1683 (T45): además del tinte, cada malla cambia a un material de armazón propio (ver Quemar).
+            Quemar(transform);
+        }
+
+        /// <summary>T-1683 (T45): nombre del material de armazón quemado que lleva toda la chatarra.</summary>
+        public const string NombreMaterialArmazon = "ArmazonQuemado_T1683";
+
+        // Los huecos de bala (HuecosBala) se pegan como hijos del carro: son quads transparentes y no se queman.
+        private const string NombreHuecoBala = "HuecoBala";
+        private const float BrilloArmazon = 0.15f;
+        // Caché de un material compartido (no es estado de partida): sobrevivir entre partidas solo evita crearlo otra vez.
+        private static Material materialArmazon;
+
+        /// <summary>T-1683: el color del armazón quemado.</summary>
+        public static Color ColorDelArmazon => ColorArmazon;
+
+        /// <summary>
+        /// T-1683: el material del armazón (URP Lit, gris casi negro, sin textura ni emisión). Uno solo para todos los carros; se crea la primera vez
+        /// (null si no hay ningún shader Lit, y entonces queda solo el tinte).
+        /// </summary>
+        public static Material MaterialArmazon
+        {
+            get
             {
-                if (render is ParticleSystemRenderer || render is LineRenderer || render is TrailRenderer)
+                if (materialArmazon == null)
+                {
+                    materialArmazon = CrearMaterialArmazon();
+                }
+                return materialArmazon;
+            }
+        }
+
+        private static Material CrearMaterialArmazon()
+        {
+            Shader shader = Shader.Find("Universal Render Pipeline/Lit");
+            if (shader == null)
+            {
+                shader = Shader.Find("Universal Render Pipeline/Simple Lit");
+            }
+            if (shader == null)
+            {
+                return null;
+            }
+            Material m = new Material(shader) { name = NombreMaterialArmazon, hideFlags = HideFlags.DontSave };
+            foreach (string textura in new[] { "_BaseMap", "_MainTex", "_EmissionMap" })
+            {
+                if (m.HasProperty(textura))
+                {
+                    m.SetTexture(textura, null);
+                }
+            }
+            if (m.HasProperty("_BaseColor"))
+            {
+                m.SetColor("_BaseColor", ColorArmazon);
+            }
+            if (m.HasProperty("_Color"))
+            {
+                m.SetColor("_Color", ColorArmazon);
+            }
+            if (m.HasProperty("_Smoothness"))
+            {
+                m.SetFloat("_Smoothness", BrilloArmazon);
+            }
+            if (m.HasProperty("_Metallic"))
+            {
+                m.SetFloat("_Metallic", 0f);
+            }
+            if (m.HasProperty("_EmissionColor"))
+            {
+                m.SetColor("_EmissionColor", Color.black);
+            }
+            m.DisableKeyword("_EMISSION");
+            return m;
+        }
+
+        /// <summary>T-1683: true si la malla se vuelve armazón al explotar (mallas del carro; no partículas, líneas, estelas ni huecos de bala).</summary>
+        public static bool EsMallaQuemable(Renderer render)
+        {
+            return render != null && (render is MeshRenderer || render is SkinnedMeshRenderer) && render.name != NombreHuecoBala;
+        }
+
+        /// <summary>
+        /// T-1683 (T45): deja como armazón quemado todas las mallas bajo <paramref name="raiz"/>: cada ranura de material pasa a <see cref="MaterialArmazon"/>
+        /// y encima va el tinte del armazón (por si algo pinta la carrocería con un bloque de propiedades). Antes solo se teñía con el bloque, que depende de
+        /// que el material de cada carro tenga _BaseColor y de que nadie reemplace el bloque; los modelos de Tripo (T-1644, una sola malla con textura) no
+        /// quedaban negros. Sirve igual para los carros de piezas, los de Tripo y las motos. Devuelve cuántas mallas quemó.
+        /// </summary>
+        public static int Quemar(Transform raiz)
+        {
+            if (raiz == null)
+            {
+                return 0;
+            }
+            Material quemado = MaterialArmazon;
+            int cuenta = 0;
+            foreach (Renderer render in raiz.GetComponentsInChildren<Renderer>(true))
+            {
+                if (!EsMallaQuemable(render))
                 {
                     continue;
+                }
+                if (quemado != null)
+                {
+                    Material[] materiales = new Material[Mathf.Max(1, render.sharedMaterials.Length)];
+                    for (int i = 0; i < materiales.Length; i++)
+                    {
+                        materiales[i] = quemado;
+                    }
+                    render.sharedMaterials = materiales;
                 }
                 MaterialPropertyBlock bloque = new MaterialPropertyBlock();
                 render.GetPropertyBlock(bloque);
                 bloque.SetColor("_BaseColor", ColorArmazon);
                 bloque.SetColor("_Color", ColorArmazon);
                 render.SetPropertyBlock(bloque);
+                cuenta++;
             }
+            return cuenta;
         }
 
         /// <summary>
