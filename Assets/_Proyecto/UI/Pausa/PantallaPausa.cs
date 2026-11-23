@@ -88,7 +88,6 @@ namespace MechaCyberpunk.UI.MenuPausa
         private OpcionesModernasPausa opcionesModernas;
         private BotonCyberfix volverA;
         private ControladorAPie controlCongelado;
-        private float escalaPrevia = 1f;
         private bool audioPrevio;
 
         public bool Abierta => contenido != null && contenido.activeSelf;
@@ -368,6 +367,7 @@ namespace MechaCyberpunk.UI.MenuPausa
 
         private void OnDestroy()
         {
+            ControlTiempo.Soltar(this);
             if (menu != null)
             {
                 menu.Regresar -= Cerrar;
@@ -416,10 +416,8 @@ namespace MechaCyberpunk.UI.MenuPausa
                 return;
             }
             // T-991: si la rueda de armas estaba abierta (tiempo a 0.25), la escala que se devuelve al continuar es la que ella guardó.
-            escalaPrevia = MechaCyberpunk.UI.Rueda.RuedaArmasObjetos.Abierta ? MechaCyberpunk.UI.Rueda.RuedaArmasObjetos.EscalaAnterior
-                : MechaCyberpunk.UI.Rueda.RuedaHabilidadesExo.Abierta ? MechaCyberpunk.UI.Rueda.RuedaHabilidadesExo.EscalaAnterior : Time.timeScale;
             audioPrevio = AudioListener.pause;
-            Time.timeScale = 0f;
+            ControlTiempo.Pedir(this, 0f);
             AudioListener.pause = true;
             Pausa.Fijar(true);
             IJugador jugador = Registro<IJugador>.Actual;
@@ -467,7 +465,7 @@ namespace MechaCyberpunk.UI.MenuPausa
             }
             confirmar.SetActive(false);
             contenido.SetActive(false);
-            Time.timeScale = escalaPrevia > 0f ? escalaPrevia : 1f;
+            ControlTiempo.Soltar(this);
             AudioListener.pause = audioPrevio;
             Pausa.Fijar(false);
             if (controlCongelado != null)
