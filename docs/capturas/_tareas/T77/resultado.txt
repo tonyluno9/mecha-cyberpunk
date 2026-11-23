@@ -1,0 +1,10 @@
+T77: solo 2 SKULLS en el paso 3 (Unity con ventana, Play en Ciudad_Prologo, FlujoPartida.IrANuevaPartida / IrACargar)
+Antes del arreglo (Nueva partida): a los ~20 s del paso 3 los 5 GrupoAcoso fijos (14 pandilleros SKULLS, 36-50 m de la casa) saltaban
+a (-45, y=2, -77), junto al jugador, y pasaban a alerta: pandilleros30m=14, y de 0.1 a 2.0 (cayendo desde la altura del Raycast).
+Despues (todas con SkullRecorrido=2 y pandilleros a 30 m = 2, y siempre 0.1 m: nunca caen; fase salen -> esperan):
+  Nueva 1:     pandilleros30m=2 SkullRecorrido=2 y=[0.3,0.3] durante 75 s; los 9 SKULLS fijos de la ciudad (a 36-50 m) no se mueven (n60=9 constante)
+  Nueva 2:     pandilleros30m=2 SkullRecorrido=2 y=[0.1,0.1] durante 55 s
+  Nueva 3:     pandilleros30m=2 SkullRecorrido=2 y=[0.1,0.1] durante 55 s
+  Continuar 1: pandilleros30m=2 SkullRecorrido=2 y=[0.1,0.1] durante 55 s (carga desde la ranura 0 en el paso 3)
+Nota: los SKULLS fijos de los GrupoAcoso (Plaza, Lote, Azotea) siguen en su lugar a 36-50 m; no son generados, son parte del mapa.
+Capturas de la ventana (con HUD): nueva1_esperan.png, nueva2_salen.png, nueva3_salen.png, continuar1_salen.png, continuar1_final.png

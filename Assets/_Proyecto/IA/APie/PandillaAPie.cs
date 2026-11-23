@@ -457,7 +457,8 @@ namespace MechaCyberpunk.IA.APie
             for (int i = 0; i < pandilleros.Length; i++)
             {
                 PandilleroAPie p = pandilleros[i];
-                if (p == null || !p.gameObject.activeSelf || p.EstaKO || vencidos.Contains(p))
+                // T-1720 (T77): quien acosa a un civil (GrupoAcoso) está quieto a propósito: no cuenta como atorado ni se trae al jugador.
+                if (p == null || !p.gameObject.activeSelf || p.EstaKO || vencidos.Contains(p) || p.Acosando)
                 {
                     fueraDesde[i] = -1f;
                     inicioVentana[i] = -1f;
