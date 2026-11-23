@@ -65,7 +65,6 @@ namespace MechaCyberpunk.UI.Rueda
         private Vector2 movimientoPendiente;
         private Vector2 cursor;
         private int resaltada = -1;
-        private float fixedAnterior = 0.02f;
         private Transform raizJugador;
         private ControladorAPie controlador;
         private HabilidadesProtesis habilidades;
@@ -180,6 +179,7 @@ namespace MechaCyberpunk.UI.Rueda
             {
                 Cerrar();
             }
+            ControlTiempo.Soltar(this);
             accion?.Disable();
             accionElegir?.Disable();
             accion = null;
@@ -188,6 +188,7 @@ namespace MechaCyberpunk.UI.Rueda
 
         private void OnDestroy()
         {
+            ControlTiempo.Soltar(this);
             if (Actual == this)
             {
                 Actual = null;
@@ -316,10 +317,8 @@ namespace MechaCyberpunk.UI.Rueda
         {
             abierta = true;
             aperturas++;
-            escalaAnterior = Time.timeScale;
-            fixedAnterior = Time.fixedDeltaTime;
-            Time.timeScale = ReglaRuedaArmas.EscalaTiempo * escalaAnterior;
-            Time.fixedDeltaTime = fixedAnterior * ReglaRuedaArmas.EscalaTiempo;
+            escalaAnterior = ControlTiempo.Escala;
+            ControlTiempo.Pedir(this, ReglaRuedaArmas.EscalaTiempo);
             controlador.EntradaBloqueada = true;
             cursor = Vector2.zero;
             movimientoPendiente = Vector2.zero;
@@ -337,11 +336,7 @@ namespace MechaCyberpunk.UI.Rueda
                 return;
             }
             abierta = false;
-            if (!Pausa.Activa)
-            {
-                Time.timeScale = escalaAnterior;
-            }
-            Time.fixedDeltaTime = fixedAnterior;
+            ControlTiempo.Soltar(this);
             raiz.SetActive(false);
             Sonidos.Reproducir(RuedaArmasObjetos.IdCamaraLentaSalir);
             if (controlador != null)

@@ -34,7 +34,6 @@ namespace MechaCyberpunk.UI.Kit
         private Action alEntender;
         private bool abierta;
         private int cuadroAbierta;
-        private float escalaPrevia = 1f;
         private CursorLockMode bloqueoPrevio;
         private bool cursorVisiblePrevio;
         private ControladorAPie controlCongelado;
@@ -89,6 +88,7 @@ namespace MechaCyberpunk.UI.Kit
             {
                 Restaurar();
             }
+            ControlTiempo.Soltar(this);
             aceptar?.Dispose();
             if (actual == this)
             {
@@ -136,8 +136,7 @@ namespace MechaCyberpunk.UI.Kit
             if (!abierta)
             {
                 abierta = true;
-                escalaPrevia = Time.timeScale > 0f ? Time.timeScale : 1f;
-                Time.timeScale = 0f;
+                ControlTiempo.Pedir(this, 0f);
                 Pausa.Fijar(true);
                 bloqueoPrevio = Cursor.lockState;
                 cursorVisiblePrevio = Cursor.visible;
@@ -194,7 +193,7 @@ namespace MechaCyberpunk.UI.Kit
             }
             aceptar.Disable();
             PilaPantallas.Cerrar(this);
-            Time.timeScale = escalaPrevia;
+            ControlTiempo.Soltar(this);
             Pausa.Fijar(false);
             Cursor.lockState = bloqueoPrevio;
             Cursor.visible = cursorVisiblePrevio;
