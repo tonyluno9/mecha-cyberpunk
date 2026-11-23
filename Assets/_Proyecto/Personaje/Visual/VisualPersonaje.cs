@@ -16,6 +16,8 @@ namespace MechaCyberpunk.Personaje.Visual
         [SerializeField] private Animator animador;
         [Tooltip("Leer Velocidad y EnSuelo del CharacterController, Rigidbody o movimiento del padre.")]
         [SerializeField] private bool leerDelPadre = true;
+        [Tooltip("T-53: este humano usa los mismos clips, umbrales y velocidades de animación que el jugador (Override_HumanoJugador). Se aplica al despertar.")]
+        [SerializeField] private bool comoJugador;
         [Tooltip("Suavizado de la velocidad que ve el Animator (1/s). 0 = sin suavizar.")]
         [Min(0f)] [SerializeField] private float suavizadoVelocidad = 12f;
 
@@ -1049,6 +1051,50 @@ namespace MechaCyberpunk.Personaje.Visual
             controlador = padre.GetComponentInParent<CharacterController>();
             cuerpo = padre.GetComponentInParent<Rigidbody>();
             posicionAnterior = padre.position;
+            if (comoJugador)
+            {
+                ConfigurarComoJugador();
+            }
+        }
+
+        /// <summary>T-53: marca al visual para que configure sus clips como el jugador al despertar (lo usa el editor al armar los prefabs).</summary>
+        public bool ComoJugador { get => comoJugador; set => comoJugador = value; }
+
+        /// <summary>
+        /// T-53: deja a este humano con la configuración de animación del jugador (mezcla caminar-trote por Velocidad, correr rápido, rapidez de los clips por dirección,
+        /// salto, golpes con guardia, daño lateral, muerte, IK de pies y apuntado de clip puro). Antes vivía en AnimacionJugador.ClipsDeTony.
+        /// </summary>
+        public void ConfigurarComoJugador()
+        {
+            ConfigurarClipsDireccionales(ReglasAnimacion.VelocidadPJ01Trote, ReglasAnimacion.VelocidadPJ01CorrerRapido,
+                ReglasAnimacion.VelocidadPJ01TroteAtras, ReglasAnimacion.VelocidadPJ01TroteLado, ReglasAnimacion.RapidezMinimaJugador, ReglasAnimacion.RapidezMaximaJugador);
+            ConfigurarMezclaLenta(ReglasAnimacion.VelocidadPJ01Caminar, ReglasAnimacion.VelocidadPJ01CaminarAtras, ReglasAnimacion.VelocidadPJ01CaminarLado,
+                ReglasAnimacion.VelocidadPJ01Caminar, ReglasAnimacion.VelocidadPJ01Trote);
+            AterrizajeFuerteActivo = true;
+            RapidezSaltoInicio = ReglasAnimacion.AjusteSaltoJugador("SaltoInicio");
+            RapidezSaltoAterrizaje = ReglasAnimacion.AjusteSaltoJugador("SaltoAterrizaje");
+            RapidezGolpes = ReglasAnimacion.RapidezGolpeJugador;
+            GuardiaTrasGolpe = true;
+            DanoLateral = true;
+            RapidezMuerte = ReglasAnimacion.RapidezMuerteJugador;
+            IKPiesYMirada ik = GetComponentInChildren<IKPiesYMirada>(true);
+            if (ik != null)
+            {
+                ik.Pies = true;
+                ik.SoloDesnivel = true;
+                ik.InclinarEnGiros = true;
+            }
+            ApuntadoIK apuntado = GetComponentInChildren<ApuntadoIK>(true);
+            if (apuntado != null)
+            {
+                apuntado.ClipPuro = true;
+                Animator a = apuntado.GetComponent<Animator>();
+                Transform mano = a != null && a.avatar != null && a.isHuman ? a.GetBoneTransform(HumanBodyBones.RightHand) : null;
+                if (mano != null && mano.name == AgarresArmas.ManoDerechaPJ01 && apuntado.GetComponent<AgarrePistolaPJ01>() == null)
+                {
+                    apuntado.gameObject.AddComponent<AgarrePistolaPJ01>();
+                }
+            }
         }
 
         private void OnEnable()

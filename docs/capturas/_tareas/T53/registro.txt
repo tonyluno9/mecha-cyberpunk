@@ -1,0 +1,9 @@
+T53 en Play (s2, 23-nov, Ciudad_Prologo): grupo de 3 SKULLS de calle (CapturasB24.GrupoSkulls + Provocar) a 9 m del jugador.
+Todos con ctrl=Override_HumanoJugador (clips PJ01 del jugador). Secuencia observada (CapturasB24.Estado):
+- Al provocarlos: capa 1 = PJ01_Pistola_Sacar (sacan el arma) mientras caminan (PJ01_Caminar).
+- Luego PJ01_Pistola_Apuntar / PJ01_Pistola_Disparo; la munición baja 12 -> 0.
+- Se agachan a cubrirse: PJ01_Loco_Agacharse, PJ01_Loco_AgachadoIdle, PJ01_Loco_Pararse.
+- Retroceden con PJ01_Loco_CaminarAtras.
+- Con munición 0: fase Recargando, capa 1 = PJ01_Pistola_RecargarCaminar (captura recarga.png).
+- Velocidad con el arma fuera: máximo 1.80 m/s (antes del arreglo se vieron 3.8-4.5 m/s disparando con el clip de caminar).
+- Policías que llegaron (Policia_1/2): también Override_HumanoJugador, PJ01_Pistola_Sacar al llegar, giran con PJ01_Loco_GirarDer/Izq.

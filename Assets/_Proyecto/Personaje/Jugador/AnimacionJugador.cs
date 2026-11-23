@@ -126,37 +126,8 @@ namespace MechaCyberpunk.Personaje.Jugador
             {
                 return;
             }
-            // T-1505: el estado Caminar del jugador mezcla por Velocidad caminar (1.62) -> trote (4.53); Correr es la velocidad rápida, PJ01_CorrerRapido (6.25; T-1550). La rapidez sigue esa mezcla
-            // (ConstructorControladorBase.ClipsSoloJugador) y queda entre 0.85 y 1.15.
-            visual.ConfigurarClipsDireccionales(ReglasAnimacion.VelocidadPJ01Trote, ReglasAnimacion.VelocidadPJ01CorrerRapido,
-                ReglasAnimacion.VelocidadPJ01TroteAtras, ReglasAnimacion.VelocidadPJ01TroteLado, ReglasAnimacion.RapidezMinimaJugador, ReglasAnimacion.RapidezMaximaJugador);
-            visual.ConfigurarMezclaLenta(ReglasAnimacion.VelocidadPJ01Caminar, ReglasAnimacion.VelocidadPJ01CaminarAtras, ReglasAnimacion.VelocidadPJ01CaminarLado,
-                ReglasAnimacion.VelocidadPJ01Caminar, ReglasAnimacion.VelocidadPJ01Trote);
-            visual.AterrizajeFuerteActivo = true;
-            // T-1540: los clips de salto Callejero (20-nov) van a 1x: el estado trae 2.5x y 2x de los clips viejos, el parámetro lo compensa solo en el jugador.
-            visual.RapidezSaltoInicio = ReglasAnimacion.AjusteSaltoJugador("SaltoInicio");
-            visual.RapidezSaltoAterrizaje = ReglasAnimacion.AjusteSaltoJugador("SaltoAterrizaje");
-            IKPiesYMirada ik = visual.GetComponentInChildren<IKPiesYMirada>(true);
-            if (ik != null)
-            {
-                // T-1484: el IK solo corrige la altura del piso (escalones, banquetas, pendientes); en piso plano el pie hace lo del clip.
-                ik.Pies = true;
-                ik.SoloDesnivel = true;
-                ik.InclinarEnGiros = true;
-            }
-            // T-737: al apuntar se ve el clip tal cual: ni torso girado a la mira, ni mano derecha corregida, ni mano izquierda pegada al arma por IK.
-            ApuntadoIK apuntado = visual.GetComponentInChildren<ApuntadoIK>(true);
-            if (apuntado != null)
-            {
-                apuntado.ClipPuro = true;
-                // T-738: la pistola de PJ01 se compensa en el agarre (no en los huesos) para apuntar al frente con el clip puro. Solo con el rig de PJ01 (R_Hand).
-                Animator a = apuntado.GetComponent<Animator>();
-                Transform mano = a != null && a.avatar != null && a.isHuman ? a.GetBoneTransform(HumanBodyBones.RightHand) : null;
-                if (mano != null && mano.name == AgarresArmas.ManoDerechaPJ01 && apuntado.GetComponent<AgarrePistolaPJ01>() == null)
-                {
-                    apuntado.gameObject.AddComponent<AgarrePistolaPJ01>();
-                }
-            }
+            // T-53: el cuerpo vive en VisualPersonaje.ConfigurarComoJugador para que los NPC humanos usen exactamente lo mismo.
+            visual.ConfigurarComoJugador();
         }
 
         public void AlCambiarModelo(Animator nuevo)
@@ -202,7 +173,8 @@ namespace MechaCyberpunk.Personaje.Jugador
                 return;
             }
             animador.SetFloat(IdVelocidad, controlador.Velocidad.magnitude);
-            float conImplante = LlevaImplanteDeLocomocion() ? 1f : 0f;
+            // T-56 (T56): con prótesis el jugador usa los mismos clips que sin ellas; el parámetro se queda en 0.
+            float conImplante = 0f;
             if (conImplante != conImplanteAplicado)
             {
                 animador.SetFloat(IdConImplante, conImplante);
