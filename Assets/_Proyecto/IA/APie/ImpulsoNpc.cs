@@ -162,6 +162,20 @@ namespace MechaCyberpunk.IA.APie
             Destroy(this); // OnDestroy devuelve lo apagado
         }
 
+        // T40: si lo desactivan en pleno vuelo o en el suelo (el peatón se apaga al cambiar de franja del día), no quedaría quien lo levante: se restaura y se quita.
+        private void OnDisable()
+        {
+            if (apagados.Count > 0 || ccApagado != null)
+            {
+                if (visual != null && !murio)
+                {
+                    visual.Caido = false;
+                    visual.SuspenderRaiz(false);
+                }
+                Destroy(this);
+            }
+        }
+
         private void OnDestroy()
         {
             foreach (Behaviour b in apagados)

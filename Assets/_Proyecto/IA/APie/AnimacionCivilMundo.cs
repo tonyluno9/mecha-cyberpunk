@@ -28,6 +28,10 @@ namespace MechaCyberpunk.IA.APie
         private ReglaPosturaCivil postura;
         private Transform cabeza;
         private float proximaRevision;
+        // T40: cuerpo muerto que nadie oculta (el peatón que lo ocultaba ya no corre) se esconde pasado este tiempo, para que no quede un NPC tirado para siempre.
+        private const float SegundosCuerpoMaximo = 20f;
+        private float muertoDesde;
+        private System.Collections.Generic.List<Renderer> ocultos;
 
         /// <summary>True desde que le avisaron su muerte hasta que vuelve a la vida.</summary>
         public bool MuerteAvisada => muerto;
@@ -115,6 +119,7 @@ namespace MechaCyberpunk.IA.APie
         public void AlMorirCivil(Vector3 direccion)
         {
             muerto = true;
+            muertoDesde = Time.time;
             if (Visual != null && accionPlaticaPuesta)
             {
                 EstadosNpcT1560.PonerAccion(Visual.Animador, AccionNpcT1560.Ninguna);
@@ -334,6 +339,7 @@ namespace MechaCyberpunk.IA.APie
         public void AlRevivirCivil()
         {
             muerto = false;
+            MostrarCuerpo();
             RestaurarFrente();
             accionPlaticaPuesta = false;
             postura?.Reiniciar();
@@ -351,7 +357,64 @@ namespace MechaCyberpunk.IA.APie
                 return;
             }
             proximaRevision = Time.time + segundosEntreRevisiones;
+            if (muerto && ocultos == null && Time.time - muertoDesde >= SegundosCuerpoMaximo)
+            {
+                OcultarCuerpo();
+            }
             RevisarPostura(segundosEntreRevisiones);
+        }
+
+        private void OcultarCuerpo()
+        {
+            ocultos = new System.Collections.Generic.List<Renderer>();
+            foreach (Renderer r in GetComponentsInChildren<Renderer>(false))
+            {
+                if (r.enabled)
+                {
+                    r.enabled = false;
+                    ocultos.Add(r);
+                }
+            }
+        }
+
+        private void MostrarCuerpo()
+        {
+            if (ocultos == null)
+            {
+                return;
+            }
+            foreach (Renderer r in ocultos)
+            {
+                if (r != null)
+                {
+                    r.enabled = true;
+                }
+            }
+            ocultos = null;
+        }
+
+        /// <summary>T40: depuración. True si el cuerpo está oculto por llevar muerto más de <see cref="SegundosCuerpoMaximo"/> s.</summary>
+        public bool CuerpoOculto => ocultos != null;
+
+        /// <summary>T40: depuración. Lista los civiles activos que están acostados (cabeza a menos de 0.5 m, o KO, o muertos) y por qué, o "ninguno".</summary>
+        public static string DepurarAcostados()
+        {
+            var sb = new System.Text.StringBuilder();
+            foreach (AnimacionCivilMundo c in FindObjectsByType<AnimacionCivilMundo>(FindObjectsSortMode.None))
+            {
+                VisualPersonaje v = c.Visual;
+                if (v == null)
+                {
+                    continue;
+                }
+                bool impulso = c.GetComponent<ImpulsoNpc>() != null;
+                if (c.muerto || v.Caido || impulso || c.transform.up.y < 0.7f)
+                {
+                    sb.AppendLine(c.name + " en " + c.transform.position.ToString("F1") + ": muerto=" + c.muerto + " Caido=" + v.Caido + " enImpulso=" + impulso
+                        + " ocultoPorTiempo=" + c.CuerpoOculto + " raizDerecha=" + c.transform.up.y.ToString("F2"));
+                }
+            }
+            return sb.Length == 0 ? "ninguno" : sb.ToString();
         }
 
         /// <summary>
@@ -389,6 +452,23 @@ namespace MechaCyberpunk.IA.APie
             Reproductor().Detener();
             v.Caido = false;
             v.Animador.Rebind();
+            ReactivarPaseo();
+        }
+
+        // T40: si una escena del barrio o un impulso lo dejó sin su paseo (PeatonMundo apagado) y se quedó tirado, al levantarlo vuelve a caminar.
+        private void ReactivarPaseo()
+        {
+            if (GetComponent<ImpulsoNpc>() != null)
+            {
+                return;
+            }
+            foreach (MonoBehaviour m in GetComponents<MonoBehaviour>())
+            {
+                if (m != null && !m.enabled && m.GetType().Name == "PeatonMundo")
+                {
+                    m.enabled = true;
+                }
+            }
         }
 
         private Vector3 Plano(Vector3 direccion)
