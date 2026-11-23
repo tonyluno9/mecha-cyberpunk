@@ -45,3 +45,5 @@ Sonnet sin límite hasta el 26-nov: subagentes Opus. Ramas de A (B usa T-165x): 
 T-1682 banquetas y charco (T38+E3), T-1683 menos carros (T45), T-1684 torre Nova y letreros (T47), T-1685 siempre noche (T36, wt23A/T1605-realismo).
 Escenas: los subagentes trabajan de uno en uno en la carpeta principal (Unity batch); T36 es solo código, en paralelo.
 - Paso 0: HECHO (merge 9032f76, rama tony/blender-22nov-d).
+- T37: HECHA, merge c62636d (marcada 96e271a). Pendiente: panel blanco de la captura 05 no encontrado en la escena; cascarones de cubo con textura (Bar, Clandestino, Mercado Negro, casa, CIC, taller) anotados en assets-faltan.
+- T36: código en tony/T-1685-siempre-noche (4338dc2), falta compilar e integrar (lo hace el subagente de T35 al empezar).
