@@ -273,6 +273,10 @@ namespace MechaCyberpunk.Personaje.Movimiento
                 return false;
             }
             float altura = cara.point.y - pos.y;
+            if (!PermitidaPorAltura(cara.point.y, "barda"))
+            {
+                return false;
+            }
             if (ReglaParkour.Clasificar(altura, parkour.AlturaMinimaBarda, parkour.AlturaMaximaBarda, config.AlturaMaximaAgarre) != AccionParkour.SaltarBarda)
             {
                 return false;
@@ -499,6 +503,10 @@ namespace MechaCyberpunk.Personaje.Movimiento
             }
 
             float alturaBorde = cara.point.y - pos.y;
+            if (!PermitidaPorAltura(cara.point.y, "agarre"))
+            {
+                return false;
+            }
             Vector3 final = new Vector3(sonda.x, cara.point.y + margen, sonda.z);
             Vector3 intermedio = new Vector3(pos.x, final.y, pos.z);
             bool hayEspacio = CapsulaLibre(final, radio) && CapsulaLibre(intermedio, radio);
@@ -571,6 +579,42 @@ namespace MechaCyberpunk.Personaje.Movimiento
                 }
             }
             return hay;
+        }
+
+        // ---------- Sin techos (T-1663) ----------
+
+        private string ultimoIntento = "Sin intentos todavía.";
+
+        /// <summary>T-1663 (depuración): dice si el último intento de trepar se permitió y por qué.</summary>
+        public string DepurarTrepar()
+        {
+            return ultimoIntento;
+        }
+
+        /// <summary>Piso de la calle bajo los pies: el punto más bajo con superficie plana en el alcance de búsqueda.</summary>
+        private float PisoCalleY()
+        {
+            Vector3 pos = transform.position;
+            int n = Physics.RaycastNonAlloc(pos + Vector3.up * AlturaRayoPiso, Vector3.down, golpes, AlturaRayoPiso + config.AlcanceBusquedaCalle, ~0, QueryTriggerInteraction.Ignore);
+            float y = pos.y;
+            for (int i = 0; i < n; i++)
+            {
+                if (golpes[i].transform.root != transform.root && golpes[i].normal.y >= config.NormalMinimaSuelo && golpes[i].point.y < y)
+                {
+                    y = golpes[i].point.y;
+                }
+            }
+            return y;
+        }
+
+        private bool PermitidaPorAltura(float alturaCaraY, string tipo)
+        {
+            float calle = PisoCalleY();
+            float sobreCalle = alturaCaraY - calle;
+            MotivoTrepar motivo = ReglaAlturaTrepar.Evaluar(sobreCalle, config.AlturaMaximaSobreCalle);
+            ultimoIntento = (motivo == MotivoTrepar.Permitido ? "Permitido" : "NEGADO (techo/demasiado alto)") + ": " + tipo + " a "
+                + sobreCalle.ToString("F2") + " m sobre la calle (max " + config.AlturaMaximaSobreCalle.ToString("F2") + " m, calle y=" + calle.ToString("F2") + ").";
+            return motivo == MotivoTrepar.Permitido;
         }
 
         // ---------- Colgarse (T-1628) ----------
