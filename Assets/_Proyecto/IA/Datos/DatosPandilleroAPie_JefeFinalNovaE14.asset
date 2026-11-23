@@ -50,8 +50,8 @@ MonoBehaviour:
   calorAlVencer: 15
   radioTerritorio: 35
   margenPersecucion: 10
-  segundosReaparicion: 40
-  distanciaReaparicion: 30
+  segundosReaparicion: 60
+  distanciaReaparicion: 80
   siempre: 1
   fraccionDeDia: 0.34
   radioPatrulla: 6

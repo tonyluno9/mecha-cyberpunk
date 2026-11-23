@@ -293,10 +293,28 @@ namespace MechaCyberpunk.IA.APie
         /// <summary>Lo llama <see cref="JefePandilla"/> en su Awake.</summary>
         public void MarcarComoJefe() => esJefe = true;
 
-        // ---- IMarcaMapa (T-409): sale en el minimapa mientras está activo y en pie ----
-        TipoMarcaMapa IMarcaMapa.Tipo => esJefe ? TipoMarcaMapa.Jefe : TipoMarcaMapa.Enemigo;
+        // ---- IMarcaMapa (T-409, T-1706): jefe, policía (azul), Nova (violeta) o enemigo (rojo). Sale si está en pie y es de misión (siempre) o está a menos de 60 m y en pelea (la policía, siempre que esté cerca) ----
+        TipoMarcaMapa IMarcaMapa.Tipo => esJefe ? TipoMarcaMapa.Jefe : datos != null && datos.EsPolicia ? TipoMarcaMapa.Policia : EsDeNova ? TipoMarcaMapa.Nova : TipoMarcaMapa.Enemigo;
         Vector3 IMarcaMapa.Posicion => transform.position;
-        bool IMarcaMapa.Visible => isActiveAndEnabled && !EstaKO;
+        bool IMarcaMapa.Visible => isActiveAndEnabled && !EstaKO && ReglaMarcaEnemigo.Sale(DeMision, EnPeleaParaMapa, DistanciaAlJugador);
+
+        /// <summary>T-1706: true si es de Nova (su pandilla o su modelo con sonidos de Nova).</summary>
+        public bool EsDeNova => pandillaPropia == IdPandilla.Nova || (Grupo != null && Grupo.Pandilla == IdPandilla.Nova) || sonidoNova != null;
+
+        /// <summary>T-1706: de una misión (su grupo está en modo misión o de guion) o jefe: sale siempre en el mapa.</summary>
+        public bool DeMision => esJefe || (Grupo != null && (Grupo.ModoMision || Grupo.EsDeGuion));
+
+        private bool EnPeleaParaMapa => (datos != null && datos.EsPolicia) || EsHostil || Alerta || ObjetivoActual != null;
+
+        private float DistanciaAlJugador
+        {
+            get
+            {
+                IJugador jugador = Registro<IJugador>.Actual;
+                return jugador != null && jugador.Raiz != null ? Vector3.Distance(jugador.Raiz.position, transform.position) : float.MaxValue;
+            }
+        }
+
         public float Actual => modelo != null ? modelo.Actual : 0f;
         public float Maxima => modelo != null ? modelo.Maxima : 0f;
         public bool EstaKO => modelo != null && modelo.EstaKO;
@@ -534,6 +552,24 @@ namespace MechaCyberpunk.IA.APie
             turnos = turnosPandilla;
         }
 
+        /// <summary>T-1701: lo pone en <paramref name="punto"/> (su nuevo hogar) sin tocar su vida ni su estado. Para reubicar al que quedó inalcanzable.</summary>
+        public void Reubicar(Vector3 punto)
+        {
+            hogar = punto;
+            tieneHogar = true;
+            velocidadVertical = 0f;
+            if (controlador != null)
+            {
+                controlador.enabled = false;
+                transform.position = punto;
+                controlador.enabled = true;
+            }
+            else
+            {
+                transform.position = punto;
+            }
+        }
+
         /// <summary>Vuelve a su punto con la vida llena, listo para esperar. El objeto debe estar activo.</summary>
         public void Reaparecer()
         {
@@ -676,7 +712,8 @@ namespace MechaCyberpunk.IA.APie
             }
             if (modelo.EstaKO)
             {
-                if (desaparicion >= 0f && Time.time >= desaparicion)
+                // T-1703 (T71): se quita pasado el tiempo de los datos, pero solo fuera de la vista de la cámara (máximo 120 s a la vista).
+                if (desaparicion >= 0f && ReglaLimpiezaCuerpo.Debe(Time.time - (desaparicion - datos.SegundosParaDesaparecer), datos.SegundosParaDesaparecer, ReglaLimpiezaCuerpo.FueraDeVista(transform.position)))
                 {
                     desaparicion = -1f;
                     gameObject.SetActive(false);

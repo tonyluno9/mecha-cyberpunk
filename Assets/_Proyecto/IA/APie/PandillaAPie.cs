@@ -121,7 +121,32 @@ namespace MechaCyberpunk.IA.APie
         public int Vencidos => vencidos.Count;
 
         /// <summary>T-713: True si en modo misión ya cayeron todos los del grupo.</summary>
-        public bool TodosVencidos => pandilleros != null && pandilleros.Length > 0 && vencidos.Count >= pandilleros.Length;
+        public bool TodosVencidos
+        {
+            get
+            {
+                if (pandilleros == null || pandilleros.Length == 0)
+                {
+                    return false;
+                }
+                // T-1701 (T66): cuenta solo a los vivos y activos: el que ya cayó, ya no existe o nunca llegó a aparecer no bloquea la misión.
+                bool enMarcha = isActiveAndEnabled && Time.time - activoDesde >= SegundosParaAparecer;
+                foreach (PandilleroAPie p in pandilleros)
+                {
+                    if (!ReglaMisionPandillero.NoBloquea(p != null, p != null && vencidos.Contains(p), p != null && p.EstaKO, p != null && p.gameObject.activeSelf, enMarcha))
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        }
+
+        private const float SegundosParaAparecer = 3f;
+        private float activoDesde = float.MaxValue;
+        private float[] fueraDesde;
+        private Vector3[] posicionVentana;
+        private float[] inicioVentana;
 
         private readonly System.Collections.Generic.HashSet<PandilleroAPie> vencidos = new System.Collections.Generic.HashSet<PandilleroAPie>();
 
@@ -219,7 +244,12 @@ namespace MechaCyberpunk.IA.APie
             }
             EventosLugares.JugadorEntro += AlEntrarLugar;
             EventosLugares.JugadorSalio += AlSalirLugar;
-            if (datos.Siempre)
+            activoDesde = Time.time;
+            if (ModoMision)
+            {
+                Aparecer(pandilleros.Length); // T-1701: un grupo de misión sale entero aunque no haya reloj ni sea de noche
+            }
+            else if (datos.Siempre)
             {
                 // T-447: aunque esté siempre, de día quedan menos (según el reloj, si lo hay) y de noche salen todos.
                 Aparecer(CuantosAhora(Registro<IRelojMundo>.Actual));
@@ -398,8 +428,96 @@ namespace MechaCyberpunk.IA.APie
             return territorio != null && territorio.Dueno(territorio.ZonaEn(centro)) == IdPandilla.Jugador;
         }
 
+        // T-1701 (T66): en una misión, el pandillero bajo el mapa, fuera de su zona o atorado más de 20 s se reubica en la calle, cerca del jugador y a la vista.
+        private void ReubicarInalcanzables()
+        {
+            IJugador jugador = Registro<IJugador>.Actual;
+            if (jugador == null || jugador.Raiz == null)
+            {
+                return;
+            }
+            Vector3 posJugador = jugador.Raiz.position;
+            Vector3 aZona = posJugador - centro;
+            aZona.y = 0f;
+            if (aZona.sqrMagnitude > ReglaMisionPandillero.JugadorLejosDeLaZona * ReglaMisionPandillero.JugadorLejosDeLaZona)
+            {
+                return;
+            }
+            if (fueraDesde == null || fueraDesde.Length != pandilleros.Length)
+            {
+                fueraDesde = new float[pandilleros.Length];
+                inicioVentana = new float[pandilleros.Length];
+                posicionVentana = new Vector3[pandilleros.Length];
+                for (int i = 0; i < pandilleros.Length; i++)
+                {
+                    fueraDesde[i] = -1f;
+                    inicioVentana[i] = -1f;
+                }
+            }
+            for (int i = 0; i < pandilleros.Length; i++)
+            {
+                PandilleroAPie p = pandilleros[i];
+                if (p == null || !p.gameObject.activeSelf || p.EstaKO || vencidos.Contains(p))
+                {
+                    fueraDesde[i] = -1f;
+                    inicioVentana[i] = -1f;
+                    continue;
+                }
+                Vector3 pos = p.transform.position;
+                // Bajo el mapa o fuera de su zona: cuenta desde que empezó.
+                if (ReglaMisionPandillero.FueraDeLugar(pos, centro, datos.RadioTerritorio))
+                {
+                    if (fueraDesde[i] < 0f)
+                    {
+                        fueraDesde[i] = Time.time;
+                    }
+                }
+                else
+                {
+                    fueraDesde[i] = -1f;
+                }
+                // Atorado: casi sin moverse durante toda la ventana de 20 s y lejos del jugador.
+                bool atorado = false;
+                if (inicioVentana[i] < 0f)
+                {
+                    inicioVentana[i] = Time.time;
+                    posicionVentana[i] = pos;
+                }
+                else if (Time.time - inicioVentana[i] >= ReglaMisionPandillero.SegundosParaReubicar)
+                {
+                    atorado = ReglaMisionPandillero.Atorado(pos, posicionVentana[i], posJugador);
+                    inicioVentana[i] = Time.time;
+                    posicionVentana[i] = pos;
+                }
+                if (atorado || (fueraDesde[i] >= 0f && Time.time - fueraDesde[i] >= ReglaMisionPandillero.SegundosParaReubicar))
+                {
+                    Reubicar(p, posJugador, jugador.Raiz.forward);
+                    fueraDesde[i] = -1f;
+                    inicioVentana[i] = -1f;
+                }
+            }
+        }
+
+        private static void Reubicar(PandilleroAPie p, Vector3 posJugador, Vector3 adelante)
+        {
+            for (int intento = 0; intento < 8; intento++)
+            {
+                Vector3 c = ReglaMisionPandillero.Candidato(posJugador, adelante, intento);
+                if (Physics.Raycast(c + Vector3.up * 3f, Vector3.down, out RaycastHit golpe, 8f, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
+                {
+                    p.Reubicar(golpe.point + Vector3.up * 0.05f);
+                    return;
+                }
+            }
+            p.Reubicar(posJugador + Vector3.up * 0.1f);
+        }
+
         private void Update()
         {
+            if (ModoMision)
+            {
+                ReubicarInalcanzables();
+            }
             Confrontacion?.Avanzar(Time.deltaTime, pandilleros);
             if (datos.UsaPistola)
             {
@@ -500,7 +618,7 @@ namespace MechaCyberpunk.IA.APie
         private void Aparecer(int cuantos)
         {
             // T-1495: tope de pandilleros vivos por punto y por zona (las misiones piden un número fijo y quedan fuera).
-            int cupo = ModoMision ? int.MaxValue : ReglaTopePandilleros.Cupo(Presentes, VivosCerca(centro));
+            int cupo = ModoMision ? int.MaxValue : idPandilla == IdPandilla.Nova ? ReglaTopePandilleros.CupoNova(Presentes, VivosCerca(centro)) : ReglaTopePandilleros.Cupo(Presentes, VivosCerca(centro));
             for (int i = 0; i < pandilleros.Length && i < cuantos; i++)
             {
                 PandilleroAPie p = pandilleros[i];

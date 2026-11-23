@@ -3,14 +3,16 @@ using UnityEngine;
 namespace MechaCyberpunk.Personaje.Combate
 {
     /// <summary>
-    /// Daño por zona de las balas del jugador (T-677). La cabeza hace <see cref="MultiplicadorCabeza"/> veces el daño del cuerpo.
+    /// Daño por zona de las balas del jugador (T-677). La cabeza hace <see cref="MultiplicadorCabeza"/> veces (x2; el francotirador x4, T-1707) el daño del cuerpo.
     /// Cuenta como cabeza un impacto a menos de <see cref="RadioCabeza"/> del hueso de la cabeza (si el personaje tiene rig humanoide) o, si no,
     /// en el <see cref="FraccionCabeza"/> de arriba de su collider. Vale para enemigos, aliados, civiles y cualquier otro IRecibeDanio que no sea un objeto.
     /// </summary>
     public static class ReglaZonaDanio
     {
         /// <summary>Daño de la cabeza contra el del cuerpo (x).</summary>
-        public const float MultiplicadorCabeza = 3f;
+        public const float MultiplicadorCabeza = 2f;
+        /// <summary>T-1707 (T73): la cabeza con el francotirador hace x4 (mata de un tiro a pandilleros y policías).</summary>
+        public const float MultiplicadorCabezaSniper = 4f;
         /// <summary>Fracción de arriba del collider que cuenta como cabeza (0.15 = el 15 % superior).</summary>
         public const float FraccionCabeza = 0.15f;
         /// <summary>Distancia al hueso de la cabeza (m) que cuenta como cabeza.</summary>
@@ -36,6 +38,9 @@ namespace MechaCyberpunk.Personaje.Combate
 
         /// <summary>Multiplicador de daño: <see cref="MultiplicadorCabeza"/> si es cabeza, 1 si es cuerpo.</summary>
         public static float Multiplicador(bool cabeza) => cabeza ? MultiplicadorCabeza : 1f;
+
+        /// <summary>T-1707: multiplicador según el arma. Cabeza: x4 con el francotirador, x2 con las demás; cuerpo: 1.</summary>
+        public static float Multiplicador(bool cabeza, ArmaAPie arma) => !cabeza ? 1f : arma == ArmaAPie.Sniper ? MultiplicadorCabezaSniper : MultiplicadorCabeza;
 
         /// <summary>Decide si el impacto sobre este collider es a la cabeza: cerca del hueso de la cabeza (Animator humanoide) o en el 15 % de arriba del collider.</summary>
         public static bool EsCabeza(Collider collider, Vector3 impacto)

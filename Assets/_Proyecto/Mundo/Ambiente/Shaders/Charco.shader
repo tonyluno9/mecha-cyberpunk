@@ -62,6 +62,10 @@ Shader "MechaCyberpunk/Mundo/Charco"
                 half _ReflejoBorde;
             CBUFFER_END
 
+            // T-1704: topes para que el charco no se vea blanco.
+            #define TopeReflejo 0.55
+            #define TopeFresnel 0.8
+
             struct Entrada
             {
                 float4 posicion : POSITION;
@@ -128,8 +132,14 @@ Shader "MechaCyberpunk/Mundo/Charco"
                 half3 reflejado = reflect(-vista, normalize(half3(ondas.x * 6.0, 1.0, ondas.y * 6.0)));
                 half4 cubo = SAMPLE_TEXTURECUBE_LOD(unity_SpecCube0, samplerunity_SpecCube0, reflejado, 3.0);
                 half3 entorno = cubo.rgb * (unity_SpecCube0_HDR.x * pow(abs(cubo.a), unity_SpecCube0_HDR.y));
-                half3 reflejo = lerp(entorno * 0.8, SAMPLE_TEXTURE2D(_ReflejoCharcosTex, sampler_ReflejoCharcosTex, uv).rgb, _ReflejoCharcosHay);
-                half fresnel = lerp(_FresnelMin, 1.0, pow(1.0 - saturate(vista.y), _FresnelPotencia));
+                // T-1704 (T70): un charco nunca sale claro ni blanco plano. Si el UV del reflejo plano cae fuera de la textura (o el punto queda detrás de la cámara del
+                // reflejo) no se usa ese muestreo: se usa la sonda, ya oscurecida. Todo reflejo se limita a un tope bajo y el fresnel a un máximo, así el charco queda
+                // siempre más oscuro que una banqueta mojada clara.
+                half valido = step(0.0, c.w) * step(0.02, uv.x) * step(uv.x, 0.98) * step(0.02, uv.y) * step(uv.y, 0.98) * _ReflejoCharcosHay;
+                half3 planar = SAMPLE_TEXTURE2D(_ReflejoCharcosTex, sampler_ReflejoCharcosTex, saturate(uv)).rgb;
+                half3 reflejo = lerp(min(entorno, half3(2.0, 2.0, 2.0)) * 0.35, planar, valido);
+                reflejo = min(reflejo, half3(TopeReflejo, TopeReflejo, TopeReflejo));
+                half fresnel = min(lerp(_FresnelMin, 1.0, pow(1.0 - saturate(vista.y), _FresnelPotencia)), TopeFresnel);
                 half3 charco = lerp(_ColorFondo.rgb, reflejo * _Intensidad, fresnel);
                 half3 borde = _ColorBorde.rgb + reflejo * _Intensidad * fresnel * _ReflejoBorde;
                 half3 color = lerp(borde, charco, saturate(forma * 2.0));
