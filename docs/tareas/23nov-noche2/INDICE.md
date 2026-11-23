@@ -10,7 +10,7 @@ Le gustó (NO se toca): comprar y mejorar armas con Tino en la misma tienda; los
 | T83 | [Candados del inicio: dejar usar los carros camino al Doc](T83.md) | B | HECHA |
 | T84 | [Tienda de Tino: tutorial guiado con un solo botón resaltado; arreglar el botón SALIR](T84.md) | B | HECHA |
 | T85 | [Campo de tiro: cubo holográfico, barrera en línea, maniquíes bien parados y terminal con E](T85.md) | B | pendiente |
-| T86 | [Quitar los números de daño: solo barras de vida](T86.md) | B | pendiente |
+| T86 | [Quitar los números de daño: solo barras de vida](T86.md) | B | HECHA |
 
 # EN ESPERA
 - E8. Asset del MURO ROTO (la ranura del paso 5 de la historia), parecido a la foto del juego: pedir al chat de arte con una captura del muro como referencia, pasar por Tripo y ponerlo en la ranura.

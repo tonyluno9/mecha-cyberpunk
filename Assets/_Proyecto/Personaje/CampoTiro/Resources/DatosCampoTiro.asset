@@ -22,3 +22,10 @@ MonoBehaviour:
   visualGuardia: {fileID: 4048966988714943168, guid: b49d04f70cb2433439a0b9f5ce51ed3c, type: 3}
   materialBlanco: {fileID: 2100000, guid: 9902063d810f22c45bf89c8e141963ce, type: 2}
   materialTurquesa: {fileID: 2100000, guid: a7e10202ff4ee364f98c70b604d05681, type: 2}
+  materialRejilla: {fileID: 2100000, guid: b49771d647677794f8b02ed864f3ad65, type: 2}
+  materialHolo: {fileID: 2100000, guid: bae6e98e6ab5509459111d802feeab8c, type: 2}
+  controlCentinela: {fileID: 9100000, guid: 931e8e834f19d4e47ad46c5ec0c976e3, type: 2}
+  controlRobotPesado: {fileID: 9100000, guid: ef91cd6af12436c42a6d0f210d645f5f, type: 2}
+  controlPerro: {fileID: 9100000, guid: fa4f75621d9e93f41b769a6dba31a900, type: 2}
+  controlElite: {fileID: 9100000, guid: 64172a202e7d9c049a1f38c635a3d019, type: 2}
+  controlGuardia: {fileID: 9100000, guid: b768c9a08d177704b8b9c8d14caf0187, type: 2}
