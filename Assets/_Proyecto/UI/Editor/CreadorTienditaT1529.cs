@@ -86,7 +86,7 @@ namespace MechaCyberpunk.UI.Editor
             EditorUtility.SetDirty(tienda);
 
             var so = new SerializedObject(datos);
-            so.FindProperty("maquinasVenden").boolValue = false;
+            so.FindProperty("maquinasVenden").boolValue = true; // T-1662 (T44): las máquinas vuelven a vender (el paso del hambre de la historia)
             so.FindProperty("tiendita").objectReferenceValue = edificio;
             so.FindProperty("mostrador").objectReferenceValue = mostrador;
             so.FindProperty("tendero").objectReferenceValue = tendero;

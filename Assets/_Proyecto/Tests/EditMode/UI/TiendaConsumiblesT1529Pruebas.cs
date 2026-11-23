@@ -97,7 +97,7 @@ namespace MechaCyberpunk.Tests
         {
             var datos = AssetDatabase.LoadAssetAtPath<DatosExpendedoras>("Assets/_Proyecto/UI/Datos/Resources/DatosExpendedoras_Ciudad.asset");
             Assert.IsNotNull(datos);
-            Assert.IsFalse(datos.MaquinasVenden, "Las máquinas ya no venden consumibles (CreadorTienditaT1529.Aplicar)");
+            Assert.IsTrue(datos.MaquinasVenden, "Las máquinas venden otra vez (ActivarMaquinasT1662.Aplicar)");
             Assert.IsNotNull(datos.Tiendita, "Edificio ED02");
             Assert.IsNotNull(datos.Mostrador, "Mostrador");
             Assert.IsNotNull(datos.Tendero, "Tendero");

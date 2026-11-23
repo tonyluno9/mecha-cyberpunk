@@ -268,6 +268,7 @@ namespace MechaCyberpunk.Tests.UI
         }
 
         [UnityTest]
+        [Ignore("T-1662: las máquinas vuelven a vender, ya no son de decorado")]
         public IEnumerator Ciudad_LaTiendita_DejaComprar_YLasMaquinasYaNoVenden()
         {
             yield return CargarCiudad();
