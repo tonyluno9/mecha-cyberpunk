@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfd0a89241618ed48b72ccedfc134cf7, type: 3}
   m_Name: ConfigPeatones_Trafico
   m_EditorClassIdentifier: MechaCyberpunk.Trafico::MechaCyberpunk.Trafico.Datos.ConfigPeatones
-  velocidad: 1.4
+  velocidad: 1.62
   esperaMinima: 1
   esperaMaxima: 5
   peatonesDeDia: 14
@@ -22,7 +22,7 @@ MonoBehaviour:
   recorteCierres: 15
   radioOirDisparo: 45
   segundosHuida: 6
-  multiplicadorHuida: 2.6
+  multiplicadorHuida: 2.8
   vidaPeaton: 40
   probabilidadRevancha: 0.3
   alcanceRevancha: 1.5

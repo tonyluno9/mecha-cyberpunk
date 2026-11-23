@@ -8,7 +8,7 @@ namespace MechaCyberpunk.Trafico.Datos
     public class ConfigPeatones : ScriptableObject
     {
         [Min(0.1f)] [Tooltip("Velocidad al caminar (m/s).")]
-        [SerializeField] private float velocidad = 1.4f;
+        [SerializeField] private float velocidad = 1.62f;
         [Min(0f)] [Tooltip("Espera mínima en una esquina (s).")]
         [SerializeField] private float esperaMinima = 1f;
         [Min(0f)] [Tooltip("Espera máxima en una esquina (s).")]
@@ -31,7 +31,7 @@ namespace MechaCyberpunk.Trafico.Datos
         [Min(0.5f)] [Tooltip("Cuánto tiempo corre un peatón después de oír un disparo (s).")]
         [SerializeField] private float segundosHuida = 6f;
         [Min(1f)] [Tooltip("Cuántas veces su velocidad normal corre al huir (multiplicador).")]
-        [SerializeField] private float multiplicadorHuida = 2.6f;
+        [SerializeField] private float multiplicadorHuida = 2.8f;
 
         [Header("Vida y llamada (T-663)")]
         [Min(1f)] [Tooltip("Vida de un peatón (puntos); a 0 cae y ya no llama a la policía.")]

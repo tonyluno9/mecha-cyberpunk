@@ -33,10 +33,9 @@ namespace MechaCyberpunk.Progresion.Recorrido
         private const float GradosGiroPorSegundo = 360f;
 
         // T-1656: las rapideces salen del clip de caminar de PJ01 (1.293 m/s): el visual escala el Animator contra esa medida y los pies no patinan.
-        private const float FactorSalir = 1.7f;       // ~2.2 m/s: sigue siendo "Caminar" sin verse apresurado (tope del visual: 2.2x)
-        private const float FactorVenir = 1.7f;
-        private const float RapidezCorrer = 5.5f;     // pasa al estado Correr (umbral 5.5) con el clip de correr
-        private const float RapidezAlcanzar = 6.2f;   // si el jugador está lejos, vienen corriendo
+        // T-82: caminan y corren a la velocidad de los clips del jugador (PJ01_Caminar 1.62 m/s, PJ01_Trote 4.53 m/s), sin deslizarse.
+        private const float FactorSalir = 1f;
+        private const float FactorVenir = 1f;
         private const float DistanciaAlcanzar = 7f;
         private const float DistanciaPlantarse = 3.2f;
         private const float DistanciaContacto = 0.8f;
@@ -333,7 +332,7 @@ namespace MechaCyberpunk.Progresion.Recorrido
                         continue;
                     }
                     Vector3 haciaJugador = Plano(jugador.position - p.transform.position);
-                    float rapidez = haciaJugador.magnitude > DistanciaAlcanzar ? RapidezAlcanzar : Rapidez(p, FactorVenir);
+                    float rapidez = haciaJugador.magnitude > DistanciaAlcanzar ? RapidezTrote(p) : Rapidez(p, FactorVenir);
                     Vector3 lado = haciaJugador.sqrMagnitude > 0.0001f ? Vector3.Cross(Vector3.up, haciaJugador.normalized) : Vector3.zero;
                     Avanzar(p, jugador.position + lado * (i == 0 ? 0f : 1.1f), rapidez, 0.1f);
                 }
@@ -430,11 +429,11 @@ namespace MechaCyberpunk.Progresion.Recorrido
                     {
                         Vector3 lejos = Plano(p.transform.position - jugador.position).normalized;
                         p.MirarHacia(lejos, GradosGiroPorSegundo);
-                        p.MoverPlano(lejos * RapidezCorrer);
+                        p.MoverPlano(lejos * RapidezTrote(p));
                     }
                     else
                     {
-                        Avanzar(p, puntoSalida, RapidezCorrer, 0.5f);
+                        Avanzar(p, puntoSalida, RapidezTrote(p), 0.5f);
                     }
                 }
                 yield return null;
@@ -470,7 +469,13 @@ namespace MechaCyberpunk.Progresion.Recorrido
         private static float Rapidez(PandilleroAPie p, float factor)
         {
             float escala = p != null && p.Visual != null ? p.Visual.EscalaClips : 1f;
-            return ReglasAnimacion.VelocidadClipCaminarSinImplante * escala * factor;
+            return ReglasAnimacion.VelocidadPJ01Caminar * escala * factor;
+        }
+
+        private static float RapidezTrote(PandilleroAPie p)
+        {
+            float escala = p != null && p.Visual != null ? p.Visual.EscalaClips : 1f;
+            return ReglasAnimacion.VelocidadPJ01Trote * escala;
         }
 
         // Dónde espera cada SKULL: el punto de espera, uno a cada lado (a lo ancho de la mirada hacia el jugador).

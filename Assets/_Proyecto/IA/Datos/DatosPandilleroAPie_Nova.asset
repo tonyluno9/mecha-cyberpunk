@@ -17,7 +17,7 @@ MonoBehaviour:
   danioGolpe: 30
   preparacionGolpe: 0.35
   recargaGolpe: 0.85
-  velocidad: 4.5
+  velocidad: 4.53
   velocidadGiro: 540
   radioDeteccion: 10
   correa: 25
@@ -34,6 +34,7 @@ MonoBehaviour:
   esPolicia: 0
   calorAlGolpear: 8
   calorAlMatar: 30
+  provocaAntesDeAtacar: 0
   tamanoPandilla: 3
   maxAtacando: 2
   radioFormacion: 2.5

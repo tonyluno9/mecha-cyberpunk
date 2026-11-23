@@ -69,7 +69,7 @@ namespace MechaCyberpunk.IA.Datos
         [Tooltip("Cuánto tarda en levantarse antes de correr (s).")]
         [Min(0.1f)] [SerializeField] private float segundosLevantarse = 0.7f;
         [Tooltip("Velocidad al huir (m/s).")]
-        [Min(0.5f)] [SerializeField] private float velocidadHuida = 5.5f;
+        [Min(0.5f)] [SerializeField] private float velocidadHuida = 4.53f;
         [Tooltip("Cuánto corre antes de desaparecer (m).")]
         [Min(1f)] [SerializeField] private float distanciaHuida = 25f;
         [Tooltip("Distancia del rayo que busca paredes al correr (m).")]

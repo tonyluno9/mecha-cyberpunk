@@ -1983,10 +1983,10 @@ namespace MechaCyberpunk.IA.APie
                 && (vidaJugador == null || !vidaJugador.EstaKO);
         }
 
-        /// <summary>T-1303: el policía corre a lo más a esto (m/s): el clip de correr va a 3.19 m/s; más rápido se ve flotando.</summary>
-        public const float VelocidadCorrerPolicia = 3.6f;
-        /// <summary>T-1303: caminando mientras dispara (el clip de caminar va a ~1.3-1.6 m/s).</summary>
-        public const float VelocidadCaminarPolicia = 1.4f;
+        /// <summary>T-1303 / T-82: el policía corre a lo más a esto (m/s): el trote del jugador, PJ01_Trote (4.53); más rápido se ve flotando.</summary>
+        public const float VelocidadCorrerPolicia = 4.53f;
+        /// <summary>T-1303 / T-82: caminando mientras dispara: PJ01_Caminar del jugador (1.62 m/s).</summary>
+        public const float VelocidadCaminarPolicia = 1.62f;
         /// <summary>T-1303: a esta distancia (m, en el plano) el policía ya te tocó: se detiene (el arresto lo cuenta Trafico).</summary>
         public const float DistanciaTocarPolicia = 0.9f;
 

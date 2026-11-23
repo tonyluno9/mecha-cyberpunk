@@ -19,7 +19,7 @@ namespace MechaCyberpunk.Trafico.Peatones
         public const float AlturaAsientoBanca = 0.41f;
         /// <summary>Radio con el que oyen una muerte (m), como PeatonMundo.RadioVerMuerte.</summary>
         public const float RadioMuerte = 15f;
-        public const float VelocidadHuida = 4.2f;
+        public const float VelocidadHuida = 4.53f;
         public const float SegundosHuida = 8f;
         public const float GradosMirarseEnBanca = 25f;
         private const int MuestrasMedicion = 6;

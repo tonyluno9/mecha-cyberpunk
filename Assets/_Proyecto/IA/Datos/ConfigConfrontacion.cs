@@ -39,7 +39,7 @@ namespace MechaCyberpunk.IA.Datos
         [Tooltip("El que se acerca llega hasta esta distancia y empieza a empujar (m).")]
         [Min(0.5f)] [SerializeField] private float distanciaAcercamiento = 2.2f;
         [Tooltip("Velocidad con la que el que se acerca camina hacia ti (m/s).")]
-        [Min(0.1f)] [SerializeField] private float velocidadCaminar = 1.2f;
+        [Min(0.1f)] [SerializeField] private float velocidadCaminar = 1.62f;
 
         [Header("Frases y gestos (los guardias aún usan las frases; los de calle ya no hablan al confrontar)")]
         [Tooltip("Una frase cada tanto, una sola voz a la vez en el grupo (s).")]
