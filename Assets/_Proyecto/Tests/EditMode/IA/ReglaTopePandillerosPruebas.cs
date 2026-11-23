@@ -42,5 +42,15 @@ namespace MechaCyberpunk.Tests
             Assert.LessOrEqual(ReglaTopePandilleros.PorPunto, ReglaTopePandilleros.EnZona);
             Assert.AreEqual(40f, ReglaTopePandilleros.RadioZona);
         }
+
+        // T-1702 (T72): la refinería (Nova) no pasa de 4 vivos.
+        [Test]
+        public void CupoNova_ZonaVacia_Es4_Y_ConLaZonaLlenaEsCero()
+        {
+            Assert.AreEqual(4, ReglaTopePandilleros.CupoNova(0, 0));
+            Assert.AreEqual(0, ReglaTopePandilleros.CupoNova(0, 4));
+            Assert.AreEqual(0, ReglaTopePandilleros.CupoNova(4, 4));
+            Assert.AreEqual(1, ReglaTopePandilleros.CupoNova(2, 3));
+        }
     }
 }

@@ -500,7 +500,7 @@ namespace MechaCyberpunk.IA.APie
         private void Aparecer(int cuantos)
         {
             // T-1495: tope de pandilleros vivos por punto y por zona (las misiones piden un número fijo y quedan fuera).
-            int cupo = ModoMision ? int.MaxValue : ReglaTopePandilleros.Cupo(Presentes, VivosCerca(centro));
+            int cupo = ModoMision ? int.MaxValue : idPandilla == IdPandilla.Nova ? ReglaTopePandilleros.CupoNova(Presentes, VivosCerca(centro)) : ReglaTopePandilleros.Cupo(Presentes, VivosCerca(centro));
             for (int i = 0; i < pandilleros.Length && i < cuantos; i++)
             {
                 PandilleroAPie p = pandilleros[i];
