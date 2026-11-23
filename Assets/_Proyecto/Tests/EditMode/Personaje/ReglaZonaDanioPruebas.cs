@@ -4,13 +4,13 @@ using UnityEngine;
 
 namespace MechaCyberpunk.Tests.Personaje
 {
-    /// <summary>T-677: daño por zona. La cabeza (hueso o el 15 % de arriba del collider) hace x3.</summary>
+    /// <summary>T-677: daño por zona. La cabeza (hueso o el 15 % de arriba del collider) hace x2 (x4 con el francotirador, T-1707).</summary>
     public class ReglaZonaDanioPruebas
     {
         [Test]
-        public void MultiplicadorCabeza_EsTres_YCuerpoUno()
+        public void MultiplicadorCabeza_EsDos_YCuerpoUno()
         {
-            Assert.AreEqual(3f, ReglaZonaDanio.Multiplicador(true));
+            Assert.AreEqual(2f, ReglaZonaDanio.Multiplicador(true));
             Assert.AreEqual(1f, ReglaZonaDanio.Multiplicador(false));
         }
 

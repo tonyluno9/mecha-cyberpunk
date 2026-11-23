@@ -724,11 +724,11 @@ namespace MechaCyberpunk.Personaje.Combate
             IRecibeDanio objetivo = mejor.collider.GetComponentInParent<IRecibeDanio>();
             bool mato = false;
             bool esCarne = objetivo != null && !(objetivo is IObjetoInerte);
-            // T-677: la cabeza hace x3 (ReglaZonaDanio); cuerpo normal. Solo a personas, no a objetos.
+            // T-677: la cabeza hace x2, x4 con el francotirador (ReglaZonaDanio); cuerpo normal. Solo a personas, no a objetos.
             bool cabeza = esCarne && ReglaZonaDanio.EsCabeza(mejor.collider, mejor.point);
             if (objetivo != null)
             {
-                mato = objetivo.RecibirDanio(new InfoDanio(danio * ReglaZonaDanio.Multiplicador(cabeza), TipoDanio.Disparo, mejor.point, direccion, null)).CausoKO;
+                mato = objetivo.RecibirDanio(new InfoDanio(danio * ReglaZonaDanio.Multiplicador(cabeza, arma), TipoDanio.Disparo, mejor.point, direccion, null)).CausoKO;
             }
             BalaImpacto?.Invoke(arma, new ImpactoBala(mejor.point, mejor.normal, esCarne, mato, cabeza));
             // T-1472: un impacto por tiro, con el sonido del material golpeado (carne, cabeza, robot, metal, cristal o concreto).
