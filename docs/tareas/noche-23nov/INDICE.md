@@ -13,7 +13,7 @@ Le gustó (NO se toca): el logo, las opciones, levantarse del suelo al inicio, l
 | T55 | [Verificar que ya no suena el roce de ropa (T49)](T55.md) | B | HECHA |
 | T56 | [Prótesis: holograma más rápido y en su lugar; mismas animaciones con y sin prótesis](T56.md) | B | HECHA |
 | T57 | [Menú de prótesis (Tab) con el cuerpo holográfico](T57.md) | B | HECHA |
-| T58 | [Estela al caer con las piernas: efecto de humo](T58.md) | B | pendiente |
+| T58 | [Estela al caer con las piernas: efecto de humo](T58.md) | B | HECHA |
 | T59 | [Tino vende las armas y las mejora; fuera la armería](T59.md) | B (quitar armería del mapa: A) | HECHA |
 | T60 | [Guardar el arma: que desaparezca de la mano](T60.md) | B | HECHA |
 | T62 | [Avisos del tutorial en una ventana central con 'Entendido'; máquina expendedora con ratón](T62.md) | B | HECHA |
