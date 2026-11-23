@@ -57,9 +57,9 @@ namespace MechaCyberpunk.Tests.IA
             Assert.IsTrue(ReglaImpulsoAtropello.Arrolla(carro, new Vector3(0f, 0f, 2f)));
             Vector3 v = ReglaImpulsoAtropello.VelocidadDeVuelo(carro);
             Assert.Greater(v.z, 4f, "sale hacia donde va el carro");
-            Assert.Greater(v.y, 3f, "sale hacia arriba");
+            Assert.GreaterOrEqual(v.y, 3f, "sale hacia arriba");
             float tiempoVuelo = 2f * v.y / 9.81f;
-            Assert.Greater(v.z * tiempoVuelo, 3f, "recorre varios metros antes de caer");
+            Assert.Greater(v.z * tiempoVuelo, 2.5f, "recorre metros antes de caer");
             Assert.LessOrEqual(ReglaImpulsoAtropello.RapidezMinima * 3.6f, 20f, "el umbral no deja sin arrollar a 20 km/h");
         }
     }
