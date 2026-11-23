@@ -53,6 +53,12 @@ namespace MechaCyberpunk.Progresion.Sonido
             new MapaSonidos19nov.Par("UI_MARCADOR", "UI_SELECCIONAR"),
             new MapaSonidos19nov.Par("UI_INDICADOR_DANIO", "IMP_BALA_ZUMBIDO"),
             new MapaSonidos19nov.Par("UI_TELEFONO", "HUD_MENSAJE_CELULAR"),
+            // T65: los sonidos viejos ya no estan en el catalogo; estos IDs que el codigo aun pide suenan con el nuevo mas parecido.
+            new MapaSonidos19nov.Par("JUG_DANIO", "NPC_H_DOLOR"),
+            new MapaSonidos19nov.Par("PAN_RIVAL_DANIO", "NPC_H_DOLOR"),
+            new MapaSonidos19nov.Par("ZON_CONQUISTADA", "HUD_LOGRO"),
+            new MapaSonidos19nov.Par("ZON_RESPETO_SUBE", "HUD_NOTIFICACION"),
+            new MapaSonidos19nov.Par("CAL_BAJA_NIVEL", "HUD_NOTIFICACION"),
         };
 
 

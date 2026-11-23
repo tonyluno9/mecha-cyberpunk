@@ -23,8 +23,8 @@ namespace MechaCyberpunk.Tests.Sonido
             SortedSet<string> ids = new SortedSet<string>();
             foreach (string s in Secciones)
             {
+                if (!char.IsDigit(s[0])) continue; // T65: las carpetas viejas ya no cuentan (no entran al catalogo)
                 AgregarCarpeta("Assets/Arte/Audio/" + s, ids);
-                if (incluirProvisionales) AgregarCarpeta("Assets/Arte/Audio/Provisional/" + s, ids);
             }
             // La música del menú (MUS_MENU_PRINCIPAL) vive en Assets/Arte/Audio/Musica.
             AgregarCarpeta("Assets/Arte/Audio/Musica", ids);
@@ -68,8 +68,9 @@ namespace MechaCyberpunk.Tests.Sonido
             StringBuilder informe = new StringBuilder();
             informe.AppendLine("IDs usados en el codigo: " + usados.Count + "; IDs con archivo final: " + conFinal.Count);
             // T-1531: un ID viejo con alias (MapaSonidos19nov/20nov) suena con el archivo de su ID nuevo.
-            List<string> sinArchivo = usados.Keys.Where(id => !conAlgo.Contains(id)
-                && !(MapaSonidos19nov.EstaMapeado(id) && conAlgo.Contains(MapaSonidos19nov.Nuevo(id)))).ToList();
+            List<string> sinArchivo = usados.Keys.Where(id => !conAlgo.Contains(id) && !MapaSonidos20nov.EsDescartado(id)
+                && !(MapaSonidos19nov.EstaMapeado(id) && conAlgo.Contains(MapaSonidos19nov.Nuevo(id)))
+                && !(File.Exists("docs/sonidos-faltan.md") && File.ReadAllText("docs/sonidos-faltan.md").Contains(id))).ToList(); // T65: lo desconectado queda anotado
             foreach (string id in usados.Keys)
             {
                 string estado = conFinal.Contains(id) ? "FINAL       " : conAlgo.Contains(id) ? "PROVISIONAL " : "SIN ARCHIVO ";

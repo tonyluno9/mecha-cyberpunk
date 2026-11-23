@@ -8,7 +8,7 @@ using UnityEngine;
 namespace MechaCyberpunk.Progresion.Editor
 {
     /// <summary>
-    /// Arma el CatalogoSonidos (T-407): lee Assets/Arte/Audio/&lt;SEC&gt;/&lt;ID&gt;.wav y &lt;ID&gt;_NN.wav (los finales) y Assets/Arte/Audio/Provisional/&lt;SEC&gt;/ (los provisionales).
+    /// Arma el CatalogoSonidos (T-407): lee los &lt;ID&gt;.wav y &lt;ID&gt;_NN.wav de las carpetas nuevas de Assets/Arte/Audio (01_UI a 19_Voces y Musica). T65: las carpetas viejas ya no entran.
     /// Los dos builds lo corren antes de construir, así los WAV que entregue el equipo entran solos.
     /// Batchmode: -executeMethod MechaCyberpunk.Progresion.Editor.CreadorCatalogoSonidos.Crear
     /// </summary>
@@ -18,7 +18,6 @@ namespace MechaCyberpunk.Progresion.Editor
         public const string CarpetaAudio = "Assets/Arte/Audio";
         /// <summary>La música (MUS_MENU_PRINCIPAL...), dentro de Assets/Arte/Audio.</summary>
         public const string CarpetaMusica = "Musica";
-        private static readonly string[] Secciones = { "JUG", "PUN", "ARM", "VEH", "PAN", "CAL", "ZON", "ECO", "UI", "MUN", "AMB", "MUS" };
         /// <summary>T-1471: carpetas de los sonidos nuevos (T-1470), dentro de Assets/Arte/Audio.</summary>
         public static readonly string[] CarpetasNuevas =
         {
@@ -38,13 +37,9 @@ namespace MechaCyberpunk.Progresion.Editor
         [MenuItem("Mecha Cyberpunk/Sonido/Crear catalogo")]
         public static void Crear()
         {
-            GeneradorSonidosProvisionales.Crear();
+            // T65: ya no se leen las carpetas viejas (JUG, PUN, ARM, VEH, PAN, CAL, ZON, ECO, UI, MUN, AMB, MUS ni Provisional) ni se generan provisionales:
+            // el catalogo solo trae los sonidos nuevos (01_UI a 19_Voces y la musica del menu). Un ID viejo sin equivalente nuevo queda en silencio (docs/sonidos-faltan.md).
             SortedDictionary<string, CatalogoSonidos.Entrada> entradas = new SortedDictionary<string, CatalogoSonidos.Entrada>();
-            foreach (string seccion in Secciones)
-            {
-                Leer(CarpetaAudio + "/" + seccion, entradas, false);
-                Leer(CarpetaAudio + "/Provisional/" + seccion, entradas, true);
-            }
             // T-1471: las 10 carpetas nuevas (19-nov). Si un ID nuevo ya existia (UI_MOVER, UI_ERROR, VEH_PUERTA_ABRIR...), sus archivos REEMPLAZAN a los finales viejos.
             SortedDictionary<string, CatalogoSonidos.Entrada> nuevas = new SortedDictionary<string, CatalogoSonidos.Entrada>();
             foreach (string carpeta in CarpetasNuevas)

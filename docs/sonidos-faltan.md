@@ -93,3 +93,61 @@ Lista "Faltan" de `3d sonidos/LEEME_SONIDOS.md` (19-nov), más lo que se encontr
 - **Alarma:** suena al forzar carros estacionados, no al robar uno del tráfico. Falta una tecla de claxon para el jugador.
 - **Policía:** sonido al detener al jugador (no hay evento de arresto), estática de radio, megáfono nuevo, rotores, reflector, ambulancia.
 - **Config de clínica y mejora de armas:** siguen pidiendo ECO_SIN_DINERO en sus Config; el mapa lo hace sonar con UI_ERROR.
+
+## T65: sonidos viejos desconectados que quedan en silencio
+
+El catálogo (CreadorCatalogoSonidos.Crear) ya no lee las carpetas viejas (JUG, PUN, ARM, VEH, PAN, CAL, ZON, ECO, UI, MUN, AMB ni Provisional). Estos IDs los pide el código y no tienen equivalente en 01_UI a 19_Voces: no suenan hasta que haya un archivo nuevo.
+
+| ID | Lo pide |
+| --- | --- |
+| AMB_BAR | ReglaAmbienteZona.cs |
+| AMB_CALLE_DIA | ReglaAmbienteZona.cs |
+| AMB_CALLE_NOCHE | GestorSonidos.cs, ReglaAmbienteZona.cs |
+| AMB_CASINO | ReglaAmbienteZona.cs |
+| AMB_CLANDESTINO | ReglaAmbienteZona.cs |
+| AMB_CLINICA | ReglaAmbienteZona.cs |
+| AMB_INTERIOR_CASA | GestorSonidos.cs, ReglaAmbienteZona.cs |
+| AMB_MERCADO | ReglaAmbienteZona.cs |
+| AMB_NEON_ALTO | ReglaAmbienteZona.cs, ReglaMezclaSonidos.cs |
+| AMB_TIANGUIS | ReglaAmbienteZona.cs |
+| ARM_CAMBIAR | ReglaMezclaSonidos.cs, SonidosArmasT1472.cs |
+| ARM_DISPARO_LEJANO | ReglaMezclaSonidos.cs |
+| ARM_ESC_RECARGA_CARTUCHO | ReglaMezclaSonidos.cs, SonidosArmasT1472.cs |
+| ARM_FUS_RAFAGA_COLA | ReglaMezclaSonidos.cs |
+| ARM_LASER_AVISO | GuardiaNova.cs, PistolaPandillero.cs |
+| ARM_LGR_DISPARO | ReglaMezclaSonidos.cs |
+| ARM_PIS_RECARGA | ReglaMezclaSonidos.cs, SonidosArmasT1472.cs |
+| ARM_PIS_SACAR | ReglaMezclaSonidos.cs |
+| ARM_SNI_RECARGA | ReglaMezclaSonidos.cs, SonidosArmasT1472.cs |
+| ARM_SNI_ZOOM | ZoomSniper.cs |
+| CAL_DRON_ZUMBIDO | CapsulaCaida.cs, DronMundo.cs, ReglaMezclaSonidos.cs |
+| ECO_CLINICA_DESPERTAR | DoctorClinica.cs |
+| JUG_CAE_DERROTADO | ReglaMezclaSonidos.cs, VidaAPie.cs |
+| JUG_CORRER_RESPIRA | ReglaMezclaSonidos.cs |
+| JUG_REGENERA | VidaAPie.cs |
+| JUG_SALTO | ControladorAPie.cs, ReglaMezclaSonidos.cs |
+| MUN_AIRE_ACONDICIONADO | ReglaMezclaSonidos.cs |
+| MUN_CHISPAS_ELECTRICAS | CarroTrafico.cs, DanioCarro.cs, ReglaMezclaSonidos.cs |
+| MUN_HOLOGRAMA | CapsulaCaida.cs, ReglaMezclaSonidos.cs |
+| MUN_NEON_ZUMBIDO | ReglaMezclaSonidos.cs |
+| MUN_PERRO_LADRA | ReglaMezclaSonidos.cs |
+| PAN_ALIADO_CAE | ReglaMezclaSonidos.cs |
+| PAN_ALIADO_ESPERA | ReglaMezclaSonidos.cs |
+| PAN_ALIADO_RECLUTA | ReglaMezclaSonidos.cs |
+| PAN_ALIADO_SIGUE | ReglaMezclaSonidos.cs |
+| PAN_JEFE_CAE | PandilleroAPie.cs |
+| PAN_JEFE_ENTRADA | JefePandilla.cs, ReglaMezclaSonidos.cs |
+| PAN_RIVAL_ALERTA | PandilleroAPie.cs, ReglaMezclaSonidos.cs |
+| PAN_RIVAL_CAE | PandilleroAPie.cs, ReglaMezclaSonidos.cs |
+| PAN_RIVAL_PROVOCA | ReglaMezclaSonidos.cs |
+| PAN_SILBIDO_LLAMAR | ReglaMezclaSonidos.cs |
+| PAN_VECINO_AUXILIO | ReglaMezclaSonidos.cs |
+| PUN_BLOQUEO | VidaAPie.cs |
+| UI_CONTINUARA | PantallaContinuara.cs |
+| UI_TEXTO | ColaAvisos.cs, ReglaMezclaSonidos.cs |
+| VEH_FORZAR_PUERTA | CarroEstacionado.cs |
+| VEH_PASA_CERCA | CarroTrafico.cs, CarroViejo.cs, ReglaMezclaSonidos.cs |
+
+Quitado del código: la respiración al correr (JUG_CORRER_RESPIRA) y el sonido de confirmación de kill (T64).
+
+Ejemplo: el "¡hey!" cuando un enemigo te ve es PAN_RIVAL_ALERTA; falta una voz nueva de alerta de pandilleros que no sean SKULLS (SKU_GRITO_ALERTA está apagado por VocesPandilla.VocesSkullsActivas).
