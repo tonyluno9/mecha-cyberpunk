@@ -136,7 +136,9 @@ namespace MechaCyberpunk.Tests.Vehiculos
                 List<GameObject> excluidos = MenosCarrosT1683.Instancias(raices, MenosCarrosT1683.RutasExcluidas(), out int anidados);
                 List<string> activos = excluidos.Where(g => g.activeInHierarchy).Select(g => g.name).ToList();
                 Assert.AreEqual(0, activos.Count, "carros excluidos activos en la escena: " + string.Join(", ", activos));
-                Assert.AreEqual(0, anidados, "carros excluidos dentro de otros prefabs");
+                List<string> anidadosActivos = MenosCarrosT1683.InstanciasAnidadas(raices, MenosCarrosT1683.RutasExcluidas())
+                    .Where(g => g.activeInHierarchy).Select(g => g.name).ToList();
+                Assert.AreEqual(0, anidadosActivos.Count, "carros excluidos activos dentro de otros prefabs (Barrio): " + string.Join(", ", anidadosActivos));
                 int estacionados = raices.SelectMany(g => g.GetComponentsInChildren<CarroEstacionado>(false)).Count(c => c.name.StartsWith(MenosCarrosT1683.PrefijoEstacionado));
                 Assert.Greater(estacionados, 0, "siguen los estacionados (cambiados, no borrados)");
             }
@@ -147,6 +149,15 @@ namespace MechaCyberpunk.Tests.Vehiculos
         }
 
         // ------------------------------------------------------------------ explosión: chatarra quemada
+
+        // El color sale del material o del bloque con precisión de GPU (sRGB/lineal): se compara con tolerancia.
+        private static void ColorParecido(Color esperado, Color real, string mensaje)
+        {
+            const float Tolerancia = 0.01f;
+            Assert.AreEqual(esperado.r, real.r, Tolerancia, mensaje + " (r)");
+            Assert.AreEqual(esperado.g, real.g, Tolerancia, mensaje + " (g)");
+            Assert.AreEqual(esperado.b, real.b, Tolerancia, mensaje + " (b)");
+        }
 
         [TestCase("V12")]
         [TestCase("V20")]
@@ -175,7 +186,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
                 Assert.AreEqual(mallas.Length, quemadas, codigo + ": se queman todas las mallas");
                 Material armazon = DanioCarro.MaterialArmazon;
                 Assert.IsNotNull(armazon, "no se pudo crear el material del armazón");
-                Assert.AreEqual(DanioCarro.ColorDelArmazon, armazon.GetColor("_BaseColor"));
+                ColorParecido(DanioCarro.ColorDelArmazon, armazon.GetColor("_BaseColor"), "material del armazón");
                 Assert.IsNull(armazon.GetTexture("_BaseMap"), "el armazón no lleva la textura del carro");
                 MaterialPropertyBlock bloque = new MaterialPropertyBlock();
                 foreach (Renderer r in mallas)
@@ -186,7 +197,7 @@ namespace MechaCyberpunk.Tests.Vehiculos
                         Assert.AreSame(armazon, m, codigo + ": " + r.name + " sigue con " + (m != null ? m.name : "null"));
                     }
                     r.GetPropertyBlock(bloque);
-                    Assert.AreEqual(DanioCarro.ColorDelArmazon, bloque.GetColor("_BaseColor"), codigo + ": " + r.name + " sin tinte de armazón");
+                    ColorParecido(DanioCarro.ColorDelArmazon, bloque.GetColor("_BaseColor"), codigo + ": " + r.name + " sin tinte de armazón");
                 }
             }
             finally

@@ -305,13 +305,16 @@ namespace MechaCyberpunk.Vehiculos.Editor
             sb.AppendLine("\treferencias a excluidos en listas de componentes: " + enListas);
 
             // b) Los carros de modelos excluidos que hay en la escena.
-            List<GameObject> carros = Instancias(escena.GetRootGameObjects(), rutas, out int anidados);
-            sb.AppendLine("\tcarros de modelos excluidos en la escena: " + carros.Count + " (activos " + carros.Count(c => c.activeInHierarchy) + ")"
-                + (anidados > 0 ? "; además " + anidados + " dentro de otra instancia de prefab (se arreglan en ese prefab; no se tocan)" : ""));
+            List<GameObject> carros = Instancias(escena.GetRootGameObjects(), rutas, out int _);
+            List<GameObject> anidadas = InstanciasAnidadas(escena.GetRootGameObjects(), rutas);
+            sb.AppendLine("\tcarros de modelos excluidos en la escena: " + carros.Count + " (activos " + carros.Count(c => c.activeInHierarchy) + ")");
+            sb.AppendLine("\tdentro de otra instancia de prefab (Barrio...): " + anidadas.Count + " (activos " + anidadas.Count(c => c.activeInHierarchy)
+                + "): se pone el reemplazo al lado y se apagan");
+            carros.AddRange(anidadas.Where(a => a.activeSelf));
             Dictionary<string, int> porModelo = new Dictionary<string, int>();
             foreach (GameObject go in carros)
             {
-                string rutaVieja = AssetDatabase.GetAssetPath(PrefabUtility.GetCorrespondingObjectFromSource(go));
+                string rutaVieja = RutaExcluidaDe(go, rutas);
                 string codigo = CodigoDe(Path.GetFileNameWithoutExtension(rutaVieja));
                 porModelo[codigo] = porModelo.TryGetValue(codigo, out int k) ? k + 1 : 1;
                 cambio |= Reemplazar(go, rutaVieja, aplicar, sb);
@@ -347,35 +350,81 @@ namespace MechaCyberpunk.Vehiculos.Editor
             return cambio;
         }
 
-        /// <summary>Raíces de instancias de prefabs excluidos que no están dentro de otra instancia (esas se cambian editando su prefab).</summary>
+        /// <summary>
+        /// Raíces de instancias de prefabs excluidos que no están dentro de otra instancia. <paramref name="anidados"/> cuenta las que están dentro de otra
+        /// instancia que no es de un excluido (p. ej. los Carro_V01b del prefab Barrio): esas las da <see cref="InstanciasAnidadas"/>.
+        /// </summary>
         public static List<GameObject> Instancias(IEnumerable<GameObject> raices, HashSet<string> rutas, out int anidados)
         {
             List<GameObject> lista = new List<GameObject>();
-            anidados = 0;
+            List<GameObject> dentro = InstanciasAnidadas(raices, rutas, lista);
+            anidados = dentro.Count;
+            return lista;
+        }
+
+        /// <summary>
+        /// Instancias de excluidos que viven dentro de otra instancia de prefab que no es de un excluido (Barrio.prefab trae Carro_V01b). No se pueden borrar
+        /// desde la escena: Aplicar pone su reemplazo al lado y las apaga. Si se da <paramref name="sueltas"/>, ahí van las que no están anidadas.
+        /// </summary>
+        public static List<GameObject> InstanciasAnidadas(IEnumerable<GameObject> raices, HashSet<string> rutas, List<GameObject> sueltas = null)
+        {
+            List<GameObject> lista = new List<GameObject>();
             foreach (GameObject raiz in raices)
             {
                 foreach (Transform t in raiz.GetComponentsInChildren<Transform>(true))
                 {
                     GameObject go = t.gameObject;
-                    if (!PrefabUtility.IsAnyPrefabInstanceRoot(go))
+                    if (!PrefabUtility.IsAnyPrefabInstanceRoot(go) || RutaExcluidaDe(go, rutas) == null)
                     {
                         continue;
                     }
-                    Object fuente = PrefabUtility.GetCorrespondingObjectFromSource(go);
-                    string ruta = fuente != null ? AssetDatabase.GetAssetPath(fuente) : null;
-                    if (string.IsNullOrEmpty(ruta) || !rutas.Contains(ruta))
+                    if (DentroDeUnExcluido(go, rutas))
                     {
-                        continue;
+                        continue; // es una pieza de un carro excluido: se va con él
                     }
                     if (PrefabUtility.GetOutermostPrefabInstanceRoot(go) != go)
                     {
-                        anidados++;
-                        continue;
+                        lista.Add(go);
                     }
-                    lista.Add(go);
+                    else
+                    {
+                        sueltas?.Add(go);
+                    }
                 }
             }
             return lista;
+        }
+
+        /// <summary>La ruta del prefab excluido de donde sale la instancia (siguiendo la cadena de prefabs anidados y variantes), o null.</summary>
+        public static string RutaExcluidaDe(GameObject go, HashSet<string> rutas)
+        {
+            Object o = go;
+            for (int i = 0; i < 12 && o != null; i++)
+            {
+                o = PrefabUtility.GetCorrespondingObjectFromSource(o);
+                if (o == null)
+                {
+                    break;
+                }
+                string ruta = AssetDatabase.GetAssetPath(o);
+                if (rutas.Contains(ruta))
+                {
+                    return ruta;
+                }
+            }
+            return null;
+        }
+
+        private static bool DentroDeUnExcluido(GameObject go, HashSet<string> rutas)
+        {
+            for (Transform p = go.transform.parent; p != null; p = p.parent)
+            {
+                if (PrefabUtility.IsAnyPrefabInstanceRoot(p.gameObject) && RutaExcluidaDe(p.gameObject, rutas) != null)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         private static bool Reemplazar(GameObject go, string rutaVieja, bool aplicar, StringBuilder sb)
@@ -407,7 +456,10 @@ namespace MechaCyberpunk.Vehiculos.Editor
             Transform padre = go.transform.parent;
             GameObject nuevo = padre != null ? (GameObject)PrefabUtility.InstantiatePrefab(prefabNuevo, padre) : (GameObject)PrefabUtility.InstantiatePrefab(prefabNuevo, go.scene);
             nuevo.transform.SetPositionAndRotation(go.transform.position, go.transform.rotation);
-            nuevo.transform.SetSiblingIndex(go.transform.GetSiblingIndex());
+            if (padre == null || !PrefabUtility.IsPartOfPrefabInstance(padre))
+            {
+                nuevo.transform.SetSiblingIndex(go.transform.GetSiblingIndex());
+            }
             nuevo.layer = go.layer;
             // Huella centrada donde estaba la del viejo y el fondo a la misma altura (el ajuste fino al piso lo hace EstacionadosTripoT1644.Ajustar).
             Physics.SyncTransforms();
@@ -427,7 +479,14 @@ namespace MechaCyberpunk.Vehiculos.Editor
                 }
             }
             bool activo = go.activeSelf;
-            Object.DestroyImmediate(go);
+            if (PrefabUtility.GetOutermostPrefabInstanceRoot(go) != go)
+            {
+                go.SetActive(false); // dentro de otro prefab (Barrio): no se puede borrar desde la escena
+            }
+            else
+            {
+                Object.DestroyImmediate(go);
+            }
             nuevo.SetActive(activo);
             Physics.SyncTransforms();
             sb.AppendLine(descripcion + " -> " + nuevo.name + " (" + Path.GetFileName(rutaNueva) + ") en " + nuevo.transform.position.ToString("F2")
@@ -515,6 +574,59 @@ namespace MechaCyberpunk.Vehiculos.Editor
                 b.Encapsulate(c.transform.TransformPoint(c.center + esquina));
             }
             return b;
+        }
+
+        // ------------------------------------------------------------------ fotos (en una corrida aparte de Unity)
+
+        public const string CarpetaFotos = "docs/capturas/_tareas/T45";
+
+        /// <summary>Hoja de 3 x 2 de estacionados que eran de modelos excluidos, vistos desde la calle a la altura de una persona (1.7 m).</summary>
+        public static void Fotos()
+        {
+            Scene escena = EditorSceneManager.OpenScene(RutaEscena, OpenSceneMode.Single);
+            string[] nombres =
+            {
+                "Estacionado_11_V02", "Estacionado_12_V03", "Estacionado_17_V20", "Estacionado_18_V21", "Estacionado_19_V09", "Estacionado_32_V14",
+            };
+            List<Transform> todos = escena.GetRootGameObjects().SelectMany(r => r.GetComponentsInChildren<Transform>(true))
+                .Where(t => t.name.StartsWith(PrefijoEstacionado, StringComparison.Ordinal)).ToList();
+            const int Ancho = 800;
+            const int Alto = 500;
+            const float AlturaOjos = 1.7f;
+            const float Lejos = 9f;
+            Texture2D hoja = new Texture2D(Ancho * 3, Alto * 2, TextureFormat.RGB24, false);
+            RenderTexture rt = new RenderTexture(Ancho, Alto, 24);
+            GameObject camObjeto = new GameObject("CamFotosT1683");
+            Camera cam = camObjeto.AddComponent<Camera>();
+            cam.fieldOfView = 60f;
+            cam.farClipPlane = 400f;
+            StringBuilder sb = new StringBuilder("T-1683 fotos\n");
+            for (int i = 0; i < nombres.Length; i++)
+            {
+                Transform carro = todos.FirstOrDefault(t => t.name == nombres[i]);
+                sb.AppendLine(nombres[i] + ": " + (carro != null ? carro.position.ToString("F1") : "NO ESTÁ"));
+                if (carro == null)
+                {
+                    continue;
+                }
+                Vector3 pos = carro.position + carro.forward * Lejos * 0.8f - carro.right * Lejos * 0.6f;
+                camObjeto.transform.position = new Vector3(pos.x, carro.position.y + AlturaOjos, pos.z);
+                camObjeto.transform.LookAt(carro.position + Vector3.up * 0.8f);
+                cam.targetTexture = rt;
+                cam.Render();
+                RenderTexture.active = rt;
+                hoja.ReadPixels(new Rect(0f, 0f, Ancho, Alto), (i % 3) * Ancho, (1 - i / 3) * Alto);
+            }
+            hoja.Apply();
+            RenderTexture.active = null;
+            cam.targetTexture = null;
+            Directory.CreateDirectory(CarpetaFotos);
+            File.WriteAllBytes(CarpetaFotos + "/calle_estacionados.png", hoja.EncodeToPNG());
+            Object.DestroyImmediate(hoja);
+            Object.DestroyImmediate(rt);
+            Object.DestroyImmediate(camObjeto);
+            Directory.CreateDirectory("Logs");
+            File.WriteAllText("Logs/menos-carros-T1683-fotos.txt", sb.ToString());
         }
 
         private static string Ruta(Transform t)
