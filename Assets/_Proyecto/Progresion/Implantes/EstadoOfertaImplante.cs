@@ -7,6 +7,8 @@ namespace MechaCyberpunk.Progresion
         SinDinero,
         LigaBaja,
         /// <summary>Ya tienes el nivel más alto de ese espacio.</summary>
-        YaLoMejor
+        YaLoMejor,
+        /// <summary>T-78: la primera visita al Doc solo deja instalar un espacio; los demás salen bloqueados (lo pone la pantalla, no el servicio).</summary>
+        Bloqueado
     }
 }

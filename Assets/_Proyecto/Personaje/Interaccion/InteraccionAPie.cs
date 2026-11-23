@@ -114,6 +114,11 @@ namespace MechaCyberpunk.Personaje.Interaccion
                     PuertaIntentada?.Invoke(puerta, resultado);
                     break;
                 case AccionMontar.Subir:
+                    if (montable != null && montable.Modo == ModoJugador.Carro && CandadosMundo.RoboCarros)
+                    {
+                        CandadosMundo.Negar(); // T-78: el inicio guiado todavía no deja robar carros
+                        break;
+                    }
                     jugador.Subir(montable);
                     LimpiarCandidatos();
                     break;

@@ -14,6 +14,8 @@ namespace MechaCyberpunk.Progresion.Partida
         public const string Protesis = "protesis";
         public const string Rueda = "rueda";
         public const string Maquina = "maquina";
+        /// <summary>T-78: la ventana "YA ERES LIBRE DE RECORRER CYBER CITY" al terminar la chica.</summary>
+        public const string Libre = "libre";
 
         private static readonly HashSet<string> vistos = new HashSet<string>();
 

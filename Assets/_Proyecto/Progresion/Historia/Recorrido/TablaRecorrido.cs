@@ -42,6 +42,8 @@ namespace MechaCyberpunk.Progresion.Recorrido
         public const string ObjetivoRanura = "VE A LA RANURA DEL MURO";
         public const string ObjetivoDoc = "VE CON EL DOC";
         public const string ObjetivoMejora = "INSTALA UNA MEJORA CON EL DOC";
+        public const string ObjetivoTino = "VE CON TINO";
+        public const string ObjetivoUsarProtesis = "USA TU PRÓTESIS (TAB)";
         public const string ObjetivoInventor = "COMPRA UN ARMA CON TINO";
         public const string ObjetivoComer = "COMPRA ALGO EN LA MÁQUINA";
         public const string PensamientoHambre = "Tengo hambre...";
@@ -88,6 +90,8 @@ namespace MechaCyberpunk.Progresion.Recorrido
             yield return ObjetivoDoc;
             yield return ObjetivoMejora;
             yield return ObjetivoInventor;
+            yield return ObjetivoTino;
+            yield return ObjetivoUsarProtesis;
             yield return ObjetivoComer;
             yield return ObjetivoTianguis;
             yield return ObjetivoJefeSkulls;

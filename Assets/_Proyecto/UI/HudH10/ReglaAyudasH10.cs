@@ -26,6 +26,8 @@ namespace MechaCyberpunk.UI.Hud
         public bool Recargando;
         public TipoCandidatoInteraccion Candidato;
         public string NombreCandidato;
+        /// <summary>T-78: el montable de enfrente es un carro y el candado de robo de carros está puesto (dice AÚN NO).</summary>
+        public bool MontableBloqueado;
         public string TextoInteractuable;
         public bool PuedeUsarInteractuable;
         public string TeclaRecargar;
@@ -81,6 +83,10 @@ namespace MechaCyberpunk.UI.Hud
             switch (c.Candidato)
             {
                 case TipoCandidatoInteraccion.Montable:
+                    if (c.MontableBloqueado)
+                    {
+                        return CandadosMundo.AvisoAunNo; // T-78: inicio guiado, todavía no se roban carros
+                    }
                     return !string.IsNullOrEmpty(c.NombreCandidato) && c.NombreCandidato.ToLowerInvariant().Contains("moto") ? TextoSubirMoto : TextoSubirCarro;
                 case TipoCandidatoInteraccion.Puerta:
                     return string.IsNullOrEmpty(c.NombreCandidato) ? TextoAbrir : TextoAbrir + " " + c.NombreCandidato;

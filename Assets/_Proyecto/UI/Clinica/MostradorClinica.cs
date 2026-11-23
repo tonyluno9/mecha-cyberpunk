@@ -107,10 +107,13 @@ namespace MechaCyberpunk.UI.Clinica
         {
             abierta = true;
             congela.Congelar();
+            // T-78: en la primera visita (el suero) solo se puede instalar las PIERNAS, gratis, y no se sale sin instalarlas.
+            bool primeraVisita = PrimeraVisitaClinica.Pendiente;
+            pantalla.RestringirA(primeraVisita ? EspacioImplante.Piernas : (EspacioImplante?)null);
             pantalla.Mostrar(Registro<ServicioImplantes>.Actual, AlInstalar, AlSalir);
             // T-1017: con Tab, las prótesis de ataque del Doc (brazo láser, hombrera de misiles) en la pantalla de tienda.
             MechaCyberpunk.Personaje.CatalogoProtesisAtaque catalogo = MechaCyberpunk.Personaje.CatalogoProtesisAtaque.Actual;
-            bool hay = catalogo != null && catalogo.Tienda != null && Tienda() != null;
+            bool hay = !primeraVisita && catalogo != null && catalogo.Tienda != null && Tienda() != null;
             pantalla.OfrecerAtaque(hay ? AbrirAtaque : (System.Action)null, TextoPestanaAtaque);
         }
 

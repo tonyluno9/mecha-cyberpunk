@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Economia;
 using MechaCyberpunk.Personaje;
@@ -30,6 +31,47 @@ namespace MechaCyberpunk.UI.Armas
         private const float MargenArriba = 14f;
 
         private static PestanasBancoTino actual;
+        private static readonly List<BotonExtra> botonesExtra = new List<BotonExtra>();
+
+        /// <summary>T-78: un botón que otra función agrega a la barra de arriba del banco (por ejemplo CAMPO DE TIRO, T-79).</summary>
+        public sealed class BotonExtra
+        {
+            public string Etiqueta;
+            public Action Accion;
+            public Func<bool> Visible;
+            internal Text Texto;
+            internal GameObject Caja;
+        }
+
+        /// <summary>
+        /// T-78: PUNTO DE EXTENSIÓN para T-79. Registra un botón extra en la barra de pestañas del banco (a la derecha de MEJORAR). Se crea la próxima vez que
+        /// se abre el banco; <paramref name="visible"/> (opcional) decide si se ve cada vez que se abre. Ejemplo: <c>PestanasBancoTino.RegistrarBotonExtra("CAMPO DE TIRO", abrirCampo)</c>.
+        /// </summary>
+        public static BotonExtra RegistrarBotonExtra(string etiqueta, Action accion, Func<bool> visible = null)
+        {
+            BotonExtra boton = new BotonExtra { Etiqueta = etiqueta, Accion = accion, Visible = visible };
+            botonesExtra.Add(boton);
+            return boton;
+        }
+
+        /// <summary>Quita un botón registrado con <see cref="RegistrarBotonExtra"/> (y su objeto, si ya se creó).</summary>
+        public static void QuitarBotonExtra(BotonExtra boton)
+        {
+            botonesExtra.Remove(boton);
+            if (boton != null && boton.Caja != null)
+            {
+                Destroy(boton.Caja);
+            }
+        }
+
+        /// <summary>
+        /// T-78: mientras devuelva un texto no vacío el banco NO se puede cerrar (Esc ni SALIR) y ese texto sale bajo las pestañas ("COMPRA UN ARMA").
+        /// La pone la historia en el paso de Tino; null = el banco cierra libre.
+        /// </summary>
+        public static Func<string> BloqueoSalida { get; set; }
+
+        /// <summary>La línea de lo que falta para poder salir (pruebas); vacía si no hay bloqueo.</summary>
+        public static string LineaFalta => actual != null && actual.cajaFalta != null && actual.cajaFalta.activeSelf ? actual.textoFalta.text : string.Empty;
 
         private MostradorTienda mostrador;
         private BancoArmas banco;
@@ -43,6 +85,9 @@ namespace MechaCyberpunk.UI.Armas
         private Image lineaMejorar;
         private Text textoComprar;
         private Text textoMejorar;
+        private Text textoFalta;
+        private GameObject cajaFalta;
+        private RectTransform barraPestanas;
 
         /// <summary>True mientras el banco de Tino está abierto.</summary>
         public static bool Abierto => actual != null && actual.abierto;
@@ -51,7 +96,12 @@ namespace MechaCyberpunk.UI.Armas
         public static bool EnMejorar => actual != null && actual.enMejorar;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-        private static void Reiniciar() => actual = null;
+        private static void Reiniciar()
+        {
+            actual = null;
+            BloqueoSalida = null;
+            botonesExtra.Clear();
+        }
 
         /// <summary>El mostrador de armas de la ciudad (el que vende armas) o null.</summary>
         public static MostradorTienda BuscarMostradorArmas()
@@ -167,6 +217,50 @@ namespace MechaCyberpunk.UI.Armas
             TrazoH10.Colocar(barra, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -MargenArriba), new Vector2(ancho, TamanoPestana.y));
             CrearPestana(barra, "Comprar", TextoComprar, 0f, false, out textoComprar, out lineaComprar);
             CrearPestana(barra, "Mejorar", TextoMejorar, TamanoPestana.x + SeparacionPestanas, true, out textoMejorar, out lineaMejorar);
+            barraPestanas = barra;
+            // Abajo al centro, con fondo y marco propios: arriba quedaba detrás del letrero del CIC y no se leía.
+            RectTransform falta = TrazoH10.Nodo(canvas.transform, "LineaFalta");
+            TrazoH10.Colocar(falta, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 120f), new Vector2(760f, 64f));
+            Image fondoFalta = TrazoH10.Imagen(falta, "Fondo", TrazoH10.ConAlfa(TrazoH10.FondoPantalla, 0.95f), TrazoH10.Relleno);
+            TrazoH10.Estirar(fondoFalta.rectTransform);
+            Image marcoFalta = TrazoH10.Imagen(falta, "Marco", TrazoH10.Coral, TrazoH10.Linea);
+            TrazoH10.Estirar(marcoFalta.rectTransform);
+            textoFalta = TrazoH10.Etiqueta(falta, "Texto", string.Empty, TrazoH10.TamanoSeccion, TrazoH10.Coral, TextAnchor.MiddleCenter);
+            TrazoH10.Estirar(textoFalta.rectTransform);
+            VestidoH10.Fuente(falta);
+            cajaFalta = falta.gameObject;
+            cajaFalta.SetActive(false);
+        }
+
+        // T-78: crea los botones extra que se registraron y aún no tienen objeto (a la derecha de MEJORAR) y muestra solo los visibles.
+        private void PrepararBotonesExtra()
+        {
+            float x = (TamanoPestana.x + SeparacionPestanas) * 2f;
+            for (int i = 0; i < botonesExtra.Count; i++)
+            {
+                BotonExtra boton = botonesExtra[i];
+                if (boton.Caja == null)
+                {
+                    RectTransform caja = TrazoH10.Nodo(barraPestanas, "Extra_" + boton.Etiqueta);
+                    TrazoH10.Colocar(caja, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(x, 0f), TamanoPestana);
+                    Image fondo = TrazoH10.Imagen(caja, "Fondo", TrazoH10.ConAlfa(TrazoH10.FondoPanel, 0.9f), TrazoH10.Relleno);
+                    TrazoH10.Estirar(fondo.rectTransform);
+                    fondo.raycastTarget = true;
+                    Image linea = TrazoH10.Imagen(caja, "Linea", TrazoH10.TurquesaTenue, TrazoH10.Linea);
+                    TrazoH10.Estirar(linea.rectTransform);
+                    boton.Texto = TrazoH10.Etiqueta(caja, "Texto", boton.Etiqueta, TrazoH10.TamanoFila, TrazoH10.Turquesa, TextAnchor.MiddleCenter);
+                    TrazoH10.Estirar(boton.Texto.rectTransform);
+                    EventTrigger disparador = caja.gameObject.AddComponent<EventTrigger>();
+                    EventTrigger.Entry clic = new EventTrigger.Entry { eventID = EventTriggerType.PointerClick };
+                    BotonExtra capturado = boton;
+                    clic.callback.AddListener(_ => capturado.Accion?.Invoke());
+                    disparador.triggers.Add(clic);
+                    VestidoH10.Fuente(caja);
+                    boton.Caja = caja.gameObject;
+                }
+                boton.Caja.SetActive(boton.Visible == null || boton.Visible());
+                x += TamanoPestana.x + SeparacionPestanas;
+            }
         }
 
         private void CrearPestana(Transform padre, string nombre, string etiqueta, float x, bool mejorar, out Text texto, out Image linea)
@@ -202,6 +296,7 @@ namespace MechaCyberpunk.UI.Armas
             }
             KitUI.AsegurarEventSystem();
             raiz.SetActive(true);
+            PrepararBotonesExtra();
             cambiar.Enable();
             // Con el mostrador vacío (no hay armas en venta) se arranca en MEJORAR, y al revés.
             enMejorar = mostrador == null;
@@ -258,12 +353,29 @@ namespace MechaCyberpunk.UI.Armas
             {
                 CambiarA(!enMejorar);
             }
+            if (abierto && textoFalta != null)
+            {
+                string falta = TextoFalta();
+                textoFalta.text = falta.Length > 0 ? "PARA SALIR: " + falta : string.Empty;
+                cajaFalta.SetActive(falta.Length > 0);
+            }
+        }
+
+        private static string TextoFalta()
+        {
+            string falta = BloqueoSalida != null ? BloqueoSalida() : string.Empty;
+            return falta ?? string.Empty;
         }
 
         private void Salir()
         {
             if (!abierto)
             {
+                return;
+            }
+            if (TextoFalta().Length > 0)
+            {
+                Sonidos.Reproducir("UI_CANCELAR"); // T-78: en el paso de Tino no se sale sin arma y mejora; la línea de arriba dice qué falta
                 return;
             }
             CerrarPestana();

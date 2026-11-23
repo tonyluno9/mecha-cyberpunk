@@ -302,7 +302,7 @@ namespace MechaCyberpunk.UI.Clinica
             this.servicio = servicio;
             this.alInstalar = alInstalar;
             this.alSalir = alSalir;
-            indice = 0;
+            indice = soloEspacio.HasValue ? (int)soloEspacio.Value : 0;
             confirmando = false;
             instalando = false;
             TerminarDestello();
@@ -364,7 +364,7 @@ namespace MechaCyberpunk.UI.Clinica
                     marcador.gameObject.SetActive(false);
                     // Lo recién instalado ya se ve en verde y el dinero ya bajó mientras se desvanece.
                     EspacioImplante elegido = (EspacioImplante)indice;
-                    PintarHolograma(servicio.Opcion(elegido), servicio.ImplanteInstalado(elegido));
+                    PintarHolograma(Oferta(elegido), servicio.ImplanteInstalado(elegido));
                     conector.gameObject.SetActive(false);
                     foreach (RectTransform linea in lineasEspacio)
                     {
@@ -427,6 +427,10 @@ namespace MechaCyberpunk.UI.Clinica
                     PintarAviso();
                     PintarBoton();
                 }
+                else if (SalidaBloqueada)
+                {
+                    MostrarAviso(TextoSalidaBloqueada); // T-78: primera visita: no se sale sin instalar
+                }
                 else
                 {
                     alSalir?.Invoke();
@@ -456,7 +460,7 @@ namespace MechaCyberpunk.UI.Clinica
 
         private void AlConfirmar()
         {
-            OfertaImplante oferta = servicio.Opcion((EspacioImplante)indice);
+            OfertaImplante oferta = Oferta((EspacioImplante)indice);
             if (confirmando)
             {
                 confirmando = false;
@@ -485,12 +489,45 @@ namespace MechaCyberpunk.UI.Clinica
                     Sonidos.Reproducir(config.SonidoSinDinero);
                     MostrarAviso(config.TextoAvisoSinDinero);
                     break;
+                case EstadoOfertaImplante.Bloqueado:
+                    Sonidos.Reproducir(config.SonidoCancelar);
+                    MostrarAviso(TextoNoDisponible);
+                    break;
                 default:
                     Sonidos.Reproducir(config.SonidoCancelar);
                     break;
             }
             PintarAviso();
             PintarBoton();
+        }
+
+        // ---------- T-78: primera visita al Doc ----------
+
+        /// <summary>T-78: texto de un espacio que aún no se ofrece (primera visita al Doc).</summary>
+        public const string TextoNoDisponible = "AÚN NO DISPONIBLE";
+        /// <summary>T-78: lo que dice la pantalla si se intenta salir sin instalar el implante obligatorio de la primera visita.</summary>
+        public const string TextoSalidaBloqueada = "INSTALA LAS PIERNAS PARA SEGUIR";
+
+        private EspacioImplante? soloEspacio;
+
+        /// <summary>
+        /// T-78: la primera visita al Doc solo deja instalar <paramref name="espacio"/> (las demás filas salen "AÚN NO DISPONIBLE") y no se puede salir
+        /// hasta instalarlo. Se pone antes de <see cref="Mostrar"/> y queda hasta que se vuelva a llamar (con null) o se instale.
+        /// </summary>
+        public void RestringirA(EspacioImplante? espacio) => soloEspacio = espacio;
+
+        /// <summary>True mientras la primera visita obliga a instalar un implante.</summary>
+        public bool SalidaBloqueada => soloEspacio.HasValue && servicio != null && servicio.Nivel(soloEspacio.Value) == 0;
+
+        // La oferta del servicio, salvo en la primera visita: los otros espacios quedan bloqueados.
+        private OfertaImplante Oferta(EspacioImplante espacio)
+        {
+            OfertaImplante oferta = servicio.Opcion(espacio);
+            if (soloEspacio.HasValue && espacio != soloEspacio.Value)
+            {
+                return new OfertaImplante(oferta.Implante, EstadoOfertaImplante.Bloqueado, 0, 0);
+            }
+            return oferta;
         }
 
         private void Pintar()
@@ -501,19 +538,19 @@ namespace MechaCyberpunk.UI.Clinica
             {
                 EspacioImplante espacio = (EspacioImplante)i;
                 string instalado = servicio.Nivel(espacio) > 0 ? servicio.Nombre(espacio) : config.TextoVacio;
-                OfertaImplante oferta = servicio.Opcion(espacio);
+                OfertaImplante oferta = Oferta(espacio);
                 bool elegida = i == indice;
                 Preparar(textosEspacio[i], string.Format(config.FormatoEspacio, config.NombreEspacio(i), instalado),
                     elegida ? config.ColorElegido : config.ColorNormal, config.TamanoEspacio);
                 string texto = TextoDeOferta(oferta, servicio.Nivel(espacio));
-                Color color = oferta.Estado == EstadoOfertaImplante.LigaBaja ? config.ColorApagado
+                Color color = oferta.Estado == EstadoOfertaImplante.LigaBaja || oferta.Estado == EstadoOfertaImplante.Bloqueado ? config.ColorApagado
                     : oferta.Estado == EstadoOfertaImplante.SinDinero ? config.ColorAviso
                     : elegida ? config.ColorElegido : config.ColorNormal;
                 Preparar(textosOpcion[i], elegida ? string.Format(config.FormatoElegido, texto) : texto, color, config.TamanoOpcion);
             }
 
             EspacioImplante elegido = (EspacioImplante)indice;
-            OfertaImplante ofertaElegida = servicio.Opcion(elegido);
+            OfertaImplante ofertaElegida = Oferta(elegido);
             DatosImplante mostrado = ofertaElegida.Implante != null ? ofertaElegida.Implante : servicio.ImplanteInstalado(elegido);
             Preparar(textoDescripcion, mostrado != null ? mostrado.Descripcion : string.Empty, config.ColorNormal, config.TamanoDescripcion);
 
@@ -533,6 +570,8 @@ namespace MechaCyberpunk.UI.Clinica
         {
             switch (oferta.Estado)
             {
+                case EstadoOfertaImplante.Bloqueado:
+                    return TextoNoDisponible;
                 case EstadoOfertaImplante.YaLoMejor:
                     return config.TextoLoMejor;
                 case EstadoOfertaImplante.LigaBaja:
@@ -724,7 +763,7 @@ namespace MechaCyberpunk.UI.Clinica
                 f.Fondo.color = elegida ? TrazoH10.TurquesaFondo : TrazoH10.FondoPanel;
                 f.Filo.color = TrazoH10.Rareza(nivel);
                 f.Borde.SetActive(elegida);
-                OfertaImplante ofertaFila = servicio.Opcion(espacio);
+                OfertaImplante ofertaFila = Oferta(espacio);
                 int nivelIcono = Mathf.Max(nivel, ofertaFila.Implante != null ? ofertaFila.Implante.Nivel : 0);
                 Sprite icono = Resources.Load<Sprite>(RutaIconos + espacio + "_" + Mathf.Clamp(nivelIcono, 1, NivelesImplante));
                 f.Icono.sprite = icono != null ? icono : IconoGenerico();
@@ -738,7 +777,7 @@ namespace MechaCyberpunk.UI.Clinica
                 {
                     f.Marcas[m].color = m < nivel ? TrazoH10.Turquesa : TrazoH10.ConAlfa(TrazoH10.TextoTenue, 0.25f);
                 }
-                PintarEtiqueta(f.Etiqueta, servicio.Opcion(espacio), cartera);
+                PintarEtiqueta(f.Etiqueta, Oferta(espacio), cartera);
             }
 
             EspacioImplante elegido = (EspacioImplante)indice;
@@ -746,7 +785,7 @@ namespace MechaCyberpunk.UI.Clinica
             textoMarcador.text = nombreEspacio;
             textoEspacioElegido.text = nombreEspacio + " · " + (mostrado != null ? mostrado.Nombre : config.TextoSinImplante);
             textoNombreImplante.text = mostrado != null ? mostrado.Nombre : config.TextoSinImplante;
-            textoNombreImplante.color = oferta.Estado == EstadoOfertaImplante.LigaBaja ? TrazoH10.TextoTenue : TrazoH10.Texto;
+            textoNombreImplante.color = oferta.Estado == EstadoOfertaImplante.LigaBaja || oferta.Estado == EstadoOfertaImplante.Bloqueado ? TrazoH10.TextoTenue : TrazoH10.Texto;
             textoNivelImplante.text = mostrado != null
                 ? string.Format(config.FormatoNivel, Romanos[Mathf.Clamp(mostrado.Nivel, 0, Romanos.Length - 1)])
                     + (oferta.Estado == EstadoOfertaImplante.YaLoMejor ? " · " + config.TextoInstalado : string.Empty)
@@ -757,7 +796,7 @@ namespace MechaCyberpunk.UI.Clinica
             EfectosImplantes antes = instalado != null ? instalado.Efectos : EfectosImplantes.Ninguno;
             EfectosImplantes despues = oferta.Implante != null ? oferta.Implante.Efectos : antes;
             ReglaMenuImplantes.Comparar(antes, despues, efectos);
-            bool apagada = oferta.Estado == EstadoOfertaImplante.LigaBaja;
+            bool apagada = oferta.Estado == EstadoOfertaImplante.LigaBaja || oferta.Estado == EstadoOfertaImplante.Bloqueado;
             for (int i = 0; i < filasTabla.Count; i++)
             {
                 FilaTabla f = filasTabla[i];
@@ -826,6 +865,10 @@ namespace MechaCyberpunk.UI.Clinica
         {
             switch (oferta.Estado)
             {
+                case EstadoOfertaImplante.Bloqueado:
+                    etiqueta.text = TextoNoDisponible;
+                    etiqueta.color = TrazoH10.TextoTenue;
+                    break;
                 case EstadoOfertaImplante.YaLoMejor:
                     etiqueta.text = config.TextoLoMejor;
                     etiqueta.color = TrazoH10.Turquesa;
@@ -863,7 +906,7 @@ namespace MechaCyberpunk.UI.Clinica
             {
                 return;
             }
-            OfertaImplante oferta = servicio.Opcion((EspacioImplante)indice);
+            OfertaImplante oferta = Oferta((EspacioImplante)indice);
             Color color;
             switch (oferta.Estado)
             {
@@ -877,6 +920,10 @@ namespace MechaCyberpunk.UI.Clinica
                     break;
                 case EstadoOfertaImplante.LigaBaja:
                     textoBoton.text = string.Format(config.FormatoEtiquetaLiga, oferta.LigaQueAbre);
+                    color = TrazoH10.TextoTenue;
+                    break;
+                case EstadoOfertaImplante.Bloqueado:
+                    textoBoton.text = TextoNoDisponible;
                     color = TrazoH10.TextoTenue;
                     break;
                 default:

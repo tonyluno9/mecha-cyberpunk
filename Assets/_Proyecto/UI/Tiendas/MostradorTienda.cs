@@ -197,6 +197,11 @@ namespace MechaCyberpunk.UI.Tiendas
             {
                 return false;
             }
+            if (!CandadosMundo.TiendaPermitida(string.Empty))
+            {
+                texto = CandadosMundo.AvisoAunNo; // T-78: inicio guiado: las tiendas sueltas no abren
+                return false;
+            }
             ILugar lugar = BuscarLugar();
             if (lugar != null && !lugar.EstaAbierto)
             {

@@ -922,6 +922,7 @@ namespace MechaCyberpunk.UI.Hud
                     case TipoCandidatoAPie.Montable:
                         c.Candidato = TipoCandidatoInteraccion.Montable;
                         c.NombreCandidato = interaccion.MontableCandidato != null ? interaccion.MontableCandidato.Nombre : null;
+                        c.MontableBloqueado = CandadosMundo.RoboCarros && interaccion.MontableCandidato != null && interaccion.MontableCandidato.Modo == ModoJugador.Carro;
                         break;
                     case TipoCandidatoAPie.Interactuable:
                         c.Candidato = TipoCandidatoInteraccion.Interactuable;

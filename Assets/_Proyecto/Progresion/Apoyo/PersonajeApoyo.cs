@@ -183,6 +183,12 @@ namespace MechaCyberpunk.Progresion.Apoyo
             {
                 return;
             }
+            // T-78: en el inicio guiado solo sirve la tienda del paso (el Doc o Tino); lo que no es del paso dice AÚN NO.
+            if (regalo == null && CandadosMundo.Tiendas && !ServicioPermitido())
+            {
+                CandadosMundo.Negar();
+                return;
+            }
             if (regalo != null)
             {
                 Action accion = regalo;
@@ -229,6 +235,16 @@ namespace MechaCyberpunk.Progresion.Apoyo
                 }
             }
             Usado?.Invoke(datos.Id);
+        }
+
+        private bool ServicioPermitido()
+        {
+            switch (datos.Servicio)
+            {
+                case ServicioApoyo.Mejoras: return CandadosMundo.TiendaPermitida(CandadosMundo.TiendaTino);
+                case ServicioApoyo.Curar: return CandadosMundo.TiendaPermitida(CandadosMundo.TiendaDoc);
+                default: return true;
+            }
         }
 
         private void Curar()

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Progresion.Partida;
 using MechaCyberpunk.UI.Kit;
@@ -14,12 +15,12 @@ namespace MechaCyberpunk.Progresion.Recorrido
     {
         public static AvisoTutorialHistoria Actual { get; private set; }
 
-        private string idPendiente;
-        private string textoPendiente;
+        // T-78: una cola (antes era uno solo): "YA ERES LIBRE" y el aviso de la máquina pueden pedirse en el mismo cuadro.
+        private readonly List<KeyValuePair<string, string>> pendientes = new List<KeyValuePair<string, string>>();
 
         /// <summary>True si hay un aviso esperando o ya abierto.</summary>
-        public bool Visible => !string.IsNullOrEmpty(idPendiente) || VentanaAviso.Abierta;
-        public string TextoActual => VentanaAviso.Abierta ? VentanaAviso.TextoActual : textoPendiente ?? string.Empty;
+        public bool Visible => pendientes.Count > 0 || VentanaAviso.Abierta;
+        public string TextoActual => VentanaAviso.Abierta ? VentanaAviso.TextoActual : pendientes.Count > 0 ? pendientes[0].Value : string.Empty;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void Reiniciar() => Actual = null;
@@ -41,20 +42,25 @@ namespace MechaCyberpunk.Progresion.Recorrido
             {
                 return;
             }
-            idPendiente = id;
-            textoPendiente = aviso;
+            foreach (KeyValuePair<string, string> p in pendientes)
+            {
+                if (p.Key == id)
+                {
+                    return;
+                }
+            }
+            pendientes.Add(new KeyValuePair<string, string>(id, aviso));
         }
 
         /// <summary>Cancela el aviso pendiente (uno ya abierto lo cierra el jugador con ENTENDIDO).</summary>
         public void Quitar()
         {
-            idPendiente = null;
-            textoPendiente = null;
+            pendientes.Clear();
         }
 
         private void Update()
         {
-            if (string.IsNullOrEmpty(idPendiente))
+            if (pendientes.Count == 0)
             {
                 return;
             }
@@ -65,12 +71,14 @@ namespace MechaCyberpunk.Progresion.Recorrido
             {
                 return;
             }
-            string id = idPendiente;
-            string aviso = textoPendiente;
+            List<KeyValuePair<string, string>> lista = new List<KeyValuePair<string, string>>(pendientes);
             Quitar();
-            if (AvisosUnicos.Marcar(id))
+            foreach (KeyValuePair<string, string> p in lista)
             {
-                VentanaAviso.Mostrar(aviso);
+                if (AvisosUnicos.Marcar(p.Key))
+                {
+                    VentanaAviso.Mostrar(p.Value); // la ventana pone en cola las que lleguen con una abierta
+                }
             }
         }
     }

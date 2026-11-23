@@ -7,6 +7,8 @@ using MechaCyberpunk.Economia;
 using MechaCyberpunk.IA.APie;
 using MechaCyberpunk.Personaje;
 using MechaCyberpunk.Personaje.Combate;
+using MechaCyberpunk.Personaje.Habilidades;
+using MechaCyberpunk.UI.Armas;
 using MechaCyberpunk.Personaje.Jugador;
 using MechaCyberpunk.Personaje.Movimiento;
 using MechaCyberpunk.Personaje.Vida;
@@ -103,6 +105,8 @@ namespace MechaCyberpunk.Progresion.Recorrido
         private float inicioDespierta = float.MaxValue;
         // T-1656: los SKULLS salen poco después de que despierta (ya de pie), para esperarlo a media calle antes de que se aleje.
         private const float SegundosHastaMolestia = 6f;
+        private const float MetrosEntraProteccionTianguis = 80f;
+        private const float MetrosSaleProteccionTianguis = 110f;
         private GameObject ranuraCerrada;
         private RecintoJefe recinto;
         private bool jefeMostrado;
@@ -117,6 +121,11 @@ namespace MechaCyberpunk.Progresion.Recorrido
         private bool ruedaAvisada;
         private Expendedora maquinaHambre;
         private IRelojMundo relojVigilado;
+        // T-78: aviso suave si se aleja del Doc y protección del Tianguis por cercanía.
+        private float proximoAvisoLejos;
+        private float distanciaDocAntes;
+        private float proximaMuestraDoc;
+        private bool tianguisProtegido;
 
         // ---------- Arranque ----------
 
@@ -268,12 +277,14 @@ namespace MechaCyberpunk.Progresion.Recorrido
         {
             Registro<IGuardable>.Agregar(this);
             AvisosUnicos.Cambio += GuardarPartida; // T-62: un aviso nuevo (o el tutorial de prótesis completo) se guarda en la partida
+            CandadosMundo.Negado += AvisarNegado;
         }
 
         private void OnDisable()
         {
             Registro<IGuardable>.Quitar(this);
             AvisosUnicos.Cambio -= GuardarPartida;
+            CandadosMundo.Negado -= AvisarNegado;
         }
 
         private void OnDestroy()
@@ -281,6 +292,8 @@ namespace MechaCyberpunk.Progresion.Recorrido
             if (Actual == this)
             {
                 Actual = null;
+                CandadosMundo.Liberar(); // T-78: sin recorrido (título, otra partida) el mundo no queda con candados
+                PestanasBancoTino.BloqueoSalida = null;
             }
             DejarDeVigilarReloj();
             Cancelar();
@@ -409,6 +422,9 @@ namespace MechaCyberpunk.Progresion.Recorrido
             paso = nuevo;
             sub = 0;
             jefeMostrado = false;
+            tianguisProtegido = false;
+            PestanasBancoTino.BloqueoSalida = null;
+            GestorCandados.Aplicar(nuevo); // T-78: los candados del mundo según el paso (también al cargar la partida: Reanudar pasa por aquí)
             // T-1658: de recibir el dinero del maletín a salir del menú de prótesis del suero, la camilla del Doc no se usa; al terminar sale el tutorial de prótesis.
             if (nuevo >= PasoRecorrido.Dinero && nuevo <= PasoRecorrido.Suero)
             {
@@ -457,6 +473,7 @@ namespace MechaCyberpunk.Progresion.Recorrido
                 case PasoRecorrido.Decision: EntrarDecision(); break;
                 case PasoRecorrido.Dinero: EntrarDinero(); break;
                 case PasoRecorrido.Suero: EntrarSuero(); break;
+                case PasoRecorrido.UsarProtesis: EntrarUsarProtesis(); break;
                 case PasoRecorrido.Armas: EntrarArmas(); break;
                 case PasoRecorrido.Inventor: EntrarInventor(); break;
                 case PasoRecorrido.Chica: EntrarChica(); break;
@@ -606,6 +623,9 @@ namespace MechaCyberpunk.Progresion.Recorrido
             }
             Fijar(TablaRecorrido.ObjetivoDoc, doc.Posicion);
             doc.DarRegalo(() => IrA(PasoRecorrido.Suero));
+            distanciaDocAntes = 0f;
+            proximoAvisoLejos = 0f;
+            proximaMuestraDoc = 0f;
             GuardarPartida();
         }
 
@@ -623,9 +643,9 @@ namespace MechaCyberpunk.Progresion.Recorrido
                 {
                     Fijar(TablaRecorrido.ObjetivoMejora, doc.Posicion);
                 }
-                if (Registro<IImplantes>.Actual == null)
+                if (Registro<IImplantes>.Actual == null || Registro<IImplantes>.Actual.Nivel(EspacioImplante.Piernas) > 0)
                 {
-                    IrA(PasoRecorrido.Armas);
+                    IrA(PasoRecorrido.UsarProtesis); // sin servicio de implantes, o ya tiene las piernas (partida vieja): no hay nada que instalar
                     return;
                 }
                 MostradorClinica clinica = FindFirstObjectByType<MostradorClinica>();
@@ -637,18 +657,67 @@ namespace MechaCyberpunk.Progresion.Recorrido
         }
 
         // 9. T-59: con Tino, en el CIC, comprar el arma (su banco tiene COMPRAR y MEJORAR). En cuanto la tienes, sales a la calle y sigue la chica.
+        // T-78: es obligatorio comprar un arma Y ponerle una mejora; el banco no deja salir hasta tener las dos (PestanasBancoTino.BloqueoSalida).
         private void EntrarArmas()
         {
-            sub = TieneArma() ? 1 : 0;
+            sub = TieneArma() && TieneMejoraDeArma() ? 1 : 0;
             PersonajeApoyo inventor = viejo != null ? viejo.Inventor : null;
             if (sub == 0)
             {
-                Fijar(TablaRecorrido.ObjetivoInventor, inventor != null ? inventor.Posicion : PosicionGrupos(viejo != null ? viejo.GruposTianguis : null));
+                Fijar(TablaRecorrido.ObjetivoTino, inventor != null ? inventor.Posicion : PosicionGrupos(viejo != null ? viejo.GruposTianguis : null));
+                PestanasBancoTino.BloqueoSalida = FaltaEnElBanco;
                 GuardarPartida();
                 return;
             }
             IrA(PasoRecorrido.Chica);
         }
+
+        private string FaltaEnElBanco() => paso == PasoRecorrido.Armas ? GestorCandados.FaltaEnElBanco(TieneArma(), TieneMejoraDeArma()) : string.Empty;
+
+        // T-78: tras instalar las piernas del Doc, usarlas: Tab, PIERNAS y correr. La ventana del tutorial (TutorialProtesis, con ENTENDIDO) sale al
+        // pisar la calle (IrA llama a PrimeraVisitaClinica.Terminar); el paso avanza solo cuando las piernas están activas y corre.
+        private void EntrarUsarProtesis()
+        {
+            Quitar();
+            (Registro<IObjetivos>.Actual as ServicioObjetivos)?.Fijar(new Objetivo(TablaRecorrido.ObjetivoUsarProtesis, IdLugar.Ninguno));
+            GuardarPartida();
+        }
+
+        private void ActualizarUsarProtesis(Transform jugador)
+        {
+            HabilidadesProtesis habilidades = HabilidadesProtesis.Actual;
+            ControladorAPie controlador = jugador.GetComponentInChildren<ControladorAPie>();
+            if (habilidades == null || controlador == null)
+            {
+                return;
+            }
+            bool activas = habilidades.Estado(HabilidadProtesis.Piernas) == EstadoHabilidad.Activa;
+            if (GestorCandados.UsoPiernasCompleto(activas, controlador.PidiendoCorrer, controlador.Velocidad.magnitude))
+            {
+                IrA(PasoRecorrido.Armas);
+            }
+        }
+
+        // T-78: el aviso suave "VE CON EL DOC" si se aleja mucho del Doc antes de recibir el suero. Sin paredes.
+        private void ActualizarDinero(Transform jugador)
+        {
+            PersonajeApoyo doc = viejo != null ? viejo.Doc : null;
+            if (doc == null || Time.time < proximaMuestraDoc)
+            {
+                return;
+            }
+            proximaMuestraDoc = Time.time + 1f;
+            float distancia = Plano(jugador.position, doc.Posicion);
+            if (Time.time >= proximoAvisoLejos && distanciaDocAntes > 0f && GestorCandados.DebeAvisarLejosDelDoc(distancia, distanciaDocAntes))
+            {
+                proximoAvisoLejos = Time.time + 8f;
+                Avisar(GestorCandados.AvisoDoc, MechaCyberpunk.UI.Hud.TipoAviso.Neutro);
+            }
+            distanciaDocAntes = distancia;
+        }
+
+        // T-78: el candado le negó algo al jugador (carro, tienda...): aviso suave en el HUD.
+        private static void AvisarNegado(string texto) => Avisar(texto, MechaCyberpunk.UI.Hud.TipoAviso.Neutro);
 
         // T-62: acabas de comprar el arma: sale el aviso de la rueda de armas (una sola vez; espera a que cierres el banco).
         private void AvisarRueda()
@@ -683,13 +752,14 @@ namespace MechaCyberpunk.Progresion.Recorrido
         private void ReproducirChica()
         {
             sub = 1;
-            Cinematica("C06", () => MisionProtegida.Activar("historia: guerra con los SKULLS", false), () => IrA(PasoRecorrido.GuerraSkulls));
+            Cinematica("C06", null, () => IrA(PasoRecorrido.GuerraSkulls));
         }
 
         // 12. Guerra con los SKULLS: liberar el Tianguis. Pelea protegida; la otra pandilla (Neón Alto) sigue apagada.
         private void EntrarGuerraSkulls()
         {
-            MisionProtegida.Activar("historia: guerra con los SKULLS", false);
+            // T-78: el mundo ya es libre; la pelea protegida solo se activa al acercarse al Tianguis (ActualizarProteccionTianguis).
+            AvisoTutorialHistoria.Actual?.Mostrar(AvisosUnicos.Libre, GestorCandados.TextoLibre);
             Prender(viejo != null ? viejo.GruposNeon : null, false);
             if (!hambreResuelta && IniciarHambre())
             {
@@ -888,7 +958,7 @@ namespace MechaCyberpunk.Progresion.Recorrido
             Keyboard teclado = Keyboard.current;
             if (teclado != null && teclado.f8Key.wasPressedThisFrame && !Pausa.Activa && paso != PasoRecorrido.Libre && paso != PasoRecorrido.Ninguno)
             {
-                SaltarA(paso + 1);
+                SaltarA(GestorCandados.Siguiente(paso));
                 return;
             }
 #endif
@@ -921,11 +991,23 @@ namespace MechaCyberpunk.Progresion.Recorrido
                 case PasoRecorrido.Suero:
                     ActualizarSuero();
                     break;
+                case PasoRecorrido.Dinero:
+                    ActualizarDinero(jugador);
+                    break;
+                case PasoRecorrido.UsarProtesis:
+                    ActualizarUsarProtesis(jugador);
+                    break;
                 case PasoRecorrido.Armas:
                     if (sub == 0 && TieneArma())
                     {
-                        AvisarRueda();
-                        IrA(PasoRecorrido.Chica);
+                        if (!ruedaAvisada)
+                        {
+                            AvisarRueda(); // el aviso espera a que cierres el banco (AvisoTutorialHistoria)
+                        }
+                        if (TieneMejoraDeArma() && !PestanasBancoTino.Abierto)
+                        {
+                            IrA(PasoRecorrido.Chica);
+                        }
                     }
                     break;
                 case PasoRecorrido.Chica:
@@ -936,6 +1018,7 @@ namespace MechaCyberpunk.Progresion.Recorrido
                     {
                         break; // esperando a que compre algo en la máquina
                     }
+                    ActualizarProteccionTianguis(jugador);
                     if (ActualizarConquista(viejo != null ? viejo.ZonaTianguis : "tianguis", viejo != null ? viejo.GruposTianguis : null,
                         TablaRecorrido.ObjetivoJefeSkulls, IdPandilla.Calaveras))
                     {
@@ -964,6 +1047,26 @@ namespace MechaCyberpunk.Progresion.Recorrido
             }
         }
 
+        // T-78: la misión protegida de la guerra con los SKULLS vale solo cerca del Tianguis (con un margen para no prender y apagar).
+        private void ActualizarProteccionTianguis(Transform jugador)
+        {
+            float distancia = Plano(jugador.position, PosicionGrupos(viejo != null ? viejo.GruposTianguis : null));
+            bool cerca = distancia <= (tianguisProtegido ? MetrosSaleProteccionTianguis : MetrosEntraProteccionTianguis);
+            if (cerca == tianguisProtegido)
+            {
+                return;
+            }
+            tianguisProtegido = cerca;
+            if (cerca)
+            {
+                MisionProtegida.Activar("historia: guerra con los SKULLS", false);
+            }
+            else
+            {
+                MisionProtegida.Desactivar();
+            }
+        }
+
         private void ActualizarSuero()
         {
             if (sub != 1)
@@ -973,7 +1076,12 @@ namespace MechaCyberpunk.Progresion.Recorrido
             IImplantes implantes = Registro<IImplantes>.Actual;
             if (implantes != null && implantes.Cantidad > implantesAntes)
             {
-                IrA(PasoRecorrido.Armas);
+                MostradorClinica clinica = FindFirstObjectByType<MostradorClinica>();
+                if (clinica != null && (clinica.Operando || clinica.PantallaAbierta))
+                {
+                    return; // que termine la operación (fundido y subtítulo) antes de salir a la calle
+                }
+                IrA(PasoRecorrido.UsarProtesis);
             }
         }
 
@@ -1249,6 +1357,23 @@ namespace MechaCyberpunk.Progresion.Recorrido
             visual.Caido = false;
             yield return new WaitForSecondsRealtime(SegundosEnNegroLevantarse);
             control?.ActivarControl(true);
+        }
+
+        private static bool TieneMejoraDeArma()
+        {
+            ArsenalJugador arsenal = Registro<ArsenalJugador>.Actual;
+            if (arsenal == null)
+            {
+                return false;
+            }
+            foreach (ArmaAPie arma in Enum.GetValues(typeof(ArmaAPie)))
+            {
+                if (arma != ArmaAPie.Punos && arma != ArmaAPie.Granada && arsenal.Nivel(arma) >= 1)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         private bool TieneArma()
