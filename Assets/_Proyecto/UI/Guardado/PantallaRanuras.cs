@@ -4,6 +4,7 @@ using MechaCyberpunk.Progresion.Guardado;
 using MechaCyberpunk.Progresion.Partida;
 using MechaCyberpunk.UI.Kit;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace MechaCyberpunk.UI.Guardado
@@ -26,6 +27,10 @@ namespace MechaCyberpunk.UI.Guardado
         public const string TextoSi = "SÍ";
         public const string TextoNo = "NO";
         public const string TextoAyuda = "↑ ↓ ELEGIR · ENTER ACEPTAR · ESC VOLVER";
+        /// <summary>T50: en CARGAR el ratón elige con un clic y carga con doble clic.</summary>
+        public const string TextoAyudaCargar = "↑ ↓ O CLIC ELEGIR · ENTER O DOBLE CLIC CARGAR · ESC VOLVER";
+        private const float AlfaPanelH10 = 0.96f;
+        private const float AlfaFondoH10 = 0.93f;
 
         [Header("Medidas (px a 1920x1080)")]
         [SerializeField] private Vector2 tamanoFila = new Vector2(1080f, 96f);
@@ -48,6 +53,7 @@ namespace MechaCyberpunk.UI.Guardado
         private ModoRanuras modo;
         private int ranuraConfirmar = -1;
         private ControladorAPie controlCongelado;
+        private Text textoAyuda;
 
         public bool Abierta => contenido != null && contenido.activeSelf;
         public bool ConfirmacionAbierta => confirmar != null && confirmar.activeSelf;
@@ -157,9 +163,11 @@ namespace MechaCyberpunk.UI.Guardado
             {
                 Armar();
             }
+            Vestir();
             for (int i = 0; i < filas.Length; i++)
             {
                 int ranura = i;
+                filas[i].gameObject.AddComponent<ClicRanura>();
                 filas[i].AlPulsar.AddListener(() => AlPulsarRanura(ranura));
             }
             volver.AlPulsar.AddListener(Cerrar);
@@ -169,6 +177,57 @@ namespace MechaCyberpunk.UI.Guardado
             menuConfirmar.Regresar += CancelarConfirmacion;
             confirmar.SetActive(false);
             contenido.SetActive(false);
+        }
+
+        /// <summary>
+        /// T50: el estilo del menú nuevo (H10, el mismo de la pausa y las opciones): fondo y paneles de cristal con su línea fina, filas sin fondo que se
+        /// encienden, letra Rajdhani y colores de TrazoH10. Se hace al armar la pantalla, por código, así que el prefab no cambia.
+        /// </summary>
+        private void Vestir()
+        {
+            Transform raiz = contenido.transform;
+            Transform fondoPantalla = raiz.Find("FondoPantalla");
+            if (fondoPantalla != null && fondoPantalla.TryGetComponent(out Image velo))
+            {
+                velo.color = TrazoH10.ConAlfa(TrazoH10.FondoPantalla, AlfaFondoH10);
+            }
+            Transform panel = raiz.Find("Panel");
+            if (panel != null)
+            {
+                Image imagen = panel.GetComponent<Image>();
+                VestidoH10.Panel(imagen);
+                imagen.color = TrazoH10.ConAlfa(TrazoH10.FondoPanel, AlfaPanelH10);
+                Transform ayuda = panel.Find("Ayuda");
+                textoAyuda = ayuda != null ? ayuda.GetComponent<Text>() : null;
+            }
+            if (confirmar != null)
+            {
+                VestidoH10.Panel(confirmar.GetComponent<Image>());
+                Transform pregunta = confirmar.transform.Find("Pregunta");
+                if (pregunta != null)
+                {
+                    pregunta.GetComponent<Text>().color = TrazoH10.Coral;
+                }
+            }
+            foreach (BotonCyberfix b in new[] { volver, si, no })
+            {
+                VestidoH10.Boton(b);
+            }
+            for (int i = 0; i < filas.Length; i++)
+            {
+                VestidoH10.Boton(filas[i]);
+                objetivos[i].font = TrazoH10.Fuente;
+                objetivos[i].fontSize = TrazoH10.TamanoDato;
+            }
+            if (titulo != null)
+            {
+                titulo.color = TrazoH10.Turquesa;
+            }
+            if (textoAyuda != null)
+            {
+                textoAyuda.color = TrazoH10.TextoTenue;
+            }
+            VestidoH10.Fuente(raiz);
         }
 
         private void OnDisable()
@@ -196,6 +255,10 @@ namespace MechaCyberpunk.UI.Guardado
             }
             modo = nuevoModo;
             titulo.text = modo == ModoRanuras.Guardar ? TituloGuardar : TituloCargar;
+            if (textoAyuda != null)
+            {
+                textoAyuda.text = modo == ModoRanuras.Cargar ? TextoAyudaCargar : TextoAyuda;
+            }
             Refrescar();
             confirmar.SetActive(false);
             PilaPantallas.Abrir(this);
@@ -236,7 +299,6 @@ namespace MechaCyberpunk.UI.Guardado
         private void Refrescar()
         {
             ServicioGuardado servicio = ServicioGuardado.Actual;
-            EstiloCyberfix e = KitUI.Estilo;
             for (int i = 0; i < filas.Length; i++)
             {
                 ResumenRanura resumen = servicio != null ? servicio.ResumenDe(i) : ResumenRanura.SinPartida(i);
@@ -244,7 +306,7 @@ namespace MechaCyberpunk.UI.Guardado
                 bool activa = modo == ModoRanuras.Guardar ? i != ServicioGuardado.RanuraAuto : !resumen.Vacia;
                 filas[i].interactable = activa;
                 objetivos[i].text = resumen.Vacia ? string.Empty : resumen.Objetivo;
-                objetivos[i].color = activa ? e.Turquesa : e.Desactivado;
+                objetivos[i].color = activa ? TrazoH10.Turquesa : TrazoH10.TextoTenue;
             }
         }
 
@@ -258,6 +320,12 @@ namespace MechaCyberpunk.UI.Guardado
             }
             if (modo == ModoRanuras.Cargar)
             {
+                // T50: un clic de ratón solo elige la fila; el doble clic (o Enter) carga.
+                if (ClicRanura.EsClicSimple(filas[ranura]))
+                {
+                    filas[ranura].Elegir();
+                    return;
+                }
                 Cerrar();
                 MechaCyberpunk.UI.Titulo.PantallaCargando.Mostrar();
                 FlujoPartida.IrACargar(ranura);

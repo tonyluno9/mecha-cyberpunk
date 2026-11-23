@@ -310,7 +310,9 @@ namespace MechaCyberpunk.Tests.UI
             // Créditos.
             PantallaCreditos creditos = PantallaCreditos.Abrir(null);
             yield return new WaitForSecondsRealtime(9f);
-            AssertMarco(creditos.transform.Find("CanvasCreditos/Panel").GetComponent<Image>(), "El panel de créditos");
+            Image panelCreditos = creditos.transform.Find("CanvasCreditos/Panel").GetComponent<Image>();
+            Assert.AreSame(TrazoH10.Relleno, panelCreditos.sprite, "T50: el panel de créditos usa el estilo H10 del menú nuevo");
+            Assert.AreEqual(Image.Type.Sliced, panelCreditos.type, "El panel de créditos es 9-slice");
             Capturar("creditos", camara);
             yield return Pulsar(teclado.escapeKey);
 
