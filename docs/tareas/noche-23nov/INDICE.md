@@ -11,7 +11,7 @@ Le gustó (NO se toca): el logo, las opciones, levantarse del suelo al inicio, l
 | T53 | [Todos los humanos usan EXACTAMENTE las animaciones del jugador](T53.md) | B | HECHA |
 | T54 | [Reducir los carros estacionados a la mitad](T54.md) | A | pendiente |
 | T55 | [Verificar que ya no suena el roce de ropa (T49)](T55.md) | B | HECHA |
-| T56 | [Prótesis: holograma más rápido y en su lugar; mismas animaciones con y sin prótesis](T56.md) | B | pendiente |
+| T56 | [Prótesis: holograma más rápido y en su lugar; mismas animaciones con y sin prótesis](T56.md) | B | HECHA |
 | T57 | [Menú de prótesis (Tab) con el cuerpo holográfico](T57.md) | B | pendiente |
 | T58 | [Estela al caer con las piernas: efecto de humo](T58.md) | B | pendiente |
 | T59 | [Tino vende las armas y las mejora; fuera la armería](T59.md) | B (quitar armería del mapa: A) | HECHA |

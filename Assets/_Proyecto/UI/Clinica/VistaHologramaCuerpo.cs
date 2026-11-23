@@ -228,7 +228,8 @@ namespace MechaCyberpunk.UI.Clinica
             float escala = cuerpo.localScale.x > 0f ? cuerpo.localScale.x : 1f;
             Vector3 fuera = (centroLocal.sqrMagnitude > MinimoDireccion ? centroLocal.normalized : Vector3.up) * (config.DistanciaEnsamble / escala);
             ensamble = 1f;
-            pieza.localPosition = fuera;
+            // T-1759 (T56): en la instalación lenta la pieza se dibuja EN su lugar; antes se quedaba en "fuera" (las piernas, bajo los pies).
+            pieza.localPosition = ensambleLento ? Vector3.zero : fuera;
             tweenEnsamble = DOTween.To(() => ensamble, v =>
                 {
                     ensamble = v;
@@ -242,6 +243,8 @@ namespace MechaCyberpunk.UI.Clinica
                 .SetEase(ensambleLento ? Ease.Linear : Ease.OutCubic).SetUpdate(true).SetTarget(this)
                 .OnComplete(() =>
                 {
+                    pieza.localPosition = Vector3.zero;
+                    pieza.localScale = Vector3.one;
                     Destellar();
                     Pintar();
                     alTerminar?.Invoke();
