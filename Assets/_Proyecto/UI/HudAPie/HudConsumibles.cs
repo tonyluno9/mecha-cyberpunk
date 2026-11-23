@@ -47,7 +47,21 @@ namespace MechaCyberpunk.UI.Hud
 
         private void OnEnable() => AccionConsumirEquipado.Habilitar();
 
-        private void OnDisable() => AccionConsumirEquipado.Deshabilitar();
+        private void OnDisable()
+        {
+            AccionConsumirEquipado.Deshabilitar();
+            if (consumibles != null)
+            {
+                consumibles.Curado -= AlCurar;
+                consumibles = null;
+            }
+        }
+
+        // T-63: segundos que se muestra "+N VIDA" tras la última curación.
+        private const float SegundosAviso = 2f;
+        private readonly AvisoCuracion aviso = new AvisoCuracion();
+
+        private void AlCurar(float curado) => aviso.Sumar(curado, SegundosAviso);
 
         private void Start()
         {
@@ -105,6 +119,11 @@ namespace MechaCyberpunk.UI.Hud
             {
                 IJugador j = Registro<IJugador>.Actual;
                 consumibles = j != null && j.Raiz != null ? j.Raiz.GetComponent<ConsumiblesJugador>() : null;
+                if (consumibles != null)
+                {
+                    consumibles.Curado -= AlCurar;
+                    consumibles.Curado += AlCurar;
+                }
                 vida = j != null && j.Raiz != null ? j.Raiz.GetComponent<VidaAPie>() : null;
                 interaccion = j != null && j.Raiz != null ? j.Raiz.GetComponentInChildren<InteraccionAPie>() : null;
                 if (consumibles == null)
@@ -157,8 +176,9 @@ namespace MechaCyberpunk.UI.Hud
                 }
             }
             ObjetoEquipado = equipados[0];
-            // T-1529: la línea "[E] BEBIDA x2" repetía lo que ya dicen las casillas (ícono, tecla y cantidad): ya no se escribe.
-            textoConsumo.text = string.Empty;
+            // T-1529: la línea "[E] BEBIDA x2" repetía lo que ya dicen las casillas. T-63: ahí se muestra cuánto curó el último consumible.
+            aviso.Avanzar(Time.unscaledDeltaTime);
+            textoConsumo.text = aviso.Visible ? "+" + Mathf.RoundToInt(aviso.Total) + " VIDA" : string.Empty;
         }
 
         // Qué objeto hay en cada ranura con lo que lleva ahora (sin los que se quitaron de la rueda).
