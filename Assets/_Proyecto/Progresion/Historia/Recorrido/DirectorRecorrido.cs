@@ -519,6 +519,13 @@ namespace MechaCyberpunk.Progresion.Recorrido
         {
             MisionProtegida.Activar("historia: los SKULLS lo molestan", false);
             Quitar();
+            if (molestia != null)
+            {
+                // T-1720 (T77): una sola escena de SKULLS a la vez: si ya había una, se quita antes de armar otra.
+                molestia.Terminada -= AlTerminarMolestia;
+                molestia.Cancelar();
+                Destroy(molestia);
+            }
             molestia = gameObject.AddComponent<MolestiaSkulls>();
             molestia.Terminada += AlTerminarMolestia;
             float distancia = datos != null ? datos.DistanciaAparicionSkulls : 10f;
