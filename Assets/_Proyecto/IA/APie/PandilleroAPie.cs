@@ -712,7 +712,8 @@ namespace MechaCyberpunk.IA.APie
             }
             if (modelo.EstaKO)
             {
-                if (desaparicion >= 0f && Time.time >= desaparicion)
+                // T-1703 (T71): se quita pasado el tiempo de los datos, pero solo fuera de la vista de la cámara (máximo 120 s a la vista).
+                if (desaparicion >= 0f && ReglaLimpiezaCuerpo.Debe(Time.time - (desaparicion - datos.SegundosParaDesaparecer), datos.SegundosParaDesaparecer, ReglaLimpiezaCuerpo.FueraDeVista(transform.position)))
                 {
                     desaparicion = -1f;
                     gameObject.SetActive(false);
