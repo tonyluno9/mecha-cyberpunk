@@ -52,3 +52,5 @@ Escenas: los subagentes trabajan de uno en uno en la carpeta principal (Unity ba
 - T45: código en tony/T-1683-menos-carros (9f74562), falta correr MenosCarrosT1683.Aplicar en la carpeta principal.
 - T38+E3: en curso (T-1682).
 - Sesión B: TERMINÓ (2579abf). Pide en para-sesion-A ronda D: Historia_EsperaSkulls, expendedora entre CIC y Tianguis, PuntoTrepar a azoteas, (opcional) vendedores y drones.
+- T38+E3: HECHA, merge 5f2c0d5. T45: HECHA, merge fde5981. T47: HECHA, merge 93f3e24. para-sesion-A ronda D: HECHO, merge 29e3705.
+- Builds: HECHOS (Demo 21:27, Juego 21:29, Result: Success; prueba de inicio del Demo bien). Reporte: docs/reporte-tareas-23nov.md. RONDA D TERMINADA.
