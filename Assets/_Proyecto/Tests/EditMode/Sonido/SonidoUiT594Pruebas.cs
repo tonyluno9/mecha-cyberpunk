@@ -52,7 +52,8 @@ namespace MechaCyberpunk.Tests.Sonido
             Assert.IsNotNull(clip, "El provisional generado por codigo existe.");
             Assert.Less(clip.length, 0.15f, "Es un tic, no una melodia.");
             CatalogoSonidos catalogo = AssetDatabase.LoadAssetAtPath<CatalogoSonidos>("Assets/_Proyecto/Progresion/Datos/CatalogoSonidos.asset");
-            Assert.IsNotNull(catalogo.Elegir("UI_TEXTO"), "El catalogo tiene el ID.");
+            // T65: el provisional UI_TEXTO ya no entra al catalogo (queda en silencio, anotado en docs/sonidos-faltan.md).
+            Assert.IsNull(catalogo.Elegir("UI_TEXTO"), "UI_TEXTO ya no suena.");
         }
     }
 }

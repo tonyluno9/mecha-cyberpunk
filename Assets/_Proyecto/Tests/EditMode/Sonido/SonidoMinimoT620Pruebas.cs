@@ -78,7 +78,10 @@ namespace MechaCyberpunk.Tests.Sonido
             List<string> sinClip = new List<string>();
             foreach (string id in ReglaMezclaSonidos.IdsEncendidos)
             {
-                if (!c.Tiene(id)) sinClip.Add(id);
+                // T65: un ID viejo suena con su alias nuevo; sin alias queda en silencio y anotado en docs/sonidos-faltan.md.
+                string nuevo = MapaSonidos19nov.Nuevo(id);
+                bool anotado = System.IO.File.Exists("docs/sonidos-faltan.md") && System.IO.File.ReadAllText("docs/sonidos-faltan.md").Contains(id);
+                if (!c.Tiene(id) && !(nuevo != null && c.Tiene(nuevo)) && !anotado) sinClip.Add(id);
             }
             CollectionAssert.IsEmpty(sinClip, "todos los encendidos tienen archivo (el codigo solo pide RALENTI para el motor; ACELERA queda listo)");
         }

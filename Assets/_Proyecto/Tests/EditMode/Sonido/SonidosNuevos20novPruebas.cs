@@ -68,6 +68,9 @@ namespace MechaCyberpunk.Tests.Sonido
             {
                 string ext = Path.GetExtension(f).ToLowerInvariant();
                 if (ext != ".wav" && ext != ".mp3") continue;
+                // T65: solo cuentan las carpetas nuevas (01_UI a 19_Voces y Musica); las viejas ya no se leen.
+                string carpeta = f.Substring(audio.Length).TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar).Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)[0];
+                if (!Regex.IsMatch(carpeta, "^(0[1-9]|1[0-9])_") && carpeta != "Musica") continue;
                 ids.Add(Variante.Match(Path.GetFileNameWithoutExtension(f)).Groups[1].Value);
             }
             foreach (string d in MapaSonidos20nov.IdsDescartados) ids.Remove(d);
@@ -334,11 +337,17 @@ namespace MechaCyberpunk.Tests.Sonido
             CatalogoSonidos catalogo = AssetDatabase.LoadAssetAtPath<CatalogoSonidos>("Assets/_Proyecto/Progresion/Datos/CatalogoSonidos.asset");
             Assert.IsNotNull(catalogo);
             HashSet<string> conClip = new HashSet<string>(catalogo.Entradas.Where(e => e != null && e.finales != null && e.finales.Length > 0).Select(e => e.id));
-            List<string> faltan = IdsVivos().Where(id => !conClip.Contains(id)).ToList();
+            List<string> faltan = IdsVivos().Where(id => !conClip.Contains(id) && !MapaSonidos20nov.EsDescartado(id)).ToList();
             Assert.IsEmpty(faltan, "IDs sin entrada en el catalogo (corre Mecha Cyberpunk/Sonido/Crear catalogo): " + string.Join(", ", faltan));
             foreach (string d in MapaSonidos20nov.IdsDescartados) Assert.IsFalse(conClip.Contains(d), d + ": no debe estar en el catalogo");
             catalogo.SincronizarInterruptores();
             foreach (string id in MapaSonidos20nov.IdsNuevos) Assert.IsTrue(catalogo.Encendido(id), id + " apagado");
+        }
+
+        private static bool QuedaAnotadoComoFaltante(string id)
+        {
+            string ruta = Path.Combine(Raiz, "docs/sonidos-faltan.md");
+            return File.Exists(ruta) && File.ReadAllText(ruta).Contains(id);
         }
 
         [Test]
@@ -364,6 +373,7 @@ namespace MechaCyberpunk.Tests.Sonido
                 if (conArchivo.Any(x => x.StartsWith(id + "_", StringComparison.Ordinal))) continue; // un prefijo (ROB_VOZ), no un ID
                 string alias = MapaSonidos19nov.Nuevo(id);
                 if (alias != null && conArchivo.Contains(alias)) continue;
+                if (QuedaAnotadoComoFaltante(id) || MapaSonidos20nov.EsDescartado(id)) continue; // T65: el sonido viejo se desconecto y esta en docs/sonidos-faltan.md
                 sin.Add(id + " <- " + string.Join("|", usados[id].Distinct()));
             }
             Assert.IsEmpty(sin, "IDs pedidos por el codigo sin archivo (ni alias a uno): " + string.Join("; ", sin));
