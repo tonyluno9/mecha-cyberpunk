@@ -70,6 +70,12 @@ namespace MechaCyberpunk.UI.Armas
         /// </summary>
         public static Func<string> BloqueoSalida { get; set; }
 
+        /// <summary>T-79: true mientras el jugador está en el campo de tiro (salió del banco por el botón y regresará a él). La historia lo trata como banco abierto.</summary>
+        public static bool EnCampoDeTiro { get; set; }
+
+        /// <summary>T-79: el banco está abierto o el jugador está en el campo de tiro (que vuelve al banco).</summary>
+        public static bool AbiertoOEnCampo => Abierto || EnCampoDeTiro;
+
         /// <summary>La línea de lo que falta para poder salir (pruebas); vacía si no hay bloqueo.</summary>
         public static string LineaFalta => actual != null && actual.cajaFalta != null && actual.cajaFalta.activeSelf ? actual.textoFalta.text : string.Empty;
 
@@ -100,6 +106,7 @@ namespace MechaCyberpunk.UI.Armas
         {
             actual = null;
             BloqueoSalida = null;
+            EnCampoDeTiro = false;
             botonesExtra.Clear();
         }
 

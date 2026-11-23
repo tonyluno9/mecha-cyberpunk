@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 287f2f3be685d044b8dc64113624823a, type: 3}
+  m_Name: DatosCampoTiro
+  m_EditorClassIdentifier: MechaCyberpunk.CampoTiro::MechaCyberpunk.CampoTiro.DatosCampoTiro
+  costales:
+  - {fileID: 3702575159874352153, guid: 3e69b06610a9d0844800d08f2b39b8e4, type: 3}
+  - {fileID: 6335992979632703098, guid: 90444b773b47f634e9e89b263da9d064, type: 3}
+  visualCentinela: {fileID: 6763210813834072146, guid: 6625c3052a7346e46800cf7163e51f5b, type: 3}
+  visualRobotPesado: {fileID: 9075936679948580971, guid: 78d644096829b5d429ea63c3d96e8fd6, type: 3}
+  visualPerro: {fileID: 8133388734837568357, guid: db7f2ac55040f9243a7900cf848f4dbf, type: 3}
+  visualElite: {fileID: 3376699270675252164, guid: 00f0b9eb21f8f474086b3b208f7f075d, type: 3}
+  visualGuardia: {fileID: 4048966988714943168, guid: b49d04f70cb2433439a0b9f5ce51ed3c, type: 3}
+  materialBlanco: {fileID: 2100000, guid: 9902063d810f22c45bf89c8e141963ce, type: 2}
+  materialTurquesa: {fileID: 2100000, guid: a7e10202ff4ee364f98c70b604d05681, type: 2}

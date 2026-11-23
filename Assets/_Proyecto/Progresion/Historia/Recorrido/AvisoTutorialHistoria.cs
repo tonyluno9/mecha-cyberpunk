@@ -66,7 +66,8 @@ namespace MechaCyberpunk.Progresion.Recorrido
             }
             IJugador jugador = Registro<IJugador>.Actual;
             bool enJuego = jugador != null && jugador.Raiz != null && !FlujoPartida.EnTitulo && !Pausa.Activa
-                && PilaPantallas.Vacia && !CinematicaEnCurso.Activa;
+                && PilaPantallas.Vacia && !CinematicaEnCurso.Activa
+                && !MechaCyberpunk.UI.Armas.PestanasBancoTino.EnCampoDeTiro; // T-79: en el campo de tiro no salen avisos de la historia
             if (!enJuego)
             {
                 return;

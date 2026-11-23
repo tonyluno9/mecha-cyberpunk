@@ -37,6 +37,7 @@ namespace MechaCyberpunk.Personaje.Jugador
         {
             Registro<ArsenalJugador>.Quitar(this);
             Desvigilar();
+            DevolverPrestadas();
         }
 
         private void Desvigilar()
@@ -142,8 +143,55 @@ namespace MechaCyberpunk.Personaje.Jugador
             }
         }
 
-        /// <summary>Nivel del arma (0 a 3) o -1 si no la tiene.</summary>
+        // T-1722 (T79): armas "prestadas" mientras se está en el campo de tiro: todas las que no se tienen, en su nivel más bajo del catálogo.
+        // No tocan el inventario ni lo que se guarda: al devolverlas el arsenal queda como estaba.
+        private readonly Dictionary<ArmaAPie, int> prestadas = new Dictionary<ArmaAPie, int>();
+
+        /// <summary>T-1722: true mientras hay armas prestadas (campo de tiro).</summary>
+        public bool Prestado => prestadas.Count > 0;
+
+        /// <summary>T-1722: presta TODAS las armas que no se tienen y pone la munición infinita (<see cref="CargadorPistola.MunicionInfinita"/>).</summary>
+        public void PrestarTodas()
+        {
+            prestadas.Clear();
+            foreach (ArmaAPie arma in (ArmaAPie[])Enum.GetValues(typeof(ArmaAPie)))
+            {
+                if (NivelReal(arma) >= 0)
+                {
+                    continue;
+                }
+                int nivel = 0;
+                if (catalogo != null)
+                {
+                    for (int n = 0; n <= 3; n++)
+                    {
+                        if (catalogo.Buscar(arma, n) != null)
+                        {
+                            nivel = n;
+                            break;
+                        }
+                    }
+                }
+                prestadas[arma] = nivel;
+            }
+            CargadorPistola.MunicionInfinita = true;
+        }
+
+        /// <summary>T-1722: quita las armas prestadas y la munición infinita. El arsenal vuelve a lo que era.</summary>
+        public void DevolverPrestadas()
+        {
+            prestadas.Clear();
+            CargadorPistola.MunicionInfinita = false;
+        }
+
+        /// <summary>Nivel del arma (0 a 3) o -1 si no la tiene. Cuenta las armas prestadas del campo de tiro (T-1722).</summary>
         public int Nivel(ArmaAPie arma)
+        {
+            int real = NivelReal(arma);
+            return real < 0 && prestadas.TryGetValue(arma, out int prestado) ? prestado : real;
+        }
+
+        private int NivelReal(ArmaAPie arma)
         {
             if (desplazadas.Contains(arma))
             {
