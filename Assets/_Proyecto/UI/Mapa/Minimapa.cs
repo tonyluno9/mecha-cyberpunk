@@ -297,8 +297,8 @@ namespace MechaCyberpunk.UI.Mapa
             iconos.Clear();
             posicionesIconos.Clear();
             visiblesIconos.Clear();
-            Reunir(marcas);
-            Reunir(destinos);
+            Reunir(marcas, true);
+            Reunir(destinos, false);
             bool[] quedan = CalculoCallesMapa.SinEncimar(posicionesIconos, visiblesIconos, ladoIcono * SeparacionIconos, ladoFlecha + ladoIcono * 0.5f);
             for (int i = 0; i < iconos.Count; i++)
             {
@@ -309,10 +309,16 @@ namespace MechaCyberpunk.UI.Mapa
             }
         }
 
-        private void Reunir(List<Image> lista)
+        // T-1714: los puntos de personas hostiles (enemigo, jefe, policía, Nova) no se esconden: antes cualquiera a menos de ~16 m caía bajo la flecha del
+        // jugador y desaparecía (Nova y policía no se veían nunca de cerca). Solo se encimían entre sí los íconos de lugar.
+        private void Reunir(List<Image> lista, bool sonMarcas)
         {
             for (int i = 0; i < lista.Count; i++)
             {
+                if (sonMarcas && i < tiposMarcas.Count && IconosMapa.EsEnemigo(tiposMarcas[i]))
+                {
+                    continue;
+                }
                 iconos.Add(lista[i]);
                 posicionesIconos.Add(lista[i].rectTransform.anchoredPosition);
                 visiblesIconos.Add(lista[i].gameObject.activeSelf);

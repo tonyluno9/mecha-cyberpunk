@@ -18,6 +18,8 @@ namespace MechaCyberpunk.Mundo.Ambiente
         private float proximo;
         private float fin = -1f;
         private bool activo;
+        private Transform ancla;
+        private AudioSource fuente;
 
         /// <summary>True durante el instante del parpadeo (para las pruebas).</summary>
         public bool EnParpadeo => activo;
@@ -26,7 +28,46 @@ namespace MechaCyberpunk.Mundo.Ambiente
         {
             Reunir();
             proximo = Time.time + ReglaGlitch.Espera(Random.value);
-            bucle = Sonidos.ReproducirBucle(ReglaGlitch.IdZumbido, transform);
+            IniciarBucle();
+        }
+
+        /// <summary>La fuente del zumbido (la crea el gestor de sonido), o null si aún no suena. Para las pruebas.</summary>
+        public AudioSource FuenteZumbido => fuente;
+
+        /// <summary>El hijo vacío donde suena el zumbido, en el centro de las piezas visuales.</summary>
+        public Transform Ancla => ancla;
+
+        // El transform del objeto puede estar en el origen con las piezas lejos (el Elevador): el sonido sale del centro de los renderers.
+        private void IniciarBucle()
+        {
+            if (ancla == null)
+            {
+                ancla = new GameObject("AnclaZumbido").transform;
+                ancla.SetParent(transform, false);
+            }
+            ancla.position = ReglaGlitch.CentroDe(renderers, transform.position);
+            bucle = Sonidos.ReproducirBucle(ReglaGlitch.IdZumbido, ancla);
+            fuente = null;
+            if (bucle != Sonidos.SinBucle)
+            {
+                foreach (AudioSource a in FindObjectsByType<AudioSource>(FindObjectsSortMode.None))
+                {
+                    if (a.name == "Bucle_" + ReglaGlitch.IdZumbido && (a.transform.position - ancla.position).sqrMagnitude < 0.25f)
+                    {
+                        fuente = a;
+                        break;
+                    }
+                }
+            }
+        }
+
+        // El gestor escribe el volumen en su Update; aquí, después, se sube solo el de esta zona (conserva el ducking y el volumen general).
+        private void LateUpdate()
+        {
+            if (fuente != null && bucle != Sonidos.SinBucle)
+            {
+                fuente.volume = Mathf.Min(1f, fuente.volume * ReglaGlitch.AmplificacionZumbido);
+            }
         }
 
         private void OnDisable()
@@ -36,6 +77,7 @@ namespace MechaCyberpunk.Mundo.Ambiente
             {
                 Sonidos.DetenerBucle(bucle);
                 bucle = Sonidos.SinBucle;
+                fuente = null;
             }
         }
 
@@ -44,7 +86,7 @@ namespace MechaCyberpunk.Mundo.Ambiente
             // Si el gestor de sonido llegó después, engancha el zumbido.
             if (bucle == Sonidos.SinBucle && Registro<ISonidos>.Actual != null)
             {
-                bucle = Sonidos.ReproducirBucle(ReglaGlitch.IdZumbido, transform);
+                IniciarBucle();
             }
             if (activo)
             {
