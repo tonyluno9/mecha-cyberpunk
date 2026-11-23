@@ -202,9 +202,7 @@ namespace MechaCyberpunk.Tests.UI
             mapa.Cerrar();
             yield return null;
             minimapa.Actualizar();
-            Assert.GreaterOrEqual(minimapa.Ruta.Count, 2, "El minimapa también traza la ruta GPS");
-            Assert.Less(Vector3.Distance(minimapa.Ruta[minimapa.Ruta.Count - 1], new Vector3(tino.x, 0f, tino.z)), ToleranciaMetros);
-            Assert.AreEqual(minimapa.Ruta.Count - 1, minimapa.SegmentosRutaVisibles);
+            Assert.IsNull(minimapa.Raiz.Find("Mascara/Mundo/Desplazado/RutaGps"), "T-51: el minimapa no traza ruta, solo muestra la marca");
             Assert.IsTrue(minimapa.PuntoVisible, "La marca sale en el minimapa");
 
             // Otro clic en el mismo icono lo quita y la ruta desaparece de los dos mapas.
@@ -218,7 +216,6 @@ namespace MechaCyberpunk.Tests.UI
             mapa.Cerrar();
             yield return null;
             minimapa.Actualizar();
-            Assert.AreEqual(0, minimapa.SegmentosRutaVisibles, "ni en el minimapa");
             Assert.IsFalse(minimapa.PuntoVisible);
         }
 
@@ -247,7 +244,6 @@ namespace MechaCyberpunk.Tests.UI
             Colocar(mercado + new Vector3(0f, 0f, 55f));
             minimapa.Actualizar();
             Assert.IsTrue(minimapa.PuntoVisible, "Lejos: la marca sale pegada al borde");
-            Assert.Greater(minimapa.SegmentosRutaVisibles, 0);
             Colocar(mercado + new Vector3(0f, 0f, 25f));
             minimapa.Actualizar();
             Assert.IsTrue(PuntoMarcadoMapa.Hay, "Al acercarte la marca sigue ahí");
@@ -259,7 +255,6 @@ namespace MechaCyberpunk.Tests.UI
             minimapa.Actualizar();
             Assert.IsFalse(PuntoMarcadoMapa.Hay, "Al llegar la marca se quita sola");
             Assert.IsFalse(minimapa.PuntoVisible);
-            Assert.AreEqual(0, minimapa.SegmentosRutaVisibles, "y la ruta desaparece");
         }
 
         [Test]

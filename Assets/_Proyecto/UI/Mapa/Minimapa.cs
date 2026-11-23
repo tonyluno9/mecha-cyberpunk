@@ -9,7 +9,7 @@ namespace MechaCyberpunk.UI.Mapa
 {
     /// <summary>
     /// El minimapa (T-409, canvas propio de orden 25). Desde T-700 es CUADRADO, de 260 px, arriba a la derecha como H10_HUD.png, con borde turquesa
-    /// fino, la ruta punteada al objetivo y el cono de vista del jugador; muestra 60 m a la redonda y gira con la cámara (arriba es hacia donde miras). Calles en gris sobre negro,
+    /// fino y el cono de vista del jugador; muestra 60 m a la redonda y gira con la cámara (arriba es hacia donde miras). Calles en gris sobre negro,
     /// manzanas del color de su dueño al 55 %, tú como flecha blanca fija en el centro, el objetivo como rombo naranja (pegado al borde si está
     /// lejos), enemigos en rojo (el jefe más grande), los iconos de los lugares y el punto marcado en el mapa
     /// grande con su distancia. Se esconde en el mecha y con el mapa grande abierto. Las cuentas están en <see cref="CalculoMinimapa"/>.
@@ -58,19 +58,8 @@ namespace MechaCyberpunk.UI.Mapa
         private const float MetrosCalles = 105f;
         /// <summary>Cuántas líneas de calle se dibujan ahora.</summary>
         public int LineasCallesVisibles { get; private set; }
-        // T-632: ruta tipo GPS por las calles hasta el objetivo; se recalcula al moverte más de MetrosParaRecalcular o si el objetivo cambia.
-        private const float MetrosParaRecalcular = 2f;
-        private const float GrosorRutaPx = 4f;
-        // T-700: la ruta va punteada y turquesa clara, como en H10.
-        private static readonly Color ColorRuta = new Color(0.62f, 1f, 0.97f, 0.95f);
-        private RectTransform capaRuta;
+        // T-51: ya no hay ruta ni rastro hacia el objetivo en el minimapa: solo el rombo.
         private CirculoBusquedaMapa circuloBusqueda;
-        private readonly List<Image> segmentosRuta = new List<Image>();
-        private List<Vector3> ruta = new List<Vector3>();
-        private Vector3 origenRuta;
-        private Vector3 destinoRuta;
-        private bool rutaCalculada;
-        private int recalculosRuta;
         private readonly List<Image> marcas = new List<Image>();
         private readonly List<TipoMarcaMapa> tiposMarcas = new List<TipoMarcaMapa>();
         private readonly List<Image> destinos = new List<Image>();
@@ -94,13 +83,6 @@ namespace MechaCyberpunk.UI.Mapa
         public float RadioMetros => radioMetros;
         /// <summary>Píxeles por metro.</summary>
         public float Escala => escala;
-        /// <summary>Puntos de la ruta GPS (mundo), vacía si no hay objetivo.</summary>
-        public IReadOnlyList<Vector3> Ruta => ruta;
-        /// <summary>Cuántos tramos de la ruta se dibujan ahora.</summary>
-        public int SegmentosRutaVisibles { get; private set; }
-        /// <summary>Cuántas veces se calculó la ruta.</summary>
-        public int RecalculosRuta => recalculosRuta;
-
         /// <summary>La marca dibujada de <paramref name="marca"/>, o null si no sale ahora.</summary>
         public Image MarcaDe(IMarcaMapa marca)
         {
@@ -146,7 +128,6 @@ namespace MechaCyberpunk.UI.Mapa
             capaCalles = Centrado(desplazado, "Calles");
 
             circuloBusqueda = new CirculoBusquedaMapa(desplazado);
-            capaRuta = Centrado(desplazado, "RutaGps");
             capaMarcas = Centrado(mascara.transform, "Marcas");
             rombo = (RectTransform)KitUI.CrearRombo(capaMarcas, "Objetivo", diagonalRombo, e.Naranja).rectTransform.parent;
             rombo.gameObject.SetActive(false);
@@ -249,7 +230,6 @@ namespace MechaCyberpunk.UI.Mapa
             {
                 PuntoMarcadoMapa.Quitar();
             }
-            ActualizarRuta(centro, PuntoMarcadoMapa.Hay || hayObjetivo, PuntoMarcadoMapa.Hay ? PuntoMarcadoMapa.Posicion : destino);
 
             // El punto marcado en el mapa grande, también pegado al borde, con su distancia.
             bool hayPunto = PuntoMarcadoMapa.Hay
@@ -268,56 +248,6 @@ namespace MechaCyberpunk.UI.Mapa
             QuitarEncimados();
             rombo.SetAsLastSibling();
             punto.rectTransform.SetAsLastSibling();
-        }
-
-        private void ActualizarRuta(Vector3 centro, bool hayObjetivo, Vector3 destino)
-        {
-            if (!hayObjetivo)
-            {
-                rutaCalculada = false;
-                ruta.Clear();
-            }
-            else if (!rutaCalculada || CalculoMinimapa.DistanciaPlana(centro, origenRuta) > MetrosParaRecalcular
-                || CalculoMinimapa.DistanciaPlana(destino, destinoRuta) > 0.5f)
-            {
-                ruta = CalculoRutaGps.Ruta(centro, destino);
-                origenRuta = centro;
-                destinoRuta = destino;
-                rutaCalculada = true;
-                recalculosRuta++;
-            }
-            int tramos = Mathf.Max(0, ruta.Count - 1);
-            while (segmentosRuta.Count < tramos)
-            {
-                Image seg = KitUI.CrearImagen(capaRuta, "Tramo_" + segmentosRuta.Count, ColorRuta);
-                ConfigHudH10 estilo = ConfigHudH10.Actual;
-                if (estilo != null && estilo.PuntoRuta != null)
-                {
-                    // Punteado: el sprite de un punto se repite a lo largo del tramo.
-                    seg.sprite = estilo.PuntoRuta;
-                    seg.type = Image.Type.Tiled;
-                }
-                KitUI.Colocar(seg.rectTransform, new Vector2(0.5f, 0.5f), Vector2.zero, Vector2.one);
-                seg.rectTransform.pivot = new Vector2(0.5f, 0.5f);
-                segmentosRuta.Add(seg);
-            }
-            for (int i = 0; i < segmentosRuta.Count; i++)
-            {
-                bool usar = i < tramos;
-                Mostrar(segmentosRuta[i].gameObject, usar);
-                if (!usar)
-                {
-                    continue;
-                }
-                Vector2 a = GeometriaBarrio.AMapa(ruta[i]) * escala;
-                Vector2 b = GeometriaBarrio.AMapa(ruta[i + 1]) * escala;
-                Vector2 d = b - a;
-                RectTransform rect = segmentosRuta[i].rectTransform;
-                rect.anchoredPosition = (a + b) * 0.5f;
-                rect.sizeDelta = new Vector2(d.magnitude + GrosorRutaPx * 0.5f, GrosorRutaPx);
-                rect.localRotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(d.y, d.x) * Mathf.Rad2Deg);
-            }
-            SegmentosRutaVisibles = tramos;
         }
 
         // Las líneas de las calles que caen cerca del jugador (las demás no se dibujan).

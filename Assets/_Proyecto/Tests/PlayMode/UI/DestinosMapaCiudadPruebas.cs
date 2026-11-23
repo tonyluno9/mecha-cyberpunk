@@ -131,7 +131,7 @@ namespace MechaCyberpunk.Tests.UI
             yield return null;
             yield return null;
             minimapa.Actualizar();
-            Assert.Greater(minimapa.SegmentosRutaVisibles, 0, "El minimapa dibuja la ruta GPS");
+            Assert.IsNull(minimapa.Raiz.Find("Mascara/Mundo/Desplazado/RutaGps"), "T-51: el minimapa ya no dibuja ruta");
             Assert.IsTrue(minimapa.PuntoVisible);
             CapturaUI.Capturar("docs/capturas/T-668-minimapa-ruta.png", camara);
         }

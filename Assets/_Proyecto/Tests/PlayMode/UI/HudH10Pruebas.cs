@@ -355,10 +355,8 @@ namespace MechaCyberpunk.Tests.UI
                 Assert.IsNotNull(marco, "T-725: lleva el marco del chat de arte");
                 Assert.AreSame(ConfigHudH10.Actual.MarcoMinimapa, marco.GetComponent<Image>().sprite);
                 Assert.AreEqual(Image.Type.Sliced, marco.GetComponent<Image>().type, "9-slice: las esquinas no se estiran");
-                Assert.Greater(minimapa.SegmentosRutaVisibles, 0, "Hay ruta al objetivo");
-                Image tramo = minimapa.Raiz.Find("Mascara/Mundo/Desplazado/RutaGps/Tramo_0").GetComponent<Image>();
-                Assert.AreEqual(Image.Type.Tiled, tramo.type, "La ruta va punteada (el punto se repite)");
-                Assert.IsNotNull(tramo.sprite);
+                Assert.IsNull(minimapa.Raiz.Find("Mascara/Mundo/Desplazado/RutaGps"), "T-51: sin línea de ruta en el minimapa");
+                Assert.IsTrue(minimapa.RomboVisible, "El rombo del objetivo sí se queda");
             }
             finally
             {
