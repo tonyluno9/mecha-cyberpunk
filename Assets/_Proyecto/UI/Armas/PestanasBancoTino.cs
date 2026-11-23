@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Economia;
 using MechaCyberpunk.Personaje;
+using MechaCyberpunk.Personaje.Combate;
 using MechaCyberpunk.Personaje.Jugador;
 using MechaCyberpunk.Personaje.Movimiento;
 using MechaCyberpunk.UI.Kit;
@@ -70,6 +71,27 @@ namespace MechaCyberpunk.UI.Armas
         /// </summary>
         public static Func<string> BloqueoSalida { get; set; }
 
+        /// <summary>
+        /// T-84: tutorial guiado de la primera visita. La historia lo pone en true en el paso Armas y en false al salir de él. Con él encendido todo el
+        /// banco queda oscuro y bloqueado salvo el control del paso actual (<see cref="PasoTutorial"/>), y las teclas no se saltan el guion.
+        /// </summary>
+        public static bool TutorialGuiado { get; set; }
+
+        /// <summary>T-84: el paso actual del tutorial (Ninguno si está apagado o el banco está cerrado).</summary>
+        public static PasoTutorialTino PasoTutorial => actual != null && actual.abierto && TutorialGuiado ? actual.paso : PasoTutorialTino.Ninguno;
+
+        /// <summary>T-84: el número de paso mostrado (1 a 5), 0 si no hay tutorial.</summary>
+        public static int NumeroPasoTutorial => ReglaTutorialTino.Numero(PasoTutorial);
+
+        /// <summary>T-84: la línea que se ve ("PASO 2 DE 5: AHORA PULSA COMPRAR"), vacía si no hay tutorial.</summary>
+        public static string TextoTutorial => ReglaTutorialTino.Linea(PasoTutorial);
+
+        /// <summary>T-84: cuántas celdas oscuras bloquean la pantalla ahora (pruebas); 0 si la guía no está bloqueando.</summary>
+        public static int CeldasBloqueando => actual != null && actual.guia != null ? actual.guia.CeldasActivas : 0;
+
+        /// <summary>T-84: el control que está resaltado ahora (nombres de GameObject), para que las pruebas hagan clic ahí.</summary>
+        public static IReadOnlyList<RectTransform> ObjetivosResaltados => actual != null ? actual.objetivos : (IReadOnlyList<RectTransform>)new RectTransform[0];
+
         /// <summary>T-79: true mientras el jugador está en el campo de tiro (salió del banco por el botón y regresará a él). La historia lo trata como banco abierto.</summary>
         public static bool EnCampoDeTiro { get; set; }
 
@@ -94,6 +116,19 @@ namespace MechaCyberpunk.UI.Armas
         private Text textoFalta;
         private GameObject cajaFalta;
         private RectTransform barraPestanas;
+        private RectTransform botonSalir;
+        private GuiaTutorialTino guia;
+        private PantallaTienda pantallaTienda;
+        private PasoTutorialTino paso;
+        private string nombrePistola = "PISTOLA";
+        private float proximaBusqueda;
+        private float proximaPantalla;
+        private bool guiaEncendida;
+        private PasoTutorialTino pasoBuscado;
+        private readonly List<RectTransform> objetivos = new List<RectTransform>();
+        private const float SegundosEntreBusquedas = 0.2f;
+        private const float AnchoSalir = 180f;
+        private const string TextoSalir = "SALIR";
 
         /// <summary>True mientras el banco de Tino está abierto.</summary>
         public static bool Abierto => actual != null && actual.abierto;
@@ -106,6 +141,7 @@ namespace MechaCyberpunk.UI.Armas
         {
             actual = null;
             BloqueoSalida = null;
+            TutorialGuiado = false;
             EnCampoDeTiro = false;
             botonesExtra.Clear();
         }
@@ -237,6 +273,33 @@ namespace MechaCyberpunk.UI.Armas
             VestidoH10.Fuente(falta);
             cajaFalta = falta.gameObject;
             cajaFalta.SetActive(false);
+            ConstruirBotonSalir(barra);
+            // La guía va al final: queda sobre las pestañas, el botón SALIR y los botones extra.
+            guia = new GuiaTutorialTino(canvas.transform);
+        }
+
+        // T-84: SALIR propio del banco, en la barra de arriba (este lienzo va sobre los paneles de COMPRAR y MEJORAR): se ve en todas las pestañas.
+        private void ConstruirBotonSalir(RectTransform barra)
+        {
+            RectTransform caja = TrazoH10.Nodo(barra, "BotonSalirBanco");
+            botonSalir = caja;
+            TrazoH10.Colocar(caja, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2((TamanoPestana.x + SeparacionPestanas) * 2f, 0f), new Vector2(AnchoSalir, TamanoPestana.y));
+            Image fondo = TrazoH10.Imagen(caja, "Fondo", TrazoH10.ConAlfa(TrazoH10.FondoPanel, 0.97f), TrazoH10.Relleno);
+            TrazoH10.Estirar(fondo.rectTransform);
+            fondo.raycastTarget = true;
+            Image linea = TrazoH10.Imagen(caja, "Linea", TrazoH10.Coral, TrazoH10.Linea);
+            TrazoH10.Estirar(linea.rectTransform);
+            Text texto = TrazoH10.Etiqueta(caja, "Texto", TextoSalir, TrazoH10.TamanoFila, TrazoH10.Coral, TextAnchor.MiddleCenter);
+            TrazoH10.Estirar(texto.rectTransform);
+            EventTrigger disparador = caja.gameObject.AddComponent<EventTrigger>();
+            EventTrigger.Entry clic = new EventTrigger.Entry { eventID = EventTriggerType.PointerClick };
+            clic.callback.AddListener(_ =>
+            {
+                Sonidos.Reproducir("UI_CANCELAR");
+                Salir();
+            });
+            disparador.triggers.Add(clic);
+            VestidoH10.Fuente(caja);
         }
 
         // T-78: crea los botones extra que se registraron y aún no tienen objeto (a la derecha de MEJORAR) y muestra solo los visibles.
@@ -268,6 +331,12 @@ namespace MechaCyberpunk.UI.Armas
                 boton.Caja.SetActive(boton.Visible == null || boton.Visible());
                 x += TamanoPestana.x + SeparacionPestanas;
             }
+            if (botonSalir != null)
+            {
+                // SALIR siempre al final de la barra y al frente de sus hermanos.
+                botonSalir.anchoredPosition = new Vector2(x, 0f);
+                botonSalir.SetAsLastSibling();
+            }
         }
 
         private void CrearPestana(Transform padre, string nombre, string etiqueta, float x, bool mejorar, out Text texto, out Image linea)
@@ -294,6 +363,9 @@ namespace MechaCyberpunk.UI.Armas
             banco = trabajo;
             alCerrar = alCerrarBanco;
             abierto = true;
+            proximaPantalla = 0f;
+            proximaBusqueda = 0f;
+            pasoBuscado = PasoTutorialTino.Ninguno;
             JugadorAPie jugador = Registro<IJugador>.Actual as JugadorAPie;
             ControladorAPie controlador = jugador != null ? jugador.GetComponent<ControladorAPie>() : null;
             if (controlador != null && controlador.ControlActivo)
@@ -356,16 +428,187 @@ namespace MechaCyberpunk.UI.Armas
         private void Update()
         {
             // Una ventana de aviso encima atiende las teclas.
-            if (abierto && cambiar.WasPressedThisFrame() && !VentanaAviso.Abierta)
+            if (abierto && cambiar.WasPressedThisFrame() && !VentanaAviso.Abierta && !TutorialGuiado)
             {
-                CambiarA(!enMejorar);
+                CambiarA(!enMejorar); // T-84: con el tutorial, TAB no se salta el guion
             }
             if (abierto && textoFalta != null)
             {
                 string falta = TextoFalta();
                 textoFalta.text = falta.Length > 0 ? "PARA SALIR: " + falta : string.Empty;
-                cajaFalta.SetActive(falta.Length > 0);
+                cajaFalta.SetActive(falta.Length > 0 && !TutorialGuiado);
             }
+            ActualizarTutorial();
+        }
+
+        // T-84: calcula el paso del estado real y dibuja la guía.
+        private void ActualizarTutorial()
+        {
+            if (!abierto || !TutorialGuiado)
+            {
+                paso = PasoTutorialTino.Ninguno;
+                objetivos.Clear();
+                if (guia != null && guiaEncendida)
+                {
+                    guia.Apagar();
+                    guiaEncendida = false;
+                }
+                return;
+            }
+            guiaEncendida = true;
+            paso = CalcularPaso();
+            if (paso != pasoBuscado || Time.unscaledTime >= proximaBusqueda || HayObjetivoPerdido())
+            {
+                pasoBuscado = paso;
+                proximaBusqueda = Time.unscaledTime + SegundosEntreBusquedas;
+                BuscarObjetivos();
+            }
+            guia.Actualizar(objetivos, ReglaTutorialTino.Linea(paso), Time.unscaledTime);
+        }
+
+        private bool HayObjetivoPerdido()
+        {
+            foreach (RectTransform r in objetivos)
+            {
+                if (r == null || !r.gameObject.activeInHierarchy)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private PasoTutorialTino CalcularPaso()
+        {
+            ArsenalJugador arsenal = Registro<ArsenalJugador>.Actual;
+            bool tienePistola = arsenal != null && arsenal.Tiene(ArmaAPie.Pistola);
+            bool pistolaEnCompra = false;
+            if (!enMejorar)
+            {
+                BuscarPantallaTienda();
+                pistolaEnCompra = pantallaTienda != null && pantallaTienda.Mercado != null && pantallaTienda.Mercado.NombreMostrado == NombrePistolaEnLista();
+            }
+            bool pistolaEnMejorar = enMejorar && banco != null && banco.Pantalla != null && banco.Pantalla.ArmaElegida != null
+                && banco.Pantalla.ArmaElegida.Arma == ArmaAPie.Pistola;
+            return ReglaTutorialTino.Calcular(true, TextoFalta().Length == 0, tienePistola, enMejorar, pistolaEnCompra, pistolaEnMejorar);
+        }
+
+        // El nombre de la pistola base como lo muestra la lista de COMPRAR (en mayúsculas).
+        private string NombrePistolaEnLista()
+        {
+            ArsenalJugador arsenal = Registro<ArsenalJugador>.Actual;
+            if (arsenal != null && arsenal.Catalogo != null)
+            {
+                var datos = arsenal.Catalogo.Buscar(ArmaAPie.Pistola, 0);
+                if (datos != null)
+                {
+                    nombrePistola = ReglaVistaMercado.Nombre(datos).ToUpperInvariant();
+                }
+            }
+            return nombrePistola;
+        }
+
+        private void BuscarPantallaTienda()
+        {
+            if (pantallaTienda != null && pantallaTienda.Visible)
+            {
+                return;
+            }
+            if (Time.unscaledTime < proximaPantalla)
+            {
+                return;
+            }
+            pantallaTienda = null;
+            proximaPantalla = Time.unscaledTime + SegundosEntreBusquedas;
+            foreach (PantallaTienda p in FindObjectsByType<PantallaTienda>(FindObjectsInactive.Exclude, FindObjectsSortMode.None))
+            {
+                if (p.Visible)
+                {
+                    pantallaTienda = p;
+                    return;
+                }
+            }
+        }
+
+        private void BuscarObjetivos()
+        {
+            objetivos.Clear();
+            if (ReglaTutorialTino.ResaltaFilaPistolaCompra(paso))
+            {
+                RectTransform fila = BuscarFilaPistola();
+                if (fila != null)
+                {
+                    objetivos.Add(fila);
+                }
+                return;
+            }
+            foreach (string nombre in ReglaTutorialTino.Objetivos(paso))
+            {
+                RectTransform r = BuscarPorNombre(barraPestanas, nombre);
+                if (r == null && pantallaTienda != null)
+                {
+                    r = BuscarPorNombre(pantallaTienda.transform, nombre);
+                }
+                if (r == null && banco != null && banco.Pantalla != null && banco.Pantalla.Canvas != null)
+                {
+                    r = BuscarPorNombre(banco.Pantalla.Canvas.transform, nombre);
+                }
+                if (r != null)
+                {
+                    objetivos.Add(r);
+                }
+            }
+        }
+
+        private RectTransform BuscarFilaPistola()
+        {
+            if (pantallaTienda == null)
+            {
+                return null;
+            }
+            string buscada = NombrePistolaEnLista();
+            foreach (RectTransform r in pantallaTienda.GetComponentsInChildren<RectTransform>(false))
+            {
+                if (!r.name.StartsWith("Fila_") || r.name == "Fila_vacia")
+                {
+                    continue;
+                }
+                Transform nombre = r.Find("Nombre");
+                Text t = nombre != null ? nombre.GetComponent<Text>() : null;
+                if (t != null && t.text.Trim().ToUpperInvariant() == buscada)
+                {
+                    return r;
+                }
+            }
+            return null;
+        }
+
+        private static RectTransform BuscarPorNombre(Transform raizBusqueda, string nombre)
+        {
+            if (raizBusqueda == null)
+            {
+                return null;
+            }
+            foreach (RectTransform r in raizBusqueda.GetComponentsInChildren<RectTransform>(false))
+            {
+                if (r.name == nombre)
+                {
+                    return r;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>T-84: el GameObject de la fila de la pistola en la lista de COMPRAR, o null.</summary>
+        public static GameObject FilaPistolaCompra()
+        {
+            if (actual == null || !actual.abierto || actual.enMejorar)
+            {
+                return null;
+            }
+            actual.BuscarPantallaTienda();
+            RectTransform fila = actual.BuscarFilaPistola();
+            return fila != null ? fila.gameObject : null;
         }
 
         private static string TextoFalta()
@@ -383,6 +626,11 @@ namespace MechaCyberpunk.UI.Armas
             if (TextoFalta().Length > 0)
             {
                 Sonidos.Reproducir("UI_CANCELAR"); // T-78: en el paso de Tino no se sale sin arma y mejora; la línea de arriba dice qué falta
+                return;
+            }
+            if (TutorialGuiado && !ReglaTutorialTino.PermiteSalir(paso))
+            {
+                Sonidos.Reproducir("UI_CANCELAR"); // T-84: el guion no deja salir antes del paso 5
                 return;
             }
             CerrarPestana();

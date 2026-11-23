@@ -294,6 +294,7 @@ namespace MechaCyberpunk.Progresion.Recorrido
                 Actual = null;
                 CandadosMundo.Liberar(); // T-78: sin recorrido (título, otra partida) el mundo no queda con candados
                 PestanasBancoTino.BloqueoSalida = null;
+                PestanasBancoTino.TutorialGuiado = false; // T-84
             }
             DejarDeVigilarReloj();
             Cancelar();
@@ -435,9 +436,15 @@ namespace MechaCyberpunk.Progresion.Recorrido
             jefeMostrado = false;
             tianguisProtegido = false;
             PestanasBancoTino.BloqueoSalida = null;
+            PestanasBancoTino.TutorialGuiado = false; // T-84
             GestorCandados.Aplicar(nuevo); // T-78: los candados del mundo según el paso (también al cargar la partida: Reanudar pasa por aquí)
             // T-1658: de recibir el dinero del maletín a salir del menú de prótesis del suero, la camilla del Doc no se usa; al terminar sale el tutorial de prótesis.
-            if (nuevo >= PasoRecorrido.Dinero && nuevo <= PasoRecorrido.Suero)
+            if (nuevo < PasoRecorrido.Dinero)
+            {
+                // T-80: antes del Doc no hay prótesis ni tutorial de Tab. Limpia lo que quedara de otra partida jugada sin cerrar el juego.
+                MechaCyberpunk.UI.Clinica.PrimeraVisitaClinica.Fijar(false, false);
+            }
+            else if (nuevo >= PasoRecorrido.Dinero && nuevo <= PasoRecorrido.Suero)
             {
                 MechaCyberpunk.UI.Clinica.PrimeraVisitaClinica.Iniciar();
             }
@@ -680,6 +687,7 @@ namespace MechaCyberpunk.Progresion.Recorrido
             {
                 Fijar(TablaRecorrido.ObjetivoTino, inventor != null ? inventor.Posicion : PosicionGrupos(viejo != null ? viejo.GruposTianguis : null));
                 PestanasBancoTino.BloqueoSalida = FaltaEnElBanco;
+                PestanasBancoTino.TutorialGuiado = true; // T-84: primera visita a Tino guiada paso a paso
                 GuardarPartida();
                 return;
             }
