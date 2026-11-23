@@ -72,10 +72,11 @@ namespace MechaCyberpunk.Progresion.Recorrido.Editor
             CrearMarcador(MarcadorHistoria.IdRanura);
             CrearMarcador(MarcadorHistoria.IdTorre);
             CrearMarcador(MarcadorHistoria.IdCallejonSkulls);
+            CrearMarcador(MarcadorHistoria.IdEsperaSkulls);
 
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
-            Debug.Log("[Historia] Recorrido: " + cinematicas.Count + " cinemáticas, " + skulls.Count + " prefabs de SKULL y 4 marcadores.");
+            Debug.Log("[Historia] Recorrido: " + cinematicas.Count + " cinemáticas, " + skulls.Count + " prefabs de SKULL y 5 marcadores.");
         }
 
         private static void CrearMarcador(string id)
