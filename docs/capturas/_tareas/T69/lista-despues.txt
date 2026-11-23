@@ -1,0 +1,1634 @@
+T-1700 lista-despues.txt de Assets/_Proyecto/Escenas/Ciudad_Prologo.unity
+Flotantes (cualquier altura): 6 | otro=6
+Unidades=6859 ignoradas=2970 soportadas=2094 pegadas a pared=47
+Primitivos visibles: 1607 | Cube=1058, Quad=423, Cylinder=73, Sphere=53
+
+== FLOTANTES (clase, hueco m, posición, tamaño, ruta) ==
+otro	3.39	(-29.0, 3.7, -73.0)	(0.2, 0.2, 3.3)	S2n_TallerMecanico/Muebles/Elevador	
+otro	3.20	(70.5, 4.9, 43.5)	(1.3, 1.3, 1.1)	S2o_Casino/I13	
+otro	3.20	(70.5, 4.9, 50.5)	(1.3, 1.3, 1.1)	S2o_Casino/I13	
+otro	3.20	(77.5, 4.9, 43.5)	(1.3, 1.3, 1.1)	S2o_Casino/I13	
+otro	3.20	(77.5, 4.9, 50.5)	(1.3, 1.3, 1.1)	S2o_Casino/I13	
+otro	2.95	(72.0, 4.3, 47.0)	(2.2, 2.2, 2.0)	T930_Casino/I13	
+
+Sin excepcion (a apagar): 0 | con excepcion: estructura/arquitectura=683, calcomania plana de calle=344, luz o pieza emisiva=541, cristal, cielo o domo (visual a conservar)=3, tiene textura propia=36
+== PRIMITIVOS (malla, posicion, material, excepcion, ruta) ==
+Cube	(0.0, -0.5, 0.0)	Barrio_Asfalto	estructura/arquitectura	Barrio/Calles/Asfalto
+Quad	(124.5, 0.0, 5.0)	T1503_Agua_S2c_Charco_3	calcomania plana de calle	Barrio/Calles/Charcos/Charco_0
+Quad	(24.2, 0.0, -2.0)	T1503_Agua_S2c_Charco_0	calcomania plana de calle	Barrio/Calles/Charcos/Charco_1
+Quad	(-1.6, 0.0, -3.6)	T1503_Agua_S2c_Charco_3	calcomania plana de calle	Barrio/Calles/Charcos/Charco_2
+Quad	(-33.1, 0.0, -4.3)	T1503_Agua_S2c_Charco_2	calcomania plana de calle	Barrio/Calles/Charcos/Charco_3
+Quad	(-46.6, 0.0, -2.7)	T1503_Agua_S2c_Charco_3	calcomania plana de calle	Barrio/Calles/Charcos/Charco_4
+Quad	(-40.6, 0.0, 3.6)	T1503_Agua_S2c_Charco_0	calcomania plana de calle	Barrio/Calles/Charcos/Charco_5
+Quad	(-37.0, 0.0, -2.4)	T1503_Agua_S2c_Charco_1	calcomania plana de calle	Barrio/Calles/Charcos/Charco_6
+Quad	(-78.3, 0.0, -0.3)	T1503_Agua_S2c_Charco_2	calcomania plana de calle	Barrio/Calles/Charcos/Charco_7
+Quad	(-86.7, 0.0, 1.6)	T1503_Agua_S2c_Charco_1	calcomania plana de calle	Barrio/Calles/Charcos/Charco_8
+Quad	(-33.7, 0.0, -2.9)	T1503_Agua_S2c_Charco_0	calcomania plana de calle	Barrio/Calles/Charcos/Charco_9
+Quad	(22.1, 0.0, -1.8)	T1503_Agua_S2c_Charco_0	calcomania plana de calle	Barrio/Calles/Charcos/Charco_10
+Quad	(67.0, 0.0, 1.5)	T1503_Agua_S2c_Charco_1	calcomania plana de calle	Barrio/Calles/Charcos/Charco_11
+Quad	(60.3, 0.0, 1.7)	T1503_Agua_S2c_Charco_2	calcomania plana de calle	Barrio/Calles/Charcos/Charco_12
+Quad	(-67.2, 0.0, -4.2)	T1503_Agua_S2c_Charco_3	calcomania plana de calle	Barrio/Calles/Charcos/Charco_13
+Quad	(99.4, 0.0, 3.5)	T1503_Agua_S2c_Charco_0	calcomania plana de calle	Barrio/Calles/Charcos/Charco_14
+Quad	(37.4, 0.0, 4.1)	T1503_Agua_S2c_Charco_1	calcomania plana de calle	Barrio/Calles/Charcos/Charco_15
+Quad	(-94.2, 0.0, -3.4)	T1503_Agua_S2c_Charco_2	calcomania plana de calle	Barrio/Calles/Charcos/Charco_16
+Quad	(-118.0, 0.0, -2.7)	T1503_Agua_S2c_Charco_3	calcomania plana de calle	Barrio/Calles/Charcos/Charco_17
+Quad	(8.1, 0.0, -3.9)	T1503_Agua_S2c_Charco_0	calcomania plana de calle	Barrio/Calles/Charcos/Charco_18
+Quad	(-3.2, 0.0, 4.6)	T1503_Agua_S2c_Charco_1	calcomania plana de calle	Barrio/Calles/Charcos/Charco_19
+Quad	(-53.4, 0.0, -2.6)	T1503_Agua_S2c_Charco_1	calcomania plana de calle	Barrio/Calles/Charcos/Charco_20
+Quad	(59.2, 0.0, -2.8)	T1503_Agua_S2c_Charco_0	calcomania plana de calle	Barrio/Calles/Charcos/Charco_21
+Quad	(-49.2, 0.0, 70.0)	T1503_Agua_S2c_Charco_3	calcomania plana de calle	Barrio/Calles/Charcos/Charco_22
+Quad	(-42.7, 0.0, -72.6)	T1503_Agua_S2c_Charco_2	calcomania plana de calle	Barrio/Calles/Charcos/Charco_23
+Quad	(-46.4, 0.0, 11.1)	T1503_Agua_S2c_Charco_1	calcomania plana de calle	Barrio/Calles/Charcos/Charco_24
+Quad	(-45.1, 0.0, -75.1)	T1503_Agua_S2c_Charco_0	calcomania plana de calle	Barrio/Calles/Charcos/Charco_25
+Quad	(-43.9, 0.0, 65.3)	T1503_Agua_S2c_Charco_3	calcomania plana de calle	Barrio/Calles/Charcos/Charco_26
+Quad	(-45.5, 0.0, -66.5)	T1503_Agua_S2c_Charco_2	calcomania plana de calle	Barrio/Calles/Charcos/Charco_27
+Quad	(-42.8, 0.0, -68.0)	T1503_Agua_S2c_Charco_1	calcomania plana de calle	Barrio/Calles/Charcos/Charco_28
+Quad	(-48.7, 0.0, -33.9)	T1503_Agua_S2c_Charco_0	calcomania plana de calle	Barrio/Calles/Charcos/Charco_29
+Quad	(-50.7, 0.0, 24.7)	T1503_Agua_S2c_Charco_2	calcomania plana de calle	Barrio/Calles/Charcos/Charco_30
+Quad	(-46.5, 0.0, -56.9)	T1503_Agua_S2c_Charco_3	calcomania plana de calle	Barrio/Calles/Charcos/Charco_31
+Quad	(-41.5, 0.0, 3.9)	T1503_Agua_S2c_Charco_0	calcomania plana de calle	Barrio/Calles/Charcos/Charco_32
+Quad	(-40.9, 0.0, 4.5)	T1503_Agua_S2c_Charco_1	calcomania plana de calle	Barrio/Calles/Charcos/Charco_33
+Quad	(-37.9, 0.0, -2.3)	T1503_Agua_S2c_Charco_2	calcomania plana de calle	Barrio/Calles/Charcos/Charco_34
+Quad	(-42.2, 0.0, -2.0)	T1503_Agua_S2c_Charco_3	calcomania plana de calle	Barrio/Calles/Charcos/Charco_35
+Quad	(49.9, 0.0, -55.8)	T1503_Agua_S2c_Charco_0	calcomania plana de calle	Barrio/Calles/Charcos/Charco_36
+Quad	(51.2, 0.0, -16.6)	T1503_Agua_S2c_Charco_1	calcomania plana de calle	Barrio/Calles/Charcos/Charco_37
+Quad	(49.2, 0.0, -26.2)	T1503_Agua_S2c_Charco_2	calcomania plana de calle	Barrio/Calles/Charcos/Charco_38
+Quad	(49.4, 0.0, 74.3)	T1503_Agua_S2c_Charco_3	calcomania plana de calle	Barrio/Calles/Charcos/Charco_39
+Quad	(48.1, 0.0, 11.7)	T1503_Agua_S2c_Charco_3	calcomania plana de calle	Barrio/Calles/Charcos/Charco_40
+Quad	(43.2, 0.0, 74.4)	T1503_Agua_S2c_Charco_2	calcomania plana de calle	Barrio/Calles/Charcos/Charco_41
+Quad	(45.0, 0.0, -17.2)	T1503_Agua_S2c_Charco_1	calcomania plana de calle	Barrio/Calles/Charcos/Charco_42
+Quad	(43.0, 0.0, 45.1)	T1503_Agua_S2c_Charco_0	calcomania plana de calle	Barrio/Calles/Charcos/Charco_43
+Quad	(50.5, 0.0, 60.3)	T1503_Agua_S2c_Charco_3	calcomania plana de calle	Barrio/Calles/Charcos/Charco_44
+Quad	(43.5, 0.0, 34.9)	T1503_Agua_S2c_Charco_2	calcomania plana de calle	Barrio/Calles/Charcos/Charco_45
+Quad	(51.8, 0.0, -0.7)	T1503_Agua_S2c_Charco_1	calcomania plana de calle	Barrio/Calles/Charcos/Charco_46
+Quad	(51.6, 0.0, -3.3)	T1503_Agua_S2c_Charco_0	calcomania plana de calle	Barrio/Calles/Charcos/Charco_47
+Quad	(48.9, 0.0, 2.9)	T1503_Agua_S2c_Charco_3	calcomania plana de calle	Barrio/Calles/Charcos/Charco_48
+Quad	(54.6, 0.0, -2.0)	T1503_Agua_S2c_Charco_2	calcomania plana de calle	Barrio/Calles/Charcos/Charco_49
+Cube	(-106.5, 3.2, 9.8)	T507_T506_Barrio_Pobre_A_1	estructura/arquitectura	Barrio/Manzana_1/Edificios/Edificio_1/Lado_Sur/Relleno_Fachada
+Cube	(-130.8, 3.2, 9.8)	T507_T506_Barrio_Pobre_A_1	estructura/arquitectura	Barrio/Manzana_1/Edificios/Edificio_1/Lado_Sur/Relleno_Fachada
+Quad	(-118.7, 7.5, 10.0)	Fachada_Pobre	estructura/arquitectura	Barrio/Manzana_1/Edificios/Edificio_1/Lado_Sur/Ventanas
+Cube	(-118.7, 8.8, 10.0)	T506_Barrio_ConcretoOscuro	estructura/arquitectura	Barrio/Manzana_1/Edificios/Edificio_1/Lado_Sur/Cornisa
+Cube	(-131.2, 3.2, 10.2)	T507_T506_Barrio_Pobre_A_1	estructura/arquitectura	Barrio/Manzana_1/Edificios/Edificio_1/Lado_Oeste/Relleno_Fachada
+Cube	(-131.2, 3.2, 34.5)	T507_T506_Barrio_Pobre_A_1	estructura/arquitectura	Barrio/Manzana_1/Edificios/Edificio_1/Lado_Oeste/Relleno_Fachada
+Quad	(-131.0, 7.5, 22.3)	Fachada_Pobre	estructura/arquitectura	Barrio/Manzana_1/Edificios/Edificio_1/Lado_Oeste/Ventanas
+Cube	(-131.0, 8.8, 22.3)	T506_Barrio_ConcretoOscuro	estructura/arquitectura	Barrio/Manzana_1/Edificios/Edificio_1/Lado_Oeste/Cornisa
+Cube	(-131.2, 3.2, 34.8)	T507_T506_Barrio_Pobre_B_2	estructura/arquitectura	Barrio/Manzana_1/Edificios/Edificio_2/Lado_Oeste/Relleno_Fachada
+Cube	(-131.2, 3.2, 59.2)	T507_T506_Barrio_Pobre_B_2	estructura/arquitectura	Barrio/Manzana_1/Edificios/Edificio_2/Lado_Oeste/Relleno_Fachada
+Quad	(-131.0, 8.1, 47.0)	Fachada_Pobre	estructura/arquitectura	Barrio/Manzana_1/Edificios/Edificio_2/Lado_Oeste/Ventanas
+Cube	(-131.0, 10.0, 47.0)	T506_Barrio_ConcretoOscuro	estructura/arquitectura	Barrio/Manzana_1/Edificios/Edificio_2/Lado_Oeste/Cornisa
+Cube	(-130.8, 3.2, 84.2)	T507_T506_Barrio_Pobre_A_3	estructura/arquitectura	Barrio/Manzana_1/Edificios/Edificio_3/Lado_Norte/Relleno_Fachada
+Cube	(-106.5, 3.2, 84.2)	T507_T506_Barrio_Pobre_A_3	estructura/arquitectura	Barrio/Manzana_1/Edificios/Edificio_3/Lado_Norte/Relleno_Fachada
+Quad	(-118.7, 8.3, 84.0)	Fachada_Pobre	estructura/arquitectura	Barrio/Manzana_1/Edificios/Edificio_3/Lado_Norte/Ventanas
+Cube	(-118.7, 10.4, 84.0)	T506_Barrio_ConcretoOscuro	estructura/arquitectura	Barrio/Manzana_1/Edificios/Edificio_3/Lado_Norte/Cornisa
+Cube	(-131.2, 3.2, 59.5)	T507_T506_Barrio_Pobre_A_3	estructura/arquitectura	Barrio/Manzana_1/Edificios/Edificio_3/Lado_Oeste/Relleno_Fachada
+Cube	(-131.2, 3.2, 83.8)	T507_T506_Barrio_Pobre_A_3	estructura/arquitectura	Barrio/Manzana_1/Edificios/Edificio_3/Lado_Oeste/Relleno_Fachada
+Quad	(-131.0, 8.3, 71.7)	Fachada_Pobre	estructura/arquitectura	Barrio/Manzana_1/Edificios/Edificio_3/Lado_Oeste/Ventanas
+Cube	(-131.0, 10.4, 71.7)	T506_Barrio_ConcretoOscuro	estructura/arquitectura	Barrio/Manzana_1/Edificios/Edificio_3/Lado_Oeste/Cornisa
+Cube	(-81.8, 3.2, 9.8)	T507_T506_Barrio_Pobre_A_4	estructura/arquitectura	Barrio/Manzana_1/Edificios/Edificio_4/Lado_Sur/Relleno_Fachada
+Cube	(-106.2, 3.2, 9.8)	T507_T506_Barrio_Pobre_A_4	estructura/arquitectura	Barrio/Manzana_1/Edificios/Edificio_4/Lado_Sur/Relleno_Fachada
+Quad	(-94.0, 8.6, 10.0)	Fachada_Pobre	estructura/arquitectura	Barrio/Manzana_1/Edificios/Edificio_4/Lado_Sur/Ventanas
+Cube	(-94.0, 10.9, 10.0)	T506_Barrio_ConcretoOscuro	estructura/arquitectura	Barrio/Manzana_1/Edificios/Edificio_4/Lado_Sur/Cornisa
+Cube	(-106.2, 3.2, 84.2)	T507_T506_Barrio_Pobre_A_0	estructura/arquitectura	Barrio/Manzana_1/Edificios/Edificio_6/Lado_Norte/Relleno_Fachada
+Cube	(-81.8, 3.2, 84.2)	T507_T506_Barrio_Pobre_A_0	estructura/arquitectura	Barrio/Manzana_1/Edificios/Edificio_6/Lado_Norte/Relleno_Fachada
+Quad	(-94.0, 7.4, 84.0)	Fachada_Pobre	estructura/arquitectura	Barrio/Manzana_1/Edificios/Edificio_6/Lado_Norte/Ventanas
+Cube	(-94.0, 8.6, 84.0)	T506_Barrio_ConcretoOscuro	estructura/arquitectura	Barrio/Manzana_1/Edificios/Edificio_6/Lado_Norte/Cornisa
+Cube	(-57.2, 3.2, 9.8)	T507_T506_Barrio_Pobre_B_1	estructura/arquitectura	Barrio/Manzana_1/Edificios/Edificio_7/Lado_Sur/Relleno_Fachada
+Cube	(-81.5, 3.2, 9.8)	T507_T506_Barrio_Pobre_B_1	estructura/arquitectura	Barrio/Manzana_1/Edificios/Edificio_7/Lado_Sur/Relleno_Fachada
+Quad	(-69.3, 7.6, 10.0)	Fachada_Pobre	estructura/arquitectura	Barrio/Manzana_1/Edificios/Edificio_7/Lado_Sur/Ventanas
+Cube	(-69.3, 9.0, 10.0)	T506_Barrio_ConcretoOscuro	estructura/arquitectura	Barrio/Manzana_1/Edificios/Edificio_7/Lado_Sur/Cornisa
+Cube	(-56.8, 3.2, 34.5)	T507_T506_Barrio_Pobre_B_1	estructura/arquitectura	Barrio/Manzana_1/Edificios/Edificio_7/Lado_Este/Relleno_Fachada
+Cube	(-56.8, 3.2, 10.2)	T507_T506_Barrio_Pobre_B_1	estructura/arquitectura	Barrio/Manzana_1/Edificios/Edificio_7/Lado_Este/Relleno_Fachada
+Quad	(-57.0, 7.6, 22.3)	Fachada_Pobre	estructura/arquitectura	Barrio/Manzana_1/Edificios/Edificio_7/Lado_Este/Ventanas
+Cube	(-57.0, 9.0, 22.3)	T506_Barrio_ConcretoOscuro	estructura/arquitectura	Barrio/Manzana_1/Edificios/Edificio_7/Lado_Este/Cornisa
+Cube	(-79.5, 4.6, 22.3)	T507_T506_Barrio_Pobre_B_1	estructura/arquitectura	Barrio/Manzana_1/Edificios/Edificio_7/Cuerpo_T531
+Cube	(-63.1, 4.6, 22.3)	T507_T506_Barrio_Pobre_B_1	estructura/arquitectura	Barrio/Manzana_1/Edificios/Edificio_7/Cuerpo_T531
+Cube	(-73.3, 6.4, 22.3)	T507_T506_Barrio_Pobre_B_1	estructura/arquitectura	Barrio/Manzana_1/Edificios/Edificio_7/Cuerpo_T531
+Cube	(-73.3, 2.0, 25.3)	T507_T506_Barrio_Pobre_B_1	estructura/arquitectura	Barrio/Manzana_1/Edificios/Edificio_7/Cuerpo_T531
+Cube	(-56.8, 3.2, 59.2)	T507_T506_Barrio_Pobre_A_2	estructura/arquitectura	Barrio/Manzana_1/Edificios/Edificio_8/Lado_Este/Relleno_Fachada
+Cube	(-56.8, 3.2, 34.8)	T507_T506_Barrio_Pobre_A_2	estructura/arquitectura	Barrio/Manzana_1/Edificios/Edificio_8/Lado_Este/Relleno_Fachada
+Quad	(-57.0, 8.4, 47.0)	Fachada_Pobre	estructura/arquitectura	Barrio/Manzana_1/Edificios/Edificio_8/Lado_Este/Ventanas
+Cube	(-57.0, 10.5, 47.0)	T506_Barrio_ConcretoOscuro	estructura/arquitectura	Barrio/Manzana_1/Edificios/Edificio_8/Lado_Este/Cornisa
+Cube	(-81.5, 3.2, 84.2)	T507_T506_Barrio_Pobre_A_3	estructura/arquitectura	Barrio/Manzana_1/Edificios/Edificio_9/Lado_Norte/Relleno_Fachada
+Cube	(-57.2, 3.2, 84.2)	T507_T506_Barrio_Pobre_A_3	estructura/arquitectura	Barrio/Manzana_1/Edificios/Edificio_9/Lado_Norte/Relleno_Fachada
+Quad	(-69.3, 7.7, 84.0)	Fachada_Pobre	estructura/arquitectura	Barrio/Manzana_1/Edificios/Edificio_9/Lado_Norte/Ventanas
+Cube	(-69.3, 9.1, 84.0)	T506_Barrio_ConcretoOscuro	estructura/arquitectura	Barrio/Manzana_1/Edificios/Edificio_9/Lado_Norte/Cornisa
+Cube	(-56.8, 3.2, 83.8)	T507_T506_Barrio_Pobre_A_3	estructura/arquitectura	Barrio/Manzana_1/Edificios/Edificio_9/Lado_Este/Relleno_Fachada
+Cube	(-56.8, 3.2, 59.5)	T507_T506_Barrio_Pobre_A_3	estructura/arquitectura	Barrio/Manzana_1/Edificios/Edificio_9/Lado_Este/Relleno_Fachada
+Quad	(-57.0, 7.7, 71.7)	Fachada_Pobre	estructura/arquitectura	Barrio/Manzana_1/Edificios/Edificio_9/Lado_Este/Ventanas
+Cube	(-57.0, 9.1, 71.7)	T506_Barrio_ConcretoOscuro	estructura/arquitectura	Barrio/Manzana_1/Edificios/Edificio_9/Lado_Este/Cornisa
+Cube	(-24.8, 3.2, 57.5)	T507_T506_Barrio_Edif_D_2	estructura/arquitectura	Barrio/Manzana_2/Edificios/Edificio_11/Lado_Este/Relleno_Fachada
+Cube	(-24.8, 3.2, 32.5)	T507_T506_Barrio_Edif_D_2	estructura/arquitectura	Barrio/Manzana_2/Edificios/Edificio_11/Lado_Este/Relleno_Fachada
+Quad	(-25.0, 13.3, 45.0)	T507_Fachada_Alta_2	estructura/arquitectura	Barrio/Manzana_2/Edificios/Edificio_11/Lado_Este/Ventanas
+Cube	(-25.0, 20.4, 45.0)	T506_Barrio_ConcretoOscuro	estructura/arquitectura	Barrio/Manzana_2/Edificios/Edificio_11/Lado_Este/Cornisa
+Cube	(-37.2, 3.2, 32.5)	T507_T506_Barrio_Edif_D_2	estructura/arquitectura	Barrio/Manzana_2/Edificios/Edificio_11/Lado_Oeste/Relleno_Fachada
+Cube	(-37.2, 3.2, 57.5)	T507_T506_Barrio_Edif_D_2	estructura/arquitectura	Barrio/Manzana_2/Edificios/Edificio_11/Lado_Oeste/Relleno_Fachada
+Quad	(-37.0, 13.3, 45.0)	T507_Fachada_Alta_2	estructura/arquitectura	Barrio/Manzana_2/Edificios/Edificio_11/Lado_Oeste/Ventanas
+Cube	(-37.0, 20.4, 45.0)	T506_Barrio_ConcretoOscuro	estructura/arquitectura	Barrio/Manzana_2/Edificios/Edificio_11/Lado_Oeste/Cornisa
+Quad	(-31.0, 12.2, 84.0)	T507_Fachada_Alta_3	estructura/arquitectura	Barrio/Manzana_2/Edificios/Edificio_12/Lado_Norte/Ventanas
+Cube	(-31.0, 18.1, 84.0)	T506_Barrio_ConcretoOscuro	estructura/arquitectura	Barrio/Manzana_2/Edificios/Edificio_12/Lado_Norte/Cornisa
+Cube	(-37.2, 3.2, 58.5)	T507_T506_Barrio_Edif_C_3	estructura/arquitectura	Barrio/Manzana_2/Edificios/Edificio_12/Lado_Oeste/Relleno_Fachada
+Cube	(-37.2, 3.2, 83.5)	T507_T506_Barrio_Edif_C_3	estructura/arquitectura	Barrio/Manzana_2/Edificios/Edificio_12/Lado_Oeste/Relleno_Fachada
+Quad	(-37.0, 12.2, 71.0)	T507_Fachada_Alta_3	estructura/arquitectura	Barrio/Manzana_2/Edificios/Edificio_12/Lado_Oeste/Ventanas
+Cube	(-37.0, 18.1, 71.0)	T506_Barrio_ConcretoOscuro	estructura/arquitectura	Barrio/Manzana_2/Edificios/Edificio_12/Lado_Oeste/Cornisa
+Cube	(-18.3, 3.2, 84.2)	T507_T506_Barrio_Edif_C_2	estructura/arquitectura	Barrio/Manzana_2/Edificios/Edificio_17/Lado_Norte/Relleno_Fachada
+Cube	(-13.0, 3.2, 84.2)	T507_T506_Barrio_Edif_C_2	estructura/arquitectura	Barrio/Manzana_2/Edificios/Edificio_17/Lado_Norte/Relleno_Fachada
+Quad	(-15.7, 14.6, 84.0)	T507_Fachada_Alta_2	estructura/arquitectura	Barrio/Manzana_2/Edificios/Edificio_17/Lado_Norte/Ventanas
+Cube	(-15.7, 23.0, 84.0)	T506_Barrio_ConcretoOscuro	estructura/arquitectura	Barrio/Manzana_2/Edificios/Edificio_17/Lado_Norte/Cornisa
+Cube	(-12.2, 3.2, 84.2)	T507_T506_Barrio_Edif_B_4	estructura/arquitectura	Barrio/Manzana_2/Edificios/Edificio_19/Lado_Norte/Relleno_Fachada
+Cube	(12.2, 3.2, 84.2)	T507_T506_Barrio_Edif_B_4	estructura/arquitectura	Barrio/Manzana_2/Edificios/Edificio_19/Lado_Norte/Relleno_Fachada
+Quad	(0.0, 16.4, 84.0)	T507_Fachada_Alta_4	estructura/arquitectura	Barrio/Manzana_2/Edificios/Edificio_19/Lado_Norte/Ventanas
+Cube	(0.0, 26.5, 84.0)	T506_Barrio_ConcretoOscuro	estructura/arquitectura	Barrio/Manzana_2/Edificios/Edificio_19/Lado_Norte/Cornisa
+Cube	(6.9, 8.2, 10.5)	T506_Barrio_Clandestino	estructura/arquitectura	Barrio/Manzana_2/Lugar_Clandestino/FachadaIzquierda
+Cube	(-6.9, 8.2, 10.5)	T506_Barrio_Clandestino	estructura/arquitectura	Barrio/Manzana_2/Lugar_Clandestino/FachadaDerecha
+Cube	(0.0, 9.8, 10.5)	T506_Barrio_Clandestino	estructura/arquitectura	Barrio/Manzana_2/Lugar_Clandestino/Dintel
+Cube	(6.9, 8.2, 12.5)	T506_Barrio_Clandestino	estructura/arquitectura	Barrio/Manzana_2/Lugar_Clandestino/CuerpoLadoIzquierdo
+Cube	(-6.9, 8.2, 12.5)	T506_Barrio_Clandestino	estructura/arquitectura	Barrio/Manzana_2/Lugar_Clandestino/CuerpoLadoDerecho
+Cube	(0.0, 9.8, 12.5)	T506_Barrio_Clandestino	estructura/arquitectura	Barrio/Manzana_2/Lugar_Clandestino/CuerpoTecho
+Cube	(0.0, 1.4, 10.5)	T506_Barrio_PanelPuerta	estructura/arquitectura	Barrio/Manzana_2/Lugar_Clandestino/Puerta/Hoja
+Cube	(-1.2, 1.8, 10.5)	T506_Barrio_Clandestino	estructura/arquitectura	Barrio/Manzana_2/Lugar_Clandestino/Puerta/Marco_T536/Jamba
+Cube	(1.2, 1.8, 10.5)	T506_Barrio_Clandestino	estructura/arquitectura	Barrio/Manzana_2/Lugar_Clandestino/Puerta/Marco_T536/Jamba
+Cube	(0.0, 3.0, 10.5)	T506_Barrio_Clandestino	estructura/arquitectura	Barrio/Manzana_2/Lugar_Clandestino/Puerta/Marco_T536/Dintel
+Cube	(0.0, 8.2, 34.1)	T506_Barrio_Clandestino	estructura/arquitectura	Barrio/Manzana_2/Lugar_Clandestino/Interior/Estructura/MuroFondo
+Cube	(11.7, 8.2, 23.7)	T506_Barrio_Clandestino	estructura/arquitectura	Barrio/Manzana_2/Lugar_Clandestino/Interior/Estructura/MuroIzquierdo
+Cube	(-11.7, 8.2, 23.7)	T506_Barrio_Clandestino	estructura/arquitectura	Barrio/Manzana_2/Lugar_Clandestino/Interior/Estructura/MuroDerecho
+Cube	(0.0, 14.2, 23.7)	T506_Barrio_Clandestino	estructura/arquitectura	Barrio/Manzana_2/Lugar_Clandestino/Interior/Estructura/TechoInterior
+Cube	(0.0, 0.2, 23.7)	T506_Clandestino_Piso	estructura/arquitectura	Barrio/Manzana_2/Lugar_Clandestino/Interior/Revestimiento/Piso
+Cube	(0.0, 12.2, 23.7)	T506_Clandestino_Techo	estructura/arquitectura	Barrio/Manzana_2/Lugar_Clandestino/Interior/Revestimiento/Techo
+Cube	(0.0, 6.2, 33.4)	T506_Clandestino_Muro	estructura/arquitectura	Barrio/Manzana_2/Lugar_Clandestino/Interior/Revestimiento/MuroAtras
+Cube	(11.0, 6.2, 23.7)	T506_Clandestino_Muro	estructura/arquitectura	Barrio/Manzana_2/Lugar_Clandestino/Interior/Revestimiento/MuroIzq
+Cube	(-11.0, 6.2, 23.7)	T506_Clandestino_Muro	estructura/arquitectura	Barrio/Manzana_2/Lugar_Clandestino/Interior/Revestimiento/MuroDer
+Cube	(6.3, 6.2, 14.0)	T506_Clandestino_Muro	estructura/arquitectura	Barrio/Manzana_2/Lugar_Clandestino/Interior/Revestimiento/MuroFrenteIzq
+Cube	(-6.3, 6.2, 14.0)	T506_Clandestino_Muro	estructura/arquitectura	Barrio/Manzana_2/Lugar_Clandestino/Interior/Revestimiento/MuroFrenteDer
+Cube	(0.0, 0.4, 24.5)	T506_Clandestino_Metal	estructura/arquitectura	Barrio/Manzana_2/Lugar_Clandestino/Interior/Fosa/Plataforma
+Cube	(0.0, 0.6, 24.5)	T506_Clandestino_Lona	estructura/arquitectura	Barrio/Manzana_2/Lugar_Clandestino/Interior/Fosa/Lona
+Cube	(5.2, 2.0, 29.7)	T506_Clandestino_Metal	estructura/arquitectura	Barrio/Manzana_2/Lugar_Clandestino/Interior/Fosa/Poste
+Cube	(5.2, 2.0, 19.3)	T506_Clandestino_Metal	estructura/arquitectura	Barrio/Manzana_2/Lugar_Clandestino/Interior/Fosa/Poste
+Cube	(-5.2, 2.0, 29.7)	T506_Clandestino_Metal	estructura/arquitectura	Barrio/Manzana_2/Lugar_Clandestino/Interior/Fosa/Poste
+Cube	(-5.2, 2.0, 19.3)	T506_Clandestino_Metal	estructura/arquitectura	Barrio/Manzana_2/Lugar_Clandestino/Interior/Fosa/Poste
+Cube	(0.0, 1.6, 29.7)	T506_Clandestino_Metal	estructura/arquitectura	Barrio/Manzana_2/Lugar_Clandestino/Interior/Fosa/RejaAtras
+Cube	(5.2, 1.6, 24.5)	T506_Clandestino_Metal	estructura/arquitectura	Barrio/Manzana_2/Lugar_Clandestino/Interior/Fosa/RejaIzq
+Cube	(-5.2, 1.6, 24.5)	T506_Clandestino_Metal	estructura/arquitectura	Barrio/Manzana_2/Lugar_Clandestino/Interior/Fosa/RejaDer
+Cube	(3.2, 1.6, 19.3)	T506_Clandestino_Metal	estructura/arquitectura	Barrio/Manzana_2/Lugar_Clandestino/Interior/Fosa/RejaFrenteIzq
+Cube	(-3.2, 1.6, 19.3)	T506_Clandestino_Metal	estructura/arquitectura	Barrio/Manzana_2/Lugar_Clandestino/Interior/Fosa/RejaFrenteDer
+Cube	(0.0, 2.5, 29.7)	T506_Clandestino_Metal	estructura/arquitectura	Barrio/Manzana_2/Lugar_Clandestino/Interior/Fosa/RejaAtras
+Cube	(5.2, 2.5, 24.5)	T506_Clandestino_Metal	estructura/arquitectura	Barrio/Manzana_2/Lugar_Clandestino/Interior/Fosa/RejaIzq
+Cube	(-5.2, 2.5, 24.5)	T506_Clandestino_Metal	estructura/arquitectura	Barrio/Manzana_2/Lugar_Clandestino/Interior/Fosa/RejaDer
+Cube	(3.2, 2.5, 19.3)	T506_Clandestino_Metal	estructura/arquitectura	Barrio/Manzana_2/Lugar_Clandestino/Interior/Fosa/RejaFrenteIzq
+Cube	(-3.2, 2.5, 19.3)	T506_Clandestino_Metal	estructura/arquitectura	Barrio/Manzana_2/Lugar_Clandestino/Interior/Fosa/RejaFrenteDer
+Cube	(0.0, 3.3, 29.7)	Clandestino_NeonCian	luz o pieza emisiva	Barrio/Manzana_2/Lugar_Clandestino/Interior/Fosa/RejaAtras
+Cube	(5.2, 3.3, 24.5)	Clandestino_NeonCian	luz o pieza emisiva	Barrio/Manzana_2/Lugar_Clandestino/Interior/Fosa/RejaIzq
+Cube	(-5.2, 3.3, 24.5)	Clandestino_NeonCian	luz o pieza emisiva	Barrio/Manzana_2/Lugar_Clandestino/Interior/Fosa/RejaDer
+Cube	(3.2, 3.3, 19.3)	Clandestino_NeonCian	luz o pieza emisiva	Barrio/Manzana_2/Lugar_Clandestino/Interior/Fosa/RejaFrenteIzq
+Cube	(-3.2, 3.3, 19.3)	Clandestino_NeonCian	luz o pieza emisiva	Barrio/Manzana_2/Lugar_Clandestino/Interior/Fosa/RejaFrenteDer
+Cube	(10.4, 0.4, 24.0)	T506_Clandestino_Grada	estructura/arquitectura	Barrio/Manzana_2/Lugar_Clandestino/Interior/Gradas/GradaLado
+Cube	(-10.4, 0.4, 24.0)	T506_Clandestino_Grada	estructura/arquitectura	Barrio/Manzana_2/Lugar_Clandestino/Interior/Gradas/GradaLado
+Cube	(0.0, 0.4, 32.9)	T506_Clandestino_Grada	estructura/arquitectura	Barrio/Manzana_2/Lugar_Clandestino/Interior/Gradas/GradaFondo
+Cube	(9.2, 0.6, 24.0)	T506_Clandestino_Grada	estructura/arquitectura	Barrio/Manzana_2/Lugar_Clandestino/Interior/Gradas/GradaLado
+Cube	(-9.2, 0.6, 24.0)	T506_Clandestino_Grada	estructura/arquitectura	Barrio/Manzana_2/Lugar_Clandestino/Interior/Gradas/GradaLado
+Cube	(0.0, 0.6, 31.7)	T506_Clandestino_Grada	estructura/arquitectura	Barrio/Manzana_2/Lugar_Clandestino/Interior/Gradas/GradaFondo
+Cube	(8.0, 0.8, 24.0)	T506_Clandestino_Grada	estructura/arquitectura	Barrio/Manzana_2/Lugar_Clandestino/Interior/Gradas/GradaLado
+Cube	(-8.0, 0.8, 24.0)	T506_Clandestino_Grada	estructura/arquitectura	Barrio/Manzana_2/Lugar_Clandestino/Interior/Gradas/GradaLado
+Cube	(0.0, 0.8, 30.5)	T506_Clandestino_Grada	estructura/arquitectura	Barrio/Manzana_2/Lugar_Clandestino/Interior/Gradas/GradaFondo
+Cube	(7.5, 0.8, 15.3)	T506_Clandestino_Madera	estructura/arquitectura	Barrio/Manzana_2/Lugar_Clandestino/Interior/BarChico/Barra
+Cube	(7.5, 1.4, 15.3)	Clandestino_NeonMagenta	luz o pieza emisiva	Barrio/Manzana_2/Lugar_Clandestino/Interior/BarChico/NeonBarra
+Cube	(7.5, 2.0, 14.2)	T506_Clandestino_Metal	estructura/arquitectura	Barrio/Manzana_2/Lugar_Clandestino/Interior/BarChico/Estante
+Cube	(0.0, 6.2, 33.3)	Clandestino_NeonMagenta	luz o pieza emisiva	Barrio/Manzana_2/Lugar_Clandestino/Interior/Neon/LetreroFosa
+Cube	(10.9, 5.2, 23.7)	Clandestino_NeonCian	luz o pieza emisiva	Barrio/Manzana_2/Lugar_Clandestino/Interior/Neon/TiraIzq
+Cube	(-10.9, 5.2, 23.7)	Clandestino_NeonCian	luz o pieza emisiva	Barrio/Manzana_2/Lugar_Clandestino/Interior/Neon/TiraDer
+Cube	(0.0, 3.7, 9.9)	Entrada_Neon_Clandestino	luz o pieza emisiva	Barrio/Manzana_2/Lugar_Clandestino/EntradaNeon/CajonLuz
+Cube	(1.8, 1.8, 9.9)	Entrada_Neon_Clandestino	luz o pieza emisiva	Barrio/Manzana_2/Lugar_Clandestino/EntradaNeon/NeonJamba
+Cube	(-1.8, 1.8, 9.9)	Entrada_Neon_Clandestino	luz o pieza emisiva	Barrio/Manzana_2/Lugar_Clandestino/EntradaNeon/NeonJamba
+Cube	(2.6, 1.9, 9.9)	Entrada_Neon_Clandestino	luz o pieza emisiva	Barrio/Manzana_2/Lugar_Clandestino/EntradaNeon/NeonLateral
+Cube	(-2.6, 1.9, 9.9)	Entrada_Neon_Clandestino	luz o pieza emisiva	Barrio/Manzana_2/Lugar_Clandestino/EntradaNeon/NeonLateral
+Cube	(0.0, 3.9, 9.3)	Entrada_Neon_Clandestino	luz o pieza emisiva	Barrio/Manzana_2/Lugar_Clandestino/EntradaNeon/BordeToldo
+Cube	(-25.5, 4.2, 29.8)	T506_Barrio_Mercado	estructura/arquitectura	Barrio/Manzana_2/Lugar_MercadoNegro/FachadaIzquierda
+Cube	(-25.5, 4.2, 22.3)	T506_Barrio_Mercado	estructura/arquitectura	Barrio/Manzana_2/Lugar_MercadoNegro/FachadaDerecha
+Cube	(-25.5, 5.8, 26.0)	T506_Barrio_Mercado	estructura/arquitectura	Barrio/Manzana_2/Lugar_MercadoNegro/Dintel
+Cube	(-25.5, 1.8, 26.0)	T506_Barrio_PanelPuerta	estructura/arquitectura	Barrio/Manzana_2/Lugar_MercadoNegro/Puerta/Hoja
+Cube	(-24.9, 3.7, 26.0)	Entrada_Neon_Mercado	luz o pieza emisiva	Barrio/Manzana_2/Lugar_MercadoNegro/EntradaNeon/CajonLuz
+Cube	(-24.9, 1.8, 27.8)	Entrada_Neon_Mercado	luz o pieza emisiva	Barrio/Manzana_2/Lugar_MercadoNegro/EntradaNeon/NeonJamba
+Cube	(-24.9, 1.8, 24.2)	Entrada_Neon_Mercado	luz o pieza emisiva	Barrio/Manzana_2/Lugar_MercadoNegro/EntradaNeon/NeonJamba
+Cube	(-25.0, 1.9, 28.6)	Entrada_Neon_Mercado	luz o pieza emisiva	Barrio/Manzana_2/Lugar_MercadoNegro/EntradaNeon/NeonLateral
+Cube	(-25.0, 1.9, 23.5)	Entrada_Neon_Mercado	luz o pieza emisiva	Barrio/Manzana_2/Lugar_MercadoNegro/EntradaNeon/NeonLateral
+Cube	(-24.3, 3.9, 26.0)	Entrada_Neon_Mercado	luz o pieza emisiva	Barrio/Manzana_2/Lugar_MercadoNegro/EntradaNeon/BordeToldo
+Cube	(-24.8, 3.6, 26.0)	T506_Cerrado_Herrumbre	estructura/arquitectura	Barrio/Manzana_2/Lugar_MercadoNegro/Cerrado/CajonCortina
+Cube	(-36.8, 4.2, 26.0)	T506_Barrio_Mercado	estructura/arquitectura	Barrio/Manzana_2/Lugar_MercadoNegro/Interior/Estructura/MuroFondo
+Cube	(-31.3, 4.2, 31.5)	T506_Barrio_Mercado	estructura/arquitectura	Barrio/Manzana_2/Lugar_MercadoNegro/Interior/Estructura/MuroIzquierdo
+Cube	(-31.3, 4.2, 20.5)	T506_Barrio_Mercado	estructura/arquitectura	Barrio/Manzana_2/Lugar_MercadoNegro/Interior/Estructura/MuroDerecho
+Cube	(-31.3, 6.3, 26.0)	T506_Barrio_Mercado	estructura/arquitectura	Barrio/Manzana_2/Lugar_MercadoNegro/Interior/Estructura/TechoInterior
+Cube	(-31.3, 0.2, 26.0)	T506_MercadoInt_Piso	estructura/arquitectura	Barrio/Manzana_2/Lugar_MercadoNegro/Interior/Revestimiento/Piso
+Cube	(-31.3, 4.3, 26.0)	T506_MercadoInt_Techo	estructura/arquitectura	Barrio/Manzana_2/Lugar_MercadoNegro/Interior/Revestimiento/Techo
+Cube	(-36.5, 2.3, 26.0)	T506_MercadoInt_Muro	estructura/arquitectura	Barrio/Manzana_2/Lugar_MercadoNegro/Interior/Revestimiento/MuroAtras
+Cube	(-31.3, 2.3, 31.0)	T506_MercadoInt_Muro	estructura/arquitectura	Barrio/Manzana_2/Lugar_MercadoNegro/Interior/Revestimiento/MuroIzq
+Cube	(-31.3, 2.3, 21.1)	T506_MercadoInt_Muro	estructura/arquitectura	Barrio/Manzana_2/Lugar_MercadoNegro/Interior/Revestimiento/MuroDer
+Cube	(-26.1, 2.3, 29.3)	T506_MercadoInt_Muro	estructura/arquitectura	Barrio/Manzana_2/Lugar_MercadoNegro/Interior/Revestimiento/MuroFrenteIzq
+Cube	(-26.1, 2.3, 22.8)	T506_MercadoInt_Muro	estructura/arquitectura	Barrio/Manzana_2/Lugar_MercadoNegro/Interior/Revestimiento/MuroFrenteDer
+Cube	(-31.3, 0.2, 26.0)	T506_MercadoInt_Madera	estructura/arquitectura	Barrio/Manzana_2/Lugar_MercadoNegro/Interior/Revestimiento/PasilloCentral
+Cube	(-36.4, 0.4, 26.0)	T506_MercadoInt_Metal	estructura/arquitectura	Barrio/Manzana_2/Lugar_MercadoNegro/Interior/Revestimiento/RodapieFondo
+Cube	(-27.9, 4.0, 26.0)	MercadoInt_Lampara	luz o pieza emisiva	Barrio/Manzana_2/Lugar_MercadoNegro/Interior/Luces/LuzSodioMostrador_Cable
+Cylinder	(-27.9, 3.6, 26.0)	MercadoInt_Lampara	luz o pieza emisiva	Barrio/Manzana_2/Lugar_MercadoNegro/Interior/Luces/LuzSodioMostrador_Pantalla
+Cube	(-33.3, 4.0, 29.2)	MercadoInt_Lampara	luz o pieza emisiva	Barrio/Manzana_2/Lugar_MercadoNegro/Interior/Luces/LuzSodioPuestosIzqAtras_Cable
+Cylinder	(-33.3, 3.6, 29.2)	MercadoInt_Lampara	luz o pieza emisiva	Barrio/Manzana_2/Lugar_MercadoNegro/Interior/Luces/LuzSodioPuestosIzqAtras_Pantalla
+Cube	(-30.1, 4.0, 29.2)	MercadoInt_Lampara	luz o pieza emisiva	Barrio/Manzana_2/Lugar_MercadoNegro/Interior/Luces/LuzSodioPuestosIzqFrente_Cable
+Cylinder	(-30.1, 3.6, 29.2)	MercadoInt_Lampara	luz o pieza emisiva	Barrio/Manzana_2/Lugar_MercadoNegro/Interior/Luces/LuzSodioPuestosIzqFrente_Pantalla
+Cube	(-33.3, 4.0, 22.8)	MercadoInt_Lampara	luz o pieza emisiva	Barrio/Manzana_2/Lugar_MercadoNegro/Interior/Luces/LuzSodioPuestosDerAtras_Cable
+Cylinder	(-33.3, 3.6, 22.8)	MercadoInt_Lampara	luz o pieza emisiva	Barrio/Manzana_2/Lugar_MercadoNegro/Interior/Luces/LuzSodioPuestosDerAtras_Pantalla
+Cube	(-30.1, 4.0, 22.8)	MercadoInt_Lampara	luz o pieza emisiva	Barrio/Manzana_2/Lugar_MercadoNegro/Interior/Luces/LuzSodioPuestosDerFrente_Cable
+Cylinder	(-30.1, 3.6, 22.8)	MercadoInt_Lampara	luz o pieza emisiva	Barrio/Manzana_2/Lugar_MercadoNegro/Interior/Luces/LuzSodioPuestosDerFrente_Pantalla
+Cube	(-31.5, 4.0, 26.0)	MercadoInt_Lampara	luz o pieza emisiva	Barrio/Manzana_2/Lugar_MercadoNegro/Interior/Luces/LuzSodioPasillo_Cable
+Cylinder	(-31.5, 3.6, 26.0)	MercadoInt_Lampara	luz o pieza emisiva	Barrio/Manzana_2/Lugar_MercadoNegro/Interior/Luces/LuzSodioPasillo_Pantalla
+Cube	(-98.5, -98.7, -13.3)	Greybox_Apariencia	estructura/arquitectura	Barrio/Manzana_2/Lugar_MercadoNegro/Interior/Clinica/MostradorClinica/VistaPreviaApariencia/Pivote/CuerpoJugador/Ropa_Tirantes
+Sphere	(-98.6, -98.1, -13.4)	Greybox_Apariencia	luz o pieza emisiva	Barrio/Manzana_2/Lugar_MercadoNegro/Interior/Clinica/MostradorClinica/VistaPreviaApariencia/Pivote/CuerpoJugador/Implante_OjoLed
+Cube	(70.5, 0.2, 47.0)	T506_CasinoInt_Piso	estructura/arquitectura	Barrio/Manzana_3/Lugar_Casino/Interior/Revestimiento/Piso
+Cube	(70.5, 5.7, 47.0)	S2_Techo_X05	estructura/arquitectura	Barrio/Manzana_3/Lugar_Casino/Interior/Revestimiento/Techo
+Cube	(83.0, 3.0, 47.0)	T930_Muro_MuroAtras	estructura/arquitectura	Barrio/Manzana_3/Lugar_Casino/Interior/Revestimiento/MuroAtras
+Cube	(70.5, 3.0, 33.1)	T506_CasinoInt_Muro	estructura/arquitectura	Barrio/Manzana_3/Lugar_Casino/Interior/Revestimiento/MuroIzq
+Cube	(70.5, 3.0, 61.0)	T930_Muro_MuroDer	estructura/arquitectura	Barrio/Manzana_3/Lugar_Casino/Interior/Revestimiento/MuroDer
+Cube	(58.1, 3.0, 39.3)	T930_Muro_MuroFrenteIzq	estructura/arquitectura	Barrio/Manzana_3/Lugar_Casino/Interior/Revestimiento/MuroFrenteIzq
+Cube	(58.1, 3.0, 54.8)	T930_Muro_MuroFrenteDer	estructura/arquitectura	Barrio/Manzana_3/Lugar_Casino/Interior/Revestimiento/MuroFrenteDer
+Cube	(82.9, 0.4, 47.0)	T506_CasinoInt_Dorado	estructura/arquitectura	Barrio/Manzana_3/Lugar_Casino/Interior/Revestimiento/ZocaloFondo
+Cube	(82.5, 0.3, 36.0)	T506_Tragamonedas_Cuerpo	estructura/arquitectura	Barrio/Manzana_3/Lugar_Casino/Interior/Mobiliario/Tragamonedas/Tragamonedas_1/Base
+Cube	(82.5, 1.2, 36.0)	T506_Tragamonedas_Cuerpo	estructura/arquitectura	Barrio/Manzana_3/Lugar_Casino/Interior/Mobiliario/Tragamonedas/Tragamonedas_1/Cuerpo
+Cube	(82.5, 2.2, 36.0)	T506_Tragamonedas_Corona	estructura/arquitectura	Barrio/Manzana_3/Lugar_Casino/Interior/Mobiliario/Tragamonedas/Tragamonedas_1/Corona
+Cube	(82.1, 1.5, 36.0)	Tragamonedas_Pantalla	luz o pieza emisiva	Barrio/Manzana_3/Lugar_Casino/Interior/Mobiliario/Tragamonedas/Tragamonedas_1/Pantalla
+Cube	(82.1, 1.7, 36.0)	Tragamonedas_Neon	luz o pieza emisiva	Barrio/Manzana_3/Lugar_Casino/Interior/Mobiliario/Tragamonedas/Tragamonedas_1/TiraNeonArriba
+Cube	(82.1, 1.3, 36.0)	Tragamonedas_Neon	luz o pieza emisiva	Barrio/Manzana_3/Lugar_Casino/Interior/Mobiliario/Tragamonedas/Tragamonedas_1/TiraNeonAbajo
+Cube	(82.5, 1.4, 36.5)	T506_Tragamonedas_Cuerpo	estructura/arquitectura	Barrio/Manzana_3/Lugar_Casino/Interior/Mobiliario/Tragamonedas/Tragamonedas_1/Palanca
+Cube	(82.5, 1.6, 36.5)	Tragamonedas_Neon	luz o pieza emisiva	Barrio/Manzana_3/Lugar_Casino/Interior/Mobiliario/Tragamonedas/Tragamonedas_1/PalancaBola
+Cube	(82.5, 0.3, 40.0)	T506_Tragamonedas_Cuerpo	estructura/arquitectura	Barrio/Manzana_3/Lugar_Casino/Interior/Mobiliario/Tragamonedas/Tragamonedas_2/Base
+Cube	(82.5, 1.2, 40.0)	T506_Tragamonedas_Cuerpo	estructura/arquitectura	Barrio/Manzana_3/Lugar_Casino/Interior/Mobiliario/Tragamonedas/Tragamonedas_2/Cuerpo
+Cube	(82.5, 2.2, 40.0)	T506_Tragamonedas_Corona	estructura/arquitectura	Barrio/Manzana_3/Lugar_Casino/Interior/Mobiliario/Tragamonedas/Tragamonedas_2/Corona
+Cube	(82.1, 1.5, 40.0)	Tragamonedas_Pantalla	luz o pieza emisiva	Barrio/Manzana_3/Lugar_Casino/Interior/Mobiliario/Tragamonedas/Tragamonedas_2/Pantalla
+Cube	(82.1, 1.7, 40.0)	Tragamonedas_Neon	luz o pieza emisiva	Barrio/Manzana_3/Lugar_Casino/Interior/Mobiliario/Tragamonedas/Tragamonedas_2/TiraNeonArriba
+Cube	(82.1, 1.3, 40.0)	Tragamonedas_Neon	luz o pieza emisiva	Barrio/Manzana_3/Lugar_Casino/Interior/Mobiliario/Tragamonedas/Tragamonedas_2/TiraNeonAbajo
+Cube	(82.5, 1.4, 40.5)	T506_Tragamonedas_Cuerpo	estructura/arquitectura	Barrio/Manzana_3/Lugar_Casino/Interior/Mobiliario/Tragamonedas/Tragamonedas_2/Palanca
+Cube	(82.5, 1.6, 40.5)	Tragamonedas_Neon	luz o pieza emisiva	Barrio/Manzana_3/Lugar_Casino/Interior/Mobiliario/Tragamonedas/Tragamonedas_2/PalancaBola
+Cube	(82.5, 0.3, 44.0)	T506_Tragamonedas_Cuerpo	estructura/arquitectura	Barrio/Manzana_3/Lugar_Casino/Interior/Mobiliario/Tragamonedas/Tragamonedas_3/Base
+Cube	(82.5, 1.2, 44.0)	T506_Tragamonedas_Cuerpo	estructura/arquitectura	Barrio/Manzana_3/Lugar_Casino/Interior/Mobiliario/Tragamonedas/Tragamonedas_3/Cuerpo
+Cube	(82.5, 2.2, 44.0)	T506_Tragamonedas_Corona	estructura/arquitectura	Barrio/Manzana_3/Lugar_Casino/Interior/Mobiliario/Tragamonedas/Tragamonedas_3/Corona
+Cube	(82.1, 1.5, 44.0)	Tragamonedas_Pantalla	luz o pieza emisiva	Barrio/Manzana_3/Lugar_Casino/Interior/Mobiliario/Tragamonedas/Tragamonedas_3/Pantalla
+Cube	(82.1, 1.7, 44.0)	Tragamonedas_Neon	luz o pieza emisiva	Barrio/Manzana_3/Lugar_Casino/Interior/Mobiliario/Tragamonedas/Tragamonedas_3/TiraNeonArriba
+Cube	(82.1, 1.3, 44.0)	Tragamonedas_Neon	luz o pieza emisiva	Barrio/Manzana_3/Lugar_Casino/Interior/Mobiliario/Tragamonedas/Tragamonedas_3/TiraNeonAbajo
+Cube	(82.5, 1.4, 44.5)	T506_Tragamonedas_Cuerpo	estructura/arquitectura	Barrio/Manzana_3/Lugar_Casino/Interior/Mobiliario/Tragamonedas/Tragamonedas_3/Palanca
+Cube	(82.5, 1.6, 44.5)	Tragamonedas_Neon	luz o pieza emisiva	Barrio/Manzana_3/Lugar_Casino/Interior/Mobiliario/Tragamonedas/Tragamonedas_3/PalancaBola
+Cube	(82.5, 0.3, 50.0)	T506_Tragamonedas_Cuerpo	estructura/arquitectura	Barrio/Manzana_3/Lugar_Casino/Interior/Mobiliario/Tragamonedas/Tragamonedas_4/Base
+Cube	(82.5, 1.2, 50.0)	T506_Tragamonedas_Cuerpo	estructura/arquitectura	Barrio/Manzana_3/Lugar_Casino/Interior/Mobiliario/Tragamonedas/Tragamonedas_4/Cuerpo
+Cube	(82.5, 2.2, 50.0)	T506_Tragamonedas_Corona	estructura/arquitectura	Barrio/Manzana_3/Lugar_Casino/Interior/Mobiliario/Tragamonedas/Tragamonedas_4/Corona
+Cube	(82.1, 1.5, 50.0)	Tragamonedas_Pantalla	luz o pieza emisiva	Barrio/Manzana_3/Lugar_Casino/Interior/Mobiliario/Tragamonedas/Tragamonedas_4/Pantalla
+Cube	(82.1, 1.7, 50.0)	Tragamonedas_Neon	luz o pieza emisiva	Barrio/Manzana_3/Lugar_Casino/Interior/Mobiliario/Tragamonedas/Tragamonedas_4/TiraNeonArriba
+Cube	(82.1, 1.3, 50.0)	Tragamonedas_Neon	luz o pieza emisiva	Barrio/Manzana_3/Lugar_Casino/Interior/Mobiliario/Tragamonedas/Tragamonedas_4/TiraNeonAbajo
+Cube	(82.5, 1.4, 50.5)	T506_Tragamonedas_Cuerpo	estructura/arquitectura	Barrio/Manzana_3/Lugar_Casino/Interior/Mobiliario/Tragamonedas/Tragamonedas_4/Palanca
+Cube	(82.5, 1.6, 50.5)	Tragamonedas_Neon	luz o pieza emisiva	Barrio/Manzana_3/Lugar_Casino/Interior/Mobiliario/Tragamonedas/Tragamonedas_4/PalancaBola
+Cube	(82.5, 0.3, 54.0)	T506_Tragamonedas_Cuerpo	estructura/arquitectura	Barrio/Manzana_3/Lugar_Casino/Interior/Mobiliario/Tragamonedas/Tragamonedas_5/Base
+Cube	(82.5, 1.2, 54.0)	T506_Tragamonedas_Cuerpo	estructura/arquitectura	Barrio/Manzana_3/Lugar_Casino/Interior/Mobiliario/Tragamonedas/Tragamonedas_5/Cuerpo
+Cube	(82.5, 2.2, 54.0)	T506_Tragamonedas_Corona	estructura/arquitectura	Barrio/Manzana_3/Lugar_Casino/Interior/Mobiliario/Tragamonedas/Tragamonedas_5/Corona
+Cube	(82.1, 1.5, 54.0)	Tragamonedas_Pantalla	luz o pieza emisiva	Barrio/Manzana_3/Lugar_Casino/Interior/Mobiliario/Tragamonedas/Tragamonedas_5/Pantalla
+Cube	(82.1, 1.7, 54.0)	Tragamonedas_Neon	luz o pieza emisiva	Barrio/Manzana_3/Lugar_Casino/Interior/Mobiliario/Tragamonedas/Tragamonedas_5/TiraNeonArriba
+Cube	(82.1, 1.3, 54.0)	Tragamonedas_Neon	luz o pieza emisiva	Barrio/Manzana_3/Lugar_Casino/Interior/Mobiliario/Tragamonedas/Tragamonedas_5/TiraNeonAbajo
+Cube	(82.5, 1.4, 54.5)	T506_Tragamonedas_Cuerpo	estructura/arquitectura	Barrio/Manzana_3/Lugar_Casino/Interior/Mobiliario/Tragamonedas/Tragamonedas_5/Palanca
+Cube	(82.5, 1.6, 54.5)	Tragamonedas_Neon	luz o pieza emisiva	Barrio/Manzana_3/Lugar_Casino/Interior/Mobiliario/Tragamonedas/Tragamonedas_5/PalancaBola
+Cube	(82.5, 0.3, 58.0)	T506_Tragamonedas_Cuerpo	estructura/arquitectura	Barrio/Manzana_3/Lugar_Casino/Interior/Mobiliario/Tragamonedas/Tragamonedas_6/Base
+Cube	(82.5, 1.2, 58.0)	T506_Tragamonedas_Cuerpo	estructura/arquitectura	Barrio/Manzana_3/Lugar_Casino/Interior/Mobiliario/Tragamonedas/Tragamonedas_6/Cuerpo
+Cube	(82.5, 2.2, 58.0)	T506_Tragamonedas_Corona	estructura/arquitectura	Barrio/Manzana_3/Lugar_Casino/Interior/Mobiliario/Tragamonedas/Tragamonedas_6/Corona
+Cube	(82.1, 1.5, 58.0)	Tragamonedas_Pantalla	luz o pieza emisiva	Barrio/Manzana_3/Lugar_Casino/Interior/Mobiliario/Tragamonedas/Tragamonedas_6/Pantalla
+Cube	(82.1, 1.7, 58.0)	Tragamonedas_Neon	luz o pieza emisiva	Barrio/Manzana_3/Lugar_Casino/Interior/Mobiliario/Tragamonedas/Tragamonedas_6/TiraNeonArriba
+Cube	(82.1, 1.3, 58.0)	Tragamonedas_Neon	luz o pieza emisiva	Barrio/Manzana_3/Lugar_Casino/Interior/Mobiliario/Tragamonedas/Tragamonedas_6/TiraNeonAbajo
+Cube	(82.5, 1.4, 58.5)	T506_Tragamonedas_Cuerpo	estructura/arquitectura	Barrio/Manzana_3/Lugar_Casino/Interior/Mobiliario/Tragamonedas/Tragamonedas_6/Palanca
+Cube	(82.5, 1.6, 58.5)	Tragamonedas_Neon	luz o pieza emisiva	Barrio/Manzana_3/Lugar_Casino/Interior/Mobiliario/Tragamonedas/Tragamonedas_6/PalancaBola
+Cylinder	(74.0, 3.0, 40.5)	T506_CasinoInt_Dorado	estructura/arquitectura	Barrio/Manzana_3/Lugar_Casino/Interior/Mobiliario/Columna
+Cylinder	(74.0, 3.0, 53.5)	T506_CasinoInt_Dorado	estructura/arquitectura	Barrio/Manzana_3/Lugar_Casino/Interior/Mobiliario/Columna
+Cylinder	(67.0, 3.0, 40.5)	T506_CasinoInt_Dorado	estructura/arquitectura	Barrio/Manzana_3/Lugar_Casino/Interior/Mobiliario/Columna
+Cylinder	(67.0, 3.0, 53.5)	T506_CasinoInt_Dorado	estructura/arquitectura	Barrio/Manzana_3/Lugar_Casino/Interior/Mobiliario/Columna
+Cube	(82.9, 3.4, 47.0)	CasinoInt_NeonDorado	luz o pieza emisiva	Barrio/Manzana_3/Lugar_Casino/Interior/Neon/FrisoFondo
+Cube	(82.9, 5.1, 47.0)	CasinoInt_NeonMagenta	luz o pieza emisiva	Barrio/Manzana_3/Lugar_Casino/Interior/Neon/TiraAtras
+Cube	(70.3, 3.4, 33.1)	CasinoInt_NeonDorado	luz o pieza emisiva	Barrio/Manzana_3/Lugar_Casino/Interior/Neon/FrisoIzquierdo
+Cube	(70.3, 3.4, 60.9)	CasinoInt_NeonDorado	luz o pieza emisiva	Barrio/Manzana_3/Lugar_Casino/Interior/Neon/FrisoDerecho
+Cube	(77.0, 2.5, 33.2)	CasinoInt_Pantalla	luz o pieza emisiva	Barrio/Manzana_3/Lugar_Casino/Interior/Neon/PantallaIzquierda1
+Cube	(71.0, 2.5, 33.2)	CasinoInt_Pantalla	luz o pieza emisiva	Barrio/Manzana_3/Lugar_Casino/Interior/Neon/PantallaIzquierda2
+Cube	(79.0, 2.5, 60.8)	CasinoInt_Pantalla	luz o pieza emisiva	Barrio/Manzana_3/Lugar_Casino/Interior/Neon/PantallaDerecha
+Cube	(79.0, 5.3, 40.0)	CasinoInt_Lampara	luz o pieza emisiva	Barrio/Manzana_3/Lugar_Casino/Interior/Luces/LuzCalidaSalonIzq_Cable
+Cylinder	(79.0, 4.8, 40.0)	CasinoInt_Lampara	luz o pieza emisiva	Barrio/Manzana_3/Lugar_Casino/Interior/Luces/LuzCalidaSalonIzq_Pantalla
+Cube	(79.0, 5.3, 54.0)	CasinoInt_Lampara	luz o pieza emisiva	Barrio/Manzana_3/Lugar_Casino/Interior/Luces/LuzCalidaSalonDer_Cable
+Cylinder	(79.0, 4.8, 54.0)	CasinoInt_Lampara	luz o pieza emisiva	Barrio/Manzana_3/Lugar_Casino/Interior/Luces/LuzCalidaSalonDer_Pantalla
+Cube	(75.0, 5.3, 47.0)	CasinoInt_Lampara	luz o pieza emisiva	Barrio/Manzana_3/Lugar_Casino/Interior/Luces/LuzCalidaCentro1_Cable
+Cylinder	(75.0, 4.8, 47.0)	CasinoInt_Lampara	luz o pieza emisiva	Barrio/Manzana_3/Lugar_Casino/Interior/Luces/LuzCalidaCentro1_Pantalla
+Cube	(67.5, 5.3, 47.0)	CasinoInt_Lampara	luz o pieza emisiva	Barrio/Manzana_3/Lugar_Casino/Interior/Luces/LuzCalidaCentro2_Cable
+Cylinder	(67.5, 4.8, 47.0)	CasinoInt_Lampara	luz o pieza emisiva	Barrio/Manzana_3/Lugar_Casino/Interior/Luces/LuzCalidaCentro2_Pantalla
+Cube	(66.0, 5.3, 37.5)	CasinoInt_Lampara	luz o pieza emisiva	Barrio/Manzana_3/Lugar_Casino/Interior/Luces/LuzCalidaMesas_Cable
+Cylinder	(66.0, 4.8, 37.5)	CasinoInt_Lampara	luz o pieza emisiva	Barrio/Manzana_3/Lugar_Casino/Interior/Luces/LuzCalidaMesas_Pantalla
+Cube	(72.0, 5.3, 57.5)	CasinoInt_Lampara	luz o pieza emisiva	Barrio/Manzana_3/Lugar_Casino/Interior/Luces/LuzCalidaCajera_Cable
+Cylinder	(72.0, 4.8, 57.5)	CasinoInt_Lampara	luz o pieza emisiva	Barrio/Manzana_3/Lugar_Casino/Interior/Luces/LuzCalidaCajera_Pantalla
+Quad	(-63.0, 8.6, -64.0)	Fachada_Pobre	estructura/arquitectura	Barrio/Manzana_4/Edificios/Edificio_33/Lado_Norte/Ventanas
+Cube	(-63.0, 11.0, -64.0)	T506_Barrio_ConcretoOscuro	estructura/arquitectura	Barrio/Manzana_4/Edificios/Edificio_33/Lado_Norte/Cornisa
+Cube	(-56.8, 3.2, -64.5)	T507_T506_Barrio_Pobre_A_0	estructura/arquitectura	Barrio/Manzana_4/Edificios/Edificio_33/Lado_Este/Relleno_Fachada
+Cube	(-56.8, 3.2, -69.5)	T507_T506_Barrio_Pobre_A_0	estructura/arquitectura	Barrio/Manzana_4/Edificios/Edificio_33/Lado_Este/Relleno_Fachada
+Quad	(-57.0, 8.6, -67.0)	Fachada_Pobre	estructura/arquitectura	Barrio/Manzana_4/Edificios/Edificio_33/Lado_Este/Ventanas
+Cube	(-57.0, 11.0, -67.0)	T506_Barrio_ConcretoOscuro	estructura/arquitectura	Barrio/Manzana_4/Edificios/Edificio_33/Lado_Este/Cornisa
+Cube	(-69.5, 3.2, -63.8)	T507_T506_Barrio_Pobre_A_0	estructura/arquitectura	Barrio/Manzana_4/Edificios/Edificio_42/Lado_Norte/Relleno_Fachada
+Quad	(-78.0, 8.7, -64.0)	Fachada_Pobre	estructura/arquitectura	Barrio/Manzana_4/Edificios/Edificio_42/Lado_Norte/Ventanas
+Cube	(-78.0, 11.1, -64.0)	T506_Barrio_ConcretoOscuro	estructura/arquitectura	Barrio/Manzana_4/Edificios/Edificio_42/Lado_Norte/Cornisa
+Cube	(-69.5, 3.2, -84.2)	T507_T506_Barrio_Pobre_A_0	estructura/arquitectura	Barrio/Manzana_4/Edificios/Edificio_42/Lado_Sur/Relleno_Fachada
+Quad	(-78.0, 8.7, -84.0)	Fachada_Pobre	estructura/arquitectura	Barrio/Manzana_4/Edificios/Edificio_42/Lado_Sur/Ventanas
+Cube	(-78.0, 11.1, -84.0)	T506_Barrio_ConcretoOscuro	estructura/arquitectura	Barrio/Manzana_4/Edificios/Edificio_42/Lado_Sur/Cornisa
+Cube	(-59.5, 3.7, -72.8)	T506_Barrio_Casa	estructura/arquitectura	Barrio/Manzana_4/Lugar_Casa/CuerpoLadoIzquierdo
+Cube	(-59.5, 3.7, -81.3)	T506_Barrio_Casa	estructura/arquitectura	Barrio/Manzana_4/Lugar_Casa/CuerpoLadoDerecho
+Cube	(-59.5, 5.3, -77.0)	T506_Barrio_Casa	estructura/arquitectura	Barrio/Manzana_4/Lugar_Casa/CuerpoTecho
+Cube	(-68.8, 3.7, -77.0)	T506_Barrio_Casa	estructura/arquitectura	Barrio/Manzana_4/Lugar_Casa/Interior/Estructura/MuroFondo
+Cube	(-64.8, 3.7, -70.3)	T506_Barrio_Casa	estructura/arquitectura	Barrio/Manzana_4/Lugar_Casa/Interior/Estructura/MuroIzquierdo
+Cube	(-64.8, 3.7, -83.8)	T506_Barrio_Casa	estructura/arquitectura	Barrio/Manzana_4/Lugar_Casa/Interior/Estructura/MuroDerecho
+Cube	(-64.8, 6.5, -77.0)	T506_Barrio_Casa	estructura/arquitectura	Barrio/Manzana_4/Lugar_Casa/Interior/Estructura/TechoInterior
+Cube	(-74.0, 2.6, -54.1)	Callejon_NeonCian	luz o pieza emisiva	Barrio/Manzana_4/Callejon/TiraNorte
+Cube	(-74.0, 2.6, -63.9)	Callejon_NeonCian	luz o pieza emisiva	Barrio/Manzana_4/Callejon/TiraSur
+Cube	(-12.5, 3.2, -84.2)	T507_T506_Barrio_Edif_B_3	estructura/arquitectura	Barrio/Manzana_5/Edificios/Edificio_45/Lado_Sur/Relleno_Fachada
+Cube	(-36.8, 3.2, -84.2)	T507_T506_Barrio_Edif_B_3	estructura/arquitectura	Barrio/Manzana_5/Edificios/Edificio_45/Lado_Sur/Relleno_Fachada
+Quad	(-24.7, 12.1, -84.0)	T507_Fachada_Alta_3	estructura/arquitectura	Barrio/Manzana_5/Edificios/Edificio_45/Lado_Sur/Ventanas
+Cube	(-24.7, 18.0, -84.0)	T506_Barrio_ConcretoOscuro	estructura/arquitectura	Barrio/Manzana_5/Edificios/Edificio_45/Lado_Sur/Cornisa
+Cube	(-37.2, 3.2, -83.8)	T507_T506_Barrio_Edif_B_3	estructura/arquitectura	Barrio/Manzana_5/Edificios/Edificio_45/Lado_Oeste/Relleno_Fachada
+Quad	(-37.0, 12.1, -71.7)	T507_Fachada_Alta_3	estructura/arquitectura	Barrio/Manzana_5/Edificios/Edificio_45/Lado_Oeste/Ventanas
+Cube	(-37.0, 18.0, -71.7)	T506_Barrio_ConcretoOscuro	estructura/arquitectura	Barrio/Manzana_5/Edificios/Edificio_45/Lado_Oeste/Cornisa
+Cube	(12.2, 3.2, -84.2)	T507_T506_Barrio_Edif_D_0	estructura/arquitectura	Barrio/Manzana_5/Edificios/Edificio_48/Lado_Sur/Relleno_Fachada
+Cube	(-12.2, 3.2, -84.2)	T507_T506_Barrio_Edif_D_0	estructura/arquitectura	Barrio/Manzana_5/Edificios/Edificio_48/Lado_Sur/Relleno_Fachada
+Quad	(0.0, 10.6, -84.0)	T507_Fachada_Alta_0	estructura/arquitectura	Barrio/Manzana_5/Edificios/Edificio_48/Lado_Sur/Ventanas
+Cube	(0.0, 14.9, -84.0)	T506_Barrio_ConcretoOscuro	estructura/arquitectura	Barrio/Manzana_5/Edificios/Edificio_48/Lado_Sur/Cornisa
+Cube	(36.8, 3.2, -84.2)	T507_T506_Barrio_Edif_D_5	estructura/arquitectura	Barrio/Manzana_5/Edificios/Edificio_50/Lado_Sur/Relleno_Fachada
+Cube	(12.5, 3.2, -84.2)	T507_T506_Barrio_Edif_D_5	estructura/arquitectura	Barrio/Manzana_5/Edificios/Edificio_50/Lado_Sur/Relleno_Fachada
+Quad	(24.7, 15.5, -84.0)	T507_Fachada_Alta_5	estructura/arquitectura	Barrio/Manzana_5/Edificios/Edificio_50/Lado_Sur/Ventanas
+Cube	(24.7, 24.7, -84.0)	T506_Barrio_ConcretoOscuro	estructura/arquitectura	Barrio/Manzana_5/Edificios/Edificio_50/Lado_Sur/Cornisa
+Cube	(37.2, 3.2, -83.8)	T507_T506_Barrio_Edif_D_5	estructura/arquitectura	Barrio/Manzana_5/Edificios/Edificio_50/Lado_Este/Relleno_Fachada
+Quad	(37.0, 15.5, -71.7)	T507_Fachada_Alta_5	estructura/arquitectura	Barrio/Manzana_5/Edificios/Edificio_50/Lado_Este/Ventanas
+Cube	(37.0, 24.7, -71.7)	T506_Barrio_ConcretoOscuro	estructura/arquitectura	Barrio/Manzana_5/Edificios/Edificio_50/Lado_Este/Cornisa
+Cube	(-6.9, 6.2, -10.5)	T506_Barrio_Bar	estructura/arquitectura	Barrio/Manzana_5/Lugar_Bar/FachadaIzquierda
+Cube	(6.9, 6.2, -10.5)	T506_Barrio_Bar	estructura/arquitectura	Barrio/Manzana_5/Lugar_Bar/FachadaDerecha
+Cube	(0.0, 7.8, -10.5)	T506_Barrio_Bar	estructura/arquitectura	Barrio/Manzana_5/Lugar_Bar/Dintel
+Cube	(-6.9, 6.2, -12.5)	T506_Barrio_Bar	estructura/arquitectura	Barrio/Manzana_5/Lugar_Bar/CuerpoLadoIzquierdo
+Cube	(6.9, 6.2, -12.5)	T506_Barrio_Bar	estructura/arquitectura	Barrio/Manzana_5/Lugar_Bar/CuerpoLadoDerecho
+Cube	(0.0, 7.8, -12.5)	T506_Barrio_Bar	estructura/arquitectura	Barrio/Manzana_5/Lugar_Bar/CuerpoTecho
+Cube	(0.0, 1.4, -10.5)	T506_Barrio_PanelPuerta	estructura/arquitectura	Barrio/Manzana_5/Lugar_Bar/Puerta/Hoja
+Cube	(1.2, 1.8, -10.5)	T506_Barrio_Bar	estructura/arquitectura	Barrio/Manzana_5/Lugar_Bar/Puerta/Marco_T536/Jamba
+Cube	(-1.2, 1.8, -10.5)	T506_Barrio_Bar	estructura/arquitectura	Barrio/Manzana_5/Lugar_Bar/Puerta/Marco_T536/Jamba
+Cube	(0.0, 3.0, -10.5)	T506_Barrio_Bar	estructura/arquitectura	Barrio/Manzana_5/Lugar_Bar/Puerta/Marco_T536/Dintel
+Cube	(0.0, 6.2, -31.3)	T506_Barrio_Bar	estructura/arquitectura	Barrio/Manzana_5/Lugar_Bar/Interior/Estructura/MuroFondo
+Cube	(-11.2, 6.2, -21.0)	T506_Barrio_Bar	estructura/arquitectura	Barrio/Manzana_5/Lugar_Bar/Interior/Estructura/MuroIzquierdo
+Cube	(11.2, 6.2, -21.0)	T506_Barrio_Bar	estructura/arquitectura	Barrio/Manzana_5/Lugar_Bar/Interior/Estructura/MuroDerecho
+Cube	(0.0, 8.5, -21.0)	T506_Barrio_Bar	estructura/arquitectura	Barrio/Manzana_5/Lugar_Bar/Interior/Estructura/TechoInterior
+Cube	(0.0, 0.2, -21.0)	T506_Bar_Piso	estructura/arquitectura	Barrio/Manzana_5/Lugar_Bar/Interior/Revestimiento/Piso
+Cube	(0.0, 4.7, -21.0)	T506_Bar_Techo	estructura/arquitectura	Barrio/Manzana_5/Lugar_Bar/Interior/Revestimiento/Techo
+Cube	(0.0, 2.5, -27.9)	T506_Bar_Muro	estructura/arquitectura	Barrio/Manzana_5/Lugar_Bar/Interior/Revestimiento/MuroAtras
+Cube	(-10.0, 2.5, -21.0)	T506_Bar_Muro	estructura/arquitectura	Barrio/Manzana_5/Lugar_Bar/Interior/Revestimiento/MuroIzq
+Cube	(10.0, 2.5, -21.0)	T506_Bar_Muro	estructura/arquitectura	Barrio/Manzana_5/Lugar_Bar/Interior/Revestimiento/MuroDer
+Cube	(-5.8, 2.5, -14.0)	T506_Bar_Muro	estructura/arquitectura	Barrio/Manzana_5/Lugar_Bar/Interior/Revestimiento/MuroFrenteIzq
+Cube	(5.8, 2.5, -14.0)	T506_Bar_Muro	estructura/arquitectura	Barrio/Manzana_5/Lugar_Bar/Interior/Revestimiento/MuroFrenteDer
+Cube	(0.0, 2.5, -27.7)	T506_Bar_Metal	estructura/arquitectura	Barrio/Manzana_5/Lugar_Bar/Interior/Mobiliario/Estante
+Cube	(0.0, 3.1, -27.7)	T506_Bar_Metal	estructura/arquitectura	Barrio/Manzana_5/Lugar_Bar/Interior/Mobiliario/Estante
+Cube	(8.3, 0.5, -18.8)	T506_Bar_Metal	estructura/arquitectura	Barrio/Manzana_5/Lugar_Bar/Interior/Mobiliario/Escenario
+Cube	(-9.9, 1.3, -22.5)	T506_Bar_Metal	estructura/arquitectura	Barrio/Manzana_5/Lugar_Bar/Interior/Mobiliario/PuertaBanos
+Cube	(-9.9, 2.8, -22.5)	Bar_NeonCian	luz o pieza emisiva	Barrio/Manzana_5/Lugar_Bar/Interior/Mobiliario/LetreroBanos
+Cube	(-4.5, 3.5, -27.8)	Bar_Pantalla	luz o pieza emisiva	Barrio/Manzana_5/Lugar_Bar/Interior/Neon/PantallaAtras1
+Cube	(4.5, 3.5, -27.8)	Bar_Pantalla	luz o pieza emisiva	Barrio/Manzana_5/Lugar_Bar/Interior/Neon/PantallaAtras2
+Cube	(9.8, 3.0, -18.8)	Bar_Pantalla	luz o pieza emisiva	Barrio/Manzana_5/Lugar_Bar/Interior/Neon/PantallaEscenario
+Cube	(0.0, 4.4, -27.9)	Bar_NeonMagenta	luz o pieza emisiva	Barrio/Manzana_5/Lugar_Bar/Interior/Neon/TiraAtras
+Cube	(-9.9, 4.4, -21.0)	Bar_NeonCian	luz o pieza emisiva	Barrio/Manzana_5/Lugar_Bar/Interior/Neon/TiraIzquierda
+Cube	(9.9, 4.4, -21.0)	Bar_NeonCian	luz o pieza emisiva	Barrio/Manzana_5/Lugar_Bar/Interior/Neon/TiraDerecha
+Cube	(0.0, 4.6, -25.0)	Bar_NeonCian	luz o pieza emisiva	Barrio/Manzana_5/Lugar_Bar/Interior/Neon/TiraTecho
+Cube	(0.0, 4.6, -20.5)	Bar_NeonMagenta	luz o pieza emisiva	Barrio/Manzana_5/Lugar_Bar/Interior/Neon/TiraTecho
+Cube	(0.0, 4.6, -16.0)	Bar_NeonCian	luz o pieza emisiva	Barrio/Manzana_5/Lugar_Bar/Interior/Neon/TiraTecho
+Cube	(0.0, 4.6, -21.0)	Bar_NeonMagenta	luz o pieza emisiva	Barrio/Manzana_5/Lugar_Bar/Interior/Neon/TiraCentro
+Cube	(-5.0, 4.3, -24.6)	Bar_Lampara	luz o pieza emisiva	Barrio/Manzana_5/Lugar_Bar/Interior/Luces/LuzCalidaBarra1_Cable
+Cylinder	(-5.0, 3.8, -24.6)	Bar_Lampara	luz o pieza emisiva	Barrio/Manzana_5/Lugar_Bar/Interior/Luces/LuzCalidaBarra1_Pantalla
+Cube	(0.0, 4.3, -24.6)	Bar_Lampara	luz o pieza emisiva	Barrio/Manzana_5/Lugar_Bar/Interior/Luces/LuzCalidaBarra2_Cable
+Cylinder	(0.0, 3.8, -24.6)	Bar_Lampara	luz o pieza emisiva	Barrio/Manzana_5/Lugar_Bar/Interior/Luces/LuzCalidaBarra2_Pantalla
+Cube	(5.0, 4.3, -24.6)	Bar_Lampara	luz o pieza emisiva	Barrio/Manzana_5/Lugar_Bar/Interior/Luces/LuzCalidaBarra3_Cable
+Cylinder	(5.0, 3.8, -24.6)	Bar_Lampara	luz o pieza emisiva	Barrio/Manzana_5/Lugar_Bar/Interior/Luces/LuzCalidaBarra3_Pantalla
+Cube	(-4.8, 4.3, -19.2)	Bar_Lampara	luz o pieza emisiva	Barrio/Manzana_5/Lugar_Bar/Interior/Luces/LuzCalidaMesasIzq_Cable
+Cylinder	(-4.8, 3.8, -19.2)	Bar_Lampara	luz o pieza emisiva	Barrio/Manzana_5/Lugar_Bar/Interior/Luces/LuzCalidaMesasIzq_Pantalla
+Cube	(3.2, 4.3, -19.2)	Bar_Lampara	luz o pieza emisiva	Barrio/Manzana_5/Lugar_Bar/Interior/Luces/LuzCalidaMesasDer_Cable
+Cylinder	(3.2, 3.8, -19.2)	Bar_Lampara	luz o pieza emisiva	Barrio/Manzana_5/Lugar_Bar/Interior/Luces/LuzCalidaMesasDer_Pantalla
+Cube	(81.5, 3.2, -84.2)	T507_T506_Barrio_Edif_C_2	estructura/arquitectura	Barrio/Manzana_6/Edificios/Edificio_53/Lado_Sur/Relleno_Fachada
+Cube	(57.2, 3.2, -84.2)	T507_T506_Barrio_Edif_C_2	estructura/arquitectura	Barrio/Manzana_6/Edificios/Edificio_53/Lado_Sur/Relleno_Fachada
+Quad	(69.3, 16.3, -84.0)	Fachada_Media	estructura/arquitectura	Barrio/Manzana_6/Edificios/Edificio_53/Lado_Sur/Ventanas
+Cube	(69.3, 26.4, -84.0)	T506_Barrio_ConcretoOscuro	estructura/arquitectura	Barrio/Manzana_6/Edificios/Edificio_53/Lado_Sur/Cornisa
+Cube	(56.8, 3.2, -83.8)	T507_T506_Barrio_Edif_C_2	estructura/arquitectura	Barrio/Manzana_6/Edificios/Edificio_53/Lado_Oeste/Relleno_Fachada
+Quad	(57.0, 16.3, -71.7)	Fachada_Media	estructura/arquitectura	Barrio/Manzana_6/Edificios/Edificio_53/Lado_Oeste/Ventanas
+Cube	(57.0, 26.4, -71.7)	T506_Barrio_ConcretoOscuro	estructura/arquitectura	Barrio/Manzana_6/Edificios/Edificio_53/Lado_Oeste/Cornisa
+Cube	(106.2, 3.2, -84.2)	T507_T506_Barrio_Edif_A_5	estructura/arquitectura	Barrio/Manzana_6/Edificios/Edificio_56/Lado_Sur/Relleno_Fachada
+Cube	(81.8, 3.2, -84.2)	T507_T506_Barrio_Edif_A_5	estructura/arquitectura	Barrio/Manzana_6/Edificios/Edificio_56/Lado_Sur/Relleno_Fachada
+Quad	(94.0, 12.8, -84.0)	Fachada_Media	estructura/arquitectura	Barrio/Manzana_6/Edificios/Edificio_56/Lado_Sur/Ventanas
+Cube	(94.0, 19.3, -84.0)	T506_Barrio_ConcretoOscuro	estructura/arquitectura	Barrio/Manzana_6/Edificios/Edificio_56/Lado_Sur/Cornisa
+Cube	(-81.3, 0.0, -0.5)	Final_Grieta	calcomania plana de calle	Barrio/PulidoFinales/Grietas/Grieta
+Cube	(44.8, 0.0, 5.9)	Final_Grieta	calcomania plana de calle	Barrio/PulidoFinales/Grietas/Grieta
+Cube	(29.7, 0.0, 4.1)	Final_Grieta	calcomania plana de calle	Barrio/PulidoFinales/Grietas/Grieta
+Cube	(50.9, 0.0, 40.1)	Final_Grieta	calcomania plana de calle	Barrio/PulidoFinales/Grietas/Grieta
+Cube	(16.7, 0.0, 0.0)	Final_Grieta	calcomania plana de calle	Barrio/PulidoFinales/Grietas/Grieta
+Cube	(47.2, 0.0, -55.8)	Final_Grieta	calcomania plana de calle	Barrio/PulidoFinales/Grietas/Grieta
+Cube	(-116.1, 0.0, 3.9)	Final_Grieta	calcomania plana de calle	Barrio/PulidoFinales/Grietas/Grieta
+Cube	(-45.7, 0.0, -42.0)	Final_Grieta	calcomania plana de calle	Barrio/PulidoFinales/Grietas/Grieta
+Cube	(-32.5, 0.0, 3.8)	Final_Grieta	calcomania plana de calle	Barrio/PulidoFinales/Grietas/Grieta
+Cube	(-107.1, 0.0, 0.0)	Final_Grieta	calcomania plana de calle	Barrio/PulidoFinales/Grietas/Grieta
+Cube	(122.8, 0.0, 4.0)	Final_Grieta	calcomania plana de calle	Barrio/PulidoFinales/Grietas/Grieta
+Cube	(43.1, 0.0, 12.5)	Final_Grieta	calcomania plana de calle	Barrio/PulidoFinales/Grietas/Grieta
+Cube	(-36.2, 0.0, 0.5)	Final_Grieta	calcomania plana de calle	Barrio/PulidoFinales/Grietas/Grieta
+Cube	(46.3, 0.0, -20.1)	Final_Grieta	calcomania plana de calle	Barrio/PulidoFinales/Grietas/Grieta
+Cube	(-12.1, 0.0, 0.4)	Final_Grieta	calcomania plana de calle	Barrio/PulidoFinales/Grietas/Grieta
+Cube	(52.0, 0.0, -76.2)	Final_Grieta	calcomania plana de calle	Barrio/PulidoFinales/Grietas/Grieta
+Cube	(47.7, 0.0, 4.5)	Final_Grieta	calcomania plana de calle	Barrio/PulidoFinales/Grietas/Grieta
+Cube	(51.7, 0.0, 20.5)	Final_Grieta	calcomania plana de calle	Barrio/PulidoFinales/Grietas/Grieta
+Cube	(-57.5, 0.0, 2.4)	Final_Grieta	calcomania plana de calle	Barrio/PulidoFinales/Grietas/Grieta
+Cube	(-44.7, 0.0, -3.1)	Final_Grieta	calcomania plana de calle	Barrio/PulidoFinales/Grietas/Grieta
+Cube	(-44.4, 0.0, 65.6)	Final_Grieta	calcomania plana de calle	Barrio/PulidoFinales/Grietas/Grieta
+Cube	(109.5, 0.0, 5.4)	Final_Grieta	calcomania plana de calle	Barrio/PulidoFinales/Grietas/Grieta
+Cube	(43.2, 0.0, -66.2)	Final_Grieta	calcomania plana de calle	Barrio/PulidoFinales/Grietas/Grieta
+Cube	(67.9, 0.0, 1.2)	Final_Grieta	calcomania plana de calle	Barrio/PulidoFinales/Grietas/Grieta
+Cube	(46.1, 0.0, -46.3)	Final_Grieta	calcomania plana de calle	Barrio/PulidoFinales/Grietas/Grieta
+Cube	(-74.4, 0.0, -0.2)	Final_Grieta	calcomania plana de calle	Barrio/PulidoFinales/Grietas/Grieta
+Cube	(46.0, 0.0, 70.8)	Final_Grieta	calcomania plana de calle	Barrio/PulidoFinales/Grietas/Grieta
+Cube	(7.8, 0.0, 0.2)	Final_Grieta	calcomania plana de calle	Barrio/PulidoFinales/Grietas/Grieta
+Cube	(46.4, 0.0, 12.7)	Final_Grieta	calcomania plana de calle	Barrio/PulidoFinales/Grietas/Grieta
+Cube	(85.8, 0.0, -1.1)	Final_Grieta	calcomania plana de calle	Barrio/PulidoFinales/Grietas/Grieta
+Quad	(34.2, 3.2, 7.7)	T544_PantallaLed	luz o pieza emisiva	Barrio/ArteNoche/Calle_tianguis/CY02_PantallaVertical_Noche/Visual/PantallaLed_T544
+Quad	(-37.9, 3.2, 63.0)	T544_PantallaLed	luz o pieza emisiva	Barrio/ArteNoche/Calle_tianguis/CY02_PantallaVertical_Noche/Visual/PantallaLed_T544
+Quad	(39.3, 3.2, -78.8)	T544_PantallaLed	luz o pieza emisiva	Barrio/ArteNoche/Calle_tianguis/CY02_PantallaVertical_Noche/Visual/PantallaLed_T544
+Quad	(57.0, 3.2, 9.9)	T544_PantallaLed	luz o pieza emisiva	Barrio/ArteNoche/Calle_neon/CY02_PantallaVertical_Noche/Visual/PantallaLed_T544
+Quad	(103.0, 3.2, 9.1)	T544_PantallaLed	luz o pieza emisiva	Barrio/ArteNoche/Calle_neon/CY02_PantallaVertical_Noche/Visual/PantallaLed_T544
+Quad	(54.7, 3.2, 33.8)	T544_PantallaLed	luz o pieza emisiva	Barrio/ArteNoche/Calle_neon/CY02_PantallaVertical_Noche/Visual/PantallaLed_T544
+Cube	(-50.6, 4.2, -90.2)	Cabina_Estructura	estructura/arquitectura	MechaEstacionado/Sacudida/Cabina/Techo
+Quad	(-50.2, 3.7, -90.4)	Cabina_Cristal	cristal, cielo o domo (visual a conservar)	MechaEstacionado/Sacudida/Cabina/Cristal
+Cube	(-50.3, 4.1, -90.4)	Cabina_NeonTurquesa	luz o pieza emisiva	MechaEstacionado/Sacudida/Cabina/NeonViga
+Cube	(-50.2, 3.4, -90.4)	Cabina_NeonMagenta	luz o pieza emisiva	MechaEstacionado/Sacudida/Cabina/NeonTablero
+Quad	(-50.5, 3.4, -90.3)	Cabina_MarcoPantalla	luz o pieza emisiva	MechaEstacionado/Sacudida/Cabina/MarcoPantallaVida
+Quad	(-50.2, 3.7, -90.4)	Cabina_Persiana	cristal, cielo o domo (visual a conservar)	MechaEstacionado/Sacudida/Cabina/Persiana
+Cube	(-50.4, 3.5, -90.1)	Cabina_AlarmaApagada	luz o pieza emisiva	MechaEstacionado/Sacudida/Cabina/AlarmaDanio/Led
+Cube	(-50.6, 3.4, -90.7)	Cabina_NeonTurquesa	luz o pieza emisiva	MechaEstacionado/Sacudida/Cabina/LedSinapsis/Led1
+Cube	(-50.6, 3.4, -90.8)	Cabina_NeonTurquesa	luz o pieza emisiva	MechaEstacionado/Sacudida/Cabina/LedSinapsis/Led2
+Cube	(-30.0, 4.2, 10.2)	T407_NeonMagenta	luz o pieza emisiva	GTA_T407/Tianguis/Mantas/MantaFranja
+Cube	(-12.0, 4.2, 10.2)	T407_NeonMagenta	luz o pieza emisiva	GTA_T407/Tianguis/Mantas/MantaFranja
+Cube	(12.0, 4.2, 10.2)	T407_NeonMagenta	luz o pieza emisiva	GTA_T407/Tianguis/Mantas/MantaFranja
+Cube	(30.0, 4.2, 10.2)	T407_NeonMagenta	luz o pieza emisiva	GTA_T407/Tianguis/Mantas/MantaFranja
+Cube	(-30.0, 4.2, -10.2)	T407_NeonMagenta	luz o pieza emisiva	GTA_T407/Tianguis/Mantas/MantaFranja
+Cube	(-12.0, 4.2, -10.2)	T407_NeonMagenta	luz o pieza emisiva	GTA_T407/Tianguis/Mantas/MantaFranja
+Cube	(12.0, 4.2, -10.2)	T407_NeonMagenta	luz o pieza emisiva	GTA_T407/Tianguis/Mantas/MantaFranja
+Cube	(30.0, 4.2, -10.2)	T407_NeonMagenta	luz o pieza emisiva	GTA_T407/Tianguis/Mantas/MantaFranja
+Cube	(3.6, 5.1, -9.3)	T506_T414_FondoLetrero	tiene textura propia	GTA_T414/LetreroElFox_Fondo
+Cube	(3.6, 4.3, -9.3)	T414_NeonBar	luz o pieza emisiva	GTA_T414/LetreroElFox_Neon
+Cube	(3.6, 5.9, -9.3)	T414_NeonBar	luz o pieza emisiva	GTA_T414/LetreroElFox_NeonArriba
+Quad	(73.0, 2.0, -8.6)	T544_PantallaLed	luz o pieza emisiva	GTA_T428/PantallaNova/Visual/PantallaLed_T544
+Quad	(-125.5, 0.0, 2.3)	T1503_Agua_S2c_Charco_3	calcomania plana de calle	T501_Suburbios/Charcos/Charco_0
+Quad	(-123.2, 0.0, 1.7)	T1503_Agua_S2c_Charco_0	calcomania plana de calle	T501_Suburbios/Charcos/Charco_1
+Quad	(-119.4, 0.0, -0.2)	T1503_Agua_S2c_Charco_3	calcomania plana de calle	T501_Suburbios/Charcos/Charco_2
+Quad	(-116.0, 0.0, -3.6)	T1503_Agua_S2c_Charco_2	calcomania plana de calle	T501_Suburbios/Charcos/Charco_3
+Quad	(-110.7, 0.0, 2.0)	T1503_Agua_S2c_Charco_3	calcomania plana de calle	T501_Suburbios/Charcos/Charco_4
+Quad	(-108.7, 0.0, 3.5)	T1503_Agua_S2c_Charco_0	calcomania plana de calle	T501_Suburbios/Charcos/Charco_5
+Quad	(-104.8, 0.0, 0.5)	T1503_Agua_S2c_Charco_1	calcomania plana de calle	T501_Suburbios/Charcos/Charco_6
+Quad	(-98.9, 0.0, -0.9)	T1503_Agua_S2c_Charco_2	calcomania plana de calle	T501_Suburbios/Charcos/Charco_7
+Quad	(-96.7, 0.0, -5.0)	T1503_Agua_S2c_Charco_1	calcomania plana de calle	T501_Suburbios/Charcos/Charco_8
+Quad	(-92.2, 0.0, -2.5)	T1503_Agua_S2c_Charco_0	calcomania plana de calle	T501_Suburbios/Charcos/Charco_9
+Quad	(-88.8, 0.0, 2.1)	T1503_Agua_S2c_Charco_0	calcomania plana de calle	T501_Suburbios/Charcos/Charco_10
+Quad	(-85.8, 0.0, -2.3)	T1503_Agua_S2c_Charco_1	calcomania plana de calle	T501_Suburbios/Charcos/Charco_11
+Quad	(-81.6, 0.0, -2.0)	T1503_Agua_S2c_Charco_2	calcomania plana de calle	T501_Suburbios/Charcos/Charco_12
+Quad	(-77.7, 0.0, 3.6)	T1503_Agua_S2c_Charco_3	calcomania plana de calle	T501_Suburbios/Charcos/Charco_13
+Quad	(-73.4, 0.0, -4.7)	T1503_Agua_S2c_Charco_0	calcomania plana de calle	T501_Suburbios/Charcos/Charco_14
+Quad	(-69.8, 0.0, 0.4)	T1503_Agua_S2c_Charco_1	calcomania plana de calle	T501_Suburbios/Charcos/Charco_15
+Quad	(-65.3, 0.0, -4.8)	T1503_Agua_S2c_Charco_2	calcomania plana de calle	T501_Suburbios/Charcos/Charco_16
+Quad	(-61.6, 0.0, -4.5)	T1503_Agua_S2c_Charco_3	calcomania plana de calle	T501_Suburbios/Charcos/Charco_17
+Quad	(-62.0, 0.3, -58.2)	T1503_Agua_S2c_Charco_3	calcomania plana de calle	T502_Callejon/Charcos/Charco_0
+Quad	(-66.5, 0.3, -60.6)	T1503_Agua_S2c_Charco_0	calcomania plana de calle	T502_Callejon/Charcos/Charco_1
+Quad	(-71.0, 0.3, -58.4)	T1503_Agua_S2c_Charco_3	calcomania plana de calle	T502_Callejon/Charcos/Charco_2
+Quad	(-75.5, 0.3, -60.2)	T1503_Agua_S2c_Charco_2	calcomania plana de calle	T502_Callejon/Charcos/Charco_3
+Quad	(-80.0, 0.3, -58.6)	T1503_Agua_S2c_Charco_3	calcomania plana de calle	T502_Callejon/Charcos/Charco_4
+Quad	(-84.0, 0.3, -59.8)	T1503_Agua_S2c_Charco_0	calcomania plana de calle	T502_Callejon/Charcos/Charco_5
+Quad	(-31.0, 0.0, 4.2)	T1503_Agua_S2c_Charco_3	calcomania plana de calle	T503_Tianguis/Charcos/Charco_0
+Quad	(-3.0, 0.0, -4.2)	T1503_Agua_S2c_Charco_2	calcomania plana de calle	T503_Tianguis/Charcos/Charco_3
+Quad	(8.0, 0.0, 4.6)	T1503_Agua_S2c_Charco_3	calcomania plana de calle	T503_Tianguis/Charcos/Charco_4
+Quad	(17.0, 0.0, -4.5)	T1503_Agua_S2c_Charco_0	calcomania plana de calle	T503_Tianguis/Charcos/Charco_5
+Quad	(34.0, 0.0, -4.3)	T1503_Agua_S2c_Charco_2	calcomania plana de calle	T503_Tianguis/Charcos/Charco_7
+Sphere	(-24.1, 1.3, 31.9)	Aviso_Naranja	luz o pieza emisiva	T504_Mercado/Piezas/C18_BarreraCalle_T504/Aviso_Naranja
+Sphere	(-24.1, 1.3, 33.9)	Aviso_Naranja	luz o pieza emisiva	T504_Mercado/Piezas/C18_BarreraCalle_T504/Aviso_Naranja
+Sphere	(-20.0, 1.3, 22.0)	Aviso_Naranja	luz o pieza emisiva	T504_Mercado/Piezas/C18_BarreraCalle_T504/Aviso_Naranja
+Sphere	(-20.0, 1.3, 28.6)	Aviso_Naranja	luz o pieza emisiva	T504_Mercado/Piezas/C18_BarreraCalle_T504/Aviso_Naranja
+Quad	(-22.4, 0.2, 19.4)	T1503_Agua_S2c_Charco_3	calcomania plana de calle	T504_Mercado/Charcos/Charco_0
+Quad	(-21.4, 0.2, 26.4)	T1503_Agua_S2c_Charco_0	calcomania plana de calle	T504_Mercado/Charcos/Charco_1
+Quad	(-23.4, 0.2, 31.2)	T1503_Agua_S2c_Charco_3	calcomania plana de calle	T504_Mercado/Charcos/Charco_2
+Quad	(-22.0, 0.2, 14.6)	T1503_Agua_S2c_Charco_2	calcomania plana de calle	T504_Mercado/Charcos/Charco_3
+Quad	(-20.8, 0.2, 34.5)	T1503_Agua_S2c_Charco_3	calcomania plana de calle	T504_Mercado/Charcos/Charco_4
+Quad	(37.7, 5.6, 16.0)	T544_PantallaLed	luz o pieza emisiva	T505_NeonAlto/Piezas/CY02_PantallaVertical_T505/Visual/PantallaLed_T544
+Quad	(37.7, 5.6, 30.0)	T544_PantallaLed	luz o pieza emisiva	T505_NeonAlto/Piezas/CY02_PantallaVertical_T505/Visual/PantallaLed_T544
+Quad	(37.7, 5.6, 66.0)	T544_PantallaLed	luz o pieza emisiva	T505_NeonAlto/Piezas/CY02_PantallaVertical_T505/Visual/PantallaLed_T544
+Quad	(56.3, 5.6, 19.0)	T544_PantallaLed	luz o pieza emisiva	T505_NeonAlto/Piezas/CY02_PantallaVertical_T505/Visual/PantallaLed_T544
+Quad	(56.3, 5.6, 32.0)	T544_PantallaLed	luz o pieza emisiva	T505_NeonAlto/Piezas/CY02_PantallaVertical_T505/Visual/PantallaLed_T544
+Quad	(56.3, 5.6, 77.0)	T544_PantallaLed	luz o pieza emisiva	T505_NeonAlto/Piezas/CY02_PantallaVertical_T505/Visual/PantallaLed_T544
+Quad	(56.0, 0.0, 47.0)	Alfombra_Roja	luz o pieza emisiva	T505_NeonAlto/Piezas/Casino/Alfombra
+Quad	(44.2, 0.0, 14.0)	T1503_Agua_S2c_Charco_3	calcomania plana de calle	T505_NeonAlto/Charcos/Charco_0
+Quad	(49.6, 0.0, 20.0)	T1503_Agua_S2c_Charco_0	calcomania plana de calle	T505_NeonAlto/Charcos/Charco_1
+Quad	(46.4, 0.0, 29.0)	T1503_Agua_S2c_Charco_3	calcomania plana de calle	T505_NeonAlto/Charcos/Charco_2
+Quad	(43.5, 0.0, 41.0)	T1503_Agua_S2c_Charco_2	calcomania plana de calle	T505_NeonAlto/Charcos/Charco_3
+Quad	(50.8, 0.0, 55.0)	T1503_Agua_S2c_Charco_3	calcomania plana de calle	T505_NeonAlto/Charcos/Charco_4
+Quad	(47.5, 0.0, 63.0)	T1503_Agua_S2c_Charco_0	calcomania plana de calle	T505_NeonAlto/Charcos/Charco_5
+Quad	(45.2, 0.0, 76.0)	T1503_Agua_S2c_Charco_1	calcomania plana de calle	T505_NeonAlto/Charcos/Charco_6
+Quad	(49.0, 0.0, 82.0)	T1503_Agua_S2c_Charco_2	calcomania plana de calle	T505_NeonAlto/Charcos/Charco_7
+Quad	(47.0, 6.0, 24.0)	Niebla_Verde	luz o pieza emisiva	T505_NeonAlto/Niebla/Niebla_0
+Quad	(47.0, 6.0, 34.0)	Niebla_Verde	luz o pieza emisiva	T505_NeonAlto/Niebla/Niebla_1
+Quad	(47.0, 6.0, 44.0)	Niebla_Verde	luz o pieza emisiva	T505_NeonAlto/Niebla/Niebla_2
+Quad	(47.0, 6.0, 54.0)	Niebla_Verde	luz o pieza emisiva	T505_NeonAlto/Niebla/Niebla_3
+Quad	(47.0, 6.0, 64.0)	Niebla_Verde	luz o pieza emisiva	T505_NeonAlto/Niebla/Niebla_4
+Quad	(47.0, 6.0, 74.0)	Niebla_Verde	luz o pieza emisiva	T505_NeonAlto/Niebla/Niebla_5
+Quad	(47.0, 6.0, 84.0)	Niebla_Verde	luz o pieza emisiva	T505_NeonAlto/Niebla/Niebla_6
+Cube	(-77.1, 2.0, 10.2)	T507_C21_PisoLiso_cy_0	estructura/arquitectura	T531_Locales/CIC/Pilastra
+Cube	(-69.5, 2.0, 10.2)	T507_C21_PisoLiso_cy_0	estructura/arquitectura	T531_Locales/CIC/Pilastra
+Cube	(-73.3, 3.4, 10.2)	T507_C21_PisoLiso_cy_0	estructura/arquitectura	T531_Locales/CIC/Dintel
+Cube	(-100.0, 3.8, -13.0)	T506_Casa_Techo	estructura/arquitectura	T531_Locales/IDI/Techo
+Cube	(-100.0, 2.0, -16.0)	T506_CasinoInt_Muro	estructura/arquitectura	T531_Locales/IDI/MuroFondo
+Cube	(-104.0, 2.0, -13.0)	T506_CasinoInt_Muro	estructura/arquitectura	T531_Locales/IDI/MuroIzq
+Cube	(-96.0, 2.0, -13.0)	T506_CasinoInt_Muro	estructura/arquitectura	T531_Locales/IDI/MuroDer
+Cube	(-103.8, 2.0, -10.2)	T507_T506_Barrio_Pobre_A_5	tiene textura propia	T531_Locales/IDI/Pilastra
+Cube	(-96.2, 2.0, -10.2)	T507_T506_Barrio_Pobre_A_5	tiene textura propia	T531_Locales/IDI/Pilastra
+Cube	(-100.0, 3.4, -10.2)	T507_T506_Barrio_Pobre_A_5	tiene textura propia	T531_Locales/IDI/Dintel
+Quad	(36.0, 33.2, 47.5)	T544_PantallaLed	luz o pieza emisiva	T541_Torres/Torre_Edificio_20/PisoPantalla/Visual/PantallaLed_T544
+Quad	(25.1, 21.2, 11.0)	T544_PantallaLed	luz o pieza emisiva	T541_Torres/Torre_Edificio_22/PisoPantalla/Visual/PantallaLed_T544
+Quad	(25.1, 45.2, 11.0)	T544_PantallaLed	luz o pieza emisiva	T541_Torres/Torre_Edificio_22/PisoPantalla/Visual/PantallaLed_T544
+Quad	(57.7, 45.2, 20.1)	T544_PantallaLed	luz o pieza emisiva	T541_Torres/Torre_Edificio_23/PisoPantalla/Visual/PantallaLed_T544
+Quad	(57.7, 57.2, 20.1)	T544_PantallaLed	luz o pieza emisiva	T541_Torres/Torre_Edificio_23/PisoPantalla/Visual/PantallaLed_T544
+Quad	(57.7, 69.2, 20.1)	T544_PantallaLed	luz o pieza emisiva	T541_Torres/Torre_Edificio_23/PisoPantalla/Visual/PantallaLed_T544
+Quad	(57.7, 87.2, 20.1)	T544_PantallaLed	luz o pieza emisiva	T541_Torres/Torre_Edificio_23/PisoPantalla/Visual/PantallaLed_T544
+Quad	(81.3, 21.2, 10.9)	T544_PantallaLed	luz o pieza emisiva	T541_Torres/Torre_Edificio_24/PisoPantalla/Visual/PantallaLed_T544
+Quad	(81.3, 45.2, 10.9)	T544_PantallaLed	luz o pieza emisiva	T541_Torres/Torre_Edificio_24/PisoPantalla/Visual/PantallaLed_T544
+Quad	(81.3, 57.2, 10.9)	T544_PantallaLed	luz o pieza emisiva	T541_Torres/Torre_Edificio_24/PisoPantalla/Visual/PantallaLed_T544
+Quad	(57.7, 21.2, 73.1)	T544_PantallaLed	luz o pieza emisiva	T541_Torres/Torre_Edificio_25/PisoPantalla/Visual/PantallaLed_T544
+Quad	(57.7, 69.2, 73.1)	T544_PantallaLed	luz o pieza emisiva	T541_Torres/Torre_Edificio_25/PisoPantalla/Visual/PantallaLed_T544
+Quad	(73.7, 45.2, 73.1)	T544_PantallaLed	luz o pieza emisiva	T541_Torres/Torre_Edificio_26/PisoPantalla/Visual/PantallaLed_T544
+Quad	(73.7, 63.2, 73.1)	T544_PantallaLed	luz o pieza emisiva	T541_Torres/Torre_Edificio_26/PisoPantalla/Visual/PantallaLed_T544
+Quad	(73.7, 111.2, 73.1)	T544_PantallaLed	luz o pieza emisiva	T541_Torres/Torre_Edificio_26/PisoPantalla/Visual/PantallaLed_T544
+Quad	(73.7, 123.2, 73.1)	T544_PantallaLed	luz o pieza emisiva	T541_Torres/Torre_Edificio_26/PisoPantalla/Visual/PantallaLed_T544
+Quad	(99.9, 39.2, 11.0)	T544_PantallaLed	luz o pieza emisiva	T541_Torres/Torre_Edificio_27/PisoPantalla/Visual/PantallaLed_T544
+Quad	(99.9, 51.2, 11.0)	T544_PantallaLed	luz o pieza emisiva	T541_Torres/Torre_Edificio_27/PisoPantalla/Visual/PantallaLed_T544
+Quad	(99.9, 63.2, 11.0)	T544_PantallaLed	luz o pieza emisiva	T541_Torres/Torre_Edificio_27/PisoPantalla/Visual/PantallaLed_T544
+Quad	(99.9, 81.2, 11.0)	T544_PantallaLed	luz o pieza emisiva	T541_Torres/Torre_Edificio_27/PisoPantalla/Visual/PantallaLed_T544
+Quad	(99.9, 105.2, 11.0)	T544_PantallaLed	luz o pieza emisiva	T541_Torres/Torre_Edificio_27/PisoPantalla/Visual/PantallaLed_T544
+Quad	(99.9, 33.2, 35.7)	T544_PantallaLed	luz o pieza emisiva	T541_Torres/Torre_Edificio_28/PisoPantalla/Visual/PantallaLed_T544
+Quad	(99.9, 45.2, 35.7)	T544_PantallaLed	luz o pieza emisiva	T541_Torres/Torre_Edificio_28/PisoPantalla/Visual/PantallaLed_T544
+Quad	(89.9, 33.2, 71.2)	T544_PantallaLed	luz o pieza emisiva	T541_Torres/Torre_Edificio_29/PisoPantalla/Visual/PantallaLed_T544
+Quad	(89.9, 45.2, 71.2)	T544_PantallaLed	luz o pieza emisiva	T541_Torres/Torre_Edificio_29/PisoPantalla/Visual/PantallaLed_T544
+Quad	(89.9, 81.2, 71.2)	T544_PantallaLed	luz o pieza emisiva	T541_Torres/Torre_Edificio_29/PisoPantalla/Visual/PantallaLed_T544
+Quad	(89.9, 93.2, 71.2)	T544_PantallaLed	luz o pieza emisiva	T541_Torres/Torre_Edificio_29/PisoPantalla/Visual/PantallaLed_T544
+Quad	(120.9, 27.2, 11.0)	T544_PantallaLed	luz o pieza emisiva	T541_Torres/Torre_Edificio_30/PisoPantalla/Visual/PantallaLed_T544
+Quad	(120.9, 75.2, 35.7)	T544_PantallaLed	luz o pieza emisiva	T541_Torres/Torre_Edificio_31/PisoPantalla/Visual/PantallaLed_T544
+Quad	(120.9, 45.2, 60.4)	T544_PantallaLed	luz o pieza emisiva	T541_Torres/Torre_Edificio_32/PisoPantalla/Visual/PantallaLed_T544
+Quad	(70.4, 0.2, 47.0)	T930_Alfombra	estructura/arquitectura	T546_Interiores/Casino/AlfombraEstampada
+Cube	(68.5, 0.3, 33.8)	Tragamonedas_Cuerpo	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Base
+Cube	(68.5, 1.2, 33.8)	Tragamonedas_Cuerpo	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Cuerpo
+Cube	(68.5, 2.2, 33.8)	Tragamonedas_Corona	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Corona
+Cube	(68.5, 1.5, 34.1)	T930_Pantalla2	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/Pantalla
+Cube	(68.5, 1.7, 34.1)	Tragamonedas_Neon	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/TiraNeonArriba
+Cube	(68.5, 1.2, 34.1)	Tragamonedas_Neon	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/TiraNeonAbajo
+Cube	(69.0, 1.4, 33.8)	Tragamonedas_Cuerpo	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Palanca
+Cube	(69.0, 1.6, 33.8)	Tragamonedas_Neon	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/PalancaBola
+Cube	(70.1, 0.3, 33.8)	Tragamonedas_Cuerpo	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Base
+Cube	(70.1, 1.2, 33.8)	Tragamonedas_Cuerpo	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Cuerpo
+Cube	(70.1, 2.2, 33.8)	Tragamonedas_Corona	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Corona
+Cube	(70.1, 1.5, 34.1)	T930_Pantalla1	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/Pantalla
+Cube	(70.1, 1.7, 34.1)	Tragamonedas_Neon	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/TiraNeonArriba
+Cube	(70.1, 1.2, 34.1)	Tragamonedas_Neon	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/TiraNeonAbajo
+Cube	(70.6, 1.4, 33.8)	Tragamonedas_Cuerpo	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Palanca
+Cube	(70.6, 1.6, 33.8)	Tragamonedas_Neon	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/PalancaBola
+Cube	(71.7, 0.3, 33.8)	Tragamonedas_Cuerpo	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Base
+Cube	(71.7, 1.2, 33.8)	Tragamonedas_Cuerpo	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Cuerpo
+Cube	(71.7, 2.2, 33.8)	Tragamonedas_Corona	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Corona
+Cube	(71.7, 1.5, 34.1)	T930_Pantalla1	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/Pantalla
+Cube	(71.7, 1.7, 34.1)	Tragamonedas_Neon	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/TiraNeonArriba
+Cube	(71.7, 1.2, 34.1)	Tragamonedas_Neon	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/TiraNeonAbajo
+Cube	(72.2, 1.4, 33.8)	Tragamonedas_Cuerpo	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Palanca
+Cube	(72.2, 1.6, 33.8)	Tragamonedas_Neon	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/PalancaBola
+Cube	(73.3, 0.3, 33.8)	Tragamonedas_Cuerpo	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Base
+Cube	(73.3, 1.2, 33.8)	Tragamonedas_Cuerpo	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Cuerpo
+Cube	(73.3, 2.2, 33.8)	Tragamonedas_Corona	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Corona
+Cube	(73.3, 1.5, 34.1)	T930_Pantalla1	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/Pantalla
+Cube	(73.3, 1.7, 34.1)	Tragamonedas_Neon	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/TiraNeonArriba
+Cube	(73.3, 1.2, 34.1)	Tragamonedas_Neon	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/TiraNeonAbajo
+Cube	(73.8, 1.4, 33.8)	Tragamonedas_Cuerpo	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Palanca
+Cube	(73.8, 1.6, 33.8)	Tragamonedas_Neon	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/PalancaBola
+Cube	(74.9, 0.3, 33.8)	Tragamonedas_Cuerpo	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Base
+Cube	(74.9, 1.2, 33.8)	Tragamonedas_Cuerpo	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Cuerpo
+Cube	(74.9, 2.2, 33.8)	Tragamonedas_Corona	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Corona
+Cube	(74.9, 1.5, 34.1)	T930_Pantalla2	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/Pantalla
+Cube	(74.9, 1.7, 34.1)	Tragamonedas_Neon	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/TiraNeonArriba
+Cube	(74.9, 1.2, 34.1)	Tragamonedas_Neon	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/TiraNeonAbajo
+Cube	(75.4, 1.4, 33.8)	Tragamonedas_Cuerpo	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Palanca
+Cube	(75.4, 1.6, 33.8)	Tragamonedas_Neon	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/PalancaBola
+Cube	(76.5, 0.3, 33.8)	Tragamonedas_Cuerpo	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Base
+Cube	(76.5, 1.2, 33.8)	Tragamonedas_Cuerpo	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Cuerpo
+Cube	(76.5, 2.2, 33.8)	Tragamonedas_Corona	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Corona
+Cube	(76.5, 1.5, 34.1)	T930_Pantalla1	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/Pantalla
+Cube	(76.5, 1.7, 34.1)	Tragamonedas_Neon	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/TiraNeonArriba
+Cube	(76.5, 1.2, 34.1)	Tragamonedas_Neon	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/TiraNeonAbajo
+Cube	(77.0, 1.4, 33.8)	Tragamonedas_Cuerpo	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Palanca
+Cube	(77.0, 1.6, 33.8)	Tragamonedas_Neon	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/PalancaBola
+Cube	(78.1, 0.3, 33.8)	Tragamonedas_Cuerpo	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Base
+Cube	(78.1, 1.2, 33.8)	Tragamonedas_Cuerpo	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Cuerpo
+Cube	(78.1, 2.2, 33.8)	Tragamonedas_Corona	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Corona
+Cube	(78.1, 1.5, 34.1)	T930_Pantalla2	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/Pantalla
+Cube	(78.1, 1.7, 34.1)	Tragamonedas_Neon	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/TiraNeonArriba
+Cube	(78.1, 1.2, 34.1)	Tragamonedas_Neon	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/TiraNeonAbajo
+Cube	(78.6, 1.4, 33.8)	Tragamonedas_Cuerpo	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Palanca
+Cube	(78.6, 1.6, 33.8)	Tragamonedas_Neon	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/PalancaBola
+Cube	(79.7, 0.3, 33.8)	Tragamonedas_Cuerpo	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Base
+Cube	(79.7, 1.2, 33.8)	Tragamonedas_Cuerpo	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Cuerpo
+Cube	(79.7, 2.2, 33.8)	Tragamonedas_Corona	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Corona
+Cube	(79.7, 1.5, 34.1)	T930_Pantalla2	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/Pantalla
+Cube	(79.7, 1.7, 34.1)	Tragamonedas_Neon	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/TiraNeonArriba
+Cube	(79.7, 1.2, 34.1)	Tragamonedas_Neon	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/TiraNeonAbajo
+Cube	(80.2, 1.4, 33.8)	Tragamonedas_Cuerpo	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Palanca
+Cube	(80.2, 1.6, 33.8)	Tragamonedas_Neon	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/PalancaBola
+Cube	(81.3, 0.3, 33.8)	Tragamonedas_Cuerpo	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Base
+Cube	(81.3, 1.2, 33.8)	Tragamonedas_Cuerpo	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Cuerpo
+Cube	(81.3, 2.2, 33.8)	Tragamonedas_Corona	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Corona
+Cube	(81.3, 1.5, 34.1)	T930_Pantalla2	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/Pantalla
+Cube	(81.3, 1.7, 34.1)	Tragamonedas_Neon	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/TiraNeonArriba
+Cube	(81.3, 1.2, 34.1)	Tragamonedas_Neon	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/TiraNeonAbajo
+Cube	(81.8, 1.4, 33.8)	Tragamonedas_Cuerpo	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Palanca
+Cube	(81.8, 1.6, 33.8)	Tragamonedas_Neon	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/PalancaBola
+Cube	(63.5, 0.3, 60.3)	Tragamonedas_Cuerpo	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Base
+Cube	(63.5, 1.2, 60.3)	Tragamonedas_Cuerpo	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Cuerpo
+Cube	(63.5, 2.2, 60.3)	Tragamonedas_Corona	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Corona
+Cube	(63.5, 1.5, 60.0)	T930_Pantalla2	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/Pantalla
+Cube	(63.5, 1.7, 60.0)	Tragamonedas_Neon	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/TiraNeonArriba
+Cube	(63.5, 1.2, 60.0)	Tragamonedas_Neon	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/TiraNeonAbajo
+Cube	(63.0, 1.4, 60.3)	Tragamonedas_Cuerpo	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Palanca
+Cube	(63.0, 1.6, 60.3)	Tragamonedas_Neon	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/PalancaBola
+Cube	(65.1, 0.3, 60.3)	Tragamonedas_Cuerpo	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Base
+Cube	(65.1, 1.2, 60.3)	Tragamonedas_Cuerpo	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Cuerpo
+Cube	(65.1, 2.2, 60.3)	Tragamonedas_Corona	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Corona
+Cube	(65.1, 1.5, 60.0)	T930_Pantalla2	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/Pantalla
+Cube	(65.1, 1.7, 60.0)	Tragamonedas_Neon	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/TiraNeonArriba
+Cube	(65.1, 1.2, 60.0)	Tragamonedas_Neon	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/TiraNeonAbajo
+Cube	(64.6, 1.4, 60.3)	Tragamonedas_Cuerpo	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Palanca
+Cube	(64.6, 1.6, 60.3)	Tragamonedas_Neon	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/PalancaBola
+Cube	(66.7, 0.3, 60.3)	Tragamonedas_Cuerpo	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Base
+Cube	(66.7, 1.2, 60.3)	Tragamonedas_Cuerpo	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Cuerpo
+Cube	(66.7, 2.2, 60.3)	Tragamonedas_Corona	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Corona
+Cube	(66.7, 1.5, 60.0)	T930_Pantalla1	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/Pantalla
+Cube	(66.7, 1.7, 60.0)	Tragamonedas_Neon	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/TiraNeonArriba
+Cube	(66.7, 1.2, 60.0)	Tragamonedas_Neon	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/TiraNeonAbajo
+Cube	(66.2, 1.4, 60.3)	Tragamonedas_Cuerpo	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Palanca
+Cube	(66.2, 1.6, 60.3)	Tragamonedas_Neon	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/PalancaBola
+Cube	(68.3, 0.3, 60.3)	Tragamonedas_Cuerpo	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Base
+Cube	(68.3, 1.2, 60.3)	Tragamonedas_Cuerpo	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Cuerpo
+Cube	(68.3, 2.2, 60.3)	Tragamonedas_Corona	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Corona
+Cube	(68.3, 1.5, 60.0)	T930_Pantalla2	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/Pantalla
+Cube	(68.3, 1.7, 60.0)	Tragamonedas_Neon	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/TiraNeonArriba
+Cube	(68.3, 1.2, 60.0)	Tragamonedas_Neon	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/TiraNeonAbajo
+Cube	(67.8, 1.4, 60.3)	Tragamonedas_Cuerpo	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Palanca
+Cube	(67.8, 1.6, 60.3)	Tragamonedas_Neon	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/PalancaBola
+Cube	(74.7, 0.3, 60.3)	Tragamonedas_Cuerpo	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Base
+Cube	(74.7, 1.2, 60.3)	Tragamonedas_Cuerpo	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Cuerpo
+Cube	(74.7, 2.2, 60.3)	Tragamonedas_Corona	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Corona
+Cube	(74.7, 1.5, 60.0)	T930_Pantalla2	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/Pantalla
+Cube	(74.7, 1.7, 60.0)	Tragamonedas_Neon	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/TiraNeonArriba
+Cube	(74.7, 1.2, 60.0)	Tragamonedas_Neon	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/TiraNeonAbajo
+Cube	(74.2, 1.4, 60.3)	Tragamonedas_Cuerpo	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Palanca
+Cube	(74.2, 1.6, 60.3)	Tragamonedas_Neon	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/PalancaBola
+Cube	(76.3, 0.3, 60.3)	Tragamonedas_Cuerpo	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Base
+Cube	(76.3, 1.2, 60.3)	Tragamonedas_Cuerpo	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Cuerpo
+Cube	(76.3, 2.2, 60.3)	Tragamonedas_Corona	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Corona
+Cube	(76.3, 1.5, 60.0)	T930_Pantalla2	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/Pantalla
+Cube	(76.3, 1.7, 60.0)	Tragamonedas_Neon	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/TiraNeonArriba
+Cube	(76.3, 1.2, 60.0)	Tragamonedas_Neon	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/TiraNeonAbajo
+Cube	(75.8, 1.4, 60.3)	Tragamonedas_Cuerpo	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Palanca
+Cube	(75.8, 1.6, 60.3)	Tragamonedas_Neon	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/PalancaBola
+Cube	(77.9, 0.3, 60.3)	Tragamonedas_Cuerpo	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Base
+Cube	(77.9, 1.2, 60.3)	Tragamonedas_Cuerpo	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Cuerpo
+Cube	(77.9, 2.2, 60.3)	Tragamonedas_Corona	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Corona
+Cube	(77.9, 1.5, 60.0)	T930_Pantalla2	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/Pantalla
+Cube	(77.9, 1.7, 60.0)	Tragamonedas_Neon	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/TiraNeonArriba
+Cube	(77.9, 1.2, 60.0)	Tragamonedas_Neon	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/TiraNeonAbajo
+Cube	(77.4, 1.4, 60.3)	Tragamonedas_Cuerpo	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Palanca
+Cube	(77.4, 1.6, 60.3)	Tragamonedas_Neon	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/PalancaBola
+Cube	(79.5, 0.3, 60.3)	Tragamonedas_Cuerpo	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Base
+Cube	(79.5, 1.2, 60.3)	Tragamonedas_Cuerpo	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Cuerpo
+Cube	(79.5, 2.2, 60.3)	Tragamonedas_Corona	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Corona
+Cube	(79.5, 1.5, 60.0)	T930_Pantalla1	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/Pantalla
+Cube	(79.5, 1.7, 60.0)	Tragamonedas_Neon	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/TiraNeonArriba
+Cube	(79.5, 1.2, 60.0)	Tragamonedas_Neon	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/TiraNeonAbajo
+Cube	(79.0, 1.4, 60.3)	Tragamonedas_Cuerpo	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Palanca
+Cube	(79.0, 1.6, 60.3)	Tragamonedas_Neon	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/PalancaBola
+Cube	(81.1, 0.3, 60.3)	Tragamonedas_Cuerpo	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Base
+Cube	(81.1, 1.2, 60.3)	Tragamonedas_Cuerpo	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Cuerpo
+Cube	(81.1, 2.2, 60.3)	Tragamonedas_Corona	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Corona
+Cube	(81.1, 1.5, 60.0)	T930_Pantalla2	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/Pantalla
+Cube	(81.1, 1.7, 60.0)	Tragamonedas_Neon	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/TiraNeonArriba
+Cube	(81.1, 1.2, 60.0)	Tragamonedas_Neon	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/TiraNeonAbajo
+Cube	(80.6, 1.4, 60.3)	Tragamonedas_Cuerpo	estructura/arquitectura	T546_Interiores/Casino/Tragamonedas_Adorno/Palanca
+Cube	(80.6, 1.6, 60.3)	Tragamonedas_Neon	luz o pieza emisiva	T546_Interiores/Casino/Tragamonedas_Adorno/PalancaBola
+Sphere	(-36.2, 4.0, 26.0)	T546_Foco	luz o pieza emisiva	T546_Interiores/EntradaArmasMercado/SerieFocos/Foco
+Sphere	(-35.5, 3.9, 26.0)	T546_Foco	luz o pieza emisiva	T546_Interiores/EntradaArmasMercado/SerieFocos/Foco
+Sphere	(-34.8, 3.8, 26.0)	T546_Foco	luz o pieza emisiva	T546_Interiores/EntradaArmasMercado/SerieFocos/Foco
+Sphere	(-34.1, 3.8, 26.0)	T546_Foco	luz o pieza emisiva	T546_Interiores/EntradaArmasMercado/SerieFocos/Foco
+Sphere	(-33.4, 3.8, 26.0)	T546_Foco	luz o pieza emisiva	T546_Interiores/EntradaArmasMercado/SerieFocos/Foco
+Sphere	(-32.7, 3.7, 26.0)	T546_Foco	luz o pieza emisiva	T546_Interiores/EntradaArmasMercado/SerieFocos/Foco
+Sphere	(-32.0, 3.7, 26.0)	T546_Foco	luz o pieza emisiva	T546_Interiores/EntradaArmasMercado/SerieFocos/Foco
+Sphere	(-31.3, 3.7, 26.0)	T546_Foco	luz o pieza emisiva	T546_Interiores/EntradaArmasMercado/SerieFocos/Foco
+Sphere	(-30.6, 3.7, 26.0)	T546_Foco	luz o pieza emisiva	T546_Interiores/EntradaArmasMercado/SerieFocos/Foco
+Sphere	(-29.9, 3.7, 26.0)	T546_Foco	luz o pieza emisiva	T546_Interiores/EntradaArmasMercado/SerieFocos/Foco
+Sphere	(-29.2, 3.8, 26.0)	T546_Foco	luz o pieza emisiva	T546_Interiores/EntradaArmasMercado/SerieFocos/Foco
+Sphere	(-28.5, 3.8, 26.0)	T546_Foco	luz o pieza emisiva	T546_Interiores/EntradaArmasMercado/SerieFocos/Foco
+Sphere	(-27.8, 3.8, 26.0)	T546_Foco	luz o pieza emisiva	T546_Interiores/EntradaArmasMercado/SerieFocos/Foco
+Sphere	(-27.1, 3.9, 26.0)	T546_Foco	luz o pieza emisiva	T546_Interiores/EntradaArmasMercado/SerieFocos/Foco
+Sphere	(-26.4, 4.0, 26.0)	T546_Foco	luz o pieza emisiva	T546_Interiores/EntradaArmasMercado/SerieFocos/Foco
+Quad	(-71.6, 2.0, 15.9)	T546_Pizarron_T546_Pizarron	estructura/arquitectura	S2_Interiores/TallerTino/Pizarron
+Sphere	(-76.7, 3.4, 11.2)	T546_Foco	luz o pieza emisiva	S2_Interiores/TallerTino/SerieFocos/Foco
+Sphere	(-76.2, 1.2, 11.4)	T546_Foco	luz o pieza emisiva	S2_Interiores/TallerTino/SerieFocos/Foco
+Sphere	(-75.8, 1.2, 11.7)	T546_Foco	luz o pieza emisiva	S2_Interiores/TallerTino/SerieFocos/Foco
+Sphere	(-75.3, 3.2, 11.9)	T546_Foco	luz o pieza emisiva	S2_Interiores/TallerTino/SerieFocos/Foco
+Sphere	(-74.9, 3.1, 12.1)	T546_Foco	luz o pieza emisiva	S2_Interiores/TallerTino/SerieFocos/Foco
+Sphere	(-74.4, 3.1, 12.3)	T546_Foco	luz o pieza emisiva	S2_Interiores/TallerTino/SerieFocos/Foco
+Sphere	(-74.0, 0.3, 12.6)	T546_Foco	luz o pieza emisiva	S2_Interiores/TallerTino/SerieFocos/Foco
+Sphere	(-73.5, 0.3, 12.8)	T546_Foco	luz o pieza emisiva	S2_Interiores/TallerTino/SerieFocos/Foco
+Sphere	(-73.1, 1.9, 13.0)	T546_Foco	luz o pieza emisiva	S2_Interiores/TallerTino/SerieFocos/Foco
+Sphere	(-72.6, 3.0, 13.2)	T546_Foco	luz o pieza emisiva	S2_Interiores/TallerTino/SerieFocos/Foco
+Sphere	(-72.2, 1.9, 13.5)	T546_Foco	luz o pieza emisiva	S2_Interiores/TallerTino/SerieFocos/Foco
+Sphere	(-71.7, 1.9, 13.7)	T546_Foco	luz o pieza emisiva	S2_Interiores/TallerTino/SerieFocos/Foco
+Sphere	(-71.3, 0.3, 13.9)	T546_Foco	luz o pieza emisiva	S2_Interiores/TallerTino/SerieFocos/Foco
+Sphere	(-70.8, 1.2, 14.1)	T546_Foco	luz o pieza emisiva	S2_Interiores/TallerTino/SerieFocos/Foco
+Sphere	(-70.4, 1.2, 14.4)	T546_Foco	luz o pieza emisiva	S2_Interiores/TallerTino/SerieFocos/Foco
+Sphere	(-69.9, 1.4, 14.6)	T546_Foco	luz o pieza emisiva	S2_Interiores/TallerTino/SerieFocos/Foco
+Sphere	(-76.7, 2.3, 15.3)	T546_Foco	luz o pieza emisiva	S2_Interiores/TallerTino/SerieFocos/Foco
+Sphere	(-76.2, 0.3, 15.0)	T546_Foco	luz o pieza emisiva	S2_Interiores/TallerTino/SerieFocos/Foco
+Sphere	(-75.8, 0.3, 14.8)	T546_Foco	luz o pieza emisiva	S2_Interiores/TallerTino/SerieFocos/Foco
+Sphere	(-75.3, 0.3, 14.6)	T546_Foco	luz o pieza emisiva	S2_Interiores/TallerTino/SerieFocos/Foco
+Sphere	(-74.9, 0.3, 14.4)	T546_Foco	luz o pieza emisiva	S2_Interiores/TallerTino/SerieFocos/Foco
+Sphere	(-74.4, 0.3, 14.1)	T546_Foco	luz o pieza emisiva	S2_Interiores/TallerTino/SerieFocos/Foco
+Sphere	(-74.0, 0.3, 13.9)	T546_Foco	luz o pieza emisiva	S2_Interiores/TallerTino/SerieFocos/Foco
+Sphere	(-73.5, 1.2, 13.7)	T546_Foco	luz o pieza emisiva	S2_Interiores/TallerTino/SerieFocos/Foco
+Sphere	(-73.1, 1.9, 13.4)	T546_Foco	luz o pieza emisiva	S2_Interiores/TallerTino/SerieFocos/Foco
+Sphere	(-72.6, 3.1, 13.2)	T546_Foco	luz o pieza emisiva	S2_Interiores/TallerTino/SerieFocos/Foco
+Sphere	(-72.2, 1.9, 13.0)	T546_Foco	luz o pieza emisiva	S2_Interiores/TallerTino/SerieFocos/Foco
+Sphere	(-71.7, 0.3, 12.7)	T546_Foco	luz o pieza emisiva	S2_Interiores/TallerTino/SerieFocos/Foco
+Sphere	(-71.3, 0.3, 12.5)	T546_Foco	luz o pieza emisiva	S2_Interiores/TallerTino/SerieFocos/Foco
+Sphere	(-70.8, 1.1, 12.3)	T546_Foco	luz o pieza emisiva	S2_Interiores/TallerTino/SerieFocos/Foco
+Sphere	(-70.4, 0.3, 12.1)	T546_Foco	luz o pieza emisiva	S2_Interiores/TallerTino/SerieFocos/Foco
+Sphere	(-69.9, 3.4, 11.8)	T546_Foco	luz o pieza emisiva	S2_Interiores/TallerTino/SerieFocos/Foco
+Quad	(-134.6, 0.0, 0.0)	M01_LineasAmarillas	calcomania plana de calle	S2n_Lineas/Amarillas/LineaAmarilla
+Quad	(-122.9, 0.0, 0.0)	M01_LineasAmarillas	calcomania plana de calle	S2n_Lineas/Amarillas/LineaAmarilla
+Quad	(-111.2, 0.0, 0.0)	M01_LineasAmarillas	calcomania plana de calle	S2n_Lineas/Amarillas/LineaAmarilla
+Quad	(-99.5, 0.0, 0.0)	M01_LineasAmarillas	calcomania plana de calle	S2n_Lineas/Amarillas/LineaAmarilla
+Quad	(-87.8, 0.0, 0.0)	M01_LineasAmarillas	calcomania plana de calle	S2n_Lineas/Amarillas/LineaAmarilla
+Quad	(-76.1, 0.0, 0.0)	M01_LineasAmarillas	calcomania plana de calle	S2n_Lineas/Amarillas/LineaAmarilla
+Quad	(-64.4, 0.0, 0.0)	M01_LineasAmarillas	calcomania plana de calle	S2n_Lineas/Amarillas/LineaAmarilla
+Quad	(-29.6, 0.0, 0.0)	M01_LineasAmarillas	calcomania plana de calle	S2n_Lineas/Amarillas/LineaAmarilla
+Quad	(-17.8, 0.0, 0.0)	M01_LineasAmarillas	calcomania plana de calle	S2n_Lineas/Amarillas/LineaAmarilla
+Quad	(-5.9, 0.0, 0.0)	M01_LineasAmarillas	calcomania plana de calle	S2n_Lineas/Amarillas/LineaAmarilla
+Quad	(5.9, 0.0, 0.0)	M01_LineasAmarillas	calcomania plana de calle	S2n_Lineas/Amarillas/LineaAmarilla
+Quad	(17.8, 0.0, 0.0)	M01_LineasAmarillas	calcomania plana de calle	S2n_Lineas/Amarillas/LineaAmarilla
+Quad	(29.6, 0.0, 0.0)	M01_LineasAmarillas	calcomania plana de calle	S2n_Lineas/Amarillas/LineaAmarilla
+Quad	(64.4, 0.0, 0.0)	M01_LineasAmarillas	calcomania plana de calle	S2n_Lineas/Amarillas/LineaAmarilla
+Quad	(76.0, 0.0, 0.0)	M01_LineasAmarillas	calcomania plana de calle	S2n_Lineas/Amarillas/LineaAmarilla
+Quad	(87.8, 0.0, 0.0)	M01_LineasAmarillas	calcomania plana de calle	S2n_Lineas/Amarillas/LineaAmarilla
+Quad	(99.5, 0.0, 0.0)	M01_LineasAmarillas	calcomania plana de calle	S2n_Lineas/Amarillas/LineaAmarilla
+Quad	(111.2, 0.0, 0.0)	M01_LineasAmarillas	calcomania plana de calle	S2n_Lineas/Amarillas/LineaAmarilla
+Quad	(122.9, 0.0, 0.0)	M01_LineasAmarillas	calcomania plana de calle	S2n_Lineas/Amarillas/LineaAmarilla
+Quad	(134.6, 0.0, 0.0)	M01_LineasAmarillas	calcomania plana de calle	S2n_Lineas/Amarillas/LineaAmarilla
+Quad	(-47.0, 0.0, -83.0)	M01_LineasAmarillas	calcomania plana de calle	S2n_Lineas/Amarillas/LineaAmarilla
+Quad	(-47.0, 0.0, -72.0)	M01_LineasAmarillas	calcomania plana de calle	S2n_Lineas/Amarillas/LineaAmarilla
+Quad	(-47.0, 0.0, -61.0)	M01_LineasAmarillas	calcomania plana de calle	S2n_Lineas/Amarillas/LineaAmarilla
+Quad	(-47.0, 0.0, -50.0)	M01_LineasAmarillas	calcomania plana de calle	S2n_Lineas/Amarillas/LineaAmarilla
+Quad	(-47.0, 0.0, -39.0)	M01_LineasAmarillas	calcomania plana de calle	S2n_Lineas/Amarillas/LineaAmarilla
+Quad	(-47.0, 0.0, -28.0)	M01_LineasAmarillas	calcomania plana de calle	S2n_Lineas/Amarillas/LineaAmarilla
+Quad	(-47.0, 0.0, -17.0)	M01_LineasAmarillas	calcomania plana de calle	S2n_Lineas/Amarillas/LineaAmarilla
+Quad	(-47.0, 0.0, 17.3)	M01_LineasAmarillas	calcomania plana de calle	S2n_Lineas/Amarillas/LineaAmarilla
+Quad	(-47.0, 0.0, 29.0)	M01_LineasAmarillas	calcomania plana de calle	S2n_Lineas/Amarillas/LineaAmarilla
+Quad	(-47.0, 0.0, 40.6)	M01_LineasAmarillas	calcomania plana de calle	S2n_Lineas/Amarillas/LineaAmarilla
+Quad	(-47.0, 0.0, 52.2)	M01_LineasAmarillas	calcomania plana de calle	S2n_Lineas/Amarillas/LineaAmarilla
+Quad	(-47.0, 0.0, 63.9)	M01_LineasAmarillas	calcomania plana de calle	S2n_Lineas/Amarillas/LineaAmarilla
+Quad	(-47.0, 0.0, 75.5)	M01_LineasAmarillas	calcomania plana de calle	S2n_Lineas/Amarillas/LineaAmarilla
+Quad	(-47.0, 0.0, 87.1)	M01_LineasAmarillas	calcomania plana de calle	S2n_Lineas/Amarillas/LineaAmarilla
+Quad	(47.0, 0.0, -83.0)	M01_LineasAmarillas	calcomania plana de calle	S2n_Lineas/Amarillas/LineaAmarilla
+Quad	(47.0, 0.0, -72.0)	M01_LineasAmarillas	calcomania plana de calle	S2n_Lineas/Amarillas/LineaAmarilla
+Quad	(47.0, 0.0, -61.0)	M01_LineasAmarillas	calcomania plana de calle	S2n_Lineas/Amarillas/LineaAmarilla
+Quad	(47.0, 0.0, -50.0)	M01_LineasAmarillas	calcomania plana de calle	S2n_Lineas/Amarillas/LineaAmarilla
+Quad	(47.0, 0.0, -39.0)	M01_LineasAmarillas	calcomania plana de calle	S2n_Lineas/Amarillas/LineaAmarilla
+Quad	(47.0, 0.0, -28.0)	M01_LineasAmarillas	calcomania plana de calle	S2n_Lineas/Amarillas/LineaAmarilla
+Quad	(47.0, 0.0, -17.0)	M01_LineasAmarillas	calcomania plana de calle	S2n_Lineas/Amarillas/LineaAmarilla
+Quad	(47.0, 0.0, 17.3)	M01_LineasAmarillas	calcomania plana de calle	S2n_Lineas/Amarillas/LineaAmarilla
+Quad	(47.0, 0.0, 29.0)	M01_LineasAmarillas	calcomania plana de calle	S2n_Lineas/Amarillas/LineaAmarilla
+Quad	(47.0, 0.0, 40.6)	M01_LineasAmarillas	calcomania plana de calle	S2n_Lineas/Amarillas/LineaAmarilla
+Quad	(47.0, 0.0, 52.2)	M01_LineasAmarillas	calcomania plana de calle	S2n_Lineas/Amarillas/LineaAmarilla
+Quad	(47.0, 0.0, 63.9)	M01_LineasAmarillas	calcomania plana de calle	S2n_Lineas/Amarillas/LineaAmarilla
+Quad	(47.0, 0.0, 75.5)	M01_LineasAmarillas	calcomania plana de calle	S2n_Lineas/Amarillas/LineaAmarilla
+Quad	(47.0, 0.0, 87.1)	M01_LineasAmarillas	calcomania plana de calle	S2n_Lineas/Amarillas/LineaAmarilla
+Quad	(-135.5, 0.0, 4.6)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-135.5, 0.0, -4.6)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-127.5, 0.0, 4.6)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-127.5, 0.0, -4.6)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-119.5, 0.0, 4.6)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-119.5, 0.0, -4.6)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-111.5, 0.0, 4.6)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-111.5, 0.0, -4.6)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-103.5, 0.0, 4.6)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-103.5, 0.0, -4.6)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-95.5, 0.0, 4.6)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-95.5, 0.0, -4.6)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-87.5, 0.0, 4.6)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-87.5, 0.0, -4.6)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-79.5, 0.0, 4.6)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-79.5, 0.0, -4.6)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-71.5, 0.0, 4.6)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-71.5, 0.0, -4.6)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-63.5, 0.0, 4.6)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-63.5, 0.0, -4.6)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-33.0, 0.0, 4.6)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-33.0, 0.0, -4.6)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-25.0, 0.0, 4.6)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-25.0, 0.0, -4.6)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-17.0, 0.0, 4.6)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-17.0, 0.0, -4.6)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-9.0, 0.0, 4.6)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-9.0, 0.0, -4.6)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-1.0, 0.0, 4.6)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-1.0, 0.0, -4.6)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(7.0, 0.0, 4.6)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(7.0, 0.0, -4.6)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(15.0, 0.0, 4.6)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(15.0, 0.0, -4.6)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(23.0, 0.0, 4.6)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(23.0, 0.0, -4.6)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(31.0, 0.0, 4.6)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(31.0, 0.0, -4.6)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(61.0, 0.0, 4.6)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(61.0, 0.0, -4.6)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(69.0, 0.0, 4.6)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(69.0, 0.0, -4.6)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(77.0, 0.0, 4.6)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(77.0, 0.0, -4.6)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(85.0, 0.0, 4.6)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(85.0, 0.0, -4.6)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(93.0, 0.0, 4.6)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(93.0, 0.0, -4.6)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(101.0, 0.0, 4.6)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(101.0, 0.0, -4.6)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(109.0, 0.0, 4.6)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(109.0, 0.0, -4.6)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(117.0, 0.0, 4.6)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(117.0, 0.0, -4.6)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(125.0, 0.0, 4.6)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(125.0, 0.0, -4.6)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(133.0, 0.0, 4.6)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(133.0, 0.0, -4.6)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-51.6, 0.0, -84.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-42.4, 0.0, -84.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-51.6, 0.0, -76.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-42.4, 0.0, -76.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-51.6, 0.0, -68.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-42.4, 0.0, -68.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-51.6, 0.0, -60.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-42.4, 0.0, -60.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-51.6, 0.0, -52.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-42.4, 0.0, -52.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-51.6, 0.0, -44.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-42.4, 0.0, -44.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-51.6, 0.0, -36.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-42.4, 0.0, -36.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-51.6, 0.0, -28.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-42.4, 0.0, -28.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-51.6, 0.0, -20.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-42.4, 0.0, -20.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-51.6, 0.0, 14.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-42.4, 0.0, 14.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-51.6, 0.0, 22.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-42.4, 0.0, 22.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-51.6, 0.0, 30.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-42.4, 0.0, 30.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-51.6, 0.0, 38.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-42.4, 0.0, 38.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-51.6, 0.0, 46.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-42.4, 0.0, 46.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-51.6, 0.0, 54.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-42.4, 0.0, 54.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-51.6, 0.0, 62.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-42.4, 0.0, 62.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-51.6, 0.0, 70.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-42.4, 0.0, 70.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-51.6, 0.0, 78.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-42.4, 0.0, 78.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-51.6, 0.0, 86.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-42.4, 0.0, 86.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(42.4, 0.0, -84.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(51.6, 0.0, -84.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(42.4, 0.0, -76.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(51.6, 0.0, -76.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(42.4, 0.0, -68.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(51.6, 0.0, -68.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(42.4, 0.0, -60.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(51.6, 0.0, -60.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(42.4, 0.0, -52.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(51.6, 0.0, -52.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(42.4, 0.0, -44.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(51.6, 0.0, -44.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(42.4, 0.0, -36.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(51.6, 0.0, -36.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(42.4, 0.0, -28.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(51.6, 0.0, -28.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(42.4, 0.0, -20.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(51.6, 0.0, -20.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(42.4, 0.0, 14.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(51.6, 0.0, 14.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(42.4, 0.0, 22.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(51.6, 0.0, 22.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(42.4, 0.0, 30.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(51.6, 0.0, 30.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(42.4, 0.0, 38.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(51.6, 0.0, 38.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(42.4, 0.0, 46.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(51.6, 0.0, 46.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(42.4, 0.0, 54.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(51.6, 0.0, 54.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(42.4, 0.0, 62.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(51.6, 0.0, 62.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(42.4, 0.0, 70.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(51.6, 0.0, 70.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(42.4, 0.0, 78.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(51.6, 0.0, 78.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(42.4, 0.0, 86.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(51.6, 0.0, 86.0)	M03_LineaBlanca	calcomania plana de calle	S2n_Lineas/Blancas/LineaBlanca
+Quad	(-37.5, 0.0, 0.0)	M02_CrucePeatonal	calcomania plana de calle	S2n_Lineas/Cebras/Cebra
+Quad	(-56.5, 0.0, 0.0)	M02_CrucePeatonal	calcomania plana de calle	S2n_Lineas/Cebras/Cebra
+Quad	(-47.0, 0.0, 9.5)	M02_CrucePeatonal	calcomania plana de calle	S2n_Lineas/Cebras/Cebra
+Quad	(-47.0, 0.0, -9.5)	M02_CrucePeatonal	calcomania plana de calle	S2n_Lineas/Cebras/Cebra
+Quad	(56.5, 0.0, 0.0)	M02_CrucePeatonal	calcomania plana de calle	S2n_Lineas/Cebras/Cebra
+Quad	(37.5, 0.0, 0.0)	M02_CrucePeatonal	calcomania plana de calle	S2n_Lineas/Cebras/Cebra
+Quad	(47.0, 0.0, 9.5)	M02_CrucePeatonal	calcomania plana de calle	S2n_Lineas/Cebras/Cebra
+Quad	(47.0, 0.0, -9.5)	M02_CrucePeatonal	calcomania plana de calle	S2n_Lineas/Cebras/Cebra
+Cube	(37.9, 10.0, 42.4)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Descanso
+Cube	(37.2, 11.2, 42.4)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Pasamanos
+Cube	(37.2, 11.1, 42.4)	Luz_Verde	luz o pieza emisiva	S2n_Puentes/Puente_Sur/Visual/Neon
+Cube	(37.2, 10.7, 42.4)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Travesano
+Cube	(37.2, 10.6, 41.4)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Poste
+Cube	(37.2, 10.6, 42.4)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Poste
+Cube	(37.2, 10.6, 43.3)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Poste
+Cube	(38.5, 11.2, 42.4)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Pasamanos
+Cube	(38.5, 11.1, 42.4)	Luz_Verde	luz o pieza emisiva	S2n_Puentes/Puente_Sur/Visual/Neon
+Cube	(38.5, 10.7, 42.4)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Travesano
+Cube	(38.5, 10.6, 41.4)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Poste
+Cube	(38.5, 10.6, 42.4)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Poste
+Cube	(38.5, 10.6, 43.3)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Poste
+Cube	(37.9, 9.8, 41.2)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Escalon
+Cube	(37.9, 9.5, 40.9)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Escalon
+Cube	(37.9, 9.2, 40.6)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Escalon
+Cube	(37.9, 8.9, 40.3)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Escalon
+Cube	(37.9, 8.6, 40.0)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Escalon
+Cube	(37.9, 8.4, 39.6)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Escalon
+Cube	(37.2, 9.1, 40.4)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Larguero
+Cube	(38.5, 9.1, 40.4)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Larguero
+Cube	(37.2, 10.3, 40.4)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Pasamanos
+Cube	(37.2, 10.2, 40.4)	Luz_Verde	luz o pieza emisiva	S2n_Puentes/Puente_Sur/Visual/Neon
+Cube	(37.2, 9.8, 40.4)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Travesano
+Cube	(37.2, 10.6, 41.4)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Poste
+Cube	(37.2, 9.8, 40.4)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Poste
+Cube	(37.2, 8.9, 39.5)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Poste
+Cube	(38.5, 10.3, 40.4)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Pasamanos
+Cube	(38.5, 10.2, 40.4)	Luz_Verde	luz o pieza emisiva	S2n_Puentes/Puente_Sur/Visual/Neon
+Cube	(38.5, 9.8, 40.4)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Travesano
+Cube	(38.5, 10.6, 41.4)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Poste
+Cube	(38.5, 9.8, 40.4)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Poste
+Cube	(38.5, 8.9, 39.5)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Poste
+Cube	(37.9, 9.8, 43.5)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Escalon
+Cube	(37.9, 9.6, 43.8)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Escalon
+Cube	(37.9, 9.3, 44.2)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Escalon
+Cube	(37.9, 9.1, 44.5)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Escalon
+Cube	(37.9, 8.8, 44.8)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Escalon
+Cube	(37.9, 8.5, 45.2)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Escalon
+Cube	(37.9, 8.3, 45.5)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Escalon
+Cube	(37.9, 8.0, 45.9)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Escalon
+Cube	(37.9, 7.8, 46.2)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Escalon
+Cube	(37.9, 7.5, 46.5)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Escalon
+Cube	(37.9, 7.3, 46.9)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Escalon
+Cube	(37.9, 7.0, 47.2)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Escalon
+Cube	(37.9, 6.8, 47.6)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Escalon
+Cube	(37.9, 6.5, 47.9)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Escalon
+Cube	(37.9, 6.3, 48.2)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Escalon
+Cube	(37.9, 6.0, 48.6)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Escalon
+Cube	(37.9, 5.8, 48.9)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Escalon
+Cube	(37.9, 5.5, 49.3)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Escalon
+Cube	(37.9, 5.2, 49.6)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Escalon
+Cube	(37.9, 5.0, 49.9)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Escalon
+Cube	(37.9, 4.7, 50.3)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Escalon
+Cube	(37.9, 4.5, 50.6)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Escalon
+Cube	(37.9, 4.2, 51.0)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Escalon
+Cube	(37.9, 4.0, 51.3)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Escalon
+Cube	(37.9, 3.7, 51.6)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Escalon
+Cube	(37.9, 3.5, 52.0)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Escalon
+Cube	(37.9, 3.2, 52.3)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Escalon
+Cube	(37.9, 3.0, 52.7)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Escalon
+Cube	(37.9, 2.7, 53.0)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Escalon
+Cube	(37.9, 2.5, 53.3)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Escalon
+Cube	(37.9, 2.2, 53.7)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Escalon
+Cube	(37.9, 1.9, 54.0)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Escalon
+Cube	(37.9, 1.7, 54.4)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Escalon
+Cube	(37.9, 1.4, 54.7)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Escalon
+Cube	(37.9, 1.2, 55.0)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Escalon
+Cube	(37.9, 0.9, 55.4)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Escalon
+Cube	(37.9, 0.7, 55.7)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Escalon
+Cube	(37.9, 0.4, 56.1)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Escalon
+Cube	(37.9, 0.2, 56.4)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Escalon
+Cube	(37.2, 5.0, 49.9)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Larguero
+Cube	(38.5, 5.0, 49.9)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Larguero
+Cube	(37.2, 6.2, 49.9)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Pasamanos
+Cube	(37.2, 6.1, 49.9)	Luz_Verde	luz o pieza emisiva	S2n_Puentes/Puente_Sur/Visual/Neon
+Cube	(37.2, 5.7, 49.9)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Travesano
+Cube	(37.2, 10.6, 43.3)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Poste
+Cube	(37.2, 9.5, 44.8)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Poste
+Cube	(37.2, 8.4, 46.2)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Poste
+Cube	(37.2, 7.3, 47.7)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Poste
+Cube	(37.2, 6.2, 49.2)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Poste
+Cube	(37.2, 5.1, 50.7)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Poste
+Cube	(37.2, 4.0, 52.1)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Poste
+Cube	(37.2, 2.9, 53.6)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Poste
+Cube	(37.2, 1.8, 55.1)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Poste
+Cube	(37.2, 0.7, 56.6)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Poste
+Cube	(38.5, 6.2, 49.9)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Pasamanos
+Cube	(38.5, 6.1, 49.9)	Luz_Verde	luz o pieza emisiva	S2n_Puentes/Puente_Sur/Visual/Neon
+Cube	(38.5, 5.7, 49.9)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Travesano
+Cube	(38.5, 10.6, 43.3)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Poste
+Cube	(38.5, 9.5, 44.8)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Poste
+Cube	(38.5, 8.4, 46.2)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Poste
+Cube	(38.5, 7.3, 47.7)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Poste
+Cube	(38.5, 6.2, 49.2)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Poste
+Cube	(38.5, 5.1, 50.7)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Poste
+Cube	(38.5, 4.0, 52.1)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Poste
+Cube	(38.5, 2.9, 53.6)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Poste
+Cube	(38.5, 1.8, 55.1)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Poste
+Cube	(38.5, 0.7, 56.6)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Poste
+Cube	(37.2, 3.8, 46.5)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Apoyo
+Cube	(38.5, 3.8, 46.5)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Apoyo
+Cube	(37.2, 2.6, 49.7)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Apoyo
+Cube	(38.5, 2.6, 49.7)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Apoyo
+Cube	(37.2, 1.4, 52.9)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Apoyo
+Cube	(38.5, 1.4, 52.9)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Sur/Visual/Apoyo
+Cube	(56.4, 10.0, 67.6)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Descanso
+Cube	(55.8, 11.2, 67.6)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Pasamanos
+Cube	(55.8, 11.1, 67.6)	Luz_Magenta	luz o pieza emisiva	S2n_Puentes/Puente_Nova/Visual/Neon
+Cube	(55.8, 10.7, 67.6)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Travesano
+Cube	(55.8, 10.6, 68.6)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Poste
+Cube	(55.8, 10.6, 67.6)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Poste
+Cube	(55.8, 10.6, 66.7)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Poste
+Cube	(57.0, 11.2, 67.6)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Pasamanos
+Cube	(57.0, 11.1, 67.6)	Luz_Magenta	luz o pieza emisiva	S2n_Puentes/Puente_Nova/Visual/Neon
+Cube	(57.0, 10.7, 67.6)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Travesano
+Cube	(57.0, 10.6, 68.6)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Poste
+Cube	(57.0, 10.6, 67.6)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Poste
+Cube	(57.0, 10.6, 66.7)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Poste
+Cube	(56.4, 9.8, 68.8)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Escalon
+Cube	(56.4, 9.5, 69.1)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Escalon
+Cube	(56.4, 9.2, 69.4)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Escalon
+Cube	(56.4, 8.9, 69.7)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Escalon
+Cube	(56.4, 8.6, 70.0)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Escalon
+Cube	(56.4, 8.4, 70.4)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Escalon
+Cube	(55.8, 9.1, 69.6)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Larguero
+Cube	(57.0, 9.1, 69.6)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Larguero
+Cube	(55.8, 10.3, 69.6)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Pasamanos
+Cube	(55.8, 10.2, 69.6)	Luz_Magenta	luz o pieza emisiva	S2n_Puentes/Puente_Nova/Visual/Neon
+Cube	(55.8, 9.8, 69.6)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Travesano
+Cube	(55.8, 10.6, 68.6)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Poste
+Cube	(55.8, 9.8, 69.6)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Poste
+Cube	(55.8, 8.9, 70.5)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Poste
+Cube	(57.0, 10.3, 69.6)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Pasamanos
+Cube	(57.0, 10.2, 69.6)	Luz_Magenta	luz o pieza emisiva	S2n_Puentes/Puente_Nova/Visual/Neon
+Cube	(57.0, 9.8, 69.6)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Travesano
+Cube	(57.0, 10.6, 68.6)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Poste
+Cube	(57.0, 9.8, 69.6)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Poste
+Cube	(57.0, 8.9, 70.5)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Poste
+Cube	(56.4, 9.8, 66.5)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Escalon
+Cube	(56.4, 9.6, 66.2)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Escalon
+Cube	(56.4, 9.3, 65.9)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Escalon
+Cube	(56.4, 9.1, 65.5)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Escalon
+Cube	(56.4, 8.8, 65.2)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Escalon
+Cube	(56.4, 8.5, 64.8)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Escalon
+Cube	(56.4, 8.3, 64.5)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Escalon
+Cube	(56.4, 8.0, 64.1)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Escalon
+Cube	(56.4, 7.8, 63.8)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Escalon
+Cube	(56.4, 7.5, 63.5)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Escalon
+Cube	(56.4, 7.3, 63.1)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Escalon
+Cube	(56.4, 7.0, 62.8)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Escalon
+Cube	(56.4, 6.8, 62.5)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Escalon
+Cube	(56.4, 6.5, 62.1)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Escalon
+Cube	(56.4, 6.3, 61.8)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Escalon
+Cube	(56.4, 6.0, 61.4)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Escalon
+Cube	(56.4, 5.8, 61.1)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Escalon
+Cube	(56.4, 5.5, 60.8)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Escalon
+Cube	(56.4, 5.2, 60.4)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Escalon
+Cube	(56.4, 5.0, 60.1)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Escalon
+Cube	(56.4, 4.7, 59.7)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Escalon
+Cube	(56.4, 4.5, 59.4)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Escalon
+Cube	(56.4, 4.2, 59.1)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Escalon
+Cube	(56.4, 4.0, 58.7)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Escalon
+Cube	(56.4, 3.7, 58.4)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Escalon
+Cube	(56.4, 3.5, 58.0)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Escalon
+Cube	(56.4, 3.2, 57.7)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Escalon
+Cube	(56.4, 3.0, 57.4)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Escalon
+Cube	(56.4, 2.7, 57.0)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Escalon
+Cube	(56.4, 2.5, 56.7)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Escalon
+Cube	(56.4, 2.2, 56.3)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Escalon
+Cube	(56.4, 1.9, 56.0)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Escalon
+Cube	(56.4, 1.7, 55.7)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Escalon
+Cube	(56.4, 1.4, 55.3)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Escalon
+Cube	(56.4, 1.2, 55.0)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Escalon
+Cube	(56.4, 0.9, 54.6)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Escalon
+Cube	(56.4, 0.7, 54.3)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Escalon
+Cube	(56.4, 0.4, 54.0)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Escalon
+Cube	(56.4, 0.2, 53.6)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Escalon
+Cube	(55.8, 5.0, 60.1)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Larguero
+Cube	(57.0, 5.0, 60.1)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Larguero
+Cube	(55.8, 6.2, 60.1)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Pasamanos
+Cube	(55.8, 6.1, 60.1)	Luz_Magenta	luz o pieza emisiva	S2n_Puentes/Puente_Nova/Visual/Neon
+Cube	(55.8, 5.7, 60.1)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Travesano
+Cube	(55.8, 10.6, 66.7)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Poste
+Cube	(55.8, 9.5, 65.2)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Poste
+Cube	(55.8, 8.4, 63.8)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Poste
+Cube	(55.8, 7.3, 62.3)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Poste
+Cube	(55.8, 6.2, 60.8)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Poste
+Cube	(55.8, 5.1, 59.3)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Poste
+Cube	(55.8, 4.0, 57.9)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Poste
+Cube	(55.8, 2.9, 56.4)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Poste
+Cube	(55.8, 1.8, 54.9)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Poste
+Cube	(55.8, 0.7, 53.4)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Poste
+Cube	(57.0, 6.2, 60.1)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Pasamanos
+Cube	(57.0, 6.1, 60.1)	Luz_Magenta	luz o pieza emisiva	S2n_Puentes/Puente_Nova/Visual/Neon
+Cube	(57.0, 5.7, 60.1)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Travesano
+Cube	(57.0, 10.6, 66.7)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Poste
+Cube	(57.0, 9.5, 65.2)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Poste
+Cube	(57.0, 8.4, 63.8)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Poste
+Cube	(57.0, 7.3, 62.3)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Poste
+Cube	(57.0, 6.2, 60.8)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Poste
+Cube	(57.0, 5.1, 59.3)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Poste
+Cube	(57.0, 4.0, 57.9)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Poste
+Cube	(57.0, 2.9, 56.4)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Poste
+Cube	(57.0, 1.8, 54.9)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Poste
+Cube	(57.0, 0.7, 53.4)	T508_Barandal	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Poste
+Cube	(55.8, 3.8, 63.5)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Apoyo
+Cube	(56.9, 3.8, 63.5)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Apoyo
+Cube	(55.8, 2.6, 60.3)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Apoyo
+Cube	(56.9, 2.6, 60.3)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Apoyo
+Cube	(55.8, 1.4, 57.1)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Apoyo
+Cube	(56.9, 1.4, 57.1)	T506_Final_Acero	estructura/arquitectura	S2n_Puentes/Puente_Nova/Visual/Apoyo
+Cube	(-24.7, 9.1, -79.8)	T507_T506_Barrio_Edif_B_3	tiene textura propia	S2n_TallerMecanico/Cuerpo/Cuerpo_Sur
+Cube	(-24.7, 9.1, -63.5)	T507_T506_Barrio_Edif_B_3	tiene textura propia	S2n_TallerMecanico/Cuerpo/Cuerpo_Norte
+Cube	(-16.7, 9.1, -71.7)	T507_T506_Barrio_Edif_B_3	tiene textura propia	S2n_TallerMecanico/Cuerpo/Cuerpo_Fondo
+Cube	(-29.0, 11.7, -71.7)	T507_T506_Barrio_Edif_B_3	tiene textura propia	S2n_TallerMecanico/Cuerpo/Cuerpo_Arriba
+Cube	(-29.0, 3.7, -73.0)	S2n_Elevador_Amarillo	tiene textura propia	S2n_TallerMecanico/Muebles/Elevador/Travesano
+Quad	(-135.3, 5.0, -40.5)	S2c_Ventana_2	estructura/arquitectura	S2o_CalleK01/Fondo/Casa_2/C03_Fachada/VentanaCalida
+Quad	(-135.0, 3.0, -44.3)	S2c_Ventana_0	estructura/arquitectura	S2o_CalleK01/Fondo/Casa_3/C01_Fachada/VentanaCalida
+Quad	(-135.3, 5.4, -45.2)	S2c_Ventana_2	estructura/arquitectura	S2o_CalleK01/Fondo/Casa_3/C03_Fachada/VentanaCalida
+Quad	(-135.3, 5.4, -43.6)	S2c_Ventana_0	estructura/arquitectura	S2o_CalleK01/Fondo/Casa_3/C03_Fachada/VentanaCalida
+Quad	(-135.3, 5.0, -48.6)	S2c_Ventana_1	estructura/arquitectura	S2o_CalleK01/Fondo/Casa_4/C03_Fachada/VentanaCalida
+Quad	(-96.3, 0.2, -40.9)	T1503_Agua_S2c_Charco_0	calcomania plana de calle	S2o_CalleK01/Cosas/Charco
+Quad	(-119.4, 0.2, -42.6)	T1503_Agua_S2c_Charco_0	calcomania plana de calle	S2o_CalleK01/Cosas/Charco
+Quad	(-89.4, 0.2, -42.8)	T1503_Agua_S2c_Charco_3	calcomania plana de calle	S2o_CalleK01/Cosas/Charco
+Quad	(-121.0, 0.2, -40.5)	T1503_Agua_S2c_Charco_1	calcomania plana de calle	S2o_CalleK01/Cosas/Charco
+Quad	(-98.4, 0.2, -42.9)	T1503_Agua_S2c_Charco_3	calcomania plana de calle	S2o_CalleK01/Cosas/Charco
+Quad	(-116.8, 0.2, -42.3)	T1503_Agua_S2c_Charco_3	calcomania plana de calle	S2o_CalleK01/Cosas/Charco
+Quad	(-93.4, 0.2, -44.7)	T1503_Agua_S2c_Charco_3	calcomania plana de calle	S2o_CalleK01/Cosas/Charco
+Quad	(-85.5, 0.2, -45.9)	T1503_Agua_S2c_Charco_0	calcomania plana de calle	S2o_CalleK01/Cosas/Charco
+Quad	(-115.7, 0.2, -42.9)	T1503_Agua_S2c_Charco_2	calcomania plana de calle	S2o_CalleK01/Cosas/Charco
+Quad	(-86.4, 0.2, -43.3)	T1503_Agua_S2c_Charco_3	calcomania plana de calle	S2o_CalleK01/Cosas/Charco
+Quad	(-73.0, 0.2, -43.6)	T1503_Agua_S2c_Charco_1	calcomania plana de calle	S2o_CalleK01/Cosas/Charco
+Cube	(72.0, 5.5, 35.5)	T930_Viga	estructura/arquitectura	T930_Casino/Viga
+Cube	(72.0, 5.5, 40.3)	T930_Viga	estructura/arquitectura	T930_Casino/Viga
+Cube	(72.0, 5.5, 45.1)	T930_Viga	estructura/arquitectura	T930_Casino/Viga
+Cube	(72.0, 5.5, 49.9)	T930_Viga	estructura/arquitectura	T930_Casino/Viga
+Cube	(72.0, 5.5, 54.7)	T930_Viga	estructura/arquitectura	T930_Casino/Viga
+Cube	(72.0, 5.5, 59.5)	T930_Viga	estructura/arquitectura	T930_Casino/Viga
+Cylinder	(72.0, 5.2, 36.5)	T930_Tubo	estructura/arquitectura	T930_Casino/Tubo
+Cylinder	(72.0, 5.2, 39.4)	T930_Tubo	estructura/arquitectura	T930_Casino/Tubo
+Cylinder	(72.0, 5.2, 54.6)	T930_Tubo	estructura/arquitectura	T930_Casino/Tubo
+Cylinder	(72.0, 5.2, 57.5)	T930_Tubo	estructura/arquitectura	T930_Casino/Tubo
+Cylinder	(64.0, 5.0, 37.5)	T930_FocoCuerpo	luz o pieza emisiva	T930_Casino/Foco
+Cylinder	(64.0, 4.8, 37.4)	T930_FocoLuz	luz o pieza emisiva	T930_Casino/FocoLuz
+Cylinder	(64.0, 5.0, 56.5)	T930_FocoCuerpo	luz o pieza emisiva	T930_Casino/Foco
+Cylinder	(64.0, 4.8, 56.4)	T930_FocoMagenta	luz o pieza emisiva	T930_Casino/FocoLuz
+Cylinder	(68.0, 5.0, 37.5)	T930_FocoCuerpo	luz o pieza emisiva	T930_Casino/Foco
+Cylinder	(68.0, 4.8, 37.4)	T930_FocoLuz	luz o pieza emisiva	T930_Casino/FocoLuz
+Cylinder	(68.0, 5.0, 56.5)	T930_FocoCuerpo	luz o pieza emisiva	T930_Casino/Foco
+Cylinder	(68.0, 4.8, 56.4)	T930_FocoMagenta	luz o pieza emisiva	T930_Casino/FocoLuz
+Cylinder	(72.0, 5.0, 37.5)	T930_FocoCuerpo	luz o pieza emisiva	T930_Casino/Foco
+Cylinder	(72.0, 4.8, 37.4)	T930_FocoLuz	luz o pieza emisiva	T930_Casino/FocoLuz
+Cylinder	(72.0, 5.0, 56.5)	T930_FocoCuerpo	luz o pieza emisiva	T930_Casino/Foco
+Cylinder	(72.0, 4.8, 56.4)	T930_FocoMagenta	luz o pieza emisiva	T930_Casino/FocoLuz
+Cylinder	(76.0, 5.0, 37.5)	T930_FocoCuerpo	luz o pieza emisiva	T930_Casino/Foco
+Cylinder	(76.0, 4.8, 37.4)	T930_FocoLuz	luz o pieza emisiva	T930_Casino/FocoLuz
+Cylinder	(76.0, 5.0, 56.5)	T930_FocoCuerpo	luz o pieza emisiva	T930_Casino/Foco
+Cylinder	(76.0, 4.8, 56.4)	T930_FocoMagenta	luz o pieza emisiva	T930_Casino/FocoLuz
+Cylinder	(80.0, 5.0, 37.5)	T930_FocoCuerpo	luz o pieza emisiva	T930_Casino/Foco
+Cylinder	(80.0, 4.8, 37.4)	T930_FocoLuz	luz o pieza emisiva	T930_Casino/FocoLuz
+Cylinder	(80.0, 5.0, 56.5)	T930_FocoCuerpo	luz o pieza emisiva	T930_Casino/Foco
+Cylinder	(80.0, 4.8, 56.4)	T930_FocoMagenta	luz o pieza emisiva	T930_Casino/FocoLuz
+Cube	(69.8, 0.3, 37.5)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Base
+Cube	(69.8, 1.2, 37.5)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Cuerpo
+Cube	(69.8, 2.2, 37.5)	Tragamonedas_Corona	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Corona
+Cube	(69.8, 1.5, 37.1)	T930_Pantalla2	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/Pantalla
+Cube	(69.8, 1.7, 37.1)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/TiraNeonArriba
+Cube	(69.8, 1.2, 37.1)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/TiraNeonAbajo
+Cube	(69.3, 1.4, 37.5)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Palanca
+Cube	(69.3, 1.6, 37.5)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/PalancaBola
+Cube	(70.9, 0.3, 37.5)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Base
+Cube	(70.9, 1.2, 37.5)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Cuerpo
+Cube	(70.9, 2.2, 37.5)	Tragamonedas_Corona	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Corona
+Cube	(70.9, 1.5, 37.1)	T930_Pantalla2	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/Pantalla
+Cube	(70.9, 1.7, 37.1)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/TiraNeonArriba
+Cube	(70.9, 1.2, 37.1)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/TiraNeonAbajo
+Cube	(70.4, 1.4, 37.5)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Palanca
+Cube	(70.4, 1.6, 37.5)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/PalancaBola
+Cube	(72.0, 0.3, 37.5)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Base
+Cube	(72.0, 1.2, 37.5)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Cuerpo
+Cube	(72.0, 2.2, 37.5)	Tragamonedas_Corona	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Corona
+Cube	(72.0, 1.5, 37.1)	T930_Pantalla1	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/Pantalla
+Cube	(72.0, 1.7, 37.1)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/TiraNeonArriba
+Cube	(72.0, 1.2, 37.1)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/TiraNeonAbajo
+Cube	(71.6, 1.4, 37.5)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Palanca
+Cube	(71.6, 1.6, 37.5)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/PalancaBola
+Cube	(73.2, 0.3, 37.5)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Base
+Cube	(73.2, 1.2, 37.5)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Cuerpo
+Cube	(73.2, 2.2, 37.5)	Tragamonedas_Corona	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Corona
+Cube	(73.2, 1.5, 37.1)	T930_Pantalla1	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/Pantalla
+Cube	(73.2, 1.7, 37.1)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/TiraNeonArriba
+Cube	(73.2, 1.2, 37.1)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/TiraNeonAbajo
+Cube	(72.7, 1.4, 37.5)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Palanca
+Cube	(72.7, 1.6, 37.5)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/PalancaBola
+Cube	(74.3, 0.3, 37.5)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Base
+Cube	(74.3, 1.2, 37.5)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Cuerpo
+Cube	(74.3, 2.2, 37.5)	Tragamonedas_Corona	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Corona
+Cube	(74.3, 1.5, 37.1)	T930_Pantalla1	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/Pantalla
+Cube	(74.3, 1.7, 37.1)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/TiraNeonArriba
+Cube	(74.3, 1.2, 37.1)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/TiraNeonAbajo
+Cube	(73.8, 1.4, 37.5)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Palanca
+Cube	(73.8, 1.6, 37.5)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/PalancaBola
+Cube	(75.4, 0.3, 37.5)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Base
+Cube	(75.4, 1.2, 37.5)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Cuerpo
+Cube	(75.4, 2.2, 37.5)	Tragamonedas_Corona	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Corona
+Cube	(75.4, 1.5, 37.1)	T930_Pantalla2	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/Pantalla
+Cube	(75.4, 1.7, 37.1)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/TiraNeonArriba
+Cube	(75.4, 1.2, 37.1)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/TiraNeonAbajo
+Cube	(74.9, 1.4, 37.5)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Palanca
+Cube	(74.9, 1.6, 37.5)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/PalancaBola
+Cube	(76.5, 0.3, 37.5)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Base
+Cube	(76.5, 1.2, 37.5)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Cuerpo
+Cube	(76.5, 2.2, 37.5)	Tragamonedas_Corona	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Corona
+Cube	(76.5, 1.5, 37.1)	T930_Pantalla2	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/Pantalla
+Cube	(76.5, 1.7, 37.1)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/TiraNeonArriba
+Cube	(76.5, 1.2, 37.1)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/TiraNeonAbajo
+Cube	(76.0, 1.4, 37.5)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Palanca
+Cube	(76.0, 1.6, 37.5)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/PalancaBola
+Cube	(77.6, 0.3, 37.5)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Base
+Cube	(77.6, 1.2, 37.5)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Cuerpo
+Cube	(77.6, 2.2, 37.5)	Tragamonedas_Corona	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Corona
+Cube	(77.6, 1.5, 37.1)	T930_Pantalla1	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/Pantalla
+Cube	(77.6, 1.7, 37.1)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/TiraNeonArriba
+Cube	(77.6, 1.2, 37.1)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/TiraNeonAbajo
+Cube	(77.2, 1.4, 37.5)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Palanca
+Cube	(77.2, 1.6, 37.5)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/PalancaBola
+Cube	(78.8, 0.3, 37.5)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Base
+Cube	(78.8, 1.2, 37.5)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Cuerpo
+Cube	(78.8, 2.2, 37.5)	Tragamonedas_Corona	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Corona
+Cube	(78.8, 1.5, 37.1)	T930_Pantalla2	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/Pantalla
+Cube	(78.8, 1.7, 37.1)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/TiraNeonArriba
+Cube	(78.8, 1.2, 37.1)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/TiraNeonAbajo
+Cube	(78.3, 1.4, 37.5)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Palanca
+Cube	(78.3, 1.6, 37.5)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/PalancaBola
+Cube	(79.9, 0.3, 37.5)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Base
+Cube	(79.9, 1.2, 37.5)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Cuerpo
+Cube	(79.9, 2.2, 37.5)	Tragamonedas_Corona	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Corona
+Cube	(79.9, 1.5, 37.1)	T930_Pantalla1	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/Pantalla
+Cube	(79.9, 1.7, 37.1)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/TiraNeonArriba
+Cube	(79.9, 1.2, 37.1)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/TiraNeonAbajo
+Cube	(79.4, 1.4, 37.5)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Palanca
+Cube	(79.4, 1.6, 37.5)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/PalancaBola
+Cube	(69.8, 0.3, 38.6)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Base
+Cube	(69.8, 1.2, 38.6)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Cuerpo
+Cube	(69.8, 2.2, 38.6)	Tragamonedas_Corona	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Corona
+Cube	(69.8, 1.5, 38.9)	T930_Pantalla1	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/Pantalla
+Cube	(69.8, 1.7, 38.9)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/TiraNeonArriba
+Cube	(69.8, 1.2, 38.9)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/TiraNeonAbajo
+Cube	(70.3, 1.4, 38.6)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Palanca
+Cube	(70.3, 1.6, 38.6)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/PalancaBola
+Cube	(70.9, 0.3, 38.6)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Base
+Cube	(70.9, 1.2, 38.6)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Cuerpo
+Cube	(70.9, 2.2, 38.6)	Tragamonedas_Corona	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Corona
+Cube	(70.9, 1.5, 38.9)	T930_Pantalla1	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/Pantalla
+Cube	(70.9, 1.7, 38.9)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/TiraNeonArriba
+Cube	(70.9, 1.2, 38.9)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/TiraNeonAbajo
+Cube	(71.4, 1.4, 38.6)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Palanca
+Cube	(71.4, 1.6, 38.6)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/PalancaBola
+Cube	(72.0, 0.3, 38.6)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Base
+Cube	(72.0, 1.2, 38.6)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Cuerpo
+Cube	(72.0, 2.2, 38.6)	Tragamonedas_Corona	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Corona
+Cube	(72.0, 1.5, 38.9)	T930_Pantalla1	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/Pantalla
+Cube	(72.0, 1.7, 38.9)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/TiraNeonArriba
+Cube	(72.0, 1.2, 38.9)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/TiraNeonAbajo
+Cube	(72.5, 1.4, 38.6)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Palanca
+Cube	(72.5, 1.6, 38.6)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/PalancaBola
+Cube	(73.2, 0.3, 38.6)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Base
+Cube	(73.2, 1.2, 38.6)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Cuerpo
+Cube	(73.2, 2.2, 38.6)	Tragamonedas_Corona	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Corona
+Cube	(73.2, 1.5, 38.9)	T930_Pantalla1	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/Pantalla
+Cube	(73.2, 1.7, 38.9)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/TiraNeonArriba
+Cube	(73.2, 1.2, 38.9)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/TiraNeonAbajo
+Cube	(73.6, 1.4, 38.6)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Palanca
+Cube	(73.6, 1.6, 38.6)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/PalancaBola
+Cube	(74.3, 0.3, 38.6)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Base
+Cube	(74.3, 1.2, 38.6)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Cuerpo
+Cube	(74.3, 2.2, 38.6)	Tragamonedas_Corona	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Corona
+Cube	(74.3, 1.5, 38.9)	T930_Pantalla2	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/Pantalla
+Cube	(74.3, 1.7, 38.9)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/TiraNeonArriba
+Cube	(74.3, 1.2, 38.9)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/TiraNeonAbajo
+Cube	(74.8, 1.4, 38.6)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Palanca
+Cube	(74.8, 1.6, 38.6)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/PalancaBola
+Cube	(75.4, 0.3, 38.6)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Base
+Cube	(75.4, 1.2, 38.6)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Cuerpo
+Cube	(75.4, 2.2, 38.6)	Tragamonedas_Corona	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Corona
+Cube	(75.4, 1.5, 38.9)	T930_Pantalla1	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/Pantalla
+Cube	(75.4, 1.7, 38.9)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/TiraNeonArriba
+Cube	(75.4, 1.2, 38.9)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/TiraNeonAbajo
+Cube	(75.9, 1.4, 38.6)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Palanca
+Cube	(75.9, 1.6, 38.6)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/PalancaBola
+Cube	(76.5, 0.3, 38.6)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Base
+Cube	(76.5, 1.2, 38.6)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Cuerpo
+Cube	(76.5, 2.2, 38.6)	Tragamonedas_Corona	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Corona
+Cube	(76.5, 1.5, 38.9)	T930_Pantalla1	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/Pantalla
+Cube	(76.5, 1.7, 38.9)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/TiraNeonArriba
+Cube	(76.5, 1.2, 38.9)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/TiraNeonAbajo
+Cube	(77.0, 1.4, 38.6)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Palanca
+Cube	(77.0, 1.6, 38.6)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/PalancaBola
+Cube	(77.6, 0.3, 38.6)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Base
+Cube	(77.6, 1.2, 38.6)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Cuerpo
+Cube	(77.6, 2.2, 38.6)	Tragamonedas_Corona	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Corona
+Cube	(77.6, 1.5, 38.9)	T930_Pantalla2	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/Pantalla
+Cube	(77.6, 1.7, 38.9)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/TiraNeonArriba
+Cube	(77.6, 1.2, 38.9)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/TiraNeonAbajo
+Cube	(78.1, 1.4, 38.6)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Palanca
+Cube	(78.1, 1.6, 38.6)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/PalancaBola
+Cube	(78.8, 0.3, 38.6)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Base
+Cube	(78.8, 1.2, 38.6)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Cuerpo
+Cube	(78.8, 2.2, 38.6)	Tragamonedas_Corona	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Corona
+Cube	(78.8, 1.5, 38.9)	T930_Pantalla2	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/Pantalla
+Cube	(78.8, 1.7, 38.9)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/TiraNeonArriba
+Cube	(78.8, 1.2, 38.9)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/TiraNeonAbajo
+Cube	(79.2, 1.4, 38.6)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Palanca
+Cube	(79.2, 1.6, 38.6)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/PalancaBola
+Cube	(79.9, 0.3, 38.6)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Base
+Cube	(79.9, 1.2, 38.6)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Cuerpo
+Cube	(79.9, 2.2, 38.6)	Tragamonedas_Corona	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Corona
+Cube	(79.9, 1.5, 38.9)	T930_Pantalla2	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/Pantalla
+Cube	(79.9, 1.7, 38.9)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/TiraNeonArriba
+Cube	(79.9, 1.2, 38.9)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/TiraNeonAbajo
+Cube	(80.4, 1.4, 38.6)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Palanca
+Cube	(80.4, 1.6, 38.6)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/PalancaBola
+Cube	(75.6, 0.3, 57.1)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Base
+Cube	(75.6, 1.2, 57.1)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Cuerpo
+Cube	(75.6, 2.2, 57.1)	Tragamonedas_Corona	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Corona
+Cube	(75.6, 1.5, 56.8)	T930_Pantalla1	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/Pantalla
+Cube	(75.6, 1.7, 56.8)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/TiraNeonArriba
+Cube	(75.6, 1.2, 56.8)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/TiraNeonAbajo
+Cube	(75.1, 1.4, 57.1)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Palanca
+Cube	(75.1, 1.6, 57.1)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/PalancaBola
+Cube	(76.7, 0.3, 57.1)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Base
+Cube	(76.7, 1.2, 57.1)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Cuerpo
+Cube	(76.7, 2.2, 57.1)	Tragamonedas_Corona	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Corona
+Cube	(76.7, 1.5, 56.8)	T930_Pantalla1	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/Pantalla
+Cube	(76.7, 1.7, 56.8)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/TiraNeonArriba
+Cube	(76.7, 1.2, 56.8)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/TiraNeonAbajo
+Cube	(76.2, 1.4, 57.1)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Palanca
+Cube	(76.2, 1.6, 57.1)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/PalancaBola
+Cube	(77.8, 0.3, 57.1)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Base
+Cube	(77.8, 1.2, 57.1)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Cuerpo
+Cube	(77.8, 2.2, 57.1)	Tragamonedas_Corona	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Corona
+Cube	(77.8, 1.5, 56.8)	T930_Pantalla1	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/Pantalla
+Cube	(77.8, 1.7, 56.8)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/TiraNeonArriba
+Cube	(77.8, 1.2, 56.8)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/TiraNeonAbajo
+Cube	(77.4, 1.4, 57.1)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Palanca
+Cube	(77.4, 1.6, 57.1)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/PalancaBola
+Cube	(79.0, 0.3, 57.1)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Base
+Cube	(79.0, 1.2, 57.1)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Cuerpo
+Cube	(79.0, 2.2, 57.1)	Tragamonedas_Corona	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Corona
+Cube	(79.0, 1.5, 56.8)	T930_Pantalla1	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/Pantalla
+Cube	(79.0, 1.7, 56.8)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/TiraNeonArriba
+Cube	(79.0, 1.2, 56.8)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/TiraNeonAbajo
+Cube	(78.5, 1.4, 57.1)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Palanca
+Cube	(78.5, 1.6, 57.1)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/PalancaBola
+Cube	(80.1, 0.3, 57.1)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Base
+Cube	(80.1, 1.2, 57.1)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Cuerpo
+Cube	(80.1, 2.2, 57.1)	Tragamonedas_Corona	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Corona
+Cube	(80.1, 1.5, 56.8)	T930_Pantalla2	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/Pantalla
+Cube	(80.1, 1.7, 56.8)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/TiraNeonArriba
+Cube	(80.1, 1.2, 56.8)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/TiraNeonAbajo
+Cube	(79.6, 1.4, 57.1)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Palanca
+Cube	(79.6, 1.6, 57.1)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/PalancaBola
+Cube	(75.6, 0.3, 58.0)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Base
+Cube	(75.6, 1.2, 58.0)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Cuerpo
+Cube	(75.6, 2.2, 58.0)	Tragamonedas_Corona	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Corona
+Cube	(75.6, 1.5, 58.4)	T930_Pantalla2	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/Pantalla
+Cube	(75.6, 1.7, 58.4)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/TiraNeonArriba
+Cube	(75.6, 1.2, 58.4)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/TiraNeonAbajo
+Cube	(76.1, 1.4, 58.0)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Palanca
+Cube	(76.1, 1.6, 58.0)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/PalancaBola
+Cube	(76.7, 0.3, 58.0)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Base
+Cube	(76.7, 1.2, 58.0)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Cuerpo
+Cube	(76.7, 2.2, 58.0)	Tragamonedas_Corona	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Corona
+Cube	(76.7, 1.5, 58.4)	T930_Pantalla2	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/Pantalla
+Cube	(76.7, 1.7, 58.4)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/TiraNeonArriba
+Cube	(76.7, 1.2, 58.4)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/TiraNeonAbajo
+Cube	(77.2, 1.4, 58.0)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Palanca
+Cube	(77.2, 1.6, 58.0)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/PalancaBola
+Cube	(77.8, 0.3, 58.0)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Base
+Cube	(77.8, 1.2, 58.0)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Cuerpo
+Cube	(77.8, 2.2, 58.0)	Tragamonedas_Corona	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Corona
+Cube	(77.8, 1.5, 58.4)	T930_Pantalla1	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/Pantalla
+Cube	(77.8, 1.7, 58.4)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/TiraNeonArriba
+Cube	(77.8, 1.2, 58.4)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/TiraNeonAbajo
+Cube	(78.3, 1.4, 58.0)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Palanca
+Cube	(78.3, 1.6, 58.0)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/PalancaBola
+Cube	(79.0, 0.3, 58.0)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Base
+Cube	(79.0, 1.2, 58.0)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Cuerpo
+Cube	(79.0, 2.2, 58.0)	Tragamonedas_Corona	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Corona
+Cube	(79.0, 1.5, 58.4)	T930_Pantalla1	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/Pantalla
+Cube	(79.0, 1.7, 58.4)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/TiraNeonArriba
+Cube	(79.0, 1.2, 58.4)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/TiraNeonAbajo
+Cube	(79.4, 1.4, 58.0)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Palanca
+Cube	(79.4, 1.6, 58.0)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/PalancaBola
+Cube	(80.1, 0.3, 58.0)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Base
+Cube	(80.1, 1.2, 58.0)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Cuerpo
+Cube	(80.1, 2.2, 58.0)	Tragamonedas_Corona	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Corona
+Cube	(80.1, 1.5, 58.4)	T930_Pantalla1	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/Pantalla
+Cube	(80.1, 1.7, 58.4)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/TiraNeonArriba
+Cube	(80.1, 1.2, 58.4)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/TiraNeonAbajo
+Cube	(80.6, 1.4, 58.0)	Tragamonedas_Cuerpo	estructura/arquitectura	T930_Casino/Tragamonedas_Adorno/Palanca
+Cube	(80.6, 1.6, 58.0)	Tragamonedas_Neon	luz o pieza emisiva	T930_Casino/Tragamonedas_Adorno/PalancaBola
+Cube	(83.0, 2.2, 47.0)	T930_Oscuro	estructura/arquitectura	T930_Casino/FondoArco
+Cube	(57.7, 0.2, 47.0)	T930_AlfombraCalle	estructura/arquitectura	T930_Casino/AlfombraEntrada
+Cylinder	(56.7, 1.1, 45.3)	T930_Cordon	estructura/arquitectura	T930_Casino/Cordon
+Cylinder	(58.6, 1.1, 45.3)	T930_Cordon	estructura/arquitectura	T930_Casino/Cordon
+Cylinder	(56.7, 1.1, 48.7)	T930_Cordon	estructura/arquitectura	T930_Casino/Cordon
+Cylinder	(58.6, 1.1, 48.7)	T930_Cordon	estructura/arquitectura	T930_Casino/Cordon
+Cube	(58.0, 4.4, 47.0)	T1105_MuroSobreArco	estructura/arquitectura	T930_Casino/T1105_MuroSobreArco
+Cube	(-29.8, 2.1, 26.3)	T1503_Muro_MuroFondo	estructura/arquitectura	T931_Armero/MuroFondo
+Cube	(-27.7, 2.1, 30.9)	T1503_Muro_ForroIzq	estructura/arquitectura	T931_Armero/ForroIzq
+Cube	(-27.7, 2.1, 21.6)	T1503_Muro_ForroDer	estructura/arquitectura	T931_Armero/ForroDer
+Cube	(-25.7, 2.1, 29.3)	T1503_Muro_ForroPuertaIzq	estructura/arquitectura	T931_Armero/ForroPuertaIzq
+Cube	(-25.7, 2.1, 22.9)	T1503_Muro_ForroPuertaDer	estructura/arquitectura	T931_Armero/ForroPuertaDer
+Cube	(-27.7, 0.3, 26.3)	S2_Piso_X03	estructura/arquitectura	T931_Armero/Piso
+Cube	(-27.7, 3.9, 26.3)	S2_Techo_X05	estructura/arquitectura	T931_Armero/Plafon
+Cube	(-27.9, 3.8, 26.3)	T931_TuboLuz	luz o pieza emisiva	T931_Armero/TuboLuz
+Quad	(-116.1, 4.9, -17.8)	S2c_Ventana_1	luz o pieza emisiva	T1102_CalleDoc/Casas/Fachada_P_01_3p_c1/C20b_PisoDosVentanas_cy/VentanaCalida
+Quad	(-116.1, 3.1, -26.5)	S2c_Ventana_2	luz o pieza emisiva	T1102_CalleDoc/Casas/Fachada_P_02_1p_c3/C01_Fachada/VentanaCalida
+Quad	(-116.3, 0.9, -26.5)	T1102_Interior	luz o pieza emisiva	T1102_CalleDoc/Casas/Fachada_P_02_1p_c3/C01_Fachada/InteriorCalido
+Quad	(-104.5, 1.9, -17.4)	S2c_Ventana_1	luz o pieza emisiva	T1102_CalleDoc/Casas/Fachada_O_01_2p_c3/C02_Fachada/VentanaCalida
+Quad	(-104.6, 5.1, -20.0)	S2c_Ventana_0	luz o pieza emisiva	T1102_CalleDoc/Casas/Fachada_O_01_2p_c3/C03_Fachada/VentanaCalida
+Quad	(-104.7, 1.3, -28.1)	T1102_Interior	luz o pieza emisiva	T1102_CalleDoc/Casas/Fachada_O_02_2p_c1/C01_Fachada/InteriorCalido
+Quad	(-104.6, 5.6, -26.8)	S2c_Ventana_1	luz o pieza emisiva	T1102_CalleDoc/Casas/Fachada_O_02_2p_c1/C03_Fachada/VentanaCalida
+Quad	(-104.6, 5.6, -29.3)	S2c_Ventana_2	luz o pieza emisiva	T1102_CalleDoc/Casas/Fachada_O_02_2p_c1/C03_Fachada/VentanaCalida
+Quad	(-104.9, 4.9, -73.4)	S2c_Ventana_2	luz o pieza emisiva	T1102_CalleDoc/Casas/Fachada_O_03_3p_c0/C20b_PisoDosVentanas_cy/VentanaCalida
+Quad	(-104.9, 3.1, -81.5)	S2c_Ventana_1	luz o pieza emisiva	T1102_CalleDoc/Casas/Fachada_O_05_2p_c2/C01_Fachada/VentanaCalida
+Quad	(-104.7, 0.9, -81.4)	T1102_Interior	luz o pieza emisiva	T1102_CalleDoc/Casas/Fachada_O_05_2p_c2/C01_Fachada/InteriorCalido
+Quad	(-104.6, 5.6, -82.3)	S2c_Ventana_0	luz o pieza emisiva	T1102_CalleDoc/Casas/Fachada_O_05_2p_c2/C03_Fachada/VentanaCalida
+Quad	(-102.4, 5.1, -83.9)	S2c_Ventana_2	luz o pieza emisiva	T1102_CalleDoc/Casas/Fachada_S_02_2p_c2/C03_Fachada/VentanaCalida
+Quad	(-100.4, 5.1, -83.9)	S2c_Ventana_2	luz o pieza emisiva	T1102_CalleDoc/Casas/Fachada_S_02_2p_c2/C03_Fachada/VentanaCalida
+Quad	(-109.2, 0.2, -11.4)	T1503_Agua_S2c_Charco_0	calcomania plana de calle	T1102_CalleDoc/Piso/Charco
+Quad	(-108.9, 0.2, -18.2)	T1503_Agua_S2c_Charco_1	calcomania plana de calle	T1102_CalleDoc/Piso/Charco
+Quad	(-112.8, 0.2, -25.7)	T1503_Agua_S2c_Charco_2	calcomania plana de calle	T1102_CalleDoc/Piso/Charco
+Quad	(-113.1, 0.2, -30.9)	T1503_Agua_S2c_Charco_1	calcomania plana de calle	T1102_CalleDoc/Piso/Charco
+Quad	(-112.0, 0.2, -49.2)	T1503_Agua_S2c_Charco_2	calcomania plana de calle	T1102_CalleDoc/Piso/Charco
+Quad	(-108.2, 0.2, -65.8)	T1503_Agua_S2c_Charco_2	calcomania plana de calle	T1102_CalleDoc/Piso/Charco
+Quad	(-111.0, 0.2, -71.0)	T1503_Agua_S2c_Charco_0	calcomania plana de calle	T1102_CalleDoc/Piso/Charco
+Quad	(-112.0, 0.2, -77.1)	T1503_Agua_S2c_Charco_2	calcomania plana de calle	T1102_CalleDoc/Piso/Charco
+Quad	(-116.1, 3.1, -86.8)	S2c_Ventana_2	luz o pieza emisiva	T1102_CalleDoc/Remate/Remate_01_2p_c1/C01_Fachada/VentanaCalida
+Quad	(-116.1, 0.8, -87.0)	T1102_Interior	luz o pieza emisiva	T1102_CalleDoc/Remate/Remate_01_2p_c1/C01_Fachada/InteriorCalido
+Quad	(-115.2, 5.6, -87.1)	S2c_Ventana_0	luz o pieza emisiva	T1102_CalleDoc/Remate/Remate_01_2p_c1/C03_Fachada/VentanaCalida
+Cube	(102.4, 37.1, -64.6)	T1103_LuzAviso	luz o pieza emisiva	T1103_Luces/Avisos_Nova/LuzAviso_Nova_0
+Cube	(102.4, 37.1, -53.0)	T1103_LuzAviso	luz o pieza emisiva	T1103_Luces/Avisos_Nova/LuzAviso_Nova_1
+Cube	(117.6, 37.1, -64.6)	T1103_LuzAviso	luz o pieza emisiva	T1103_Luces/Avisos_Nova/LuzAviso_Nova_2
+Cube	(117.6, 37.1, -53.0)	T1103_LuzAviso	luz o pieza emisiva	T1103_Luces/Avisos_Nova/LuzAviso_Nova_3
+Cube	(13.7, 84.8, 36.1)	T1103_LuzAviso	luz o pieza emisiva	T1103_Luces/Avisos_Torre_Edificio_20/LuzAviso_Torre_Edificio_20_0
+Cube	(13.7, 84.8, 57.9)	T1103_LuzAviso	luz o pieza emisiva	T1103_Luces/Avisos_Torre_Edificio_20/LuzAviso_Torre_Edificio_20_1
+Cube	(35.6, 84.8, 36.1)	T1103_LuzAviso	luz o pieza emisiva	T1103_Luces/Avisos_Torre_Edificio_20/LuzAviso_Torre_Edificio_20_2
+Cube	(35.6, 84.8, 57.9)	T1103_LuzAviso	luz o pieza emisiva	T1103_Luces/Avisos_Torre_Edificio_20/LuzAviso_Torre_Edificio_20_3
+Cube	(13.7, 102.8, 60.7)	T1103_LuzAviso	luz o pieza emisiva	T1103_Luces/Avisos_Torre_Edificio_21/LuzAviso_Torre_Edificio_21_0
+Cube	(13.7, 102.8, 82.6)	T1103_LuzAviso	luz o pieza emisiva	T1103_Luces/Avisos_Torre_Edificio_21/LuzAviso_Torre_Edificio_21_1
+Cube	(35.6, 102.8, 60.7)	T1103_LuzAviso	luz o pieza emisiva	T1103_Luces/Avisos_Torre_Edificio_21/LuzAviso_Torre_Edificio_21_2
+Cube	(35.6, 102.8, 82.6)	T1103_LuzAviso	luz o pieza emisiva	T1103_Luces/Avisos_Torre_Edificio_21/LuzAviso_Torre_Edificio_21_3
+Cube	(13.7, 84.8, 11.4)	T1103_LuzAviso	luz o pieza emisiva	T1103_Luces/Avisos_Torre_Edificio_22/LuzAviso_Torre_Edificio_22_0
+Cube	(13.7, 84.8, 33.3)	T1103_LuzAviso	luz o pieza emisiva	T1103_Luces/Avisos_Torre_Edificio_22/LuzAviso_Torre_Edificio_22_1
+Cube	(35.6, 84.8, 11.4)	T1103_LuzAviso	luz o pieza emisiva	T1103_Luces/Avisos_Torre_Edificio_22/LuzAviso_Torre_Edificio_22_2
+Cube	(35.6, 84.8, 33.3)	T1103_LuzAviso	luz o pieza emisiva	T1103_Luces/Avisos_Torre_Edificio_22/LuzAviso_Torre_Edificio_22_3
+Cube	(58.4, 108.8, 11.4)	T1103_LuzAviso	luz o pieza emisiva	T1103_Luces/Avisos_Torre_Edificio_23/LuzAviso_Torre_Edificio_23_0
+Cube	(58.4, 108.8, 29.6)	T1103_LuzAviso	luz o pieza emisiva	T1103_Luces/Avisos_Torre_Edificio_23/LuzAviso_Torre_Edificio_23_1
+Cube	(71.6, 108.8, 11.4)	T1103_LuzAviso	luz o pieza emisiva	T1103_Luces/Avisos_Torre_Edificio_23/LuzAviso_Torre_Edificio_23_2
+Cube	(71.6, 108.8, 29.6)	T1103_LuzAviso	luz o pieza emisiva	T1103_Luces/Avisos_Torre_Edificio_23/LuzAviso_Torre_Edificio_23_3
+Cube	(74.4, 132.8, 11.4)	T1103_LuzAviso	luz o pieza emisiva	T1103_Luces/Avisos_Torre_Edificio_24/LuzAviso_Torre_Edificio_24_0
+Cube	(74.4, 132.8, 29.6)	T1103_LuzAviso	luz o pieza emisiva	T1103_Luces/Avisos_Torre_Edificio_24/LuzAviso_Torre_Edificio_24_1
+Cube	(87.6, 132.8, 11.4)	T1103_LuzAviso	luz o pieza emisiva	T1103_Luces/Avisos_Torre_Edificio_24/LuzAviso_Torre_Edificio_24_2
+Cube	(87.6, 132.8, 29.6)	T1103_LuzAviso	luz o pieza emisiva	T1103_Luces/Avisos_Torre_Edificio_24/LuzAviso_Torre_Edificio_24_3
+Cube	(58.4, 102.8, 64.4)	T1103_LuzAviso	luz o pieza emisiva	T1103_Luces/Avisos_Torre_Edificio_25/LuzAviso_Torre_Edificio_25_0
+Cube	(58.4, 102.8, 82.6)	T1103_LuzAviso	luz o pieza emisiva	T1103_Luces/Avisos_Torre_Edificio_25/LuzAviso_Torre_Edificio_25_1
+Cube	(71.6, 102.8, 64.4)	T1103_LuzAviso	luz o pieza emisiva	T1103_Luces/Avisos_Torre_Edificio_25/LuzAviso_Torre_Edificio_25_2
+Cube	(71.6, 102.8, 82.6)	T1103_LuzAviso	luz o pieza emisiva	T1103_Luces/Avisos_Torre_Edificio_25/LuzAviso_Torre_Edificio_25_3
+Cube	(74.4, 144.8, 64.4)	T1103_LuzAviso	luz o pieza emisiva	T1103_Luces/Avisos_Torre_Edificio_26/LuzAviso_Torre_Edificio_26_0
+Cube	(74.4, 144.8, 82.6)	T1103_LuzAviso	luz o pieza emisiva	T1103_Luces/Avisos_Torre_Edificio_26/LuzAviso_Torre_Edificio_26_1
+Cube	(87.6, 144.8, 64.4)	T1103_LuzAviso	luz o pieza emisiva	T1103_Luces/Avisos_Torre_Edificio_26/LuzAviso_Torre_Edificio_26_2
+Cube	(87.6, 144.8, 82.6)	T1103_LuzAviso	luz o pieza emisiva	T1103_Luces/Avisos_Torre_Edificio_26/LuzAviso_Torre_Edificio_26_3
+Cube	(90.4, 138.8, 11.4)	T1103_LuzAviso	luz o pieza emisiva	T1103_Luces/Avisos_Torre_Edificio_27/LuzAviso_Torre_Edificio_27_0
+Cube	(90.4, 138.8, 33.3)	T1103_LuzAviso	luz o pieza emisiva	T1103_Luces/Avisos_Torre_Edificio_27/LuzAviso_Torre_Edificio_27_1
+Cube	(108.6, 138.8, 11.4)	T1103_LuzAviso	luz o pieza emisiva	T1103_Luces/Avisos_Torre_Edificio_27/LuzAviso_Torre_Edificio_27_2
+Cube	(108.6, 138.8, 33.3)	T1103_LuzAviso	luz o pieza emisiva	T1103_Luces/Avisos_Torre_Edificio_27/LuzAviso_Torre_Edificio_27_3
+Cube	(90.4, 72.8, 36.1)	T1103_LuzAviso	luz o pieza emisiva	T1103_Luces/Avisos_Torre_Edificio_28/LuzAviso_Torre_Edificio_28_0
+Cube	(90.4, 72.8, 57.9)	T1103_LuzAviso	luz o pieza emisiva	T1103_Luces/Avisos_Torre_Edificio_28/LuzAviso_Torre_Edificio_28_1
+Cube	(108.6, 72.8, 36.1)	T1103_LuzAviso	luz o pieza emisiva	T1103_Luces/Avisos_Torre_Edificio_28/LuzAviso_Torre_Edificio_28_2
+Cube	(108.6, 72.8, 57.9)	T1103_LuzAviso	luz o pieza emisiva	T1103_Luces/Avisos_Torre_Edificio_28/LuzAviso_Torre_Edificio_28_3
+Cube	(90.4, 108.8, 60.7)	T1103_LuzAviso	luz o pieza emisiva	T1103_Luces/Avisos_Torre_Edificio_29/LuzAviso_Torre_Edificio_29_0
+Cube	(90.4, 108.8, 82.6)	T1103_LuzAviso	luz o pieza emisiva	T1103_Luces/Avisos_Torre_Edificio_29/LuzAviso_Torre_Edificio_29_1
+Cube	(108.6, 108.8, 60.7)	T1103_LuzAviso	luz o pieza emisiva	T1103_Luces/Avisos_Torre_Edificio_29/LuzAviso_Torre_Edificio_29_2
+Cube	(108.6, 108.8, 82.6)	T1103_LuzAviso	luz o pieza emisiva	T1103_Luces/Avisos_Torre_Edificio_29/LuzAviso_Torre_Edificio_29_3
+Cube	(111.4, 132.8, 11.4)	T1103_LuzAviso	luz o pieza emisiva	T1103_Luces/Avisos_Torre_Edificio_30/LuzAviso_Torre_Edificio_30_0
+Cube	(111.4, 132.8, 33.3)	T1103_LuzAviso	luz o pieza emisiva	T1103_Luces/Avisos_Torre_Edificio_30/LuzAviso_Torre_Edificio_30_1
+Cube	(129.6, 132.8, 11.4)	T1103_LuzAviso	luz o pieza emisiva	T1103_Luces/Avisos_Torre_Edificio_30/LuzAviso_Torre_Edificio_30_2
+Cube	(129.6, 132.8, 33.3)	T1103_LuzAviso	luz o pieza emisiva	T1103_Luces/Avisos_Torre_Edificio_30/LuzAviso_Torre_Edificio_30_3
+Cube	(111.4, 108.8, 36.1)	T1103_LuzAviso	luz o pieza emisiva	T1103_Luces/Avisos_Torre_Edificio_31/LuzAviso_Torre_Edificio_31_0
+Cube	(111.4, 108.8, 57.9)	T1103_LuzAviso	luz o pieza emisiva	T1103_Luces/Avisos_Torre_Edificio_31/LuzAviso_Torre_Edificio_31_1
+Cube	(129.6, 108.8, 36.1)	T1103_LuzAviso	luz o pieza emisiva	T1103_Luces/Avisos_Torre_Edificio_31/LuzAviso_Torre_Edificio_31_2
+Cube	(129.6, 108.8, 57.9)	T1103_LuzAviso	luz o pieza emisiva	T1103_Luces/Avisos_Torre_Edificio_31/LuzAviso_Torre_Edificio_31_3
+Cube	(111.4, 72.8, 60.7)	T1103_LuzAviso	luz o pieza emisiva	T1103_Luces/Avisos_Torre_Edificio_32/LuzAviso_Torre_Edificio_32_0
+Cube	(111.4, 72.8, 82.6)	T1103_LuzAviso	luz o pieza emisiva	T1103_Luces/Avisos_Torre_Edificio_32/LuzAviso_Torre_Edificio_32_1
+Cube	(129.6, 72.8, 60.7)	T1103_LuzAviso	luz o pieza emisiva	T1103_Luces/Avisos_Torre_Edificio_32/LuzAviso_Torre_Edificio_32_2
+Cube	(129.6, 72.8, 82.6)	T1103_LuzAviso	luz o pieza emisiva	T1103_Luces/Avisos_Torre_Edificio_32/LuzAviso_Torre_Edificio_32_3
+Quad	(-78.4, 0.2, -29.7)	T1503_Agua_S2c_Charco_0	calcomania plana de calle	T1320_Calles/Plaza_K09/Charco
+Quad	(-83.9, 0.2, -28.1)	T1503_Agua_S2c_Charco_0	calcomania plana de calle	T1320_Calles/Plaza_K09/Charco
+Quad	(-77.0, 0.2, -33.8)	T1503_Agua_S2c_Charco_3	calcomania plana de calle	T1320_Calles/Plaza_K09/Charco
+Quad	(-77.8, 0.2, -21.6)	T1503_Agua_S2c_Charco_1	calcomania plana de calle	T1320_Calles/Plaza_K09/Charco
+Quad	(-16.6, 0.2, 17.3)	T1503_Agua_S2c_Charco_0	calcomania plana de calle	T1320_Calles/CalleArmeria/Charco
+Quad	(-16.5, 0.2, 18.3)	T1503_Agua_S2c_Charco_1	calcomania plana de calle	T1320_Calles/CalleArmeria/Charco
+Quad	(-19.6, 0.2, 15.5)	T1503_Agua_S2c_Charco_3	calcomania plana de calle	T1320_Calles/CalleArmeria/Charco
+Quad	(-17.1, 0.2, 32.6)	T1503_Agua_S2c_Charco_1	calcomania plana de calle	T1320_Calles/CalleArmeria/Charco
+Sphere	(0.0, 0.0, 0.0)	AMB_CieloRealista	cristal, cielo o domo (visual a conservar)	Realismo_T1605/CieloRealista
+Cylinder	(-39.5, 3.9, -8.7)	ES01_Luz	luz o pieza emisiva	GTA_T1630_SoloPatrullas/Semaforos/Cruce_-47_0/Poste_ES01_Z_0/Lente_Roja
+Cylinder	(-39.5, 3.6, -8.7)	ES01_Luz	luz o pieza emisiva	GTA_T1630_SoloPatrullas/Semaforos/Cruce_-47_0/Poste_ES01_Z_0/Lente_Ambar
+Cylinder	(-39.5, 3.2, -8.7)	ES01_Luz	luz o pieza emisiva	GTA_T1630_SoloPatrullas/Semaforos/Cruce_-47_0/Poste_ES01_Z_0/Lente_Verde
+Cylinder	(-54.5, 3.9, 8.7)	ES01_Luz	luz o pieza emisiva	GTA_T1630_SoloPatrullas/Semaforos/Cruce_-47_0/Poste_ES01_Z_1/Lente_Roja
+Cylinder	(-54.5, 3.6, 8.7)	ES01_Luz	luz o pieza emisiva	GTA_T1630_SoloPatrullas/Semaforos/Cruce_-47_0/Poste_ES01_Z_1/Lente_Ambar
+Cylinder	(-54.5, 3.2, 8.7)	ES01_Luz	luz o pieza emisiva	GTA_T1630_SoloPatrullas/Semaforos/Cruce_-47_0/Poste_ES01_Z_1/Lente_Verde
+Cylinder	(-55.7, 3.9, -7.5)	ES01_Luz	luz o pieza emisiva	GTA_T1630_SoloPatrullas/Semaforos/Cruce_-47_0/Poste_ES01_X_2/Lente_Roja
+Cylinder	(-55.7, 3.6, -7.5)	ES01_Luz	luz o pieza emisiva	GTA_T1630_SoloPatrullas/Semaforos/Cruce_-47_0/Poste_ES01_X_2/Lente_Ambar
+Cylinder	(-55.7, 3.2, -7.5)	ES01_Luz	luz o pieza emisiva	GTA_T1630_SoloPatrullas/Semaforos/Cruce_-47_0/Poste_ES01_X_2/Lente_Verde
+Cylinder	(-38.3, 3.9, 8.5)	ES01_Luz	luz o pieza emisiva	GTA_T1630_SoloPatrullas/Semaforos/Cruce_-47_0/Poste_ES01_X_3/Lente_Roja
+Cylinder	(-38.3, 3.6, 8.5)	ES01_Luz	luz o pieza emisiva	GTA_T1630_SoloPatrullas/Semaforos/Cruce_-47_0/Poste_ES01_X_3/Lente_Ambar
+Cylinder	(-38.3, 3.2, 8.5)	ES01_Luz	luz o pieza emisiva	GTA_T1630_SoloPatrullas/Semaforos/Cruce_-47_0/Poste_ES01_X_3/Lente_Verde
+Cylinder	(38.3, 3.9, -7.5)	ES01_Luz	luz o pieza emisiva	GTA_T1630_SoloPatrullas/Semaforos/Cruce_47_0/Poste_ES01_X_0/Lente_Roja
+Cylinder	(38.3, 3.6, -7.5)	ES01_Luz	luz o pieza emisiva	GTA_T1630_SoloPatrullas/Semaforos/Cruce_47_0/Poste_ES01_X_0/Lente_Ambar
+Cylinder	(38.3, 3.2, -7.5)	ES01_Luz	luz o pieza emisiva	GTA_T1630_SoloPatrullas/Semaforos/Cruce_47_0/Poste_ES01_X_0/Lente_Verde
+Cylinder	(53.5, 3.9, -8.7)	ES01_Luz	luz o pieza emisiva	GTA_T1630_SoloPatrullas/Semaforos/Cruce_47_0/Poste_ES01_Z_1/Lente_Roja
+Cylinder	(53.5, 3.6, -8.7)	ES01_Luz	luz o pieza emisiva	GTA_T1630_SoloPatrullas/Semaforos/Cruce_47_0/Poste_ES01_Z_1/Lente_Ambar
+Cylinder	(53.5, 3.2, -8.7)	ES01_Luz	luz o pieza emisiva	GTA_T1630_SoloPatrullas/Semaforos/Cruce_47_0/Poste_ES01_Z_1/Lente_Verde
+Cylinder	(39.5, 3.9, 8.7)	ES01_Luz	luz o pieza emisiva	GTA_T1630_SoloPatrullas/Semaforos/Cruce_47_0/Poste_ES01_Z_2/Lente_Roja
+Cylinder	(39.5, 3.6, 8.7)	ES01_Luz	luz o pieza emisiva	GTA_T1630_SoloPatrullas/Semaforos/Cruce_47_0/Poste_ES01_Z_2/Lente_Ambar
+Cylinder	(39.5, 3.2, 8.7)	ES01_Luz	luz o pieza emisiva	GTA_T1630_SoloPatrullas/Semaforos/Cruce_47_0/Poste_ES01_Z_2/Lente_Verde
+Cylinder	(55.7, 3.9, 7.5)	ES01_Luz	luz o pieza emisiva	GTA_T1630_SoloPatrullas/Semaforos/Cruce_47_0/Poste_ES01_X_3/Lente_Roja
+Cylinder	(55.7, 3.6, 7.5)	ES01_Luz	luz o pieza emisiva	GTA_T1630_SoloPatrullas/Semaforos/Cruce_47_0/Poste_ES01_X_3/Lente_Ambar
+Cylinder	(55.7, 3.2, 7.5)	ES01_Luz	luz o pieza emisiva	GTA_T1630_SoloPatrullas/Semaforos/Cruce_47_0/Poste_ES01_X_3/Lente_Verde
+Quad	(-70.1, 0.3, -59.0)	CalleCasa_Asfalto	estructura/arquitectura	T1641_CalleCasa/Asfalto
+Cube	(-70.1, 0.3, -61.9)	T1682_Bordillo_32m	tiene textura propia	T1641_CalleCasa/Bordillo_Sur
+Cube	(-70.1, 0.3, -56.1)	T1682_Bordillo_32m	tiene textura propia	T1641_CalleCasa/Bordillo_Norte
+Quad	(-62.0, 0.3, -58.2)	T1503_Agua_S2c_Charco_3	calcomania plana de calle	T1642_Charcos/Charco_0
+Quad	(-71.5, 0.3, -60.2)	T1503_Agua_S2c_Charco_0	calcomania plana de calle	T1642_Charcos/Charco_1
+Quad	(-80.0, 0.3, -58.6)	T1503_Agua_S2c_Charco_3	calcomania plana de calle	T1642_Charcos/Charco_2
+Quad	(-51.0, 0.0, -80.0)	T1503_Agua_S2c_Charco_2	calcomania plana de calle	T1642_Charcos/Charco_3
+Quad	(-50.5, 0.0, -69.5)	T1503_Agua_S2c_Charco_3	calcomania plana de calle	T1642_Charcos/Charco_4
+Cube	(-94.0, 0.1, 86.9)	T1642_Bordillo	tiene textura propia	T1642_Bordillos/Bordillo_M1_Norte_0
+Cube	(-94.0, 0.1, 7.1)	T1642_Bordillo	tiene textura propia	T1642_Bordillos/Bordillo_M1_Sur_0
+Cube	(-54.1, 0.1, 47.0)	T1642_Bordillo	tiene textura propia	T1642_Bordillos/Bordillo_M1_Este_0
+Cube	(-133.9, 0.1, 47.0)	T1642_Bordillo	tiene textura propia	T1642_Bordillos/Bordillo_M1_Oeste_0
+Cube	(0.0, 0.1, 86.9)	T1642_Bordillo	tiene textura propia	T1642_Bordillos/Bordillo_M2_Norte_0
+Cube	(0.0, 0.1, 7.1)	T1642_Bordillo	tiene textura propia	T1642_Bordillos/Bordillo_M2_Sur_0
+Cube	(39.9, 0.1, 47.0)	T1642_Bordillo	tiene textura propia	T1642_Bordillos/Bordillo_M2_Este_0
+Cube	(-39.9, 0.1, 47.0)	T1642_Bordillo	tiene textura propia	T1642_Bordillos/Bordillo_M2_Oeste_0
+Cube	(94.0, 0.1, 86.9)	T1642_Bordillo	tiene textura propia	T1642_Bordillos/Bordillo_M3_Norte_0
+Cube	(94.0, 0.1, 7.1)	T1642_Bordillo	tiene textura propia	T1642_Bordillos/Bordillo_M3_Sur_0
+Cube	(133.9, 0.1, 47.0)	T1642_Bordillo	tiene textura propia	T1642_Bordillos/Bordillo_M3_Este_0
+Cube	(54.1, 0.1, 47.0)	T1642_Bordillo	tiene textura propia	T1642_Bordillos/Bordillo_M3_Oeste_0
+Cube	(-94.0, 0.1, -7.1)	T1642_Bordillo	tiene textura propia	T1642_Bordillos/Bordillo_M4_Norte_0
+Cube	(-94.0, 0.1, -86.9)	T1642_Bordillo	tiene textura propia	T1642_Bordillos/Bordillo_M4_Sur_0
+Cube	(-54.1, 0.1, -74.5)	T1642_Bordillo	tiene textura propia	T1642_Bordillos/Bordillo_M4_Este_0
+Cube	(-54.1, 0.1, -31.5)	T1642_Bordillo	tiene textura propia	T1642_Bordillos/Bordillo_M4_Este_1
+Cube	(-133.9, 0.1, -47.0)	T1642_Bordillo	tiene textura propia	T1642_Bordillos/Bordillo_M4_Oeste_0
+Cube	(0.0, 0.1, -7.1)	T1642_Bordillo	tiene textura propia	T1642_Bordillos/Bordillo_M5_Norte_0
+Cube	(0.0, 0.1, -86.9)	T1642_Bordillo	tiene textura propia	T1642_Bordillos/Bordillo_M5_Sur_0
+Cube	(39.9, 0.1, -47.0)	T1642_Bordillo	tiene textura propia	T1642_Bordillos/Bordillo_M5_Este_0
+Cube	(-39.9, 0.1, -47.0)	T1642_Bordillo	tiene textura propia	T1642_Bordillos/Bordillo_M5_Oeste_0
+Cube	(94.0, 0.1, -7.1)	T1642_Bordillo	tiene textura propia	T1642_Bordillos/Bordillo_M6_Norte_0
+Cube	(94.0, 0.1, -86.9)	T1642_Bordillo	tiene textura propia	T1642_Bordillos/Bordillo_M6_Sur_0
+Cube	(133.9, 0.1, -47.0)	T1642_Bordillo	tiene textura propia	T1642_Bordillos/Bordillo_M6_Este_0
+Cube	(54.1, 0.1, -47.0)	T1642_Bordillo	tiene textura propia	T1642_Bordillos/Bordillo_M6_Oeste_0
+Cube	(-110.5, 0.3, -86.9)	T1682_Bordillo_16m	luz o pieza emisiva	T1682_Bordillos/Bordillo_T1102_CalleDoc_S_12
+
+== DESCARTADOS tinaco/antena/aire/caja (motivo, ruta) ==
+IGNORADO por nombre/componente	Barrio/Manzana_2/Lugar_MercadoNegro/Interior/Clinica/MostradorClinica/VistaPreviaApariencia/Pivote/CuerpoJugador/Ropa_Tirantes
+IGNORADO por nombre/componente	Barrio/Manzana_2/Lugar_MercadoNegro/Interior/Clinica/MostradorClinica/VistaPreviaApariencia/Pivote/CuerpoJugador/Implante_OjoLed
+IGNORADO por nombre/componente	JugadorAPie/ModeloJugador/Giro/Modelo/Armature/BoneRoot/Hip/Waist/Spine01/Spine02/R_Clavicle/R_Upperarm/R_Forearm/R_Hand/ManoDer/Revolver/W06/Modelo/Tambor
+IGNORADO por nombre/componente	JugadorAPie/ModeloJugador/Giro/Modelo/Armature/BoneRoot/Hip/Waist/Spine01/Spine02/R_Clavicle/R_Upperarm/R_Forearm/R_Hand/ManoDer/Lanzagranadas/W08/Modelo/Tambor
+IGNORADO por nombre/componente	T508_CallesLlenas/neon_A/C16_Tambo_T508/Visual
+IGNORADO por nombre/componente	S2_Techos/Parkour/Ruta_S2c_Suburbios_01_BardaYEscalera/Contenedor/Visual
+IGNORADO por nombre/componente	S2_Techos/Parkour/Ruta_S2c_Suburbios_02_BardaYEscalera/Contenedor/Visual
+IGNORADO por nombre/componente	S2_Techos/Parkour/Ruta_S2c_Suburbios_03_BardaYEscalera/Contenedor/Visual
+IGNORADO por nombre/componente	S2_Techos/Parkour/Ruta_S2c_Mercado_05_BardaYEscalera/Contenedor/Visual
+IGNORADO por nombre/componente	S2_Techos/Parkour/Ruta_S2c_Mercado_06_BardaYEscalera/Contenedor/Visual
