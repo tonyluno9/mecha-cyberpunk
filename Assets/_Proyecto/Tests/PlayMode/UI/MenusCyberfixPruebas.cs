@@ -300,7 +300,7 @@ namespace MechaCyberpunk.Tests.UI
             }
             Assert.AreSame(pausa.Opciones, pausa.Menu.Elegido);
             yield return Pulsar(teclado.enterKey);
-            Assert.IsTrue(pausa.PantallaOpciones.Abierta, "Se abren las opciones");
+            Assert.IsTrue(pausa.OpcionesModernas.Abierta, "Se abren las opciones modernas (T48)");
             yield return new WaitForSecondsRealtime(0.2f);
             Capturar("opciones", camara);
             yield return Pulsar(teclado.escapeKey);
