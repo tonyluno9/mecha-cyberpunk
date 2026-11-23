@@ -50,3 +50,11 @@ T-1652 empujones (T21.3 + T19.1), T-1653 detalles T19 (T19.2 + T19.3), T-1654 pa
 | T19 punto 3 | tony/T-1653-detalles-t19 | HECHA con reserva | no existe clip de levantarse de sentado |
 | T28 pasos | tony/T-1654-pasos | HECHA | |
 Unity de B cerrado. La sesión A ya puede hacer el build.
+
+---
+# Ronda D de B (22-nov noche): T30-T34, T39-T44, T46, T48
+B trabaja en `.sesiones/s2`, rama `integ/B23` (desde main 9032f76). Subagentes escriben código en s2 sin git; Opus compila, prueba, hace commit por tarea y merge a main.
+Ramas: T-1655 audio (T32), T-1656 inicio y SKULLS (T30+T31), T-1657 golpe lento (T33), T-1658 Doc e implantes (T34), T-1659 confrontación (T41),
+T-1660 policía (T42), T-1661 barras de vida (T43), T-1662 tutorial e historia (T44), T-1663 sin techos (T39), T-1664 NPCs y aviones (T40),
+T-1665 drones inmunes (T46), T-1666 menú de pausa (T48).
+Si se corta: `cd .sesiones/s2`, `git status`, ver qué tareas tienen commit (`git log --oneline origin/main | grep T-16`), seguir con las que falten.
