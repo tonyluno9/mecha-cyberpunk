@@ -791,7 +791,7 @@ ModelImporter:
       scale: {x: 1.0000002, y: 1.0000005, z: 1.0000002}
     - name: L_CalfTwist02
       parentName: L_CalfTwist01
-      position: {x: -0.000000035017724, y: 0.20038371, z: -0.00000004902482}
+      position: {x: -0.00000003501772, y: 0.2003837, z: -0.00000004902482}
       rotation: {x: 0.000000054016695, y: -0.000000007392371, z: -0.00000010430018, w: 1}
       scale: {x: 1.0000002, y: 1.0000004, z: 1.0000001}
     - name: L_KneeShareBone
@@ -831,7 +831,7 @@ ModelImporter:
       scale: {x: 1.0000001, y: 0.9999998, z: 0.9999998}
     - name: R_ToeBase
       parentName: R_Foot
-      position: {x: 0.000000035017724, y: 0.18942678, z: -0.0000000070035457}
+      position: {x: 0.00000003501772, y: 0.18942678, z: -0.0000000070035457}
       rotation: {x: 0.000000052154057, y: -0.00000026822087, z: 0.00000018998978, w: 1}
       scale: {x: 1.0000005, y: 1, z: 1.0000002}
     - name: R_CalfTwist01
@@ -901,7 +901,7 @@ ModelImporter:
       scale: {x: 0.99999994, y: 1, z: 1.0000001}
     - name: L_Clavicle
       parentName: Spine02
-      position: {x: 0.013563483, y: 0.11077498, z: 0.05816451}
+      position: {x: 0.013563482, y: 0.11077498, z: 0.05816451}
       rotation: {x: 0.71922326, y: -0.016720584, z: 0.08295822, w: 0.6896059}
       scale: {x: 1.0000001, y: 1, z: 1.0000001}
     - name: L_Upperarm
@@ -946,7 +946,7 @@ ModelImporter:
       scale: {x: 0.99997574, y: 0.9998861, z: 1.0001389}
     - name: L_Pinky3
       parentName: L_Pinky2
-      position: {x: 0.00000007003545, y: 0.027769731, z: 0.000000096298756}
+      position: {x: 0.00000007003544, y: 0.027769731, z: 0.000000096298756}
       rotation: {x: -0.000000007450578, y: 0.00000013504173, z: 0.0000004952306, w: 1}
       scale: {x: 1.0000014, y: 1.00004, z: 0.9999592}
     - name: L_Ring1
@@ -1016,7 +1016,7 @@ ModelImporter:
       scale: {x: 1.0000004, y: 1, z: 1.0000001}
     - name: L_UpperarmTwist02
       parentName: L_UpperarmTwist01
-      position: {x: 0.000000031515956, y: 0.14033486, z: -0.0000002801418}
+      position: {x: 0.000000031515956, y: 0.14033486, z: -0.00000028014176}
       rotation: {x: -0, y: -0.00000002689193, z: 0.000000016123515, w: 1}
       scale: {x: 1.0000006, y: 1.0000001, z: 1.0000004}
     - name: R_Clavicle
@@ -1046,7 +1046,7 @@ ModelImporter:
       scale: {x: 0.999985, y: 1.0000005, z: 1.0000149}
     - name: R_ForearmTwist02
       parentName: R_ForearmTwist01
-      position: {x: 0.0000002451241, y: 0.102758534, z: 0.00000004902482}
+      position: {x: 0.0000002451241, y: 0.10275853, z: 0.00000004902482}
       rotation: {x: 0.0000000822001, y: -0.000000029802312, z: 0.0000010873831, w: 1}
       scale: {x: 1.0000001, y: 0.9999999, z: 1.0000002}
     - name: R_Hand
@@ -1116,7 +1116,7 @@ ModelImporter:
       scale: {x: 0.99980074, y: 0.99893886, z: 1.0012664}
     - name: R_Pinky1
       parentName: R_Hand
-      position: {x: -0.02148665, y: 0.12061809, z: 0.04429413}
+      position: {x: -0.02148665, y: 0.12061809, z: 0.044294126}
       rotation: {x: 0.029154548, y: -0.9650118, z: -0.035667155, w: -0.25812793}
       scale: {x: 1.0071142, y: 0.9898385, z: 1.0031174}
     - name: R_Pinky2
