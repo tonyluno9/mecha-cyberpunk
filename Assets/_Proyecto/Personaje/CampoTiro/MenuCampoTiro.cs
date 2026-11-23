@@ -23,7 +23,7 @@ namespace MechaCyberpunk.CampoTiro
         private const float AltoPaso = 56f;
         private const float AnchoAccion = 340f;
         private static readonly Vector2 TamanoMarcador = new Vector2(620f, 90f);
-        private static readonly Vector2 MargenMarcador = new Vector2(30f, -30f);
+        private static readonly Vector2 MargenMarcador = new Vector2(0f, -24f); // arriba al centro: a la izquierda se encimaba con la vida del HUD
 
         private static readonly ArmaAPie[] Armas =
         {
@@ -60,13 +60,15 @@ namespace MechaCyberpunk.CampoTiro
         {
             Canvas canvas = KitUI.CrearCanvas(transform, "CanvasCampoTiro", OrdenCanvas);
             RectTransform zonaMarcador = TrazoH10.Nodo(canvas.transform, "Marcador");
-            TrazoH10.Colocar(zonaMarcador, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, 1f), MargenMarcador, TamanoMarcador);
-            marcador = TrazoH10.Etiqueta(zonaMarcador, "Texto", string.Empty, TrazoH10.TamanoDato, TrazoH10.Turquesa, TextAnchor.UpperLeft);
+            TrazoH10.Colocar(zonaMarcador, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), MargenMarcador, TamanoMarcador);
+            Image fondoMarcador = TrazoH10.Imagen(zonaMarcador, "Fondo", TrazoH10.ConAlfa(TrazoH10.FondoPantalla, 0.9f), TrazoH10.Relleno);
+            TrazoH10.Estirar(fondoMarcador.rectTransform);
+            marcador = TrazoH10.Etiqueta(zonaMarcador, "Texto", string.Empty, TrazoH10.TamanoDato, TrazoH10.Turquesa, TextAnchor.MiddleCenter);
             TrazoH10.Estirar(marcador.rectTransform);
             raizMarcador = zonaMarcador.gameObject;
             raizMarcador.SetActive(false);
 
-            Image panel = TrazoH10.Panel(canvas.transform, "Menu", TrazoH10.Turquesa, TrazoH10.FondoPantalla);
+            Image panel = TrazoH10.Panel(canvas.transform, "Menu", TrazoH10.Turquesa, TrazoH10.ConAlfa(TrazoH10.FondoPantalla, 0.96f)); // la sala es blanca: fondo casi opaco
             TrazoH10.Colocar(panel.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Vector2.zero, TamanoPanel);
             raizMenu = panel.gameObject;
             ConstruirMenu(panel.transform);

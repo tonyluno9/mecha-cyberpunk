@@ -1004,7 +1004,7 @@ namespace MechaCyberpunk.Progresion.Recorrido
                         {
                             AvisarRueda(); // el aviso espera a que cierres el banco (AvisoTutorialHistoria)
                         }
-                        if (TieneMejoraDeArma() && !PestanasBancoTino.Abierto)
+                        if (TieneMejoraDeArma() && !PestanasBancoTino.AbiertoOEnCampo)
                         {
                             IrA(PasoRecorrido.Chica);
                         }

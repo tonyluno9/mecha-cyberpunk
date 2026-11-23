@@ -52,7 +52,11 @@ namespace MechaCyberpunk.CampoTiro
         private static int golpesEnDisparo;
 
 
-        public static bool EstaDentro { get; private set; }
+        public static bool EstaDentro
+        {
+            get => PestanasBancoTino.EnCampoDeTiro;
+            private set => PestanasBancoTino.EnCampoDeTiro = value; // la historia (T78) no avanza ni avisa mientras estás en el campo
+        }
         public static bool EnTransicion { get; private set; }
         public static bool MenuAbierto { get; private set; }
         public static ArmaAPie ArmaElegida { get; private set; } = ArmaAPie.Pistola;
@@ -406,6 +410,12 @@ namespace MechaCyberpunk.CampoTiro
             armas.Equipar(armaPrevia);
             LimpiarEstadoDelCampo();
             jugador.Colocar(new Pose(posicionPrevia, rotacionPrevia));
+            // La red de seguridad pudo guardar la sala (y=800) como punto seguro: al bajar a la calle creería que el jugador se cayó y lo regresaría.
+            RedSeguridadJugador red = jugador.GetComponent<RedSeguridadJugador>();
+            if (red != null)
+            {
+                red.FijarSeguro(new Pose(posicionPrevia, rotacionPrevia));
+            }
             controlador.Empujar(Mathf.DeltaAngle(controlador.GiroCamara, giroPrevio), inclinacionPrevia - controlador.Inclinacion);
             EstaDentro = false;
             menu.MostrarMarcador(false);
