@@ -67,6 +67,8 @@ namespace MechaCyberpunk.Progresion.Editor
                 entradas.Remove(id);
             }
             MapaSonidos19nov.Reemplazar(entradas, nuevas.Values);
+            // T-1690 (T49): los pasos se quedan con sus clips originales (sin los PAS_*_21..28 de T28, que sisean).
+            RevertirPasosT1655.SoloOriginales(entradas);
             CatalogoSonidos catalogo = AssetDatabase.LoadAssetAtPath<CatalogoSonidos>(RutaCatalogo);
             if (catalogo == null)
             {
@@ -76,6 +78,8 @@ namespace MechaCyberpunk.Progresion.Editor
             }
             catalogo.Fijar(new List<CatalogoSonidos.Entrada>(entradas.Values));
             catalogo.SincronizarInterruptores();
+            // T-1690 (T49): el roce de ropa no suena aunque quede su interruptor de antes.
+            foreach (string id in MapaSonidos20nov.IdsDescartados) catalogo.FijarEncendido(id, false);
             EditorUtility.SetDirty(catalogo);
             AssetDatabase.SaveAssets();
             Debug.Log("[Sonido] CreadorCatalogoSonidos: " + entradas.Count + " IDs en " + RutaCatalogo + ".");

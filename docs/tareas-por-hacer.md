@@ -589,3 +589,9 @@ En pausa, Opciones, Cargar y Guardar abren el menú ANTIGUO: que usen la interfa
 **HECHA (22-nov, merge 5f2c0d5):** las 4 máscaras del agua T-1503 se cambiaron por formas recortadas de T11_Charco (mismo shader y reflejo, 220/220 charcos); en la foto se ve un charco de orilla irregular con el reflejo igual (T38/7_charco_antes y _despues).
 ## E4. Cinemáticas reales: Tony pasará los videos para cada cinemática de T10.
 ## E5. Día: después de la misión de la chica (paso 11) se podrá pasar a de día.
+
+## T49. Quitar el sonido de roce de ropa (el siseo)
+Tony encontró que el siseo de fondo al moverse es el sonido de movimiento de la ropa (JUG_ROPA_ROCE / roce de chamarra o similar, en loop o
+por paso). Quítalo por completo: que no suene en ningún movimiento del jugador ni de los NPCs. No borres el archivo; solo desconéctalo del
+catálogo y de donde se reproduce.
+Comprobar: caminar, correr y saltar en el build sin siseo de fondo.
