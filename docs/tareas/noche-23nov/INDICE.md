@@ -22,7 +22,7 @@ Le gustó (NO se toca): el logo, las opciones, levantarse del suelo al inicio, l
 | T65 | [Eliminar TODOS los sonidos viejos de la primera versión](T65.md) | B | HECHA |
 | T66 | [Misión 'Libera el Tianguis': enemigo escondido que no deja terminar](T66.md) | A | pendiente |
 | T67 | [Enemigos marcados en el minimapa y el mapa](T67.md) | A | pendiente |
-| T68 | [Siempre de noche; día o noche solo desde Ajustes](T68.md) | B | pendiente |
+| T68 | [Siempre de noche; día o noche solo desde Ajustes](T68.md) | B | HECHA |
 | T69 | [Tinacos flotando y primitivos restantes: barrido automático](T69.md) | A | HECHA (23-nov, merge 23ce0f9): 27 flotantes → 0 tinacos/aires/antenas/cajas (19 bajados a su techo); quedan 6 justificados (elevador del taller y 5 candiles del casino). Primitivos 1615 → 1607: se apagaron 8 franjas de cubo sin textura; el resto son arquitectura con textura, neones, calcomanías de calle y cielo. Listas y captura en docs/capturas/_tareas/T69/. |
 | T70 | [Charcos que se ven como manchas blancas](T70.md) | A | pendiente |
 | T71 | [Civil tirado en la calle del mercado](T71.md) | A | pendiente |

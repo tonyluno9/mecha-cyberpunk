@@ -57,6 +57,8 @@ namespace MechaCyberpunk.Progresion.Opciones
         public NivelApuntadoAsistido ApuntadoAsistido => Valores.apuntadoAsistido;
         public CalidadGrafica Calidad => Valores.calidad;
         public bool PantallaCompleta => Valores.pantallaCompleta;
+        /// <summary>T68: noche (por defecto) o día en todo el juego.</summary>
+        public MomentoDelDia MomentoDia => Valores.momentoDia;
         /// <summary>True: se muestran los avisos de la primera vez de cada acción (T-441).</summary>
         public bool Tutorial => Valores.tutorial;
         /// <summary>Acciones del tutorial ya mostradas, separadas por comas (T-441).</summary>
@@ -240,6 +242,14 @@ namespace MechaCyberpunk.Progresion.Opciones
             Guardar();
         }
 
+        /// <summary>T68: cambia el momento del día. <c>AplicadorMomentoDia</c> hace la transición (negro, luz y levantarse) si hay partida en curso.</summary>
+        public void FijarMomentoDia(MomentoDelDia momento)
+        {
+            Valores.momentoDia = momento;
+            ReglaMomentoDia.Fijar(momento, true);
+            Guardar();
+        }
+
         public void FijarTutorial(bool valor)
         {
             Valores.tutorial = valor;
@@ -315,6 +325,7 @@ namespace MechaCyberpunk.Progresion.Opciones
             AplicarVolumenes();
             AplicarCalidad();
             AplicarPantalla();
+            ReglaMomentoDia.Fijar(Valores.momentoDia, false);
         }
 
         private void AplicarVolumenes()

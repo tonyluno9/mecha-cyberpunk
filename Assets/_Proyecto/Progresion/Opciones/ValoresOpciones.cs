@@ -24,6 +24,8 @@ namespace MechaCyberpunk.Progresion.Opciones
         public string tutorialVisto = "";
         /// <summary>Versión de los volúmenes: 0 en archivos de antes de la música del menú (la música venía apagada por defecto).</summary>
         public int versionVolumen;
+        /// <summary>T68: momento del día de todo el juego (por defecto Noche; el valor viejo 0 de archivos anteriores también es Noche).</summary>
+        public MomentoDelDia momentoDia = MomentoDelDia.Noche;
 
         public ValoresOpciones Copiar()
         {
