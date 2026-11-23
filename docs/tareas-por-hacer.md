@@ -514,6 +514,7 @@ pasar a día. Por ahora: noche fija, sin ciclo de día.
 5. Usa los modelos que ya existen; si algo no tiene modelo, déjalo anotado en docs/assets-faltan.md en vez de inventarlo.
 
 ## T38. Banquetas con textura propia
+**HECHA (22-nov, merge 5f2c0d5):** 19 banquetas (6 manzanas y 13 S2c, incluida la de la casa) con T02_Banqueta a losa de 0.8 m; 0 banquetas con asfalto; 13 bordillos de concreto nuevos en las banquetas S2c que dan a la calle (más los 25 de T22) y los 2 de la calle de la casa pasan a concreto. BanquetasT1682Pruebas 4/4, T1642 y T1680 siguen pasando. Capturas en docs/capturas/_tareas/T38/.
 Las banquetas tienen textura de calle. Usa la textura nueva de banqueta que va a generar el chat de arte (T02_Banqueta en imageassets/calle/,
 cuando llegue; mientras, la mejor de banqueta que exista), bien escalada, con bordillo de concreto, en TODAS las banquetas.
 
@@ -583,5 +584,6 @@ En pausa, Opciones, Cargar y Guardar abren el menú ANTIGUO: que usen la interfa
 # EN ESPERA (agregado 22-nov noche)
 ## E2. Salto: posible cambio de animación después (Tony lo decide).
 ## E3. Charcos: una textura que parezca más charco (cuando se haga, junto con T38).
+**HECHA (22-nov, merge 5f2c0d5):** las 4 máscaras del agua T-1503 se cambiaron por formas recortadas de T11_Charco (mismo shader y reflejo, 220/220 charcos); en la foto se ve un charco de orilla irregular con el reflejo igual (T38/7_charco_antes y _despues).
 ## E4. Cinemáticas reales: Tony pasará los videos para cada cinemática de T10.
 ## E5. Día: después de la misión de la chica (paso 11) se podrá pasar a de día.
