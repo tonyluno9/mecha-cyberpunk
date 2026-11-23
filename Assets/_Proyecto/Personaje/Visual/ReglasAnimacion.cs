@@ -236,7 +236,11 @@ namespace MechaCyberpunk.Personaje.Visual
         /// T-962: los PJ01_Punos_* de Blender duran 1.43 a 1.83 s (0.8 de los de Mixamo, con el impacto en la misma fracción del clip): con 2.7 conectan a los 0.13 a 0.21 s
         /// y terminan a los 0.53 a 0.68 s, como antes.
         /// </summary>
-        public const float RapidezGolpeJugador = 2.7f;
+        // T-1657 (T33): Tony pidió ver el impacto; la rapidez baja a 0.75x de la anterior (2.7), y el momento del golpe y la recarga se alargan lo mismo (<see cref="EscalaTiempoGolpe"/>).
+        public const float RapidezGolpeAnterior = 2.7f;
+        public const float RapidezGolpeJugador = RapidezGolpeAnterior * 0.75f;
+        /// <summary>T-1657: cuánto se alargan la preparación (momento del impacto) y la recarga del golpe frente a lo que eran con la rapidez anterior.</summary>
+        public const float EscalaTiempoGolpe = RapidezGolpeAnterior / RapidezGolpeJugador;
         /// <summary>T-944: qué tan rápido cae el jugador al morir (1 = el clip tal como viene). T-962: los PJ01_Muerte_* de Blender ya vienen 1.7 veces más rápidos que los de Mixamo.</summary>
         public const float RapidezMuerteJugador = 1f;
 
