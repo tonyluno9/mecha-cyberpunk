@@ -53,6 +53,12 @@ namespace MechaCyberpunk.Progresion.Recorrido
         private const float RadioRodeo = 0.35f;
         private const float LargoRodeo = 1.6f;
         private const float RadioLlegadaRuta = 0.6f;
+        private const float MetrosProgreso = 0.3f;
+        private const float SegundosAtorado = 0.8f;
+        private const float SegundosDesvio = 0.8f;
+        private const float GradosFrenteListo = 12f;
+        private const float RadioEstorbo = 1.4f;
+        private const float ExtensionMaximaEstorbo = 3f;
         private static readonly float[] AngulosRodeo = { 0f, 30f, -30f, 60f, -60f, 90f, -90f, 135f, -135f };
         private static readonly float[] AngulosPared = { 0f, 45f, -45f, 90f, -90f };
         private static readonly RaycastHit[] golpesRodeo = new RaycastHit[12];
@@ -90,6 +96,10 @@ namespace MechaCyberpunk.Progresion.Recorrido
             public int Indice;
             public int Cuenta;
             public float Proxima;
+            public Vector3 UltimaPos;
+            public float DesdeProgreso;
+            public Vector3 Desvio;
+            public float HastaDesvio;
         }
 
         /// <summary>Depuración: qué fase va ("salen", "esperan", "vienen", "plantan", "empujan", "huyen", "") para las pruebas y capturas.</summary>
@@ -335,8 +345,9 @@ namespace MechaCyberpunk.Progresion.Recorrido
             List<PandilleroAPie> vivos = Vivos();
             PandilleroAPie empujador = vivos.Count > 0 ? vivos[0] : null;
             PandilleroAPie otro = vivos.Count > 1 ? vivos[1] : null;
-            Vector3 vino = empujador != null ? Plano(empujador.transform.position - jugador.position) : -Plano(jugador.forward);
-            vino = vino.sqrMagnitude > 0.0001f ? vino.normalized : -Plano(jugador.forward).normalized;
+            // T-1754 (T52): se plantan ENFRENTE del jugador (hacia donde mira), no por el lado por donde llegaron.
+            Vector3 vino = Plano(jugador.forward);
+            vino = vino.sqrMagnitude > 0.0001f ? vino.normalized : (empujador != null ? Plano(empujador.transform.position - jugador.position).normalized : Vector3.forward);
             vino = DireccionLibreDesdeJugador(vino, DistanciaContacto + 0.4f);
             Vector3 lateral = Vector3.Cross(Vector3.up, vino);
             Vector3 puestoFrente = jugador.position + vino * DistanciaContacto;
@@ -349,6 +360,17 @@ namespace MechaCyberpunk.Progresion.Recorrido
                 if (listos)
                 {
                     break;
+                }
+                yield return null;
+            }
+            // T-1754 (T52): se giran (con el giro normal, sin brincar) hasta quedar de frente al jugador antes de hablarle.
+            float limiteGiro = Time.time + 1.2f;
+            while (Time.time < limiteGiro && !TodosDeFrente())
+            {
+                foreach (PandilleroAPie p in Vivos())
+                {
+                    p.MoverPlano(Vector3.zero);
+                    p.MirarHacia(Plano(jugador.position - p.transform.position), GradosGiroPorSegundo);
                 }
                 yield return null;
             }
@@ -477,11 +499,83 @@ namespace MechaCyberpunk.Progresion.Recorrido
                 p.MoverPlano(Vector3.zero);
                 return false;
             }
+            dir = DesatorarSiHaceFalta(p, dir);
             p.MirarHacia(dir, GradosGiroPorSegundo);
             // Mientras gira va más despacio para no deslizarse de lado.
             float alineado = Mathf.Clamp01((Vector3.Dot(Plano(p.transform.forward).normalized, dir) + 0.3f) / 1.3f);
             p.MoverPlano(dir * rapidez * Mathf.Max(0.15f, alineado));
             return false;
+        }
+
+        // T-1754 (T52): si en SegundosAtorado no avanzó MetrosProgreso (atorado entre un coche y la expendedora, por ejemplo), se hace a un lado
+        // libre durante SegundosDesvio y vuelve a buscar el camino.
+        private Vector3 DesatorarSiHaceFalta(PandilleroAPie p, Vector3 dir)
+        {
+            if (!rutas.TryGetValue(p, out Ruta ruta))
+            {
+                return dir;
+            }
+            Vector3 pos = p.transform.position;
+            if (Time.time < ruta.HastaDesvio)
+            {
+                return ruta.Desvio;
+            }
+            if (Plano(pos - ruta.UltimaPos).magnitude > MetrosProgreso)
+            {
+                ruta.UltimaPos = pos;
+                ruta.DesdeProgreso = Time.time;
+                return dir;
+            }
+            if (Time.time - ruta.DesdeProgreso < SegundosAtorado)
+            {
+                return dir;
+            }
+            AtravesarEstorbosChicos(p);
+            Vector3 lado = Vector3.Cross(Vector3.up, dir);
+            Vector3[] opciones = { lado, -lado, -dir, (lado - dir).normalized, (-lado - dir).normalized };
+            Vector3 elegida = -dir;
+            foreach (Vector3 o in opciones)
+            {
+                if (Libre(p, o, LargoRodeo))
+                {
+                    elegida = o;
+                    break;
+                }
+            }
+            ruta.Desvio = elegida;
+            ruta.HastaDesvio = Time.time + SegundosDesvio;
+            ruta.UltimaPos = pos;
+            ruta.DesdeProgreso = Time.time + SegundosDesvio;
+            ruta.Proxima = 0f;
+            return elegida;
+        }
+
+        // T-1754 (T52): atorado entre props o carros (expendedora, patrulla estacionada): deja de chocar con los estorbos CHICOS que lo rodean
+        // (no edificios ni piso) para que pase por el hueco en vez de quedarse empujando.
+        private static readonly Collider[] estorbos = new Collider[24];
+
+        private void AtravesarEstorbosChicos(PandilleroAPie p)
+        {
+            CharacterController propio = p.GetComponent<CharacterController>();
+            if (propio == null)
+            {
+                return;
+            }
+            int n = Physics.OverlapSphereNonAlloc(p.transform.position + Vector3.up * 0.9f, RadioEstorbo, estorbos, ~0, QueryTriggerInteraction.Ignore);
+            for (int i = 0; i < n; i++)
+            {
+                Collider c = estorbos[i];
+                if (c == null || c == propio || c.transform.IsChildOf(p.transform) || (jugador != null && c.transform.IsChildOf(jugador))
+                    || c.GetComponentInParent<PandilleroAPie>() != null)
+                {
+                    continue;
+                }
+                Vector3 e = c.bounds.extents;
+                if (Mathf.Max(e.x, e.z) <= ExtensionMaximaEstorbo && e.y <= ExtensionMaximaEstorbo)
+                {
+                    Physics.IgnoreCollision(propio, c, true);
+                }
+            }
         }
 
         // Dirección (plano, unitaria) para ir de <p> a <meta>: NavMesh si la ciudad lo tiene; si no, línea recta con rodeo por SphereCast.
@@ -724,6 +818,19 @@ namespace MechaCyberpunk.Progresion.Recorrido
                 }
             }
             return menor;
+        }
+
+        private bool TodosDeFrente()
+        {
+            foreach (PandilleroAPie p in Vivos())
+            {
+                Vector3 hacia = Plano(jugador.position - p.transform.position);
+                if (hacia.sqrMagnitude > 0.0001f && Vector3.Angle(Plano(p.transform.forward), hacia) > GradosFrenteListo)
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
         private void AlinearFrenteAlJugador()
