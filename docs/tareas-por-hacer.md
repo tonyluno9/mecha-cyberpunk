@@ -562,6 +562,7 @@ arriba de la pantalla con su nombre.
    el dinero llega después de la decisión.
 
 ## T45. Menos carros y carros quemados
+**HECHA (22-nov, merge fde5981):** fuera del tráfico y la ciudad V01b, V16 a V18 (microbús, camión, tráiler) y V22 a V24 (superdeportivos); queda el deportivo V12 y los tuneados V20/V21 con neón. 24 estacionados/robables cambiados por modelos que se quedan (tabla en docs/carros-T45.md); patrullas, ambulancia, motos y Nova sin tocar. Al explotar, toda malla pasa a material de armazón quemado (DanioCarro.Quemar): fotos en docs/capturas/_tareas/T45/.
 1. Menos carros: quedarse con los básicos (sedanes, compactos, pickups, taxi) y el TUNEADO con NEÓN debajo. Fuera tráileres, camiones y la
    mayoría de camionetas y deportivos (algún deportivo suelto está bien).
 2. Los carros nuevos al explotar se ven negros/quemados (material quemado) como los demás.
