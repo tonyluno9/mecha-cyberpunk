@@ -58,3 +58,24 @@ Ramas: T-1655 audio (T32), T-1656 inicio y SKULLS (T30+T31), T-1657 golpe lento 
 T-1660 policía (T42), T-1661 barras de vida (T43), T-1662 tutorial e historia (T44), T-1663 sin techos (T39), T-1664 NPCs y aviones (T40),
 T-1665 drones inmunes (T46), T-1666 menú de pausa (T48).
 Si se corta: `cd .sesiones/s2`, `git status`, ver qué tareas tienen commit (`git log --oneline origin/main | grep T-16`), seguir con las que falten.
+
+## B TERMINÓ la ronda D (22-nov noche)
+| Tarea | Rama | Estado | Nota |
+| --- | --- | --- | --- |
+| T30 inicio tirado | tony/T-1656-inicio-skulls | HECHA | captura T30 |
+| T31 SKULLS del inicio | tony/T-1656-inicio-skulls | HECHA | falta colocar Historia_EsperaSkulls (A) |
+| T32 audio | tony/T-1655-audio | HECHA | siseo = cola de ruido de los pasos de T28; oírlo en el build |
+| T33 golpe lento | tony/T-1657-golpe-lento | HECHA | |
+| T34 Doc e implantes | tony/T-1658-doc-implantes | HECHA | no se recorrió entero en Play |
+| T39 sin techos | tony/T-1663-sin-techos | HECHA | escaleras a azoteas: A |
+| T40 NPCs, aviones, drones | tony/T-1664-npcs-aviones | HECHA | vendedores "pregonando": A |
+| T41 confrontación | tony/T-1659-confrontacion | HECHA | |
+| T42 policía y escalada | tony/T-1660-policia | HECHA | toca Core/Respuesta (ReglaPuertaNova) |
+| T43 barras de vida | tony/T-1661-barras-vida | HECHA | ver el HUD en el build |
+| T44 tutorial e historia | tony/T-1662-tutorial-historia | HECHA | expendedora cerca del camino: A |
+| T46 drones inmunes | tony/T-1665-drones-escudo | HECHA | solo drones Nova_DR (los de persecución DronMundo siguen derribables) |
+| T48 pausa moderna | tony/T-1666-pausa | HECHA | |
+Notas:
+- Merge: el primer merge (297f1e0) llevó a main todas las ramas a la vez por error (usé la punta de integ/B23); los merges siguientes de T-1656 a T-1660 quedaron vacíos. Todo el código está en main.
+- Pruebas: EditMode de las clases nuevas 106/106 (con el arreglo de ReglaEscudoDron); PlayMode Bullying 3/3, ProvocacionCalle y RespuestaNovaT1304 en verde. MenusCyberfixPruebas falla 2 por un error de la escena de Arena ("Faltan referencias en JaulaClandestino"), no por B.
+- No se hizo build. Unity de B cerrado. La sesión A ya puede hacer el build.
