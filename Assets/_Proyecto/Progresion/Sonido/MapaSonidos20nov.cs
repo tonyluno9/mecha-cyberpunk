@@ -10,6 +10,13 @@ namespace MechaCyberpunk.Progresion.Sonido
     /// </summary>
     public static class MapaSonidos20nov
     {
+        /// <summary>
+        /// IDs cuyos archivos siguen en Assets pero ya no se usan: el catálogo no los lee y no suenan. LEEME 20-nov: las voces de despachador.
+        /// T-1690 (T49): el roce de ropa del jugador (JUG_ROPA_ROCE y JUG_ROPA_MOVER) era el siseo de fondo al moverse; los .wav se quedan en su carpeta.
+        /// Va antes de <see cref="IdsNuevos"/> porque ArmarIds lo lee (los estáticos se inicializan en orden).
+        /// </summary>
+        public static readonly string[] IdsDescartados = { "POL_RADIO_DESPACHO", "JUG_ROPA_ROCE", "JUG_ROPA_MOVER" };
+
         /// <summary>IDs nuevos de 20-nov (los que no existían el 19-nov), uno por fila de <see cref="TablaMezcla20nov"/>.</summary>
         public static readonly string[] IdsNuevos = ArmarIds();
 
@@ -48,8 +55,6 @@ namespace MechaCyberpunk.Progresion.Sonido
             new MapaSonidos19nov.Par("UI_TELEFONO", "HUD_MENSAJE_CELULAR"),
         };
 
-        /// <summary>IDs cuyos archivos siguen en Assets pero ya no se usan (LEEME 20-nov: las voces de despachador). El catálogo no los lee.</summary>
-        public static readonly string[] IdsDescartados = { "POL_RADIO_DESPACHO" };
 
         /// <summary>Carpetas nuevas del 20-nov dentro de Assets/Arte/Audio.</summary>
         public static readonly string[] Carpetas =
@@ -68,9 +73,12 @@ namespace MechaCyberpunk.Progresion.Sonido
 
         private static string[] ArmarIds()
         {
-            string[] ids = new string[TablaMezcla20nov.Filas.Length];
-            for (int i = 0; i < ids.Length; i++) ids[i] = TablaMezcla20nov.Filas[i].Id;
-            return ids;
+            List<string> ids = new List<string>(TablaMezcla20nov.Filas.Length);
+            foreach (TablaMezcla20nov.Fila f in TablaMezcla20nov.Filas)
+            {
+                if (Array.IndexOf(IdsDescartados, f.Id) < 0) ids.Add(f.Id);
+            }
+            return ids.ToArray();
         }
 
         private static Dictionary<string, MapaSonidos19nov.Par> ArmarPares()

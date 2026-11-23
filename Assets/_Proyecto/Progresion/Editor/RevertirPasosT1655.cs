@@ -23,6 +23,31 @@ namespace MechaCyberpunk.Progresion.Editor
             { "PAS_TIERRA", new[] { "2fe5b88b64ed4d342a10386ee2d13b1f", "ed95c3faeecadee479d5c67ed04e11f2", "4eb1edcfe4c38044d9beef2e3a41e9f3", "35c1c953538655446aaadf3d82c1f787", "f5ea4f385467ece44bb2af44989d8942", "3dc1045ee0481fb44a64db70aa498dd4", "ae10ac8676df2fb438ea96b6eb374132", "6ddb92f262f7feb4a9ee1caba7e7efbb" } },
         };
 
+        /// <summary>
+        /// T-1690 (T49): <see cref="CreadorCatalogoSonidos.Crear"/> (lo corre cada build) vuelve a leer TODOS los PAS_*_NN de 05_Pasos, incluidos los
+        /// PAS_*_21..28 de T28 con la cola de ruido (el siseo). Esto deja en cada ID de pasos solo sus clips originales, igual que <see cref="Aplicar"/>.
+        /// </summary>
+        public static void SoloOriginales(IDictionary<string, CatalogoSonidos.Entrada> entradas)
+        {
+            foreach (KeyValuePair<string, string[]> par in Originales)
+            {
+                List<AudioClip> clips = new List<AudioClip>();
+                foreach (string guid in par.Value)
+                {
+                    string ruta = AssetDatabase.GUIDToAssetPath(guid);
+                    AudioClip clip = string.IsNullOrEmpty(ruta) ? null : AssetDatabase.LoadAssetAtPath<AudioClip>(ruta);
+                    if (clip != null) clips.Add(clip);
+                }
+                if (clips.Count == 0) continue;
+                if (!entradas.TryGetValue(par.Key, out CatalogoSonidos.Entrada e) || e == null)
+                {
+                    e = new CatalogoSonidos.Entrada { id = par.Key };
+                    entradas[par.Key] = e;
+                }
+                e.finales = clips.ToArray();
+            }
+        }
+
         [MenuItem("Mecha Cyberpunk/T1655/Regresar pasos a antes de T28")]
         public static void Aplicar()
         {
