@@ -25,6 +25,9 @@ namespace MechaCyberpunk.Personaje.Combate
             this.tiempoRecarga = Math.Max(0f, tiempoRecarga);
         }
 
+        /// <summary>T-1722 (T79): con true disparar no gasta balas del cargador (campo de tiro). Lo pone <c>ArsenalJugador.PrestarTodas</c>.</summary>
+        public static bool MunicionInfinita { get; set; }
+
         /// <summary>Multiplica el tiempo de recarga al empezarla (T-430, implante SINAPSIS). 1 = normal.</summary>
         public float FactorRecarga { get; set; } = 1f;
 
@@ -63,7 +66,10 @@ namespace MechaCyberpunk.Personaje.Combate
             {
                 return false;
             }
-            Balas--;
+            if (!MunicionInfinita)
+            {
+                Balas--;
+            }
             enfriamiento = tiempoEntreDisparos;
             Disparo?.Invoke();
             return true;

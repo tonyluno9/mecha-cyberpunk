@@ -189,6 +189,12 @@ namespace MechaCyberpunk.Personaje.Jugador
 
         public string ClaveGuardado => Clave;
 
+        /// <summary>T-1722 (T79): mientras tenga valor, el guardado escribe esta posición (la tienda de Tino) en vez de la del campo de tiro.</summary>
+        public static (Vector3 posicion, float giro, ArmaAPie arma)? GuardadoFijo { get; set; }
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ReiniciarGuardadoFijo() => GuardadoFijo = null;
+
         public string Guardar()
         {
             Vector3 posicion = transform.position;
@@ -210,6 +216,12 @@ namespace MechaCyberpunk.Personaje.Jugador
                 giro = frente.sqrMagnitude > 0f ? Quaternion.LookRotation(frente.normalized, Vector3.up).eulerAngles.y : 0f,
                 arma = armas != null ? armas.ArmaActiva.ToString() : ArmaAPie.Punos.ToString(),
             };
+            if (GuardadoFijo.HasValue)
+            {
+                datos.posicion = GuardadoFijo.Value.posicion;
+                datos.giro = GuardadoFijo.Value.giro;
+                datos.arma = GuardadoFijo.Value.arma.ToString();
+            }
             return JsonUtility.ToJson(datos);
         }
 

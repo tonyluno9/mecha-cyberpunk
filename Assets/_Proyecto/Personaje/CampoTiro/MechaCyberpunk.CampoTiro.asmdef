@@ -1,0 +1,14 @@
+{
+    "name": "MechaCyberpunk.CampoTiro",
+    "rootNamespace": "MechaCyberpunk.CampoTiro",
+    "references": ["MechaCyberpunk.Core", "MechaCyberpunk.Combate", "MechaCyberpunk.Economia", "MechaCyberpunk.Personaje", "MechaCyberpunk.Personaje.Visual", "Unity.Cinemachine", "MechaCyberpunk.UI", "UnityEngine.UI", "Unity.InputSystem"],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

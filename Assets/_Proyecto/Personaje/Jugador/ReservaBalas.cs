@@ -114,6 +114,10 @@ namespace MechaCyberpunk.Personaje.Jugador
             {
                 return 0;
             }
+            if (CargadorPistola.MunicionInfinita)
+            {
+                return Maximo(arma); // T-1722: campo de tiro, sin tocar la reserva real
+            }
             if (!modelo.Existe(arma))
             {
                 ArsenalJugador arsenal = Registro<ArsenalJugador>.Actual;
@@ -143,6 +147,10 @@ namespace MechaCyberpunk.Personaje.Jugador
 
         public int Tomar(ArmaAPie arma, int cantidad)
         {
+            if (CargadorPistola.MunicionInfinita)
+            {
+                return ModeloReservaBalas.EsLimitada(arma) ? cantidad : 0; // T-1722: campo de tiro
+            }
             Cantidad(arma);
             return modelo.Tomar(arma, cantidad);
         }
