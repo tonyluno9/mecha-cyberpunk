@@ -46,7 +46,7 @@ namespace MechaCyberpunk.Progresion.Recorrido
         private const float SegundosEntreNaves = 50f;
         private const float SegundosPrimeraNave = 4f;
         private const int EstrellasNave = 5;
-        private const float HoraNoche = 23f;
+        private const float HoraNoche = ReglaNocheFija.HoraNoche; // T-1685: la noche fija usa la misma hora
         private const float LluviaNoche = 0.7f;
         private const float SegundosFin = 5f;
         private const float SegundosEnNegroLevantarse = 1.8f;
@@ -105,6 +105,7 @@ namespace MechaCyberpunk.Progresion.Recorrido
         private Vector3 inicioAdelante = Vector3.forward;
         private bool inicioConocido;
         private bool sinMarcadorAvisado;
+        private IRelojMundo relojVigilado;
 
         // ---------- Arranque ----------
 
@@ -219,6 +220,7 @@ namespace MechaCyberpunk.Progresion.Recorrido
             {
                 Actual = null;
             }
+            DejarDeVigilarReloj();
             Cancelar();
         }
 
@@ -353,13 +355,16 @@ namespace MechaCyberpunk.Progresion.Recorrido
             {
                 CerrarRanura();
             }
-            if (paso >= PasoRecorrido.Despierta && paso <= PasoRecorrido.Decision)
+            if (NocheFijaAhora())
             {
                 PonerNoche();
             }
             else if (paso > PasoRecorrido.Decision)
             {
                 Reloj()?.Pausar(false);
+            }
+            if (paso > PasoRecorrido.Decision)
+            {
                 ClimaMundo.Lluvia = 0f;
             }
         }
@@ -500,7 +505,10 @@ namespace MechaCyberpunk.Progresion.Recorrido
         private void EntrarDinero()
         {
             ClimaMundo.Lluvia = 0f;
-            Reloj()?.Pausar(false);
+            if (!NocheFijaAhora())
+            {
+                Reloj()?.Pausar(false);
+            }
             Registro<ICartera>.Actual?.Abonar(TablaRecorrido.DineroMaletin, MotivoDinero.Mision);
             Avisar(TablaRecorrido.AvisoMaletin + Moneda.Texto(TablaRecorrido.DineroMaletin), MechaCyberpunk.UI.Hud.TipoAviso.Dinero);
             PersonajeApoyo doc = viejo != null ? viejo.Doc : null;
@@ -734,6 +742,7 @@ namespace MechaCyberpunk.Progresion.Recorrido
                 return;
             }
 #endif
+            MantenerNoche();
             if (!iniciado || CinematicaEnCurso.Activa || FlujoPartida.EnTitulo)
             {
                 return;
@@ -918,13 +927,64 @@ namespace MechaCyberpunk.Progresion.Recorrido
         private void PonerNoche()
         {
             IRelojMundo reloj = Reloj();
-            if (reloj != null && (!reloj.EsDeNoche || reloj.Hora < HoraNoche - 1f))
+            if (reloj != null && (!reloj.EsDeNoche || ReglaNocheFija.HayQueVolver(reloj.Hora)))
             {
                 reloj.AvanzarHasta(HoraNoche);
             }
-            if (paso >= PasoRecorrido.Despierta && paso <= PasoRecorrido.Decision)
+            if (NocheFijaAhora())
             {
                 reloj?.Pausar(true);
+            }
+        }
+
+        // T-1685 (T36): del paso 2 al 11 (ReglaNocheFija) el reloj se queda a las 23:00 y en pausa. Sin la regla, la noche de los pasos 2 a 6
+        // sigue como antes (la historia la pide).
+        private bool NocheFijaAhora()
+        {
+            return ReglaNocheFija.Aplica(paso) || (paso >= PasoRecorrido.Despierta && paso <= PasoRecorrido.Decision);
+        }
+
+        // T-1685: cada frame, y en cuanto el reloj avisa que cambió de franja, lo regresa a la noche si algo lo movió (dormir, la clínica, cargar
+        // una partida de día, una herramienta de prueba). AvanzarHasta suma los días que cruce, así que la renta y los negocios siguen contando.
+        private void MantenerNoche()
+        {
+            IRelojMundo actual = Reloj();
+            if (actual != relojVigilado)
+            {
+                if (relojVigilado != null)
+                {
+                    relojVigilado.FranjaCambio -= AlCambiarFranja;
+                }
+                relojVigilado = actual;
+                if (relojVigilado != null)
+                {
+                    relojVigilado.FranjaCambio += AlCambiarFranja;
+                }
+            }
+            if (actual == null || !iniciado || !NocheFijaAhora())
+            {
+                return;
+            }
+            if (!actual.EsDeNoche || ReglaNocheFija.HayQueVolver(actual.Hora) || !actual.Pausado)
+            {
+                PonerNoche();
+            }
+        }
+
+        private void AlCambiarFranja(FranjaDia franja)
+        {
+            if (franja == FranjaDia.Dia && iniciado && NocheFijaAhora())
+            {
+                PonerNoche();
+            }
+        }
+
+        private void DejarDeVigilarReloj()
+        {
+            if (relojVigilado != null)
+            {
+                relojVigilado.FranjaCambio -= AlCambiarFranja;
+                relojVigilado = null;
             }
         }
 
