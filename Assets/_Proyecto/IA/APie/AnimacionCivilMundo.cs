@@ -29,9 +29,10 @@ namespace MechaCyberpunk.IA.APie
         private Transform cabeza;
         private float proximaRevision;
         // T40: cuerpo muerto que nadie oculta (el peatón que lo ocultaba ya no corre) se esconde pasado este tiempo, para que no quede un NPC tirado para siempre.
-        private const float SegundosCuerpoMaximo = 20f;
+        private const float SegundosCuerpoMaximo = ReglaLimpiezaCuerpo.SegundosMinimos; // T-1703: 45 s y solo fuera de la vista (máximo 120 s)
         private float muertoDesde;
         private System.Collections.Generic.List<Renderer> ocultos;
+        private System.Collections.Generic.List<Collider> colliderApagados;
 
         /// <summary>True desde que le avisaron su muerte hasta que vuelve a la vida.</summary>
         public bool MuerteAvisada => muerto;
@@ -357,7 +358,7 @@ namespace MechaCyberpunk.IA.APie
                 return;
             }
             proximaRevision = Time.time + segundosEntreRevisiones;
-            if (muerto && ocultos == null && Time.time - muertoDesde >= SegundosCuerpoMaximo)
+            if (muerto && ocultos == null && ReglaLimpiezaCuerpo.Debe(Time.time - muertoDesde, SegundosCuerpoMaximo, ReglaLimpiezaCuerpo.FueraDeVista(transform.position)))
             {
                 OcultarCuerpo();
             }
@@ -373,6 +374,16 @@ namespace MechaCyberpunk.IA.APie
                 {
                     r.enabled = false;
                     ocultos.Add(r);
+                }
+            }
+            // T-1703: el cuerpo limpiado tampoco estorba (sin collider); se restaura si el civil revive.
+            colliderApagados = new System.Collections.Generic.List<Collider>();
+            foreach (Collider c in GetComponentsInChildren<Collider>(false))
+            {
+                if (c.enabled && !(c is CharacterController))
+                {
+                    c.enabled = false;
+                    colliderApagados.Add(c);
                 }
             }
         }
@@ -391,6 +402,17 @@ namespace MechaCyberpunk.IA.APie
                 }
             }
             ocultos = null;
+            if (colliderApagados != null)
+            {
+                foreach (Collider c in colliderApagados)
+                {
+                    if (c != null)
+                    {
+                        c.enabled = true;
+                    }
+                }
+                colliderApagados = null;
+            }
         }
 
         /// <summary>T40: depuración. True si el cuerpo está oculto por llevar muerto más de <see cref="SegundosCuerpoMaximo"/> s.</summary>
