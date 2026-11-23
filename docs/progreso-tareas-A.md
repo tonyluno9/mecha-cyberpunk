@@ -37,3 +37,11 @@ Paso 0: HECHO (389475c). No hay video del logo en la carpeta (solo PNG en imagea
 - T23, T19.4, T20 y marcador del callejón (-64,0.2,-59): HECHOS, merge 9b27d39 (T20 falta verlo en el build)
 - T24: HECHA, merge 36e6964 (+ T-1647 toldos y corro fuera de la ruta de peatones)
 - Builds: HECHOS (Demo 17:07, Juego 17:09, Result: Success; Demo probado). Reporte: docs/reporte-tareas-22nov-c.md. RONDA C TERMINADA.
+
+---
+# Ronda D (22-nov noche, 2): T37, T35, T38+E3, T45, T47, T36 y para-sesion-A
+Sesión B en .sesiones/s2: T30-T34, T39-T44, T46, T48. A es la única que edita escenas; revisar docs/para-sesion-A.md tras cada tarea.
+Sonnet sin límite hasta el 26-nov: subagentes Opus. Ramas de A (B usa T-165x): T-1680 limpieza (T37), T-1681 muro torres (T35),
+T-1682 banquetas y charco (T38+E3), T-1683 menos carros (T45), T-1684 torre Nova y letreros (T47), T-1685 siempre noche (T36, wt23A/T1605-realismo).
+Escenas: los subagentes trabajan de uno en uno en la carpeta principal (Unity batch); T36 es solo código, en paralelo.
+- Paso 0: HECHO (merge 9032f76, rama tony/blender-22nov-d).
