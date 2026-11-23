@@ -455,10 +455,12 @@ noche; el muro unido con fachadas de casas; que los NPCs caminen de frente y te 
 guardias de Nova frente al casino; el edificio ejecutivo con LEDs a lo lejos.
 
 ## T30. Inicio: aparecer tirado justo después de la cinemática
+**HECHA (22-nov, sesión B, T-1656 8008bfd): tras C01 el jugador ya está en el suelo y se levanta, pegado al piso (docs/capturas/_tareas/T30).**
 Después de la cinemática C01 el jugador ya está TIRADO en el suelo y se levanta (no cae desde arriba). Las cinemáticas reales (videos) las va
 a pasar Tony; dejar listo su espacio (T10).
 
 ## T31. SKULLS del inicio (paso 3 de la historia): caminar bien y frenarte donde estés
+**HECHA (22-nov, sesión B, T-1656 8008bfd): sin voz ni subtítulos; caminan con el clip de PJ01 a su velocidad; salen del callejón, esperan a media calle (marcador Historia_EsperaSkulls, lo coloca A), vienen al caminar el jugador y lo tiran donde está (docs/capturas/_tareas/T31).**
 1. SIN VOZ: no dicen nada (Tony dirá después qué audios usan). Subtítulos tampoco.
 2. Su CAMINAR se ve raro y deforme: que usen el mismo caminar bueno del jugador (PJ01_Caminar retargeteado) o uno bueno de Mixamo, sin
    deslizarse, con la velocidad del clip.
@@ -467,6 +469,7 @@ a pasar Tony; dejar listo su espacio (T10).
    ángulo en que lo reciban (no hace falta acomodarse de lado). Lo demás como está (no te dejan moverte, te tiran, se van).
 
 ## T32. Audio: quitar voces de SKULLS, regresar los pasos y quitar el siseo
+**HECHA (22-nov, sesión B, T-1655 108755e): voces y subtítulos de SKULLS apagados (VocesPandilla.VocesSkullsActivas); pasos con los clips de antes de T28; el siseo era la cola de ruido de los PAS_*_2x de T28 (ya no se usan). Falta oírlo en el build.**
 1. Quita las voces de los SKULLS a TODOS (T5 y T15): no suenan hasta que Tony diga qué audio usar. Los subtítulos de las escenas del barrio se
    quedan solo donde no son SKULLS... (si es más simple, apaga también los subtítulos de los SKULLS).
 2. PASOS: regresa los pasos al sonido que tenían ANTES de T28 (Tony los arreglará él). Se escucha un SISEO de fondo al caminar que salió con el
@@ -474,10 +477,12 @@ a pasar Tony; dejar listo su espacio (T10).
 3. Más adelante Tony ajustará el volumen de las voces; no tocar ahora.
 
 ## T33. Golpe del jugador un poco más lento
+**HECHA (22-nov, sesión B, T-1657 8185b64): golpes 1, 2 y con prótesis a 0.75x (rapidez 2.025), impacto y recarga alargados, mismo daño.**
 El golpe del personaje sale demasiado rápido: baja la velocidad de reproducción de los clips de golpe 1 y 2 (y del golpe con prótesis) para que
 se vea el impacto, sin cambiar el daño. El salto queda como está (posible cambio después, ver E2).
 
 ## T34. Clínica del Doc: primera visita guiada e instalación lenta del implante
+**HECHA (22-nov, sesión B, T-1658 4e95303): camilla bloqueada en la primera visita, dibujado lento de 7 s con taladro, tutorial TAB/piernas/brazos, sin sonido de explosión al caer, brazos más rápidos y empujan carros 0.6 m/s. No se recorrió completo en Play: probarlo en partida nueva.**
 1. En la PRIMERA visita no se puede usar la camilla/silla (misma tecla que hablar con el Doc y confunde): primero el Doc inyecta el suero y abre
    el menú de prótesis; la camilla se habilita después.
 2. En el menú de prótesis, al instalar las PIERNAS: el holograma de la pierna se va DIBUJANDO muy lento en la misma interfaz mientras suena el
@@ -510,9 +515,11 @@ Las banquetas tienen textura de calle. Usa la textura nueva de banqueta que va a
 cuando llegue; mientras, la mejor de banqueta que exista), bien escalada, con bordillo de concreto, en TODAS las banquetas.
 
 ## T39. Quitar subir a los techos
+**HECHA (22-nov, sesión B, T-1663 c5c3707): agarre, colgarse y bardas solo hasta 2.5 m sobre la calle. Las escaleras de mano (PuntoTrepar) que llevan a azoteas las quita A.**
 Quita la posibilidad de subir a los techos (trepar / parkour a azoteas). Colgarse de bordes bajos y saltar bardas se queda si no lleva al techo.
 
 ## T40. NPCs: de espaldas, tirados, raros; aviones y drones sin atravesar
+**HECHA (22-nov, sesión B, T-1664 2e4ee61): 65/65 platicadores con el cuerpo de frente a su pareja; NPCs tirados se levantan o se ocultan; Nova busca hueco libre al aparecer; aviones y drones por encima del edificio más alto de su ruta. Los vendedores raros los cambia A (para-sesion-A).**
 1. Siguen NPCs de espaldas al platicar o parados raros (captura 02): revisa todos los grupos y que se miren de frente.
 2. NPC tirado bugueado en la calle (captura 03): que no aparezcan NPCs acostados sin razón.
 3. NPCs "trabajando" que se ven raros: revisar sus animaciones o quitarlos.
@@ -520,10 +527,12 @@ Quita la posibilidad de subir a los techos (trepar / parkour a azoteas). Colgars
 5. Aviones que pasan y drones que vigilan: que no atraviesen paredes, edificios ni el muro (rutas por encima o con evitación).
 
 ## T41. Confrontación de pandilleros (revisión de T26)
+**HECHA (22-nov, sesión B, T-1659 55f3e5c): te miran a 20 m, a los 20 s cerca uno se acerca lento, empuja; si le pegas vienen todos; si te alejas (>14 m) se acaba. Sin voces.**
 No atacan de primeras. Primero te VEN de lejos y te miran. Si te quedas cerca unos 20 s, UNO solo se acerca caminando lento. Si sigues ahí, te
 empuja. Si le pegas a ese uno, entonces vienen los demás. Si te alejas en cualquier momento, se acaba. Sin voces por ahora (T32).
 
 ## T42. Policía y escalada (revisión de T8/T17)
+**HECHA (22-nov, sesión B, T-1660 bff8b7f): al dispararle a una patrulla las dos rondas prenden sirena y persiguen (visto en Play); policía con 140 de vida; Nova solo con 10 policías muertos y camioneta llegada, luego E15 sin armadura, E18, perros/drones, E16, E14; separación entre patrullas.**
 1. Al dispararle a una patrulla, TODAS las patrullas cercanas prenden luces y sirena y van por ti; no debe haber patrullas que se queden quietas o
    "haciéndose tontas".
 2. Los policías no mueren de 2 balazos: súbeles la vida (que aguanten varios tiros).
@@ -532,10 +541,12 @@ empuja. Si le pegas a ese uno, entonces vienen los demás. Si te alejas en cualq
 4. Patrullas que se chocan entre ellas: evitarlo.
 
 ## T43. Barra de vida sobre los enemigos
+**HECHA (22-nov, sesión B, T-1661 1367273): barra pequeña sobre enemigos dañados (6 s), grande con nombre para jefes. En Play se encendieron 6 barras al dañar al grupo; la captura de la vista de juego no muestra el HUD: revisarla en el build.**
 Todos los enemigos con una barra de vida pequeña sobre la cabeza (solo cuando están en combate o recibieron daño); los jefes con una barra grande
 arriba de la pantalla con su nombre.
 
 ## T44. Tutorial e historia: guía y orden
+**HECHA (22-nov, sesión B, T-1662 d09efb9): línea turquesa en el piso hacia el objetivo (vista en Play), aviso de la rueda de armas, expendedoras venden y paso "Tengo hambre", orden Doc → armas (frase del vendedor) → TINO → chica; el dinero del maletín llega después de la decisión.**
 1. Guía: una ruta marcada (línea en el minimapa y en el piso o flecha) hacia cada objetivo de la historia.
 2. Después de vencer a los SKULLS y tener la pistola: "Mantén la RUEDA del ratón y elige la pistola para equiparla".
 3. Máquinas expendedoras: hoy no se puede comprar; que se pueda (consumibles) y que el tutorial lo pida antes de las peleas con pandilleros
@@ -552,6 +563,7 @@ arriba de la pantalla con su nombre.
 2. Los carros nuevos al explotar se ven negros/quemados (material quemado) como los demás.
 
 ## T46. Drones de Nova inmunes con efecto holográfico
+**HECHA (22-nov, sesión B, T-1665 0b6678d): drones de patrulla de Nova con escudo: un balazo no les quita vida y sale el destello cian con NOV_ESCUDO_IMPACTO (comprobado en Play: 1 impacto, 1 efecto, vida intacta).**
 Los drones de Nova que patrullan, al recibir balazos, muestran un escudo/efecto holográfico (destello cian donde pega la bala) para que se entienda
 que son inmunes; no reciben daño de armas normales.
 
@@ -561,6 +573,7 @@ que son inmunes; no reciben daño de armas normales.
 2. Más anuncios y letreros en edificios; los letreros de neón/LED de los edificios con neón deben iluminar de verdad (emisión + luz).
 
 ## T48. Menú de pausa con la interfaz nueva
+**HECHA (22-nov, sesión B, T-1666 8e607b7): Opciones de la pausa abre el panel moderno del menú principal; Guardar/Cargar usan la pantalla de ranuras del menú principal.**
 En pausa, Opciones, Cargar y Guardar abren el menú ANTIGUO: que usen la interfaz moderna del menú principal.
 
 ---

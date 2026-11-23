@@ -27,3 +27,12 @@ mejor si A lo pone en `Ciudad_Prologo.unity` (o en el prefab de la zona que toqu
 
 - T25: no toqué los prefabs de Vehiculos/Prefabs (los está cambiando T24); la patrulla buena es `Trafico/Prefabs/Patrulla.prefab` (cuerpo PA01). PatrullaMundo
   agrega DanioCarro al arrancar, así que si T24 cambia el modelo de alguna patrulla sigue recibiendo daño.
+
+## Ronda D (22-nov noche, T30-T48)
+| Qué | Prefab / archivo | Dónde | Por qué |
+| --- | --- | --- | --- |
+| Punto donde esperan los SKULLS | `Assets/_Proyecto/Progresion/Historia/Recorrido/Prefabs/Historia_EsperaSkulls.prefab` | A MEDIA CALLE frente a la casa del jugador, sobre el piso, a 6-10 m de `Inicio_Calle` hacia la calle (3-4 m del borde de la banqueta). Solo importa la posición. | T31: salen de `Historia_CallejonSkulls`, se paran aquí esperando y van por el jugador cuando camina. Sin el marcador usan un punto 5-10 m delante de `Inicio_Calle` (en la prueba quedaron junto a la banqueta de enfrente). |
+| Expendedora cerca del camino | Una máquina `CY06_Expendedora*` o la tiendita | Entre el CIC y el Tianguis (camino de C06 a la guerra con los SKULLS) | T44: el paso "Tengo hambre…" manda a la máquina que vende más cercana; ya venden todas (T-1662). |
+| Vendedores que "pregonan" | `Assets/Arte/Editor/NpcsBarriosT1542.cs` (línea ~473) | Generador de NPCs de los barrios | T40.3: si Tony los sigue viendo raros, cambiar `pregonar` por `esperar` y volver a correr el generador (toca la escena). |
+| Escaleras y tubos a azoteas | `PuntoTrepar` en la escena | Donde lleven a un techo | T39: el trepar libre ya no sube a más de 2.5 m sobre la calle, pero los `PuntoTrepar` (escaleras de mano) siguen funcionando: quitar los que lleven a azoteas. |
+| Drones de SKULLS | `Assets/Arte/Editor/DronesZonasT1398.cs` | Ruta de `Skulls_E13_*` | T40.5: ahora los drones vuelan por encima del edificio más alto bajo su ruta; los de SKULLS quedaron a ~88 m porque su ruta cruza una torre. Si se quieren bajos, acortar su ruta para que no pase sobre edificios. |
