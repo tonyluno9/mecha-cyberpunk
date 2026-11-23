@@ -534,6 +534,24 @@ namespace MechaCyberpunk.IA.APie
             turnos = turnosPandilla;
         }
 
+        /// <summary>T-1701: lo pone en <paramref name="punto"/> (su nuevo hogar) sin tocar su vida ni su estado. Para reubicar al que quedó inalcanzable.</summary>
+        public void Reubicar(Vector3 punto)
+        {
+            hogar = punto;
+            tieneHogar = true;
+            velocidadVertical = 0f;
+            if (controlador != null)
+            {
+                controlador.enabled = false;
+                transform.position = punto;
+                controlador.enabled = true;
+            }
+            else
+            {
+                transform.position = punto;
+            }
+        }
+
         /// <summary>Vuelve a su punto con la vida llena, listo para esperar. El objeto debe estar activo.</summary>
         public void Reaparecer()
         {
