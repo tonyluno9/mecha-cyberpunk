@@ -493,6 +493,7 @@ se vea el impacto, sin cambiar el daño. El salto queda como está (posible camb
 5. Implante de brazos: golpe más rápido (ya está más fuerte) y al golpear un carro lo mueve unos centímetros (impulso pequeño, no lo saca volando).
 
 ## T35. Muro: unir los muros con las torres
+**HECHA (22-nov, merge 8340fdf):** las rendijas eran entre el cuerpo de cada torre MU02 (más angosto que su base, hasta 1.4 m adentro de su caja) y los tramos MU01 vecinos, y de 5 cm entre los rellenos y las puertas. MuroTorresT1681 alargó 44 tramos MU01 (mismo modelo, con su collider): 1.8 m dentro de cada torre (las 16, las de esquina por sus dos lados) y 0.25 m dentro del marco de cada puerta. Rendijas visibles > 5 cm junto a torres 52 → 0 (rayos cada 2 cm, 4 alturas, 5 ángulos), cápsulas del jugador libres 0 y rayos horizontales cada 0.25 m libres 0. MuroTorresT1681Pruebas 3/3, MuroPerimetroT1601Pruebas 3/3, LimpiezaT1680Pruebas 4/4. Capturas antes/después a 1.7 m en docs/capturas/_tareas/T35/ (la unión de la captura 06 es la de torre_0_Este). Las fachadas de casas junto al muro no se tocaron.
 Entre los tramos del muro y las torres junto a las puertas quedan rendijas que parecen salidas (captura 06). Unir TODAS las torres con sus muros
 sin ninguna separación visible ni pasable.
 
