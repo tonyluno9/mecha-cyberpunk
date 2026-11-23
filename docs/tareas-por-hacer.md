@@ -497,6 +497,7 @@ Entre los tramos del muro y las torres junto a las puertas quedan rendijas que p
 sin ninguna separación visible ni pasable.
 
 ## T36. Siempre de noche
+**HECHA (22-nov, merge ce13bcf):** ReglaNocheFija: del paso 2 al 11 de la historia el reloj se queda a las 23:00 en pausa; si algo lo adelanta (dormir, la clínica, una partida cargada de día) vuelve a las 23:00 sumando los días cruzados; desde el paso 12 corre normal. Compila; NocheFijaT1685Pruebas 26/26 EditMode; NocheFijaT1685Play 2/2 en Play (paso 4: AvanzarHasta(12) → a los 5 cuadros 23:00, de noche, en pausa, día 2; paso 12: el mediodía se queda); RecorridoMisionesPruebas 2/2.
 El juego se queda de NOCHE todo el tiempo hasta la misión de después de "la chica" (paso 11 de la historia); después de esa misión se podrá
 pasar a día. Por ahora: noche fija, sin ciclo de día.
 
