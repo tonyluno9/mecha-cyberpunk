@@ -47,3 +47,8 @@ Escenas: los subagentes trabajan de uno en uno en la carpeta principal (Unity ba
 - Paso 0: HECHO (merge 9032f76, rama tony/blender-22nov-d).
 - T37: HECHA, merge c62636d (marcada 96e271a). Pendiente: panel blanco de la captura 05 no encontrado en la escena; cascarones de cubo con textura (Bar, Clandestino, Mercado Negro, casa, CIC, taller) anotados en assets-faltan.
 - T36: código en tony/T-1685-siempre-noche (4338dc2), falta compilar e integrar (lo hace el subagente de T35 al empezar).
+- T36: HECHA, merge ce13bcf (prueba Play NocheFijaT1685Play 2/2).
+- T35: HECHA, merge 8340fdf (44 tramos MU01 alargados, rendijas 52 → 0).
+- T45: código en tony/T-1683-menos-carros (9f74562), falta correr MenosCarrosT1683.Aplicar en la carpeta principal.
+- T38+E3: en curso (T-1682).
+- Sesión B: TERMINÓ (2579abf). Pide en para-sesion-A ronda D: Historia_EsperaSkulls, expendedora entre CIC y Tianguis, PuntoTrepar a azoteas, (opcional) vendedores y drones.
