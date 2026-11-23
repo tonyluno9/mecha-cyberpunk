@@ -17,7 +17,7 @@ Le gustó (NO se toca): el logo, las opciones, levantarse del suelo al inicio, l
 | T59 | [Tino vende las armas y las mejora; fuera la armería](T59.md) | B (quitar armería del mapa: A) | HECHA |
 | T60 | [Guardar el arma: que desaparezca de la mano](T60.md) | B | HECHA |
 | T62 | [Avisos del tutorial en una ventana central con 'Entendido'; máquina expendedora con ratón](T62.md) | B | HECHA |
-| T63 | [Consumibles: usarlos mientras corres, con sonido, y que curen](T63.md) | B | pendiente |
+| T63 | [Consumibles: usarlos mientras corres, con sonido, y que curen](T63.md) | B | HECHA |
 | T64 | [Quitar el sonido al hacer una kill](T64.md) | B | HECHA |
 | T65 | [Eliminar TODOS los sonidos viejos de la primera versión](T65.md) | B | HECHA |
 | T66 | [Misión 'Libera el Tianguis': enemigo escondido que no deja terminar](T66.md) | A | pendiente |

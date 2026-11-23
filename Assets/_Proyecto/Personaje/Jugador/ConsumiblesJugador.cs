@@ -47,6 +47,17 @@ namespace MechaCyberpunk.Personaje.Jugador
         /// <summary>Se avisa al usar un objeto, con el objeto.</summary>
         public event Action<DatosConsumible> Usado;
 
+        /// <summary>T-63: se avisa cada vez que se cura vida con un consumible, con los puntos que de verdad curó (la venda avisa en cada paso).</summary>
+        public event Action<float> Curado;
+
+        private void AvisarCuracion(float curado)
+        {
+            if (curado > 0f)
+            {
+                Curado?.Invoke(curado);
+            }
+        }
+
         /// <summary>Se avisa cuando cambia el objeto elegido o lo que lleva.</summary>
         public event Action Cambio;
 
@@ -86,7 +97,7 @@ namespace MechaCyberpunk.Personaje.Jugador
             float dt = Time.deltaTime;
             if (gradual.Activa && vida != null)
             {
-                vida.Curar(gradual.Avanzar(dt));
+                AvisarCuracion(vida.Curar(gradual.Avanzar(dt)));
             }
             if (velocidadHasta >= 0f && Time.time >= velocidadHasta)
             {
@@ -161,7 +172,7 @@ namespace MechaCyberpunk.Personaje.Jugador
                 }
                 else
                 {
-                    vida.Curar(c.Curacion);
+                    AvisarCuracion(vida.Curar(c.Curacion));
                 }
             }
             vida.DarInvulnerabilidad(c.SegundosSinDanio);
@@ -175,11 +186,7 @@ namespace MechaCyberpunk.Personaje.Jugador
                 velocidadHasta = Mathf.Max(velocidadHasta, Time.time + c.SegundosVelocidad);
                 controlador.FactorExtraVelocidad = factorVelocidad;
             }
-            if (c.SegundosVelocidad > 0f && c.FactorVelocidad > 1f)
-            {
-                // T-1561: la bebida energética se bebe con PJ01_Beber (guarda el arma y sale de pelea antes; bloquea el movimiento mientras dura).
-                GetComponentInChildren<MechaCyberpunk.Personaje.Visual.VisualPersonaje>(false)?.Beber();
-            }
+            // T-63: ya no se reproduce el gesto PJ01_Beber: guardaba el arma y bloqueaba las piernas, y el efecto debe ser al instante, también corriendo y en pelea.
             ReglaSonidoConsumible.Sonar(c.Id); // T-1474: sonido propio de cada consumible (antes UI_ACEPTAR)
             Usado?.Invoke(c);
             return true;

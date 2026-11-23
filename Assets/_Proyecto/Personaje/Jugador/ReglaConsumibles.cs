@@ -42,6 +42,41 @@ namespace MechaCyberpunk.Personaje.Jugador
         }
     }
 
+    /// <summary>T-63: suma lo curado para mostrarlo en el HUD ("+25 VIDA"): se acumula mientras llegan curaciones seguidas y se borra tras un rato sin curar (C# puro).</summary>
+    public class AvisoCuracion
+    {
+        private float total;
+        private float restante;
+
+        /// <summary>Lo curado en la racha actual (puntos).</summary>
+        public float Total => restante > 0f ? total : 0f;
+
+        public bool Visible => restante > 0f && total > 0f;
+
+        /// <summary>Suma lo curado y reinicia el tiempo que se muestra (<paramref name="segundos"/>).</summary>
+        public void Sumar(float curado, float segundos)
+        {
+            if (curado <= 0f)
+            {
+                return;
+            }
+            total = restante > 0f ? total + curado : curado;
+            restante = Math.Max(0f, segundos);
+        }
+
+        public void Avanzar(float dt)
+        {
+            if (restante > 0f)
+            {
+                restante = Math.Max(0f, restante - dt);
+                if (restante <= 0f)
+                {
+                    total = 0f;
+                }
+            }
+        }
+    }
+
     /// <summary>Reglas puras de la selección de consumibles (T-685).</summary>
     public static class ReglaConsumibles
     {
