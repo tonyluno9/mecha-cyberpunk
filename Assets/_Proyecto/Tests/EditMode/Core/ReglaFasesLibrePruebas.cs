@@ -3,18 +3,26 @@ using NUnit.Framework;
 
 namespace MechaCyberpunk.Tests
 {
-    /// <summary>T-historia-libre-23nov: la escalada del modo libre sube por tiempo O por bajas (lo que pase primero), una fase a la vez.</summary>
+    /// <summary>T-historia-libre-23nov / T99: la escalada del modo libre sube a 1 min O a 10 bajas de la fase (lo que pase primero), una fase a la vez.</summary>
     public class ReglaFasesLibrePruebas
     {
         private static ReglaFasesLibre ReglaDeTony() => new ReglaFasesLibre(ParametrosRespuesta.FasesLibrePorOmision());
 
         [Test]
-        public void PorOmision_SeisFases_LaUltimaSinFin()
+        public void PorOmision_SeisFases_UnMinutoODiezBajas_LaUltimaSinFin()
         {
             FaseModoLibre[] fases = ParametrosRespuesta.FasesLibrePorOmision();
             Assert.AreEqual(6, fases.Length);
-            Assert.AreEqual(300f, fases[0].Segundos);
-            Assert.AreEqual(20, fases[0].Muertes);
+            for (int i = 0; i < 5; i++)
+            {
+                Assert.AreEqual(60f, fases[i].Segundos, fases[i].Nombre);
+                Assert.AreEqual(10, fases[i].Muertes, fases[i].Nombre);
+                Assert.AreEqual(0, fases[i].MuertesAlterna, fases[i].Nombre);
+                foreach (TipoRespuesta t in fases[i].Tipos)
+                {
+                    Assert.IsTrue(FaseModoLibre.Contiene(fases[i].TiposMuertes, t), fases[i].Nombre + ": cuenta toda baja de lo que llega en la fase (" + t + ")");
+                }
+            }
             Assert.AreEqual(0f, fases[5].Segundos);
             Assert.AreEqual(0, fases[5].Muertes);
             Assert.IsFalse(fases[2].ModoNova);
@@ -22,10 +30,10 @@ namespace MechaCyberpunk.Tests
         }
 
         [Test]
-        public void Avanzar_PasaElTiempoMaximo_SubeDeFase()
+        public void Avanzar_UnMinutoSinBajas_SubeDeFase()
         {
             ReglaFasesLibre r = ReglaDeTony();
-            Assert.IsFalse(r.Avanzar(299f));
+            Assert.IsFalse(r.Avanzar(59f));
             Assert.AreEqual(1, r.Nivel);
             Assert.IsTrue(r.Avanzar(1f));
             Assert.AreEqual(2, r.Nivel);
@@ -33,12 +41,12 @@ namespace MechaCyberpunk.Tests
         }
 
         [Test]
-        public void Avanzar_MatasVeintePoliciasAntesDelTiempo_SubeDeFase()
+        public void Avanzar_DiezBajasAntesDelMinuto_SubeDeFase()
         {
             ReglaFasesLibre r = ReglaDeTony();
-            for (int i = 0; i < 19; i++)
+            for (int i = 0; i < 9; i++)
             {
-                r.RegistrarBaja(TipoRespuesta.PoliciaAPie);
+                r.RegistrarBaja(i % 2 == 0 ? TipoRespuesta.PoliciaAPie : TipoRespuesta.Patrulla);
             }
             Assert.IsFalse(r.Avanzar(10f));
             r.RegistrarBaja(TipoRespuesta.PoliciaAPie);
@@ -47,28 +55,16 @@ namespace MechaCyberpunk.Tests
         }
 
         [Test]
-        public void RegistrarBaja_TipoQueNoCuenta_NoSube()
+        public void RegistrarBaja_TipoQueNoEsDeLaFase_NoSube()
         {
             ReglaFasesLibre r = ReglaDeTony();
+            r.Iniciar(4); // drones de NOVA
             for (int i = 0; i < 50; i++)
             {
-                r.RegistrarBaja(TipoRespuesta.Patrulla); // en la fase 1 solo cuentan los policías a pie
+                r.RegistrarBaja(TipoRespuesta.PoliciaAPie); // un policía rezagado no es de esta fase
             }
             Assert.IsFalse(r.Avanzar(1f));
-            Assert.AreEqual(1, r.Nivel);
-        }
-
-        [Test]
-        public void Fase2_SeisPatrullasInutilizadas_Sube()
-        {
-            ReglaFasesLibre r = ReglaDeTony();
-            r.Iniciar(2);
-            for (int i = 0; i < 6; i++)
-            {
-                r.RegistrarBaja(TipoRespuesta.Patrulla);
-            }
-            Assert.IsTrue(r.Avanzar(0.1f));
-            Assert.AreEqual(3, r.Nivel);
+            Assert.AreEqual(4, r.Nivel);
         }
 
         [Test]
@@ -87,6 +83,15 @@ namespace MechaCyberpunk.Tests
         }
 
         [Test]
+        public void Avanzar_PasoDeTiempoEnorme_SoloSubeUnaFase()
+        {
+            ReglaFasesLibre r = ReglaDeTony();
+            Assert.IsTrue(r.Avanzar(1000f));
+            Assert.AreEqual(2, r.Nivel);
+            Assert.AreEqual(0f, r.SegundosEnFase);
+        }
+
+        [Test]
         public void UltimaFase_NuncaTermina()
         {
             ReglaFasesLibre r = ReglaDeTony();
@@ -100,12 +105,12 @@ namespace MechaCyberpunk.Tests
         }
 
         [Test]
-        public void SegundosHastaFase_SoloTiempo_MinutosDeTony()
+        public void SegundosHastaFase_SoloTiempo_UnMinutoPorFase()
         {
             ReglaFasesLibre r = ReglaDeTony();
             Assert.AreEqual(0f, r.SegundosHastaFase(1));
-            Assert.AreEqual(900f, r.SegundosHastaFase(4));
-            Assert.AreEqual(1440f, r.SegundosHastaFase(6));
+            Assert.AreEqual(180f, r.SegundosHastaFase(4));
+            Assert.AreEqual(300f, r.SegundosHastaFase(6));
         }
 
         [Test]

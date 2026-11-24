@@ -3,9 +3,9 @@ using System;
 namespace MechaCyberpunk.Core
 {
     /// <summary>
-    /// T94: la regla pura de la fase 0 del modo libre (solo SKULLS, antes de la policía). Dura al menos <see cref="ParametrosRespuesta.SegundosFaseSkulls"/>;
-    /// pasado ese tiempo termina en cuanto llevas <see cref="ParametrosRespuesta.SkullsFaseSkulls"/> SKULLS vencidos, y siempre termina a
-    /// <see cref="ParametrosRespuesta.SegundosMaximosFaseSkulls"/> para que no se atore. Mientras dura manda un goteo constante de grupos pequeños
+    /// T94: la regla pura de la fase 0 del modo libre (solo SKULLS, antes de la policía). T99: termina a los
+    /// <see cref="ParametrosRespuesta.SegundosFaseSkulls"/> (60 s) o en cuanto llevas <see cref="ParametrosRespuesta.SkullsFaseSkulls"/> (10) SKULLS
+    /// vencidos, lo que pase primero (sin tiempo mínimo). Mientras dura manda un goteo constante de grupos pequeños
     /// (cada <see cref="ParametrosRespuesta.SegundosEntreGruposSkulls"/> s, hasta <see cref="ParametrosRespuesta.SkullsVivosFaseSkulls"/> vivos y dentro
     /// del tope de enemigos del modo libre); una fracción llega armada. Sin Unity: el tiempo entra como dt y el azar (0 a 1) como parámetro.
     /// </summary>
@@ -37,11 +37,9 @@ namespace MechaCyberpunk.Core
         {
             get
             {
-                if (p.SegundosMaximosFaseSkulls > 0f && Segundos >= p.SegundosMaximosFaseSkulls)
-                {
-                    return true;
-                }
-                return Segundos >= p.SegundosFaseSkulls && (p.SkullsFaseSkulls <= 0 || Muertes >= p.SkullsFaseSkulls);
+                // T99: lo que pase primero (el tiempo máximo o los SKULLS vencidos); ya no hay tiempo mínimo.
+                return (p.SegundosFaseSkulls > 0f && Segundos >= p.SegundosFaseSkulls)
+                    || (p.SkullsFaseSkulls > 0 && Muertes >= p.SkullsFaseSkulls);
             }
         }
 
