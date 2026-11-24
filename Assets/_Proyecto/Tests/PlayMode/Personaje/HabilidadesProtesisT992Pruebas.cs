@@ -106,7 +106,7 @@ namespace MechaCyberpunk.Tests.Personaje
         }
 
         [UnityTest]
-        public IEnumerator Piernas_NivelI_CorrerX1punto5_Dura6s_YLuegoRecarga()
+        public IEnumerator Piernas_NivelI_CorrerX1punto5_Dura18s_YLuegoRecarga()
         {
             yield return Calentar();
             Poner(EspacioImplante.Piernas, 1);
@@ -132,10 +132,12 @@ namespace MechaCyberpunk.Tests.Personaje
             Debug.Log("[Prueba] T-992 correr con PIERNAS I: medido " + distancia + " m, esperado " + esperada + " m");
             Assert.AreEqual(esperada, distancia, esperada * Tolerancia);
 
-            yield return Esperar(5.4f - (Time.time - inicio));
-            Assert.AreEqual(EstadoHabilidad.Activa, habilidades.Estado(HabilidadProtesis.Piernas), "a los 5.4 s sigue activa");
-            yield return Esperar(6.4f - (Time.time - inicio));
-            Assert.AreEqual(EstadoHabilidad.Recargando, habilidades.Estado(HabilidadProtesis.Piernas), "a los 6.4 s ya recarga");
+            float dura = habilidades.Config.Tiempos(HabilidadProtesis.Piernas).duracionNivel1; // T98: 18 s (antes 6)
+            Assert.AreEqual(18f, dura, 0.0001f, "T98: PIERNAS I dura el triple");
+            yield return Esperar(dura - 0.6f - (Time.time - inicio));
+            Assert.AreEqual(EstadoHabilidad.Activa, habilidades.Estado(HabilidadProtesis.Piernas), "0.6 s antes de acabar sigue activa");
+            yield return Esperar(dura + 0.4f - (Time.time - inicio));
+            Assert.AreEqual(EstadoHabilidad.Recargando, habilidades.Estado(HabilidadProtesis.Piernas), "0.4 s después ya recarga");
             Assert.AreEqual(1f, habilidades.FactorCorrer, "y el efecto se acabó");
             habilidades.Pulsar(HabilidadProtesis.Piernas); // T-1329: ya no hay tecla suelta
             yield return null;
@@ -170,7 +172,7 @@ namespace MechaCyberpunk.Tests.Personaje
         }
 
         [UnityTest]
-        public IEnumerator Piernas_NivelII_Dura10s()
+        public IEnumerator Piernas_NivelII_Dura30s()
         {
             yield return Calentar();
             Poner(EspacioImplante.Piernas, 2);
@@ -178,10 +180,12 @@ namespace MechaCyberpunk.Tests.Personaje
             habilidades.Pulsar(HabilidadProtesis.Piernas); // T-1329: ya no hay tecla suelta
             yield return null;
             float inicio = Time.time;
-            yield return Esperar(9.4f - (Time.time - inicio));
-            Assert.AreEqual(EstadoHabilidad.Activa, habilidades.Estado(HabilidadProtesis.Piernas), "con el nivel II sigue activa a los 9.4 s");
-            yield return Esperar(10.5f - (Time.time - inicio));
-            Assert.AreEqual(EstadoHabilidad.Recargando, habilidades.Estado(HabilidadProtesis.Piernas), "y a los 10.5 s recarga");
+            float dura = habilidades.Config.Tiempos(HabilidadProtesis.Piernas).duracionNivel2; // T98: 30 s (antes 10)
+            Assert.AreEqual(30f, dura, 0.0001f, "T98: PIERNAS II dura el triple");
+            yield return Esperar(dura - 0.6f - (Time.time - inicio));
+            Assert.AreEqual(EstadoHabilidad.Activa, habilidades.Estado(HabilidadProtesis.Piernas), "con el nivel II sigue activa 0.6 s antes de acabar");
+            yield return Esperar(dura + 0.5f - (Time.time - inicio));
+            Assert.AreEqual(EstadoHabilidad.Recargando, habilidades.Estado(HabilidadProtesis.Piernas), "y 0.5 s después recarga");
         }
 
         [UnityTest]
@@ -332,9 +336,10 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.AreEqual(EstadoHabilidad.Activa, habilidades.Estado(HabilidadProtesis.Cabeza));
             Assert.Greater(visor.Marcados, 0, "pulsar 3 marca al enemigo detrás de la pared");
             Debug.Log("[Prueba] T-992 visor: " + visor.Marcados + " renderers marcados");
-            yield return Esperar(7.4f - (Time.time - inicio));
-            Assert.Greater(visor.Marcados, 0, "a los 7.4 s sigue marcado (nivel I dura 8 s)");
-            yield return Esperar(8.6f - (Time.time - inicio));
+            float dura = habilidades.Config.Tiempos(HabilidadProtesis.Cabeza).duracionNivel1; // T98: 24 s (antes 8)
+            yield return Esperar(dura - 0.6f - (Time.time - inicio));
+            Assert.Greater(visor.Marcados, 0, "0.6 s antes de acabar sigue marcado (nivel I dura " + dura + " s)");
+            yield return Esperar(dura + 0.6f - (Time.time - inicio));
             Assert.AreEqual(EstadoHabilidad.Recargando, habilidades.Estado(HabilidadProtesis.Cabeza));
             Assert.AreEqual(0, visor.Marcados, "al acabar se desmarcan");
         }
@@ -366,7 +371,7 @@ namespace MechaCyberpunk.Tests.Personaje
             habilidades.Pulsar(HabilidadProtesis.Brazos); // T-1329: ya no hay tecla suelta
             yield return null;
             Assert.AreEqual(EstadoHabilidad.Lista, habilidades.Estado(HabilidadProtesis.Brazos), "en el carro la tecla 2 no hace nada");
-            yield return Esperar(6.3f);
+            yield return Esperar(habilidades.Config.Tiempos(HabilidadProtesis.Piernas).duracionNivel1 + 0.3f); // T98: 18 s (antes 6)
             Assert.AreEqual(EstadoHabilidad.Recargando, habilidades.Estado(HabilidadProtesis.Piernas), "pero el tiempo de PIERNAS siguió corriendo");
         }
 

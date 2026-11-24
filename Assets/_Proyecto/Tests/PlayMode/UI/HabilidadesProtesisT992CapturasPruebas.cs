@@ -142,7 +142,7 @@ namespace MechaCyberpunk.Tests.UI
             habilidades.Pulsar(HabilidadProtesis.Brazos); // T-1329: ya no hay tecla suelta
             yield return null;
             Assert.AreEqual(EstadoHabilidad.Activa, habilidades.Estado(HabilidadProtesis.Brazos));
-            float fin = Time.time + 6.6f;
+            float fin = Time.time + habilidades.Config.Tiempos(HabilidadProtesis.Brazos).duracionNivel1 + 0.6f; // T98: 18 s (antes 6)
             while (Time.time < fin) yield return null;
             Assert.AreEqual(EstadoHabilidad.Recargando, habilidades.Estado(HabilidadProtesis.Brazos));
             habilidades.Pulsar(HabilidadProtesis.Piernas); // T-1329: ya no hay tecla suelta
@@ -151,7 +151,7 @@ namespace MechaCyberpunk.Tests.UI
             fin = Time.time + 2.2f;
             while (Time.time < fin) yield return null;
             Capturar("barra-activa.png");
-            fin = Time.time + 4.5f;
+            fin = Time.time + habilidades.Config.Tiempos(HabilidadProtesis.Piernas).duracionNivel1 - 1.5f; // T98: que PIERNAS se acabe
             while (Time.time < fin) yield return null;
 
             // 3. Visor: un pandillero detrás de una pared, visto con CABEZA activa.
