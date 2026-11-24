@@ -13,21 +13,46 @@ MonoBehaviour:
   m_Name: ConfigHabilidadesProtesis
   m_EditorClassIdentifier: MechaCyberpunk.Personaje::MechaCyberpunk.Personaje.ConfigHabilidadesProtesis
   piernas:
-    duracionNivel1: 6
-    duracionNivel2: 10
+    duracionNivel1: 18
+    duracionNivel2: 30
     recarga: 20
   brazos:
-    duracionNivel1: 6
-    duracionNivel2: 10
+    duracionNivel1: 18
+    duracionNivel2: 30
     recarga: 25
   cabeza:
-    duracionNivel1: 8
-    duracionNivel2: 14
+    duracionNivel1: 24
+    duracionNivel2: 42
     recarga: 30
+  laser:
+    duracionNivel1: 12
+    duracionNivel2: 12
+    recarga: 16
+  misiles:
+    duracionNivel1: 3
+    duracionNivel2: 3
+    recarga: 22
   factorCorrer: 1.5
   factorCaminar: 1.3
   factorSalto: 2.2
   factorGolpe: 2.5
   empujeGolpe: 6
   factorTiempoRecarga: 0.4
+  factorRapidezGolpe: 1.2
+  masaCuerpoPesado: 150
+  empujeCuerpoPesado: 0.6
+  danioLaser: 80
+  alcanceLaser: 45
+  anchoLaser: 0.08
+  radioLaser: 0.2
+  colorLaser: {r: 1, g: 0.15, b: 0.2, a: 1}
+  cantidadMisiles: 4
+  segundosEntreMisiles: 0.15
+  danioMisil: 90
+  radioMisil: 3.5
+  velocidadMisil: 20
+  giroMisil: 220
+  busquedaMisil: 45
+  conoMisil: 75
+  vidaMisil: 5
   controles: {fileID: -944628639613478452, guid: c989656e714a4084491168fccd720455, type: 3}

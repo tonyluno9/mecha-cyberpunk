@@ -23,14 +23,14 @@ namespace MechaCyberpunk.Personaje
     {
         public const string NombreRecurso = "ConfigHabilidadesProtesis";
 
-        [Header("Tiempos")]
-        [SerializeField] private TiemposHabilidad piernas = new TiemposHabilidad { duracionNivel1 = 6f, duracionNivel2 = 10f, recarga = 20f };
-        [SerializeField] private TiemposHabilidad brazos = new TiemposHabilidad { duracionNivel1 = 6f, duracionNivel2 = 10f, recarga = 25f };
-        [SerializeField] private TiemposHabilidad cabeza = new TiemposHabilidad { duracionNivel1 = 8f, duracionNivel2 = 14f, recarga = 30f };
+        [Header("Tiempos (T98: duraciones x3 del 24-nov, recarga igual)")]
+        [SerializeField] private TiemposHabilidad piernas = new TiemposHabilidad { duracionNivel1 = 18f, duracionNivel2 = 30f, recarga = 20f };
+        [SerializeField] private TiemposHabilidad brazos = new TiemposHabilidad { duracionNivel1 = 18f, duracionNivel2 = 30f, recarga = 25f };
+        [SerializeField] private TiemposHabilidad cabeza = new TiemposHabilidad { duracionNivel1 = 24f, duracionNivel2 = 42f, recarga = 30f };
         [Tooltip("T-1017: el brazo láser dispara mientras dura.")]
-        [SerializeField] private TiemposHabilidad laser = new TiemposHabilidad { duracionNivel1 = 4f, duracionNivel2 = 4f, recarga = 16f };
+        [SerializeField] private TiemposHabilidad laser = new TiemposHabilidad { duracionNivel1 = 12f, duracionNivel2 = 12f, recarga = 16f };
         [Tooltip("T-1017: la hombrera lanza sus misiles al activarse; la duración es cuánto se ve activa.")]
-        [SerializeField] private TiemposHabilidad misiles = new TiemposHabilidad { duracionNivel1 = 1f, duracionNivel2 = 1f, recarga = 22f };
+        [SerializeField] private TiemposHabilidad misiles = new TiemposHabilidad { duracionNivel1 = 3f, duracionNivel2 = 3f, recarga = 22f };
 
         [Header("PIERNAS")]
         [Tooltip("Multiplica la velocidad al correr mientras dura.")]
