@@ -70,10 +70,20 @@ namespace MechaCyberpunk.Core
         /// <summary>T-historia-libre-23nov: enemigos de respuesta vivos que cuentan para el tope del modo libre.</summary>
         public static int VivosLibre => Regla.VivosLibre;
 
+        /// <summary>T94: cuántos enemigos que no son de respuesta (los SKULLS del goteo del modo libre) están vivos; cuentan para el tope del modo libre.</summary>
+        public static void PonerVivosExtraLibre(int cuantos)
+        {
+            vivosExtraLibre = Mathf.Max(0, cuantos);
+            Regla.VivosExtraLibre = vivosExtraLibre;
+        }
+
+        private static int vivosExtraLibre;
+
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void Reiniciar()
         {
             modoNovaPrevio = false;
+            vivosExtraLibre = 0;
             camionetasLlegadas = 0;
             puertaForzada = false;
             entradas.Clear();
@@ -108,6 +118,7 @@ namespace MechaCyberpunk.Core
                 if (regla == null)
                 {
                     regla = new ReglaEscaladaRespuesta(Parametros);
+                    regla.VivosExtraLibre = vivosExtraLibre;
                     if (libre != null)
                     {
                         regla.PonerModoLibre(libre);
