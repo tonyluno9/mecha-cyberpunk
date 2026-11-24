@@ -71,7 +71,8 @@ namespace MechaCyberpunk.Personaje.Movimiento
         /// <summary>Derriba al jugador ahora, empujándolo hacia <paramref name="direccion"/> (plano horizontal). Lo usan el detector de carros y las pruebas.</summary>
         public bool Derribar(Vector3 direccion)
         {
-            if (Derribado || (vida != null && vida.EstaKO) || (jugadorAPie != null && jugadorAPie.Modo != ModoJugador.APie))
+            // VR (vr/quest3): con visor no se derriba ni empuja al jugador (marea).
+            if (ModoVR.Activo || Derribado || (vida != null && vida.EstaKO) || (jugadorAPie != null && jugadorAPie.Modo != ModoJugador.APie))
             {
                 return false;
             }
