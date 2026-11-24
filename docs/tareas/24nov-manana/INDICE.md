@@ -6,7 +6,7 @@ Le gustó: en VR el juego se ve bien.
 | T96 | Morir → MENÚ PRINCIPAL: carga infinita | A (main) | HECHA |
 | T94 | Modo libre: 2 min de SKULLS antes de la policía | A (main) | HECHA |
 | T90 | Menú de Tino no desaparece en su cinemática | A (main) | HECHA |
-| T93 | Pantalla de muerte con estilo nuevo | A (main) | PENDIENTE |
+| T93 | Pantalla de muerte con estilo nuevo | A (main) | HECHA |
 | T92 | El doble de balas por arma | A (main) | PENDIENTE |
 | T91 | VR: miras a vista completa al apuntar | VR | HECHA (VR9) |
 | T95 | VR: gesto de la espalda y guardar en la cadera | VR | HECHA (VR9) |
