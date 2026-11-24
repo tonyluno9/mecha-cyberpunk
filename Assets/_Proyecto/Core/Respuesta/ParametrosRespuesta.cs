@@ -42,8 +42,26 @@ namespace MechaCyberpunk.Core
 
         // ----- T-historia-libre-23nov: modo libre (escalada progresiva tras el campo de tiro) -----
         [Header("Modo libre (T-historia-libre-23nov)")]
-        [Tooltip("Fase 0 del modo libre: segundos solo con los SKULLS antes de que llegue la policía (s). Si antes te ganas estrellas, la policía llega antes.")]
-        [Min(0f)] public float SegundosFaseSkulls = 45f;
+        [Tooltip("T94: fase 0 del modo libre (solo SKULLS, sin policía aunque tengas estrellas): segundos MÍNIMOS que dura (s). Termina al pasar este tiempo si ya mataste SkullsFaseSkulls; si no, cuando los mates (o al tope SegundosMaximosFaseSkulls).")]
+        [Min(0f)] public float SegundosFaseSkulls = 120f;
+        [Tooltip("T94: SKULLS vencidos en la fase 0 para que termine (cuenta desde el principio de la fase; solo la deja terminar tras SegundosFaseSkulls). 0 = solo el tiempo.")]
+        [Min(0)] public int SkullsFaseSkulls = 10;
+        [Tooltip("T94: tope de la fase 0 para que no se atore: a estos segundos llega la policía aunque no hayas matado a los SKULLS pedidos (s).")]
+        [Min(0f)] public float SegundosMaximosFaseSkulls = 240f;
+        [Tooltip("T94: segundos entre dos grupos de SKULLS del goteo de la fase 0 (s).")]
+        [Min(0.5f)] public float SegundosEntreGruposSkulls = 12f;
+        [Tooltip("T94: segundos hasta el primer grupo de SKULLS al empezar la fase 0 (s).")]
+        [Min(0f)] public float SegundosPrimerGrupoSkulls = 4f;
+        [Tooltip("T94: SKULLS por grupo del goteo, mínimo.")]
+        [Min(1)] public int SkullsPorGrupoMin = 2;
+        [Tooltip("T94: SKULLS por grupo del goteo, máximo.")]
+        [Min(1)] public int SkullsPorGrupoMax = 3;
+        [Tooltip("T94: máximo de SKULLS del goteo vivos a la vez (además respeta TopeEnemigosLibre / TopeEnemigosLibreVR).")]
+        [Min(1)] public int SkullsVivosFaseSkulls = 6;
+        [Tooltip("T94: fracción de los SKULLS del goteo que llegan armados (pistola; nunca rifles). El resto pelea a golpes. 0 a 1.")]
+        [Range(0f, 1f)] public float FraccionSkullsArmados = 0.2f;
+        [Tooltip("T94: los SKULLS del goteo aparecen a lo más a esta distancia del jugador (m); la mínima es MetrosMinimosRefuerzo y fuera de la vista (GradosVistaRefuerzo).")]
+        [Min(1f)] public float MetrosMaximosAparicionSkulls = 45f;
         [Tooltip("Fases 1 a 6 de la escalada del modo libre: cada una dura su tiempo o hasta sus bajas (lo que pase primero).")]
         public FaseModoLibre[] FasesLibre = FasesLibrePorOmision();
         [Tooltip("Modo libre en PC: máximo de enemigos de respuesta vivos a la vez (policías a pie, drones, NOVA; sin contar los vehículos). T-rendimiento-tope-24nov: medido en el build de PC (RTX 5070 Laptop, 2560x1600, Ultra): 24 enemigos dan 87.6 fps de promedio y 62.8 el 1 % más bajo; 31 dan 83.9 / 60.6.")]

@@ -34,7 +34,9 @@ namespace MechaCyberpunk.Progresion.Recorrido
 
         private ReglaFasesLibre regla;
         private ParametrosRespuesta numeros;
-        private float tiempoFaseSkulls;
+        private ReglaFaseSkulls reglaSkulls;
+        private FaseModoLibre faseSkulls;
+        private GoteoSkullsLibre goteo;
         private float proximaRevision;
         private bool pausadoPorCampo;
         private bool muerto;
@@ -44,7 +46,7 @@ namespace MechaCyberpunk.Progresion.Recorrido
         private readonly HashSet<PandilleroAPie> vigilados = new HashSet<PandilleroAPie>();
         private readonly List<PandilleroAPie> limpiar = new List<PandilleroAPie>();
 
-        /// <summary>Nivel de escalada: 0 (solo SKULLS) a 6.</summary>
+        /// <summary>Nivel de escalada: 0 (solo SKULLS, T94: goteo de grupos y sin policía) a 6.</summary>
         public int Nivel { get; private set; }
 
         public int SkullsMuertos { get; private set; }
@@ -73,12 +75,20 @@ namespace MechaCyberpunk.Progresion.Recorrido
             numeros = DirectorRespuesta.Parametros;
             regla = new ReglaFasesLibre(numeros.FasesLibre);
             Nivel = 0;
+            // T94: fase 0 solo con SKULLS: una fase del director sin tipos (no llega la policía aunque tengas estrellas) y el goteo de SKULLS.
+            reglaSkulls = new ReglaFaseSkulls(numeros);
+            faseSkulls = new FaseModoLibre("SKULLS", 0f, 1, false, new TipoRespuesta[0], 0, null);
+            goteo = gameObject.AddComponent<GoteoSkullsLibre>();
+            goteo.Configurar(numeros);
+            goteo.SkullVencido += AlVencerSkullGoteo;
+            DirectorRespuesta.PonerModoLibre(faseSkulls);
             FaseJuego.Reiniciar(FaseJuego.Fase.Skulls, 0);
             (Registro<IObjetivos>.Actual as ServicioObjetivos)?.Fijar(new Objetivo(TextoObjetivo, IdLugar.Ninguno));
             MisionProtegida.Desactivar();
             GuardarPuntoReintento(guardarReintento);
             gameObject.AddComponent<MarcadorModoLibre>().Configurar(this);
-            Debug.Log("[Historia] Empieza el modo libre (SOBREVIVE). Fases: " + regla.Total + ", fase 0 de " + numeros.SegundosFaseSkulls + " s.");
+            Debug.Log("[Historia] Empieza el modo libre (SOBREVIVE). Fases: " + regla.Total + ", fase 0 SKULLS de " + numeros.SegundosFaseSkulls + " s o "
+                + numeros.SkullsFaseSkulls + " SKULLS (tope " + numeros.SegundosMaximosFaseSkulls + " s).");
         }
 
         private void Awake()
@@ -117,6 +127,10 @@ namespace MechaCyberpunk.Progresion.Recorrido
                 }
             }
             vigilados.Clear();
+            if (goteo != null)
+            {
+                goteo.SkullVencido -= AlVencerSkullGoteo;
+            }
         }
 
         private void Update()
@@ -139,7 +153,7 @@ namespace MechaCyberpunk.Progresion.Recorrido
             if (enCampo != pausadoPorCampo)
             {
                 pausadoPorCampo = enCampo;
-                DirectorRespuesta.PonerModoLibre(enCampo || Nivel == 0 ? null : regla.Fase);
+                DirectorRespuesta.PonerModoLibre(enCampo ? null : FaseDelDirector);
             }
             if (enCampo || CinematicaEnCurso.Activa || Pausa.Activa)
             {
@@ -149,13 +163,7 @@ namespace MechaCyberpunk.Progresion.Recorrido
             SegundosVivo += dt;
             if (Nivel == 0)
             {
-                tiempoFaseSkulls += dt;
-                if (tiempoFaseSkulls >= numeros.SegundosFaseSkulls || EstrellasAhora() > 0)
-                {
-                    Nivel = 1;
-                    regla.Iniciar(1);
-                    AplicarFase();
-                }
+                AvanzarFaseSkulls(dt);
             }
             else if (regla.Avanzar(dt))
             {
@@ -166,6 +174,51 @@ namespace MechaCyberpunk.Progresion.Recorrido
             {
                 proximaRevision = Time.time + SegundosEntreRevisiones;
                 Revisar();
+            }
+        }
+
+        /// <summary>T94: la fase que se le pasa al director de respuesta (la de SKULLS, sin tipos, en la fase 0).</summary>
+        private FaseModoLibre FaseDelDirector => Nivel == 0 ? faseSkulls : regla.Fase;
+
+        // T94: la fase 0: goteo de grupos de SKULLS (dentro del tope de enemigos del modo libre) hasta que la regla diga que llega la policía.
+        private void AvanzarFaseSkulls(float dt)
+        {
+            reglaSkulls.Avanzar(dt);
+            if (reglaSkulls.Terminada)
+            {
+                Debug.Log("[Historia] T94: termina la fase 0 SKULLS a los " + reglaSkulls.Segundos.ToString("F0") + " s con " + reglaSkulls.Muertes
+                    + " SKULLS vencidos (" + goteo.Generados + " del goteo, " + goteo.GeneradosArmados + " armados).");
+                Nivel = 1;
+                regla.Iniciar(1);
+                AplicarFase();
+                return;
+            }
+            int espacio = numeros.TopeEnemigosLibreActual - DirectorRespuesta.VivosLibre;
+            int cuantos = reglaSkulls.CuantosGenerar(goteo.Vivos, espacio, UnityEngine.Random.value);
+            if (cuantos <= 0)
+            {
+                return;
+            }
+            if (goteo.Generar(cuantos, () => reglaSkulls.EsArmado(UnityEngine.Random.value)) > 0)
+            {
+                reglaSkulls.RegistrarGrupo();
+            }
+            else
+            {
+                reglaSkulls.RegistrarFallo();
+            }
+        }
+
+        private void AlVencerSkullGoteo(PandilleroAPie p)
+        {
+            if (muerto)
+            {
+                return;
+            }
+            SkullsMuertos++;
+            if (Nivel == 0 && !pausadoPorCampo)
+            {
+                reglaSkulls.RegistrarMuerte();
             }
         }
 
@@ -241,7 +294,7 @@ namespace MechaCyberpunk.Progresion.Recorrido
             }
             foreach (PandilleroAPie p in PandilleroAPie.Activos)
             {
-                if (p != null && !p.EstaKO && p.Pandilla == IdPandilla.Calaveras && !p.EsDeNova && vigilados.Add(p))
+                if (p != null && !p.EstaKO && p.Pandilla == IdPandilla.Calaveras && !p.EsDeNova && !goteo.EsDelGoteo(p) && vigilados.Add(p))
                 {
                     p.Vencido += AlVencerPandillero;
                 }
@@ -258,6 +311,10 @@ namespace MechaCyberpunk.Progresion.Recorrido
             if (!muerto)
             {
                 SkullsMuertos++;
+                if (Nivel == 0 && !pausadoPorCampo)
+                {
+                    reglaSkulls.RegistrarMuerte(); // T94: los SKULLS del mapa también cuentan para terminar la fase 0
+                }
             }
         }
 
@@ -392,7 +449,9 @@ namespace MechaCyberpunk.Progresion.Recorrido
             {
                 return "[Historia] sin modo libre";
             }
-            return "[Historia] modo libre fase " + d.Nivel + (d.Nivel > 0 ? " " + d.regla.Fase.Nombre + " " + d.regla.SegundosEnFase.ToString("F0") + "s bajas "
+            string fase0 = d.Nivel == 0 && d.reglaSkulls != null ? " SKULLS " + d.reglaSkulls.Segundos.ToString("F0") + "s bajas " + d.reglaSkulls.Muertes
+                + "/" + d.numeros.SkullsFaseSkulls + " goteo vivos " + d.goteo.Vivos + " (" + d.goteo.GeneradosArmados + "/" + d.goteo.Generados + " armados)" : string.Empty;
+            return "[Historia] modo libre fase " + d.Nivel + fase0 + (d.Nivel > 0 ? " " + d.regla.Fase.Nombre + " " + d.regla.SegundosEnFase.ToString("F0") + "s bajas "
                 + d.regla.MuertesDeFase + "/" + d.regla.Fase.Muertes : string.Empty) + " | SKULLS " + d.SkullsMuertos + " policías " + d.PoliciasMuertos
                 + " NOVA " + d.NovaMuertos + " | " + d.SegundosVivo.ToString("F0") + " s | vivos " + DirectorRespuesta.VivosLibre;
         }

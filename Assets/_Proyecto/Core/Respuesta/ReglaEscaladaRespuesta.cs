@@ -60,12 +60,17 @@ namespace MechaCyberpunk.Core
             }
         }
 
-        /// <summary>T-historia-libre-23nov: enemigos vivos que cuentan para el tope del modo libre (todo menos los vehículos).</summary>
+        /// <summary>T94: enemigos vivos que no son de respuesta (los SKULLS del goteo de la fase 0) y también cuentan para el tope del modo libre.</summary>
+        public int VivosExtraLibre { get => vivosExtraLibre; set => vivosExtraLibre = Math.Max(0, value); }
+
+        private int vivosExtraLibre;
+
+        /// <summary>T-historia-libre-23nov: enemigos vivos que cuentan para el tope del modo libre (todo menos los vehículos; T94: más <see cref="VivosExtraLibre"/>).</summary>
         public int VivosLibre
         {
             get
             {
-                int suma = 0;
+                int suma = vivosExtraLibre;
                 for (int i = 0; i < vivos.Length; i++)
                 {
                     suma += i == (int)TipoRespuesta.Patrulla || i == (int)TipoRespuesta.Camioneta ? 0 : vivos[i];
