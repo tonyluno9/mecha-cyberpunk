@@ -108,9 +108,19 @@ kbd{font:700 15px Rajdhani;color:var(--cyan);border:1px solid var(--cyan);paddin
 footer{padding:30px;text-align:center;color:var(--mut);border-top:1px solid var(--line)}
 @media(max-width:600px){.steps li{grid-template-columns:1fr}.map{aspect-ratio:auto}.map div{min-height:110px}.tl div{grid-template-columns:1fr}.rec span:last-child{display:none}}
 @media(prefers-reduced-motion:reduce){.logo{animation:none;clip-path:none}#hero>img,.rec i,.glitch{animation:none}}
+/* capturas */
+.shots{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:14px;margin:16px 0 30px}
+.shots figure{margin:0;display:flex;flex-direction:column}
+.shots img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;background:#000}
+.shots .big{grid-column:1/-1}.shots .big img{aspect-ratio:auto;max-height:560px;object-fit:contain}
+.shots .sm img{object-fit:contain}
+.shots figcaption{padding:8px 10px;font-size:15px}.shots figcaption b{display:block;color:var(--yel)}
+.hueco{aspect-ratio:16/9;display:grid;place-items:center;text-align:center;border:1px dashed var(--line);color:#8a93a6;font-weight:700;letter-spacing:.06em;padding:10px}
+.hueco small{display:block;font-weight:400;font-size:13px;letter-spacing:0}
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:6px}
 </style></head><body>
 
-<nav aria-label="Secciones"><b>CYBERCITY</b><a href="#cine">Cinemáticas</a><a href="#historia">Historia</a><a href="#demo">La demo</a><a href="#libre">Modo libre</a><a href="#ciudad">La ciudad</a><a href="#controles">Controles</a></nav>
+<nav aria-label="Secciones"><b>CYBERCITY</b><a href="#cine">Cinemáticas</a><a href="#historia">Historia</a><a href="#demo">La demo</a><a href="#libre">Modo libre</a><a href="#ciudad">La ciudad</a><a href="#juego">En el juego</a><a href="#controles">Controles</a></nav>
 
 <header id="hero">
   <img src="media/L01_Carga_Protagonista.jpg" alt="">
@@ -188,7 +198,21 @@ footer{padding:30px;text-align:center;color:var(--mut);border-top:1px solid var(
   </div>
 </div></section>
 
-<section class="band" id="controles"><div class="wrap">
+<section class="band" id="juego"><div class="wrap">
+  <span class="lbl">En el juego</span><h2>Así se ve CYBERCITY</h2>
+  <h3>Implantes</h3><p>Te puedes poner prótesis en los ojos, los brazos y las piernas.</p>
+  <div class="shots"><figure class="cut big"><img src="media/cap/imp_doc.jpg" alt="Con el Doc" loading="lazy"><figcaption><b>Con el Doc</b>El holograma de tu cuerpo con las prótesis: ojos, brazos, piernas y sinapsis.</figcaption></figure><figure class="cut sm"><img src="media/cap/imp_calle.jpg" alt="En plena calle" loading="lazy"><figcaption><b>En plena calle</b>Activa las prótesis desde el holograma del cuerpo.</figcaption></figure><figure class="cut sm"><img src="media/cap/imp_instalado.jpg" alt="Implante instalado" loading="lazy"><figcaption><b>Implante instalado</b>La clínica del Doc al terminar de instalar el exo de piernas.</figcaption></figure></div>
+  <h3>Armas</h3><p>Compras armas con Tino y les instalas mejoras pieza por pieza.</p>
+  <div class="shots"><figure class="cut "><img src="media/cap/arm_comprar.jpg" alt="La tienda de Tino" loading="lazy"><figcaption><b>La tienda de Tino</b>Lista de armas con precio y el holograma de cada una.</figcaption></figure><figure class="cut sm"><img src="media/cap/arm_mejorar.jpg" alt="Mejoras" loading="lazy"><figcaption><b>Mejoras</b>Cargador, cañón y mira, con las estadísticas antes y después.</figcaption></figure><figure class="cut sm"><img src="media/cap/arm_expendedora.jpg" alt="Máquina expendedora" loading="lazy"><figcaption><b>Máquina expendedora</b>Bebida, papitas y café.</figcaption></figure><figure class="cut"><div class="hueco">Rueda de armas<small>Captura pendiente</small></div></figure></div>
+  <h3>Noche y día</h3><p>La ciudad cambia entre la noche con neón y el día.</p>
+  <div class="shots"><figure class="cut big"><img src="media/cap/noche_mercado.jpg" alt="El mercado de noche" loading="lazy"><figcaption><b>El mercado de noche</b>Neón y gente en la calle.</figcaption></figure><figure class="cut "><img src="media/cap/noche_patrulla.jpg" alt="Calle de noche" loading="lazy"><figcaption><b>Calle de noche</b>Con una patrulla.</figcaption></figure><figure class="cut "><img src="media/cap/dia_skulls.jpg" alt="Calle de día" loading="lazy"><figcaption><b>Calle de día</b>El protagonista y los SKULLS.</figcaption></figure><figure class="cut"><div class="vs"><img src="media/cap/cmp_noche.jpg" alt="El mismo lugar de noche" loading="lazy" style="object-fit:contain"><img src="media/cap/cmp_dia.jpg" alt="El mismo lugar de día" loading="lazy" style="object-fit:contain"></div><figcaption><b>Mismo lugar</b>De noche y de día.</figcaption></figure></div>
+  <h3>Vehículos</h3><p>Puedes robar carros y motos y manejarlos por la ciudad.</p>
+  <div class="shots"><figure class="cut "><img src="media/cap/veh_carro.jpg" alt="Carro" loading="lazy"><figcaption><b>Carro</b>Manejando de noche por la calle.</figcaption></figure><figure class="cut"><div class="hueco">Moto<small>Captura pendiente</small></div></figure></div>
+  <h3>Enemigos</h3>
+  <div class="shots"><figure class="cut "><img src="media/cap/ene_nova.jpg" alt="NOVA" loading="lazy"><figcaption><b>NOVA</b>Robots y soldados de NOVA en la calle.</figcaption></figure><figure class="cut "><img src="media/cap/dia_skulls.jpg" alt="SKULLS" loading="lazy"><figcaption><b>SKULLS</b>La pandilla en la calle, de día.</figcaption></figure><figure class="cut"><div class="hueco">Policía<small>Captura pendiente</small></div></figure><figure class="cut"><div class="hueco">Patrullas<small>Captura pendiente</small></div></figure><figure class="cut"><div class="hueco">Drones<small>Captura pendiente</small></div></figure><figure class="cut"><div class="hueco">Matón de los SKULLS<small>Captura pendiente</small></div></figure><figure class="cut"><div class="hueco">Robot pesado de NOVA<small>Captura pendiente</small></div></figure></div>
+</div></section>
+
+<section class="band alt" id="controles"><div class="wrap">
   <span class="lbl">Controles</span><h2>Cómo se juega</h2>
   <div class="tabs" role="tablist"><button class="btn" role="tab" aria-selected="true" data-t="pc">PC · teclado y ratón</button><button class="btn" role="tab" aria-selected="false" data-t="vr">VR · Meta Quest 3</button></div>
   <div class="cut card" style="padding:8px 10px"><table id="ctl"></table></div>
