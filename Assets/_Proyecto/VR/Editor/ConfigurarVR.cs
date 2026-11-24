@@ -200,6 +200,12 @@ namespace MechaCyberpunk.VR.Editor
             ConstruirVREn("Builds/VR10");
         }
 
+        /// <summary>Build VR en Builds/VR11 (24-nov mediodía: T101 mira telescópica, T98, T99, T100). Batchmode: -executeMethod MechaCyberpunk.VR.Editor.ConfigurarVR.ConstruirVR11</summary>
+        public static void ConstruirVR11()
+        {
+            ConstruirVREn("Builds/VR11");
+        }
+
         private static void ConstruirVREn(string carpeta)
         {
             PonerMultiPass();
