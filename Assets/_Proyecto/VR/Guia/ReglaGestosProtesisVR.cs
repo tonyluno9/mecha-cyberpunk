@@ -3,34 +3,50 @@ using UnityEngine;
 namespace MechaCyberpunk.VR.Guia
 {
     /// <summary>
-    /// VR20, lógica pura: qué pose de prótesis hacen las dos manos. Las posiciones van en el marco de la cabeza sin inclinación
+    /// VR20/VR45/VR31b, lógica pura: qué pose de prótesis hacen las dos manos. Las posiciones van en el marco de la cabeza sin inclinación
     /// (x a la derecha, y arriba, z al frente plano de la cabeza; el origen son los ojos), así vale para cualquier giro del cuerpo.
-    /// PIERNAS: cada mano a menos de <see cref="RadioMuslo"/> del punto de su muslo (estimado desde los ojos: <see cref="AbajoMuslo"/> m abajo,
-    /// <see cref="LadoMuslo"/> m a su lado). BRAZOS: cada mano a más de <see cref="LadoBrazoAbierto"/> m a su lado, a la altura de los hombros
-    /// (± <see cref="ToleranciaHombros"/> m) y sin irse mucho al frente ni atrás. Cuenta solo si las DOS manos están en la misma pose.
+    /// PIERNAS (VR45, más tolerante): las dos manos abajo, entre la cadera y la rodilla (de <see cref="AbajoCadera"/> a <see cref="AbajoRodilla"/> m
+    /// bajo los ojos), con cualquier separación entre ellas, sin irse mucho al frente, atrás ni a los lados.
+    /// BRAZOS (pose T aproximada): cada mano a más de <see cref="LadoBrazoAbierto"/> m a su lado, a la altura de los hombros
+    /// (± <see cref="ToleranciaHombros"/> m) y sin irse mucho al frente ni atrás.
+    /// VISIÓN (VR31b): cada mano a un lado de la cabeza (de <see cref="LadoCabezaMinimo"/> a <see cref="LadoCabezaMaximo"/> m a su lado), a la
+    /// altura de los ojos (± <see cref="AltoCabeza"/> m) y cerca del plano de la cara. Cuenta solo si las DOS manos están en la misma pose.
     /// </summary>
     public static class ReglaGestosProtesisVR
     {
         /// <summary>Cuánto tiempo hay que sostener la pose con los dos grips (s).</summary>
         public const float SegundosGesto = 0.5f;
 
-        /// <summary>El muslo queda tanto debajo de los ojos (m): media pierna de una persona de 1.70–1.85 m.</summary>
-        public const float AbajoMuslo = 0.9f;
-        /// <summary>El muslo queda tanto a cada lado del centro de la cabeza (m).</summary>
-        public const float LadoMuslo = 0.17f;
-        /// <summary>El muslo queda un poco adelante de los ojos (m), donde se apoya la mano.</summary>
-        public const float AdelanteMuslo = 0.05f;
-        /// <summary>Qué tan lejos del punto del muslo puede estar la mano (m).</summary>
-        public const float RadioMuslo = 0.25f;
+        /// <summary>VR45: la cadera queda tanto debajo de los ojos (m); la mano más arriba ya no cuenta como piernas.</summary>
+        public const float AbajoCadera = 0.6f;
+        /// <summary>VR45: la rodilla queda tanto debajo de los ojos (m); la mano más abajo ya no cuenta.</summary>
+        public const float AbajoRodilla = 1.25f;
+        /// <summary>VR45: cuánto puede irse la mano a su lado con las manos abajo (m).</summary>
+        public const float LadoPiernas = 0.5f;
+        /// <summary>VR45: cuánto puede cruzar la mano al otro lado del centro (m): las manos pueden juntarse.</summary>
+        public const float CruceCentroPiernas = 0.15f;
+        /// <summary>VR45: cuánto puede irse la mano al frente o atrás con las manos abajo (m).</summary>
+        public const float FondoPiernas = 0.5f;
 
-        /// <summary>Lo mínimo que la mano se aleja a su lado de la cabeza con el brazo abierto (m).</summary>
-        public const float LadoBrazoAbierto = 0.55f;
+        /// <summary>Lo mínimo que la mano se aleja a su lado de la cabeza con el brazo abierto (m). VR45: más tolerante (antes 0.55).</summary>
+        public const float LadoBrazoAbierto = 0.45f;
         /// <summary>Los hombros quedan tanto debajo de los ojos (m).</summary>
         public const float AbajoHombros = 0.25f;
-        /// <summary>Cuánto puede subir o bajar la mano respecto a los hombros (m).</summary>
-        public const float ToleranciaHombros = 0.3f;
-        /// <summary>Cuánto puede irse la mano al frente o atrás con los brazos abiertos (m): brazos al frente no cuentan.</summary>
-        public const float FondoBrazoAbierto = 0.45f;
+        /// <summary>Cuánto puede subir o bajar la mano respecto a los hombros (m). VR45: antes 0.3.</summary>
+        public const float ToleranciaHombros = 0.35f;
+        /// <summary>Cuánto puede irse la mano al frente o atrás con los brazos abiertos (m): brazos al frente no cuentan. VR45: antes 0.45.</summary>
+        public const float FondoBrazoAbierto = 0.5f;
+
+        /// <summary>VR31b: lo mínimo que la mano se aleja a su lado del centro de la cabeza para la visión (m).</summary>
+        public const float LadoCabezaMinimo = 0.04f;
+        /// <summary>VR31b: lo más que la mano se aleja a su lado de la cabeza para la visión (m).</summary>
+        public const float LadoCabezaMaximo = 0.32f;
+        /// <summary>VR31b: cuánto puede subir o bajar la mano respecto a los ojos (m).</summary>
+        public const float AltoCabeza = 0.2f;
+        /// <summary>VR31b: cuánto puede irse la mano atrás de los ojos (m).</summary>
+        public const float AtrasCabeza = 0.2f;
+        /// <summary>VR31b: cuánto puede irse la mano al frente de los ojos (m).</summary>
+        public const float FrenteCabeza = 0.2f;
 
         /// <summary>
         /// La posición <paramref name="mano"/> (mundo) en el marco de la cabeza: x derecha, y arriba, z frente plano. Mirando casi recto
@@ -54,15 +70,17 @@ namespace MechaCyberpunk.VR.Guia
             return new Vector3(Vector3.Dot(d, derecha), d.y, Vector3.Dot(d, frente));
         }
 
-        /// <summary>El punto del muslo de ese lado, en el marco de la cabeza.</summary>
-        public static Vector3 PuntoMuslo(bool derecha) => new Vector3(derecha ? LadoMuslo : -LadoMuslo, -AbajoMuslo, AdelanteMuslo);
-
-        /// <summary>True si la mano (marco de la cabeza) está sobre el muslo de su lado.</summary>
-        public static bool EnMuslo(Vector3 mano, bool derecha)
+        /// <summary>VR45: true si la mano (marco de la cabeza) está abajo, entre la cadera y la rodilla, de su lado o cerca del centro.</summary>
+        public static bool EnPiernas(Vector3 mano, bool derecha)
         {
-            bool suLado = derecha ? mano.x > 0f : mano.x < 0f;
-            return suLado && Vector3.Distance(mano, PuntoMuslo(derecha)) <= RadioMuslo;
+            float lado = derecha ? mano.x : -mano.x;
+            return mano.y <= -AbajoCadera && mano.y >= -AbajoRodilla
+                && lado >= -CruceCentroPiernas && lado <= LadoPiernas
+                && Mathf.Abs(mano.z) <= FondoPiernas;
         }
+
+        /// <summary>Compatibilidad con VR20: ahora es <see cref="EnPiernas"/> (de la cadera a la rodilla).</summary>
+        public static bool EnMuslo(Vector3 mano, bool derecha) => EnPiernas(mano, derecha);
 
         /// <summary>True si la mano (marco de la cabeza) está con el brazo abierto a su lado, a la altura del hombro.</summary>
         public static bool BrazoAbierto(Vector3 mano, bool derecha)
@@ -73,16 +91,29 @@ namespace MechaCyberpunk.VR.Guia
                 && Mathf.Abs(mano.z) <= FondoBrazoAbierto;
         }
 
+        /// <summary>VR31b: true si la mano (marco de la cabeza) está a su lado de la cabeza, a la altura de los ojos.</summary>
+        public static bool JuntoACabeza(Vector3 mano, bool derecha)
+        {
+            float lado = derecha ? mano.x : -mano.x;
+            return lado >= LadoCabezaMinimo && lado <= LadoCabezaMaximo
+                && Mathf.Abs(mano.y) <= AltoCabeza
+                && mano.z >= -AtrasCabeza && mano.z <= FrenteCabeza;
+        }
+
         /// <summary>La pose que hacen las dos manos juntas (marco de la cabeza); Ninguno si no están las dos en la misma.</summary>
         public static GestoProtesisVR Pose(Vector3 izquierda, Vector3 derecha)
         {
-            if (EnMuslo(izquierda, false) && EnMuslo(derecha, true))
+            if (EnPiernas(izquierda, false) && EnPiernas(derecha, true))
             {
                 return GestoProtesisVR.Piernas;
             }
             if (BrazoAbierto(izquierda, false) && BrazoAbierto(derecha, true))
             {
                 return GestoProtesisVR.Brazos;
+            }
+            if (JuntoACabeza(izquierda, false) && JuntoACabeza(derecha, true))
+            {
+                return GestoProtesisVR.Vision;
             }
             return GestoProtesisVR.Ninguno;
         }

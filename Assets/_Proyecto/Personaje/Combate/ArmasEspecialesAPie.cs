@@ -97,6 +97,24 @@ namespace MechaCyberpunk.Personaje.Combate
         /// <summary>VR5: true mientras el gatillo del control VR está abajo (solo cuenta con <see cref="BocaExterna"/>).</summary>
         public bool GatilloExterno { get; set; }
 
+        /// <summary>
+        /// VR51 (solo VR, con <see cref="BocaExterna"/>): con true el arco y el marcador de caída del lanzagranadas se ven sin el botón de
+        /// apuntar (el gatillo izquierdo del control).
+        /// </summary>
+        public bool ArcoExterno { get; set; }
+
+        /// <summary>
+        /// VR51 (solo VR, con <see cref="BocaExterna"/>): con true la carga llena del plasma espera a <see cref="DisparoExterno"/> en vez de
+        /// soltar el rayo sola (<see cref="ReglaRayoPlasma.RetenerCarga"/>).
+        /// </summary>
+        public bool RetenerCargaExterna { get; set; }
+
+        /// <summary>VR51 (solo VR): el gatillo que suelta el rayo con la carga llena cuando <see cref="RetenerCargaExterna"/>.</summary>
+        public bool DisparoExterno { get; set; }
+
+        /// <summary>VR51: true con la carga del plasma llena esperando el disparo.</summary>
+        public bool CargaPlasmaLlena => plasma != null && plasma.CargaLlena;
+
         /// <summary>VR5: la bola de energía de la carga del plasma (para que VR la deje visible).</summary>
         public Transform BolaCarga => bolaCarga;
 
@@ -472,7 +490,7 @@ namespace MechaCyberpunk.Personaje.Combate
         // Al apuntar se ve el arco hasta lo primero que toca.
         private void DibujarArco(ArmaAPie arma, DatosArma d)
         {
-            if (!controlador.Apuntando)
+            if (!controlador.Apuntando && !(BocaExterna != null && ArcoExterno))
             {
                 arco.enabled = false;
                 marcador.enabled = false;
@@ -549,12 +567,13 @@ namespace MechaCyberpunk.Personaje.Combate
             }
             EstadoPlasma antes = plasma.Estado;
             bool faltoEnergia = false;
+            plasma.RetenerCarga = BocaExterna != null && RetenerCargaExterna; // VR51; en PC siempre false
             bool empezo = plasma.Avanzar(Time.deltaTime, pulsado, () =>
             {
                 bool hay = cargador.IntentarDisparar();
                 faltoEnergia = !hay;
                 return hay;
-            });
+            }, DisparoExterno);
             // T-1532: GATILLO al apretar, SIN_ENERGIA si la carga acaba sin celda (los bucles de carga y rayo siguen más abajo).
             EventoSonidoPlasma sonidos = ReglaSonidoPlasma.Evaluar(antes, plasma.Estado, empezo, faltoEnergia);
             if ((sonidos & EventoSonidoPlasma.Gatillo) != 0)

@@ -182,6 +182,12 @@ namespace MechaCyberpunk.VR.Editor
             ConstruirVREn("Builds/VR7");
         }
 
+        /// <summary>Build VR en Builds/VR8 (octava tanda). Batchmode: -executeMethod MechaCyberpunk.VR.Editor.ConfigurarVR.ConstruirVR8</summary>
+        public static void ConstruirVR8()
+        {
+            ConstruirVREn("Builds/VR8");
+        }
+
         private static void ConstruirVREn(string carpeta)
         {
             PonerMultiPass();

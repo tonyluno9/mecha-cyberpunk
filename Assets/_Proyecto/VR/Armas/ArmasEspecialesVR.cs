@@ -12,6 +12,9 @@ namespace MechaCyberpunk.VR
     ///   apunta el control. El plasma carga con el gatillo sostenido y suelta el rayo, que sigue al cañón; la línea de mira sale del cañón.
     /// - Granada: el grip derecho la toma (aparece en la mano) y al soltarlo sale desde la mano con su velocidad × <see cref="FactorLanzamiento"/>.
     ///   Con la granada activa el grip derecho no agarra enemigos (<see cref="AgarreImplanteVR"/>). Si se acabaron, el grip empieza la recarga.
+    /// VR51: con el gatillo IZQUIERDO, el lanzagranadas muestra el arco y el marcador de dónde cae (el de PC) y el gatillo derecho dispara; el
+    /// plasma carga (también con el derecho sostenido, como antes), al llenarse suena un aviso y vibra, y el gatillo derecho suelta el rayo.
+    /// VR52: sin balas el gatillo derecho hace el clic vacío (no recarga solo: A y el gesto, <see cref="RecargaManualVR"/>).
     /// Corre antes que PistolaVR (le dice si ocultar la granada) y antes que ArmasEspecialesAPie (que dispara en su LateUpdate). Lo agrega
     /// <see cref="ArranqueCombateVR"/>.
     /// </summary>
@@ -34,6 +37,14 @@ namespace MechaCyberpunk.VR
         private const float SegundosTiro = 0.1f;
         private const float AmplitudRayo = 0.25f;
         private const float SegundosRayo = 0.05f;
+        private const float AmplitudCargaLlena = 0.6f;
+        private const float SegundosCargaLlena = 0.12f;
+        /// <summary>VR51: el aviso de carga completa del plasma (un pitido de fijar blanco).</summary>
+        public const string IdCargaLlena = SonidosArmasT1472.MisilesFijar;
+        private bool cargaLlenaAntes;
+
+        /// <summary>VR51: veces que sonó el aviso de carga completa (para las pruebas).</summary>
+        public int AvisosCargaLlena { get; private set; }
 
         private AdaptadorVR adaptador;
         private PistolaAPie pistola;
@@ -99,6 +110,9 @@ namespace MechaCyberpunk.VR
             {
                 especiales.BocaExterna = null;
                 especiales.GatilloExterno = false;
+                especiales.DisparoExterno = false;
+                especiales.RetenerCargaExterna = false;
+                especiales.ArcoExterno = false;
             }
         }
 
@@ -127,7 +141,17 @@ namespace MechaCyberpunk.VR
             pistolaVR.OcultarArma = TomaElGrip(activa) && !GranadaTomada;
             pistolaVR.Actualizar();
             especiales.BocaExterna = pistolaVR.Boca;
-            especiales.GatilloExterno = !bloqueado && !pistolaVR.SinCargador && UsaGatillo(activa) && EntradaVR.Sostenido(EntradaVR.GatilloDerecho);
+            bool puedeGatillo = !bloqueado && !pistolaVR.SinCargador && UsaGatillo(activa);
+            bool derecho = EntradaVR.Sostenido(EntradaVR.GatilloDerecho);
+            bool izquierdo = EntradaVR.Sostenido(EntradaVR.GatilloIzquierdo);
+            bool plasma = activa == ArmaAPie.RiflePlasma;
+            // VR51: el plasma carga con el izquierdo (o con el derecho sostenido, como antes) y la carga llena espera al derecho.
+            especiales.GatilloExterno = puedeGatillo && (derecho || (plasma && izquierdo));
+            especiales.DisparoExterno = puedeGatillo && derecho;
+            especiales.RetenerCargaExterna = plasma;
+            especiales.ArcoExterno = !bloqueado && activa == ArmaAPie.Lanzagranadas && izquierdo;
+            AvisarCargaLlena(plasma);
+            ClicVacio(activa, bloqueado);
             if (activa == ArmaAPie.RiflePlasma && especiales.EstadoPlasma == EstadoPlasma.Rayo)
             {
                 VibrarDerecha(AmplitudRayo, SegundosRayo);
@@ -207,6 +231,38 @@ namespace MechaCyberpunk.VR
             UltimoOrigenGranada = origen;
             mano.Vibrar(AmplitudLanzar, SegundosLanzar);
             return true;
+        }
+
+        // VR51: al llenarse la carga del plasma suena el aviso y vibran las dos manos (una vez por carga).
+        private void AvisarCargaLlena(bool plasma)
+        {
+            bool llena = plasma && especiales.CargaPlasmaLlena;
+            if (llena && !cargaLlenaAntes)
+            {
+                AvisosCargaLlena++;
+                Sonidos.Reproducir(IdCargaLlena);
+                VibrarDerecha(AmplitudCargaLlena, SegundosCargaLlena);
+                ManoVR izq = adaptador.ManoIzquierda;
+                if (izq != null)
+                {
+                    izq.Vibrar(AmplitudCargaLlena, SegundosCargaLlena);
+                }
+            }
+            cargaLlenaAntes = llena;
+        }
+
+        // VR52: el lanzagranadas vacío no recarga solo; el gatillo derecho hace el clic vacío (el plasma ya suena SIN_ENERGIA al intentar el rayo).
+        private void ClicVacio(ArmaAPie activa, bool bloqueado)
+        {
+            if (bloqueado || activa != ArmaAPie.Lanzagranadas || !EntradaVR.Pulso(EntradaVR.GatilloDerecho))
+            {
+                return;
+            }
+            CargadorPistola c = pistola.Cargador;
+            if (c != null && c.Balas <= 0 && !c.Recargando)
+            {
+                Sonidos.Reproducir(SonidosArmasT1472.SinBalas);
+            }
         }
 
         private void AlDisparar(ArmaAPie arma, Vector3 boca)

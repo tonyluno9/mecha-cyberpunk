@@ -187,7 +187,7 @@ namespace MechaCyberpunk.Tests.VR
                 + maximoCuadroMedias.ToString("0.00") + "° / " + maximoCuadroFondo.ToString("0.00") + "°.");
             Assert.Greater(medias, 10f, "A medias sí gira.");
             Assert.Less(medias, fondo * 0.7f, "A medias gira más lento que a fondo.");
-            Assert.AreEqual(OpcionesVR.VelocidadGiroPorDefecto, fondo, 25f, "A fondo gira a ~120°/s.");
+            Assert.AreEqual(OpcionesVR.VelocidadGiroPorDefecto, fondo, 25f, "A fondo gira a ~la VELOCIDAD DE GIRO por defecto (VR38: 60°/s).");
             Assert.Less(maximoCuadroFondo, 1f, "Sin saltos: ningún cuadro gira más que la velocidad máxima.");
             Assert.Less(maximoCuadroMedias, 1f);
         }

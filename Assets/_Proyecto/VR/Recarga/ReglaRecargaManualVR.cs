@@ -16,6 +16,9 @@ namespace MechaCyberpunk.VR
         /// <summary>True si con estas balas se puede recargar (lo mismo que pide <c>CargadorPistola.EmpezarRecarga</c>). Reserva -1 = infinita.</summary>
         public static bool PuedeRecargar(int balas, int tamano, int reserva, bool recargando) => !recargando && balas < tamano && reserva != 0;
 
+        /// <summary>VR52: el aviso "A: RECARGAR" (o "SIN BALAS") se ve con el cargador vacío y sin recarga en curso (en VR no recarga solo).</summary>
+        public static bool MostrarAviso(int balas, bool recargando) => balas <= 0 && !recargando;
+
         /// <summary>
         /// Un cuadro. <paramref name="puedeRecargar"/>: ver <see cref="PuedeRecargar"/>; <paramref name="pulsoA"/>: A se pulsó;
         /// <paramref name="pulsoGripIzq"/>/<paramref name="sostieneGripIzq"/>: el grip izquierdo; <paramref name="enCadera"/>: la mano izquierda está

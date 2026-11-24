@@ -17,9 +17,25 @@ namespace MechaCyberpunk.VR
         public const float SegundosEnfriamiento = 0.3f;
         /// <summary>Ventana (s) en la que se busca la rapidez más alta de la mano.</summary>
         public const float SegundosPico = 0.1f;
+        /// <summary>VR37: radio (m) de la esfera de los nudillos (antes 0.10).</summary>
+        public const float RadioNudillos = 0.13f;
+        /// <summary>VR37: rapidez (m/s) que basta si la mano acaba de entrar en el enemigo (medida en los últimos <see cref="SegundosPicoEntrada"/> s).</summary>
+        public const float VelocidadEntrada = 0.6f;
+        /// <summary>VR37: ventana (s) de la rapidez al entrar en el enemigo (el brazo ya frenó al llegar).</summary>
+        public const float SegundosPicoEntrada = 0.25f;
 
         /// <summary>True si a esa rapidez (m/s) la mano golpea.</summary>
         public static bool Golpea(float velocidad) => velocidad > VelocidadMinima;
+
+        /// <summary>
+        /// VR37: si la mano le pega a algo que toca. Cuenta la rapidez (magnitud, en cualquier dirección) por encima de <see cref="VelocidadMinima"/>; si
+        /// la mano acaba de entrar en él, basta <see cref="VelocidadEntrada"/> en los últimos <see cref="SegundosPicoEntrada"/> s.
+        /// </summary>
+        public static bool GolpeaAl(float velocidad, float picoEntrada, bool entrando) =>
+            Golpea(velocidad) || (entrando && picoEntrada > VelocidadEntrada);
+
+        /// <summary>VR37: si vale la pena barrer la mano este cuadro (si no, ni golpeando ni entrando podría contar).</summary>
+        public static bool ValeLaPenaBarrer(float velocidad, float picoEntrada) => Golpea(velocidad) || picoEntrada > VelocidadEntrada;
 
         /// <summary>Multiplicador del daño del puño a esa rapidez: clamp(v / 3, 1, 2).</summary>
         public static float Factor(float velocidad) => Math.Max(1f, Math.Min(FactorMaximo, velocidad / VelocidadPlena));

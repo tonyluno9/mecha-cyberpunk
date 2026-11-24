@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using System.Text;
+using MechaCyberpunk.Personaje.Combate;
+using MechaCyberpunk.VR.Menus;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
 
 namespace MechaCyberpunk.VR.Manos
@@ -13,6 +16,11 @@ namespace MechaCyberpunk.VR.Manos
     /// El puño se alinea a la pose grip de OpenXR (en Unity: +Z del meñique al pulgar, por el hueco del puño; -Y hacia donde pega;
     /// la palma hacia -X en la derecha y +X en la izquierda), con el centro del puño en el origen de la grip.
     /// Va en el jugador; lo agrega <see cref="ArranqueCombateVR"/>. Si el modelo cambia (ropa, implantes), se rehace.
+    /// VR40: si están los prefabs de las manos nuevas MN01 (Resources/ManosVR, los hace ImportarManosVR40), se usan esas en vez del puño de PJ01:
+    /// el grip analógico mezcla Abierta→Puño, el gatillo dobla el índice, con arma la derecha va en AgarrePistola (la izquierda en el guardamanos
+    /// con armas largas o con el cargador en la mano), granada en la mano que la lleva, Señalar con el menú abierto; y con la prótesis de brazos
+    /// brillan en cian con pulso. Se alinean a la grip igual que el puño (centro del puño en el origen de la grip). Sin esos prefabs queda el puño
+    /// de PJ01 de VR35.
     /// </summary>
     public class PunosVisiblesVR : MonoBehaviour
     {
@@ -33,8 +41,24 @@ namespace MechaCyberpunk.VR.Manos
         private const float CentroHaciaMuneca = 0.17f;
         private const float FrenteNudillos = 0.1f;
 
+        /// <summary>VR40: prefabs de las manos MN01 en Resources.</summary>
+        public const string RecursoManoDerecha = "ManosVR/MN01_ManoVR_R";
+        public const string RecursoManoIzquierda = "ManosVR/MN01_ManoVR_L";
+
         private AdaptadorVR adaptador;
         private readonly GameObject[] punos = new GameObject[2];
+        private readonly ManoMN01VR[] mn01 = new ManoMN01VR[2];
+        private GameObject prefabMN01Der;
+        private GameObject prefabMN01Izq;
+        private bool buscoMN01;
+        private InputAction[] gripValor;
+        private InputAction[] gripBoton;
+        private InputAction[] gatilloValor;
+        private InputAction[] gatilloBoton;
+        private PistolaVR pistolaVR;
+        private ArmasEspecialesVR especiales;
+        private RecargaManualVR recarga;
+        private AgarreImplanteVR agarre;
         private readonly Transform[] nudillos = new Transform[2];
         private readonly Vector3[] frenteLocal = new Vector3[2];
         private float siguienteRevision;
@@ -42,6 +66,12 @@ namespace MechaCyberpunk.VR.Manos
 
         /// <summary>True si los dos puños están puestos.</summary>
         public bool Listo => punos[0] != null && punos[1] != null;
+
+        /// <summary>VR40: true si las manos visibles son las MN01 nuevas (no el puño de PJ01).</summary>
+        public bool UsaManosMN01 => mn01[0] != null && mn01[1] != null;
+
+        /// <summary>VR40: la mano MN01 de un lado (null si no se usan).</summary>
+        public ManoMN01VR ManoMN01(bool derecha) => mn01[derecha ? 1 : 0];
 
         /// <summary>El objeto del puño de una mano (null si aún no está).</summary>
         public GameObject Puno(bool derecha) => punos[derecha ? 1 : 0];
@@ -61,6 +91,53 @@ namespace MechaCyberpunk.VR.Manos
         private void Awake()
         {
             adaptador = GetComponent<AdaptadorVR>();
+            gripValor = Acciones("VR40_Grip", "/{Grip}", InputActionType.Value);
+            gripBoton = Acciones("VR40_GripBoton", "/{GripButton}", InputActionType.Button);
+            gatilloValor = Acciones("VR40_Gatillo", "/{Trigger}", InputActionType.Value);
+            gatilloBoton = Acciones("VR40_GatilloBoton", "/{TriggerButton}", InputActionType.Button);
+        }
+
+        private static InputAction[] Acciones(string nombre, string control, InputActionType tipo)
+        {
+            return new[]
+            {
+                new InputAction(nombre + "Izq", tipo, EntradaVR.Izq + control),
+                new InputAction(nombre + "Der", tipo, EntradaVR.Der + control),
+            };
+        }
+
+        private IEnumerable<InputAction> TodasLasAcciones()
+        {
+            foreach (InputAction[] par in new[] { gripValor, gripBoton, gatilloValor, gatilloBoton })
+            {
+                if (par == null)
+                {
+                    continue;
+                }
+                foreach (InputAction a in par)
+                {
+                    if (a != null)
+                    {
+                        yield return a;
+                    }
+                }
+            }
+        }
+
+        private void OnEnable()
+        {
+            foreach (InputAction a in TodasLasAcciones())
+            {
+                a.Enable();
+            }
+        }
+
+        private void OnDisable()
+        {
+            foreach (InputAction a in TodasLasAcciones())
+            {
+                a.Disable();
+            }
         }
 
         private void Update()
@@ -79,6 +156,10 @@ namespace MechaCyberpunk.VR.Manos
                 }
             }
             if (!adaptador.Armado || adaptador.ManoIzquierda == null || adaptador.ManoDerecha == null)
+            {
+                return;
+            }
+            if (RevisarMN01())
             {
                 return;
             }
@@ -113,6 +194,167 @@ namespace MechaCyberpunk.VR.Manos
         private void OnDestroy()
         {
             Quitar();
+            foreach (InputAction a in TodasLasAcciones())
+            {
+                a.Dispose();
+            }
+        }
+
+        // ---- VR40: manos MN01 ----
+
+        // True si se usan (o se acaban de poner) las manos MN01; false para seguir con el puño de PJ01.
+        private bool RevisarMN01()
+        {
+            if (!buscoMN01)
+            {
+                buscoMN01 = true;
+                prefabMN01Der = Resources.Load<GameObject>(RecursoManoDerecha);
+                prefabMN01Izq = Resources.Load<GameObject>(RecursoManoIzquierda);
+                if (prefabMN01Der == null || prefabMN01Izq == null)
+                {
+                    Debug.LogWarning("[VR] VR40: faltan los prefabs de las manos MN01 (corre ImportarManosVR40.Aplicar); quedan los puños de PJ01.", this);
+                }
+            }
+            if (prefabMN01Der == null || prefabMN01Izq == null)
+            {
+                return false;
+            }
+            BuscarEstados();
+            if (UsaManosMN01 && punos[0] != null && punos[1] != null)
+            {
+                OcultarControles();
+                return true;
+            }
+            Quitar();
+            ManoMN01VR izq = ConstruirMN01(adaptador.ManoIzquierda, false, prefabMN01Izq);
+            ManoMN01VR der = ConstruirMN01(adaptador.ManoDerecha, true, prefabMN01Der);
+            if (izq == null || der == null)
+            {
+                Quitar();
+                prefabMN01Der = null; // no sirven: el puño de PJ01
+                prefabMN01Izq = null;
+                Debug.LogWarning("[VR] VR40: los prefabs de las manos MN01 no traen sus 17 huesos y poses; quedan los puños de PJ01.", this);
+                return false;
+            }
+            mn01[0] = izq;
+            mn01[1] = der;
+            firma = "MN01";
+            OcultarControles();
+            Debug.Log("[VR] VR40: manos MN01 puestas en los controles.");
+            return true;
+        }
+
+        private void BuscarEstados()
+        {
+            if (pistolaVR == null)
+            {
+                pistolaVR = GetComponent<PistolaVR>();
+            }
+            if (especiales == null)
+            {
+                especiales = GetComponent<ArmasEspecialesVR>();
+            }
+            if (recarga == null)
+            {
+                recarga = GetComponent<RecargaManualVR>();
+            }
+            if (agarre == null)
+            {
+                agarre = GetComponent<AgarreImplanteVR>();
+            }
+        }
+
+        private ManoMN01VR ConstruirMN01(ManoVR mano, bool derecha, GameObject prefab)
+        {
+            GameObject objeto = Instantiate(prefab, mano.transform, false);
+            objeto.name = NombrePuno;
+            ManoMN01VR m = objeto.GetComponent<ManoMN01VR>();
+            if (m == null || !m.Valida)
+            {
+                Destroy(objeto);
+                return null;
+            }
+            m.PrepararMallas(mano.gameObject.layer);
+            m.PonerPose(PoseManoVR.Libre, 0f, 0f);
+            int lado = derecha ? 1 : 0;
+            punos[lado] = objeto;
+            Alinear(m, mano, derecha, lado);
+            return m;
+        }
+
+        // Como el puño de PJ01: u (lado del pulgar) -> +Z de la grip, -f (muñeca->nudillos) -> +Y, y el centro del puño en el origen de la grip.
+        private void Alinear(ManoMN01VR m, ManoVR mano, bool derecha, int lado)
+        {
+            Transform t = m.transform;
+            t.localPosition = Vector3.zero;
+            t.localRotation = Quaternion.identity;
+            Vector3 escalaPadre = mano.transform.lossyScale;
+            t.localScale = new Vector3(1f / Mathf.Max(1e-6f, escalaPadre.x), 1f / Mathf.Max(1e-6f, escalaPadre.y), 1f / Mathf.Max(1e-6f, escalaPadre.z));
+            Transform muneca = m.Hueso(ReglaManosMN01VR.IndiceMano);
+            Transform indice = m.Hueso(ReglaManosMN01VR.IndiceIndice1);
+            Transform medio = m.Hueso(ReglaManosMN01VR.IndiceMedio1);
+            Transform menique = m.Hueso(ReglaManosMN01VR.IndiceMenique1);
+            float largo = Vector3.Distance(medio.position, muneca.position);
+            Vector3 f = (medio.position - muneca.position).normalized;
+            Vector3 uCrudo = indice.position - menique.position;
+            Vector3 u = (uCrudo - Vector3.Project(uCrudo, f)).normalized;
+            if (largo < 1e-4f || u.sqrMagnitude < 1e-6f)
+            {
+                nudillos[lado] = t;
+                frenteLocal[lado] = Vector3.zero;
+                return;
+            }
+            Vector3 palma = PalmaDe(f, u, derecha);
+            Quaternion giro = Quaternion.LookRotation(mano.transform.forward, mano.transform.up) * Quaternion.Inverse(Quaternion.LookRotation(u, -f));
+            t.rotation = giro * t.rotation;
+            f = giro * f;
+            palma = giro * palma;
+            Vector3 baseNudillos = (indice.position + menique.position) * 0.5f;
+            Vector3 centro = baseNudillos + palma * (CentroHaciaPalma * largo) - f * (CentroHaciaMuneca * largo);
+            t.position += mano.transform.position - centro;
+            nudillos[lado] = muneca;
+            frenteLocal[lado] = muneca.InverseTransformPoint(medio.position + f * (FrenteNudillos * largo));
+        }
+
+        // Cada cuadro, después de las armas (que deciden qué hay en la mano): la pose de cada mano MN01 y el brillo de la prótesis.
+        private void LateUpdate()
+        {
+            if (!UsaManosMN01)
+            {
+                return;
+            }
+            float mezcla = ReglaManosMN01VR.Mezcla(Time.deltaTime);
+            bool armaVisible = pistolaVR != null && pistolaVR.enabled && pistolaVR.ArmaVisible;
+            bool armaLarga = armaVisible && !ReglasArmaAPie.UsaPoseDePistola(pistolaVR.ArmaMostrada);
+            bool granada = especiales != null && especiales.enabled && especiales.GranadaTomada;
+            bool cargador = recarga != null && recarga.enabled && recarga.Estado == EstadoCargadorVR.EnMano;
+            float brillo = agarre != null && agarre.TieneImplante ? ReglaManosMN01VR.Pulso(Time.time) : 0f;
+            for (int lado = 0; lado < 2; lado++)
+            {
+                ManoMN01VR m = mn01[lado];
+                if (m == null)
+                {
+                    continue;
+                }
+                bool derecha = lado == 1;
+                PoseManoVR pose = ReglaManosMN01VR.Elegir(derecha, MenusVR.MenuAbierto, MenusVR.UIApuntada, armaVisible, armaLarga, granada, cargador);
+                float grip = Mathf.Max(Valor(gripValor, lado), Boton(gripBoton, lado));
+                float gatillo = Mathf.Max(Valor(gatilloValor, lado), Boton(gatilloBoton, lado));
+                m.Aplicar(pose, grip, gatillo, mezcla);
+                m.FijarBrillo(brillo);
+            }
+        }
+
+        private static float Valor(InputAction[] par, int lado)
+        {
+            InputAction a = par != null ? par[lado] : null;
+            return a != null && a.enabled ? Mathf.Clamp01(a.ReadValue<float>()) : 0f;
+        }
+
+        private static float Boton(InputAction[] par, int lado)
+        {
+            InputAction a = par != null ? par[lado] : null;
+            return a != null && a.enabled && a.IsPressed() ? 1f : 0f;
         }
 
         private ManoVR Mano(bool derecha)
@@ -134,6 +376,7 @@ namespace MechaCyberpunk.VR.Manos
                 }
                 punos[i] = null;
                 nudillos[i] = null;
+                mn01[i] = null;
             }
             firma = null;
             MostrarControles(true);

@@ -18,7 +18,7 @@ namespace MechaCyberpunk.Tests.VR
         [TestCase("W A S D TE MUEVEN · ESPACIO SALTA", "STICK IZQ. TE MUEVEN · CLIC STICK DER. SALTA")]
         [TestCase("CLIC DER. APUNTA · CLIC DISPARA", "LA MANO APUNTA · GATILLO DER. DISPARA")]
         [TestCase("ESC abre la pausa: ahí guardas la partida y ajustas las opciones.", "Y abre la pausa: ahí guardas la partida y ajustas las opciones.")]
-        [TestCase("USA TU PRÓTESIS (TAB)", "USA TU PRÓTESIS (GRIP IZQ. + GATILLO IZQ.)")]
+        [TestCase("USA TU PRÓTESIS (TAB)", "USA TU PRÓTESIS (GESTO + LOS DOS GRIPS)")]
         [TestCase("PASO 2/3 · MANTÉN [ESPACIO] · LEVANTAR", "PASO 2/3 · MANTÉN [CLIC STICK DER.] · LEVANTAR")]
         [TestCase("↑ ↓ ELEGIR · ENTER ACEPTAR · ESC VOLVER", TeclaVR.AyudaMenus)]
         [TestCase("Clic GOLPEA", TeclaVR.AyudaGolpes)]

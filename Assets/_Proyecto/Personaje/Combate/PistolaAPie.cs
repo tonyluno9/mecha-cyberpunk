@@ -249,7 +249,8 @@ namespace MechaCyberpunk.Personaje.Combate
                 c.ClicVacio += () =>
                 {
                     // T-1308: la recarga automática al vaciarse también suena y pasa por la animación (AnimacionJugador lee Recargando).
-                    if (c.EmpezarRecarga())
+                    // VR52 (solo VR): sin recarga automática, se recarga a mano (A + el gesto, RecargaManualVR); la granada (y en el carro, donde A es del manejo) sí se repone sola.
+                    if ((RecargaAutomatica(arma) || EstaEnCarro()) && c.EmpezarRecarga())
                     {
                         Sonidos.Reproducir(IdRecarga(arma));
                     }
@@ -486,11 +487,14 @@ namespace MechaCyberpunk.Personaje.Combate
             bool rayoEnMarcha = especiales != null && especiales.EstadoPlasma != EstadoPlasma.Reposo;
             bool bloquear = aplica && ReglaApuntarConBalas.Bloquea(actual.Balas, rayoEnMarcha);
             controlador.ApuntarBloqueado = bloquear;
-            if (bloquear && controlador.QuiereApuntar && !actual.Recargando && actual.EmpezarRecarga())
+            if (bloquear && controlador.QuiereApuntar && !actual.Recargando && RecargaAutomatica(activa) && actual.EmpezarRecarga())
             {
                 Sonidos.Reproducir(IdRecarga(activa));
             }
         }
+
+        /// <summary>VR52: true si el arma se recarga sola al vaciarse. En PC siempre; en VR solo la granada (lo demás es a mano).</summary>
+        public static bool RecargaAutomatica(ArmaAPie arma) => !ModoVR.Activo || arma == ArmaAPie.Granada;
 
         private ArmaAPie armaAnterior = ArmaAPie.Pistola;
         private bool enCarroAnterior;

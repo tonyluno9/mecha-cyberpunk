@@ -28,7 +28,7 @@ namespace MechaCyberpunk.VR.Menus
     /// Al salir de VR todo vuelve como estaba.</item>
     /// <item>Láser del control derecho: se ve con un menú abierto o al apuntar a algo de la UI que se pueda usar; el gatillo derecho hace clic.
     /// Mientras <see cref="BloqueaDisparo"/> la pistola (VR2) no debe disparar.</item>
-    /// <item>Botón Menú del control izquierdo = Esc (abre y cierra la pausa, cierra el mapa...). Y (mantener) = la rueda de armas: se elige moviendo la mano izquierda o con el stick izquierdo (VR19).</item>
+    /// <item>Botón Menú del control izquierdo = Esc (abre y cierra la pausa, cierra el mapa...). X (mantener) = la rueda de armas: con el grip izquierdo apretado se mueve con la mano izquierda y al soltarlo se elige (VR46).</item>
     /// <item>VR21: los carros y motos ya se manejan en VR (VR/Vehiculos/ManejoVR); <see cref="TextoNoDisponible"/> queda para otros avisos.</item>
     /// <item>En escenas sin jugador a pie (Inicio) arma un rig mínimo (cabeza y control derecho) para poder elegir con el láser.</item>
     /// </list>
@@ -48,8 +48,8 @@ namespace MechaCyberpunk.VR.Menus
         /// <summary>Hasta dónde busca UI el láser (m).</summary>
         private const float AlcanceLaser = 10f;
         /// <summary>Largo del láser cuando no toca nada (m).</summary>
-        private const float LargoLaser = 3f;
-        private const float GrosorLaser = 0.004f;
+        private const float LargoLaserMaximo = 3f;
+        private const float GrosorLaser = 0.005f;
         private const float DistanciaAviso = 1.2f;
         private const float EscalaOculto = 1e-5f;
         private const float BajadaOculto = 1000f;
@@ -61,7 +61,11 @@ namespace MechaCyberpunk.VR.Menus
         /// <summary>VR29: con la pausa arriba, Y es también la pausa (VR27): si en estos cuadros nadie la cerró, la cierra MenusVR.</summary>
         private const int CuadrosEsperaPausaY = 3;
         private static readonly Color ColorLaser = new Color(0f, 0.9f, 1f, 0.85f);
-        private static readonly Color ColorLaserFin = new Color(0f, 0.9f, 1f, 0.15f);
+        // VR44: la punta del láser también se ve (antes se perdía casi transparente y parecía atravesar el panel).
+        private static readonly Color ColorLaserFin = new Color(0f, 0.9f, 1f, 0.6f);
+        /// <summary>VR43: un set 3D de una vista de menú (cuerpo del Doc, arma de Tino) que está más lejos que esto (m) de su Canvas fue puesto
+        /// aparte a propósito: en VR se saca del Canvas (si no, hereda su escala de panel y queda microscópico frente a su cámara).</summary>
+        private const float DistanciaSetAparte = 50f;
 
         /// <summary>El de la sesión (null sin VR).</summary>
         public static MenusVR Actual { get; private set; }
@@ -73,7 +77,7 @@ namespace MechaCyberpunk.VR.Menus
         public static bool UIApuntada { get; private set; }
 
         /// <summary>Lo que VR2 consulta: con un menú abierto o apuntando a la UI el gatillo derecho es clic, no disparo.</summary>
-        public static bool BloqueaDisparo => MenuAbierto || UIApuntada;
+        public static bool BloqueaDisparo => MenuAbierto || UIApuntada || MechaCyberpunk.VR.Tutorial.TarjetaTutorialVR.BotonApuntado;
 
         private readonly List<LienzoConvertidoVR> lienzos = new List<LienzoConvertidoVR>();
         private readonly HashSet<Canvas> vistos = new HashSet<Canvas>();
@@ -82,6 +86,14 @@ namespace MechaCyberpunk.VR.Menus
         private readonly PanelAvisoVR aviso = new PanelAvisoVR();
         private readonly RigMenusVR rig = new RigMenusVR();
         private readonly RaycastHit[] golpes = new RaycastHit[16];
+        private readonly OcultarTapanVR tapan = new OcultarTapanVR();
+        private SeleccionLaserVR seleccion;
+        private int versionAncla;
+        private int versionTapada = -1;
+        private bool hayPunto;
+        private Vector3 puntoLaser;
+        private Quaternion giroPunto = Quaternion.identity;
+        private readonly HashSet<Transform> setsSacados = new HashSet<Transform>();
         private static readonly Predicate<Canvas> EsNulo = c => c == null;
 
         private Camera camaraLaser;
@@ -101,7 +113,7 @@ namespace MechaCyberpunk.VR.Menus
         private bool siguiendo;
         private float segundosFuera;
         private bool laserVisible;
-        private float largoLaser = LargoLaser;
+        private float largoLaser = LargoLaserMaximo;
         private int escPendiente;
         private Canvas lienzoRueda;
         private Object ruedaDelLienzo;
@@ -139,6 +151,34 @@ namespace MechaCyberpunk.VR.Menus
         public Transform ManoLaser => mano;
         /// <summary>True si el láser se dibujó el último cuadro.</summary>
         public bool LaserDibujado => linea != null && linea.enabled;
+        /// <summary>VR44: el largo del láser este cuadro (m): hasta donde toca el panel.</summary>
+        public float LargoLaser => largoLaser;
+        /// <summary>VR44: la selección del láser (botón elegido, marco y punto).</summary>
+        public SeleccionLaserVR Seleccion => seleccion;
+        /// <summary>VR42: lo que se oculta entre la cabeza y el panel mientras hay una pantalla abierta.</summary>
+        public OcultarTapanVR Tapan => tapan;
+
+        /// <summary>
+        /// VR36: todos los Canvas (raíz y anidados) de los paneles frente a la cabeza y de las pantallas completas, para que la cinemática
+        /// en negro los siga dibujando (avisos, fundidos, la pantalla de texto de la cinemática).
+        /// </summary>
+        public void LienzosDePanel(List<Canvas> salida)
+        {
+            foreach (LienzoConvertidoVR l in lienzos)
+            {
+                if (l.Canvas == null || (l.Tipo != TipoLienzoVR.Frente && l.Tipo != TipoLienzoVR.PantallaCompleta))
+                {
+                    continue;
+                }
+                foreach (Canvas c in l.Lienzos)
+                {
+                    if (c != null)
+                    {
+                        salida.Add(c);
+                    }
+                }
+            }
+        }
 
         /// <summary>El tipo con el que se convirtió este Canvas, o null si no es uno de los convertidos.</summary>
         public TipoLienzoVR? TipoDe(Canvas canvas)
@@ -266,6 +306,7 @@ namespace MechaCyberpunk.VR.Menus
             camaraLaser.targetTexture = new RenderTexture(16, 16, 0) { name = "LaserVR" };
             raycaster = gameObject.AddComponent<RaycasterLaserVR>();
             raycaster.Configurar(camaraLaser);
+            seleccion = new SeleccionLaserVR(transform);
             CrearLinea();
             casco.Crear(transform);
             Debug.Log("[VR] Menús VR listos.");
@@ -329,6 +370,9 @@ namespace MechaCyberpunk.VR.Menus
         private void RestaurarTodo()
         {
             puntero.Liberar();
+            tapan.Mostrar();
+            versionTapada = -1;
+            seleccion?.Destruir();
             foreach (LienzoConvertidoVR l in lienzos)
             {
                 l.Restaurar();
@@ -350,6 +394,8 @@ namespace MechaCyberpunk.VR.Menus
             rig.ColocarEnCuarto();
             anclaPuesta = false;
             barrido = 0f;
+            tapan.Mostrar();
+            versionTapada = -1;
         }
 
         // ---- Cada cuadro ----
@@ -533,6 +579,7 @@ namespace MechaCyberpunk.VR.Menus
                 }
             }
             vistos.RemoveWhere(EsNulo);
+            seleccion.Limpiar();
             ApagarXREnCamarasDeTextura();
             Canvas[] todos = FindObjectsByType<Canvas>(FindObjectsInactive.Include, FindObjectsSortMode.None);
             foreach (Canvas c in todos)
@@ -627,6 +674,8 @@ namespace MechaCyberpunk.VR.Menus
             if (algoNuevo)
             {
                 ColocarAncla();
+                // VR43: la vista 3D de la pantalla (el cuerpo del Doc, el arma de Tino) se crea al abrirla: se arregla ya, sin esperar al barrido.
+                ApagarXREnCamarasDeTextura();
             }
             cantidadPrevia = cantidad;
             arribaPrevia = arriba;
@@ -639,6 +688,36 @@ namespace MechaCyberpunk.VR.Menus
                 Debug.Log("[VR] Menú abierto: " + abierto + " (pila " + cantidad + ", pausa " + pausa + ", cyberfix " + abiertos + ", rueda " + rueda + ", aviso " + VentanaAviso.Abierta + ", rig de menús " + sinJugadorConRig + ")");
             }
             MenuAbierto = abierto;
+            ActualizarTapan(abierto && !rueda && !sinJugadorConRig && !PantallaCargando.Visible);
+        }
+
+        // VR42: con una pantalla abierta, lo que queda entre la cabeza y el panel no se dibuja; se vuelve a ver al cerrar.
+        // Se calcula al abrir y cada vez que el panel se recoloca.
+        private void ActualizarTapan(bool pantalla)
+        {
+            if (!pantalla || cabeza == null || !anclaPuesta)
+            {
+                if (versionTapada >= 0)
+                {
+                    tapan.Mostrar();
+                    versionTapada = -1;
+                }
+                return;
+            }
+            if (versionTapada == versionAncla)
+            {
+                return;
+            }
+            tapan.Mostrar();
+            versionTapada = versionAncla;
+            float factor = distanciaAncla / ReglaLienzosVR.DistanciaFrente;
+            float ancho = ReglaLienzosVR.AnchoFrente * factor;
+            float alto = ancho * ReglaLienzosVR.AltoReferencia / ReglaLienzosVR.AnchoReferencia;
+            tapan.Ocultar(cabeza.position, ancla.position, ancho, alto, raizJugador, transform);
+            if (tapan.Ocultos > 0)
+            {
+                Debug.Log("[VR] Pantalla abierta: " + tapan.Ocultos + " renderers que tapaban el panel se ocultan.");
+            }
         }
 
         /// <summary>Pone el panel de menús frente a la cabeza (más cerca si hay pared).</summary>
@@ -654,6 +733,7 @@ namespace MechaCyberpunk.VR.Menus
             anclaPuesta = true;
             siguiendo = false;
             segundosFuera = 0f;
+            versionAncla++;
         }
 
         // V12: con el rig de menús (Inicio) el panel va debajo de la pantalla de cine e inclinado hacia la cabeza; si no, el de siempre.
@@ -757,17 +837,34 @@ namespace MechaCyberpunk.VR.Menus
             if (mano == null)
             {
                 puntero.Liberar();
+                seleccion.Soltar();
                 laserVisible = false;
+                hayPunto = false;
                 return;
             }
             camaraLaser.transform.SetPositionAndRotation(mano.position, mano.rotation);
             var rayo = new Ray(mano.position, mano.forward);
-            bool hay = raycaster.Lanzar(rayo, AlcanceLaser, lienzos, out RaycastResult resultado);
+            bool hayDirecto = raycaster.Lanzar(rayo, AlcanceLaser, lienzos, out RaycastResult directo);
+            RaycastResult resultado = directo;
+            bool hay = hayDirecto;
+            if (!hayDirecto || directo.module == raycaster)
+            {
+                // VR44: el botón bajo el láser o, con un menú abierto, el más cercano (magnetismo). Con el gatillo abajo el elegido no cambia:
+                // el clic va solo a lo resaltado.
+                GameObject bloqueado = puntero.Pulsado ? seleccion.Elegido : null;
+                hay = seleccion.Elegir(rayo, AlcanceLaser, lienzos, camaraLaser, raycaster, hayDirecto, directo, MenuAbierto, bloqueado, out resultado);
+            }
+            else
+            {
+                seleccion.Soltar(); // la pantalla grande de Inicio: va por su propio camino
+            }
             bool interactivo = hay && PunteroUIVR.EsInteractivo(resultado.gameObject);
             if (!MenuAbierto && !interactivo && !puntero.Pulsado)
             {
                 puntero.Liberar();
+                seleccion.Soltar();
                 laserVisible = false;
+                hayPunto = false;
                 return;
             }
             bool presiono = EntradaVR.Pulso(EntradaVR.GatilloDerecho);
@@ -775,7 +872,28 @@ namespace MechaCyberpunk.VR.Menus
             puntero.Procesar(hay, resultado, presiono, solto);
             UIApuntada = interactivo;
             laserVisible = true;
-            largoLaser = hay ? resultado.distance : LargoLaser;
+            // VR44: el láser se detiene en el panel (aunque ahí no haya nada que tocar) y un punto marca dónde toca.
+            if (hay)
+            {
+                largoLaser = resultado.distance;
+                puntoLaser = resultado.worldPosition;
+                giroPunto = resultado.worldNormal.sqrMagnitude > 0.25f
+                    ? Quaternion.LookRotation(-resultado.worldNormal, Vector3.up)
+                    : Quaternion.LookRotation(rayo.direction, Vector3.up);
+                hayPunto = true;
+            }
+            else if (SeleccionLaserVR.TocarPanel(rayo, AlcanceLaser, lienzos, out float distanciaPanel, out Vector3 puntoPanel, out Quaternion giroPanel))
+            {
+                largoLaser = distanciaPanel;
+                puntoLaser = puntoPanel;
+                giroPunto = giroPanel;
+                hayPunto = true;
+            }
+            else
+            {
+                largoLaser = LargoLaserMaximo;
+                hayPunto = false;
+            }
         }
 
         private void DibujarLaser()
@@ -785,7 +903,10 @@ namespace MechaCyberpunk.VR.Menus
                 // Se fue con el control que lo llevaba (el jugador se destruyó al cambiar de escena): se vuelve a crear.
                 CrearLinea();
             }
-            if (!laserVisible || mano == null)
+            bool ver = laserVisible && mano != null;
+            float escalaPunto = ReglaLienzosVR.EscalaFrente * Mathf.Max(0.1f, largoLaser) / ReglaLienzosVR.DistanciaFrente;
+            seleccion.Dibujar(ver, hayPunto, puntoLaser, giroPunto, escalaPunto);
+            if (!ver)
             {
                 linea.enabled = false;
                 return;
@@ -1149,20 +1270,69 @@ namespace MechaCyberpunk.VR.Menus
         {
             camarasVistas.RemoveWhere(c => c == null);
             Camera[] camaras = FindObjectsByType<Camera>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            setsSacados.RemoveWhere(t => t == null);
             foreach (Camera c in camaras)
             {
-                if (c == null || c.targetTexture == null || camarasVistas.Contains(c))
+                if (c == null || c.targetTexture == null)
                 {
                     continue;
                 }
-                camarasVistas.Add(c);
+                // VR43: cada vez (no solo la primera): una pantalla puede volver a encender el XR de su cámara.
                 UniversalAdditionalCameraData datos = c.GetUniversalAdditionalCameraData();
                 if (datos != null && datos.allowXRRendering)
                 {
                     SistemaVR.PermitirXR(c, false);
-                    camarasSinXR.Add(c);
+                    if (!camarasSinXR.Contains(c))
+                    {
+                        camarasSinXR.Add(c);
+                    }
+                }
+                if (camarasVistas.Add(c) || !setsSacados.Contains(SetDe(c.transform)))
+                {
+                    SacarSetDelLienzo(c);
                 }
             }
+        }
+
+        // VR43: el set de la vista 3D (cuerpo del Doc, arma de Tino) cuelga del objeto de su pantalla, que es un Canvas. En PC ese Canvas es de
+        // pantalla (escala ~1); en VR es un panel del mundo con escala de ~0.0008 m/px, así que el set queda microscópico (la cámara del set,
+        // con su plano cercano de 5 cm, ya no ve nada) y además se mueve con el panel. Si el set se puso lejos a propósito (su posición del
+        // juego, lejos de la ciudad), se saca del Canvas a la raíz de la escena con escala 1 y sin giro: lo mismo que ve en PC. Lo destruye
+        // su dueño como siempre.
+        private void SacarSetDelLienzo(Camera c)
+        {
+            Transform set = SetDe(c.transform);
+            if (set == null || set.parent == null || setsSacados.Contains(set))
+            {
+                return;
+            }
+            Canvas lienzo = set.parent.GetComponentInParent<Canvas>(true);
+            Canvas raiz = lienzo != null ? lienzo.rootCanvas : null;
+            if (raiz == null || TipoDe(raiz) == null)
+            {
+                return;
+            }
+            if (Vector3.Distance(set.position, raiz.transform.position) < DistanciaSetAparte)
+            {
+                return; // pegado a la pantalla: no se mueve (se vería en el mundo junto al panel)
+            }
+            Vector3 posicion = set.position;
+            set.SetParent(null, true);
+            set.SetPositionAndRotation(posicion, Quaternion.identity);
+            set.localScale = Vector3.one;
+            setsSacados.Add(set);
+            Debug.Log("[VR] La vista 3D " + set.name + " sale del Canvas " + raiz.name + " (escala 1, como en PC).");
+        }
+
+        // El set de una cámara: su ancestro más alto que no es de la UI (el que cuelga directo de un RectTransform).
+        private static Transform SetDe(Transform camara)
+        {
+            Transform t = camara;
+            while (t.parent != null && !(t.parent is RectTransform))
+            {
+                t = t.parent;
+            }
+            return t.parent != null ? t : null;
         }
 
         private void DevolverCamarasXR()

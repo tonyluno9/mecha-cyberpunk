@@ -12,6 +12,8 @@ namespace MechaCyberpunk.VR.Guia
     /// Se guarda en PlayerPrefs (<see cref="GuiaControlesVR.ClaveVista"/>) al mostrarla y ya no vuelve a salir sola (sí desde Pausa → CONTROLES).
     /// Con el simulador de XR no sale sola salvo <see cref="GuiaControlesVR.MostrarEnSimulador"/> (para no tapar las pruebas de VR).
     /// Se agrega solo al jugador cuando el rig VR está armado y se quita al terminar.
+    /// VR62: ya no sale sola en el juego: las tarjetas del tutorial (VR/Tutorial/TutorialVR) enseñan cada control en su momento y Pausa →
+    /// CONTROLES muestra las 16 páginas. Queda apagada (<see cref="Activo"/> = false); las pruebas la encienden para probarla.
     /// </summary>
     public class ArranqueGuiaVR : MonoBehaviour
     {
@@ -23,6 +25,15 @@ namespace MechaCyberpunk.VR.Guia
 
         /// <summary>True si la guía ya salió sola alguna vez en esta máquina.</summary>
         public static bool YaVista => PlayerPrefs.GetInt(GuiaControlesVR.ClaveVista, 0) == 1;
+
+        /// <summary>VR62: si la guía completa sale sola la primera vez (apagado: la reemplazan las tarjetas del tutorial).</summary>
+        public static bool Activo { get; set; }
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void Reiniciar()
+        {
+            Activo = false;
+        }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void Suscribir()
@@ -42,7 +53,7 @@ namespace MechaCyberpunk.VR.Guia
 
         private static void AlListo(AdaptadorVR rig)
         {
-            if (rig != null && !YaVista && rig.GetComponent<ArranqueGuiaVR>() == null)
+            if (Activo && rig != null && !YaVista && rig.GetComponent<ArranqueGuiaVR>() == null)
             {
                 rig.gameObject.AddComponent<ArranqueGuiaVR>();
             }
@@ -55,7 +66,7 @@ namespace MechaCyberpunk.VR.Guia
 
         private void Update()
         {
-            if (YaVista || !ModoVR.Activo)
+            if (!Activo || YaVista || !ModoVR.Activo)
             {
                 Destroy(this);
                 return;

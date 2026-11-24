@@ -45,5 +45,17 @@ namespace MechaCyberpunk.VR.Cinematicas
         {
             return hayJugadorVR && !excluido && reproduciendo && (redirigido || enLienzoDePantalla);
         }
+
+        /// <summary>VR36: lo más que se queda el último cuadro de un video parado en la pantalla mientras sigue la cinemática (s).</summary>
+        public const float SegundosSinCorte = 1f;
+
+        /// <summary>
+        /// VR36: true si un video que ya estaba en la pantalla de cine y se paró (fin de un clip, el otro reproductor prepara el siguiente)
+        /// se queda con su último cuadro: solo mientras la cinemática sigue y por poco tiempo (después sale lo que la cinemática ponga).
+        /// </summary>
+        public static bool MantenerEnCine(bool cinematicaEnCurso, bool reproduciendo, float segundosParado)
+        {
+            return cinematicaEnCurso && !reproduciendo && segundosParado < SegundosSinCorte;
+        }
     }
 }

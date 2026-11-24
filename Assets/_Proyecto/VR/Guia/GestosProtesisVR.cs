@@ -6,12 +6,14 @@ using UnityEngine;
 namespace MechaCyberpunk.VR.Guia
 {
     /// <summary>
-    /// VR20: gestos de las prótesis. Con la prótesis instalada, las dos manos sobre los muslos con los dos grips ~0.5 s activan PIERNAS;
-    /// los dos brazos abiertos a los lados con los dos grips ~0.5 s activan BRAZOS (<see cref="ReglaGestosProtesisVR"/>). Llama a la misma
-    /// API que la rueda de prótesis (<see cref="HabilidadesProtesis.Pulsar"/>: mismo efecto, sonido de servos y recarga); al activarse vibran
-    /// los dos controles. Sin la prótesis la pose no cuenta (ni suena error). Con pausa, menú o rueda abiertos no hace nada.
-    /// <see cref="EnPose"/> dice si las dos manos están en la pose de una prótesis instalada, para que el agarre (VR/Agarre) no tome a nadie
-    /// con esos grips. Se agrega solo al jugador cuando el rig VR está armado (<see cref="AdaptadorVR.Listo"/>).
+    /// VR20/VR45/VR31b: gestos de las prótesis (en VR ya no hay rueda de prótesis: solo gestos). Con la prótesis instalada y los dos grips
+    /// apretados ~0.5 s: las dos manos abajo, de la cadera a la rodilla, activan PIERNAS; los brazos abiertos en cruz activan BRAZOS; las dos
+    /// manos a los lados de la cabeza activan la VISIÓN (habilidad CABEZA) (<see cref="ReglaGestosProtesisVR"/>). Llama a
+    /// <see cref="HabilidadesProtesis.Pulsar"/> (mismo efecto, sonido y recarga que en PC); al activarse vibran los dos controles, y la visión,
+    /// que en PC no tiene sonido propio, suena como las otras (servos). Sin la prótesis la pose no cuenta (ni suena error). Con pausa, menú o
+    /// guía abiertos no hace nada. <see cref="EnPose"/> dice si las dos manos están en la pose de una prótesis instalada CON los dos grips
+    /// apretados, para que el agarre, la recarga y el gesto de armas no usen esos grips (VR45: con la zona de piernas más grande, una mano
+    /// colgando sin grip ya no bloquea sacar la pistola). Se agrega solo al jugador cuando el rig VR está armado (<see cref="AdaptadorVR.Listo"/>).
     /// </summary>
     [DefaultExecutionOrder(140)]
     public class GestosProtesisVR : MonoBehaviour
@@ -24,8 +26,8 @@ namespace MechaCyberpunk.VR.Guia
         private HabilidadesProtesis habilidades;
 
         /// <summary>
-        /// True mientras las dos manos están en la pose de una prótesis instalada (aunque aún no aprieten los grips). El agarre con implante
-        /// debería no agarrar al apretar el grip si esto es true (corre antes que AgarreImplanteVR: orden 140 contra 150).
+        /// True mientras las dos manos están en la pose de una prótesis instalada y los dos grips están apretados. El agarre con implante, la
+        /// recarga y el gesto de armas no toman el grip si esto es true (corre antes que AgarreImplanteVR: orden 140 contra 150).
         /// </summary>
         public static bool EnPose { get; private set; }
 
@@ -114,8 +116,8 @@ namespace MechaCyberpunk.VR.Guia
                 detector.Reiniciar();
                 return;
             }
-            EnPose = pose != GestoProtesisVR.Ninguno;
             bool dosGrips = EntradaVR.Sostenido(EntradaVR.GripIzquierdo) && EntradaVR.Sostenido(EntradaVR.GripDerecho);
+            EnPose = pose != GestoProtesisVR.Ninguno && dosGrips;
             GestoProtesisVR disparo = detector.Avanzar(pose, dosGrips, Time.deltaTime);
             if (disparo != GestoProtesisVR.Ninguno)
             {
@@ -125,17 +127,29 @@ namespace MechaCyberpunk.VR.Guia
 
         private bool Tiene(GestoProtesisVR gesto) => habilidades != null && habilidades.Nivel(Habilidad(gesto)) > 0;
 
-        /// <summary>La habilidad de prótesis de cada gesto.</summary>
-        public static HabilidadProtesis Habilidad(GestoProtesisVR gesto) =>
-            gesto == GestoProtesisVR.Brazos ? HabilidadProtesis.Brazos : HabilidadProtesis.Piernas;
+        /// <summary>La habilidad de prótesis de cada gesto (VR31b: la visión es la habilidad CABEZA).</summary>
+        public static HabilidadProtesis Habilidad(GestoProtesisVR gesto)
+        {
+            switch (gesto)
+            {
+                case GestoProtesisVR.Brazos: return HabilidadProtesis.Brazos;
+                case GestoProtesisVR.Vision: return HabilidadProtesis.Cabeza;
+                default: return HabilidadProtesis.Piernas;
+            }
+        }
 
         private void Activar(GestoProtesisVR gesto)
         {
             UltimoGesto = gesto;
-            // La misma API que la rueda de prótesis (RuedaHabilidadesExo): mismo efecto, sonido y recarga.
-            if (habilidades == null || !habilidades.Pulsar(Habilidad(gesto)))
+            HabilidadProtesis habilidad = Habilidad(gesto);
+            // La misma API que la tecla de PC: mismo efecto, sonido y recarga.
+            if (habilidades == null || !habilidades.Pulsar(habilidad))
             {
                 return; // recargando o ya activa: Pulsar ya sonó el error
+            }
+            if (ReglaSonidoExo.AlActivar(habilidad) == null)
+            {
+                Sonidos.ReproducirEn(ReglaSonidoExo.Servos, transform.position); // VR31b: la visión suena como las otras
             }
             Activaciones++;
             adaptador.ManoIzquierda.Vibrar(AmplitudActivar, SegundosVibrar);

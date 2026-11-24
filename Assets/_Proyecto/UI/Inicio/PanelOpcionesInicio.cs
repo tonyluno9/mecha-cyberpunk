@@ -106,7 +106,7 @@ namespace MechaCyberpunk.UI.Inicio
         public FilaOpcion Tutorial => tutorial;
         /// <summary>V10: GIRO (POR PASOS 45° / SUAVE). Solo se ve en VR.</summary>
         public FilaOpcion GiroVR => giroVR;
-        /// <summary>VR18: VELOCIDAD DE GIRO (30–180 °/s, 120 por defecto). Solo se ve en VR.</summary>
+        /// <summary>VR18: VELOCIDAD DE GIRO (30–180 °/s, 60 por defecto). Solo se ve en VR.</summary>
         public FilaOpcion VelocidadGiroVR => velocidadGiroVR;
         /// <summary>VR26: VIÑETA (NO / BAJA / MEDIA). Solo se ve en VR.</summary>
         public FilaOpcion VinetaVR => vinetaVR;
@@ -224,7 +224,7 @@ namespace MechaCyberpunk.UI.Inicio
             return panel;
         }
 
-        /// <summary>VR18: el texto de la VELOCIDAD DE GIRO ("120°/S").</summary>
+        /// <summary>VR18: el texto de la VELOCIDAD DE GIRO ("60°/S").</summary>
         public static string TextoVelocidadGiro(float gradosPorSegundo) => Mathf.RoundToInt(gradosPorSegundo) + "°/S";
 
         private static FilaOpcion Fila(RectTransform padre, ref float y, Func<Transform, FilaOpcion> crear)

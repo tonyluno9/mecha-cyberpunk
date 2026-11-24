@@ -12,6 +12,8 @@ using UnityEngine;
 namespace MechaCyberpunk.VR
 {
     /// <summary>
+    /// VR37: esfera de nudillos de 0.13 m contra todo el cuerpo (cualquier dirección y altura); además, si la mano entra en el enemigo tras ir a más de
+    /// 0.6 m/s en los últimos 0.25 s, también cuenta (aunque al llegar ya frene). Tocar despacio sigue sin contar.
     /// VR2/VR35: golpes con las manos. Cada cuadro, cada mano barre una cápsula de <see cref="Radio"/> m del punto de sus nudillos del cuadro anterior al
     /// actual (<see cref="ManoVR.Nudillos"/>; un golpe rápido no atraviesa) contra todas las capas, triggers incluidos. A lo que recibe daño
     /// (<see cref="IRecibeDanio"/>, que no sea el propio jugador) le pega si la mano va a más de 0.8 m/s (la mayor rapidez de los últimos 0.1 s: la del
@@ -24,8 +26,8 @@ namespace MechaCyberpunk.VR
     [DefaultExecutionOrder(110)]
     public class GolpesManosVR : MonoBehaviour
     {
-        /// <summary>Radio de la esfera de los nudillos de cada mano (m).</summary>
-        public const float Radio = 0.1f;
+        /// <summary>Radio de la esfera de los nudillos de cada mano (m). VR37: 0.13 (antes 0.10) para que cuente desde cualquier ángulo.</summary>
+        public const float Radio = ReglaGolpeManoVR.RadioNudillos;
         private const int MaxColisiones = 32;
         private const int MaxEnfriamientos = 16;
         private const float AmplitudVibracion = 1f;
@@ -41,6 +43,9 @@ namespace MechaCyberpunk.VR
             public readonly Queue<(float t, float rapidez)> Rapideces = new Queue<(float, float)>();
             public readonly Dictionary<Component, float> ListoContra = new Dictionary<Component, float>();
             public readonly HashSet<Component> Vistos = new HashSet<Component>();
+            /// <summary>VR37: a quién tocaba la mano el cuadro anterior (para saber si acaba de entrar en un enemigo).</summary>
+            public HashSet<Component> Dentro = new HashSet<Component>();
+            public HashSet<Component> DentroAhora = new HashSet<Component>();
         }
 
         private AdaptadorVR adaptador;
@@ -128,7 +133,8 @@ namespace MechaCyberpunk.VR
         }
 
         // La mayor rapidez de la mano en los últimos SegundosPico (la del visor si la da, si no la medida por ManoVR; las dos sin lo que camina el jugador).
-        private static float Rapidez(EstadoMano estado)
+        // VR37: también la mayor de los últimos SegundosPicoEntrada (para la mano que entra en el enemigo ya frenando).
+        private static float Rapidez(EstadoMano estado, out float picoEntrada)
         {
             float ahora = estado.Mano.VelocidadRelativa.magnitude;
             if (estado.Mano.VelocidadDispositivo(out Vector3 delVisor))
@@ -137,14 +143,19 @@ namespace MechaCyberpunk.VR
             }
             float t = Time.time;
             estado.Rapideces.Enqueue((t, ahora));
-            while (estado.Rapideces.Count > 1 && t - estado.Rapideces.Peek().t > ReglaGolpeManoVR.SegundosPico)
+            while (estado.Rapideces.Count > 1 && t - estado.Rapideces.Peek().t > ReglaGolpeManoVR.SegundosPicoEntrada)
             {
                 estado.Rapideces.Dequeue();
             }
             float pico = 0f;
+            picoEntrada = 0f;
             foreach ((float t, float rapidez) muestra in estado.Rapideces)
             {
-                pico = Mathf.Max(pico, muestra.rapidez);
+                picoEntrada = Mathf.Max(picoEntrada, muestra.rapidez);
+                if (t - muestra.t <= ReglaGolpeManoVR.SegundosPico)
+                {
+                    pico = Mathf.Max(pico, muestra.rapidez);
+                }
             }
             return pico;
         }
@@ -161,13 +172,16 @@ namespace MechaCyberpunk.VR
             {
                 return;
             }
-            float rapidez = Rapidez(estado);
+            float rapidez = Rapidez(estado, out float picoEntrada);
             Vector3 nudillos = estado.Mano.Nudillos;
             Vector3 desde = estado.HayPrevio ? estado.NudilloPrevio : nudillos;
             estado.NudilloPrevio = nudillos;
             estado.HayPrevio = true;
-            if (!puede || !ReglaGolpeManoVR.Golpea(rapidez))
+            estado.DentroAhora.Clear();
+            // VR37: se barre también a menos de 0.8 m/s si la mano venía rápida, para que cuente al entrar en el enemigo; el golpe lo decide la regla.
+            if (!puede || !ReglaGolpeManoVR.ValeLaPenaBarrer(rapidez, picoEntrada))
             {
+                CambiarDentro(estado);
                 return;
             }
             LimpiarEnfriamientos(estado);
@@ -187,6 +201,12 @@ namespace MechaCyberpunk.VR
                 {
                     continue;
                 }
+                estado.DentroAhora.Add(objetivo);
+                bool entrando = !estado.Dentro.Contains(objetivo);
+                if (!ReglaGolpeManoVR.GolpeaAl(rapidez, picoEntrada, entrando))
+                {
+                    continue;
+                }
                 CuerpoAgarradoVR agarrado = objetivo.GetComponentInParent<CuerpoAgarradoVR>();
                 bool sostenido = agarrado != null && agarrado.EstadoActual == CuerpoAgarradoVR.Estado.Sostenido;
                 if (agarrado != null && !ReglaGolpeManoVR.PuedePegarAlAgarrado(sostenido, agarrado.Mano == estado.Mano))
@@ -197,8 +217,17 @@ namespace MechaCyberpunk.VR
                 {
                     continue;
                 }
-                Golpear(estado, objetivo, c, nudillos, rapidez, sostenido ? agarrado : null);
+                Golpear(estado, objetivo, c, nudillos, Mathf.Max(rapidez, entrando ? picoEntrada : 0f), sostenido ? agarrado : null);
             }
+            CambiarDentro(estado);
+        }
+
+        private static void CambiarDentro(EstadoMano estado)
+        {
+            HashSet<Component> previo = estado.Dentro;
+            estado.Dentro = estado.DentroAhora;
+            estado.DentroAhora = previo;
+            estado.DentroAhora.Clear();
         }
 
         private void LimpiarEnfriamientos(EstadoMano estado)

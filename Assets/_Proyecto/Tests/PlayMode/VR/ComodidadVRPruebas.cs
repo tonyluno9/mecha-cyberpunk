@@ -71,9 +71,9 @@ namespace MechaCyberpunk.Tests.VR
             float quieto = Mathf.DeltaAngle(antes, adaptador.GiroRig);
             Debug.Log("[VR] Giro suave: " + parcial.ToString("0.0") + "° en 0.2 s, " + total.ToString("0.0") + "° en 0.6 s.");
             Assert.Greater(parcial, 5f, "Empieza a girar enseguida.");
-            Assert.Less(parcial, 35f, "No es un paso de 45°: es gradual (~120°/s).");
+            Assert.Less(parcial, 35f, "No es un paso de 45°: es gradual (VR38: ~60°/s).");
             Assert.Greater(total, parcial + 20f, "Sigue girando mientras se mantiene el stick.");
-            Assert.AreEqual(AdaptadorVR.VelocidadGiroSuave * 0.6f, total, 25f, "A fondo gira a ~120°/s (VELOCIDAD DE GIRO).");
+            Assert.AreEqual(AdaptadorVR.VelocidadGiroSuave * 0.6f, total, 25f, "A fondo gira a la VELOCIDAD DE GIRO (VR38: ~60°/s, con aceleración suave).");
             Assert.AreEqual(total, quieto, 3f, "Al soltar el stick deja de girar.");
         }
 

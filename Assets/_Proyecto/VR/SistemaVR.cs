@@ -87,7 +87,7 @@ namespace MechaCyberpunk.VR
             {
                 gameObject.AddComponent<DesconexionVR>();
             }
-            // VR30: ruta de chevrones al objetivo (solo se ve con ModoVR.Activo y OpcionesVR.Ruta).
+            // VR41: línea de ruta al objetivo (solo se ve con ModoVR.Activo y OpcionesVR.Ruta).
             if (GetComponent<Ruta.RutaObjetivoVR>() == null)
             {
                 gameObject.AddComponent<Ruta.RutaObjetivoVR>();
