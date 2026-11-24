@@ -9,7 +9,7 @@ namespace MechaCyberpunk.VR
     public static class ReglaAgarreVR
     {
         /// <summary>Distancia máxima (m) de la palma a la superficie del enemigo para agarrarlo.</summary>
-        public const float RadioAgarre = 0.4f;
+        public const float RadioAgarre = 0.5f;
 
         /// <summary>Distancia máxima (m) de la palma de la otra mano al enemigo sostenido para que cuente como golpe.</summary>
         public const float RadioGolpe = 0.2f;
@@ -59,7 +59,7 @@ namespace MechaCyberpunk.VR
         /// <summary>Segundos máximos de vuelo: pasado esto el enemigo vuelve a su IA aunque siga moviéndose.</summary>
         public const float SegundosVueloMaximo = 3f;
 
-        /// <summary>Multiplicador del lanzamiento según el nivel de BRAZOS (0 sin implante: no se puede agarrar).</summary>
+        /// <summary>Multiplicador del lanzamiento según el nivel de BRAZOS (0 sin implante: se sujeta pero no se lanza).</summary>
         public static float Multiplicador(int nivelBrazos)
         {
             if (nivelBrazos <= 0)

@@ -45,7 +45,7 @@ namespace MechaCyberpunk.VR.Guia
             // Control izquierdo: columna de la izquierda.
             (new Vector2(0.190f, 0.874f), new Vector2(0.165f, 0.874f), false, "STICK IZQ.: CAMINAR\nCLIC DEL STICK: CORRER"),
             (new Vector2(0.332f, 0.820f), new Vector2(0.165f, 0.720f), false, "X (MANTÉN): RUEDA DE ARMAS"),
-            (new Vector2(0.460f, 0.607f), new Vector2(0.165f, 0.580f), false, "GRIP IZQ.: AGARRAR / LANZAR\nCON LA MANO LIBRE"),
+            (new Vector2(0.460f, 0.607f), new Vector2(0.165f, 0.580f), false, TeclaVR.AyudaGolpes.Replace(" · ", " ·\n") + " / LANZAR"),
             (new Vector2(-1f, -1f), new Vector2(0.165f, 0.430f), false, "GRIP + GATILLO IZQ.:\nRUEDA DE PRÓTESIS"),
             (new Vector2(0.393f, 0.903f), new Vector2(0.420f, 0.960f), true, "Y: PAUSA"),
             // Control derecho: columna de la derecha.

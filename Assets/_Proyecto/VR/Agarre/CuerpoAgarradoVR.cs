@@ -27,6 +27,8 @@ namespace MechaCyberpunk.VR
         private const float DistanciaBusquedaPiso = 6f;
         private const float SobrePiso = 0.02f;
         private const float RadioNavMesh = 2f;
+        private const float MetrosSacudida = 0.08f;
+        private const float SegundosSacudida = 0.15f;
 
         public enum Estado
         {
@@ -61,6 +63,8 @@ namespace MechaCyberpunk.VR
         private float segundosQuieto;
         private float proximoChoque;
         private Vector3 velocidadPrevia;
+        private Vector3 sacudida;
+        private float finSacudida;
 
         public Estado EstadoActual { get; private set; }
         public ManoVR Mano => mano;
@@ -139,6 +143,24 @@ namespace MechaCyberpunk.VR
             velocidadPrevia = velocidad;
         }
 
+        /// <summary>
+        /// VR35: reacción de un golpe mientras se sostiene: se sacude en la mano hacia <paramref name="direccion"/> y hace su golpe fuerte
+        /// (además del normal que ya hace al recibir el daño).
+        /// </summary>
+        public void Reaccionar(Vector3 direccion)
+        {
+            if (EstadoActual != Estado.Sostenido)
+            {
+                return;
+            }
+            sacudida = direccion.sqrMagnitude > 1e-6f ? direccion.normalized * MetrosSacudida : Vector3.zero;
+            finSacudida = Time.time + SegundosSacudida;
+            if (pandillero != null && pandillero.Visual != null && !pandillero.EstaKO)
+            {
+                pandillero.Visual.Herir(direccion, true);
+            }
+        }
+
         /// <summary>Le aplica daño de golpe (puntos) en <paramref name="punto"/>, en la dirección <paramref name="direccion"/>.</summary>
         public ResultadoDanio Daniar(float cantidad, Vector3 punto, Vector3 direccion)
         {
@@ -160,6 +182,12 @@ namespace MechaCyberpunk.VR
             cuerpo.interpolation = RigidbodyInterpolation.None;
             cuerpo.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
             desfaseEnMano = mano.transform.InverseTransformPoint(transform.position);
+            sacudida = Vector3.zero;
+            // VR35: al sujetarlo hace su animación de recibir golpe.
+            if (pandillero != null && pandillero.Visual != null && !pandillero.EstaKO)
+            {
+                pandillero.Visual.Herir(mano.transform.forward);
+            }
         }
 
         // Apaga la IA y lo que lo mueve, y le pone un cuerpo físico con una cápsula del tamaño del enemigo.
@@ -265,7 +293,15 @@ namespace MechaCyberpunk.VR
                 Lanzar(Vector3.zero, Vector3.zero);
                 return;
             }
-            transform.position = mano.transform.TransformPoint(desfaseEnMano);
+            if (EstaDerrotado)
+            {
+                // VR35: al morir en la mano se suelta solo y sigue su muerte normal al llegar al piso.
+                Lanzar(Vector3.zero, Vector3.zero);
+                return;
+            }
+            float resta = finSacudida - Time.time;
+            Vector3 extra = resta > 0f ? sacudida * (resta / SegundosSacudida) : Vector3.zero;
+            transform.position = mano.transform.TransformPoint(desfaseEnMano) + extra;
         }
 
         private void FixedUpdate()

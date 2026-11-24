@@ -10,11 +10,11 @@ using UnityEngine.InputSystem;
 namespace MechaCyberpunk.VR
 {
     /// <summary>
-    /// VR3: con el implante de BRAZOS instalado, el grip de cada mano agarra al enemigo que tenga a menos de 0.4 m de la palma
-    /// (SKULLS y demás <see cref="PandilleroAPie"/> que no son jefes, y los maniquíes <see cref="ObjetivoTiro"/> del campo de tiro).
-    /// Al soltar el grip sale lanzado con la velocidad de la mano por el multiplicador del implante (×3 nivel 1, ×4 nivel 2);
-    /// golpearlo con la otra mano mientras se sostiene lo suelta y lo manda a volar en la dirección del golpe. Sin implante el grip
-    /// no agarra a nadie. Se agrega solo al jugador cuando el rig VR está armado (<see cref="AdaptadorVR.Listo"/>).
+    /// VR3/VR35: el grip de cada mano sujeta al enemigo que tenga a menos de 0.5 m de la palma (SKULLS y demás <see cref="PandilleroAPie"/> que no
+    /// son jefes, y los maniquíes <see cref="ObjetivoTiro"/> del campo de tiro), con o sin implante: su IA se pausa y queda pegado a la mano
+    /// (<see cref="CuerpoAgarradoVR"/>). Los golpes de la otra mano le pegan (<see cref="GolpesManosVR"/>); al morir se suelta solo. Al soltar el
+    /// grip se libera; con el implante de BRAZOS además sale lanzado con la velocidad de la mano por el multiplicador (×3 nivel 1, ×4 nivel 2).
+    /// Se agrega solo al jugador cuando el rig VR está armado (<see cref="AdaptadorVR.Listo"/>).
     /// No agarra al jugador, a civiles, peatones ni policías de tráfico (solo los tipos de arriba).
     /// </summary>
     [DefaultExecutionOrder(150)]
@@ -25,8 +25,6 @@ namespace MechaCyberpunk.VR
         private const float SegundosAgarre = 0.08f;
         private const float AmplitudLanzar = 0.8f;
         private const float SegundosLanzar = 0.12f;
-        private const float AmplitudGolpe = 1f;
-        private const float SegundosGolpe = 0.2f;
 
         /// <summary>Para pruebas: true/false fuerza tener o no el implante (nivel 1); null lee <see cref="IImplantes"/>.</summary>
         public static bool? ForzarImplante { get; set; }
@@ -45,9 +43,6 @@ namespace MechaCyberpunk.VR
 
         /// <summary>El enemigo sostenido por la mano derecha, o si no por la izquierda (null si ninguna sostiene).</summary>
         public CuerpoAgarradoVR Agarrado => Sostenido(true) ?? Sostenido(false);
-
-        /// <summary>Cuántos golpes con la otra mano mandaron a volar a un sostenido.</summary>
-        public int Golpes { get; private set; }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void Reiniciar()
@@ -113,8 +108,6 @@ namespace MechaCyberpunk.VR
             }
             LeerGrip(adaptador.ManoDerecha, EntradaVR.GripDerecho);
             LeerGrip(adaptador.ManoIzquierda, EntradaVR.GripIzquierdo);
-            RevisarGolpe(adaptador.ManoDerecha, adaptador.ManoIzquierda);
-            RevisarGolpe(adaptador.ManoIzquierda, adaptador.ManoDerecha);
         }
 
         private void LeerGrip(ManoVR mano, InputAction grip)
@@ -142,7 +135,7 @@ namespace MechaCyberpunk.VR
         /// <summary>Agarra al enemigo más cercano a la palma (a menos de <see cref="ReglaAgarreVR.RadioAgarre"/>). True si agarró.</summary>
         public bool IntentarAgarrar(ManoVR mano)
         {
-            if (mano == null || !TieneImplante || Sostenido(mano.Derecha) != null)
+            if (mano == null || Sostenido(mano.Derecha) != null)
             {
                 return false;
             }
@@ -182,11 +175,11 @@ namespace MechaCyberpunk.VR
             }
             sostenidos[mano.Derecha ? 1 : 0] = cuerpo;
             mano.Vibrar(AmplitudAgarre, SegundosAgarre);
-            Debug.Log("[VR] Agarre con implante: " + mejor.name + " (mano " + (mano.Derecha ? "derecha" : "izquierda") + ").");
+            Debug.Log("[VR] Agarre" + (TieneImplante ? " con implante: " : ": ") + mejor.name + " (mano " + (mano.Derecha ? "derecha" : "izquierda") + ").");
             return true;
         }
 
-        /// <summary>Suelta lo que sostiene la mano y lo lanza con la velocidad de la mano por el multiplicador del implante.</summary>
+        /// <summary>Suelta lo que sostiene la mano; con el implante lo lanza con la velocidad de la mano por el multiplicador.</summary>
         public void Soltar(ManoVR mano)
         {
             if (mano == null)
@@ -199,36 +192,16 @@ namespace MechaCyberpunk.VR
                 return;
             }
             sostenidos[mano.Derecha ? 1 : 0] = null;
-            cuerpo.Lanzar(ReglaAgarreVR.VelocidadLanzamiento(mano.Velocidad, NivelBrazos), mano.VelocidadAngular * Mathf.Deg2Rad);
-            mano.Vibrar(AmplitudLanzar, SegundosLanzar);
-        }
-
-        // La otra mano llega rápido al enemigo sostenido: lo suelta y sale volando en la dirección del golpe, con daño.
-        private void RevisarGolpe(ManoVR sostiene, ManoVR otra)
-        {
-            if (sostiene == null || otra == null || Sostenido(otra.Derecha) != null)
+            if (TieneImplante)
             {
-                return;
+                cuerpo.Lanzar(ReglaAgarreVR.VelocidadLanzamiento(mano.Velocidad, NivelBrazos), mano.VelocidadAngular * Mathf.Deg2Rad);
+                mano.Vibrar(AmplitudLanzar, SegundosLanzar);
             }
-            CuerpoAgarradoVR cuerpo = Sostenido(sostiene.Derecha);
-            if (cuerpo == null)
+            else
             {
-                return;
+                // VR35: sin implante solo lo libera (cae donde estaba y vuelve a su IA).
+                cuerpo.Lanzar(Vector3.zero, Vector3.zero);
             }
-            Vector3 palma = otra.Palma;
-            Vector3 velocidad = otra.VelocidadRelativa;
-            if (!ReglaAgarreVR.EsGolpe(cuerpo.DistanciaA(palma), velocidad.magnitude))
-            {
-                return;
-            }
-            sostenidos[sostiene.Derecha ? 1 : 0] = null;
-            Golpes++;
-            Vector3 direccion = velocidad.normalized;
-            cuerpo.Daniar(ReglaAgarreVR.DanioGolpe(seguidor.Efectos.multiplicadorGolpeAPie), palma, direccion);
-            cuerpo.Lanzar(ReglaAgarreVR.VelocidadGolpe(velocidad, NivelBrazos), Vector3.Cross(Vector3.up, direccion));
-            Sonidos.ReproducirEn(ReglaSonidosJugador.GolpeCarne, palma);
-            otra.Vibrar(AmplitudGolpe, SegundosGolpe);
-            sostiene.Vibrar(AmplitudLanzar, SegundosLanzar);
         }
 
         private void SoltarTodo()

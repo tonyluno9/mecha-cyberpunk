@@ -71,6 +71,31 @@ namespace MechaCyberpunk.VR
         /// <summary>Punto de agarre / golpe: el centro del control (unos cm delante del pivote).</summary>
         public Vector3 Palma => transform.TransformPoint(new Vector3(0f, -0.02f, 0.03f));
 
+        /// <summary>VR35: distancia (m) de los nudillos delante del pivote de la pose grip.</summary>
+        public const float AdelanteNudillos = 0.04f;
+
+        /// <summary>
+        /// VR35: los nudillos del puño cerrado, en el mundo (unos cm delante de la pose grip). De aquí salen los golpes con las manos; el modelo
+        /// del puño se acomoda para que sus nudillos queden en este punto.
+        /// </summary>
+        public Vector3 Nudillos => transform.TransformPoint(new Vector3(0f, -AdelanteNudillos, 0f));
+
+        /// <summary>
+        /// VR35: velocidad del control que mide el visor (en ejes del mundo, sin lo que camina el jugador por stick). False si el visor no la da
+        /// (sin visor o en el simulador): ahí se usa <see cref="VelocidadRelativa"/>.
+        /// </summary>
+        public bool VelocidadDispositivo(out Vector3 velocidad)
+        {
+            velocidad = Vector3.zero;
+            UnityEngine.XR.InputDevice dispositivo = InputDevices.GetDeviceAtXRNode(derecha ? XRNode.RightHand : XRNode.LeftHand);
+            if (!dispositivo.isValid || !dispositivo.TryGetFeatureValue(UnityEngine.XR.CommonUsages.deviceVelocity, out Vector3 enCuarto))
+            {
+                return false;
+            }
+            velocidad = transform.parent != null ? transform.parent.TransformDirection(enCuarto) : enCuarto;
+            return true;
+        }
+
         private Quaternion rotacionPrevia;
 
         public void Configurar(bool esDerecha, Transform raizRig)

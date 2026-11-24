@@ -10,11 +10,16 @@ namespace MechaCyberpunk.Progresion.Recorrido
     {
         public const int CantidadSkulls = 3;
         /// <summary>Distancia (m, en el plano) a la que el SKULL de turno ya puede pegar.</summary>
-        public const float DistanciaGolpe = 1.4f;
-        /// <summary>A esta distancia se para el SKULL de turno (un poco antes del alcance, para no encimarse).</summary>
-        public const float DistanciaPararse = 1.05f;
-        /// <summary>Radio al que esperan los que no tienen turno, rodeando al jugador.</summary>
-        public const float RadioRodeo = 2.6f;
+        public const float DistanciaGolpe = 1.1f;
+        /// <summary>
+        /// A esta distancia se para el SKULL de turno. VR35: a 0.8 m (cápsulas de 0.3 m) su cuerpo queda al alcance del puño en VR; a 1.05 m quedaba
+        /// justo fuera (la mano estirada llega a ~0.65 m) y casi ningún golpe conectaba.
+        /// </summary>
+        public const float DistanciaPararse = 0.8f;
+        /// <summary>Radio al que esperan los que no tienen turno, rodeando al jugador (VR35: más cerca, a 1.8 m).</summary>
+        public const float RadioRodeo = 1.8f;
+        /// <summary>VR35: un SKULL sin turno que ya está a menos de RadioRodeo + esto del jugador no se mueve (no retrocede si el jugador se le acerca).</summary>
+        public const float MargenSinRetroceder = 0.6f;
         /// <summary>Segundos entre golpes del grupo (pega uno a la vez).</summary>
         public const float SegundosEntreGolpes = 1.9f;
         /// <summary>Del inicio del golpe al contacto (la mano llega a ~0.35 s del clip de golpe).</summary>
@@ -29,6 +34,9 @@ namespace MechaCyberpunk.Progresion.Recorrido
 
         /// <summary>True cuando ya cayeron todos.</summary>
         public static bool Terminada(int vencidos, int total) => total > 0 && vencidos >= total;
+
+        /// <summary>VR35: true si el SKULL sin turno debe quedarse donde está (ya cerca del jugador: no retrocede para que se le pueda pegar).</summary>
+        public static bool QuedarseSinTurno(float distanciaJugador) => distanciaJugador <= RadioRodeo + MargenSinRetroceder;
 
         /// <summary>True si el SKULL de turno puede empezar un golpe ahora.</summary>
         public static bool PuedeGolpear(float distancia, float ahora, float proximoGolpe) => distancia <= DistanciaGolpe && ahora >= proximoGolpe;

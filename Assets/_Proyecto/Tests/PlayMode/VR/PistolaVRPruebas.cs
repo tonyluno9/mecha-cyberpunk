@@ -176,7 +176,7 @@ namespace MechaCyberpunk.Tests.VR
             yield return CrearObjetivo(new Vector3(p.x - 0.2f, p.y + 1f, p.z + 1.3f), o => objetivo = o);
             yield return Cuadros(5);
             float vidaAntes = objetivo.Vida;
-            // 0.8 m en 1.5 s: unos 0.53 m/s (menos de 1.5 m/s).
+            // 0.8 m en 1.5 s: unos 0.53 m/s (menos de 0.8 m/s).
             yield return MoverMano(false, ManoIzqReposo, ManoIzqReposo + new Vector3(0f, 0f, 0.8f), 1.5f, Quaternion.identity);
             yield return Cuadros(3);
             Assert.AreEqual(0, golpes.Golpes, "Tocar despacio no es un golpe.");
@@ -199,8 +199,8 @@ namespace MechaCyberpunk.Tests.VR
         [Test]
         public void FactorDeRapidez_VaDeUnoADos()
         {
-            Assert.IsFalse(ReglaGolpeManoVR.Golpea(1.4f));
-            Assert.IsTrue(ReglaGolpeManoVR.Golpea(1.6f));
+            Assert.IsFalse(ReglaGolpeManoVR.Golpea(0.7f));
+            Assert.IsTrue(ReglaGolpeManoVR.Golpea(0.9f));
             Assert.AreEqual(1f, ReglaGolpeManoVR.Factor(1.6f), 1e-5f);
             Assert.AreEqual(1.5f, ReglaGolpeManoVR.Factor(4.5f), 1e-5f);
             Assert.AreEqual(2f, ReglaGolpeManoVR.Factor(20f), 1e-5f);

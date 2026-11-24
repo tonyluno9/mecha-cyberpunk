@@ -61,6 +61,11 @@ namespace MechaCyberpunk.VR
             {
                 jugador.AddComponent<GolpesManosVR>();
             }
+            // VR35: los puños de PJ01 en las manos, en lugar de los modelos de los controles.
+            if (jugador.GetComponent<Manos.PunosVisiblesVR>() == null)
+            {
+                jugador.AddComponent<Manos.PunosVisiblesVR>();
+            }
         }
     }
 }

@@ -13,7 +13,8 @@ namespace MechaCyberpunk.Progresion.Recorrido
     /// <see cref="DatosRecorrido"/>, con sus clips y voces), lo encaran y pelean a puños. Igual que <see cref="MolestiaSkulls"/>, se llevan con
     /// <see cref="PandilleroAPie.Acosando"/> (su IA solo pone la gravedad; la pistola no sale) y este componente los mueve; el jugador sí les pega
     /// (su daño entra normal por <see cref="PandilleroAPie.RecibirDanio"/>). Pega uno a la vez y nunca dejan KO al jugador (<see cref="ReglaPeleaInicio"/>).
-    /// Avisa <see cref="Terminada"/> cuando caen los 3.
+    /// VR35: el de turno se para a 0.8 m (al alcance del puño en VR), los demás esperan a 1.8 m y no retroceden si el jugador se les acerca, y al que el
+    /// jugador sostiene en la mano no se le mueve. Avisa <see cref="Terminada"/> cuando caen los 3.
     /// </summary>
     public class PeleaInicioSkulls : MonoBehaviour
     {
@@ -168,10 +169,11 @@ namespace MechaCyberpunk.Progresion.Recorrido
                 Parar();
                 return;
             }
+            // VR35: el que el jugador sostiene en la mano (su IA apagada) no tiene turno ni se mueve.
             bool[] vivos = new bool[skulls.Count];
             for (int i = 0; i < skulls.Count; i++)
             {
-                vivos[i] = skulls[i] != null && !skulls[i].EstaKO;
+                vivos[i] = skulls[i] != null && !skulls[i].EstaKO && skulls[i].enabled;
             }
             if (turno < 0 || !vivos[turno])
             {
@@ -204,7 +206,7 @@ namespace MechaCyberpunk.Progresion.Recorrido
             }
             contacto = -1f;
             PandilleroAPie p = quienPega >= 0 && quienPega < skulls.Count ? skulls[quienPega] : null;
-            if (p == null || p.EstaKO)
+            if (p == null || p.EstaKO || !p.enabled)
             {
                 return;
             }
@@ -227,6 +229,13 @@ namespace MechaCyberpunk.Progresion.Recorrido
             Vector3 aJugador = Plano(jugador.position - p.transform.position);
             float distancia = aJugador.magnitude;
             VigilarLejos(i, p, distancia);
+            if (!deTurno && ReglaPeleaInicio.QuedarseSinTurno(distancia))
+            {
+                // VR35: ya está cerca; no retrocede a su puesto si el jugador se le acerca a pegarle.
+                p.MoverPlano(Vector3.zero);
+                p.MirarHacia(aJugador, GradosGiroPorSegundo);
+                return;
+            }
             Vector3 meta = deTurno ? jugador.position : ReglaPeleaInicio.Puesto(jugador.position, haciaElGrupo, i, skulls.Count);
             float margen = deTurno ? ReglaPeleaInicio.DistanciaPararse : 0.4f;
             float falta = deTurno ? distancia : Plano(meta - p.transform.position).magnitude;
@@ -297,7 +306,7 @@ namespace MechaCyberpunk.Progresion.Recorrido
         {
             foreach (PandilleroAPie p in skulls)
             {
-                if (p != null && !p.EstaKO)
+                if (p != null && !p.EstaKO && p.enabled)
                 {
                     p.MoverPlano(Vector3.zero);
                 }

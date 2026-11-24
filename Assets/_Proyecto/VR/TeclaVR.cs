@@ -42,6 +42,8 @@ namespace MechaCyberpunk.VR
         public const string BotonVolver = "B O Y";
         /// <summary>Lo que dice en VR en vez de las ayudas de flechas de los menús ("↑ ↓ ELEGIR · ENTER ACEPTAR · ESC VOLVER").</summary>
         public const string AyudaMenus = "LÁSER + GATILLO DER.: ELEGIR · B O Y: VOLVER";
+        /// <summary>VR35: lo que dice en VR toda ayuda de golpe ("Clic GOLPEA", "[Clic] Golpe"): en VR se pega con las manos, el gatillo no golpea.</summary>
+        public const string AyudaGolpes = "GOLPEA CON TUS MANOS · GRIP: SUJETAR";
 
         /// <summary>
         /// VR19: el botón de VR para una acción del mapa APie (los nombres de <c>ReglaTutorial</c>: "Saltar", "Recargar", "Interactuar", "Rueda"...),
@@ -183,7 +185,10 @@ namespace MechaCyberpunk.VR
         {
             // Las ayudas de flechas de los menús ("↑ ↓ ELEGIR · ENTER ACEPTAR · ESC VOLVER").
             new Regla(@"(?=.*[↑↓←→])(?=.*\b(?:ESC|ENTER)\b)", AyudaMenus),
-            new Regla(@"RUEDA: ZOOM", "B O Y: CERRAR · GATILLO DER.: MARCAR UN PUNTO O UN LUGAR"),
+            // VR35: el golpe con el clic (o ya traducido al gatillo) es golpear con las manos ("Clic GOLPEA", "[Clic] Golpe", "GATILLO DER.: GOLPE").
+            // No toca la ayuda del mecha, que también habla de bloquear.
+            new Regla(@"^(?!.*BLOQUE)(?=.*(?:\bCLIC(?:\s+IZQ(?:\.|UIERDO\b))?|\bGATILLO\s+DER(?:\.|ECHO\b))[\]\)]?\s*[:·]?\s*GOLPE(?:A|AR|S)?\b)", AyudaGolpes),
+            new Regla(@"RUEDA: ZOOM","B O Y: CERRAR · GATILLO DER.: MARCAR UN PUNTO O UN LUGAR"),
             new Regla(@"TE CUBRE DETRÁS", "AGÁCHATE DETRÁS DE UNA CAJA O MURO PARA CUBRIRTE"),
             new Regla(@"\bTE AGACHA\b", "AGÁCHATE CON EL CUERPO PARA AGACHARTE"),
             new Regla(@"RUEDA PARA ESQUIVAR", "AGACHADO + " + BotonSaltar + ": RUEDA PARA ESQUIVAR"),

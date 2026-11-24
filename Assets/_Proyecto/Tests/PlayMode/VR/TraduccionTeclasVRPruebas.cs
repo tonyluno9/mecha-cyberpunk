@@ -21,6 +21,10 @@ namespace MechaCyberpunk.Tests.VR
         [TestCase("USA TU PRÓTESIS (TAB)", "USA TU PRÓTESIS (GRIP IZQ. + GATILLO IZQ.)")]
         [TestCase("PASO 2/3 · MANTÉN [ESPACIO] · LEVANTAR", "PASO 2/3 · MANTÉN [CLIC STICK DER.] · LEVANTAR")]
         [TestCase("↑ ↓ ELEGIR · ENTER ACEPTAR · ESC VOLVER", TeclaVR.AyudaMenus)]
+        [TestCase("Clic GOLPEA", TeclaVR.AyudaGolpes)]
+        [TestCase("[Clic] Golpe", TeclaVR.AyudaGolpes)]
+        [TestCase("gatillo derecho: golpe", TeclaVR.AyudaGolpes)]
+        [TestCase("CLIC DISPARA", "GATILLO DER. DISPARA")]
         public void Traducir_TeclasDePC_PasanABotonesVR(string pc, string vr)
         {
             Assert.AreEqual(vr, TeclaVR.Traducir(pc));

@@ -12,8 +12,9 @@ using Object = UnityEngine.Object;
 namespace MechaCyberpunk.Tests.VR
 {
     /// <summary>
-    /// VR3: con el implante de BRAZOS el grip agarra a un SKULL real (prefab de la calle), lo lleva en la mano, lo lanza con la velocidad
-    /// de la mano (y al chocar contra una pared pierde vida), y golpearlo con la otra mano lo suelta y lo manda a volar. Sin implante no agarra.
+    /// VR3/VR35: el grip sujeta a un SKULL real (prefab de la calle) y lo lleva en la mano; con el implante de BRAZOS al soltarlo sale lanzado con la
+    /// velocidad de la mano (y al chocar contra una pared pierde vida). Golpearlo con la otra mano le baja vida y lo deja en la mano. Sin implante
+    /// también lo sujeta, pero al soltarlo solo cae.
     /// </summary>
     public class AgarreVRPruebas : BaseJugadorVR
     {
@@ -113,7 +114,7 @@ namespace MechaCyberpunk.Tests.VR
             yield return Preparar(1);
             yield return AgarrarConDerecha();
             CuerpoAgarradoVR cuerpo = agarre.Sostenido(true);
-            Assert.IsNotNull(cuerpo, "Con BRAZOS el grip a menos de 0.4 m agarra al SKULL.");
+            Assert.IsNotNull(cuerpo, "Con BRAZOS el grip a menos de 0.5 m agarra al SKULL.");
             Assert.AreEqual(skull.gameObject, cuerpo.gameObject);
             Assert.IsFalse(skull.enabled, "Su IA se apaga mientras se sostiene.");
             Assert.IsFalse(skull.GetComponent<CharacterController>().enabled, "Su CharacterController se apaga mientras se sostiene.");
@@ -174,22 +175,25 @@ namespace MechaCyberpunk.Tests.VR
         }
 
         [UnityTest]
-        public IEnumerator SinImplante_ElGripNoAgarra()
+        public IEnumerator SinImplante_ElGripLoSujeta_YAlSoltarloNoSaleLanzado()
         {
             yield return Preparar(0);
             yield return AgarrarConDerecha();
-            Assert.IsNull(agarre.Sostenido(true), "Sin BRAZOS el grip no agarra enemigos.");
-            Assert.IsNull(skull.GetComponent<CuerpoAgarradoVR>());
-            Assert.IsTrue(skull.enabled, "Su IA sigue.");
-            Assert.IsFalse(agarre.IntentarAgarrar(adaptador.ManoDerecha), "Tampoco llamando directo.");
-            Soltar(controlDer.gripButton);
+            CuerpoAgarradoVR cuerpo = agarre.Sostenido(true);
+            Assert.IsNotNull(cuerpo, "VR35: sin BRAZOS el grip a menos de 0.5 m también sujeta al SKULL.");
+            Assert.IsFalse(skull.enabled, "Su IA se pausa mientras se sostiene.");
+            yield return LanzarConDerecha(ManoDerInicio, ManoDerInicio + new Vector3(0f, 0.15f, 0.6f), 0.15f);
             yield return null;
+            Assert.IsNull(agarre.Sostenido(true), "Al soltar el grip lo libera.");
+            Assert.Less(cuerpo.Cuerpo.linearVelocity.magnitude, 2f, "Sin implante no sale lanzado (solo cae).");
         }
 
         [UnityTest]
-        public IEnumerator GolpearConLaOtraManoMientrasLoSostienes_LoSueltaYSaleVolando()
+        public IEnumerator GolpearConLaOtraManoMientrasLoSostienes_LeBajaVidaYSigueEnLaMano()
         {
             yield return Preparar(1);
+            GolpesManosVR golpes = jugador.GetComponent<GolpesManosVR>();
+            Assert.IsNotNull(golpes, "GolpesManosVR debe agregarse solo al armarse el rig.");
             yield return AgarrarConDerecha();
             CuerpoAgarradoVR cuerpo = agarre.Sostenido(true);
             Assert.IsNotNull(cuerpo);
@@ -198,22 +202,20 @@ namespace MechaCyberpunk.Tests.VR
             Vector3 desde = new Vector3(-0.35f, 1.3f, 0.3f);
             Vector3 hasta = new Vector3(0.3f, 1.3f, 0.8f);
             PonerMano(false, desde, Quaternion.identity);
-            yield return Segundos(0.1f); // la velocidad de la mano mide ~50 ms: que no cuente el salto a "desde"
+            yield return Segundos(0.2f); // que no cuente el salto a "desde"
             const int Pasos = 6;
-            for (int i = 1; i <= Pasos && agarre.Golpes == 0; i++)
+            for (int i = 1; i <= Pasos && golpes.Golpes == 0; i++)
             {
                 PonerMano(false, Vector3.Lerp(desde, hasta, (float)i / Pasos), Quaternion.identity);
                 yield return null;
             }
             yield return Cuadros(2);
-            Assert.AreEqual(1, agarre.Golpes, "La mano izquierda rápida contra el SKULL sostenido cuenta como golpe.");
-            Assert.IsNull(agarre.Sostenido(true), "El golpe lo suelta aunque el grip siga apretado.");
-            Assert.AreEqual(CuerpoAgarradoVR.Estado.Volando, cuerpo.EstadoActual);
-            Vector3 v = cuerpo.Cuerpo.linearVelocity;
-            Debug.Log("[VR] Velocidad del SKULL golpeado: " + v.ToString("F1") + " m/s");
-            Assert.Greater(v.magnitude, 8f, "Sale volando fuerte.");
-            Assert.Greater(v.x, 0f, "En la dirección del golpe (de izquierda a derecha).");
+            Debug.Log("[VR] Golpe al sostenido: " + golpes.Golpes + " golpes, vida " + vidaAntes + " -> " + skull.Actual);
+            Assert.GreaterOrEqual(golpes.Golpes, 1, "La mano izquierda rápida contra el SKULL sostenido es un golpe.");
+            Assert.IsTrue(golpes.UltimoASostenido);
+            Assert.IsFalse(golpes.UltimoConDerecha);
             Assert.Less(skull.Actual, vidaAntes, "El golpe le hace daño.");
+            Assert.AreEqual(cuerpo, agarre.Sostenido(true), "Sigue en la mano derecha (no sale volando).");
             Soltar(controlDer.gripButton);
             yield return null;
         }

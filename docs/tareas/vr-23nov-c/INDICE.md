@@ -3,6 +3,7 @@ Bien según Tony: intro, video, menú, láser (perfecto), carga tipo cine. Rama 
 
 | # | Tarea | Prioridad | Estado |
 |---|---|---|---|
+| VR35 | URGENTE: golpes con las manos + agarrar y golpear hasta matar | 0 | HECHO (falta visor) |
 | VR29 | GRAVE: menús del Doc, Tino y máquinas bugueados; no se puede salir | 1 | HECHO (falta visor) |
 | VR27 | Armas con gestos, recarga manual, rueda sin parpadeo, nuevo reparto (Y pausa) | 1 | HECHO (falta visor; zonas de gesto a ajustar) |
 | VR25 | HUD sin borde negro | 1 | HECHO (falta visor) |
