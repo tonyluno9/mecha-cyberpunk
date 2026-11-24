@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CYBERCITY · Presentación</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Permanent+Marker&display=swap" rel="stylesheet">
+<style>
+/* VOICE: callejero, de noche, contado por el protagonista; tenso y con orgullo
+   IDEA: el feed de vigilancia de NOVA, hackeado para contar la historia (REC, cámara, glitch)
+   PICTURE: los frames reales de las cinemáticas y del juego; el reproductor es el centro
+   COLOUR and TYPE: noche violeta, magenta de los SKULLS, cian de NOVA, amarillo del grafiti; Rajdhani + Permanent Marker
+   LAYOUT: héroe con la pantalla de carga, cine grande, historia, modo libre, controles, cómo presentarlo */
+:root{color-scheme:dark;--bg:#0a0710;--bg2:#120c1c;--ink:#f0eaf6;--mut:#a597b8;--mag:#ff2fa8;--cyan:#2ff3ff;--yel:#ffe23a;--coral:#ff5a4e;--line:#2c2140}
+*{box-sizing:border-box;min-width:0}
+html{scroll-behavior:smooth;scroll-padding-top:64px}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 Rajdhani,system-ui,sans-serif;overflow-x:clip}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,#0000 0 2px,#0002 2px 3px);z-index:90}
+img,video{display:block;max-width:100%}
+nav{position:sticky;top:0;z-index:40;display:flex;gap:2px;overflow-x:auto;padding:8px max(4vw,12px);background:#0a0710e6;backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+nav a{flex:none;color:var(--mut);text-decoration:none;font-weight:600;padding:10px 12px;border:1px solid #0000}
+nav a:hover,nav a:focus-visible{color:var(--cyan);border-color:var(--cyan);outline:none}
+nav b{flex:none;font:22px "Permanent Marker";color:var(--yel);-webkit-text-stroke:1px var(--cyan);padding:6px 14px 0 0}
+.band{padding:clamp(40px,6vw,88px) max(5vw,16px)}.alt{background:var(--bg2)}
+.wrap{max-width:1240px;margin:0 auto}
+h2{font-size:clamp(32px,4.6vw,52px);line-height:1.05;margin:0 0 16px;text-wrap:balance;font-weight:700}
+h3{font-size:22px;margin:0 0 6px;color:var(--cyan);line-height:1.15}
+p{max-width:68ch;margin:0 0 12px}
+.lbl{color:var(--mag);font-weight:700;font-size:15px;display:block;margin-bottom:4px}
+.cut{clip-path:polygon(14px 0,100% 0,100% calc(100% - 14px),calc(100% - 14px) 100%,0 100%,0 14px);background:#ffffff08;border:1px solid var(--line)}
+.btn{font:700 17px Rajdhani;min-height:44px;padding:8px 18px;background:#0000;color:var(--cyan);border:1px solid var(--cyan);cursor:pointer;text-decoration:none;display:inline-grid;place-items:center;clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px)}
+.btn:hover,.btn:focus-visible{background:var(--cyan);color:#000;outline:none}
+.btn.hot{border-color:var(--yel);color:var(--yel)}.btn.hot:hover,.btn.hot:focus-visible{background:var(--yel);color:#000}
+.btn[aria-pressed=true]{background:var(--mag);border-color:var(--mag);color:#fff}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.hint{color:var(--mut);font-size:15px}
+/* héroe */
+#hero{position:relative;min-height:min(94vh,860px);display:grid;align-items:end;overflow:hidden;background:#000}
+#hero>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:70% 30%;opacity:.8;animation:drift 24s ease-in-out infinite alternate}
+@keyframes drift{to{transform:scale(1.08) translateX(-2%)}}
+#hero::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#0a0710 0%,#0a0710cc 35%,#0000 70%),linear-gradient(0deg,#0a0710 0%,#0000 40%);z-index:1}
+.hero-in{position:relative;z-index:2;padding:0 max(5vw,16px) clamp(36px,7vw,80px)}
+.logo{font:clamp(64px,13vw,176px)/.9 "Permanent Marker";color:var(--yel);-webkit-text-stroke:3px var(--cyan);paint-order:stroke fill;text-shadow:0 0 22px #ffe23a99,0 0 60px #2ff3ff55;margin:0;transform:rotate(-3deg);clip-path:inset(0 100% 0 0);animation:spray 2.2s steps(24) .4s forwards}
+@keyframes spray{to{clip-path:inset(-20% -5% -20% 0)}}
+.hero-in p{font-size:clamp(18px,2vw,22px);margin:22px 0 24px;max-width:36ch}
+.rec{position:absolute;z-index:2;top:16px;left:max(5vw,16px);right:max(5vw,16px);display:flex;justify-content:space-between;font-weight:700;color:var(--coral)}
+.rec i{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--coral);margin-right:8px;animation:blink 1s infinite}
+.rec span:last-child{color:var(--cyan)}
+@keyframes blink{50%{opacity:.15}}
+/* cine */
+#player{position:relative;aspect-ratio:16/9;max-height:78vh;width:100%;margin:0 auto;overflow:hidden;background:#000;border:1px solid var(--mag);box-shadow:0 0 40px #ff2fa833}
+#player:fullscreen{max-height:none;border:0;aspect-ratio:auto}
+#player video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#000}
+#player .hud{position:absolute;top:12px;left:16px;right:16px;display:flex;justify-content:space-between;font-weight:700;font-size:clamp(12px,1.6vw,18px);color:var(--coral);text-shadow:0 0 4px #000;pointer-events:none;transition:opacity .4s}
+#player .hud span:last-child{color:var(--cyan)}
+#player.clean .hud{opacity:0}
+#sub{position:absolute;left:50%;bottom:7%;transform:translateX(-50%);width:min(90%,980px);text-align:center;font-size:clamp(17px,2.7vw,34px);font-weight:600;line-height:1.25;text-shadow:0 2px 6px #000,0 0 3px #000,0 0 12px #000;pointer-events:none}
+#sub em{display:block;font-style:normal;font-size:.58em;color:var(--yel);margin-bottom:2px}
+#card{position:absolute;inset:0;display:none;place-items:center;text-align:center;background:radial-gradient(#1a0b1f,#000);font:clamp(48px,10vw,140px)/1 "Permanent Marker";color:var(--yel);-webkit-text-stroke:2px var(--cyan);paint-order:stroke fill}
+#card small{display:block;font:700 clamp(15px,2.4vw,28px) Rajdhani;color:var(--coral);-webkit-text-stroke:0;margin-top:18px}
+#tap{position:absolute;inset:0;display:grid;place-items:center;background:#0008;color:var(--yel);font:700 clamp(18px,3vw,30px) Rajdhani;border:0;cursor:pointer;width:100%}
+.glitch{animation:gl .35s}@keyframes gl{30%{filter:hue-rotate(90deg) saturate(3);transform:translateX(-6px) skewX(3deg)}60%{transform:translateX(5px)}}
+#prog{height:3px;background:var(--line);margin-top:8px}#prog i{display:block;height:100%;width:0;background:var(--mag);transition:width .3s}
+.strip{display:flex;gap:6px;overflow-x:auto;scroll-snap-type:x mandatory;margin-top:12px;padding-bottom:8px}
+.strip button{flex:none;width:132px;scroll-snap-align:center;padding:0;border:2px solid #0000;background:#000;cursor:pointer;color:var(--mut);font:700 12px Rajdhani;text-align:left}
+.strip button img{width:100%;aspect-ratio:16/9;object-fit:cover;opacity:.55}
+.strip button span{display:block;padding:3px 6px}
+.strip button.on{border-color:var(--cyan);color:var(--cyan)}.strip button.on img{opacity:1}
+.strip button.new{margin-left:10px;box-shadow:-10px 0 0 -8px var(--mag)}
+/* historia */
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:24px;align-items:start}
+.chars{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:14px;margin-top:26px}
+.chars figure{margin:0;overflow:hidden}.chars img{aspect-ratio:4/3;width:100%;object-fit:cover}
+.chars figcaption{padding:12px 14px}.chars b{display:block;font-size:20px}
+.steps{list-style:none;padding:0;margin:20px 0 0;display:grid;gap:14px}
+.steps li{display:grid;grid-template-columns:minmax(0,230px) minmax(0,1fr);gap:18px;align-items:center;padding:10px}
+.steps img{width:100%;aspect-ratio:16/9;object-fit:cover}
+.steps b{color:var(--yel);font-size:20px;display:block}
+.steps .noimg{aspect-ratio:16/9;display:grid;place-items:center;background:#000;font:28px "Permanent Marker";color:var(--mag)}
+/* modo libre */
+.phases{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:10px;margin-top:20px}
+.phases div{padding:16px;border-top:4px solid var(--c)}
+.phases h3{color:var(--c)}
+.meter{height:10px;background:#000;border:1px solid var(--line);margin:10px 0 6px}.meter i{display:block;height:100%;background:var(--c);width:var(--w)}
+.dead{margin-top:24px;padding:28px;text-align:center}
+.dead h3{font:clamp(44px,7vw,84px)/1 "Permanent Marker";color:var(--coral);margin:0 0 16px}
+.stats{display:flex;flex-wrap:wrap;justify-content:center;gap:12px 40px;font-size:18px}.stats b{display:block;font-size:36px;color:var(--ink)}
+/* ciudad */
+.map{display:grid;grid-template-columns:1fr 1fr;gap:6px;aspect-ratio:1.4;max-height:460px}
+.map div{padding:14px;display:flex;flex-direction:column;justify-content:flex-end;background:linear-gradient(160deg,#0000 30%,var(--c));border:1px solid var(--c)}
+.map b{font-size:22px}.map small{font-size:15px;opacity:.85}
+/* controles */
+.tabs{display:flex;gap:8px;margin:6px 0 14px;flex-wrap:wrap}
+.tabs button[aria-selected=true]{background:var(--cyan);color:#000}
+table{width:100%;border-collapse:collapse}td{padding:10px 14px;border-bottom:1px solid var(--line)}
+td:first-child{color:var(--mut)}td:last-child{text-align:right}
+kbd{font:700 15px Rajdhani;color:var(--cyan);border:1px solid var(--cyan);padding:1px 8px;margin-left:4px;white-space:nowrap;display:inline-block;margin-block:2px}
+.gal{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:10px}
+.gal figure{flex:none;width:min(78vw,360px);margin:0;scroll-snap-align:start}
+.gal img{aspect-ratio:4/3;width:100%;object-fit:cover;background:#000}
+.gal figcaption{padding:10px 12px;font-weight:700;color:var(--cyan)}
+.gal figcaption small{display:block;color:var(--mut);font-weight:500}
+/* presentar */
+.ideas{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr));gap:14px}
+.ideas .card{padding:20px}.ideas b{color:var(--yel);font-size:20px;display:block;margin-bottom:4px}
+.tl{display:grid;gap:8px;margin-top:18px}
+.tl div{display:grid;grid-template-columns:104px minmax(0,1fr);gap:14px;padding:12px 16px}
+.tl span{font-weight:700;color:var(--mag);white-space:nowrap}
+.card{padding:22px}
+footer{padding:30px;text-align:center;color:var(--mut);border-top:1px solid var(--line)}
+@media(max-width:600px){.steps li{grid-template-columns:1fr}.map{aspect-ratio:auto}.map div{min-height:110px}.tl div{grid-template-columns:1fr}.rec span:last-child{display:none}}
+@media(prefers-reduced-motion:reduce){.logo{animation:none;clip-path:none}#hero>img,.rec i,.glitch{animation:none}}
+</style></head><body>
+
+<nav aria-label="Secciones"><b>CYBERCITY</b><a href="#cine">Cinemáticas</a><a href="#historia">Historia</a><a href="#demo">La demo</a><a href="#libre">Modo libre</a><a href="#ciudad">La ciudad</a><a href="#controles">Controles</a><a href="#presentar">Cómo presentarlo</a></nav>
+
+<header id="hero">
+  <img src="media/L01_Carga_Protagonista.jpg" alt="">
+  <div class="rec"><span><i></i>NOVA · CÁMARA 07 · SUBURBIOS</span><span id="clock">23:58:12</span></div>
+  <div class="hero-in wrap">
+    <h1 class="logo">CYBERCITY</h1>
+    <p>Una ciudad amurallada. Cámaras en cada esquina. Un maletín que no era tuyo. Y una sola noche para escapar… o regresar.</p>
+    <div class="row"><button class="btn hot" id="go">▶ Presentar las cinemáticas</button><a class="btn" href="#controles">Cómo se juega</a></div>
+  </div>
+</header>
+
+<section class="band alt" id="cine"><div class="wrap">
+  <span class="lbl">Modo cine</span><h2>La historia, clip por clip, con tu voz</h2>
+  <div id="player" tabindex="0" aria-label="Reproductor de cinemáticas">
+    <video id="vid" playsinline preload="auto"></video>
+    <div id="card"></div>
+    <div class="hud"><span>● REC</span><span id="hudR"></span></div>
+    <div id="sub" aria-live="polite"></div>
+    <button id="tap">▶ Toca para empezar (con sonido)</button>
+  </div>
+  <div id="prog"><i></i></div>
+  <div class="row" style="margin-top:12px">
+    <button class="btn" id="prev">◀ Anterior</button>
+    <button class="btn hot" id="play">▶ Reproducir</button>
+    <button class="btn" id="next">Siguiente ▶</button>
+    <button class="btn" id="auto" aria-pressed="true">Seguido</button>
+    <button class="btn" id="mus" aria-pressed="false">♪ Piano</button>
+    <button class="btn" id="subs" aria-pressed="true">Subtítulos</button>
+    <button class="btn" id="fs">⛶ Pantalla completa</button>
+  </div>
+  <div class="strip" id="strip"></div>
+  <p class="hint">Teclas: → ← pasar clip · Espacio reproducir/pausar · F pantalla completa · H ocultar el HUD. "Seguido" encadena todo como película; apágalo para pasar frame por frame y hablar tú encima.</p>
+</div></section>
+
+<section class="band" id="historia"><div class="wrap">
+  <div class="grid2">
+    <div><span class="lbl">El mundo</span><h2>Detrás del muro no hay nada</h2>
+    <p>Cyber City es una ciudad amurallada controlada por <b style="color:var(--cyan)">NOVA</b>. La gente vive vigilada por cámaras, entre tecnología y crueldad, y la pandilla de los <b style="color:var(--mag)">SKULLS</b> mantiene a todos con miedo.</p></div>
+    <div><span class="lbl">El protagonista</span><h3>Un joven tranquilo que siempre quiso ser diferente</h3>
+    <p>De niño vivía en el campo con su mamá y su hermano, y todavía guarda ese recuerdo. Ahora vive solo en los Suburbios y los SKULLS lo molestan. Una noche toma un maletín de NOVA… y todo cambia.</p></div>
+  </div>
+  <div class="chars">
+    <figure class="cut"><img src="media/L01_Carga_Protagonista.jpg" alt="El protagonista en un callejón" style="object-position:55% 30%"><figcaption><b>Él</b>Diseñado a partir de Tony. Prótesis de piernas, brazos y visión.</figcaption></figure>
+    <figure class="cut"><img src="media/C02.jpg" alt="Los SKULLS frente al puesto de tacos"><figcaption><b style="color:var(--mag)">SKULLS</b>La pandilla que manda en la calle.</figcaption></figure>
+    <figure class="cut"><img src="media/I01.jpg" alt="El Doc preparando el suero"><figcaption><b>El Doc</b>Clínica I+D+I. El suero y tus prótesis.</figcaption></figure>
+    <figure class="cut"><img src="media/J01.jpg" alt="Tino en su taller"><figcaption><b>Tino</b>Vende y mejora armas. Brazo robótico.</figcaption></figure>
+    <figure class="cut"><img src="media/L05_Carga_Nova.jpg" alt="Fuerzas de NOVA"><figcaption><b style="color:var(--cyan)">NOVA</b>La corporación que controla todo.</figcaption></figure>
+  </div>
+</div></section>
+
+<section class="band alt" id="demo"><div class="wrap">
+  <span class="lbl">La demo</span><h2>De víctima a alguien que ya no se deja</h2>
+  <ol class="steps" id="steps"></ol>
+</div></section>
+
+<section class="band" id="libre"><div class="wrap">
+  <span class="lbl">Modo libre</span><h2>Mientras más caen, más te buscan</h2>
+  <p>Al salir de con Tino empieza la cacería, sin avisos. Cada fase dura un tiempo o hasta que matas a cierto número: lo que pase primero te sube a la siguiente. Los refuerzos llegan poco a poco, los SKULLS te atacan en su zona en todas las fases y los enemigos sueltan munición y botiquines.</p>
+  <div class="row"><button class="btn" data-m="MUS_FASE_SKULLS">♪ Música SKULLS</button><button class="btn" data-m="MUS_FASE_POLICIA">♪ Música Policía</button><button class="btn" data-m="MUS_FASE_NOVA">♪ Música NOVA</button></div>
+  <div class="phases" id="phases"></div>
+  <div class="cut dead"><h3>HAS MUERTO</h3>
+    <div class="stats"><span><b id="s1">0</b>SKULLS</span><span><b id="s2">0</b>Policías</span><span><b id="s3">0</b>Unidades NOVA</span><span><b id="s4">0:00</b>Sobreviviste</span></div>
+    <p class="hint" style="margin:14px auto 0">Pantalla final (números de muestra). REINTENTAR te deja justo después del campo de tiro, con tu arma, mejoras y dinero; se guarda tu mejor récord.</p></div>
+</div></section>
+
+<section class="band alt" id="ciudad"><div class="wrap grid2">
+  <div><span class="lbl">La ciudad</span><h2>Cuatro barrios, una luz por barrio</h2>
+  <p>Cuadras cortas, calles que doblan y callejones. Carros y motos que puedes robar y manejar, cámaras de NOVA y la ranura del muro.</p>
+  <img class="cut" src="media/L06_Carga_Techos.jpg" alt="Los techos de Cyber City" style="margin-top:14px;aspect-ratio:16/9;object-fit:cover;width:100%"></div>
+  <div class="map" role="img" aria-label="Mapa de los cuatro barrios">
+    <div style="--c:#2f6fff66"><b style="color:#8fb3ff">NOVA</b><small>Torres y la Torre Nova</small></div>
+    <div style="--c:#ff2fb066"><b style="color:#ff7fd0">NEÓN ALTO</b><small>Casino VivaCoin, pantallas</small></div>
+    <div style="--c:#ff8a3d66"><b style="color:#ffae73">SUBURBIOS</b><small>Tu casa, el Doc, Tino, el callejón</small></div>
+    <div style="--c:#ffe23a55"><b style="color:var(--yel)">EL MERCADO</b><small>Tianguis y plaza</small></div>
+  </div>
+</div></section>
+
+<section class="band" id="controles"><div class="wrap">
+  <span class="lbl">Controles</span><h2>Cómo se juega</h2>
+  <div class="tabs" role="tablist"><button class="btn" role="tab" aria-selected="true" data-t="pc">PC · teclado y ratón</button><button class="btn" role="tab" aria-selected="false" data-t="vr">VR · Meta Quest 3</button></div>
+  <div class="cut card" style="padding:8px 10px"><table id="ctl"></table></div>
+  <p class="hint" id="ctlnote" style="margin-top:10px"></p>
+  <h3 style="margin-top:30px">Guía de gestos VR</h3>
+  <div class="gal" id="gal"></div>
+</div></section>
+
+<section class="band alt" id="presentar"><div class="wrap">
+  <span class="lbl">Ideas</span><h2>Cómo presentar CYBERCITY</h2>
+  <div class="ideas">
+    <div class="cut card"><b>Abre a oscuras con el logo</b>Luces apagadas, esta página en pantalla completa con "Presentar". El logo se pinta con aerosol y arranca el recuerdo del campo. No digas nada hasta que despierte.</div>
+    <div class="cut card"><b>Tu voz ya está en la película</b>La narración que grabaste suena en cada clip. Si prefieres decirla en vivo, apaga "Seguido" y pasa los clips tú con las flechas.</div>
+    <div class="cut card"><b>Corta al juego cuando Tino te da el arma</b>Ahí acaba la historia. Cambias al build en vivo: el campo de tiro y la escalada hasta NOVA, frente a todos.</div>
+    <div class="cut card"><b>Reta al salón</b>Un compañero juega el modo libre y la pantalla HAS MUERTO da su marca. El mejor tiempo del día gana. Si llevas el Quest 3, que lo prueben en VR.</div>
+    <div class="cut card"><b>Cuéntales que la cara es la tuya</b>El protagonista lo diseñaste basado en ti. Dilo después del primer clip donde se te ve: engancha al público.</div>
+    <div class="cut card"><b>Cierra con las gafas</b>Tu toma quitándote las gafas de VR y un glitch: "¿y si Cyber City sigue ahí?". Deja la duda y enciende las luces.</div>
+  </div>
+  <h3 style="margin-top:32px">Guion sugerido · unos 7 minutos</h3>
+  <div class="tl">
+    <div class="cut"><span>0:00–0:20</span>Luces apagadas. Página en pantalla completa: logo pintándose.</div>
+    <div class="cut"><span>0:20–3:00</span>Cinemáticas seguidas con tu narración (C01 a C09).</div>
+    <div class="cut"><span>3:00–3:30</span>Tú, en vivo: el mundo, NOVA, los SKULLS y quién eres.</div>
+    <div class="cut"><span>3:30–5:30</span>Juego en vivo: campo de tiro y escalada Policía → NOVA.</div>
+    <div class="cut"><span>5:30–6:30</span>Controles PC/VR y reto al salón.</div>
+    <div class="cut"><span>6:30–7:00</span>Tu toma quitándote las gafas, glitch, fin.</div>
+  </div>
+</div></section>
+
+<footer>CYBERCITY · proyecto universitario en Unity 6 · Tony</footer>
+
+<script>{
+const M='media/';
+const C=[
+{k:'C00',n:'Logo',v:'C00'},
+{k:'C01',n:'El recuerdo',v:'C01a',t:[['YO, DE NIÑO','¡Atrápame!'],['MAMÁ','No se alejen, ya va a oscurecer.']]},
+{k:'C01',n:'El recuerdo',v:'C01b',t:'Despierta. Era un sueño.',x:1},
+{k:'C02',n:'Llegan los Skulls',v:'C02',a:'NAR_C02',t:'Los Skulls llegaron como siempre… como si la calle fuera suya.'},
+{k:'C03',n:'Lo roba',v:'C03',a:'NAR_C03',t:'Dejaron un maletín de Nova a un lado, para ir a asaltar al de los tacos. Nadie lo estaba viendo… nadie, más que yo.'},
+{k:'C04',n:'Huida',v:'F08',a:'NAR_C04_F08',t:'No lo pensé. Lo tomé y corrí.'},
+{k:'C04',n:'Huida',v:'F09',a:'NAR_C04_F09',t:'Creí que nadie me había visto…'},
+{k:'C04',n:'Huida',v:'F10',a:'NAR_C04_F10',t:'Cuando voltearon, ya no estaba.'},
+{k:'C04',n:'Huida',v:'F11',a:'NAR_C04_F11',t:'Y se volvieron locos buscándolo.'},
+{k:'C05',n:'El cuarto',v:'F12',a:'NAR_C05_F12',t:'Me encerré en mi cuarto.'},
+{k:'C05',n:'El cuarto',v:'F12B',a:'NAR_C05_F12B',t:'Era de Nova. No debía tenerlo.'},
+{k:'C05',n:'El cuarto',v:'F12C',a:'NAR_C05_F12C',t:'Pero se abrió con mis huellas.'},
+{k:'C05',n:'El cuarto',v:'F13',a:'NAR_C05_F13',t:'Adentro había algo que lo cambiaba todo.'},
+{k:'C05',n:'El cuarto',v:'F14',a:'NAR_C05_F14',t:'Veinte mil biits, una llave… y un suero.'},
+{k:'C05',n:'El cuarto',v:'F15',a:'NAR_C05_F15',t:'Y por la ventana los oí: esa noche nadie iba a cuidar la ranura del muro. Era mi oportunidad de salir.'},
+{k:'C06',n:'La ranura',v:'G01',a:'NAR_C06_G01',t:'Los guardias se fueron a buscarme.'},
+{k:'C06',n:'La ranura',v:'G02',a:'NAR_C06_G02',t:'Agarré el maletín y salí.'},
+{k:'C06',n:'La ranura',v:'G03',a:'NAR_C06_G03',t:'Estaba a un paso de salir… y entonces los oí.'},
+{k:'C07',n:'El regreso',v:'G04',a:'NAR_C07_G04',t:'Estaban golpeando a mi gente… por algo que hice yo.'},
+{k:'C07',n:'El regreso',v:'G05',a:'NAR_C07_G05',t:'Podía irme. Nadie me lo iba a reprochar.'},
+{k:'C07',n:'El regreso',v:'G06',a:'NAR_C07_G06',t:'Pero no así. Si me iba, me iba con ellos.'},
+{k:'C08',n:'El suero',v:'I01',t:[['EL DOC','Con esto tu cuerpo aguanta cualquier implante.']]},
+{k:'C08',n:'El suero',v:'I02',t:[['EL DOC','Sin esto, te mata.']]},
+{k:'C08',n:'El suero',v:'I03'},
+{k:'C09',n:'Tino',v:'J01'},{k:'C09',n:'Tino',v:'J02'},{k:'C09',n:'Tino',v:'J03'},
+{k:'FIN',n:'Juego libre',card:['SOBREVIVE','POLICÍA → PATRULLAS → NOVA… HASTA QUE CAIGAS']}];
+const $=id=>document.getElementById(id);
+const pl=$('player'),vid=$('vid'),sub=$('sub'),card=$('card'),strip=$('strip'),hudR=$('hudR');
+const nar=new Audio(),piano=new Audio(M+'MUS_PIANO.mp3');piano.loop=true;piano.volume=.22;
+let i=0,playing=false,seq=true,subsOn=true,vEnd=false,aEnd=false,cardT=null;
+strip.innerHTML=C.map((c,k)=>`<button data-k="${k}" class="${k&&C[k-1].k!==c.k?'new':''}"><img src="${c.v?M+c.v+'.jpg':M+'L05_Carga_Nova.jpg'}" alt="" loading="lazy"><span>${c.k} · ${c.n}</span></button>`).join('');
+function esc(s){return s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function setSub(c,part){if(!subsOn||!c.t){sub.innerHTML='';return}
+  if(typeof c.t==='string'){sub.innerHTML=c.x?`<em>${esc(c.t)}</em>`:esc(c.t);return}
+  const [w,s]=c.t[Math.min(part,c.t.length-1)];sub.innerHTML=`<em>${esc(w)}</em>${esc(s)}`}
+function done(){if(vEnd&&aEnd&&playing&&seq){if(i<C.length-1)show(i+1,true);else stop()}}
+function show(k,auto){i=Math.max(0,Math.min(C.length-1,k));const c=C[i];clearTimeout(cardT);nar.pause();vEnd=aEnd=false;
+  pl.classList.remove('glitch');void pl.offsetWidth;pl.classList.add('glitch');
+  hudR.textContent=`${c.k} · ${c.n.toUpperCase()}  ${i+1}/${C.length}`;
+  $('prog').firstChild.style.width=((i+1)/C.length*100)+'%';
+  strip.querySelectorAll('button').forEach((b,j)=>b.classList.toggle('on',j===i));
+  strip.children[i].scrollIntoView({block:'nearest',inline:'center',behavior:'smooth'});
+  if(c.card){vid.removeAttribute('src');vid.load();card.style.display='grid';card.innerHTML=`<div>${c.card[0]}<small>${c.card[1]}</small></div>`;sub.innerHTML='';
+    if(playing&&seq)cardT=setTimeout(stop,5000);return}
+  card.style.display='none';vid.poster=M+c.v+'.jpg';vid.src=M+c.v+'.mp4';vid.volume=c.a?.55:1;setSub(c,0);
+  if(c.a)nar.src=M+c.a+'.mp3';
+  if(playing)start();}
+function start(){const c=C[i];if(c.card){if(seq)cardT=setTimeout(stop,5000);return}
+  vid.play().catch(()=>{});if(c.a){nar.currentTime=0;nar.play().catch(()=>{aEnd=true})}else aEnd=true}
+function setPlay(p){playing=p;$('play').textContent=p?'❚❚ Pausa':'▶ Reproducir';pl.classList.toggle('clean',p&&document.fullscreenElement!==null&&!!document.fullscreenElement)}
+function toggle(){$('tap').style.display='none';if(playing){vid.pause();nar.pause();setPlay(false)}else{setPlay(true);if(vEnd||vid.ended){show(i)}else{vid.play().catch(()=>{});if(C[i].a&&!aEnd)nar.play().catch(()=>{});if(C[i].card)start()}}}
+function stop(){setPlay(false)}
+vid.addEventListener('timeupdate',()=>{const c=C[i];if(Array.isArray(c.t)&&c.t.length>1)setSub(c,vid.currentTime>vid.duration*.55?1:0)});
+vid.addEventListener('ended',()=>{vEnd=true;done()});
+nar.addEventListener('ended',()=>{aEnd=true;done()});
+$('prev').onclick=()=>show(i-1);$('next').onclick=()=>show(i+1);$('play').onclick=toggle;
+$('tap').onclick=()=>{$('tap').style.display='none';setPlay(true);show(i)};
+$('auto').onclick=e=>{seq=!seq;e.currentTarget.setAttribute('aria-pressed',seq)};
+$('subs').onclick=e=>{subsOn=!subsOn;e.currentTarget.setAttribute('aria-pressed',subsOn);setSub(C[i],0)};
+$('mus').onclick=e=>{const on=piano.paused;on?piano.play().catch(()=>{}):piano.pause();e.currentTarget.setAttribute('aria-pressed',on)};
+function fs(){try{document.fullscreenElement?document.exitFullscreen():pl.requestFullscreen().catch(()=>{})}catch(e){}}
+$('fs').onclick=fs;
+$('go').onclick=()=>{$('tap').style.display='none';pl.scrollIntoView();fs();setPlay(true);show(0)};
+document.addEventListener('fullscreenchange',()=>pl.classList.toggle('clean',!!document.fullscreenElement&&playing));
+strip.onclick=e=>{const b=e.target.closest('button');if(b){$('tap').style.display='none';show(+b.dataset.k)}};
+document.addEventListener('keydown',e=>{const r=pl.getBoundingClientRect();if(!document.fullscreenElement&&(r.bottom<0||r.top>innerHeight))return;if(/INPUT|TEXTAREA/.test(e.target.tagName))return;
+  const k=e.key.toLowerCase();if(k==='arrowright'){show(i+1);e.preventDefault()}else if(k==='arrowleft'){show(i-1);e.preventDefault()}
+  else if(k===' '){toggle();e.preventDefault()}else if(k==='f')fs();else if(k==='h')pl.classList.toggle('clean')});
+show(0);
+/* reloj */
+const ck=$('clock');setInterval(()=>{const d=new Date();ck.textContent=d.toTimeString().slice(0,8)},1000);
+/* demo */
+const S=[['C01','El recuerdo','Un niño corre por el campo con su hermano y su mamá los llama. Despierta en la ciudad.'],
+['C03','El maletín','Los SKULLS dejan un maletín de NOVA para asaltar al de los tacos. Él lo toma, huye y se encierra: Ƀ20,000, una llave y un suero.'],
+['G03','La decisión','En la ranura del muro, a un paso de salir, oye que golpean a su gente por su culpa. Regresa.'],
+['L02_Carga_Persecucion','La pelea','Le salen 3 SKULLS. Por primera vez no se deja. Al vencerlos: TIENES Ƀ20,000 EN EL BANCO.'],
+['I03','El Doc','Le inyecta el suero: su cuerpo ya aguanta cualquier implante. Le instala gratis las piernas y le enseña a usarlas.'],
+['J03','Tino','Compra su primera pistola, le pone una mejora y la prueba en el campo de tiro. La historia termina cuando Tino le da el arma.'],
+['','Sobrevive','Al salir de la tienda empieza la cacería, sin avisos. Tino sigue ahí para comprar y mejorar.']];
+$('steps').innerHTML=S.map(([im,b,t])=>`<li class="cut">${im?`<img src="${M+(im==='C01'?'C01a':im)}.jpg" alt="" loading="lazy">`:'<div class="noimg">SOBREVIVE</div>'}<div><b>${b}</b>${t}</div></li>`).join('');
+/* fases */
+const P=[['1 · Policía','Policías a pie y en patrulla.','5 min o 20 policías','var(--yel)',17],['2 · Persecución','Patrullas que llegan manejando, abren la puerta y se bajan a pelear.','5 min, 6 patrullas o 30 policías','var(--yel)',33],['3 · Refuerzos','Camiones y policía pesada.','5 min o 40 policías','var(--coral)',50],['4 · Drones NOVA','NOVA toma el cielo.','4 min o 10 drones','var(--cyan)',67],['5 · Soldados NOVA','Caen cápsulas con soldados E15 y E18.','5 min o 20 soldados','var(--cyan)',84],['6 · NOVA pesada','E16, soldados y drones. Sin fin.','hasta que caigas','#8fb3ff',100]];
+$('phases').innerHTML=P.map(([h,t,u,c,w])=>`<div class="cut" style="--c:${c};--w:${w}%"><h3>${h}</h3>${t}<div class="meter"><i></i></div><span class="hint">${u}</span></div>`).join('');
+const fx=new Audio();document.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{const on=b.getAttribute('aria-pressed')!=='true';document.querySelectorAll('[data-m]').forEach(x=>x.setAttribute('aria-pressed','false'));fx.pause();if(on){fx.src=M+b.dataset.m+'.mp3';fx.volume=.5;fx.play().catch(()=>{});b.setAttribute('aria-pressed','true')}});
+const tg=[['s1',47],['s2',38],['s3',21]];let dn=false;
+const io=new IntersectionObserver(es=>{if(dn||!es[0].isIntersecting)return;dn=true;let t=0;const iv=setInterval(()=>{t++;const f=Math.min(1,t/40);tg.forEach(([id,v])=>$(id).textContent=Math.round(v*f));const s=Math.round(1312*f);$('s4').textContent=`${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`;if(t>=40)clearInterval(iv)},30)});io.observe(document.querySelector('.dead'));
+/* controles */
+const K={pc:[['Caminar','W A S D'],['Correr','Shift'],['Saltar','Espacio'],['Apuntar','Clic derecho'],['Disparar / golpear','Clic izquierdo'],['Recargar','R'],['Interactuar / hablar / subir al carro','E'],['Cambiar arma','Rueda del ratón'],['Mapa','M'],['Omitir cinemática','Clic / Enter'],['Pausa','Esc']],
+vr:[['Caminar / correr','Stick izq. / clic'],['Girar (suave)','Stick der.'],['Saltar','Clic stick der.'],['Disparar / menús','Gatillo der.'],['Apuntar · mira, zoom, carga','Gatillo izq.'],['Sacar pistola','Mano a la cadera + grip der.'],['Recargar (solo manual)','A + gesto'],['Golpe','Puño, cualquier ángulo'],['Interactuar','B'],['Rueda de armas y consumibles','Mantener X + grip izq.'],['Pausa / controles','Y'],['Prótesis piernas','Dos grips, manos abajo'],['Prótesis brazos','Dos grips, pose T'],['Prótesis visión','Dos grips, manos a la cabeza'],['Agarrar / lanzar','Grip junto al enemigo'],['Omitir cinemática','B o láser en OMITIR'],['Recentrar','Stick der. abajo 1 s']]};
+const KN={pc:'Revisa que coincidan con tu build de PC antes de presentar.',vr:'Versión VR para Meta Quest 3 con Quest Link. Las prótesis se activan solo con gestos. Pausa → CONTROLES muestra la guía de 16 páginas.'};
+function ctl(t){$('ctl').innerHTML=K[t].map(([a,b])=>`<tr><td>${a}</td><td>${b.split(' / ').map(x=>`<kbd>${x}</kbd>`).join(' ')}</td></tr>`).join('');$('ctlnote').textContent=KN[t];document.querySelectorAll('[role=tab]').forEach(b=>b.setAttribute('aria-selected',b.dataset.t===t))}
+document.querySelector('.tabs').onclick=e=>{const b=e.target.closest('[data-t]');if(b)ctl(b.dataset.t)};ctl('pc');
+const G=[['Controles_Botones','Los botones','Mapa de los dos controles'],['Gesto_MoverseGirar','Moverse y girar','Sticks'],['Gesto_Interactuar','Interactuar','B junto a la persona o cosa'],['Gesto_SacarPistola_v2','Sacar pistola','Mano a la cadera + grip'],['Gesto_ArmaLarga_v2','Arma larga','Sacar el rifle o la escopeta'],['Gesto_Disparar','Disparar','Gatillo derecho'],['Gesto_Recargar_v2','Recargar','A y el gesto, solo manual'],['Gesto_RuedaArmas','Rueda de armas','Mantener X, grip izquierdo y soltar'],['Gesto_Granada','Granada','Lanzar granada'],['Gesto_Golpe','Golpe','Desde cualquier ángulo'],['Gesto_AgarrarLanzar','Agarrar y lanzar','Con la prótesis de brazos'],['Gesto_ProtesisPiernas_v2','Prótesis de piernas','Dos grips, manos abajo'],['Gesto_ProtesisBrazos_v2','Prótesis de brazos','Dos grips, pose T'],['Gesto_ProtesisVision','Prótesis de visión','Dos grips, manos a la cabeza'],['Gesto_Recentrar','Recentrar','Stick derecho abajo 1 s'],['Gesto_Manejar','Manejar','Carros y motos']];
+$('gal').innerHTML=G.map(([f,n,d])=>`<figure class="cut"><img src="${M}VR_${f}.jpg" alt="${n}" loading="lazy"><figcaption>${n}<small>${d}</small></figcaption></figure>`).join('');
+}</script>
+</body></html>
