@@ -41,6 +41,10 @@ namespace MechaCyberpunk.UI.Inicio
         public const string TextoMomentoDia = "MOMENTO DEL DÍA";
         public const string TextoGiroVR = "GIRO";
         public const string TextoVinetaVR = "VIÑETA";
+        /// <summary>VR26: en el orden de <see cref="NivelVinetaVR"/>.</summary>
+        public static readonly string[] TextosVinetaVR = { "NO", "BAJA", "MEDIA" };
+        /// <summary>RUTA: SÍ/NO (la ruta guía en VR).</summary>
+        public const string TextoRutaVR = "RUTA";
         /// <summary>VR18: °/s del giro SUAVE con el stick a fondo.</summary>
         public const string TextoVelocidadGiroVR = "VELOCIDAD DE GIRO";
         public const string TextoCorrerVR = "CORRER";
@@ -74,6 +78,7 @@ namespace MechaCyberpunk.UI.Inicio
         [SerializeField] private FilaOpcion velocidadGiroVR;
         [SerializeField] private FilaOpcion vinetaVR;
         [SerializeField] private FilaOpcion correrVR;
+        [SerializeField] private FilaOpcion rutaVR;
         [SerializeField] private BotonInicio volver;
 
         [SerializeField] private Text controles;
@@ -103,10 +108,12 @@ namespace MechaCyberpunk.UI.Inicio
         public FilaOpcion GiroVR => giroVR;
         /// <summary>VR18: VELOCIDAD DE GIRO (30–180 °/s, 120 por defecto). Solo se ve en VR.</summary>
         public FilaOpcion VelocidadGiroVR => velocidadGiroVR;
-        /// <summary>V10: VIÑETA (SÍ / NO). Solo se ve en VR.</summary>
+        /// <summary>VR26: VIÑETA (NO / BAJA / MEDIA). Solo se ve en VR.</summary>
         public FilaOpcion VinetaVR => vinetaVR;
         /// <summary>V9: CORRER (MANTENER / ALTERNAR). Solo se ve en VR.</summary>
         public FilaOpcion CorrerVR => correrVR;
+        /// <summary>RUTA (SÍ / NO). Solo se ve en VR.</summary>
+        public FilaOpcion RutaVR => rutaVR;
         /// <summary>True si las filas de VR están a la vista (lo que tenía <see cref="ModoVR.Activo"/> al refrescar).</summary>
         public bool FilasVRVisibles => filasVR;
 
@@ -195,8 +202,9 @@ namespace MechaCyberpunk.UI.Inicio
             panel.giroVR = Fila(panel.contenidos[2], ref yVR, f => FilaOpcion.CrearSelector(f, "GiroVR", TextoGiroVR, TextosGiroVR, (int)OpcionesVR.GiroPorDefecto, true));
             panel.velocidadGiroVR = Fila(panel.contenidos[2], ref yVR, f => FilaOpcion.CrearDeslizador(f, "VelocidadGiroVR", TextoVelocidadGiroVR,
                 OpcionesVR.VelocidadGiroMinima, OpcionesVR.VelocidadGiroMaxima, OpcionesVR.PasoVelocidadGiro, OpcionesVR.VelocidadGiroPorDefecto, TextoVelocidadGiro));
-            panel.vinetaVR = Fila(panel.contenidos[2], ref yVR, f => FilaOpcion.CrearConmutador(f, "VinetaVR", TextoVinetaVR, OpcionesVR.VinetaPorDefecto));
+            panel.vinetaVR = Fila(panel.contenidos[2], ref yVR, f => FilaOpcion.CrearSelector(f, "VinetaVR", TextoVinetaVR, TextosVinetaVR, (int)OpcionesVR.NivelVinetaPorDefecto, true));
             panel.correrVR = Fila(panel.contenidos[2], ref yVR, f => FilaOpcion.CrearSelector(f, "CorrerVR", TextoCorrerVR, TextosCorrerVR, (int)OpcionesVR.CorrerPorDefecto, true));
+            panel.rutaVR = Fila(panel.contenidos[2], ref yVR, f => FilaOpcion.CrearConmutador(f, "RutaVR", TextoRutaVR, OpcionesVR.RutaPorDefecto));
             Text controles = UIInicio.Texto(panel.contenidos[2], "Controles", TextoControles, UIInicio.FuenteTexto, 27, UIInicio.TextoSuave, TextAnchor.UpperLeft);
             panel.controles = controles;
             UIInicio.Punto(controles.rectTransform, new Vector2(0f, 1f), new Vector2(34f, y - 22f), new Vector2(AnchoFila - 40f, 130f));
@@ -265,7 +273,11 @@ namespace MechaCyberpunk.UI.Inicio
             }
             if (vinetaVR != null)
             {
-                vinetaVR.Cambio += f => { if (!refrescando) OpcionesVR.FijarVineta(f.Activo); };
+                vinetaVR.Cambio += f => { if (!refrescando) OpcionesVR.FijarNivelVineta((NivelVinetaVR)f.Indice); };
+            }
+            if (rutaVR != null)
+            {
+                rutaVR.Cambio += f => { if (!refrescando) OpcionesVR.FijarRuta(f.Activo); };
             }
             if (correrVR != null)
             {
@@ -273,14 +285,24 @@ namespace MechaCyberpunk.UI.Inicio
             }
         }
 
-        // Las filas de CONTROLES en orden; en VR van sin la sensibilidad del ratón y con GIRO, VELOCIDAD DE GIRO, VIÑETA y CORRER.
+        // Las filas de CONTROLES en orden; en VR van sin la sensibilidad del ratón ni INVERTIR EJE Y (no aplican) y con GIRO, VELOCIDAD DE GIRO,
+        // VIÑETA, CORRER y RUTA.
         private FilaOpcion[] FilasControles()
         {
             if (filasVR && giroVR != null && vinetaVR != null && correrVR != null)
             {
-                return velocidadGiroVR != null
-                    ? new[] { invertirY, apuntado, tutorial, giroVR, velocidadGiroVR, vinetaVR, correrVR }
-                    : new[] { invertirY, apuntado, tutorial, giroVR, vinetaVR, correrVR };
+                var lista = new System.Collections.Generic.List<FilaOpcion> { apuntado, tutorial, giroVR };
+                if (velocidadGiroVR != null)
+                {
+                    lista.Add(velocidadGiroVR);
+                }
+                lista.Add(vinetaVR);
+                lista.Add(correrVR);
+                if (rutaVR != null)
+                {
+                    lista.Add(rutaVR);
+                }
+                return lista.ToArray();
             }
             return new[] { sensibilidad, invertirY, apuntado, tutorial };
         }
@@ -305,9 +327,17 @@ namespace MechaCyberpunk.UI.Inicio
             {
                 correrVR.gameObject.SetActive(filasVR);
             }
+            if (rutaVR != null)
+            {
+                rutaVR.gameObject.SetActive(filasVR);
+            }
             if (sensibilidad != null)
             {
                 sensibilidad.gameObject.SetActive(!filasVR);
+            }
+            if (invertirY != null)
+            {
+                invertirY.gameObject.SetActive(!filasVR);
             }
             if (controles != null)
             {
@@ -427,7 +457,11 @@ namespace MechaCyberpunk.UI.Inicio
                 {
                     velocidadGiroVR.FijarValor(OpcionesVR.VelocidadGiro);
                 }
-                vinetaVR.FijarActivo(OpcionesVR.Vineta);
+                vinetaVR.FijarIndice((int)OpcionesVR.NivelVineta);
+                if (rutaVR != null)
+                {
+                    rutaVR.FijarActivo(OpcionesVR.Ruta);
+                }
                 correrVR.FijarIndice((int)OpcionesVR.Correr);
                 refrescando = false;
             }

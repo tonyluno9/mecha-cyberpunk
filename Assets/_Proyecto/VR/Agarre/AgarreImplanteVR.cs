@@ -127,7 +127,8 @@ namespace MechaCyberpunk.VR
             {
                 // VR5: con la granada en la mano el grip derecho toma la granada (ArmasEspecialesVR), no agarra.
                 // VR20: con las dos manos en la pose de un gesto de prótesis el grip es el gesto, no agarra.
-                if (!MechaCyberpunk.VR.Guia.GestosProtesisVR.EnPose && !(mano.Derecha && armas != null && ArmasEspecialesVR.TomaElGrip(armas.ArmaActiva)))
+                // VR27: un grip en la cadera o el hombro es de sacar arma o tomar cargador (GestosArmaVR), no agarra.
+                if (!MechaCyberpunk.VR.Guia.GestosProtesisVR.EnPose && !GestosArmaVR.GripTomado(mano.Derecha) && !(mano.Derecha && armas != null && ArmasEspecialesVR.TomaElGrip(armas.ArmaActiva)))
                 {
                     IntentarAgarrar(mano);
                 }

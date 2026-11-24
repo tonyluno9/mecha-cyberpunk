@@ -5,18 +5,19 @@ namespace MechaCyberpunk.VR
 {
     /// <summary>
     /// Botones de los controles Meta Quest Touch (OpenXR) y del simulador de XR, por uso ({LeftHand}/{RightHand}).
-    /// Reparto VR19 (23-nov):
+    /// Reparto VR27 (23-nov, final):
     /// <list type="bullet">
     /// <item>Caminar / correr: stick izquierdo / clic del stick izquierdo.</item>
     /// <item>Girar: stick derecho (SUAVE por defecto, VR18; POR PASOS en Opciones).</item>
-    /// <item>Saltar: A (derecho).</item>
+    /// <item>Saltar: clic del stick derecho.</item>
+    /// <item>Disparar / clic en menús: gatillo derecho.</item>
+    /// <item>Sacar / guardar arma: gesto con la mano derecha en la cadera (corta) o sobre el hombro (larga) + grip derecho (VR/ArmasGesto).</item>
+    /// <item>Recargar: A suelta el cargador; la mano izquierda en la cadera izquierda + grip toma uno nuevo y se mete en el arma (VR/Recarga).</item>
     /// <item>Interactuar (la E del teclado): B (derecho).</item>
-    /// <item>Disparar: gatillo derecho (también es el clic del láser en los menús).</item>
-    /// <item>Agarrar / lanzar: grip de cualquier mano (con el implante de BRAZOS; con la granada, el grip derecho la toma).</item>
-    /// <item>Recargar: X (izquierdo).</item>
-    /// <item>Rueda de armas: mantener Y (izquierdo); se elige moviendo la mano izquierda o con el stick izquierdo (no camina con la rueda abierta).</item>
+    /// <item>Rueda de armas: mantener X (izquierdo); se elige moviendo la mano izquierda o con el stick izquierdo (no camina con la rueda abierta).</item>
+    /// <item>Pausa / opciones: Y (izquierdo) o Menú.</item>
     /// <item>Rueda de prótesis (la de Tab): mantener grip izquierdo + gatillo izquierdo (el gesto lo pone VR/Guia).</item>
-    /// <item>Pausa / opciones: Menú (izquierdo).</item>
+    /// <item>Agarrar / lanzar (implante): grip con la mano libre cerca del enemigo.</item>
     /// <item>Recentrar: mantener el stick derecho abajo 1 s.</item>
     /// </list>
     /// El stick derecho ya no cambia de arma. Las acciones se encienden solas mientras <see cref="Core.ModoVR.Activo"/>.
@@ -26,18 +27,24 @@ namespace MechaCyberpunk.VR
         public const string Izq = "<XRController>{LeftHand}";
         public const string Der = "<XRController>{RightHand}";
 
-        /// <summary>VR19: Saltar = A (primario derecho).</summary>
-        public const string RutaSaltar = Der + "/{PrimaryButton}";
+        /// <summary>VR27: Saltar = clic del stick derecho.</summary>
+        public const string RutaSaltar = Der + "/{Primary2DAxisClick}";
         /// <summary>VR19: Interactuar = B (secundario derecho).</summary>
         public const string RutaInteractuar = Der + "/{SecondaryButton}";
-        /// <summary>VR19: Recargar = X (primario izquierdo).</summary>
-        public const string RutaRecargar = Izq + "/{PrimaryButton}";
-        /// <summary>VR19: Rueda de armas = mantener Y (secundario izquierdo).</summary>
-        public const string RutaRueda = Izq + "/{SecondaryButton}";
+        /// <summary>VR27: soltar el cargador = A (primario derecho). Ya no es un binding de la acción Recargar (lo lee <c>RecargaManualVR</c>).</summary>
+        public const string RutaSoltarCargador = Der + "/{PrimaryButton}";
+        /// <summary>VR27: ya no es binding de nada (antes X = Recargar); queda por compatibilidad = <see cref="RutaSoltarCargador"/>.</summary>
+        public const string RutaRecargar = RutaSoltarCargador;
+        /// <summary>VR27: Rueda de armas = mantener X (primario izquierdo).</summary>
+        public const string RutaRueda = Izq + "/{PrimaryButton}";
+        /// <summary>VR27: Pausa = Y (secundario izquierdo), además del botón Menú.</summary>
+        public const string RutaPausaY = Izq + "/{SecondaryButton}";
 
         public static InputAction StickIzquierdo { get; private set; }
         public static InputAction StickDerecho { get; private set; }
         public static InputAction ClicStickIzquierdo { get; private set; }
+        /// <summary>VR27: clic del stick derecho (saltar).</summary>
+        public static InputAction ClicStickDerecho { get; private set; }
         public static InputAction GatilloDerecho { get; private set; }
         public static InputAction GatilloIzquierdo { get; private set; }
         /// <summary>Valor 0..1 del gatillo derecho.</summary>
@@ -52,7 +59,7 @@ namespace MechaCyberpunk.VR
         public static InputAction BotonX { get; private set; }
         /// <summary>Y (izquierdo, secundario).</summary>
         public static InputAction BotonY { get; private set; }
-        /// <summary>Botón Menú del control izquierdo.</summary>
+        /// <summary>VR27: pausa = botón Menú del control izquierdo o Y (MenusVR la lee para abrir y cerrar la pausa como Esc).</summary>
         public static InputAction Menu { get; private set; }
 
         private static bool creadas;
@@ -91,7 +98,8 @@ namespace MechaCyberpunk.VR
                 BotonB = Boton("VR_B", Der + "/{SecondaryButton}");
                 BotonX = Boton("VR_X", Izq + "/{PrimaryButton}");
                 BotonY = Boton("VR_Y", Izq + "/{SecondaryButton}");
-                Menu = Boton("VR_Menu", Izq + "/{MenuButton}");
+                Menu = Boton("VR_Menu", Izq + "/{MenuButton}", RutaPausaY);
+                ClicStickDerecho = Boton("VR_ClicStickDer", Der + "/{Primary2DAxisClick}");
             }
             foreach (InputAction a in Todas())
             {
@@ -114,7 +122,7 @@ namespace MechaCyberpunk.VR
         private static InputAction[] Todas() => new[]
         {
             StickIzquierdo, StickDerecho, ClicStickIzquierdo, GatilloDerecho, GatilloIzquierdo, ValorGatilloDerecho,
-            GripDerecho, GripIzquierdo, BotonA, BotonB, BotonX, BotonY, Menu,
+            GripDerecho, GripIzquierdo, BotonA, BotonB, BotonX, BotonY, Menu, ClicStickDerecho,
         };
 
         /// <summary>True si la acción se pulsó este cuadro (false si no existe o VR está apagado).</summary>

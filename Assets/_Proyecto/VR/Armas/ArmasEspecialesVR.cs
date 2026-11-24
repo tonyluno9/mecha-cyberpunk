@@ -127,7 +127,7 @@ namespace MechaCyberpunk.VR
             pistolaVR.OcultarArma = TomaElGrip(activa) && !GranadaTomada;
             pistolaVR.Actualizar();
             especiales.BocaExterna = pistolaVR.Boca;
-            especiales.GatilloExterno = !bloqueado && UsaGatillo(activa) && EntradaVR.Sostenido(EntradaVR.GatilloDerecho);
+            especiales.GatilloExterno = !bloqueado && !pistolaVR.SinCargador && UsaGatillo(activa) && EntradaVR.Sostenido(EntradaVR.GatilloDerecho);
             if (activa == ArmaAPie.RiflePlasma && especiales.EstadoPlasma == EstadoPlasma.Rayo)
             {
                 VibrarDerecha(AmplitudRayo, SegundosRayo);
@@ -136,7 +136,8 @@ namespace MechaCyberpunk.VR
 
         private void LeerGrip(bool bloqueado)
         {
-            if (!GranadaTomada && !bloqueado && !MechaCyberpunk.VR.Guia.GestosProtesisVR.EnPose && EntradaVR.Pulso(EntradaVR.GripDerecho))
+            if (!GranadaTomada && !bloqueado && !MechaCyberpunk.VR.Guia.GestosProtesisVR.EnPose && !GestosArmaVR.GripTomado(true)
+                && EntradaVR.Pulso(EntradaVR.GripDerecho))
             {
                 Tomar();
             }

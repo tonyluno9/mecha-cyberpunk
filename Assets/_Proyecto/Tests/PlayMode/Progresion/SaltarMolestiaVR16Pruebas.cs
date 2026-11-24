@@ -14,7 +14,7 @@ namespace MechaCyberpunk.Tests.Progresion
     /// <summary>
     /// VR16: con <see cref="ModoVR.Activo"/> el paso 3 ("Lo molestan") no se juega: no hay SKULLS (<see cref="MolestiaSkulls"/>) y el director pasa
     /// directo al Maletín con el mismo estado (paso, guardado, candados, misión protegida, cinemática) que si la escena se hubiera jugado y terminado.
-    /// Sin VR el paso 3 sigue como siempre.
+    /// VR24: ahora el paso 3 tampoco se juega sin VR (cambio de historia común): en los dos modos se salta igual.
     /// </summary>
     public class SaltarMolestiaVR16Pruebas
     {
@@ -121,12 +121,13 @@ namespace MechaCyberpunk.Tests.Progresion
         }
 
         [Test]
-        public void SoloMolestanYSoloEnVR()
+        public void SoloMolestanYRanura_IgualEnPCYVR()
         {
             foreach (PasoRecorrido p in Enum.GetValues(typeof(PasoRecorrido)))
             {
-                Assert.IsFalse(GestorCandados.SeSaltaEnVR(p, false), "Sin VR no se salta " + p);
-                Assert.AreEqual(p == PasoRecorrido.Molestan, GestorCandados.SeSaltaEnVR(p, true), "En VR " + p);
+                bool esperado = p == PasoRecorrido.Molestan || p == PasoRecorrido.Ranura;
+                Assert.AreEqual(esperado, GestorCandados.SeSaltaEnVR(p, false), "Sin VR " + p);
+                Assert.AreEqual(esperado, GestorCandados.SeSaltaEnVR(p, true), "En VR " + p);
             }
         }
 
@@ -163,7 +164,7 @@ namespace MechaCyberpunk.Tests.Progresion
             });
             Debug.Log("[VR16] VR: " + enVR + " pasos=" + string.Join(",", pasosVR));
 
-            Assert.IsFalse(saltadaNormal, "Sin VR el paso 3 no se salta");
+            Assert.IsTrue(saltadaNormal, "VR24: sin VR el paso 3 también se salta");
             Assert.IsTrue(saltadaVR, "En VR el paso 3 se salta");
             Assert.IsFalse(skullsVR, "En VR no se arma la escena de los SKULLS");
             Assert.IsFalse(hayMolestiaVR, "En VR no queda MolestiaSkulls");

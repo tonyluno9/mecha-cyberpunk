@@ -236,34 +236,23 @@ namespace MechaCyberpunk.Tests.VR
             GuiaControlesVR guia = GuiaControlesVR.Actual;
             yield return Cuadros(2);
 
-            // Los dos modelos son los prefabs reales (sus mallas) y sin ningún script.
-            RecursosVR recursos = RecursosVR.Cargar();
-            Assert.IsNotNull(recursos);
-            Assert.AreEqual(2, guia.Modelos.Count);
-            GameObject[] prefabs = { recursos.controlIzquierdo, recursos.controlDerecho };
-            for (int i = 0; i < 2; i++)
-            {
-                GameObject modelo = guia.Modelos[i];
-                Assert.IsNotNull(modelo, "Modelo " + i);
-                var mallas = new HashSet<Mesh>();
-                foreach (MeshFilter f in prefabs[i].GetComponentsInChildren<MeshFilter>(true))
-                {
-                    mallas.Add(f.sharedMesh);
-                }
-                MeshFilter[] propias = modelo.GetComponentsInChildren<MeshFilter>(true);
-                Assert.Greater(propias.Length, 0, "El modelo tiene mallas.");
-                foreach (MeshFilter f in propias)
-                {
-                    Assert.IsTrue(mallas.Contains(f.sharedMesh), "Malla " + f.name + " es del prefab real " + prefabs[i].name + ".");
-                }
-                Assert.Greater(modelo.GetComponentsInChildren<Renderer>(true).Length, 0);
-                Assert.AreEqual(0, modelo.GetComponentsInChildren<MonoBehaviour>(true).Length, "Sin scripts (ni TrackedPoseDriver ni los de XRI).");
-                Assert.IsTrue(modelo.activeInHierarchy);
-            }
+            // VR31: páginas con las imágenes (importadas como Sprite), etiquetas en la de botones y frase en las de gestos.
+            Assert.AreEqual(0, guia.Pagina, "Empieza en la página de botones.");
+            Assert.AreEqual(6, GuiaControlesVR.Paginas);
+            Assert.IsNotNull(guia.Imagen.sprite, "La imagen de la página está en Resources/GuiaVR.");
+            StringAssert.Contains("Controles_Botones", guia.Imagen.sprite.name);
             Assert.AreEqual(TextosGuiaVR.Etiquetas.Length, guia.Etiquetas.Count, "Una etiqueta por botón.");
-            Assert.AreEqual(TextosGuiaVR.Etiquetas.Length, guia.Lineas, "Una línea por etiqueta.");
-            Debug.Log("[VR] Guía: " + guia.LineasConPieza + "/" + guia.Lineas + " líneas a piezas con nombre del modelo.");
-            Assert.Greater(guia.LineasConPieza, 0, "Las líneas van a piezas del modelo (ThumbStick, Button_A, Trigger...).");
+            Assert.IsTrue(guia.Etiquetas[0].gameObject.activeInHierarchy, "Las etiquetas se ven en la página de botones.");
+            guia.IrSiguiente();
+            Assert.AreEqual(1, guia.Pagina);
+            StringAssert.Contains("SacarPistola", guia.Imagen.sprite.name);
+            StringAssert.Contains("PISTOLA", guia.Frase);
+            Assert.IsFalse(guia.Etiquetas[0].gameObject.activeInHierarchy, "En los gestos no van las etiquetas de los botones.");
+            guia.IrAnterior();
+            guia.IrAnterior();
+            Assert.AreEqual(GuiaControlesVR.Paginas - 1, guia.Pagina, "ANTERIOR da la vuelta.");
+            StringAssert.Contains("BRAZOS", guia.Frase);
+            guia.IrA(0);
             var textos = new List<string>();
             foreach (Text t in guia.Etiquetas)
             {

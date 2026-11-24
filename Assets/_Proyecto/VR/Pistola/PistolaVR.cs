@@ -10,7 +10,7 @@ namespace MechaCyberpunk.VR
     /// VR2: el arma de fuego en la mano (la de <see cref="ArmasAPie"/>, con su modelo real: W01 con su corredera, cargador y mira) va en la mano
     /// derecha del rig, con el cañón hacia adelante del control. El gatillo derecho dispara por <see cref="PistolaAPie.DispararExterno"/>: la bala
     /// sale de la boca del arma hacia donde apunta, con el mismo cargador, cadencia, daño, sonidos, impactos y trazos que con el ratón.
-    /// Recargar es X (VR19; binding de VR1 sobre la acción Recargar, que ya lee PistolaAPie). Mientras se ve el arma se oculta el modelo del control derecho.
+    /// VR27: recargar es a mano (A suelta el cargador, <see cref="RecargaManualVR"/>); sacar y guardar, con gestos (<see cref="GestosArmaVR"/>). Mientras se ve el arma se oculta el modelo del control derecho.
     /// VR17: el arma sigue montada en la grip (la empuñadura en la mano), pero girada como la pose aim (<see cref="ManoVR.Apuntado"/>): el cañón
     /// apunta a donde apunta el control, igual que el láser.
     /// Al armarse pone la pistola en la mano si el jugador estaba con los puños.
@@ -64,6 +64,8 @@ namespace MechaCyberpunk.VR
         public int DisparosHechos { get; private set; }
         /// <summary>VR5: true para no poner el arma activa en la mano (la granada solo se ve mientras el grip la toma, <see cref="ArmasEspecialesVR"/>).</summary>
         public bool OcultarArma { get; set; }
+        /// <summary>VR27: true con el cargador fuera (recarga a mano, <see cref="RecargaManualVR"/>): el gatillo no dispara.</summary>
+        public bool SinCargador { get; set; }
 
         private void Awake()
         {
@@ -128,7 +130,7 @@ namespace MechaCyberpunk.VR
             {
                 return false;
             }
-            if (!PistolaAPie.EsDeFuego(armas.ArmaActiva))
+            if (!PistolaAPie.EsDeFuego(armas.ArmaActiva) || SinCargador)
             {
                 return false;
             }

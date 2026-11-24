@@ -105,6 +105,7 @@ namespace MechaCyberpunk.Progresion.Recorrido
         private DirectorPandillas viejo;
         private ServicioHistoria historia;
         private MolestiaSkulls molestia;
+        private PeleaInicioSkulls pelea; // VR24
         private float inicioDespierta = float.MaxValue;
         // T-1656: los SKULLS salen poco después de que despierta (ya de pie), para esperarlo a media calle antes de que se aleje.
         private const float SegundosHastaMolestia = 6f;
@@ -356,8 +357,11 @@ namespace MechaCyberpunk.Progresion.Recorrido
             }
         }
 
-        // Al reanudar una partida guardada se vuelve a entrar al paso: lo que ya se cobró (el dinero del maletín) no se da otra vez.
+        // Al reanudar una partida guardada se vuelve a entrar al paso. VR24: el dinero del maletín ya solo se da al vencer a los SKULLS del inicio.
         private bool reanudando;
+
+        /// <summary>True mientras se vuelve a entrar al paso de una partida cargada (depuración y pruebas).</summary>
+        public bool Reanudando => reanudando;
 
         // ---------- Guardado ----------
 
@@ -426,6 +430,7 @@ namespace MechaCyberpunk.Progresion.Recorrido
                 Destroy(molestia);
                 molestia = null;
             }
+            QuitarPelea();
             Expendedora.Compra -= AlComprarEnMaquina;
             maquinaHambre = null;
             StopAllCoroutines();
@@ -442,7 +447,7 @@ namespace MechaCyberpunk.Progresion.Recorrido
             PestanasBancoTino.TutorialGuiado = false; // T-84
             GestorCandados.Aplicar(nuevo); // T-78: los candados del mundo según el paso (también al cargar la partida: Reanudar pasa por aquí)
             // T-1658: de recibir el dinero del maletín a salir del menú de prótesis del suero, la camilla del Doc no se usa; al terminar sale el tutorial de prótesis.
-            if (nuevo < PasoRecorrido.Dinero)
+            if (nuevo < PasoRecorrido.Dinero || nuevo == PasoRecorrido.PeleaSkulls)
             {
                 // T-80: antes del Doc no hay prótesis ni tutorial de Tab. Limpia lo que quedara de otra partida jugada sin cerrar el juego.
                 MechaCyberpunk.UI.Clinica.PrimeraVisitaClinica.Fijar(false, false);
@@ -492,6 +497,7 @@ namespace MechaCyberpunk.Progresion.Recorrido
                 case PasoRecorrido.Maletin: EntrarMaletin(); break;
                 case PasoRecorrido.Ranura: EntrarRanura(); break;
                 case PasoRecorrido.Decision: EntrarDecision(); break;
+                case PasoRecorrido.PeleaSkulls: EntrarPeleaSkulls(); break;
                 case PasoRecorrido.Dinero: EntrarDinero(); break;
                 case PasoRecorrido.Suero: EntrarSuero(); break;
                 case PasoRecorrido.UsarProtesis: EntrarUsarProtesis(); break;
@@ -556,10 +562,10 @@ namespace MechaCyberpunk.Progresion.Recorrido
         private void EntrarMolestan()
         {
             MolestiaSaltadaEnVR = false;
-            if (GestorCandados.SeSaltaEnVR(PasoRecorrido.Molestan, ModoVR.Activo))
+            if (GestorCandados.SeSalta(PasoRecorrido.Molestan))
             {
-                // VR16: con visor no hay SKULLS que empujan ni aviso: se da por jugado y sigue igual que al terminar la escena (Maletín).
-                Debug.Log("[Historia] VR16: en VR se salta el paso 3 (Lo molestan).");
+                // VR16/VR24: no hay SKULLS que empujan ni aviso (en PC tampoco): se da por jugado y sigue igual que al terminar la escena (Maletín).
+                Debug.Log("[Historia] VR24: se salta el paso 3 (Lo molestan).");
                 Quitar();
                 MolestiaSaltadaEnVR = true;
                 AlTerminarMolestia();
@@ -608,34 +614,85 @@ namespace MechaCyberpunk.Progresion.Recorrido
                 PonerNoche();
                 Reloj()?.Pausar(true);
                 ClimaMundo.Lluvia = LluviaNoche;
-            }, () => IrA(PasoRecorrido.Ranura));
+            }, () => IrA(GestorCandados.Siguiente(PasoRecorrido.Maletin))); // VR24: directo a C03 (ya no se camina a la ranura)
         }
 
-        // 5. Noche, lluvia: ir a la ranura del muro.
+        // 5. VR24: ya no se juega (ir a la ranura del muro). Una partida guardada aquí sigue en C03 LA DECISIÓN.
         private void EntrarRanura()
         {
-            PonerNoche();
-            ClimaMundo.Lluvia = LluviaNoche;
-            Fijar(TablaRecorrido.ObjetivoRanura, PosicionRanura());
+            Debug.Log("[Historia] VR24: el paso 5 (Ranura) ya no se juega: sigue en C03.");
+            Quitar();
+            IrA(GestorCandados.Reemplazo(PasoRecorrido.Ranura));
+        }
+
+        // 6. C03 LA DECISIÓN. VR24: en negro el jugador vuelve a su punto de inicio (donde aparece al empezar) y la ranura se cierra para el resto del juego.
+        private void EntrarDecision()
+        {
+            Quitar();
+            Cinematica("C03", () =>
+            {
+                ColocarEnElInicio();
+                CerrarRanura();
+            }, () => IrA(PasoRecorrido.PeleaSkulls));
+        }
+
+        // 6b. VR24: en el punto de inicio, 3 SKULLS lo encaran y pelean a puños (pelea protegida). Al vencerlos: Ƀ20,000 en el banco y VE CON EL DOC.
+        private void EntrarPeleaSkulls()
+        {
+            ClimaMundo.Lluvia = 0f;
+            MisionProtegida.Activar("historia: pelea con los SKULLS del inicio", false);
+            (Registro<IObjetivos>.Actual as ServicioObjetivos)?.Fijar(new Objetivo(TablaRecorrido.ObjetivoPeleaSkulls, IdLugar.Ninguno));
+            QuitarPelea();
+            ConocerInicio();
+            Transform j = JugadorRaiz();
+            Vector3 desde = j != null ? j.position : inicioPos;
+            Vector3 adelante = j != null ? Vector3.ProjectOnPlane(j.forward, Vector3.up) : inicioAdelante;
+            pelea = gameObject.AddComponent<PeleaInicioSkulls>();
+            pelea.Terminada += AlTerminarPelea;
+            if (datos == null || !pelea.Iniciar(datos.PrefabsSkull, desde, adelante))
+            {
+                Debug.LogWarning("[Historia] VR24: no se pudo armar la pelea de los SKULLS (faltan los prefabs en DatosRecorrido o el jugador): se sigue con la historia.");
+                AlTerminarPelea();
+                return;
+            }
             GuardarPartida();
         }
 
-        // 6. C03 LA DECISIÓN. En negro el jugador vuelve atrás y la ranura se cierra para el resto del juego.
-        private void EntrarDecision()
+        private void AlTerminarPelea()
         {
-            Cinematica("C03", () =>
+            if (paso != PasoRecorrido.PeleaSkulls)
             {
-                Pose ranura = PoseRanura();
-                Vector3 haciaDentro = (inicioConocido ? inicioPos - ranura.position : -ranura.forward);
-                haciaDentro.y = 0f;
-                haciaDentro = haciaDentro.sqrMagnitude > 0.01f ? haciaDentro.normalized : -ranura.forward;
-                Vector3 donde = Suelo(ranura.position + haciaDentro * MetrosAtrasDeLaRanura);
-                Registro<IJugador>.Actual?.Colocar(new Pose(donde, Quaternion.LookRotation(haciaDentro, Vector3.up)));
-                CerrarRanura();
-            }, () => IrA(PasoRecorrido.Dinero));
+                return;
+            }
+            QuitarPelea(false);
+            MisionProtegida.Desactivar();
+            // El dinero del maletín se da aquí y solo aquí (EntrarDinero ya no lo da): una sola vez.
+            Registro<ICartera>.Actual?.Abonar(TablaRecorrido.DineroMaletin, MotivoDinero.Mision);
+            Avisar(string.Format(TablaRecorrido.AvisoBanco, Moneda.Texto(TablaRecorrido.DineroMaletin)), MechaCyberpunk.UI.Hud.TipoAviso.Dinero);
+            IrA(GestorCandados.Siguiente(PasoRecorrido.PeleaSkulls));
         }
 
-        // 7. Ƀ20,000 del maletín y a ver al Doc.
+        // Quita el componente de la pelea; con <quitarSkulls> también a los SKULLS (al terminar se quedan tirados y se limpian solos).
+        private void QuitarPelea(bool quitarSkulls = true)
+        {
+            if (pelea == null)
+            {
+                return;
+            }
+            pelea.Terminada -= AlTerminarPelea;
+            if (quitarSkulls)
+            {
+                pelea.Cancelar();
+            }
+            else
+            {
+                pelea.Soltar();
+            }
+            Destroy(pelea);
+            pelea = null;
+        }
+
+        // 7. A ver al Doc (los Ƀ20,000 del maletín llegan antes, al vencer a los SKULLS del inicio: VR24).
         private void EntrarDinero()
         {
             ClimaMundo.Lluvia = 0f;
@@ -643,11 +700,7 @@ namespace MechaCyberpunk.Progresion.Recorrido
             {
                 Reloj()?.Pausar(false);
             }
-            if (!reanudando)
-            {
-                Registro<ICartera>.Actual?.Abonar(TablaRecorrido.DineroMaletin, MotivoDinero.Mision);
-                Avisar(TablaRecorrido.AvisoMaletin + Moneda.Texto(TablaRecorrido.DineroMaletin), MechaCyberpunk.UI.Hud.TipoAviso.Dinero);
-            }
+            // VR24: el dinero del maletín ya se dio al vencer a los SKULLS del inicio (AlTerminarPelea); aquí no, para no darlo dos veces.
             PersonajeApoyo doc = viejo != null ? viejo.Doc : null;
             if (doc == null)
             {

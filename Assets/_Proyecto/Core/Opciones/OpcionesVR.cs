@@ -6,13 +6,17 @@ namespace MechaCyberpunk.Core
     /// <summary>
     /// V8–V10 (rama vr/quest3): las opciones de comodidad de VR. Las escribe la pantalla de OPCIONES (UI) y las lee el AdaptadorVR (VR)
     /// cada cuadro; viven en Core porque UI y VR no se referencian. Se guardan en PlayerPrefs al cambiar (como los subtítulos).
-    /// Por defecto: giro SUAVE a 120°/s (VR18; POR PASOS queda como opción), viñeta SÍ y correr MANTENER.
+    /// Por defecto: giro SUAVE a 120°/s (VR18; POR PASOS queda como opción), viñeta BAJA (VR26: NO / BAJA / MEDIA), correr MANTENER y RUTA SÍ.
     /// </summary>
     public static class OpcionesVR
     {
         public const string ClaveGiro = "opcion_vr_giro_v2";
         public const string ClaveVineta = "opcion_vr_vineta";
         public const string ClaveCorrer = "opcion_vr_correr";
+        /// <summary>VR26: el nivel de la viñeta (NO / BAJA / MEDIA). Si no está, se lee la clave vieja de sí/no (<see cref="ClaveVineta"/>: 0 = NO, 1 = BAJA).</summary>
+        public const string ClaveNivelVineta = "opcion_vr_vineta_nivel";
+        /// <summary>RUTA: SÍ/NO (la ruta guía en VR).</summary>
+        public const string ClaveRuta = "opcion_vr_ruta";
         /// <summary>VR18: VELOCIDAD DE GIRO (°/s con el stick a fondo, giro SUAVE). Se guarda como entero.</summary>
         public const string ClaveVelocidadGiro = "opcion_vr_velocidad_giro";
 
@@ -24,11 +28,20 @@ namespace MechaCyberpunk.Core
         public const float VelocidadGiroMaxima = 180f;
         public const float PasoVelocidadGiro = 15f;
         public const bool VinetaPorDefecto = true;
+        public const NivelVinetaVR NivelVinetaPorDefecto = NivelVinetaVR.Baja;
+        public const bool RutaPorDefecto = true;
+        /// <summary>VR26: apertura de la viñeta (TunnelingVignette, 1 = abierta) en BAJA: cierra ~20% de lo que cerraba antes (0.7), solo las orillas.</summary>
+        public const float AperturaVinetaBaja = 0.94f;
+        /// <summary>VR26: apertura de la viñeta en MEDIA.</summary>
+        public const float AperturaVinetaMedia = 0.85f;
+        /// <summary>VR26: segundos que tarda la viñeta en entrar y en salir.</summary>
+        public const float SegundosVineta = 0.1f;
         public const ModoCorrerVR CorrerPorDefecto = ModoCorrerVR.Mantener;
 
         private static bool cargadas;
         private static ModoGiroVR giro = GiroPorDefecto;
-        private static bool vineta = VinetaPorDefecto;
+        private static NivelVinetaVR nivelVineta = NivelVinetaPorDefecto;
+        private static bool ruta = RutaPorDefecto;
         private static ModoCorrerVR correr = CorrerPorDefecto;
         private static float velocidadGiro = VelocidadGiroPorDefecto;
 
@@ -45,13 +58,37 @@ namespace MechaCyberpunk.Core
             }
         }
 
-        /// <summary>VIÑETA: true = se cierra la vista al moverse y al girar.</summary>
-        public static bool Vineta
+        /// <summary>VIÑETA: true = se cierra la vista al moverse y al girar (nivel BAJA o MEDIA).</summary>
+        public static bool Vineta => NivelVineta != NivelVinetaVR.No;
+
+        /// <summary>VR26: VIÑETA: NO / BAJA / MEDIA.</summary>
+        public static NivelVinetaVR NivelVineta
         {
             get
             {
                 Cargar();
-                return vineta;
+                return nivelVineta;
+            }
+        }
+
+        /// <summary>RUTA: true = se muestra la ruta guía en VR.</summary>
+        public static bool Ruta
+        {
+            get
+            {
+                Cargar();
+                return ruta;
+            }
+        }
+
+        /// <summary>VR26: la apertura de la viñeta (TunnelingVignette, 0 cerrada .. 1 abierta) para un nivel; NO = 1 (abierta).</summary>
+        public static float AperturaVineta(NivelVinetaVR nivel)
+        {
+            switch (nivel)
+            {
+                case NivelVinetaVR.Baja: return AperturaVinetaBaja;
+                case NivelVinetaVR.Media: return AperturaVinetaMedia;
+                default: return 1f;
             }
         }
 
@@ -111,14 +148,35 @@ namespace MechaCyberpunk.Core
             }
         }
 
+        /// <summary>Compatibilidad: true = BAJA (o deja MEDIA si ya estaba), false = NO.</summary>
         public static void FijarVineta(bool valor)
         {
             Cargar();
-            PlayerPrefs.SetInt(ClaveVineta, valor ? 1 : 0);
+            FijarNivelVineta(valor ? (nivelVineta == NivelVinetaVR.No ? NivelVinetaVR.Baja : nivelVineta) : NivelVinetaVR.No);
+        }
+
+        public static void FijarNivelVineta(NivelVinetaVR valor)
+        {
+            Cargar();
+            valor = Enum.IsDefined(typeof(NivelVinetaVR), valor) ? valor : NivelVinetaPorDefecto;
+            PlayerPrefs.SetInt(ClaveNivelVineta, (int)valor);
+            PlayerPrefs.SetInt(ClaveVineta, valor != NivelVinetaVR.No ? 1 : 0);
             PlayerPrefs.Save();
-            if (vineta != valor)
+            if (nivelVineta != valor)
             {
-                vineta = valor;
+                nivelVineta = valor;
+                Cambio?.Invoke();
+            }
+        }
+
+        public static void FijarRuta(bool valor)
+        {
+            Cargar();
+            PlayerPrefs.SetInt(ClaveRuta, valor ? 1 : 0);
+            PlayerPrefs.Save();
+            if (ruta != valor)
+            {
+                ruta = valor;
                 Cambio?.Invoke();
             }
         }
@@ -152,7 +210,17 @@ namespace MechaCyberpunk.Core
             cargadas = true;
             int g = PlayerPrefs.GetInt(ClaveGiro, (int)GiroPorDefecto);
             giro = Enum.IsDefined(typeof(ModoGiroVR), g) ? (ModoGiroVR)g : GiroPorDefecto;
-            vineta = PlayerPrefs.GetInt(ClaveVineta, VinetaPorDefecto ? 1 : 0) != 0;
+            if (PlayerPrefs.HasKey(ClaveNivelVineta))
+            {
+                int n = PlayerPrefs.GetInt(ClaveNivelVineta, (int)NivelVinetaPorDefecto);
+                nivelVineta = Enum.IsDefined(typeof(NivelVinetaVR), n) ? (NivelVinetaVR)n : NivelVinetaPorDefecto;
+            }
+            else
+            {
+                // La clave vieja (sí/no): NO se respeta; SÍ pasa a BAJA (la nueva, mucho más leve).
+                nivelVineta = PlayerPrefs.GetInt(ClaveVineta, 1) != 0 ? NivelVinetaPorDefecto : NivelVinetaVR.No;
+            }
+            ruta = PlayerPrefs.GetInt(ClaveRuta, RutaPorDefecto ? 1 : 0) != 0;
             int c = PlayerPrefs.GetInt(ClaveCorrer, (int)CorrerPorDefecto);
             correr = Enum.IsDefined(typeof(ModoCorrerVR), c) ? (ModoCorrerVR)c : CorrerPorDefecto;
             velocidadGiro = LimitarVelocidad(PlayerPrefs.GetInt(ClaveVelocidadGiro, Mathf.RoundToInt(VelocidadGiroPorDefecto)));

@@ -56,7 +56,7 @@ namespace MechaCyberpunk.VR.Menus
         {
             Destruir();
             textura = new RenderTexture((int)ReglaLienzosVR.AnchoReferencia, (int)ReglaLienzosVR.AltoReferencia, ProfundidadTextura,
-                RenderTextureFormat.ARGB32) { name = "HudCascoVR", useMipMap = false, antiAliasing = 1, filterMode = FilterMode.Bilinear };
+                RenderTextureFormat.ARGB32) { name = "HudCascoVR", useMipMap = false, antiAliasing = 1, filterMode = FilterMode.Bilinear, wrapMode = TextureWrapMode.Clamp };
             textura.Create();
 
             var objetoCamara = new GameObject(NombreCamara);

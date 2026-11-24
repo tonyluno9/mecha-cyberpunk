@@ -17,7 +17,8 @@ namespace MechaCyberpunk.Tests.VR
     public class ComodidadVRPruebas : BaseJugadorVR
     {
         private ModoGiroVR giroAntes;
-        private bool vinetaAntes;
+        private NivelVinetaVR vinetaAntes;
+        private bool rutaAntes;
         private ModoCorrerVR correrAntes;
         private float velocidadAntes;
 
@@ -26,19 +27,22 @@ namespace MechaCyberpunk.Tests.VR
             base.Setup();
             OpcionesVR.Recargar();
             giroAntes = OpcionesVR.Giro;
-            vinetaAntes = OpcionesVR.Vineta;
+            vinetaAntes = OpcionesVR.NivelVineta;
+            rutaAntes = OpcionesVR.Ruta;
             correrAntes = OpcionesVR.Correr;
             velocidadAntes = OpcionesVR.VelocidadGiro;
             OpcionesVR.FijarGiro(OpcionesVR.GiroPorDefecto);
             OpcionesVR.FijarVelocidadGiro(OpcionesVR.VelocidadGiroPorDefecto);
-            OpcionesVR.FijarVineta(OpcionesVR.VinetaPorDefecto);
+            OpcionesVR.FijarNivelVineta(OpcionesVR.NivelVinetaPorDefecto);
+            OpcionesVR.FijarRuta(OpcionesVR.RutaPorDefecto);
             OpcionesVR.FijarCorrer(OpcionesVR.CorrerPorDefecto);
         }
 
         public override void TearDown()
         {
             OpcionesVR.FijarGiro(giroAntes);
-            OpcionesVR.FijarVineta(vinetaAntes);
+            OpcionesVR.FijarNivelVineta(vinetaAntes);
+            OpcionesVR.FijarRuta(rutaAntes);
             OpcionesVR.FijarCorrer(correrAntes);
             OpcionesVR.FijarVelocidadGiro(velocidadAntes);
             base.TearDown();
@@ -176,13 +180,18 @@ namespace MechaCyberpunk.Tests.VR
             Assert.IsTrue(panel.VelocidadGiroVR.gameObject.activeSelf, "VR18: sale la VELOCIDAD DE GIRO.");
             Assert.AreEqual(PanelOpcionesInicio.TextosGiroVR[(int)ModoGiroVR.Suave], panel.GiroVR.TextoValor, "VR18: GIRO es SUAVE por defecto.");
             Assert.AreEqual(PanelOpcionesInicio.TextoVelocidadGiro(120f), panel.VelocidadGiroVR.TextoValor);
-            Assert.IsTrue(panel.VinetaVR.Activo);
+            Assert.AreEqual(PanelOpcionesInicio.TextosVinetaVR[(int)NivelVinetaVR.Baja], panel.VinetaVR.TextoValor, "VR26: VIÑETA es BAJA por defecto.");
+            Assert.IsTrue(panel.RutaVR.gameObject.activeSelf, "Sale RUTA en VR.");
+            Assert.IsTrue(panel.RutaVR.Activo, "RUTA: SÍ por defecto.");
+            Assert.IsFalse(panel.InvertirY.gameObject.activeSelf, "En VR no sale INVERTIR EJE Y.");
             Assert.AreEqual(PanelOpcionesInicio.TextosCorrerVR[(int)ModoCorrerVR.Mantener], panel.CorrerVR.TextoValor);
 
             panel.GiroVR.Mover(1);
             panel.VelocidadGiroVR.Mover(-1);
             panel.VinetaVR.Mover(-1);
             panel.CorrerVR.Mover(1);
+            panel.RutaVR.Mover(-1);
+            Assert.IsFalse(OpcionesVR.Ruta, "RUTA → NO se guarda.");
             Assert.AreEqual(ModoGiroVR.PorPasos, OpcionesVR.Giro, "GIRO → POR PASOS se guarda.");
             Assert.AreEqual(120f - OpcionesVR.PasoVelocidadGiro, OpcionesVR.VelocidadGiro, 0.01f, "VELOCIDAD DE GIRO se guarda.");
             Assert.IsFalse(OpcionesVR.Vineta, "VIÑETA → NO se guarda.");

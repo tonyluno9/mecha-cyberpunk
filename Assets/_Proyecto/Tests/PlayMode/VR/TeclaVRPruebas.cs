@@ -19,11 +19,12 @@ namespace MechaCyberpunk.Tests.VR
             Assert.AreEqual(vr, TeclaVR.Convertir(pc));
         }
 
-        [TestCase("Saltar", "A")]
+        [TestCase("Saltar", "CLIC STICK DER.")]
         [TestCase("Interactuar", "B")]
-        [TestCase("Recargar", "X")]
-        [TestCase("Rueda", "MANTÉN Y")]
-        public void Boton_RepartoVR19(string accion, string boton)
+        [TestCase("Recargar", "A + CADERA IZQ.")]
+        [TestCase("Rueda", "MANTÉN X")]
+        [TestCase("Pausa", "Y")]
+        public void Boton_TablaFinalVR27(string accion, string boton)
         {
             Assert.AreEqual(boton, TeclaVR.Boton(accion));
             Assert.IsNull(TeclaVR.Boton("NoExiste"));

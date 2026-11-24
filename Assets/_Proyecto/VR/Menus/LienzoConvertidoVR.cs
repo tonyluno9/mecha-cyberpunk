@@ -28,6 +28,7 @@ namespace MechaCyberpunk.VR.Menus
         private readonly Vector2 tamanoOriginal;
         private readonly List<GraphicRaycaster> apagados = new List<GraphicRaycaster>();
         private readonly List<GraphicRaycaster> temporal = new List<GraphicRaycaster>();
+        private readonly List<Image> imagenes = new List<Image>();
         private readonly Dictionary<Transform, Vector3> encogidos = new Dictionary<Transform, Vector3>();
 
         public LienzoConvertidoVR(Canvas canvas, TipoLienzoVR tipo)
@@ -119,6 +120,16 @@ namespace MechaCyberpunk.VR.Menus
                         Encoger(hijo);
                     }
                 }
+                // VR25: los degradados negros de las esquinas del H10 (en el visor se ven como el borde de una pantalla).
+                Canvas.GetComponentsInChildren(true, imagenes);
+                foreach (Image imagen in imagenes)
+                {
+                    if (imagen != null && ReglaLienzosVR.EsSombraCasco(imagen.name))
+                    {
+                        Encoger(imagen.transform);
+                    }
+                }
+                imagenes.Clear();
             }
             Canvas.GetComponentsInChildren(true, temporal);
             foreach (GraphicRaycaster g in temporal)

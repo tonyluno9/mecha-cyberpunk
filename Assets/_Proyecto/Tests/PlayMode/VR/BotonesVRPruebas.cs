@@ -13,7 +13,7 @@ using Object = UnityEngine.Object;
 namespace MechaCyberpunk.Tests.VR
 {
     /// <summary>
-    /// VR17–VR19 con el simulador: A salta, X recarga, la rueda de armas se elige con la mano izquierda o el stick izquierdo, el grip izquierdo
+    /// VR17–VR19 y VR27 con el simulador: el clic del stick derecho salta, A suelta el cargador (y ya no salta), Y es pausa, la rueda de armas se elige con la mano izquierda o el stick izquierdo, el grip izquierdo
     /// agarra con el implante, el giro suave es proporcional al stick (a medias más lento que a fondo, sin saltos) y el láser y el cañón salen
     /// de <see cref="ManoVR.Apuntado"/> (la pose aim).
     /// </summary>
@@ -54,11 +54,11 @@ namespace MechaCyberpunk.Tests.VR
         }
 
         [UnityTest]
-        public IEnumerator A_Salta()
+        public IEnumerator ClicStickDerecho_Salta()
         {
             yield return ArmarVR();
             float suelo = jugador.transform.position.y;
-            yield return Pulsar(controlDer.primaryButton);
+            yield return Pulsar(controlDer.primary2DAxisClick);
             float maxima = suelo;
             float fin = Time.time + 0.6f;
             while (Time.time < fin)
@@ -66,12 +66,12 @@ namespace MechaCyberpunk.Tests.VR
                 maxima = Mathf.Max(maxima, jugador.transform.position.y);
                 yield return null;
             }
-            Debug.Log("[VR] Salto con A: " + (maxima - suelo).ToString("0.00") + " m.");
-            Assert.Greater(maxima - suelo, 0.2f, "A (derecho) salta.");
+            Debug.Log("[VR] Salto con el clic del stick derecho: " + (maxima - suelo).ToString("0.00") + " m.");
+            Assert.Greater(maxima - suelo, 0.2f, "El clic del stick derecho salta.");
         }
 
         [UnityTest]
-        public IEnumerator X_RecargaYNoSalta()
+        public IEnumerator A_SueltaElCargadorYNoSalta()
         {
             CargadorPistola.MunicionInfinita = false;
             yield return ArmarVR();
@@ -86,15 +86,37 @@ namespace MechaCyberpunk.Tests.VR
             yield return Cuadros(2);
             Assert.AreEqual(pistola.TamanoCargador - 1, pistola.Balas, "Antes de recargar falta una bala.");
             float suelo = jugador.transform.position.y;
-            yield return Pulsar(controlIzq.primaryButton);
-            Assert.IsTrue(pistola.Recargando, "X (izquierdo) recarga.");
+            yield return Pulsar(controlDer.primaryButton);
+            RecargaManualVR recarga = jugador.GetComponent<RecargaManualVR>();
+            Assert.IsNotNull(recarga);
+            Assert.AreEqual(EstadoCargadorVR.Fuera, recarga.Estado, "A (derecho) suelta el cargador.");
             float maxima = suelo;
             for (int i = 0; i < 20; i++)
             {
                 maxima = Mathf.Max(maxima, jugador.transform.position.y);
                 yield return null;
             }
-            Assert.Less(maxima - suelo, 0.1f, "X ya no salta.");
+            Assert.Less(maxima - suelo, 0.1f, "A ya no salta.");
+        }
+
+        [UnityTest]
+        public IEnumerator Y_EsPausaYXLaRueda()
+        {
+            yield return ArmarVR();
+            Mantener(controlIzq.secondaryButton);
+            yield return Cuadros(1);
+            Assert.IsTrue(EntradaVR.Sostenido(EntradaVR.Menu), "Y (izquierdo) es la acción de pausa, como Menú.");
+            Soltar(controlIzq.secondaryButton);
+            yield return Cuadros(1);
+            Assert.IsFalse(EntradaVR.Sostenido(EntradaVR.Menu));
+            UnityEngine.InputSystem.InputAction rueda = AdaptadorVR.BuscarAccionAPie(MechaCyberpunk.UI.Rueda.RuedaArmasObjetos.NombreAccion);
+            Assert.IsNotNull(rueda, "Falta la acción Rueda del mapa APie.");
+            bool conX = false;
+            foreach (UnityEngine.InputSystem.InputBinding b in rueda.bindings)
+            {
+                conX |= b.path == EntradaVR.RutaRueda;
+            }
+            Assert.IsTrue(conX, "X (mantener) es la rueda de armas.");
         }
 
         [Test]

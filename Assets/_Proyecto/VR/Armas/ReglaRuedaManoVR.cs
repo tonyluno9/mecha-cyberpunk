@@ -3,7 +3,7 @@ using UnityEngine;
 namespace MechaCyberpunk.VR
 {
     /// <summary>
-    /// VR19, lógica pura: con la rueda de armas abierta (mantener Y), el cursor de la rueda se mueve con la mano izquierda o con el stick izquierdo.
+    /// VR19, lógica pura: con la rueda de armas abierta (mantener X), el cursor de la rueda se mueve con la mano izquierda o con el stick izquierdo.
     /// - Mano: donde estaba la mano al abrir es el centro de la rueda; moverla <see cref="MetrosAlBorde"/> hacia un lado (en el plano de la rueda)
     ///   lleva el cursor al borde de ese lado.
     /// - Stick: inclinarlo pasa de <see cref="ZonaStick"/> pone el cursor en esa dirección (a fondo, en el borde) y toma la mano de ahí como

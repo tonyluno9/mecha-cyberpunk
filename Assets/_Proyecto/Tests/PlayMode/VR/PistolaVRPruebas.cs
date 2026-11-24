@@ -9,7 +9,7 @@ using UnityEngine.TestTools;
 
 namespace MechaCyberpunk.Tests.VR
 {
-    /// <summary>VR2: la pistola en la mano derecha (apunta con el control, dispara con el gatillo, recarga con X) y los golpes con las manos.</summary>
+    /// <summary>VR2: la pistola en la mano derecha (apunta con el control, dispara con el gatillo; VR27: A suelta el cargador y A otra vez recarga) y los golpes con las manos.</summary>
     public class PistolaVRPruebas : BaseJugadorVR
     {
         private static readonly Vector3 ManoDerReposo = new Vector3(0.2f, 1.2f, 0.3f);
@@ -118,14 +118,22 @@ namespace MechaCyberpunk.Tests.VR
         }
 
         [UnityTest]
-        public IEnumerator BotonXRecargaLaPistola()
+        public IEnumerator BotonA_SueltaElCargador_YAOtraVezRecarga()
         {
             yield return ArmarConPistola();
+            RecargaManualVR recarga = jugador.GetComponent<RecargaManualVR>();
+            Assert.IsNotNull(recarga, "RecargaManualVR debe agregarse sola al armarse el rig.");
             yield return Pulsar(controlDer.triggerButton);
             yield return Cuadros(2);
             Assert.AreEqual(pistola.TamanoCargador - 1, pistola.Balas, "Antes de recargar debe faltar una bala.");
-            yield return Pulsar(controlIzq.primaryButton);
-            Assert.IsTrue(pistola.Recargando, "X (VR19) debe empezar la recarga.");
+            yield return Pulsar(controlDer.primaryButton);
+            Assert.AreEqual(EstadoCargadorVR.Fuera, recarga.Estado, "A (VR27) suelta el cargador.");
+            Assert.IsFalse(pistola.Recargando, "Soltar el cargador aún no recarga.");
+            int disparos = pistolaVR.DisparosHechos;
+            yield return Pulsar(controlDer.triggerButton);
+            Assert.AreEqual(disparos, pistolaVR.DisparosHechos, "Sin cargador el gatillo no dispara.");
+            yield return Pulsar(controlDer.primaryButton);
+            Assert.IsTrue(pistola.Recargando, "A otra vez con el cargador fuera recarga directo (no se queda atorado).");
             float fin = Time.time + 6f;
             while (pistola.Recargando && Time.time < fin)
             {

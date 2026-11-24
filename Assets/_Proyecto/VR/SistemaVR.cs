@@ -87,6 +87,11 @@ namespace MechaCyberpunk.VR
             {
                 gameObject.AddComponent<DesconexionVR>();
             }
+            // VR30: ruta de chevrones al objetivo (solo se ve con ModoVR.Activo y OpcionesVR.Ruta).
+            if (GetComponent<Ruta.RutaObjetivoVR>() == null)
+            {
+                gameObject.AddComponent<Ruta.RutaObjetivoVR>();
+            }
         }
 
         // V12: justo antes de dibujar el cuadro: una cámara que se prendió este cuadro (cinemática, muerte, Doc) no llega al visor ni un cuadro.

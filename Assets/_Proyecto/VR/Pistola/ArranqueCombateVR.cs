@@ -48,6 +48,15 @@ namespace MechaCyberpunk.VR
             {
                 jugador.AddComponent<CambioArmaStickVR>();
             }
+            // VR27: sacar y guardar armas con gestos, y la recarga a mano (A suelta el cargador).
+            if (jugador.GetComponent<ArmasAPie>() != null && jugador.GetComponent<GestosArmaVR>() == null)
+            {
+                jugador.AddComponent<GestosArmaVR>();
+            }
+            if (jugador.GetComponent<PistolaVR>() != null && jugador.GetComponent<RecargaManualVR>() == null)
+            {
+                jugador.AddComponent<RecargaManualVR>();
+            }
             if (jugador.GetComponent<GolpeAPie>() != null && jugador.GetComponent<GolpesManosVR>() == null)
             {
                 jugador.AddComponent<GolpesManosVR>();

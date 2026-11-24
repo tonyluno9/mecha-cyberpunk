@@ -30,7 +30,7 @@ namespace MechaCyberpunk.Progresion.Recorrido
         public static bool Aplica(PasoRecorrido paso, bool activa)
         {
             // T-78: UsarProtesis (21) va entre Suero y Armas aunque su número sea mayor que Libre.
-            return activa && ((paso >= PrimerPasoDeNoche && paso <= UltimoPasoDeNoche) || paso == PasoRecorrido.UsarProtesis);
+            return activa && ((paso >= PrimerPasoDeNoche && paso <= UltimoPasoDeNoche) || paso == PasoRecorrido.UsarProtesis || paso == PasoRecorrido.PeleaSkulls); // VR24: la pelea del inicio va entre Decision y Dinero
         }
 
         /// <summary>

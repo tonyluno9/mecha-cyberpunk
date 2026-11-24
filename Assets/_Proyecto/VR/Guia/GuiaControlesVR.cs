@@ -10,11 +10,11 @@ using UnityEngine.UI;
 namespace MechaCyberpunk.VR.Guia
 {
     /// <summary>
-    /// VR20: la guía de controles de VR. Un panel del mundo a <see cref="Distancia"/> m frente a la cabeza, quieto, con el estilo H10 del juego
-    /// (TrazoH10: fondo oscuro, línea turquesa, letra Rajdhani) y, delante, los modelos 3D REALES de los dos controles (los prefabs de los
-    /// Starter Assets de XRI que usa el rig, <see cref="RecursosVR"/>; sin sus scripts: solo transforms, mallas y renderers) con un vaivén lento.
-    /// Cada botón lleva una etiqueta (<see cref="TextosGuiaVR"/>, el reparto de VR19) y una línea (LineRenderer) hasta la pieza del modelo; abajo,
-    /// los gestos de las prótesis. Se cierra con B, con el gatillo derecho apuntando a CERRAR o con Menú/Esc.
+    /// VR20/VR31: la guía de controles de VR. Un panel del mundo a <see cref="Distancia"/> m frente a la cabeza, quieto, con el estilo H10 del juego
+    /// (TrazoH10: fondo oscuro, línea turquesa, letra Rajdhani) y páginas con las imágenes de Assets/Arte/UI/ControlesVR (<see cref="TextosGuiaVR.Paginas"/>):
+    /// botones → sacar pistola → arma larga → recargar → prótesis piernas → prótesis brazos. En la de botones cada etiqueta va junto a su punto cian
+    /// con una línea fina; en las de gestos, una frase corta abajo. ANTERIOR / SIGUIENTE / CERRAR con el láser y el gatillo derecho; el stick derecho
+    /// a los lados cambia de página; B, Y o Menú/Esc la cierran.
     /// Mientras está abierta va en <see cref="PilaPantallas"/> (el láser se ve, el gatillo no dispara y Menú no abre la pausa). Abierta sola
     /// (primera vez, <see cref="ArranqueGuiaVR"/>) detiene el tiempo y el control del jugador; abierta desde la pausa (botón CONTROLES que se
     /// agrega a la pausa solo en VR) esconde la pausa y al cerrarse vuelve a ella.
@@ -32,46 +32,38 @@ namespace MechaCyberpunk.VR.Guia
         public const float AltoPx = 900f;
         /// <summary>Tamaño de un px del panel en el mundo (m): 1600 px = 1.12 m.</summary>
         public const float MetrosPorPx = 0.0007f;
-        /// <summary>El lado mayor de cada control en la guía (m).</summary>
-        public const float TamanoModelo = 0.26f;
-        /// <summary>Cuánto se adelantan los modelos hacia la cabeza desde el panel (m).</summary>
-        public const float AdelantoModelos = 0.1f;
+        /// <summary>La imagen de cada página (16:9, px del panel).</summary>
+        public const float AnchoImagenPx = 1200f;
+        public const float AltoImagenPx = 675f;
 
-        private const float CentroModeloPx = 250f;
-        private const float AlturaModeloPx = 30f;
-        private const float ColumnaEtiquetasPx = 430f;
-        private const float AnchoEtiquetaPx = 360f;
-        private const float AltoEtiquetaPx = 64f;
-        private const float PrimeraEtiquetaPx = 250f;
-        private const float PasoEtiquetaPx = 76f;
-        private const float GradosInclinacion = 20f;
-        private const float GradosVaiven = 12f;
-        private const float SegundosVaiven = 7f;
-        private const float GrosorLinea = 0.0012f;
+        private const float CentroImagenYPx = 30f;
+        private const float AnchoEtiquetaIzqPx = 380f;
+        private const float AnchoEtiquetaDerPx = 440f;
+        private const float AltoEtiquetaPx = 100f;
+        private const float SeparacionLineaPx = 8f;
+        private const float YFrasePx = -338f;
+        private const float YBotonesPx = -405f;
+        private const float AnchoBotonPx = 300f;
+        private const float AltoBotonPx = 56f;
         private const float MargenPared = 0.1f;
         private const float DistanciaMinima = 0.5f;
-        private const float AlfaFondo = 0.92f;
+        private const float AlfaFondo = 0.94f;
         private const float AlcanceRayo = 5f;
-        private static readonly Color ColorLinea = new Color(0.361f, 0.890f, 0.839f, 0.9f);
-
-        private sealed class LineaGuia
-        {
-            public LineRenderer Linea;
-            public Transform Ancla;
-            public Vector3 Local;
-            public Vector2 OrigenPx;
-            public bool Encontrada;
-        }
+        private const float UmbralStick = 0.7f;
+        private const float RearmeStick = 0.3f;
+        private static readonly Vector2 GrosorContorno = new Vector2(1.5f, -1.5f);
 
         private readonly List<Text> etiquetas = new List<Text>();
-        private readonly List<GameObject> modelos = new List<GameObject>();
-        private readonly List<Renderer> renderers = new List<Renderer>();
-        private readonly List<LineaGuia> lineas = new List<LineaGuia>();
-        private readonly List<Transform> soportes = new List<Transform>();
+        private readonly List<Sprite> creados = new List<Sprite>();
         private readonly RaycastHit[] golpes = new RaycastHit[16];
         private Canvas canvas;
+        private Image imagen;
+        private Text tituloPagina;
+        private Text frase;
+        private GameObject grupoEtiquetas;
         private BotonCyberfix cerrar;
-        private Material materialLinea;
+        private BotonCyberfix siguiente;
+        private BotonCyberfix anterior;
         private PantallaPausa pausa;
         private BotonCyberfix botonPausa;
         private CanvasGroup grupoPausa;
@@ -79,7 +71,8 @@ namespace MechaCyberpunk.VR.Guia
         private Transform manoLaser;
         private LineRenderer laserMenus;
         private int cuadroAbierta;
-        private float inicio;
+        private int pagina;
+        private bool stickArmado = true;
         private bool cerrando;
 
         /// <summary>La guía abierta (null si no hay).</summary>
@@ -92,13 +85,17 @@ namespace MechaCyberpunk.VR.Guia
 
         public Canvas Canvas => canvas;
         public BotonCyberfix BotonCerrar => cerrar;
+        public BotonCyberfix BotonSiguiente => siguiente;
+        public BotonCyberfix BotonAnterior => anterior;
+        /// <summary>Las etiquetas de la página de botones.</summary>
         public IReadOnlyList<Text> Etiquetas => etiquetas;
-        /// <summary>Los dos modelos de los controles (izquierdo y derecho), instancias de los prefabs reales.</summary>
-        public IReadOnlyList<GameObject> Modelos => modelos;
-        public IReadOnlyList<Renderer> RenderersModelos => renderers;
-        public int Lineas => lineas.Count;
-        /// <summary>Cuántas líneas van a una pieza con nombre del modelo (el resto usa el punto de respaldo).</summary>
-        public int LineasConPieza { get; private set; }
+        /// <summary>La imagen de la página actual.</summary>
+        public Image Imagen => imagen;
+        /// <summary>La frase de la página actual (vacía en la de botones).</summary>
+        public string Frase => frase != null ? frase.text : string.Empty;
+        /// <summary>La página actual (0 = botones).</summary>
+        public int Pagina => pagina;
+        public static int Paginas => TextosGuiaVR.Paginas.Length;
         public bool DesdePausa => pausa != null;
         /// <summary>True si el rayo del control derecho apunta a CERRAR este cuadro.</summary>
         public bool CerrarApuntado { get; private set; }
@@ -169,21 +166,40 @@ namespace MechaCyberpunk.VR.Guia
             Destroy(gameObject);
         }
 
+        /// <summary>Pasa a la página siguiente (da la vuelta).</summary>
+        public void IrSiguiente() => IrA(pagina + 1);
+
+        /// <summary>Pasa a la página anterior (da la vuelta).</summary>
+        public void IrAnterior() => IrA(pagina - 1);
+
+        /// <summary>Muestra la página <paramref name="indice"/> (da la vuelta en los dos sentidos).</summary>
+        public void IrA(int indice)
+        {
+            int total = Paginas;
+            if (total == 0)
+            {
+                return;
+            }
+            int nueva = ((indice % total) + total) % total;
+            bool cambio = nueva != pagina;
+            pagina = nueva;
+            MostrarPagina();
+            if (cambio)
+            {
+                Sonidos.Reproducir(SonidoPagina);
+            }
+        }
+
+        private const string SonidoPagina = "UI_MOVER";
+
         private void Construir(PantallaPausa desdePausa, BotonCyberfix boton)
         {
             Actual = this;
             cuadroAbierta = Time.frameCount;
-            inicio = Time.unscaledTime;
             Transform cabeza = Cabeza();
             Colocar(cabeza);
             ArmarPanel();
-            RecursosVR recursos = RecursosVR.Cargar();
-            CrearModelo(false, recursos != null ? recursos.controlIzquierdo : null);
-            CrearModelo(true, recursos != null ? recursos.controlDerecho : null);
-            AplicarVaiven(0f);
-            CrearEtiquetas(false);
-            CrearEtiquetas(true);
-            ActualizarLineas();
+            MostrarPagina();
 
             PilaPantallas.Abrir(this);
             if (desdePausa != null && desdePausa.Abierta)
@@ -216,8 +232,8 @@ namespace MechaCyberpunk.VR.Guia
                 }
             }
             Sonidos.Reproducir("UI_MENU_ABRIR");
-            Debug.Log("[VR] Guía de controles abierta" + (pausa != null ? " desde la pausa" : string.Empty) + ": " + modelos.Count
-                + " modelos, " + etiquetas.Count + " etiquetas, " + LineasConPieza + "/" + lineas.Count + " líneas a piezas con nombre.");
+            Debug.Log("[VR] Guía de controles abierta" + (pausa != null ? " desde la pausa" : string.Empty) + ": " + Paginas + " páginas, "
+                + etiquetas.Count + " etiquetas" + (imagen != null && imagen.sprite != null ? "." : " (falta la imagen: corre ImportarGuiaVR31.Aplicar)."));
         }
 
         private static Canvas LienzoDe(PantallaPausa p)
@@ -314,264 +330,137 @@ namespace MechaCyberpunk.VR.Guia
             float mitadX = AnchoPx * 0.5f;
             float mitadY = AltoPx * 0.5f;
             float margen = TrazoH10.MargenPantalla;
-            Texto("Titulo", TextosGuiaVR.Titulo, TrazoH10.TamanoTitulo, TrazoH10.Texto, new Vector2(-mitadX + margen, mitadY - 50f), new Vector2(0f, 0.5f),
-                new Vector2(800f, 60f), TextAnchor.MiddleLeft);
-            Texto("Subtitulo", TextosGuiaVR.Subtitulo, TrazoH10.TamanoDato, TrazoH10.Turquesa, new Vector2(-mitadX + margen + 2f, mitadY - 96f), new Vector2(0f, 0.5f),
-                new Vector2(800f, 30f), TextAnchor.MiddleLeft);
-            TrazoH10.Recta(rect, "TiraCabecera", TrazoH10.TurquesaTenue, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f),
-                new Vector2(0f, -118f), new Vector2(-2f * margen, TrazoH10.GrosorLinea));
-            Texto("Izquierdo", TextosGuiaVR.Izquierdo, TrazoH10.TamanoDato, TrazoH10.Turquesa, new Vector2(-CentroModeloPx, mitadY - 150f), new Vector2(0.5f, 0.5f),
-                new Vector2(320f, 30f), TextAnchor.MiddleCenter);
-            Texto("Derecho", TextosGuiaVR.Derecho, TrazoH10.TamanoDato, TrazoH10.Turquesa, new Vector2(CentroModeloPx, mitadY - 150f), new Vector2(0.5f, 0.5f),
-                new Vector2(320f, 30f), TextAnchor.MiddleCenter);
+            tituloPagina = Texto("Titulo", TextosGuiaVR.Titulo, TrazoH10.TamanoSeccion, TrazoH10.Texto, new Vector2(-mitadX + margen, mitadY - 40f),
+                new Vector2(0f, 0.5f), new Vector2(900f, 50f), TextAnchor.MiddleLeft);
+            Texto("Ayuda", TextosGuiaVR.AyudaCerrar, TrazoH10.TamanoMicro, TrazoH10.TextoTenue, new Vector2(mitadX - margen, mitadY - 40f),
+                new Vector2(1f, 0.5f), new Vector2(700f, 40f), TextAnchor.MiddleRight);
 
-            // Gestos de las prótesis, abajo.
-            float yGestos = -mitadY + 210f;
-            TrazoH10.Recta(rect, "TiraGestos", TrazoH10.TurquesaTenue, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0.5f, 0f),
-                new Vector2(0f, yGestos + mitadY + 26f), new Vector2(-2f * margen, TrazoH10.GrosorLinea));
-            Texto("TituloGestos", TextosGuiaVR.TituloGestos, TrazoH10.TamanoDato, TrazoH10.Turquesa, new Vector2(-mitadX + margen, yGestos), new Vector2(0f, 0.5f),
-                new Vector2(AnchoPx - 2f * margen, 32f), TextAnchor.MiddleLeft);
-            Texto("GestoPiernas", TextosGuiaVR.GestoPiernas, TrazoH10.TamanoFila, TrazoH10.Amarillo, new Vector2(-mitadX + margen, yGestos - 42f), new Vector2(0f, 0.5f),
-                new Vector2(AnchoPx - 2f * margen, 36f), TextAnchor.MiddleLeft);
-            Texto("GestoBrazos", TextosGuiaVR.GestoBrazos, TrazoH10.TamanoFila, TrazoH10.Amarillo, new Vector2(-mitadX + margen, yGestos - 82f), new Vector2(0f, 0.5f),
-                new Vector2(AnchoPx - 2f * margen, 36f), TextAnchor.MiddleLeft);
+            // La imagen de la página, con un marco fino.
+            imagen = TrazoH10.Imagen(rect, "ImagenPagina", Color.white);
+            imagen.preserveAspect = true;
+            imagen.raycastTarget = false;
+            TrazoH10.Colocar(imagen.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
+                new Vector2(0f, CentroImagenYPx), new Vector2(AnchoImagenPx, AltoImagenPx));
+            Image marco = TrazoH10.Panel(rect, "MarcoImagen", TrazoH10.TurquesaTenue, Color.clear);
+            marco.raycastTarget = false;
+            TrazoH10.Colocar(marco.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
+                new Vector2(0f, CentroImagenYPx), new Vector2(AnchoImagenPx + 4f, AltoImagenPx + 4f));
 
-            // CERRAR y su ayuda.
-            cerrar = KitUI.CrearBoton(rect, TextosGuiaVR.Cerrar, Cerrar);
-            cerrar.Texto.alignment = TextAnchor.MiddleCenter;
-            VestidoH10.Boton(cerrar);
-            TrazoH10.Punto((RectTransform)cerrar.transform, new Vector2(0.5f, 0.5f), new Vector2(0f, -mitadY + 52f), new Vector2(360f, 64f));
-            Texto("AyudaCerrar", TextosGuiaVR.AyudaCerrar, TrazoH10.TamanoDato, TrazoH10.TextoTenue, new Vector2(200f, -mitadY + 52f), new Vector2(0f, 0.5f),
-                new Vector2(500f, 32f), TextAnchor.MiddleLeft);
+            // Etiquetas de la página de botones.
+            var grupo = new GameObject("EtiquetasBotones", typeof(RectTransform));
+            grupo.transform.SetParent(rect, false);
+            TrazoH10.Estirar((RectTransform)grupo.transform);
+            grupoEtiquetas = grupo;
+            CrearEtiquetas((RectTransform)grupo.transform);
+
+            // La frase de los gestos, abajo de la imagen.
+            frase = Texto("Frase", string.Empty, TrazoH10.TamanoFila, TrazoH10.Turquesa, new Vector2(0f, YFrasePx), new Vector2(0.5f, 0.5f),
+                new Vector2(AnchoPx - 2f * margen, 40f), TextAnchor.MiddleCenter);
+            Contorno(frase);
+
+            anterior = CrearBoton(rect, TextosGuiaVR.Anterior, IrAnterior, -370f);
+            siguiente = CrearBoton(rect, TextosGuiaVR.Siguiente, IrSiguiente, 0f);
+            cerrar = CrearBoton(rect, TextosGuiaVR.Cerrar, Cerrar, 370f);
             VestidoH10.Fuente(rect);
+        }
+
+        private BotonCyberfix CrearBoton(RectTransform padre, string texto, System.Action accion, float x)
+        {
+            BotonCyberfix boton = KitUI.CrearBoton(padre, texto, accion);
+            boton.Texto.alignment = TextAnchor.MiddleCenter;
+            VestidoH10.Boton(boton);
+            TrazoH10.Punto((RectTransform)boton.transform, new Vector2(0.5f, 0.5f), new Vector2(x, YBotonesPx), new Vector2(AnchoBotonPx, AltoBotonPx));
+            return boton;
+        }
+
+        // Px del panel (centro = 0,0) de un punto normalizado de la imagen.
+        private static Vector2 EnPanel(Vector2 normalizado)
+        {
+            return new Vector2((normalizado.x - 0.5f) * AnchoImagenPx, CentroImagenYPx + (normalizado.y - 0.5f) * AltoImagenPx);
+        }
+
+        private void CrearEtiquetas(RectTransform padre)
+        {
+            Vector2 esquina = new Vector2(AnchoPx * 0.5f, AltoPx * 0.5f); // de centro a abajo-izquierda (TrazoH10.Unir)
+            for (int i = 0; i < TextosGuiaVR.Etiquetas.Length; i++)
+            {
+                var e = TextosGuiaVR.Etiquetas[i];
+                Vector2 posicion = EnPanel(e.etiqueta);
+                float ancho = e.derecha ? AnchoEtiquetaDerPx : AnchoEtiquetaIzqPx;
+                Text t = TrazoH10.Etiqueta(padre, "Etiqueta_" + i, e.texto, TrazoH10.TamanoDato, TrazoH10.Turquesa,
+                    e.derecha ? TextAnchor.MiddleLeft : TextAnchor.MiddleRight);
+                TrazoH10.Colocar(t.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(e.derecha ? 0f : 1f, 0.5f), posicion,
+                    new Vector2(ancho, AltoEtiquetaPx));
+                t.horizontalOverflow = HorizontalWrapMode.Wrap;
+                t.raycastTarget = false;
+                Contorno(t);
+                etiquetas.Add(t);
+                if (e.punto.x < 0f)
+                {
+                    continue;
+                }
+                Vector2 desde = posicion + new Vector2(e.derecha ? -SeparacionLineaPx : SeparacionLineaPx, 0f);
+                Image linea = TrazoH10.Imagen(padre, "Linea_" + i, TrazoH10.ConAlfa(TrazoH10.Turquesa, 0.8f));
+                linea.raycastTarget = false;
+                TrazoH10.Unir(linea.rectTransform, desde + esquina, EnPanel(e.punto) + esquina);
+            }
+        }
+
+        private static void Contorno(Text t)
+        {
+            Outline contorno = t.gameObject.AddComponent<Outline>();
+            contorno.effectColor = new Color(0f, 0f, 0f, 0.85f);
+            contorno.effectDistance = GrosorContorno;
         }
 
         private Text Texto(string nombre, string contenido, int tamano, Color color, Vector2 posicion, Vector2 pivote, Vector2 tamanoRect, TextAnchor ancla)
         {
             Text t = TrazoH10.Etiqueta(canvas.transform, nombre, contenido, tamano, color, ancla);
             TrazoH10.Colocar(t.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), pivote, posicion, tamanoRect);
+            t.raycastTarget = false;
             return t;
         }
 
-        // ---- Modelos ----
-
-        // Instancia el prefab real del control sin dejar que despierte ningún script (bajo un padre apagado) y le quita todo lo que no es malla.
-        private void CrearModelo(bool derecha, GameObject prefab)
+        private void MostrarPagina()
         {
-            var soporte = new GameObject(derecha ? "SoporteDerecho" : "SoporteIzquierdo").transform;
-            soporte.SetParent(transform, false);
-            soportes.Add(soporte);
-            if (prefab == null)
+            var p = TextosGuiaVR.Paginas[pagina];
+            if (imagen != null)
             {
-                Debug.LogWarning("[VR] Guía: falta el modelo del control " + (derecha ? "derecho" : "izquierdo") + " en RecursosVR.");
-                modelos.Add(null);
-                return;
+                imagen.sprite = CargarImagen(p.imagen);
+                imagen.color = imagen.sprite != null ? Color.white : TrazoH10.TurquesaFondo;
             }
-            var deposito = new GameObject("Deposito");
-            deposito.SetActive(false);
-            GameObject modelo = Instantiate(prefab, deposito.transform, false);
-            modelo.name = derecha ? "ModeloControlDerecho" : "ModeloControlIzquierdo";
-            QuitarScripts(modelo);
-            var centro = new GameObject("Centro").transform;
-            centro.SetParent(soporte, false);
-            modelo.transform.SetParent(centro, false);
-            Destroy(deposito);
-
-            // Centro y tamaño medidos en el marco del soporte (aún en el origen, sin girar ni escalar).
-            soporte.localPosition = Vector3.zero;
-            soporte.localRotation = Quaternion.identity;
-            soporte.localScale = Vector3.one;
-            Bounds caja = new Bounds();
-            bool hay = false;
-            foreach (Renderer r in modelo.GetComponentsInChildren<Renderer>(true))
+            if (tituloPagina != null)
             {
-                r.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-                r.receiveShadows = false;
-                renderers.Add(r);
-                Bounds b = LocalEn(soporte, r.bounds);
-                if (!hay)
-                {
-                    caja = b;
-                    hay = true;
-                }
-                else
-                {
-                    caja.Encapsulate(b);
-                }
+                tituloPagina.text = TextosGuiaVR.Titulo + " · " + p.titulo + "   " + (pagina + 1) + "/" + Paginas;
             }
-            float lado = hay ? Mathf.Max(caja.size.x, Mathf.Max(caja.size.y, caja.size.z)) : 0f;
-            centro.localPosition = hay ? -caja.center : Vector3.zero;
-            soporte.localScale = Vector3.one * (lado > 1e-4f ? TamanoModelo / lado : 1f);
-            soporte.localPosition = new Vector3((derecha ? CentroModeloPx : -CentroModeloPx) * MetrosPorPx, AlturaModeloPx * MetrosPorPx, -AdelantoModelos);
-            modelo.SetActive(true);
-            modelos.Add(modelo);
-        }
-
-        private static Bounds LocalEn(Transform marco, Bounds mundo)
-        {
-            Vector3 c = marco.InverseTransformPoint(mundo.center);
-            Vector3 e = mundo.extents;
-            var b = new Bounds(c, Vector3.zero);
-            for (int i = 0; i < 8; i++)
+            if (frase != null)
             {
-                Vector3 esquina = mundo.center + new Vector3((i & 1) == 0 ? -e.x : e.x, (i & 2) == 0 ? -e.y : e.y, (i & 4) == 0 ? -e.z : e.z);
-                b.Encapsulate(marco.InverseTransformPoint(esquina));
+                frase.text = p.frase;
             }
-            return b;
-        }
-
-        // Solo quedan transforms, mallas y renderers: fuera TrackedPoseDriver, los scripts de XRI que animan botones, colliders, etc.
-        private static void QuitarScripts(GameObject modelo)
-        {
-            foreach (MonoBehaviour m in modelo.GetComponentsInChildren<MonoBehaviour>(true))
+            if (grupoEtiquetas != null)
             {
-                if (m != null)
-                {
-                    DestroyImmediate(m);
-                }
-            }
-            foreach (Component c in modelo.GetComponentsInChildren<Component>(true))
-            {
-                if (c == null || c is Transform || c is MeshFilter || c is Renderer)
-                {
-                    continue;
-                }
-                DestroyImmediate(c);
+                grupoEtiquetas.SetActive(pagina == 0);
             }
         }
 
-        // El soporte de cada control: de cara a la cabeza (la cara de los botones mirando hacia ella, la punta hacia arriba), inclinado y con un vaivén lento.
-        private void AplicarVaiven(float segundos)
+        // La imagen importada como Sprite (ImportarGuiaVR31); si aún es textura, se hace el sprite aquí.
+        private Sprite CargarImagen(string nombre)
         {
-            float vaiven = Mathf.Sin(segundos * (2f * Mathf.PI / SegundosVaiven)) * GradosVaiven;
-            Quaternion baseGiro = Quaternion.LookRotation(Vector3.up, Vector3.back);
-            for (int i = 0; i < soportes.Count; i++)
+            string ruta = TextosGuiaVR.CarpetaImagenes + "/" + nombre;
+            Sprite sprite = Resources.Load<Sprite>(ruta);
+            if (sprite != null)
             {
-                if (soportes[i] == null)
-                {
-                    continue;
-                }
-                soportes[i].localRotation = Quaternion.AngleAxis(vaiven, Vector3.up) * Quaternion.AngleAxis(GradosInclinacion, Vector3.right) * baseGiro;
+                return sprite;
             }
-        }
-
-        // ---- Etiquetas y líneas ----
-
-        private void CrearEtiquetas(bool derecha)
-        {
-            int indice = derecha ? 1 : 0;
-            GameObject modelo = indice < modelos.Count ? modelos[indice] : null;
-            Transform soporte = indice < soportes.Count ? soportes[indice] : null;
-            var propias = new List<(LineaGuia linea, string texto, float y)>();
-            foreach (var e in TextosGuiaVR.Etiquetas)
+            Texture2D textura = Resources.Load<Texture2D>(ruta);
+            if (textura == null)
             {
-                if (e.derecha != derecha)
-                {
-                    continue;
-                }
-                var l = new LineaGuia();
-                Transform pieza = modelo != null ? Buscar(modelo.transform, TextosGuiaVR.Nombres(e.boton, derecha)) : null;
-                if (pieza != null)
-                {
-                    l.Ancla = pieza;
-                    l.Local = Vector3.zero;
-                    l.Encontrada = true;
-                    LineasConPieza++;
-                }
-                else
-                {
-                    // Sin la pieza: un punto fijo en el marco del control (el padre del modelo, que hace de mano).
-                    l.Ancla = modelo != null ? modelo.transform.parent : soporte;
-                    l.Local = TextosGuiaVR.Respaldo(e.boton, derecha);
-                }
-                Vector3 mundo = l.Ancla != null ? l.Ancla.TransformPoint(l.Local) : transform.position;
-                float y = transform.InverseTransformPoint(mundo).y / MetrosPorPx;
-                propias.Add((l, e.texto, y));
+                Debug.LogWarning("[VR] Guía: falta la imagen " + ruta + " en Resources (Assets/Arte/UI/ControlesVR/Resources).");
+                return null;
             }
-            // De arriba abajo en el orden de las piezas, para que las líneas no se crucen.
-            propias.Sort((a, b) => b.y.CompareTo(a.y));
-            for (int i = 0; i < propias.Count; i++)
-            {
-                float y = PrimeraEtiquetaPx - i * PasoEtiquetaPx;
-                float x = derecha ? ColumnaEtiquetasPx : -ColumnaEtiquetasPx;
-                Text t = Texto("Etiqueta_" + (derecha ? "Der_" : "Izq_") + i, propias[i].texto, TrazoH10.TamanoFila, TrazoH10.Texto,
-                    new Vector2(x, y), new Vector2(derecha ? 0f : 1f, 0.5f), new Vector2(AnchoEtiquetaPx, AltoEtiquetaPx),
-                    derecha ? TextAnchor.MiddleLeft : TextAnchor.MiddleRight);
-                t.horizontalOverflow = HorizontalWrapMode.Wrap;
-                etiquetas.Add(t);
-                LineaGuia l = propias[i].linea;
-                l.OrigenPx = new Vector2(derecha ? x - 10f : x + 10f, y);
-                l.Linea = CrearLinea(t.transform);
-                lineas.Add(l);
-            }
-        }
-
-        private static Transform Buscar(Transform raiz, string[] nombres)
-        {
-            foreach (string nombre in nombres)
-            {
-                Transform t = BuscarUno(raiz, nombre);
-                if (t != null)
-                {
-                    return t;
-                }
-            }
-            return null;
-        }
-
-        private static Transform BuscarUno(Transform t, string nombre)
-        {
-            if (string.Equals(t.name, nombre, System.StringComparison.OrdinalIgnoreCase))
-            {
-                return t;
-            }
-            for (int i = 0; i < t.childCount; i++)
-            {
-                Transform r = BuscarUno(t.GetChild(i), nombre);
-                if (r != null)
-                {
-                    return r;
-                }
-            }
-            return null;
-        }
-
-        private LineRenderer CrearLinea(Transform padre)
-        {
-            if (materialLinea == null)
-            {
-                Shader shader = Shader.Find("Sprites/Default");
-                materialLinea = shader != null ? new Material(shader) : new Material(Canvas.GetDefaultCanvasMaterial());
-            }
-            var objeto = new GameObject("Linea");
-            objeto.transform.SetParent(transform, false);
-            LineRenderer linea = objeto.AddComponent<LineRenderer>();
-            linea.useWorldSpace = true;
-            linea.positionCount = 2;
-            linea.widthMultiplier = GrosorLinea;
-            linea.numCapVertices = 2;
-            linea.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-            linea.receiveShadows = false;
-            linea.sharedMaterial = materialLinea;
-            linea.startColor = ColorLinea;
-            linea.endColor = ColorLinea;
-            return linea;
-        }
-
-        private void ActualizarLineas()
-        {
-            Transform lienzo = canvas != null ? canvas.transform : transform;
-            foreach (LineaGuia l in lineas)
-            {
-                if (l.Linea == null)
-                {
-                    continue;
-                }
-                Vector3 desde = lienzo.TransformPoint(new Vector3(l.OrigenPx.x, l.OrigenPx.y, 0f));
-                Vector3 hasta = l.Ancla != null ? l.Ancla.TransformPoint(l.Local) : desde;
-                l.Linea.SetPosition(0, desde);
-                l.Linea.SetPosition(1, hasta);
-            }
+            sprite = Sprite.Create(textura, new Rect(0f, 0f, textura.width, textura.height), new Vector2(0.5f, 0.5f));
+            creados.Add(sprite);
+            return sprite;
         }
 
         // ---- Cada cuadro ----
@@ -587,29 +476,47 @@ namespace MechaCyberpunk.VR.Guia
             {
                 return;
             }
-            CerrarApuntado = ApuntaACerrar(out _);
-            if (CerrarApuntado && !cerrar.EstaElegido)
+            BotonCyberfix apuntado = BotonApuntado();
+            CerrarApuntado = apuntado == cerrar;
+            if (apuntado != null && !apuntado.EstaElegido)
             {
-                cerrar.Elegir();
+                apuntado.Elegir();
+            }
+            if (apuntado != null && EntradaVR.Pulso(EntradaVR.GatilloDerecho))
+            {
+                apuntado.Pulsar(); // CERRAR llama a Cerrar; ANTERIOR y SIGUIENTE cambian de página
+                return;
             }
             Keyboard teclado = Keyboard.current;
             bool esc = teclado != null && teclado.escapeKey.wasPressedThisFrame; // Menú del control izquierdo = Esc (MenusVR)
-            bool gatillo = CerrarApuntado && EntradaVR.Pulso(EntradaVR.GatilloDerecho);
-            if (gatillo)
-            {
-                cerrar.Pulsar(); // CERRAR llama a Cerrar
-                return;
-            }
-            if (EntradaVR.Pulso(EntradaVR.BotonB) || esc)
+            if (EntradaVR.Pulso(EntradaVR.BotonB) || EntradaVR.Pulso(EntradaVR.BotonY) || esc)
             {
                 Cerrar();
+                return;
+            }
+            // El stick derecho a los lados cambia de página (y las flechas del teclado, para probar sin visor).
+            float x = EntradaVR.Eje(EntradaVR.StickDerecho).x;
+            if (stickArmado && Mathf.Abs(x) > UmbralStick)
+            {
+                stickArmado = false;
+                IrA(pagina + (x > 0f ? 1 : -1));
+            }
+            else if (Mathf.Abs(x) < RearmeStick)
+            {
+                stickArmado = true;
+            }
+            if (teclado != null && teclado.rightArrowKey.wasPressedThisFrame)
+            {
+                IrSiguiente();
+            }
+            else if (teclado != null && teclado.leftArrowKey.wasPressedThisFrame)
+            {
+                IrAnterior();
             }
         }
 
         private void LateUpdate()
         {
-            AplicarVaiven(Time.unscaledTime - inicio);
-            ActualizarLineas();
             // El láser de los menús no conoce este panel (es del mundo): se recorta aquí, donde toca el panel.
             if (ApuntaAlPanel(out float distancia))
             {
@@ -658,16 +565,33 @@ namespace MechaCyberpunk.VR.Guia
         private bool ApuntaAlPanel(out float distancia) => RayoAlPanel(out _, out distancia);
 
         /// <summary>True si el rayo del control derecho toca el botón CERRAR.</summary>
-        public bool ApuntaACerrar(out float distancia)
+        public bool ApuntaACerrar(out float distancia) => ApuntaA(cerrar, out distancia);
+
+        /// <summary>True si el rayo del control derecho toca el botón dado.</summary>
+        public bool ApuntaA(BotonCyberfix boton, out float distancia)
         {
-            if (cerrar == null || !RayoAlPanel(out Vector2 px, out distancia))
+            if (boton == null || !RayoAlPanel(out Vector2 px, out distancia))
             {
                 distancia = 0f;
                 return false;
             }
-            var rect = (RectTransform)cerrar.transform;
+            var rect = (RectTransform)boton.transform;
             Vector3 enBoton = rect.InverseTransformPoint(canvas.transform.TransformPoint(new Vector3(px.x, px.y, 0f)));
             return rect.rect.Contains(new Vector2(enBoton.x, enBoton.y));
+        }
+
+        // El botón (ANTERIOR, SIGUIENTE o CERRAR) que toca el rayo; null si ninguno.
+        private BotonCyberfix BotonApuntado()
+        {
+            if (ApuntaA(cerrar, out _))
+            {
+                return cerrar;
+            }
+            if (ApuntaA(siguiente, out _))
+            {
+                return siguiente;
+            }
+            return ApuntaA(anterior, out _) ? anterior : null;
         }
 
         // Devuelve el tiempo, el control y la pausa como estaban.
@@ -705,10 +629,14 @@ namespace MechaCyberpunk.VR.Guia
         private void OnDestroy()
         {
             Soltar();
-            if (materialLinea != null)
+            foreach (Sprite s in creados)
             {
-                Destroy(materialLinea);
+                if (s != null)
+                {
+                    Destroy(s);
+                }
             }
+            creados.Clear();
         }
     }
 }

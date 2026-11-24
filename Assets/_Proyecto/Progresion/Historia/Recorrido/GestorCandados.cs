@@ -51,6 +51,7 @@ namespace MechaCyberpunk.Progresion.Recorrido
                 case PasoRecorrido.Maletin:
                 case PasoRecorrido.Ranura:
                 case PasoRecorrido.Decision:
+                case PasoRecorrido.PeleaSkulls: // VR24: la pelea del inicio, como el resto del inicio guiado
                     return new Candados(true, string.Empty, true); // empujón y cinemáticas: tampoco carros
                 // T-83: desde que decide quedarse (el dinero) ya puede usar carros; lo demás sigue bloqueado hasta el mundo libre.
                 case PasoRecorrido.UsarProtesis:
@@ -81,15 +82,36 @@ namespace MechaCyberpunk.Progresion.Recorrido
             {
                 case PasoRecorrido.Suero: return PasoRecorrido.UsarProtesis;
                 case PasoRecorrido.UsarProtesis: return PasoRecorrido.Armas;
+                // VR24: ya no se camina a la ranura; tras el maletín va C03 y luego la pelea con los 3 SKULLS.
+                case PasoRecorrido.Maletin: return PasoRecorrido.Decision;
+                case PasoRecorrido.Ranura: return PasoRecorrido.Decision;
+                case PasoRecorrido.Decision: return PasoRecorrido.PeleaSkulls;
+                case PasoRecorrido.PeleaSkulls: return PasoRecorrido.Dinero;
                 default: return paso + 1;
             }
         }
 
         /// <summary>
-        /// VR16: true si el paso no se juega con visor (<paramref name="vr"/> = <see cref="ModoVR.Activo"/>). Solo "Lo molestan" (los SKULLS que
-        /// empujan y el aviso de que no puede con ellos): en VR se da por hecho y la historia sigue en <see cref="Siguiente"/>. Sin VR nunca.
+        /// VR16: true si el paso no se juega con visor. VR24: ahora es igual en PC y en VR (<paramref name="vr"/> ya no cuenta): ver <see cref="SeSalta"/>.
         /// </summary>
-        public static bool SeSaltaEnVR(PasoRecorrido paso, bool vr) => vr && paso == PasoRecorrido.Molestan;
+        public static bool SeSaltaEnVR(PasoRecorrido paso, bool vr) => SeSalta(paso);
+
+        /// <summary>
+        /// VR24: los pasos que ya no se juegan (en PC ni en VR): "Lo molestan" (el empujón) se da por hecho y sigue al Maletín; "Ranura" (caminar a la
+        /// ranura del muro) se quitó y una partida guardada ahí sigue en <see cref="PasoRecorrido.Decision"/>.
+        /// </summary>
+        public static bool SeSalta(PasoRecorrido paso) => paso == PasoRecorrido.Molestan || paso == PasoRecorrido.Ranura;
+
+        /// <summary>VR24: el paso al que se va en vez de <paramref name="paso"/> si este ya no se juega (<see cref="SeSalta"/>); si se juega, el mismo.</summary>
+        public static PasoRecorrido Reemplazo(PasoRecorrido paso)
+        {
+            switch (paso)
+            {
+                case PasoRecorrido.Molestan: return PasoRecorrido.Maletin;
+                case PasoRecorrido.Ranura: return PasoRecorrido.Decision;
+                default: return paso;
+            }
+        }
 
         /// <summary>True si la distancia al Doc ya es grande y el jugador sigue alejándose (aviso suave, sin paredes).</summary>
         public static bool DebeAvisarLejosDelDoc(float distancia, float distanciaAntes) => distancia > MetrosLejosDelDoc && distancia > distanciaAntes + 0.1f;

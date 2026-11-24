@@ -13,6 +13,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
 
@@ -39,7 +40,7 @@ namespace MechaCyberpunk.VR.Menus
         public const float SegundosAviso = 2f;
         public const string AccionRueda = "Rueda";
         /// <summary>Y del control izquierdo: la rueda de armas (Tab / botón medio).</summary>
-        public const string RutaRueda = EntradaVR.Izq + "/{SecondaryButton}";
+        public const string RutaRueda = EntradaVR.RutaRueda;
 
         private const string GrupoVR = "VR";
         private const float SegundosBarrido = 0.25f;
@@ -55,6 +56,10 @@ namespace MechaCyberpunk.VR.Menus
         private const float ToleranciaSeguir = 3f;
         private const float DiferenciaAlturaSeguir = 0.3f;
         private const int CuadrosEsc = 2;
+        /// <summary>VR29: cuadros que una pantalla lleva abierta antes de que B o Y la cierren (que no se abra y cierre en el mismo cuadro).</summary>
+        private const int CuadrosGraciaSalir = 3;
+        /// <summary>VR29: con la pausa arriba, Y es también la pausa (VR27): si en estos cuadros nadie la cerró, la cierra MenusVR.</summary>
+        private const int CuadrosEsperaPausaY = 3;
         private static readonly Color ColorLaser = new Color(0f, 0.9f, 1f, 0.85f);
         private static readonly Color ColorLaserFin = new Color(0f, 0.9f, 1f, 0.15f);
 
@@ -102,6 +107,10 @@ namespace MechaCyberpunk.VR.Menus
         private Object ruedaDelLienzo;
         private bool cargaPrevia;
         private bool duplicado;
+        private int cuadroPantallaDesde = -1;
+        private int cuadroPausaY = -1;
+        private readonly List<Camera> camarasSinXR = new List<Camera>();
+        private readonly HashSet<Camera> camarasVistas = new HashSet<Camera>();
 
         // Lo de antes, para ver qué se abrió.
         private int cantidadPrevia;
@@ -331,6 +340,7 @@ namespace MechaCyberpunk.VR.Menus
             QuitarRig(false);
             CambiarJugador(null);
             QuitarBindingsPropios();
+            DevolverCamarasXR();
             anclaPuesta = false;
         }
 
@@ -373,6 +383,7 @@ namespace MechaCyberpunk.VR.Menus
             ActualizarLaser();
             ActualizarRueda();
             ActualizarPausa();
+            ActualizarSalir();
             aviso.Actualizar(dt);
         }
 
@@ -522,6 +533,7 @@ namespace MechaCyberpunk.VR.Menus
                 }
             }
             vistos.RemoveWhere(EsNulo);
+            ApagarXREnCamarasDeTextura();
             Canvas[] todos = FindObjectsByType<Canvas>(FindObjectsInactive.Include, FindObjectsSortMode.None);
             foreach (Canvas c in todos)
             {
@@ -1010,15 +1022,12 @@ namespace MechaCyberpunk.VR.Menus
                     InputSystem.QueueStateEvent(Keyboard.current, new KeyboardState());
                 }
             }
-            if (!EntradaVR.Pulso(EntradaVR.Menu) || escPendiente > 0)
+            if (!EntradaVR.Pulso(EntradaVR.Menu) || escPendiente > 0 || GuiaReciente())
             {
                 return;
             }
-            Keyboard teclado = Keyboard.current;
-            if (teclado != null)
+            if (EnviarEsc())
             {
-                InputSystem.QueueStateEvent(teclado, new KeyboardState(Key.Escape));
-                escPendiente = CuadrosEsc;
                 return;
             }
             PantallaPausa pausa = FindFirstObjectByType<PantallaPausa>(FindObjectsInactive.Include);
@@ -1034,6 +1043,139 @@ namespace MechaCyberpunk.VR.Menus
             {
                 pausa.Abrir();
             }
+        }
+
+        // Simula un Esc del teclado (se suelta a los CuadrosEsc cuadros). False si ya había uno en curso o no hay teclado.
+        private bool EnviarEsc()
+        {
+            Keyboard teclado = Keyboard.current;
+            if (teclado == null || escPendiente > 0)
+            {
+                return false;
+            }
+            InputSystem.QueueStateEvent(teclado, new KeyboardState(Key.Escape));
+            escPendiente = CuadrosEsc;
+            return true;
+        }
+
+        // ---- Salir con B o Y (VR29) ----
+
+        /// <summary>
+        /// VR29: con una pantalla abierta (Doc, Tino, máquinas, mejoras, campo de tiro, mapa, pausa, opciones...) B o Y la cierran o regresan,
+        /// por el mismo camino que su Esc de PC (cada pantalla ya atiende Esc). Solo si lleva unos cuadros abierta: el B que la abrió (interactuar)
+        /// o la Y que abrió la pausa no la cierran. Con la pausa arriba, Y es también la pausa (VR27): MenusVR espera unos cuadros y la cierra
+        /// solo si sigue abierta, para no cerrarla y volverla a abrir.
+        /// </summary>
+        // La guía de controles cierra sola con B, Y o Menú: ese toque no debe cerrar también la pausa de abajo.
+        private int cuadroGuia = -100;
+
+        private bool GuiaReciente()
+        {
+            if (Guia.GuiaControlesVR.Abierta)
+            {
+                cuadroGuia = Time.frameCount;
+            }
+            return Time.frameCount - cuadroGuia <= 3;
+        }
+
+        private void ActualizarSalir()
+        {
+            if (GuiaReciente())
+            {
+                cuadroPantallaDesde = -1;
+                cuadroPausaY = -1;
+                return;
+            }
+            bool rueda = RuedaArmasObjetos.Abierta || RuedaHabilidadesExo.Abierta;
+            bool pantalla = !rig.Existe && !PantallaCargando.Visible && !rueda
+                && (PilaPantallas.Cantidad > 0 || Pausa.Activa || MenuCyberfix.Abiertos > 0);
+            if (!pantalla)
+            {
+                cuadroPantallaDesde = -1;
+                cuadroPausaY = -1;
+                return;
+            }
+            int cuadro = Time.frameCount;
+            if (cuadroPantallaDesde < 0)
+            {
+                cuadroPantallaDesde = cuadro;
+            }
+            if (cuadroPausaY >= 0 && cuadro - cuadroPausaY >= CuadrosEsperaPausaY)
+            {
+                cuadroPausaY = -1;
+                PantallaPausa sigue = PausaArriba();
+                if (sigue != null)
+                {
+                    sigue.Cerrar();
+                }
+            }
+            bool b = EntradaVR.Pulso(EntradaVR.BotonB);
+            bool y = EntradaVR.Pulso(EntradaVR.BotonY);
+            if (!b && !y)
+            {
+                return;
+            }
+            if (cuadro - cuadroPantallaDesde < CuadrosGraciaSalir || PilaPantallas.CambioEsteCuadro)
+            {
+                return;
+            }
+            PantallaPausa pausa = PausaArriba();
+            if (pausa != null && y && !b)
+            {
+                cuadroPausaY = cuadro;
+                return;
+            }
+            if (!EnviarEsc() && pausa != null && escPendiente == 0)
+            {
+                pausa.Cerrar(); // sin teclado
+            }
+        }
+
+        // La pausa si está abierta y es la pantalla de arriba; si no, null.
+        private static PantallaPausa PausaArriba()
+        {
+            if (!Pausa.Activa || !(PilaPantallas.Arriba is PantallaPausa pausa))
+            {
+                return null;
+            }
+            return pausa.Abierta ? pausa : null;
+        }
+
+        // ---- Vistas 3D de las pantallas (VR29) ----
+
+        // Las cámaras que dibujan a una textura (el cuerpo que gira del Doc, el arma de Tino, la vista previa de la apariencia...) no van al
+        // visor: con XR encendido URP las dibujaría en estéreo y la RawImage del panel las vería mal o vacías. Al salir de VR se devuelven.
+        private void ApagarXREnCamarasDeTextura()
+        {
+            camarasVistas.RemoveWhere(c => c == null);
+            Camera[] camaras = FindObjectsByType<Camera>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            foreach (Camera c in camaras)
+            {
+                if (c == null || c.targetTexture == null || camarasVistas.Contains(c))
+                {
+                    continue;
+                }
+                camarasVistas.Add(c);
+                UniversalAdditionalCameraData datos = c.GetUniversalAdditionalCameraData();
+                if (datos != null && datos.allowXRRendering)
+                {
+                    SistemaVR.PermitirXR(c, false);
+                    camarasSinXR.Add(c);
+                }
+            }
+        }
+
+        private void DevolverCamarasXR()
+        {
+            foreach (Camera c in camarasSinXR)
+            {
+                if (c != null)
+                {
+                    SistemaVR.PermitirXR(c, true);
+                }
+            }
+            camarasSinXR.Clear();
+            camarasVistas.Clear();
         }
 
         // ---- Carros ----

@@ -216,10 +216,11 @@ namespace MechaCyberpunk.VR
                 v.name = "VinetaTunel";
                 vineta = v.GetComponent<TunnelingVignetteController>();
             }
-            parametros.apertureSize = 0.7f;
-            parametros.featheringEffect = 0.2f;
-            parametros.easeInTime = 0.2f;
-            parametros.easeOutTime = 0.3f;
+            // VR26: muy leve por defecto (BAJA: solo las orillas) y rápida (entra y sale en 0.1 s); la apertura sigue a la opción VIÑETA.
+            parametros.apertureSize = OpcionesVR.AperturaVineta(OpcionesVR.NivelVineta);
+            parametros.featheringEffect = 0.25f;
+            parametros.easeInTime = OpcionesVR.SegundosVineta;
+            parametros.easeOutTime = OpcionesVR.SegundosVineta;
             parametros.vignetteColor = Color.black;
             rigObjeto.SetActive(true);
 
@@ -384,14 +385,18 @@ namespace MechaCyberpunk.VR
             }
         }
 
-        // Caminar, correr, saltar, interactuar y recargar con los controles (lo demás lo ponen VR2–VR4). VR19: saltar con A, recargar con X.
+        // Caminar, correr, saltar, interactuar y la rueda de armas con los controles (lo demás lo ponen VR2–VR4). VR27: saltar con el clic del
+        // stick derecho, la rueda con X (mantener). Recargar ya no es un binding: A suelta el cargador y la recarga es a mano (RecargaManualVR).
         private static void AgregarBindingsBase()
         {
             AgregarBinding("Mover", RutaMover);
             AgregarBinding(AccionCorrer, RutaClicCorrer);
             AgregarBinding("Saltar", EntradaVR.RutaSaltar);
             AgregarBinding("Interactuar", EntradaVR.RutaInteractuar);
-            AgregarBinding("Recargar", EntradaVR.RutaRecargar);
+            if (BuscarAccionAPie(MechaCyberpunk.UI.Rueda.RuedaArmasObjetos.NombreAccion) != null)
+            {
+                AgregarBinding(MechaCyberpunk.UI.Rueda.RuedaArmasObjetos.NombreAccion, EntradaVR.RutaRueda);
+            }
         }
 
         private void Update()
@@ -416,8 +421,10 @@ namespace MechaCyberpunk.VR
         /// <summary>VR19: true mientras el stick izquierdo no camina (la rueda de armas está abierta y se elige con él).</summary>
         public bool MoverApagado => moverApagado;
 
-        // VR19: con la rueda de armas abierta el stick izquierdo elige en la rueda y no camina. Se anula solo el binding del stick (override vacío,
-        // sin apagar el mapa: así no se suelta la Y que mantiene la rueda); el teclado sigue igual.
+        // VR19/VR27: con la rueda de armas abierta el stick izquierdo elige en la rueda y no camina. VR27: antes se anulaba el binding con un override,
+        // pero un override (o quitarlo) vuelve a resolver los bindings de todo el asset con las acciones encendidas, y eso suelta la acción Rueda
+        // aunque el botón siga apretado: la rueda se cerraba sola y se volvía a abrir (el parpadeo). Ahora solo se apaga la acción Mover (apagar
+        // una acción no resuelve bindings); el teclado tampoco camina mientras tanto, igual que antes con el stick.
         private void ApagarMoverConRueda(bool apagar)
         {
             if (apagar == moverApagado)
@@ -433,20 +440,13 @@ namespace MechaCyberpunk.VR
                 }
             }
             moverApagado = apagar;
-            for (int i = 0; i < accionMover.bindings.Count; i++)
+            if (apagar)
             {
-                InputBinding b = accionMover.bindings[i];
-                if (b.path == RutaMover && b.groups == GrupoVR)
-                {
-                    if (apagar)
-                    {
-                        accionMover.ApplyBindingOverride(i, string.Empty);
-                    }
-                    else
-                    {
-                        accionMover.RemoveBindingOverride(i);
-                    }
-                }
+                accionMover.Disable();
+            }
+            else if (accionMover.actionMap == null || accionMover.actionMap.enabled)
+            {
+                accionMover.Enable();
             }
         }
 
@@ -472,7 +472,7 @@ namespace MechaCyberpunk.VR
             {
                 giroArmado = false;
                 giroRig = Mathf.Repeat(giroRig + Mathf.Sign(x) * GradosGiro, 360f);
-                segundosVinetaGiro = 0.25f;
+                segundosVinetaGiro = SegundosVinetaGiroSuave; // VR26: también por pasos, viñeta corta
             }
             else if (Mathf.Abs(x) < RearmeGiro)
             {
@@ -694,6 +694,7 @@ namespace MechaCyberpunk.VR
             v.y = 0f;
             // V10: con VIÑETA: NO no se cierra la vista al moverse ni al girar (el fundido del KO sí sale).
             bool moviendo = OpcionesVR.Vineta && (v.magnitude > VelocidadVineta || segundosVinetaGiro > 0f);
+            parametros.apertureSize = OpcionesVR.AperturaVineta(OpcionesVR.NivelVineta); // VR26: BAJA o MEDIA
             if (moviendo != vinetaPuesta)
             {
                 vinetaPuesta = moviendo;

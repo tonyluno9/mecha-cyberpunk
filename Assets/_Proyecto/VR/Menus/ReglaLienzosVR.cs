@@ -142,7 +142,9 @@ namespace MechaCyberpunk.VR.Menus
             {
                 return TipoLienzoVR.Frente;
             }
-            if (orden >= OrdenPantallaCompleta)
+            // VR29: solo los fundidos y negros van pegados a la cabeza. Las pantallas de PC con orden alto (mostrador del Doc, tienda de Tino,
+            // máquinas, guía del banco, cartelera, teléfono...) van al panel grande fijo frente a la cabeza, donde se ven completas y el láser las usa.
+            if (orden >= OrdenPantallaCompleta && EsFundido(nombre))
             {
                 return TipoLienzoVR.PantallaCompleta;
             }
@@ -155,6 +157,32 @@ namespace MechaCyberpunk.VR.Menus
                 return TipoLienzoVR.Casco;
             }
             return TipoLienzoVR.Frente;
+        }
+
+        /// <summary>
+        /// VR29: los Canvas de orden de pantalla completa que sí son fundidos o negros (PantallaFundido "Fundido", "CanvasFundidoCampoTiro",
+        /// "Continuara", "NegroMomentoDia", el aviso del modo video): pegados a la cabeza y más grandes que la vista.
+        /// </summary>
+        private static readonly string[] Fundidos = { "Continuara", "NegroMomentoDia", "AvisoModoVideo" };
+
+        /// <summary>VR29: true si el Canvas es un fundido o negro de pantalla completa (por su nombre).</summary>
+        public static bool EsFundido(string nombre)
+        {
+            if (string.IsNullOrEmpty(nombre))
+            {
+                return false;
+            }
+            return nombre.IndexOf("Fundido", StringComparison.Ordinal) >= 0 || Empieza(nombre, Fundidos);
+        }
+
+        /// <summary>
+        /// VR25: los Image del HUD de casco que en VR se encogen a 0, a cualquier profundidad: los degradados negros de las esquinas del H10
+        /// ("VinetaArribaIzquierda", "VinetaAbajoIzquierda", "VinetaAbajoDerecha"), que en el visor se ven como el borde de una pantalla.
+        /// La viñeta roja de vida baja ("Vinieta") sí se queda.
+        /// </summary>
+        public static bool EsSombraCasco(string nombre)
+        {
+            return !string.IsNullOrEmpty(nombre) && nombre.StartsWith("Vineta", StringComparison.Ordinal);
         }
 
         /// <summary>True si un Canvas (raíz o anidado) con este nombre es de los que en VR no se ven.</summary>
@@ -218,7 +246,11 @@ namespace MechaCyberpunk.VR.Menus
         /// <summary>Cuánto se adelanta (m, hacia la cabeza) un Canvas de este orden, escalado con la distancia.</summary>
         public static float Adelanto(int orden, float factorDistancia)
         {
-            return Mathf.Clamp(orden, 0, OrdenMaximoAdelanto) * AdelantoPorOrden * factorDistancia;
+            // VR29: las pantallas de orden alto (30000+) quedan delante de los menús normales y en su orden entre ellas.
+            int paso = orden >= OrdenPantallaCompleta
+                ? OrdenMaximoAdelanto + 1 + Mathf.Clamp(orden - OrdenPantallaCompleta, 0, OrdenMaximoAdelanto)
+                : Mathf.Clamp(orden, 0, OrdenMaximoAdelanto);
+            return paso * AdelantoPorOrden * factorDistancia;
         }
 
         /// <summary>Ángulo en el plano (°) entre hacia dónde mira la cabeza y hacia dónde está el panel.</summary>
