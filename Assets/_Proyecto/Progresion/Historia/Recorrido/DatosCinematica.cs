@@ -24,6 +24,8 @@ namespace MechaCyberpunk.Progresion.Recorrido
         [SerializeField] private VideoClip video;
         [Tooltip("T-cinematicas-videos-23nov: los clips en orden, uno tras otro sin negro entre ellos. Si la lista tiene clips, manda sobre Video.")]
         [SerializeField] private VideoClip[] videos = new VideoClip[0];
+        [Tooltip("T97: imagen fija de cada toma, en paralelo con Videos (mismo índice). Una toma sin video y con imagen se muestra fija (Ken Burns) lo que dura su narración + la pausa; sin narración 3 s.")]
+        [SerializeField] private Texture2D[] fotos = new Texture2D[0];
         [Tooltip("T-cinematicas-narracion-24nov: la narración de cada clip de Videos, en el mismo orden (vacío o null = ese clip sin voz). El clip y su frase empiezan juntos.")]
         [SerializeField] private AudioClip[] narraciones = new AudioClip[0];
         [Tooltip("Segundos de pausa en el último cuadro tras cada clip con narración, en el mismo orden (s). Si falta, 1 s. Los clips sin narración se unen sin pausa.")]
@@ -40,23 +42,55 @@ namespace MechaCyberpunk.Progresion.Recorrido
         /// <summary>El primer clip (o null si no hay ninguno).</summary>
         public VideoClip Video => Clips.Count > 0 ? Clips[0] : null;
 
-        /// <summary>Los clips en orden: la lista si tiene alguno; si no, el clip suelto; si no, vacía.</summary>
+        /// <summary>
+        /// Las tomas en orden, una entrada por toma: su VideoClip, o null si la toma es una imagen fija (T97, ver <see cref="Foto"/>).
+        /// La lista si tiene alguna toma; si no, el clip suelto; si no, vacía. Count = número de tomas.
+        /// </summary>
         public IReadOnlyList<VideoClip> Clips
         {
             get
             {
                 var lista = new List<VideoClip>();
-                if (videos != null)
+                int n = CantidadEnLista;
+                for (int i = 0; i < n; i++)
                 {
-                    foreach (VideoClip c in videos)
-                    {
-                        if (c != null) lista.Add(c);
-                    }
+                    if (EsToma(i)) lista.Add(VideoEn(i));
                 }
                 if (lista.Count == 0 && video != null) lista.Add(video);
                 return lista;
             }
         }
+
+        /// <summary>T97: la imagen fija de la toma <paramref name="indice"/> de <see cref="Clips"/> (null si esa toma es video).</summary>
+        public Texture2D Foto(int indice)
+        {
+            int i = IndiceEnLista(indice);
+            return i >= 0 && VideoEn(i) == null ? FotoEn(i) : null;
+        }
+
+        /// <summary>T97: true si la toma <paramref name="indice"/> es una imagen fija.</summary>
+        public bool EsFoto(int indice) => Foto(indice) != null;
+
+        /// <summary>T97: cuántas tomas son imagen fija.</summary>
+        public int CantidadFotos
+        {
+            get
+            {
+                int total = 0;
+                int n = Clips.Count;
+                for (int i = 0; i < n; i++)
+                {
+                    if (EsFoto(i)) total++;
+                }
+                return total;
+            }
+        }
+
+        // Largo de las listas paralelas (videos y fotos pueden tener largos distintos).
+        private int CantidadEnLista => Mathf.Max(videos != null ? videos.Length : 0, fotos != null ? fotos.Length : 0);
+        private VideoClip VideoEn(int i) => videos != null && i < videos.Length ? videos[i] : null;
+        private Texture2D FotoEn(int i) => fotos != null && i < fotos.Length ? fotos[i] : null;
+        private bool EsToma(int i) => VideoEn(i) != null || FotoEn(i) != null;
 
         /// <summary>
         /// T-cinematicas-narracion-24nov: la narración del clip <paramref name="indice"/> de <see cref="Clips"/> (null si ese clip no tiene voz).
@@ -78,7 +112,10 @@ namespace MechaCyberpunk.Progresion.Recorrido
             return i >= 0 && pausas != null && i < pausas.Length ? Mathf.Max(0f, pausas[i]) : ReglaNarracion.PausaPorDefecto;
         }
 
-        /// <summary>Segundos que ocupa el clip <paramref name="indice"/> con la regla de la narración (video, congelado y pausa).</summary>
+        /// <summary>
+        /// Segundos que ocupa el clip <paramref name="indice"/> con la regla de la narración (video, congelado y pausa). T97: si la toma es una
+        /// imagen fija, lo de <see cref="ReglaFotoCinematica.Duracion(float, float)"/> (narración + pausa; sin narración 3 s).
+        /// </summary>
         public float TramoClip(int indice)
         {
             IReadOnlyList<VideoClip> lista = Clips;
@@ -87,20 +124,26 @@ namespace MechaCyberpunk.Progresion.Recorrido
                 return 0f;
             }
             AudioClip voz = Narracion(indice);
-            return ReglaNarracion.Tramo((float)lista[indice].length, voz != null ? voz.length : 0f, Pausa(indice));
+            float segundosVoz = voz != null ? voz.length : 0f;
+            if (lista[indice] == null)
+            {
+                return EsFoto(indice) ? ReglaFotoCinematica.Duracion(segundosVoz, Pausa(indice)) : 0f;
+            }
+            return ReglaNarracion.Tramo((float)lista[indice].length, segundosVoz, Pausa(indice));
         }
 
-        // El índice de Clips (sin los null) en el arreglo videos (donde van las narraciones en paralelo). -1 si no hay lista.
+        // El índice de Clips (las tomas con video o imagen) en los arreglos paralelos (videos, fotos, narraciones, pausas). -1 si no hay lista.
         private int IndiceEnLista(int indiceClip)
         {
-            if (videos == null || indiceClip < 0)
+            if (indiceClip < 0)
             {
                 return -1;
             }
             int n = 0;
-            for (int i = 0; i < videos.Length; i++)
+            int largo = CantidadEnLista;
+            for (int i = 0; i < largo; i++)
             {
-                if (videos[i] == null)
+                if (!EsToma(i))
                 {
                     continue;
                 }
@@ -125,7 +168,10 @@ namespace MechaCyberpunk.Progresion.Recorrido
             get
             {
                 float total = 0f;
-                foreach (VideoClip c in Clips) total += (float)c.length;
+                foreach (VideoClip c in Clips)
+                {
+                    if (c != null) total += (float)c.length;
+                }
                 return total;
             }
         }
@@ -142,18 +188,43 @@ namespace MechaCyberpunk.Progresion.Recorrido
             }
         }
 
-        /// <summary>Segundos que dura el contenido: los clips con su narración (más la parte pendiente) si hay video, si no la duración de los datos.</summary>
-        public float DuracionEfectiva => Clips.Count > 0 && DuracionVideos > 0.1f ? DuracionConNarracion + segundosPendientes : duracion;
+        /// <summary>
+        /// Segundos que dura el contenido: las tomas (video o imagen fija) con su narración, más la parte pendiente, si hay tomas; si no, la
+        /// duración de los datos.
+        /// </summary>
+        public float DuracionEfectiva
+        {
+            get
+            {
+                if (Clips.Count == 0)
+                {
+                    return duracion;
+                }
+                float tomas = DuracionConNarracion;
+                return tomas > 0.1f ? tomas + segundosPendientes : duracion;
+            }
+        }
 
         /// <summary>Pone los clips en orden y la parte pendiente (editor y pruebas).</summary>
         public void ConfigurarVideos(VideoClip[] clips, float pendientes, string lineaPendiente)
         {
             videos = clips ?? new VideoClip[0];
+            fotos = new Texture2D[0];
             video = null;
             narraciones = new AudioClip[0];
             pausas = new float[0];
             segundosPendientes = Mathf.Max(0f, pendientes);
             textoPendiente = lineaPendiente ?? string.Empty;
+        }
+
+        /// <summary>
+        /// T97: pone las tomas en orden (editor y pruebas). <paramref name="clips"/> e <paramref name="imagenes"/> van en paralelo: en cada
+        /// índice, un video o una imagen fija (si están los dos, manda el video). Borra la narración: después va <see cref="ConfigurarNarracion"/>.
+        /// </summary>
+        public void ConfigurarTomas(VideoClip[] clips, Texture2D[] imagenes, float pendientes, string lineaPendiente)
+        {
+            ConfigurarVideos(clips, pendientes, lineaPendiente);
+            fotos = imagenes ?? new Texture2D[0];
         }
 
         /// <summary>T-cinematicas-narracion-24nov: la narración y la pausa de cada clip de la lista, en el mismo orden (editor y pruebas).</summary>

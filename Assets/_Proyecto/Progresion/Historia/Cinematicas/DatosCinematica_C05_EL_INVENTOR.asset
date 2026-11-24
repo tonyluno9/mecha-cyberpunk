@@ -18,9 +18,13 @@ MonoBehaviour:
   duracion: 4
   video: {fileID: 0}
   videos:
-  - {fileID: 32900000, guid: 9b107777c83f4b24480d04fd1f9f3a78, type: 3}
-  - {fileID: 32900000, guid: 69b5c446a60dd38488961cece6f224f8, type: 3}
-  - {fileID: 32900000, guid: 520cd43bc5f627348972cdf1dcff8172, type: 3}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  fotos:
+  - {fileID: 2800000, guid: d47b268cc0179884983318d31fa96179, type: 3}
+  - {fileID: 2800000, guid: fdb2dff2c3866fc499dd62ff627eee5c, type: 3}
+  - {fileID: 2800000, guid: 6c2d35cbc5ad243438e18aaecd314250, type: 3}
   narraciones:
   - {fileID: 0}
   - {fileID: 0}

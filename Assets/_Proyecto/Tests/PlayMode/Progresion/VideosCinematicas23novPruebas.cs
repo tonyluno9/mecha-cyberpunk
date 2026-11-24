@@ -25,8 +25,14 @@ namespace MechaCyberpunk.Tests.Progresion
 #endif
         }
 
+        private static string NombreToma(DatosCinematica d, int i)
+        {
+            return d.EsFoto(i) ? d.Foto(i).name : d.Clips[i].name;
+        }
+
+        /// <summary>T97: C01 sigue en video (campo y despertar); C02–C05 son imágenes fijas en el orden de las tomas.</summary>
         [Test]
-        public void Datos_ClipsEnOrden_C01aC05ConVideoYSinPartePendiente()
+        public void Datos_TomasEnOrden_C01EnVideoYElRestoImagenesFijas()
         {
             DatosCinematica c01 = Cargar("DatosCinematica_C01_EL_RECUERDO");
             DatosCinematica c02 = Cargar("DatosCinematica_C02_EL_MALETIN");
@@ -34,52 +40,44 @@ namespace MechaCyberpunk.Tests.Progresion
             DatosCinematica c04 = Cargar("DatosCinematica_C04_EL_SUERO");
             DatosCinematica c05 = Cargar("DatosCinematica_C05_EL_INVENTOR");
             Assert.AreEqual(2, c01.Clips.Count, "C01: videos 02–03");
-            Assert.AreEqual(12, c02.Clips.Count, "C02: videos 04–15");
-            StringAssert.StartsWith("04_C02_Maletin", c02.Clips[0].name);
-            StringAssert.StartsWith("15_", c02.Clips[11].name);
-            Assert.AreEqual(6, c03.Clips.Count, "C03: videos 16–21 (G01–G06, ya con C07)");
-            StringAssert.StartsWith("21_C07", c03.Clips[5].name);
-            Assert.AreEqual(0f, c03.SegundosPendientes, "C03 ya no lleva placeholder de C07");
-            Assert.AreEqual(3, c04.Clips.Count, "C04 EL SUERO: videos 22–24");
+            Assert.AreEqual(0, c01.CantidadFotos, "C01 sigue en video");
+            Assert.IsNotNull(c01.Clips[0]);
+            Assert.IsNotNull(c01.Clips[1]);
+            Assert.AreEqual(17, c02.Clips.Count, "C02: F01–F15 (con F12B y F12C)");
+            Assert.AreEqual(17, c02.CantidadFotos);
+            StringAssert.StartsWith("04_C02_F01", NombreToma(c02, 0));
+            StringAssert.StartsWith("15_", NombreToma(c02, 16));
+            Assert.AreEqual(6, c03.CantidadFotos, "C03: G01–G06");
+            StringAssert.StartsWith("21_C07", NombreToma(c03, 5));
+            Assert.AreEqual(0f, c03.SegundosPendientes);
+            Assert.AreEqual(3, c04.CantidadFotos, "C04 EL SUERO: I01–I03");
             Assert.AreEqual(0f, c04.SegundosPendientes);
-            Assert.AreEqual(3, c05.Clips.Count, "Tino (primera mejora): videos 25–27");
-            StringAssert.StartsWith("25_", c05.Clips[0].name);
+            Assert.AreEqual(3, c05.CantidadFotos, "Tino (primera mejora): J01–J03");
+            StringAssert.StartsWith("25_", NombreToma(c05, 0));
         }
 
-        /// <summary>T-cinematicas-narracion-24nov: cada clip de C02 y C03 tiene su par video + narración (la clave NAR_ está en el nombre del video).</summary>
+        /// <summary>T97: toma con narración = voz + 1 s; sin narración, imagen fija 3 s y C01 (video) sin voz.</summary>
         [Test]
-        public void Datos_CadaClipConSuNarracion_C02C03ConVozYLasDemasSinVoz()
+        public void Datos_TramosDeLasTomas_NarracionMasPausaOTresSegundos()
         {
-            foreach (string archivo in new[] { "DatosCinematica_C02_EL_MALETIN", "DatosCinematica_C03_LA_DECISION" })
+            foreach (string archivo in new[] { "DatosCinematica_C02_EL_MALETIN", "DatosCinematica_C03_LA_DECISION",
+                "DatosCinematica_C04_EL_SUERO", "DatosCinematica_C05_EL_INVENTOR" })
             {
                 DatosCinematica d = Cargar(archivo);
                 for (int i = 0; i < d.Clips.Count; i++)
                 {
+                    Assert.IsTrue(d.EsFoto(i), archivo + ": toma " + i + " es imagen fija");
                     AudioClip voz = d.Narracion(i);
-                    Assert.IsNotNull(voz, archivo + ": el clip " + d.Clips[i].name + " tiene narración");
-                    StringAssert.StartsWith("NAR_", voz.name);
-                    string clave = voz.name.Substring(4);
-                    string resto = d.Clips[i].name.Substring(d.Clips[i].name.IndexOf('_') + 1);
-                    Assert.IsTrue(resto == clave || resto.StartsWith(clave + "_"), d.Clips[i].name + " va con " + voz.name);
-                    Assert.AreEqual(1f, d.Pausa(i), 0.001f, "1 s de pausa tras la frase");
-                    Assert.AreEqual(Mathf.Max((float)d.Clips[i].length, voz.length) + 1f, d.TramoClip(i), 0.05f, "Tramo = máx(video, voz) + pausa");
+                    float esperado = voz != null ? voz.length + d.Pausa(i) : 3f;
+                    Assert.AreEqual(esperado, d.TramoClip(i), 0.05f, archivo + " " + NombreToma(d, i));
                 }
             }
-            foreach (string archivo in new[] { "DatosCinematica_C01_EL_RECUERDO", "DatosCinematica_C04_EL_SUERO", "DatosCinematica_C05_EL_INVENTOR" })
+            DatosCinematica c01 = Cargar("DatosCinematica_C01_EL_RECUERDO");
+            for (int i = 0; i < c01.Clips.Count; i++)
             {
-                DatosCinematica d = Cargar(archivo);
-                for (int i = 0; i < d.Clips.Count; i++)
-                {
-                    Assert.IsNull(d.Narracion(i), archivo + ": sin narración");
-                    Assert.AreEqual(0f, d.Pausa(i), "Sin narración no hay pausa: se une sin negro");
-                }
-                Assert.AreEqual(d.DuracionVideos, d.DuracionEfectiva, 0.01f);
+                Assert.IsNull(c01.Narracion(i), "C01 sin narración");
             }
-            DatosCinematica c02 = Cargar("DatosCinematica_C02_EL_MALETIN");
-            DatosCinematica c03 = Cargar("DatosCinematica_C03_LA_DECISION");
-            Debug.Log("[Prueba narración] C02 " + c02.DuracionEfectiva.ToString("0.0") + " s, C03 " + c03.DuracionEfectiva.ToString("0.0") + " s con la regla");
-            Assert.AreEqual(61.2f, c02.DuracionEfectiva, 1.5f, "C02 con la regla (tabla de la tarea)");
-            Assert.AreEqual(28.9f, c03.DuracionEfectiva, 1.5f, "C03 con la regla (tabla de la tarea)");
+            Assert.AreEqual(c01.DuracionVideos, c01.DuracionEfectiva, 0.01f);
         }
 
         /// <summary>
@@ -166,7 +164,7 @@ namespace MechaCyberpunk.Tests.Progresion
             Debug.Log("[Prueba C02] duración total " + total.ToString("0.0") + " s (videos " + c02.DuracionVideos.ToString("0.0")
                 + " s), cuadros sin imagen en el contenido: " + huecos + ", por clip: " + tiempos);
             Assert.IsTrue(termino, "La cinemática terminó");
-            Assert.AreEqual(11, ultimoClip, "Llegó al último clip");
+            Assert.AreEqual(c02.Clips.Count - 1, ultimoClip, "Llegó a la última toma");
             Assert.LessOrEqual(huecos, 1, "Sin negro entre clips");
             Assert.Less(total, c02.DuracionEfectiva + 6f, "No se trabó");
             Assert.Greater(total, c02.DuracionConNarracion - 1f, "Nada se aceleró: cada frase completa y su pausa");

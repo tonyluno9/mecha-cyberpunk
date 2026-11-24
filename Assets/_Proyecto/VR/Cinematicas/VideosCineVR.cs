@@ -52,13 +52,19 @@ namespace MechaCyberpunk.VR.Cinematicas
 
         private readonly List<Seguido> seguidos = new List<Seguido>();
         private float barrido;
+        // T97: la imagen fija de la cinemática (el lienzo de CinematicaPendiente) también va a la pantalla de cine; este objeto es su dueño allí.
+        private readonly object duenoFija = new object();
+        private readonly Seguido fija = new Seguido();
 
-        /// <summary>Cuántos videos se ven ahora en la pantalla de cine.</summary>
+        /// <summary>T97: true si la imagen fija de una cinemática se ve ahora en la pantalla de cine.</summary>
+        public static bool FijaEnCine => Actual != null && Actual.fija.Mostrando;
+
+        /// <summary>Cuántos videos (o imágenes fijas de cinemática, T97) se ven ahora en la pantalla de cine.</summary>
         public int Mostrando
         {
             get
             {
-                int n = 0;
+                int n = fija.Mostrando ? 1 : 0;
                 foreach (Seguido s in seguidos)
                 {
                     if (s.Mostrando)
@@ -158,6 +164,7 @@ namespace MechaCyberpunk.VR.Cinematicas
                     SoltarTodos();
                     seguidos.Clear();
                 }
+                QuitarFija();
                 return;
             }
             barrido -= Time.unscaledDeltaTime;
@@ -168,6 +175,8 @@ namespace MechaCyberpunk.VR.Cinematicas
             }
             AdaptadorVR a = AdaptadorVR.Actual;
             bool hayJugador = a != null && a.Armado;
+            // T97: antes que los videos, para que si un video toma el relevo en el mismo cuadro sea él quien apague el Canvas al final.
+            ActualizarFija(hayJugador);
             for (int i = seguidos.Count - 1; i >= 0; i--)
             {
                 Seguido s = seguidos[i];
@@ -235,6 +244,45 @@ namespace MechaCyberpunk.VR.Cinematicas
             {
                 QuitarDeLaPantalla(s);
             }
+        }
+
+        /// <summary>
+        /// T97: la toma de imagen fija de la cinemática (Ken Burns ya compuesto en el lienzo) se ve en la pantalla grande con fondo negro
+        /// (NegroCineVR) y el Canvas de pantalla de la cinemática (pegado a la cabeza) se apaga mientras tanto, igual que con sus videos.
+        /// </summary>
+        private void ActualizarFija(bool hayJugador)
+        {
+            RenderTexture textura = hayJugador ? CinematicaPendiente.TexturaFija : null;
+            if (textura == null)
+            {
+                QuitarFija();
+                return;
+            }
+            if (textura != fija.Evaluada)
+            {
+                fija.Evaluada = textura;
+                fija.EnPantalla = BuscarFuentes(textura, fija.Fuentes);
+            }
+            if (!fija.Mostrando || !PantallaCineVR.Tiene(duenoFija))
+            {
+                fija.Mostrando = true;
+                PantallaCineVR.Mostrar(duenoFija, textura, LienzoFotoCinematica.Aspecto, Prioridad);
+                Debug.Log("[VR] Cinemática: imagen fija a la pantalla de cine.");
+            }
+            ApagarFuentes(fija);
+        }
+
+        private void QuitarFija()
+        {
+            if (!fija.Mostrando)
+            {
+                return;
+            }
+            fija.Mostrando = false;
+            fija.Evaluada = null;
+            fija.Fuentes.Clear();
+            PantallaCineVR.Ocultar(duenoFija);
+            PrenderFuentes(fija);
         }
 
         private void Barrer()
@@ -381,6 +429,7 @@ namespace MechaCyberpunk.VR.Cinematicas
             {
                 Soltar(s);
             }
+            QuitarFija();
         }
 
         private Seguido Buscar(VideoPlayer video)
