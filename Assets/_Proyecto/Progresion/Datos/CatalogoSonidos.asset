@@ -1880,7 +1880,7 @@ MonoBehaviour:
   - id: POL_RADIO_AVISO
     encendido: 1
   - id: POL_RADIO_DESPACHO
-    encendido: 1
+    encendido: 0
   - id: POL_RADIO_ESTATICA
     encendido: 1
   - id: POL_SIRENA_CORTA
@@ -2117,6 +2117,10 @@ MonoBehaviour:
     encendido: 1
   - id: ZON_RESPETO_SUBE
     encendido: 1
+  - id: JUG_ROPA_ROCE
+    encendido: 0
+  - id: JUG_ROPA_MOVER
+    encendido: 0
   gananciaEfectos: 1
   gananciaVoces: 0.85
   gananciaAmbiente: 1

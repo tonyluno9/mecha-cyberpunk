@@ -1,5 +1,5 @@
 # T-historia-libre-23nov · Después de comprar armas y probar el campo de tiro: juego libre de venganza
-**Estado:** PENDIENTE
+**Estado:** HECHA (24-nov, ver docs/reporte-noche-24nov.md)
 
 > **Cambio 24-nov (Tony probó en VR):** la historia termina con la CINEMÁTICA DE TINO dándote el arma. NO hay aviso "ERES LIBRE" ni ningún otro aviso. Al salir de la tienda de Tino empieza sola la escalada: primero llegan unos policías a pie; los vences y llegan las patrullas/camiones; luego NOVA; y así hasta que te maten. Los SKULLS también te atacan si los encuentras. Siempre se puede volver a hablar con Tino. Esto manda sobre lo de abajo.
 **Lo que decidió Tony (cambio drástico):** la historia se queda como está HASTA que compras tu arma con Tino y practicas en el campo de tiro. De ahí en adelante ya no hay más historia ni cinemáticas: eres libre. El juego se enfoca en vengarte de los SKULLS: sales y les repartes balazos; luego te llega la policía y la balaceas; luego llega NOVA y la balaceas; y así, cada vez más fuerte, hasta que mueras.

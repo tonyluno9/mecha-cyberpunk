@@ -1,5 +1,5 @@
 # T-rendimiento-tope-24nov · Tope de enemigos para que nunca baje el fps
-**Estado:** PENDIENTE
+**Estado:** HECHA (24-nov, ver docs/reporte-noche-24nov.md)
 **Lo que pidió Tony:** al jugar y probar el modo libre, evitar que el juego se sature y dé un bajón de fps. El número de enemigos con el que empieza a saturarse es el límite.
 **Qué hacer:**
 1. Jugar el modo libre (PC y simulador VR, en el build, no solo en el editor) llevando cada fase al máximo, midiendo fps (promedio y 1% más bajo) contra número de enemigos vivos, vehículos, drones, ragdolls, efectos y luces activas.
