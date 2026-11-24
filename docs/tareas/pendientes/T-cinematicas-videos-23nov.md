@@ -29,4 +29,4 @@
 6. Probar en Play el paso 4 (EL MALETÍN) de principio a fin: anotar en el reporte cuánto dura y si algún clip se corta, se traba o hay negro entre clips.
 
 **Cómo comprobar:** partida nueva: C01 con video, C02 EL MALETÍN completo sin cortes, C03 con video + placeholder de C07, C04 placeholder. Se saltan con ENTER/B.
-**Estado:** PENDIENTE
+**Estado:** HECHA (23-nov, ver docs/reporte-voces-cinematicas-23nov.md). C07 y C08 siguen con placeholder: no hay videos.

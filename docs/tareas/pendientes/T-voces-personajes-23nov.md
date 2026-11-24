@@ -39,3 +39,6 @@ Cerrar Unity y Unity Hub, confirmar que no queda ningún Unity.exe, borrar `Temp
 
 ## Descartado
 Aliado y locutor de Nova Radio no llevan voz. El quejido al instalar implante también se descartó. Peatones solo tienen voz de hombre por ahora.
+
+## Estado
+HECHA (23-nov) para Jugador, SKULLS, Maton, Jefe_SKULLS, Policia, Nova, Jefe_Nova y Doc; ver docs/reporte-voces-cinematicas-23nov.md. Canepa, Tino, Mesera_Robot y Peatones: en curso.
