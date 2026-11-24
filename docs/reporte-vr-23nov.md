@@ -53,3 +53,60 @@ Build: `wtVR\Builds\VR\CyberCity.exe` (PC, OpenXR, mismas escenas que ConstruirJ
 9. Entra con B a Tino, a una máquina y al Doc, y úsalos con el láser.
 10. Acércate a un carro y pulsa B. Debe salir "NO DISPONIBLE EN VR" y no subir.
 11. Ve una cinemática (por ejemplo la silla del Doc). En el visor debes seguir viendo desde tu cabeza, sin que la cámara te mueva.
+
+---
+
+## Segunda tanda (V5–V11) · build nuevo en `wtVR\Builds\VR2\CyberCity.exe`
+`Builds\VR` (el que estás probando) no se tocó. Se metió lo nuevo de `main` con merge normal.
+
+### Botones nuevos o que cambiaron
+| Acción | Botón |
+| --- | --- |
+| Cambiar de arma | Stick derecho arriba (siguiente) o un toque abajo (anterior). También la rueda con Y |
+| Recentrar altura (1.72 m) y vista al frente | Mantener el stick derecho abajo 1 s. Mantener el botón Meta lo hace el sistema |
+| Lanzagranadas y rifle de plasma | Gatillo derecho: sale del cañón del arma en la mano. El plasma carga con el gatillo sostenido |
+| Granada | Grip derecho la toma y al soltar se lanza con la velocidad de tu mano (×1.5) |
+| Interactuar | B. Sobre Tino, las máquinas, el Doc, la terminal y los carros sale un letrero "B · …" |
+
+### Qué quedó
+- **V5**: las armas especiales hacen el mismo daño y tienen los mismos sonidos y efectos que en PC.
+  - En VR la mira del plasma sale siempre del cañón.
+  - Con la granada en la mano, el grip no agarra enemigos.
+- **V6**: el letrero flota sobre el objeto, te mira y se lee a 1–3 m. Los carros dicen "NO DISPONIBLE EN VR".
+  - La terminal del campo de tiro ahora se abre con B en VR (antes solo leía la E del teclado).
+- **V7**: en Inicio, NUEVA PARTIDA, CONTINUAR, OPCIONES y SALIR se eligen con el láser.
+  - Al cargar, el rig de menús se quita en el acto: queda un solo XR Origin, una sola cámara al visor y un solo AudioListener.
+  - El láser sigue en la ciudad y la pantalla de carga es un panel a 1.5 m frente a ti.
+  - Se arreglaron:
+    - el láser, que se perdía al cargar;
+    - el panel, que se quedaba donde estaba la cabeza vieja;
+    - el fundido, que se quedaba en negro si se pedía en pausa.
+- **V8–V10**: en Opciones → CONTROLES, solo en VR, salen tres filas nuevas. Se guardan.
+  - **GIRO**: POR PASOS 45° o SUAVE (90°/s).
+  - **VIÑETA**: SÍ o NO.
+  - **CORRER**: MANTENER o ALTERNAR. En ALTERNAR, un clic corre, otro para, y también para solo al soltar el stick.
+- **V11**: la terminal del campo de tiro está más a la derecha y más baja, y ya no tapa el arma. Para verla, voltea a la derecha.
+
+### Pruebas (simulador XR)
+- **Tanda VR normal:** 68 de 68 pasan. Son las viejas más las nuevas `ArmasEspecialesVR`, `AvisoInteraccionVR`, `ComodidadVR` y `TeclaVR`.
+- **`InicioVR` y `BaseVR`:** 8 de 8.
+- **`CiudadVR`:** 1 de 1.
+- **EditMode:** `OpcionesVR` 4 de 4 y `ReglaCampoTiro` 8 de 8.
+- **Pruebas de PC del código tocado:**
+  - Pasan `OpcionesPruebas`, `InicioPruebas`, `ArmasDistancia`, `ChispeoPlasma` y casi todas las de `ArmasEspeciales`, `ArmasNuevas` y `RuedaArmas`.
+  - Fallan 3 pruebas (4 casos), pero también fallan igual con el código de antes (lo comprobé con stash): son fallos viejos, no de esta tanda.
+- **Partidas:** las `partida_auto.json` tienen el mismo md5 antes y después.
+
+### Qué probar con el visor (build VR2)
+1. Inicio: ¿el menú sale enfrente? ¿Eliges con el láser? Al dar NUEVA PARTIDA o CONTINUAR, ¿pasas a la ciudad sin pantalla negra y con el láser?
+2. Stick derecho arriba y abajo para cambiar de arma. Con el lanzagranadas y el plasma, ¿sale del cañón hacia donde apuntas?
+3. Granada: toma con el grip y lanza. ¿La distancia se siente bien? El factor ×1.5 se puede ajustar.
+4. Acércate a Tino, a una máquina o a un carro. ¿Se lee el letrero "B · …"? ¿Es muy grande o muy chico?
+5. Mantén el stick derecho abajo 1 s: ¿te pone a 1.72 m y mirando al frente?
+6. Opciones: prueba GIRO SUAVE, VIÑETA NO y CORRER ALTERNAR. ¿Marea el giro suave?
+7. Campo de tiro: ¿encuentras la terminal a la derecha y la abres con B?
+
+### Riesgos
+- El letrero usa TextMeshPro (la fuente LiberationSans del paquete). Si no se ve en el build, es eso.
+- CORRER ALTERNAR usa un botón virtual del Input System. Si falla al crearse, se queda en MANTENER y lo avisa en el log.
+- Nada se probó con el visor, solo con el simulador.
