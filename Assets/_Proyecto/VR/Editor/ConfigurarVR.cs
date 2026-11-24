@@ -118,10 +118,22 @@ namespace MechaCyberpunk.VR.Editor
         [MenuItem("Mecha Cyberpunk/VR/Construir build VR (Builds/VR)")]
         public static void ConstruirVR()
         {
-            Directory.CreateDirectory(CarpetaBuildVR);
+            ConstruirVREn(CarpetaBuildVR);
+        }
+
+        /// <summary>Igual que <see cref="ConstruirVR"/> pero en Builds/VR2 (para no pisar el build que se está probando).
+        /// Batchmode: -executeMethod MechaCyberpunk.VR.Editor.ConfigurarVR.ConstruirVR2</summary>
+        public static void ConstruirVR2()
+        {
+            ConstruirVREn("Builds/VR2");
+        }
+
+        private static void ConstruirVREn(string carpeta)
+        {
+            Directory.CreateDirectory(carpeta);
             System.Type tipo = typeof(MechaCyberpunk.Progresion.Prologo.Editor.ConstruirDemo);
             MethodInfo preparar = tipo.GetMethod("PrepararBuildCyberfix", BindingFlags.NonPublic | BindingFlags.Static);
-            preparar?.Invoke(null, new object[] { CarpetaBuildVR });
+            preparar?.Invoke(null, new object[] { carpeta });
             var opciones = new BuildPlayerOptions
             {
                 scenes = new[]
@@ -130,7 +142,7 @@ namespace MechaCyberpunk.VR.Editor
                     MechaCyberpunk.Progresion.Prologo.Editor.ConstruirDemo.EscenaMenuCalles,
                     MechaCyberpunk.Progresion.Prologo.Editor.ConstruirDemo.EscenaJuego,
                 },
-                locationPathName = Path.Combine(CarpetaBuildVR, MechaCyberpunk.Progresion.Prologo.Editor.ConstruirDemo.NombreEjecutableJuego),
+                locationPathName = Path.Combine(carpeta, MechaCyberpunk.Progresion.Prologo.Editor.ConstruirDemo.NombreEjecutableJuego),
                 target = BuildTarget.StandaloneWindows64,
                 targetGroup = BuildTargetGroup.Standalone,
                 options = BuildOptions.None,

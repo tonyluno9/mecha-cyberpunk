@@ -19,6 +19,8 @@ namespace MechaCyberpunk.UI.Inicio
     /// Las opciones de la pantalla de inicio, en tres pestañas (GRÁFICOS, AUDIO y CONTROLES) sobre un panel de cristal. Cada fila lee del
     /// <see cref="ServicioOpciones"/> al abrirse y le escribe al instante lo que el jugador cambia (el servicio lo aplica y lo guarda).
     /// Teclado, control y ratón: ↑ ↓ eligen, ← → cambian, Q y E (o LB y RB) cambian de pestaña, Esc o B regresan.
+    /// V8–V10 (VR): con <see cref="ModoVR.Activo"/>, CONTROLES muestra GIRO, VIÑETA y CORRER (se guardan en <see cref="OpcionesVR"/>) en lugar
+    /// de la sensibilidad del ratón y la lista de teclas, que en VR no aplican. Sin VR esas tres filas no se ven.
     /// </summary>
     public class PanelOpcionesInicio : MonoBehaviour
     {
@@ -37,6 +39,13 @@ namespace MechaCyberpunk.UI.Inicio
         /// <summary>T68: en el orden de <see cref="MomentoDelDia"/>.</summary>
         public static readonly string[] TextosMomentoDia = { "NOCHE", "DÍA" };
         public const string TextoMomentoDia = "MOMENTO DEL DÍA";
+        public const string TextoGiroVR = "GIRO";
+        public const string TextoVinetaVR = "VIÑETA";
+        public const string TextoCorrerVR = "CORRER";
+        /// <summary>En el orden de <see cref="ModoGiroVR"/>.</summary>
+        public static readonly string[] TextosGiroVR = { "POR PASOS 45°", "SUAVE" };
+        /// <summary>En el orden de <see cref="ModoCorrerVR"/>.</summary>
+        public static readonly string[] TextosCorrerVR = { "MANTENER", "ALTERNAR" };
 
         private const float AnchoPanel = 1000f;
         private const float AltoPanel = 860f;
@@ -59,13 +68,18 @@ namespace MechaCyberpunk.UI.Inicio
         [SerializeField] private FilaOpcion invertirY;
         [SerializeField] private FilaOpcion apuntado;
         [SerializeField] private FilaOpcion tutorial;
+        [SerializeField] private FilaOpcion giroVR;
+        [SerializeField] private FilaOpcion vinetaVR;
+        [SerializeField] private FilaOpcion correrVR;
         [SerializeField] private BotonInicio volver;
 
         [SerializeField] private Text controles;
+        [SerializeField] private Image rayaControles;
 
         private ServicioOpciones servicio;
         private PestanaOpciones actual;
         private bool refrescando;
+        private bool filasVR;
 
         public PestanaOpciones Pestana => actual;
         public BotonInicio Volver => volver;
@@ -82,6 +96,14 @@ namespace MechaCyberpunk.UI.Inicio
         public FilaOpcion InvertirY => invertirY;
         public FilaOpcion Apuntado => apuntado;
         public FilaOpcion Tutorial => tutorial;
+        /// <summary>V10: GIRO (POR PASOS 45° / SUAVE). Solo se ve en VR.</summary>
+        public FilaOpcion GiroVR => giroVR;
+        /// <summary>V10: VIÑETA (SÍ / NO). Solo se ve en VR.</summary>
+        public FilaOpcion VinetaVR => vinetaVR;
+        /// <summary>V9: CORRER (MANTENER / ALTERNAR). Solo se ve en VR.</summary>
+        public FilaOpcion CorrerVR => correrVR;
+        /// <summary>True si las filas de VR están a la vista (lo que tenía <see cref="ModoVR.Activo"/> al refrescar).</summary>
+        public bool FilasVRVisibles => filasVR;
 
         /// <summary>El primer elemento a elegir al abrir (la pestaña activa).</summary>
         public BotonInicio PrimerElegido => pestanas.Length > (int)actual ? pestanas[(int)actual] : volver;
@@ -163,11 +185,17 @@ namespace MechaCyberpunk.UI.Inicio
             panel.invertirY = Fila(panel.contenidos[2], ref y, f => FilaOpcion.CrearConmutador(f, "InvertirY", "INVERTIR EJE Y", false));
             panel.apuntado = Fila(panel.contenidos[2], ref y, f => FilaOpcion.CrearSelector(f, "Apuntado", "APUNTADO ASISTIDO", TextosApuntado, (int)NivelApuntadoAsistido.Suave, true));
             panel.tutorial = Fila(panel.contenidos[2], ref y, f => FilaOpcion.CrearConmutador(f, "Tutorial", "AVISOS DE TUTORIAL", true));
+            // V8–V10: las de VR se acomodan en AplicarFilasVR (ocupan el lugar de la sensibilidad y de la lista de teclas).
+            float yVR = y;
+            panel.giroVR = Fila(panel.contenidos[2], ref yVR, f => FilaOpcion.CrearSelector(f, "GiroVR", TextoGiroVR, TextosGiroVR, (int)OpcionesVR.GiroPorDefecto, true));
+            panel.vinetaVR = Fila(panel.contenidos[2], ref yVR, f => FilaOpcion.CrearConmutador(f, "VinetaVR", TextoVinetaVR, OpcionesVR.VinetaPorDefecto));
+            panel.correrVR = Fila(panel.contenidos[2], ref yVR, f => FilaOpcion.CrearSelector(f, "CorrerVR", TextoCorrerVR, TextosCorrerVR, (int)OpcionesVR.CorrerPorDefecto, true));
             Text controles = UIInicio.Texto(panel.contenidos[2], "Controles", TextoControles, UIInicio.FuenteTexto, 27, UIInicio.TextoSuave, TextAnchor.UpperLeft);
             panel.controles = controles;
             UIInicio.Punto(controles.rectTransform, new Vector2(0f, 1f), new Vector2(34f, y - 22f), new Vector2(AnchoFila - 40f, 130f));
             controles.lineSpacing = 1.35f;
             Image rayaControles = UIInicio.Imagen(panel.contenidos[2], "RayaControles", UIInicio.ConAlfa(UIInicio.Naranja, 0.6f), SpritesInicio.DegradadoH, true);
+            panel.rayaControles = rayaControles;
             UIInicio.Punto(rayaControles.rectTransform, new Vector2(0f, 1f), new Vector2(34f, y - 10f), new Vector2(AnchoFila - 120f, 2f));
 
             panel.volver = BotonInicio.Crear(raiz, "Volver", TextoVolver, new Vector2(340f, 70f), 52, TextAnchor.MiddleLeft, UIInicio.Naranja);
@@ -176,7 +204,7 @@ namespace MechaCyberpunk.UI.Inicio
             Text ayuda = UIInicio.Texto(raiz, "Ayuda", TextoAyuda, UIInicio.FuenteTexto, 24, UIInicio.TextoApagado, TextAnchor.MiddleRight);
             UIInicio.Punto(ayuda.rectTransform, new Vector2(1f, 0f), new Vector2(-54f, 40f), new Vector2(660f, 36f));
             panel.Conectar();
-            panel.ConectarNavegacion();
+            panel.AplicarFilasVR();
             panel.Mostrar(PestanaOpciones.Graficos);
             return panel;
         }
@@ -216,6 +244,70 @@ namespace MechaCyberpunk.UI.Inicio
             invertirY.Cambio += f => { if (!refrescando) Servicio?.FijarInvertirY(f.Activo); };
             apuntado.Cambio += f => { if (!refrescando) Servicio?.FijarApuntadoAsistido((NivelApuntadoAsistido)f.Indice); };
             tutorial.Cambio += f => { if (!refrescando) Servicio?.FijarTutorial(f.Activo); };
+            // V8–V10: las de VR no pasan por el servicio: se guardan en OpcionesVR (Core) y el AdaptadorVR las lee.
+            if (giroVR != null)
+            {
+                giroVR.Cambio += f => { if (!refrescando) OpcionesVR.FijarGiro((ModoGiroVR)f.Indice); };
+            }
+            if (vinetaVR != null)
+            {
+                vinetaVR.Cambio += f => { if (!refrescando) OpcionesVR.FijarVineta(f.Activo); };
+            }
+            if (correrVR != null)
+            {
+                correrVR.Cambio += f => { if (!refrescando) OpcionesVR.FijarCorrer((ModoCorrerVR)f.Indice); };
+            }
+        }
+
+        // Las filas de CONTROLES en orden; en VR van sin la sensibilidad del ratón y con GIRO, VIÑETA y CORRER.
+        private FilaOpcion[] FilasControles()
+        {
+            if (filasVR && giroVR != null && vinetaVR != null && correrVR != null)
+            {
+                return new[] { invertirY, apuntado, tutorial, giroVR, vinetaVR, correrVR };
+            }
+            return new[] { sensibilidad, invertirY, apuntado, tutorial };
+        }
+
+        /// <summary>Muestra u oculta las filas de VR según <see cref="ModoVR.Activo"/>, acomoda CONTROLES y vuelve a atar la navegación.</summary>
+        public void AplicarFilasVR()
+        {
+            filasVR = ModoVR.Activo && giroVR != null && vinetaVR != null && correrVR != null;
+            if (giroVR != null)
+            {
+                giroVR.gameObject.SetActive(filasVR);
+            }
+            if (vinetaVR != null)
+            {
+                vinetaVR.gameObject.SetActive(filasVR);
+            }
+            if (correrVR != null)
+            {
+                correrVR.gameObject.SetActive(filasVR);
+            }
+            if (sensibilidad != null)
+            {
+                sensibilidad.gameObject.SetActive(!filasVR);
+            }
+            if (controles != null)
+            {
+                controles.gameObject.SetActive(!filasVR);
+            }
+            if (rayaControles != null)
+            {
+                rayaControles.gameObject.SetActive(!filasVR);
+            }
+            float y = 0f;
+            foreach (FilaOpcion fila in FilasControles())
+            {
+                if (fila != null)
+                {
+                    UIInicio.Punto(fila.GetComponent<RectTransform>(), new Vector2(0.5f, 1f), new Vector2(0f, y - AltoFila * 0.5f), new Vector2(AnchoFila, AltoFila));
+                }
+                y -= AltoFila + SeparacionFilas;
+            }
+            ConectarNavegacion();
+            Mostrar(actual);
         }
 
         private void OnEnable()
@@ -257,7 +349,7 @@ namespace MechaCyberpunk.UI.Inicio
             {
                 new[] { calidad, resolucion, pantallaCompleta, momentoDia },
                 volumenes,
-                new[] { sensibilidad, invertirY, apuntado, tutorial },
+                FilasControles(),
             };
         }
 
@@ -303,6 +395,18 @@ namespace MechaCyberpunk.UI.Inicio
         /// <summary>Pone cada fila con lo que tiene el servicio, sin avisar al servicio.</summary>
         public void Refrescar()
         {
+            if (calidad != null && ModoVR.Activo != filasVR)
+            {
+                AplicarFilasVR();
+            }
+            if (calidad != null && giroVR != null && vinetaVR != null && correrVR != null)
+            {
+                refrescando = true;
+                giroVR.FijarIndice((int)OpcionesVR.Giro);
+                vinetaVR.FijarActivo(OpcionesVR.Vineta);
+                correrVR.FijarIndice((int)OpcionesVR.Correr);
+                refrescando = false;
+            }
             ServicioOpciones s = Servicio;
             if (s == null || calidad == null)
             {

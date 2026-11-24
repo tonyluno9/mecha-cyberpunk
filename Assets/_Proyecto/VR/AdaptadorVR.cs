@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Personaje.Jugador;
 using MechaCyberpunk.Personaje.Movimiento;
@@ -9,6 +10,10 @@ using Unity.XR.CoreUtils;
 using UnityEngine.XR.Interaction.Toolkit.Locomotion.Comfort;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
+using UnityEngine.InputSystem.Layouts;
+using UnityEngine.InputSystem.LowLevel;
+using UnityEngine.InputSystem.Utilities;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using TrackedPoseDriver = UnityEngine.InputSystem.XR.TrackedPoseDriver;
@@ -22,6 +27,8 @@ namespace MechaCyberpunk.VR
     /// Caminar: stick izquierdo (lo mueve el mismo ControladorAPie, con sus velocidades 1.62 / 4.53, clic del stick = correr) hacia
     /// donde mira la cabeza. Giro por pasos de 45° con el stick derecho. Viñeta al moverse y al girar. Caminar en el cuarto empuja
     /// la cápsula (con colisión) para que la cabeza no atraviese paredes.
+    /// V8–V10: <see cref="Recentrar"/> (altura y frente), y las opciones de <see cref="OpcionesVR"/>: giro por pasos o suave,
+    /// viñeta sí o no, y correr manteniendo o alternando el clic del stick (alternar se apaga solo al soltar el stick de mover).
     /// </summary>
     [DefaultExecutionOrder(-150)]
     public class AdaptadorVR : MonoBehaviour, ITunnelingVignetteProvider
@@ -32,6 +39,17 @@ namespace MechaCyberpunk.VR
         private const float RearmeGiro = 0.35f;
         private const float VelocidadVineta = 0.4f;
         private const string GrupoVR = "VR";
+        /// <summary>V10: giro suave con el stick derecho a fondo (°/s).</summary>
+        public const float VelocidadGiroSuave = 90f;
+        private const float ZonaMuertaGiroSuave = 0.15f;
+        private const float SegundosVinetaGiroSuave = 0.1f;
+        /// <summary>V9: con CORRER ALTERNAR, el stick de mover por debajo de esto (0..1) durante <see cref="SegundosApagarCorrer"/> apaga correr.</summary>
+        public const float ZonaReposoCorrer = 0.2f;
+        public const float SegundosApagarCorrer = 0.3f;
+        private const string AccionCorrer = "Correr";
+        private const string LayoutCorrerVirtual = "CorrerVirtualVR";
+        private static readonly string RutaClicCorrer = EntradaVR.Izq + "/{Primary2DAxisClick}";
+        private static readonly string RutaCorrerVirtual = "<" + LayoutCorrerVirtual + ">/correr";
 
         /// <summary>El adaptador del jugador actual (null sin VR).</summary>
         public static AdaptadorVR Actual { get; private set; }
@@ -52,6 +70,15 @@ namespace MechaCyberpunk.VR
 
         /// <summary>Giro del rig en el mundo (°): solo cambia con el stick derecho.</summary>
         public float GiroRig => giroRig;
+
+        /// <summary>True mientras la viñeta de movimiento o de giro está pedida (con VIÑETA: NO nunca).</summary>
+        public bool VinetaPuesta => vinetaPuesta;
+
+        /// <summary>V9: true mientras CORRER ALTERNAR tiene correr encendido.</summary>
+        public bool CorrerAlternado => correrAlternado;
+
+        /// <summary>V9: el modo de correr que está aplicado a los bindings ahora.</summary>
+        public ModoCorrerVR ModoCorrer => modoCorrer;
 
         /// <summary>Hacia dónde mira la cabeza, en el plano (normalizado).</summary>
         public Vector3 FrenteCabeza
@@ -84,6 +111,12 @@ namespace MechaCyberpunk.VR
         private CinemachineBrain brain;
         private Transform padreCamaraOriginal;
         private Pose poseCamaraOriginal;
+        private InputAction accionCorrer;
+        private DispositivoCorrerVR dispositivoCorrer;
+        private ModoCorrerVR modoCorrer = ModoCorrerVR.Mantener;
+        private bool correrAlternado;
+        private float segundosStickQuieto;
+        private bool clicCorrerPrevio;
         private static readonly List<(InputAction accion, string ruta)> bindingsAgregados = new List<(InputAction, string)>();
 
         public VignetteParameters vignetteParameters => parametros;
@@ -187,6 +220,7 @@ namespace MechaCyberpunk.VR
             rigObjeto.SetActive(true);
 
             AgregarBindingsBase();
+            PrepararCorrer();
             if (vida != null)
             {
                 vida.KO += AlKO;
@@ -237,11 +271,17 @@ namespace MechaCyberpunk.VR
                 Debug.LogWarning("[VR] No encontré la acción " + nombreAccion + " del mapa APie.");
                 return false;
             }
+            AgregarBinding(accion, ruta);
+            return true;
+        }
+
+        private static void AgregarBinding(InputAction accion, string ruta)
+        {
             foreach (InputBinding b in accion.bindings)
             {
                 if (b.path == ruta)
                 {
-                    return true;
+                    return;
                 }
             }
             InputActionMap mapa = accion.actionMap;
@@ -271,7 +311,6 @@ namespace MechaCyberpunk.VR
             {
                 accion.Enable();
             }
-            return true;
         }
 
         /// <summary>La acción <paramref name="nombre"/> del mapa APie (la instancia que usa el juego), o null.</summary>
@@ -297,43 +336,55 @@ namespace MechaCyberpunk.VR
         {
             foreach (var (accion, ruta) in bindingsAgregados)
             {
-                if (accion == null)
-                {
-                    continue;
-                }
-                InputActionMap mapa = accion.actionMap;
-                var encendidas = new List<InputAction>();
-                if (mapa != null)
-                {
-                    foreach (InputAction a in mapa.actions)
-                    {
-                        if (a.enabled)
-                        {
-                            encendidas.Add(a);
-                        }
-                    }
-                    mapa.Disable();
-                }
-                for (int i = accion.bindings.Count - 1; i >= 0; i--)
-                {
-                    if (accion.bindings[i].path == ruta && accion.bindings[i].groups == GrupoVR)
-                    {
-                        accion.ChangeBinding(i).Erase();
-                    }
-                }
-                foreach (InputAction a in encendidas)
-                {
-                    a.Enable();
-                }
+                BorrarBinding(accion, ruta);
             }
             bindingsAgregados.Clear();
+        }
+
+        // Quita un binding agregado por el adaptador (grupo VR) y lo saca de la lista.
+        private static void QuitarBinding(InputAction accion, string ruta)
+        {
+            BorrarBinding(accion, ruta);
+            bindingsAgregados.RemoveAll(par => par.accion == accion && par.ruta == ruta);
+        }
+
+        private static void BorrarBinding(InputAction accion, string ruta)
+        {
+            if (accion == null)
+            {
+                return;
+            }
+            InputActionMap mapa = accion.actionMap;
+            var encendidas = new List<InputAction>();
+            if (mapa != null)
+            {
+                foreach (InputAction a in mapa.actions)
+                {
+                    if (a.enabled)
+                    {
+                        encendidas.Add(a);
+                    }
+                }
+                mapa.Disable();
+            }
+            for (int i = accion.bindings.Count - 1; i >= 0; i--)
+            {
+                if (accion.bindings[i].path == ruta && accion.bindings[i].groups == GrupoVR)
+                {
+                    accion.ChangeBinding(i).Erase();
+                }
+            }
+            foreach (InputAction a in encendidas)
+            {
+                a.Enable();
+            }
         }
 
         // Caminar, correr, saltar, interactuar y recargar con los controles (lo demás lo ponen VR2–VR4).
         private static void AgregarBindingsBase()
         {
             AgregarBinding("Mover", EntradaVR.Izq + "/{Primary2DAxis}");
-            AgregarBinding("Correr", EntradaVR.Izq + "/{Primary2DAxisClick}");
+            AgregarBinding(AccionCorrer, RutaClicCorrer);
             AgregarBinding("Saltar", EntradaVR.Izq + "/{PrimaryButton}");
             AgregarBinding("Interactuar", EntradaVR.Der + "/{SecondaryButton}");
             AgregarBinding("Recargar", EntradaVR.Der + "/{PrimaryButton}");
@@ -352,8 +403,30 @@ namespace MechaCyberpunk.VR
                 float yaw = Mathf.Atan2(f.x, f.z) * Mathf.Rad2Deg;
                 Controlador.Empujar(Mathf.DeltaAngle(Controlador.GiroCamara, yaw), 0f);
             }
+            float dt = Time.deltaTime;
+            ActualizarGiro(dt);
+            ActualizarCorrer(dt);
+        }
+
+        // V10: por pasos de 45° (hay que soltar el stick para el siguiente) o suave, proporcional al stick, con viñeta mientras gira.
+        private void ActualizarGiro(float dt)
+        {
             float x = EntradaVR.Eje(EntradaVR.StickDerecho).x;
-            if (giroArmado && Mathf.Abs(x) > UmbralGiro && (Controlador == null || Controlador.ControlActivo))
+            bool puedeGirar = Controlador == null || Controlador.ControlActivo;
+            if (OpcionesVR.Giro == ModoGiroVR.Suave)
+            {
+                float fuerza = Mathf.Abs(x);
+                if (puedeGirar && fuerza > ZonaMuertaGiroSuave)
+                {
+                    float proporcion = Mathf.Clamp01((fuerza - ZonaMuertaGiroSuave) / (1f - ZonaMuertaGiroSuave));
+                    giroRig = Mathf.Repeat(giroRig + Mathf.Sign(x) * proporcion * VelocidadGiroSuave * dt, 360f);
+                    segundosVinetaGiro = Mathf.Max(segundosVinetaGiro, SegundosVinetaGiroSuave);
+                }
+                // Si se cambia a pasos con el stick ladeado, no salta un paso hasta soltarlo.
+                giroArmado = fuerza < RearmeGiro;
+                return;
+            }
+            if (giroArmado && Mathf.Abs(x) > UmbralGiro && puedeGirar)
             {
                 giroArmado = false;
                 giroRig = Mathf.Repeat(giroRig + Mathf.Sign(x) * GradosGiro, 360f);
@@ -363,6 +436,109 @@ namespace MechaCyberpunk.VR
             {
                 giroArmado = true;
             }
+        }
+
+        // V9: la acción Correr del mapa APie siempre tiene, además, el botón de un dispositivo virtual. Con MANTENER, Correr también va
+        // al clic del stick izquierdo (como antes). Con ALTERNAR ese binding se quita y el adaptador prende y apaga el botón virtual.
+        private void PrepararCorrer()
+        {
+            accionCorrer = BuscarAccionAPie(AccionCorrer);
+            if (accionCorrer == null)
+            {
+                Debug.LogWarning("[VR] Sin la acción Correr: CORRER ALTERNAR no se puede usar.", this);
+                return;
+            }
+            try
+            {
+                InputSystem.RegisterLayout<DispositivoCorrerVR>(LayoutCorrerVirtual);
+                dispositivoCorrer = InputSystem.AddDevice<DispositivoCorrerVR>(LayoutCorrerVirtual);
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning("[VR] No se pudo crear el botón virtual de correr: " + e.Message, this);
+                dispositivoCorrer = null;
+                return;
+            }
+            AgregarBinding(accionCorrer, RutaCorrerVirtual);
+            AplicarModoCorrer(OpcionesVR.Correr);
+        }
+
+        private void AplicarModoCorrer(ModoCorrerVR modo)
+        {
+            modoCorrer = modo;
+            correrAlternado = false;
+            segundosStickQuieto = 0f;
+            if (accionCorrer == null)
+            {
+                return;
+            }
+            if (modo == ModoCorrerVR.Alternar)
+            {
+                QuitarBinding(accionCorrer, RutaClicCorrer);
+            }
+            else
+            {
+                AgregarBinding(accionCorrer, RutaClicCorrer);
+            }
+            FijarBotonCorrer(false);
+        }
+
+        private void ActualizarCorrer(float dt)
+        {
+            if (dispositivoCorrer == null || accionCorrer == null)
+            {
+                return;
+            }
+            ModoCorrerVR modo = OpcionesVR.Correr;
+            if (modo != modoCorrer)
+            {
+                AplicarModoCorrer(modo);
+            }
+            if (modo != ModoCorrerVR.Alternar)
+            {
+                return;
+            }
+            bool puedeMover = Controlador == null || Controlador.ControlActivo;
+            // El flanco se mide aquí (no con WasPressedThisFrame) para no perder un clic corto entre vueltas del Input System.
+            bool clic = EntradaVR.Sostenido(EntradaVR.ClicStickIzquierdo);
+            bool clicNuevo = clic && !clicCorrerPrevio;
+            clicCorrerPrevio = clic;
+            if (!puedeMover)
+            {
+                correrAlternado = false;
+            }
+            else if (clicNuevo)
+            {
+                correrAlternado = !correrAlternado;
+                segundosStickQuieto = 0f;
+            }
+            if (correrAlternado)
+            {
+                // Se apaga solo al soltar el stick de mover (un instante, para no cortarse al pasar por el centro).
+                if (EntradaVR.Eje(EntradaVR.StickIzquierdo).magnitude < ZonaReposoCorrer)
+                {
+                    segundosStickQuieto += dt;
+                    if (segundosStickQuieto >= SegundosApagarCorrer)
+                    {
+                        correrAlternado = false;
+                    }
+                }
+                else
+                {
+                    segundosStickQuieto = 0f;
+                }
+            }
+            FijarBotonCorrer(correrAlternado);
+        }
+
+        // Manda el estado al botón virtual (se aplica en la siguiente vuelta del Input System, un cuadro después).
+        private void FijarBotonCorrer(bool pulsado)
+        {
+            if (dispositivoCorrer == null || !dispositivoCorrer.added || dispositivoCorrer.Correr == null || dispositivoCorrer.Correr.isPressed == pulsado)
+            {
+                return;
+            }
+            InputSystem.QueueStateEvent(dispositivoCorrer, new EstadoCorrerVR { correr = pulsado ? 1f : 0f });
         }
 
         private void LateUpdate()
@@ -389,11 +565,7 @@ namespace MechaCyberpunk.VR
             }
             cabezaPrevia = cabeza;
             hayCabezaPrevia = true;
-
-            // El rig se queda con su giro (no gira con el cuerpo) y pone la cabeza justo sobre la cápsula.
-            Quaternion giro = Quaternion.Euler(0f, giroRig, 0f);
-            Vector3 horizontal = new Vector3(cabeza.x, 0f, cabeza.z);
-            Rig.SetPositionAndRotation(transform.position - giro * horizontal, giro);
+            ColocarRig(cabeza);
 
             ActualizarVineta(dt);
             segundosOcultar -= dt;
@@ -402,6 +574,41 @@ namespace MechaCyberpunk.VR
                 segundosOcultar = 0.5f;
                 OcultarCuerpo();
             }
+        }
+
+        // El rig se queda con su giro (no gira con el cuerpo) y pone la cabeza justo sobre la cápsula.
+        private void ColocarRig(Vector3 cabeza)
+        {
+            Quaternion giro = Quaternion.Euler(0f, giroRig, 0f);
+            Vector3 horizontal = new Vector3(cabeza.x, 0f, cabeza.z);
+            Rig.SetPositionAndRotation(transform.position - giro * horizontal, giro);
+        }
+
+        /// <summary>
+        /// V8: recentrar. Pone los ojos a 1.72 m (como <see cref="Recalibrar"/>) y gira el rig para que la cabeza, tal como está en el
+        /// cuarto, quede mirando al frente del cuerpo del jugador (el giro del ControladorAPie). Lo llama el gesto del stick derecho.
+        /// </summary>
+        public void Recentrar()
+        {
+            if (!Armado || Camara == null || Ajuste == null)
+            {
+                return;
+            }
+            Recalibrar();
+            // El yaw de la cabeza dentro del cuarto (el offset y el ajuste no giran).
+            Vector3 f = Camara.transform.localRotation * Vector3.forward;
+            f.y = 0f;
+            float yawCabeza = f.sqrMagnitude > 1e-4f ? Mathf.Atan2(f.x, f.z) * Mathf.Rad2Deg : 0f;
+            float frente = transform.eulerAngles.y;
+            giroRig = Mathf.Repeat(frente - yawCabeza, 360f);
+            // Un giro por pasos pendiente no se suma justo después.
+            giroArmado = false;
+            ColocarRig(Ajuste.parent.localPosition + Ajuste.localPosition + Camara.transform.localPosition);
+            if (Controlador != null)
+            {
+                Controlador.Empujar(Mathf.DeltaAngle(Controlador.GiroCamara, frente), 0f);
+            }
+            Debug.Log("[VR] Recentrado: frente " + frente.ToString("0") + "°, cabeza en el cuarto " + yawCabeza.ToString("0") + "°.");
         }
 
         // La altura de los ojos queda en la de PJ01 sea cual sea la estatura de quien juega.
@@ -434,22 +641,26 @@ namespace MechaCyberpunk.VR
             segundosVinetaGiro = Mathf.Max(0f, segundosVinetaGiro - dt);
             Vector3 v = capsula != null ? capsula.velocity : Vector3.zero;
             v.y = 0f;
-            bool moviendo = v.magnitude > VelocidadVineta || segundosVinetaGiro > 0f;
-            if (vineta != null && moviendo != vinetaPuesta)
+            // V10: con VIÑETA: NO no se cierra la vista al moverse ni al girar (el fundido del KO sí sale).
+            bool moviendo = OpcionesVR.Vineta && (v.magnitude > VelocidadVineta || segundosVinetaGiro > 0f);
+            if (moviendo != vinetaPuesta)
             {
                 vinetaPuesta = moviendo;
-                if (moviendo)
+                if (vineta != null)
                 {
-                    vineta.BeginTunnelingVignette(this);
-                }
-                else
-                {
-                    vineta.EndTunnelingVignette(this);
+                    if (moviendo)
+                    {
+                        vineta.BeginTunnelingVignette(this);
+                    }
+                    else
+                    {
+                        vineta.EndTunnelingVignette(this);
+                    }
                 }
             }
             if (segundosFundido > 0f)
             {
-                segundosFundido -= dt;
+                segundosFundido -= Time.unscaledDeltaTime; // también en pausa (timeScale 0)
                 if (segundosFundido <= 0f && vineta != null)
                 {
                     vineta.EndTunnelingVignette(fundido);
@@ -517,6 +728,14 @@ namespace MechaCyberpunk.VR
                 Actual = null;
                 QuitarBindings();
             }
+            if (dispositivoCorrer != null)
+            {
+                if (dispositivoCorrer.added && InputSystem.GetDeviceById(dispositivoCorrer.deviceId) == dispositivoCorrer)
+                {
+                    InputSystem.RemoveDevice(dispositivoCorrer);
+                }
+                dispositivoCorrer = null;
+            }
             foreach (var par in sombrasOriginales)
             {
                 if (par.Key != null)
@@ -565,6 +784,35 @@ namespace MechaCyberpunk.VR
             };
 
             public VignetteParameters vignetteParameters => p;
+        }
+
+        // V9: estado del botón virtual de correr (CORRER ALTERNAR).
+        [StructLayout(LayoutKind.Explicit, Size = 4)]
+        private struct EstadoCorrerVR : IInputStateTypeInfo
+        {
+            [InputControl(name = "correr", layout = "Button", format = "FLT")]
+            [FieldOffset(0)] public float correr;
+
+            public FourCC format => new FourCC('C', 'R', 'V', 'R');
+        }
+
+        // V9: dispositivo virtual con un solo botón; la acción Correr lo escucha y el adaptador lo prende con CORRER ALTERNAR.
+        [UnityEngine.Scripting.Preserve]
+        [InputControlLayout(stateType = typeof(EstadoCorrerVR), displayName = "Correr VR")]
+        private sealed class DispositivoCorrerVR : InputDevice
+        {
+            public ButtonControl Correr { get; private set; }
+
+            [UnityEngine.Scripting.Preserve]
+            public DispositivoCorrerVR()
+            {
+            }
+
+            protected override void FinishSetup()
+            {
+                base.FinishSetup();
+                Correr = GetChildControl<ButtonControl>("correr");
+            }
         }
     }
 }

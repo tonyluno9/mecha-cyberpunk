@@ -230,6 +230,17 @@ namespace MechaCyberpunk.VR
         private static void GuardarCamaras()
         {
             Camera vr = CamaraVR;
+            if (vr == null)
+            {
+                // La cámara del visor se perdió (el rig de menús se quitó después de que el jugador se armara, o cambió la escena):
+                // si hay jugador con rig, manda la suya, para que el visor nunca se quede sin cámara (en negro).
+                AdaptadorVR a = AdaptadorVR.Actual;
+                if (a != null && a.Armado && a.Camara != null)
+                {
+                    vr = a.Camara;
+                    CamaraVR = vr;
+                }
+            }
             foreach (Camera c in Camera.allCameras)
             {
                 if (c == vr || c.targetTexture != null)

@@ -87,7 +87,8 @@ namespace MechaCyberpunk.Tests.VR
             int cuerpo = 0;
             foreach (Renderer r in jugador.GetComponentsInChildren<Renderer>(true))
             {
-                if (r.transform.IsChildOf(adaptador.Rig) || r is ParticleSystemRenderer || r is TrailRenderer || r is LineRenderer)
+                // V5: lo marcado con IgnorarOcultarVR (la bola de carga del plasma, que en VR sale en el cañón del arma de la mano) sí se ve.
+                if (r.transform.IsChildOf(adaptador.Rig) || r.GetComponentInParent<MechaCyberpunk.VR.IgnorarOcultarVR>(true) != null || r is ParticleSystemRenderer || r is TrailRenderer || r is LineRenderer)
                 {
                     continue;
                 }

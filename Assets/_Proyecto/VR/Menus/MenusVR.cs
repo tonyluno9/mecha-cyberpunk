@@ -8,6 +8,7 @@ using MechaCyberpunk.UI.Hud;
 using MechaCyberpunk.UI.Kit;
 using MechaCyberpunk.UI.MenuPausa;
 using MechaCyberpunk.UI.Rueda;
+using MechaCyberpunk.UI.Titulo;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -101,6 +102,8 @@ namespace MechaCyberpunk.VR.Menus
         private int escPendiente;
         private Canvas lienzoRueda;
         private Object ruedaDelLienzo;
+        private bool cargaPrevia;
+        private bool duplicado;
 
         // Lo de antes, para ver qué se abrió.
         private int cantidadPrevia;
@@ -118,6 +121,16 @@ namespace MechaCyberpunk.VR.Menus
         public Pose Ancla => ancla;
         public HudMunecaVR Hud => hud;
         public bool RigMenusArmado => rig.Existe;
+        /// <summary>La raíz del rig de menús (null si no hay).</summary>
+        public GameObject RaizRigMenus => rig.Raiz;
+        /// <summary>La cámara del rig de menús (null si no hay).</summary>
+        public Camera CamaraRigMenus => rig.Camara;
+        /// <summary>De dónde sale la cabeza este cuadro: la cámara del jugador, la del rig de menús o la de la escena.</summary>
+        public Transform Cabeza => cabeza;
+        /// <summary>El control del que sale el láser (null si no hay).</summary>
+        public Transform ManoLaser => mano;
+        /// <summary>True si el láser se dibujó el último cuadro.</summary>
+        public bool LaserDibujado => linea != null && linea.enabled;
 
         /// <summary>El tipo con el que se convirtió este Canvas, o null si no es uno de los convertidos.</summary>
         public TipoLienzoVR? TipoDe(Canvas canvas)
@@ -169,7 +182,22 @@ namespace MechaCyberpunk.VR.Menus
 
         private static void AlAdaptadorListo(AdaptadorVR a)
         {
-            Asegurar();
+            MenusVR menus = Asegurar();
+            if (menus != null)
+            {
+                menus.AlArmarseJugador();
+            }
+        }
+
+        // El rig del jugador ya está: el de menús se quita en el acto (no al siguiente Update), para que nunca haya dos XR Origin
+        // ni dos cámaras de cabeza a la vez.
+        private void AlArmarseJugador()
+        {
+            sinJugador = 0f;
+            if (rig.Existe)
+            {
+                QuitarRig();
+            }
         }
 
         /// <summary>Crea el componente si VR está activo y no hay uno.</summary>
@@ -188,6 +216,8 @@ namespace MechaCyberpunk.VR.Menus
         {
             if (Actual != null && Actual != this)
             {
+                // Uno de más: se va sin tocar nada del bueno (los bindings agregados son estáticos y compartidos).
+                duplicado = true;
                 Destroy(gameObject);
                 return;
             }
@@ -234,6 +264,10 @@ namespace MechaCyberpunk.VR.Menus
 
         private void OnDestroy()
         {
+            if (duplicado)
+            {
+                return;
+            }
             RestaurarTodo();
             if (Actual == this)
             {
@@ -246,6 +280,11 @@ namespace MechaCyberpunk.VR.Menus
                 RenderTexture rt = camaraLaser.targetTexture;
                 camaraLaser.targetTexture = null;
                 Destroy(rt);
+            }
+            if (linea != null && !linea.transform.IsChildOf(transform))
+            {
+                // El láser colgaba del control del jugador, que sigue vivo: se va con los menús.
+                Destroy(linea.gameObject);
             }
             if (materialLinea != null)
             {
@@ -264,7 +303,7 @@ namespace MechaCyberpunk.VR.Menus
             vistos.Clear();
             hud.Destruir();
             aviso.Destruir();
-            rig.Destruir();
+            QuitarRig(false);
             CambiarJugador(null);
             QuitarBindingsPropios();
             anclaPuesta = false;
@@ -289,6 +328,15 @@ namespace MechaCyberpunk.VR.Menus
             }
             float dt = Time.unscaledDeltaTime;
             ElegirFuente(dt);
+            bool carga = PantallaCargando.Visible;
+            if (carga && !cargaPrevia)
+            {
+                // La pantalla de carga es un Overlay, que en el visor no se ve: se pasa a panel ya (sin esperar al barrido)
+                // y frente a donde mira la cabeza ahora.
+                barrido = 0f;
+                ColocarAncla();
+            }
+            cargaPrevia = carga;
             barrido -= dt;
             if (barrido <= 0f)
             {
@@ -342,13 +390,25 @@ namespace MechaCyberpunk.VR.Menus
         // La cabeza y el control derecho: los del jugador a pie si hay, si no los del rig de menús.
         private void ElegirFuente(float dt)
         {
+            Transform previa = cabeza;
+            ElegirCabezaYMano(dt);
+            if (cabeza != null && cabeza != previa)
+            {
+                // Cambió de dónde sale la cabeza (rig de menús ↔ rig del jugador): los paneles se vuelven a poner frente a la cabeza nueva,
+                // si no se quedarían donde estaba la vieja (al cargar la partida, la carga quedaría lejos o detrás).
+                anclaPuesta = false;
+            }
+        }
+
+        private void ElegirCabezaYMano(float dt)
+        {
             AdaptadorVR a = AdaptadorVR.Actual;
             if (a != null && a.Armado && a.Camara != null)
             {
                 sinJugador = 0f;
                 if (rig.Existe)
                 {
-                    rig.Destruir();
+                    QuitarRig();
                 }
                 cabeza = a.Camara.transform;
                 mano = a.ManoDerecha != null ? a.ManoDerecha.transform : null;
@@ -386,6 +446,31 @@ namespace MechaCyberpunk.VR.Menus
                 cabeza = principal != null ? principal.transform : null;
                 mano = null;
             }
+        }
+
+        // Quita el rig de menús. El láser cuelga de su control: se rescata antes, si no se destruiría con él y ya no se vería
+        // (al apagar los menús no: este objeto también se va y no se le pueden colgar hijos mientras se destruye).
+        private void QuitarRig(bool rescatarLaser = true)
+        {
+            if (!rig.Existe)
+            {
+                return;
+            }
+            Transform manoRig = rig.ManoDerecha;
+            if (rescatarLaser && linea != null && manoRig != null && linea.transform.IsChildOf(manoRig))
+            {
+                linea.enabled = false;
+                linea.transform.SetParent(transform, false);
+            }
+            if (mano == manoRig)
+            {
+                mano = null;
+            }
+            if (rig.Camara != null && cabeza == rig.Camara.transform)
+            {
+                cabeza = null;
+            }
+            rig.Destruir();
         }
 
         private void CambiarJugador(AdaptadorVR nuevo)
@@ -473,7 +558,9 @@ namespace MechaCyberpunk.VR.Menus
             bool rueda = RuedaArmasObjetos.Abierta || RuedaHabilidadesExo.Abierta;
             bool pausa = Pausa.Activa;
             int abiertos = MenuCyberfix.Abiertos;
-            bool abierto = cantidad > 0 || pausa || abiertos > 0 || rueda || VentanaAviso.Abierta;
+            // Sin jugador (Inicio y la carga hacia la partida) el panel es el menú: queda quieto y el láser siempre se ve.
+            bool sinJugadorConRig = rig.Existe;
+            bool abierto = cantidad > 0 || pausa || abiertos > 0 || rueda || VentanaAviso.Abierta || sinJugadorConRig;
             bool algoNuevo = cantidad > cantidadPrevia
                 || (arriba != null && arriba != arribaPrevia && cantidad >= cantidadPrevia)
                 || (rueda && !ruedaPrevia)
@@ -492,7 +579,7 @@ namespace MechaCyberpunk.VR.Menus
             abiertoPrevio = abierto;
             if (abierto != MenuAbierto)
             {
-                Debug.Log("[VR] Menú abierto: " + abierto + " (pila " + cantidad + ", pausa " + pausa + ", cyberfix " + abiertos + ", rueda " + rueda + ", aviso " + VentanaAviso.Abierta + ")");
+                Debug.Log("[VR] Menú abierto: " + abierto + " (pila " + cantidad + ", pausa " + pausa + ", cyberfix " + abiertos + ", rueda " + rueda + ", aviso " + VentanaAviso.Abierta + ", rig de menús " + sinJugadorConRig + ")");
             }
             MenuAbierto = abierto;
         }
@@ -588,8 +675,11 @@ namespace MechaCyberpunk.VR.Menus
             linea.widthMultiplier = GrosorLaser;
             linea.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             linea.receiveShadows = false;
-            Shader shader = Shader.Find("Sprites/Default");
-            materialLinea = shader != null ? new Material(shader) : new Material(Canvas.GetDefaultCanvasMaterial());
+            if (materialLinea == null)
+            {
+                Shader shader = Shader.Find("Sprites/Default");
+                materialLinea = shader != null ? new Material(shader) : new Material(Canvas.GetDefaultCanvasMaterial());
+            }
             linea.sharedMaterial = materialLinea;
             linea.startColor = ColorLaser;
             linea.endColor = ColorLaserFin;
@@ -627,7 +717,8 @@ namespace MechaCyberpunk.VR.Menus
         {
             if (linea == null)
             {
-                return;
+                // Se fue con el control que lo llevaba (el jugador se destruyó al cambiar de escena): se vuelve a crear.
+                CrearLinea();
             }
             if (!laserVisible || mano == null)
             {

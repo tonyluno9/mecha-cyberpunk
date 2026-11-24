@@ -20,9 +20,14 @@ namespace MechaCyberpunk.CampoTiro
         public const float ZInicioJugador = -10f;
         public const float MargenPared = 1f;
         public const float MargenBarrera = 0.9f;
-        /// <summary>Dónde está la terminal de configuración (locales a la sala), a un lado del jugador.</summary>
-        public const float XTerminal = 3.2f;
-        public const float ZTerminal = -9f;
+        /// <summary>
+        /// Dónde está la terminal de configuración (locales a la sala): a la derecha del punto de salida, casi a la par (V11: antes en 3.2, -9,
+        /// justo enfrente a la derecha, y tapaba el arma del HUD y la de la mano en VR). Se ve al voltear a la derecha.
+        /// </summary>
+        public const float XTerminal = 4.5f;
+        public const float ZTerminal = -9.5f;
+        /// <summary>Giro de la terminal (°): su cara mira hacia -X, al punto de salida del jugador.</summary>
+        public const float GiroTerminal = -90f;
         public const float MetrosLetrero = 2.5f;
 
         public static int LimitarCuantos(int cuantos) => Mathf.Clamp(cuantos, MinimoObjetivos, MaximoObjetivos);

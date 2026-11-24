@@ -60,6 +60,8 @@ namespace MechaCyberpunk.VR
         public ArmaAPie ArmaMostrada => armaMostrada;
         /// <summary>Tiros que salieron con el gatillo VR.</summary>
         public int DisparosHechos { get; private set; }
+        /// <summary>VR5: true para no poner el arma activa en la mano (la granada solo se ve mientras el grip la toma, <see cref="ArmasEspecialesVR"/>).</summary>
+        public bool OcultarArma { get; set; }
 
         private void Awake()
         {
@@ -164,7 +166,7 @@ namespace MechaCyberpunk.VR
                 bocaMano.localPosition = Vector3.forward * LargoBocaSinModelo;
             }
             ArmaAPie activa = armas.ArmaActiva;
-            ArmaEnMano nueva = PistolaAPie.EsDeFuego(activa) ? Obtener(activa) : null;
+            ArmaEnMano nueva = PistolaAPie.EsDeFuego(activa) && !OcultarArma ? Obtener(activa) : null;
             if (nueva != mostrada)
             {
                 if (mostrada != null)

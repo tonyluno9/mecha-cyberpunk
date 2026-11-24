@@ -31,7 +31,7 @@ namespace MechaCyberpunk.VR.Menus
         public const float DistanciaCompleta = 0.6f;
         public const float AnchoCompleta = 3.2f;
 
-        /// <summary>Desde este orden de dibujo un Canvas es fundido, negro o carga (PantallaFundido, Cargando, PantallaNegra, Cinematica).</summary>
+        /// <summary>Desde este orden de dibujo un Canvas es fundido, negro o cinemática (PantallaFundido, PantallaNegra, Cinematica). La carga no: ver <see cref="EsPanelDeCarga"/>.</summary>
         public const int OrdenPantallaCompleta = 30000;
 
         /// <summary>Si la cabeza se aleja tanto del panel (°), el panel la sigue.</summary>
@@ -54,15 +54,42 @@ namespace MechaCyberpunk.VR.Menus
             "CanvasMiraSniper", "CanvasIndicadorDanio", "CanvasVinietaVida", "CanvasMarcador", "BarrasVidaEnemigos",
         };
 
+        /// <summary>
+        /// Canvas de pantalla completa que en VR van como panel a <see cref="DistanciaFrente"/> m frente a la cabeza (y quietos en el mundo),
+        /// no pegados a ella: la pantalla de carga (PantallaCargando, "CanvasCargando"). Pegada a 0.6 m y más ancha que la vista marea y no se lee.
+        /// </summary>
+        private static readonly string[] PanelesDeCarga = { "CanvasCargando" };
+
         /// <summary>Tamaño en el mundo de un px de referencia (m/px) del panel de menús a la distancia normal.</summary>
         public static float EscalaFrente => AnchoFrente / AnchoReferencia;
 
         /// <summary>Tamaño en el mundo de un px de referencia (m/px) de una pantalla completa.</summary>
         public static float EscalaCompleta => AnchoCompleta / AnchoReferencia;
 
+        /// <summary>True si el Canvas es la pantalla de carga (va como panel frente a la cabeza aunque su orden sea de pantalla completa).</summary>
+        public static bool EsPanelDeCarga(string nombre)
+        {
+            if (string.IsNullOrEmpty(nombre))
+            {
+                return false;
+            }
+            foreach (string p in PanelesDeCarga)
+            {
+                if (nombre.StartsWith(p, StringComparison.Ordinal))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         /// <summary>El tipo de un Canvas de pantalla por su nombre y su orden de dibujo.</summary>
         public static TipoLienzoVR Clasificar(string nombre, int orden)
         {
+            if (EsPanelDeCarga(nombre))
+            {
+                return TipoLienzoVR.Frente;
+            }
             if (orden >= OrdenPantallaCompleta)
             {
                 return TipoLienzoVR.PantallaCompleta;

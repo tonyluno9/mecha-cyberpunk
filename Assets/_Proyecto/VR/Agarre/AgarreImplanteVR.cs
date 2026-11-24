@@ -1,6 +1,7 @@
 using MechaCyberpunk.CampoTiro;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.IA.APie;
+using MechaCyberpunk.Personaje.Combate;
 using MechaCyberpunk.Personaje.Jugador;
 using MechaCyberpunk.Personaje.Movimiento;
 using UnityEngine;
@@ -35,6 +36,7 @@ namespace MechaCyberpunk.VR
         private readonly SeguidorImplantes seguidor = new SeguidorImplantes();
         private readonly CuerpoAgarradoVR[] sostenidos = new CuerpoAgarradoVR[2];
         private AdaptadorVR adaptador;
+        private ArmasAPie armas;
 
         /// <summary>Nivel de BRAZOS que cuenta para agarrar (0 = sin implante).</summary>
         public int NivelBrazos => ForzarImplante.HasValue ? (ForzarImplante.Value ? 1 : 0) : seguidor.Nivel(EspacioImplante.Brazos);
@@ -75,6 +77,7 @@ namespace MechaCyberpunk.VR
         private void Awake()
         {
             adaptador = GetComponent<AdaptadorVR>();
+            armas = GetComponent<ArmasAPie>();
             if (adaptador == null)
             {
                 Debug.LogError("[VR] AgarreImplanteVR sin AdaptadorVR en " + name, this);
@@ -122,7 +125,11 @@ namespace MechaCyberpunk.VR
             }
             if (EntradaVR.Pulso(grip))
             {
-                IntentarAgarrar(mano);
+                // VR5: con la granada en la mano el grip derecho toma la granada (ArmasEspecialesVR), no agarra.
+                if (!(mano.Derecha && armas != null && ArmasEspecialesVR.TomaElGrip(armas.ArmaActiva)))
+                {
+                    IntentarAgarrar(mano);
+                }
             }
             else if (EntradaVR.Solto(grip))
             {
