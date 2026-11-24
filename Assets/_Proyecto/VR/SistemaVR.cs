@@ -158,6 +158,62 @@ namespace MechaCyberpunk.VR
             }
             AsegurarAdaptador();
             GuardarCamaras();
+            segundosRevision -= Time.unscaledDeltaTime;
+            if (segundosRevision <= 0f)
+            {
+                segundosRevision = 2f;
+                QuitarPostprocesoQueMarea();
+                ApagarReflejos();
+            }
+        }
+
+        private float segundosRevision;
+        private readonly System.Collections.Generic.HashSet<Volume> volumenesRevisados = new System.Collections.Generic.HashSet<Volume>();
+
+        // En VR marean o pesan mucho por ojo: desenfoque, motion blur, aberración, distorsión de lente, grano y Panini. Bloom y color se quedan (el neón).
+        private void QuitarPostprocesoQueMarea()
+        {
+            foreach (Volume v in FindObjectsByType<Volume>(FindObjectsInactive.Exclude, FindObjectsSortMode.None))
+            {
+                if (v == null || !volumenesRevisados.Add(v) || v.sharedProfile == null)
+                {
+                    continue;
+                }
+                VolumeProfile perfil = v.profile; // copia propia: no cambia el asset
+                Apagar<DepthOfField>(perfil);
+                Apagar<MotionBlur>(perfil);
+                Apagar<ChromaticAberration>(perfil);
+                Apagar<LensDistortion>(perfil);
+                Apagar<FilmGrain>(perfil);
+                Apagar<PaniniProjection>(perfil);
+            }
+        }
+
+        private static void Apagar<T>(VolumeProfile perfil) where T : VolumeComponent
+        {
+            if (perfil.TryGet(out T c) && c.active)
+            {
+                c.active = false;
+            }
+        }
+
+        // Los reflejos planos (espejos, charcos) renderizan otra vez la escena: en VR cuestan el doble y se ven mal por ojo.
+        private static void ApagarReflejos()
+        {
+            foreach (var e in FindObjectsByType<MechaCyberpunk.Mundo.Ambiente.EspejoReflejo>(FindObjectsSortMode.None))
+            {
+                if (e.enabled)
+                {
+                    e.enabled = false;
+                }
+            }
+            foreach (var r in FindObjectsByType<MechaCyberpunk.Mundo.Ambiente.ReflejoCharcos>(FindObjectsSortMode.None))
+            {
+                if (r.enabled)
+                {
+                    r.enabled = false;
+                }
+            }
         }
 
         // El jugador a pie de la escena actual lleva el rig VR.
