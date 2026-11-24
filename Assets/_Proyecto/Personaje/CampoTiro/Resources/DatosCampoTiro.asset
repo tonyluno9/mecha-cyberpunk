@@ -20,6 +20,8 @@ MonoBehaviour:
   visualPerro: {fileID: 8133388734837568357, guid: db7f2ac55040f9243a7900cf848f4dbf, type: 3}
   visualElite: {fileID: 3376699270675252164, guid: 00f0b9eb21f8f474086b3b208f7f075d, type: 3}
   visualGuardia: {fileID: 4048966988714943168, guid: b49d04f70cb2433439a0b9f5ce51ed3c, type: 3}
+  visualSkull: {fileID: 1073412610845367210, guid: 835de064e6c9bf8469015f830185e478, type: 3}
+  visualPolicia: {fileID: 3595146157182554730, guid: ab844c98a0f1e5f4b9e16add9c24c75c, type: 3}
   materialBlanco: {fileID: 2100000, guid: 9902063d810f22c45bf89c8e141963ce, type: 2}
   materialTurquesa: {fileID: 2100000, guid: a7e10202ff4ee364f98c70b604d05681, type: 2}
   materialRejilla: {fileID: 2100000, guid: b49771d647677794f8b02ed864f3ad65, type: 2}
@@ -29,3 +31,5 @@ MonoBehaviour:
   controlPerro: {fileID: 9100000, guid: fa4f75621d9e93f41b769a6dba31a900, type: 2}
   controlElite: {fileID: 9100000, guid: 64172a202e7d9c049a1f38c635a3d019, type: 2}
   controlGuardia: {fileID: 9100000, guid: b768c9a08d177704b8b9c8d14caf0187, type: 2}
+  controlSkull: {fileID: 9100000, guid: 4db1f4d5d78bd204fa02f307d511f18c, type: 2}
+  controlPolicia: {fileID: 9100000, guid: 0f5389ba37551f54a803058a99b2270a, type: 2}

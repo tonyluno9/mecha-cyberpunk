@@ -42,6 +42,7 @@ namespace MechaCyberpunk.Tests.Personaje
             foreach (DineroEnPiso d in Object.FindObjectsByType<DineroEnPiso>(FindObjectsSortMode.None)) Object.Destroy(d.gameObject);
             foreach (ArmaEnPiso a in Object.FindObjectsByType<ArmaEnPiso>(FindObjectsSortMode.None)) Object.Destroy(a.gameObject);
             foreach (MunicionEnPiso m in Object.FindObjectsByType<MunicionEnPiso>(FindObjectsSortMode.None)) Object.Destroy(m.gameObject);
+            foreach (BotiquinEnPiso b in Object.FindObjectsByType<BotiquinEnPiso>(FindObjectsSortMode.None)) Object.Destroy(b.gameObject); // T-drops-24nov
             base.TearDown();
         }
 

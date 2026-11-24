@@ -28,6 +28,16 @@ namespace MechaCyberpunk.Tests.IA
         }
 
         [Test]
+        public void Fundido_AntesDe20s_Cero_LuegoSube_YA21y5sUno()
+        {
+            Assert.AreEqual(0f, ReglaLimpiezaCuerpo.Fundido(0f));
+            Assert.AreEqual(0f, ReglaLimpiezaCuerpo.Fundido(20f));
+            Assert.AreEqual(0.5f, ReglaLimpiezaCuerpo.Fundido(20.75f), 1e-4f);
+            Assert.AreEqual(1f, ReglaLimpiezaCuerpo.Fundido(21.5f));
+            Assert.AreEqual(1f, ReglaLimpiezaCuerpo.Fundido(500f));
+        }
+
+        [Test]
         public void MinimoMayorQueElMaximo_ElMaximoSubeAlMinimo()
         {
             Assert.IsFalse(ReglaLimpiezaCuerpo.Debe(130f, 200f, true));

@@ -40,6 +40,53 @@ namespace MechaCyberpunk.Core
         [Tooltip("Escribe una línea [Respuesta] en consola por cada unidad que sale o se retira.")]
         public bool Registrar = true;
 
+        // ----- T-historia-libre-23nov: modo libre (escalada progresiva tras el campo de tiro) -----
+        [Header("Modo libre (T-historia-libre-23nov)")]
+        [Tooltip("Fase 0 del modo libre: segundos solo con los SKULLS antes de que llegue la policía (s). Si antes te ganas estrellas, la policía llega antes.")]
+        [Min(0f)] public float SegundosFaseSkulls = 45f;
+        [Tooltip("Fases 1 a 6 de la escalada del modo libre: cada una dura su tiempo o hasta sus bajas (lo que pase primero).")]
+        public FaseModoLibre[] FasesLibre = FasesLibrePorOmision();
+        [Tooltip("Modo libre en PC: máximo de enemigos de respuesta vivos a la vez (policías a pie, drones, NOVA; sin contar los vehículos). T-rendimiento-tope-24nov: medido en el build de PC (RTX 5070 Laptop, 2560x1600, Ultra): 24 enemigos dan 87.6 fps de promedio y 62.8 el 1 % más bajo; 31 dan 83.9 / 60.6.")]
+        [Min(1)] public int TopeEnemigosLibre = 24;
+        [Tooltip("Modo libre en VR: máximo de enemigos vivos a la vez. Conservador (VR dibuja dos veces y pide 72 fps estables); sin medir en el visor.")]
+        [Min(1)] public int TopeEnemigosLibreVR = 12;
+
+        /// <summary>El tope de enemigos del modo libre según el modo (PC o VR).</summary>
+        public int TopeEnemigosLibreActual => ModoVR.Activo ? Mathf.Min(TopeEnemigosLibreVR, TopeEnemigosLibre) : TopeEnemigosLibre;
+        [Tooltip("Modo libre: máximo de patrullas y camionetas a la vez.")]
+        [Min(0)] public int TopePatrullasLibre = 3;
+        [Tooltip("Modo libre: máximo de drones a la vez.")]
+        [Min(0)] public int TopeDronesLibre = 4;
+        [Tooltip("Modo libre: máximo de cápsulas de NOVA cayendo a la vez.")]
+        [Min(0)] public int TopeCapsulasLibre = 2;
+        [Tooltip("Modo libre: máximo de robots grandes (E16) a la vez.")]
+        [Min(0)] public int TopeRobotsGrandesLibre = 2;
+        [Tooltip("Modo libre: segundos mínimos tras una baja para que llegue su reemplazo (goteo constante, sin huecos) (s).")]
+        [Min(0f)] public float SegundosReposicionLibre = 6f;
+        [Tooltip("Modo libre: los refuerzos a pie aparecen al menos a esta distancia del jugador, también a sus espaldas (m).")]
+        [Min(0f)] public float MetrosMinimosRefuerzo = 25f;
+        [Tooltip("Modo libre: medio ángulo de la vista (°); un refuerzo no aparece dentro de él.")]
+        [Range(0f, 180f)] public float GradosVistaRefuerzo = 70f;
+
+        /// <summary>T-historia-libre-23nov: las fases de Tony (24-nov 02:29): policía a pie, más patrullas, camiones, drones de NOVA, soldados NOVA, NOVA pesada sin fin.</summary>
+        public static FaseModoLibre[] FasesLibrePorOmision()
+        {
+            TipoRespuesta[] policias = { TipoRespuesta.PoliciaAPie };
+            TipoRespuesta[] soldados = { TipoRespuesta.NovaHumanoide, TipoRespuesta.RobotMediano };
+            return new[]
+            {
+                new FaseModoLibre("POLICIA A PIE Y PATRULLAS", 300f, 2, false, new[] { TipoRespuesta.PoliciaAPie, TipoRespuesta.Patrulla }, 20, policias),
+                new FaseModoLibre("MAS PATRULLAS", 300f, 3, false, new[] { TipoRespuesta.PoliciaAPie, TipoRespuesta.Patrulla }, 30, policias,
+                    6, new[] { TipoRespuesta.Patrulla, TipoRespuesta.Camioneta }),
+                new FaseModoLibre("CAMIONES Y REFUERZOS PESADOS", 300f, 4, false,
+                    new[] { TipoRespuesta.PoliciaAPie, TipoRespuesta.Patrulla, TipoRespuesta.Camioneta, TipoRespuesta.Dron }, 40, policias),
+                new FaseModoLibre("DRONES DE NOVA", 240f, 5, true, new[] { TipoRespuesta.Dron }, 10, new[] { TipoRespuesta.Dron }),
+                new FaseModoLibre("SOLDADOS NOVA", 300f, 5, true, new[] { TipoRespuesta.NovaHumanoide, TipoRespuesta.RobotMediano, TipoRespuesta.Dron }, 20, soldados),
+                new FaseModoLibre("NOVA PESADA", 0f, 5, true,
+                    new[] { TipoRespuesta.NovaHumanoide, TipoRespuesta.RobotMediano, TipoRespuesta.Perro, TipoRespuesta.RobotGrande, TipoRespuesta.Dron }, 0, null),
+            };
+        }
+
         public AjusteTipoRespuesta AjusteDe(TipoRespuesta tipo)
         {
             if (Tipos != null)

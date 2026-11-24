@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: b3c67235630955a45b570ffc9a917bb0
+guid: 939c2de2904a68c4f9aafc1653d2f3bb
 ModelImporter:
   serializedVersion: 24300
   internalIDToNameTable: []
@@ -200,7 +200,7 @@ ModelImporter:
       name: Vidrio_Interior
     second: {fileID: 2100000, guid: 8762b1e6157231941b274554b41c3b71, type: 2}
   materials:
-    materialImportMode: 0
+    materialImportMode: 1
     materialName: 0
     materialSearch: 1
     materialLocation: 1
@@ -225,268 +225,7 @@ ModelImporter:
     animationWrapMode: 0
     extraExposedTransformPaths: []
     extraUserProperties: []
-    clipAnimations:
-    - serializedVersion: 16
-      name: Mano_Abierta
-      takeName: Mano_Abierta
-      internalID: -4481601757269129915
-      firstFrame: 0
-      lastFrame: 1
-      wrapMode: 8
-      orientationOffsetY: 0
-      level: 0
-      cycleOffset: 0
-      loop: 0
-      hasAdditiveReferencePose: 0
-      loopTime: 0
-      loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
-      mirror: 0
-      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
-      curves: []
-      events: []
-      transformMask: []
-      maskType: 3
-      maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 0
-    - serializedVersion: 16
-      name: Mano_AbrirCerrar
-      takeName: Mano_AbrirCerrar
-      internalID: -1657688607057775751
-      firstFrame: 0
-      lastFrame: 24
-      wrapMode: 2
-      orientationOffsetY: 0
-      level: 0
-      cycleOffset: 0
-      loop: 0
-      hasAdditiveReferencePose: 0
-      loopTime: 1
-      loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
-      mirror: 0
-      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
-      curves: []
-      events: []
-      transformMask: []
-      maskType: 3
-      maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 0
-    - serializedVersion: 16
-      name: Mano_AgarreArmaLarga_L
-      takeName: Mano_AgarreArmaLarga_L
-      internalID: -171185398315730767
-      firstFrame: 0
-      lastFrame: 1
-      wrapMode: 8
-      orientationOffsetY: 0
-      level: 0
-      cycleOffset: 0
-      loop: 0
-      hasAdditiveReferencePose: 0
-      loopTime: 0
-      loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
-      mirror: 0
-      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
-      curves: []
-      events: []
-      transformMask: []
-      maskType: 3
-      maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 0
-    - serializedVersion: 16
-      name: Mano_AgarrePistola
-      takeName: Mano_AgarrePistola
-      internalID: 4687923025228599751
-      firstFrame: 0
-      lastFrame: 1
-      wrapMode: 8
-      orientationOffsetY: 0
-      level: 0
-      cycleOffset: 0
-      loop: 0
-      hasAdditiveReferencePose: 0
-      loopTime: 0
-      loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
-      mirror: 0
-      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
-      curves: []
-      events: []
-      transformMask: []
-      maskType: 3
-      maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 0
-    - serializedVersion: 16
-      name: Mano_Cargador_L
-      takeName: Mano_Cargador_L
-      internalID: -1281236077282198829
-      firstFrame: 0
-      lastFrame: 1
-      wrapMode: 8
-      orientationOffsetY: 0
-      level: 0
-      cycleOffset: 0
-      loop: 0
-      hasAdditiveReferencePose: 0
-      loopTime: 0
-      loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
-      mirror: 0
-      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
-      curves: []
-      events: []
-      transformMask: []
-      maskType: 3
-      maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 0
-    - serializedVersion: 16
-      name: Mano_Gatillo
-      takeName: Mano_Gatillo
-      internalID: -8102021775916645141
-      firstFrame: 0
-      lastFrame: 1
-      wrapMode: 8
-      orientationOffsetY: 0
-      level: 0
-      cycleOffset: 0
-      loop: 0
-      hasAdditiveReferencePose: 0
-      loopTime: 0
-      loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
-      mirror: 0
-      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
-      curves: []
-      events: []
-      transformMask: []
-      maskType: 3
-      maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 0
-    - serializedVersion: 16
-      name: Mano_Granada
-      takeName: Mano_Granada
-      internalID: -4574152136618679756
-      firstFrame: 0
-      lastFrame: 1
-      wrapMode: 8
-      orientationOffsetY: 0
-      level: 0
-      cycleOffset: 0
-      loop: 0
-      hasAdditiveReferencePose: 0
-      loopTime: 0
-      loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
-      mirror: 0
-      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
-      curves: []
-      events: []
-      transformMask: []
-      maskType: 3
-      maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 0
-    - serializedVersion: 16
-      name: Mano_Puno
-      takeName: Mano_Puno
-      internalID: 1272213001425550280
-      firstFrame: 0
-      lastFrame: 1
-      wrapMode: 8
-      orientationOffsetY: 0
-      level: 0
-      cycleOffset: 0
-      loop: 0
-      hasAdditiveReferencePose: 0
-      loopTime: 0
-      loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
-      mirror: 0
-      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
-      curves: []
-      events: []
-      transformMask: []
-      maskType: 3
-      maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 0
-    - serializedVersion: 16
-      name: Mano_Senalar
-      takeName: Mano_Senalar
-      internalID: -3236046189969364388
-      firstFrame: 0
-      lastFrame: 1
-      wrapMode: 8
-      orientationOffsetY: 0
-      level: 0
-      cycleOffset: 0
-      loop: 0
-      hasAdditiveReferencePose: 0
-      loopTime: 0
-      loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
-      mirror: 0
-      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
-      curves: []
-      events: []
-      transformMask: []
-      maskType: 3
-      maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 0
+    clipAnimations: []
     isReadable: 0
   meshes:
     lODScreenPercentages: []
@@ -497,7 +236,7 @@ ModelImporter:
     sortHierarchyByName: 1
     importPhysicalCameras: 1
     importVisibility: 1
-    importBlendShapes: 0
+    importBlendShapes: 1
     importCameras: 0
     importLights: 0
     nodeNameCollisionStrategy: 1
@@ -539,8 +278,188 @@ ModelImporter:
   importAnimation: 1
   humanDescription:
     serializedVersion: 3
-    human: []
-    skeleton: []
+    human:
+    - boneName: Forearm_L
+      humanName: Hips
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Thumb1_L
+      humanName: LeftUpperLeg
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Little1_L
+      humanName: RightUpperLeg
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Thumb2_L
+      humanName: LeftLowerLeg
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Little2_L
+      humanName: RightLowerLeg
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Thumb3_L
+      humanName: LeftFoot
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Little3_L
+      humanName: RightFoot
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Middle1_L
+      humanName: Spine
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Middle2_L
+      humanName: RightShoulder
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Middle3_L
+      humanName: RightUpperArm
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    skeleton:
+    - name: MN01_ManosVR_L(Clone)
+      parentName: 
+      position: {x: 0, y: 0, z: 0}
+      rotation: {x: 0, y: 0, z: 0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: MN01_ManosVR_L
+      parentName: MN01_ManosVR_L(Clone)
+      position: {x: 0, y: 0, z: 0}
+      rotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071067}
+      scale: {x: 1, y: 1, z: 1}
+    - name: MN01_ManosVR_L_rig
+      parentName: MN01_ManosVR_L(Clone)
+      position: {x: 0, y: 0, z: 0}
+      rotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071067}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Forearm_L
+      parentName: MN01_ManosVR_L_rig
+      position: {x: -0.006787641, y: 0.37858766, z: -0.196141}
+      rotation: {x: -0.000000025878855, y: 0.16618781, z: 0.9860941, w: 0.00000013939724}
+      scale: {x: 1, y: 1, z: 1.0000005}
+    - name: Hand_L
+      parentName: Forearm_L
+      position: {x: 2.3597546e-15, y: 0.3419471, z: -0.0000000035518655}
+      rotation: {x: -0.054077495, y: -0.0000003566286, z: 0.00000011498637, w: 0.99853677}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Index1_L
+      parentName: Hand_L
+      position: {x: 0.028165083, y: 0.10502019, z: 0.002485794}
+      rotation: {x: 0.10499259, y: -0.009748704, z: -0.028374307, w: 0.99402034}
+      scale: {x: 1, y: 0.99999994, z: 0.9999999}
+    - name: Index2_L
+      parentName: Index1_L
+      position: {x: 8.979506e-11, y: 0.03250099, z: -0.0000000036670826}
+      rotation: {x: 0.13462994, y: -0.011069606, z: -0.021056844, w: 0.99061036}
+      scale: {x: 0.99999994, y: 1, z: 1}
+    - name: Index3_L
+      parentName: Index2_L
+      position: {x: 0.0000000021245796, y: 0.02191219, z: -0.000000009546056}
+      rotation: {x: 0.026176412, y: -0.00000023424967, z: -0.0000003642137, w: 0.99965733}
+      scale: {x: 1, y: 0.99999994, z: 1}
+    - name: Middle1_L
+      parentName: Hand_L
+      position: {x: 2.220446e-16, y: 0.107570715, z: -2.1369215e-10}
+      rotation: {x: -0.6343805, y: -0.030112794, z: 0.060269628, w: 0.7700793}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Middle2_L
+      parentName: Middle1_L
+      position: {x: 0.0000000010027593, y: 0.038580462, z: -8.1490725e-10}
+      rotation: {x: 0.13787992, y: -0.057870645, z: 0.5677058, w: 0.80953705}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Middle3_L
+      parentName: Middle2_L
+      position: {x: 0.000000001193257, y: 0.022831984, z: -0.000000004773028}
+      rotation: {x: 0.026177088, y: -0.00000026994323, z: -0.00000045714506, w: 0.99965733}
+      scale: {x: 0.99999994, y: 0.99999994, z: 0.99999994}
+    - name: Ring1_L
+      parentName: Hand_L
+      position: {x: -0.023323666, y: 0.10231016, z: 0.0050082346}
+      rotation: {x: 0.15282546, y: 0.049315333, z: 0.12328057, w: 0.97929275}
+      scale: {x: 1, y: 0.99999994, z: 0.99999994}
+    - name: Ring2_L
+      parentName: Ring1_L
+      position: {x: 0.000000003437548, y: 0.034197904, z: -9.313226e-10}
+      rotation: {x: 0.13795471, y: -0.05277413, z: -0.07931627, w: 0.985846}
+      scale: {x: 1, y: 1, z: 1.0000002}
+    - name: Ring3_L
+      parentName: Ring2_L
+      position: {x: -0.0000000010477379, y: 0.02484606, z: 0.0000000044237822}
+      rotation: {x: 0.026176378, y: -0.000000782579, z: -0.0000009071861, w: 0.99965733}
+      scale: {x: 1.0000001, y: 1, z: 1}
+    - name: Little1_L
+      parentName: Hand_L
+      position: {x: -0.049983997, y: 0.088377625, z: 0.019608272}
+      rotation: {x: 0.52609646, y: 0.1172018, z: 0.14184952, w: 0.8302801}
+      scale: {x: 0.9999999, y: 0.99999994, z: 0.99999994}
+    - name: Little2_L
+      parentName: Little1_L
+      position: {x: -0.000000004139989, y: 0.0263532, z: -0.0000000030267984}
+      rotation: {x: 0.04361907, y: 0.0000001242868, z: 0.0000003013953, w: 0.99904823}
+      scale: {x: 0.99999994, y: 1, z: 0.9999999}
+    - name: Little3_L
+      parentName: Little2_L
+      position: {x: 0.0000000041597623, y: 0.01756881, z: 0}
+      rotation: {x: -0.4293117, y: -0.0026537902, z: -0.023293722, w: 0.90285206}
+      scale: {x: 0.9999999, y: 0.9999998, z: 0.9999999}
+    - name: Thumb1_L
+      parentName: Hand_L
+      position: {x: 0.036408525, y: 0.03188227, z: 0.007879769}
+      rotation: {x: 0.49829206, y: -0.22021092, z: -0.24378175, w: 0.8023606}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Thumb2_L
+      parentName: Thumb1_L
+      position: {x: -0.0000000017637105, y: 0.034270823, z: 9.313226e-10}
+      rotation: {x: -0.000000104308135, y: -0.00000005008396, z: 0.00000003839419, w: 1}
+      scale: {x: 0.99999994, y: 1, z: 0.99999994}
+    - name: Thumb3_L
+      parentName: Thumb2_L
+      position: {x: -0.0000000011647772, y: 0.025703132, z: 9.313226e-10}
+      rotation: {x: -0.37232175, y: -0.00000006030777, z: 0.017907815, w: 0.927931}
+      scale: {x: 0.9999999, y: 1, z: 1}
     armTwist: 0.5
     foreArmTwist: 0.5
     upperLegTwist: 0.5
@@ -555,7 +474,7 @@ ModelImporter:
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   autoGenerateAvatarMappingIfUnspecified: 1
-  animationType: 2
+  animationType: 3
   humanoidOversampling: 1
   avatarSetup: 1
   addHumanoidExtraRootOnlyWhenUsingAvatar: 1

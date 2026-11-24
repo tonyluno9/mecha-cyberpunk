@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d70d016085def6418b42b9e147f8c92, type: 3}
+  m_Name: ConfigRecompensasEnemigo_Base
+  m_EditorClassIdentifier: MechaCyberpunk.Personaje::MechaCyberpunk.Personaje.ConfigRecompensasEnemigo
+  municionPolicia: 0.9
+  municionNova: 0.85
+  municionSkulls: 0.35
+  municionOtros: 0.3
+  probabilidadBotiquin: 0.15
+  curacionBotiquin: 25
+  segundosEnPiso: 30
+  radioRecoger: 1.3
+  radioMano: 0.35
+  separacion: 0.7
+  colorMunicion: {r: 1, g: 0.65, b: 0.15, a: 1}
+  colorBotiquin: {r: 0.3, g: 1, b: 0.45, a: 1}
+  intensidadBrillo: 0.6
+  alcanceBrillo: 1.3

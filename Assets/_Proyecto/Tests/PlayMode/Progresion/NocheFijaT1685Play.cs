@@ -97,6 +97,7 @@ namespace MechaCyberpunk.Tests.Progresion
         }
 
         [UnityTest]
+        [Ignore("T-historia-libre-23nov: el paso 12 (GuerraSkulls) quedó desconectado; tras Tino es modo libre")]
         public IEnumerator Paso12_ElRelojCorreYElMediodiaSeQueda()
         {
             yield return null;

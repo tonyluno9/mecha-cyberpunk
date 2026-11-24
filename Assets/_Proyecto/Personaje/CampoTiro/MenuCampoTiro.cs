@@ -15,13 +15,14 @@ namespace MechaCyberpunk.CampoTiro
     public class MenuCampoTiro : MonoBehaviour
     {
         public const int OrdenCanvas = 125;
-        private static readonly Vector2 TamanoPanel = new Vector2(1100f, 620f);
+        private static readonly Vector2 TamanoPanel = new Vector2(1100f, 680f); // VR50: una fila más para los tipos (SKULL y POLICÍA)
         private static readonly Vector2 TamanoBoton = new Vector2(160f, 46f);
         private const float XEtiqueta = 30f;
         private const float XBotones = 220f;
         private const float Paso = 170f;
         private const float AltoPaso = 56f;
         private const float AnchoAccion = 340f;
+        private const int BotonesPorFila = 5;
         private static readonly Vector2 TamanoMarcador = new Vector2(620f, 90f);
         private static readonly Vector2 MargenMarcador = new Vector2(0f, -24f); // arriba al centro: a la izquierda se encimaba con la vida del HUD
 
@@ -95,9 +96,10 @@ namespace MechaCyberpunk.CampoTiro
             for (int i = 0; i < Tipos.Length; i++)
             {
                 TipoObjetivoTiro tipo = Tipos[i];
-                casillasTipo.Add(Boton(padre, ReglaCampoTiro.Nombre(tipo), XBotones + i * Paso, y, TamanoBoton, () => CampoDeTiro.PonerObjetivos(tipo, CampoDeTiro.CuantosElegidos, CampoDeTiro.DistanciaElegida)));
+                casillasTipo.Add(Boton(padre, ReglaCampoTiro.Nombre(tipo), XBotones + (i % BotonesPorFila) * Paso, y + (i / BotonesPorFila) * AltoPaso, TamanoBoton,
+                    () => CampoDeTiro.PonerObjetivos(tipo, CampoDeTiro.CuantosElegidos, CampoDeTiro.DistanciaElegida)));
             }
-            y += AltoPaso + 14f;
+            y += AltoPaso * ((Tipos.Length + BotonesPorFila - 1) / BotonesPorFila) + 14f;
             Etiqueta(padre, "CUÁNTOS", y);
             for (int n = ReglaCampoTiro.MinimoObjetivos; n <= ReglaCampoTiro.MaximoObjetivos; n++)
             {
@@ -145,6 +147,7 @@ namespace MechaCyberpunk.CampoTiro
             TrazoH10.Estirar(casilla.Linea.rectTransform);
             casilla.Texto = TrazoH10.Etiqueta(caja, "Texto", etiqueta, TrazoH10.TamanoDato, TrazoH10.Turquesa, TextAnchor.MiddleCenter);
             TrazoH10.Estirar(casilla.Texto.rectTransform);
+            ResaltadoBotonCampoTiro.Agregar(caja.gameObject, casilla.Fondo); // VR44/VR50: el botón bajo el láser o el ratón se resalta
             Button boton = caja.gameObject.AddComponent<Button>();
             boton.transition = Selectable.Transition.None;
             boton.targetGraphic = casilla.Fondo;

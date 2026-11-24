@@ -26,6 +26,7 @@ namespace MechaCyberpunk.Core
         private bool novaPermitida;
         private bool puertaNova;
         private int camionetasLlegadas;
+        private FaseModoLibre libre;
 
         public ReglaEscaladaRespuesta(ParametrosRespuesta parametros, Random azar = null)
         {
@@ -42,6 +43,36 @@ namespace MechaCyberpunk.Core
         }
 
         public int Estrellas { get; private set; }
+
+        /// <summary>
+        /// T-historia-libre-23nov: la fase del modo libre que manda ahora (null fuera del modo libre). Con ella la escalada no sale de las estrellas:
+        /// solo llegan los tipos de la fase, la misión protegida no aplica, NOVA entra si la fase lo dice y valen los topes del modo libre.
+        /// </summary>
+        public FaseModoLibre Libre => libre;
+
+        /// <summary>T-historia-libre-23nov: pone (o quita con null) la fase del modo libre.</summary>
+        public void PonerModoLibre(FaseModoLibre fase)
+        {
+            libre = fase;
+            if (fase == null)
+            {
+                Reiniciar();
+            }
+        }
+
+        /// <summary>T-historia-libre-23nov: enemigos vivos que cuentan para el tope del modo libre (todo menos los vehículos).</summary>
+        public int VivosLibre
+        {
+            get
+            {
+                int suma = 0;
+                for (int i = 0; i < vivos.Length; i++)
+                {
+                    suma += i == (int)TipoRespuesta.Patrulla || i == (int)TipoRespuesta.Camioneta ? 0 : vivos[i];
+                }
+                return suma;
+            }
+        }
 
         /// <summary>T-1660: cuántas camionetas ya llegaron junto al jugador en esta búsqueda (lo dice quien las maneja).</summary>
         public int CamionetasLlegadas { get => camionetasLlegadas; set => camionetasLlegadas = Math.Max(0, value); }
@@ -147,11 +178,15 @@ namespace MechaCyberpunk.Core
         public bool PermitidoPorMision(TipoRespuesta tipo) => !mision || (novaPermitida && EsNova(tipo));
 
         /// <summary>True si el tipo todavía puede estar en pie con las estrellas y la misión de ahora (para retirar primero los niveles altos).</summary>
-        public bool PermiteMantener(TipoRespuesta tipo) => Estrellas > 0 && PermitidoPorMision(tipo) && !BloqueadoPorModoNova(tipo) && NivelDe(tipo) <= TopeDeNivel(Estrellas);
+        public bool PermiteMantener(TipoRespuesta tipo) => libre != null ? libre.Permite(tipo) : Estrellas > 0 && PermitidoPorMision(tipo) && !BloqueadoPorModoNova(tipo) && NivelDe(tipo) <= TopeDeNivel(Estrellas);
 
         // T-1631: en modo Nova no entra policía; el dron solo entra cuando ya se desbloqueó su nivel de NOVA.
         private bool BloqueadoPorModoNova(TipoRespuesta tipo)
         {
+            if (libre != null)
+            {
+                return !libre.Permite(tipo); // T-historia-libre-23nov: en el modo libre manda la fase
+            }
             if (!ModoNova)
             {
                 return false;
@@ -173,6 +208,11 @@ namespace MechaCyberpunk.Core
 
         public void Avanzar(float ahora, int estrellas, bool misionActiva, bool novaEnMision, int[] vivosActuales)
         {
+            if (libre != null)
+            {
+                AvanzarLibre(estrellas, vivosActuales);
+                return;
+            }
             mision = misionActiva;
             novaPermitida = novaEnMision;
             for (int i = 0; i < NumeroTipos; i++)
@@ -215,6 +255,44 @@ namespace MechaCyberpunk.Core
                 desdeNivel = ahora;
                 perdidasDelNivel = 0;
                 RetrasarNivel(NivelDesbloqueado, ahora);
+            }
+        }
+
+        // T-historia-libre-23nov: en el modo libre no cuentan la misión ni la puerta de Nova; el nivel es el más alto de los tipos de la fase.
+        private void AvanzarLibre(int estrellas, int[] vivosActuales)
+        {
+            mision = false;
+            novaPermitida = false;
+            for (int i = 0; i < NumeroTipos; i++)
+            {
+                vivos[i] = vivosActuales != null && i < vivosActuales.Length ? vivosActuales[i] : 0;
+            }
+            Estrellas = Math.Max(estrellas, libre.Estrellas);
+            ModoNova = libre.ModoNova && HayNovaQueGenerar();
+            int nivel = 1;
+            foreach (TipoRespuesta t in libre.Tipos ?? new TipoRespuesta[0])
+            {
+                if (disponible[(int)t])
+                {
+                    nivel = Math.Max(nivel, NivelDe(t));
+                }
+            }
+            NivelDesbloqueado = nivel;
+        }
+
+        /// <summary>T-historia-libre-23nov: cuántos de este tipo caben a la vez en el modo libre.</summary>
+        private int CupoLibre(TipoRespuesta tipo)
+        {
+            switch (tipo)
+            {
+                case TipoRespuesta.Patrulla:
+                case TipoRespuesta.Camioneta: return p.TopePatrullasLibre;
+                case TipoRespuesta.Dron: return p.TopeDronesLibre;
+                case TipoRespuesta.RobotGrande: return p.TopeRobotsGrandesLibre;
+                case TipoRespuesta.Jefe:
+                    AjusteTipoRespuesta a = p.AjusteDe(tipo);
+                    return a != null ? a.Tope : 0;
+                default: return p.TopeEnemigosLibreActual;
             }
         }
 
@@ -278,6 +356,10 @@ namespace MechaCyberpunk.Core
         /// <summary>Cuántos de este tipo puede haber a la vez ahora: crece con las bajas y con los niveles de arriba ya desbloqueados, sin pasar del tope.</summary>
         public int CupoActual(TipoRespuesta tipo)
         {
+            if (libre != null)
+            {
+                return libre.Permite(tipo) ? CupoLibre(tipo) : 0;
+            }
             AjusteTipoRespuesta a = p.AjusteDe(tipo);
             if (a == null)
             {
@@ -290,6 +372,19 @@ namespace MechaCyberpunk.Core
 
         public bool PuedeGenerar(TipoRespuesta tipo, float ahora)
         {
+            if (libre != null)
+            {
+                // T-historia-libre-23nov: goteo hasta los topes del modo libre; las patrullas tampoco salen si ya no caben sus policías.
+                if (!libre.Permite(tipo) || !disponible[(int)tipo] || ahora < proximo[(int)tipo] || vivos[(int)tipo] >= CupoLibre(tipo))
+                {
+                    return false;
+                }
+                if (tipo == TipoRespuesta.Patrulla || tipo == TipoRespuesta.Camioneta)
+                {
+                    return Vivos(TipoRespuesta.Patrulla) + Vivos(TipoRespuesta.Camioneta) < p.TopePatrullasLibre && VivosLibre < p.TopeEnemigosLibreActual;
+                }
+                return VivosLibre < p.TopeEnemigosLibreActual;
+            }
             int nivel = NivelDe(tipo);
             if (NivelDesbloqueado <= 0 || nivel > NivelDesbloqueado || nivel > TopeDeNivel(Estrellas)
                 || !disponible[(int)tipo] || !PermitidoPorMision(tipo) || BloqueadoPorModoNova(tipo))
@@ -314,6 +409,11 @@ namespace MechaCyberpunk.Core
         public void RegistrarPerdida(TipoRespuesta tipo, float ahora)
         {
             perdidas[(int)tipo]++;
+            if (libre != null)
+            {
+                proximo[(int)tipo] = Math.Max(proximo[(int)tipo], ahora + p.SegundosReposicionLibre); // T-historia-libre-23nov: reemplazo pronto
+                return;
+            }
             if (NivelDe(tipo) == NivelDesbloqueado)
             {
                 perdidasDelNivel++;

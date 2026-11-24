@@ -203,13 +203,14 @@ namespace MechaCyberpunk.VR.Cinematicas
             Texture textura = v.renderMode == VideoRenderMode.RenderTexture ? v.targetTexture : null;
             // Con la lista de clips de CinematicaPendiente hay dos VideoPlayer alternados: el RawImage pasa a mostrar la textura del segundo
             // cuando le toca, así que mientras suena y no estaba en pantalla se vuelve a buscar.
-            if (!s.Redirigido && (textura != s.Evaluada || (!s.EnPantalla && v.isPlaying)))
+            bool corriendo = v.isPlaying || CinematicaPendiente.SosteniendoCuadro(v); // narración: cuadro congelado o pausa entre clips
+            if (!s.Redirigido && (textura != s.Evaluada || (!s.EnPantalla && corriendo)))
             {
                 s.Evaluada = textura;
                 s.EnPantalla = textura != null && BuscarFuentes(textura, s.Fuentes);
             }
-            bool reproduciendo = v.isPlaying;
-            // VR36: el reproductor que vuelve a sonar (el clip siguiente de la lista) pasa al frente de la pantalla otra vez.
+            // Main: con narración el cuadro se congela o hay pausa entre clips (corriendo); VR36: el que vuelve a sonar pasa al frente.
+            bool reproduciendo = corriendo;
             bool empezo = reproduciendo && !s.Sonaba;
             s.Sonaba = reproduciendo;
             s.SegundosParado = reproduciendo ? 0f : s.SegundosParado + dt;

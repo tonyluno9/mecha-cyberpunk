@@ -79,6 +79,9 @@ namespace MechaCyberpunk.CampoTiro.Editor
                 AssetDatabase.CreateAsset(datos, RutaDatos);
             }
             datos.Configurar(new[] { costalA, costalB }, centinela, pesado, perro, elite, guardia, blanco, turquesa, rejilla, holo, cCentinela, cPesado, cPerro, cElite, cGuardia);
+            // VR50: SKULL y policía con su modelo real (si falta alguno, ese botón sale con la cápsula; no detiene lo demás).
+            datos.ConfigurarExtra(Cargar(Visuales + "Visual_E19_PandilleroSkulls_b.prefab"), Cargar(Visuales + "Visual_Policia.prefab"),
+                Control("E19_PandilleroSkulls/E19_PandilleroSkulls_b"), Control("Policia/Policia"));
             EditorUtility.SetDirty(datos);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();

@@ -578,9 +578,29 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 63d3177e8f42a00469846dac77bb35c9, type: 3}
     - {fileID: 8300000, guid: ddd3dd21659866540b61e84b6d89e64f, type: 3}
     provisionales: []
+  - id: MUS_CAMPO_TIRO
+    finales:
+    - {fileID: 8300000, guid: a2d4092a18d0ba84e931ae4e35eeb117, type: 3}
+    provisionales: []
+  - id: MUS_FASE_NOVA
+    finales:
+    - {fileID: 8300000, guid: 47df2c19984e43841a7feed2a7272b6d, type: 3}
+    provisionales: []
+  - id: MUS_FASE_POLICIA
+    finales:
+    - {fileID: 8300000, guid: 336771c0bdf0ea947ae016852c30c844, type: 3}
+    provisionales: []
+  - id: MUS_FASE_SKULLS
+    finales:
+    - {fileID: 8300000, guid: e21fde31ccccdc945873d6379831dc30, type: 3}
+    provisionales: []
   - id: MUS_MENU_PRINCIPAL
     finales:
     - {fileID: 8300000, guid: 4d3b7a1a6f1377c49ae2090bdf30c02b, type: 3}
+    provisionales: []
+  - id: MUS_PIANO_INTRO
+    finales:
+    - {fileID: 8300000, guid: a6ff1163c49574a4885c3be3cf9026ee, type: 3}
     provisionales: []
   - id: NAV_DANIADA
     finales:
@@ -1721,7 +1741,17 @@ MonoBehaviour:
     encendido: 1
   - id: MUN_PUERTA_CASA_CERRAR
     encendido: 1
+  - id: MUS_CAMPO_TIRO
+    encendido: 1
+  - id: MUS_FASE_NOVA
+    encendido: 1
+  - id: MUS_FASE_POLICIA
+    encendido: 1
+  - id: MUS_FASE_SKULLS
+    encendido: 1
   - id: MUS_MENU_PRINCIPAL
+    encendido: 1
+  - id: MUS_PIANO_INTRO
     encendido: 1
   - id: NAV_DANIADA
     encendido: 1

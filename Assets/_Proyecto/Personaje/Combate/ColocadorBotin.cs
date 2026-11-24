@@ -44,7 +44,8 @@ namespace MechaCyberpunk.Personaje.Combate
                 Object.Destroy(dinero.gameObject, vida);
             }
             float probabilidad = datos != null ? datos.ProbabilidadMunicion : 0.6f;
-            if (MunicionEnPiso.ArmaDestino() != null && Azar() < probabilidad)
+            // T-drops-24nov: con RecompensasEnemigo activo las balas de los enemigos las pone él (según el bando); aquí ya no se duplican.
+            if (!RecompensasEnemigo.ReemplazaMunicionDelBotin && MunicionEnPiso.ArmaDestino() != null && Azar() < probabilidad)
             {
                 MunicionEnPiso municion = MunicionEnPiso.Crear(piso + Vector3.forward * separacion * 0.9f);
                 Object.Destroy(municion.gameObject, vida);

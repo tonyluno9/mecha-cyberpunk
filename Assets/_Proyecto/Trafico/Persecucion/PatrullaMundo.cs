@@ -252,6 +252,7 @@ namespace MechaCyberpunk.Trafico.Persecucion
             }
             PoliciasBajaron = true;
             RadioPolicia.Sonar(transform.position, config); // T-1322
+            AbrirPuertas(); // T-historia-libre-23nov: la patrulla PA01 abre sus puertas (PuertasCarro) al bajarse los policías
             if (ocupantes.Count > 0)
             {
                 BajarOcupantes(false);
@@ -265,6 +266,18 @@ namespace MechaCyberpunk.Trafico.Persecucion
                 PonerPolicia(punto, GiroHaciaJugador(punto), i);
             }
             Sonidos.ReproducirEn("VEH_PUERTA_ABRIR", transform.position);
+        }
+
+        // T-historia-libre-23nov: vuelve a usar la animación de puertas de la patrulla (PuertasCarro de PA01); un modelo sin puertas no hace nada.
+        private void AbrirPuertas()
+        {
+            MechaCyberpunk.Vehiculos.Carro.PuertasCarro puertas = GetComponentInChildren<MechaCyberpunk.Vehiculos.Carro.PuertasCarro>();
+            if (puertas == null)
+            {
+                return;
+            }
+            puertas.AbrirPuerta(true);
+            puertas.AbrirPuerta(false);
         }
 
         private Vector3 PuntoDeBajada(float lado, int i)

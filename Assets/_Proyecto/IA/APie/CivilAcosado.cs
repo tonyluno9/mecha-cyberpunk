@@ -274,6 +274,7 @@ namespace MechaCyberpunk.IA.APie
             }
             textoGrito.text = texto;
             textoGrito.gameObject.SetActive(true);
+            textoGrito.GetComponent<MeshRenderer>().enabled = TextosSobreCabeza.Mostrar; // VR54: sin texto sobre la cabeza (la voz sigue)
         }
 
         private void ActualizarGrito()

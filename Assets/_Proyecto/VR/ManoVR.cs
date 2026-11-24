@@ -127,11 +127,13 @@ namespace MechaCyberpunk.VR
             historial.Clear();
             rotacionPrevia = transform.rotation;
             CrearAcciones();
+            MechaCyberpunk.Personaje.Combate.ManosRecogida.Agregar(transform); // T-drops-24nov: recoge balas y botiquines al acercarla
         }
 
         private void OnDisable()
         {
             TirarAcciones();
+            MechaCyberpunk.Personaje.Combate.ManosRecogida.Quitar(transform);
         }
 
         private void OnDestroy()
