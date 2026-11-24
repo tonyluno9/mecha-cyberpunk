@@ -33,6 +33,22 @@ namespace MechaCyberpunk.Tests.VR
             FlujoPartida.TituloEnEditor = true;
         }
 
+        /// <summary>
+        /// VR8: descarga la ciudad al terminar. Si se queda cargada, su cinemática inicial sigue en curso y las clases que corren después
+        /// (Comodidad, GestosArma, GuiaGestos, HudCasco) arman el rig encima, sin control.
+        /// </summary>
+        [UnityTearDown]
+        public IEnumerator DescargarCiudad()
+        {
+            Scene ciudad = SceneManager.GetActiveScene();
+            Scene vacia = SceneManager.CreateScene("VaciaVR_" + Time.frameCount);
+            SceneManager.SetActiveScene(vacia);
+            if (ciudad.IsValid() && ciudad.isLoaded && ciudad != vacia)
+            {
+                yield return SceneManager.UnloadSceneAsync(ciudad);
+            }
+        }
+
         public override void TearDown()
         {
             FlujoPartida.TituloEnEditor = false;

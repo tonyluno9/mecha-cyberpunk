@@ -179,7 +179,7 @@ namespace MechaCyberpunk.Tests.VR
             Assert.IsFalse(panel.Sensibilidad.gameObject.activeSelf, "En VR no sale la sensibilidad del ratón.");
             Assert.IsTrue(panel.VelocidadGiroVR.gameObject.activeSelf, "VR18: sale la VELOCIDAD DE GIRO.");
             Assert.AreEqual(PanelOpcionesInicio.TextosGiroVR[(int)ModoGiroVR.Suave], panel.GiroVR.TextoValor, "VR18: GIRO es SUAVE por defecto.");
-            Assert.AreEqual(PanelOpcionesInicio.TextoVelocidadGiro(120f), panel.VelocidadGiroVR.TextoValor);
+            Assert.AreEqual(PanelOpcionesInicio.TextoVelocidadGiro(OpcionesVR.VelocidadGiroPorDefecto), panel.VelocidadGiroVR.TextoValor);
             Assert.AreEqual(PanelOpcionesInicio.TextosVinetaVR[(int)NivelVinetaVR.Baja], panel.VinetaVR.TextoValor, "VR26: VIÑETA es BAJA por defecto.");
             Assert.IsTrue(panel.RutaVR.gameObject.activeSelf, "Sale RUTA en VR.");
             Assert.IsTrue(panel.RutaVR.Activo, "RUTA: SÍ por defecto.");
@@ -193,12 +193,12 @@ namespace MechaCyberpunk.Tests.VR
             panel.RutaVR.Mover(-1);
             Assert.IsFalse(OpcionesVR.Ruta, "RUTA → NO se guarda.");
             Assert.AreEqual(ModoGiroVR.PorPasos, OpcionesVR.Giro, "GIRO → POR PASOS se guarda.");
-            Assert.AreEqual(120f - OpcionesVR.PasoVelocidadGiro, OpcionesVR.VelocidadGiro, 0.01f, "VELOCIDAD DE GIRO se guarda.");
+            Assert.AreEqual(OpcionesVR.VelocidadGiroPorDefecto - OpcionesVR.PasoVelocidadGiro, OpcionesVR.VelocidadGiro, 0.01f, "VELOCIDAD DE GIRO se guarda.");
             Assert.IsFalse(OpcionesVR.Vineta, "VIÑETA → NO se guarda.");
             Assert.AreEqual(ModoCorrerVR.Alternar, OpcionesVR.Correr, "CORRER → ALTERNAR se guarda.");
             OpcionesVR.Recargar();
             Assert.AreEqual(ModoGiroVR.PorPasos, OpcionesVR.Giro);
-            Assert.AreEqual(120f - OpcionesVR.PasoVelocidadGiro, OpcionesVR.VelocidadGiro, 0.01f);
+            Assert.AreEqual(OpcionesVR.VelocidadGiroPorDefecto - OpcionesVR.PasoVelocidadGiro, OpcionesVR.VelocidadGiro, 0.01f);
             Assert.IsFalse(OpcionesVR.Vineta);
             Assert.AreEqual(ModoCorrerVR.Alternar, OpcionesVR.Correr);
 
