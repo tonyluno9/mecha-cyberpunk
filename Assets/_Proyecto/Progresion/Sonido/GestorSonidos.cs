@@ -195,6 +195,31 @@ namespace MechaCyberpunk.Progresion.Sonido
 
         public AudioMixerGroup Grupo(SeccionSonido seccion) => MezclaAudio.Grupo(seccion);
 
+        private AudioSource fuenteMuestra;
+
+        /// <summary>
+        /// T-volumen-ajustes-24nov: la muestra de un deslizador de volumen (una voz corta al mover VOCES). Suena en 2D por el grupo de su sección,
+        /// en su propia fuente y aunque el juego esté en pausa (el AudioListener pausado no la detiene). Corta la muestra anterior.
+        /// </summary>
+        public void ReproducirMuestra(string id)
+        {
+            AudioClip clip = catalogo != null && !string.IsNullOrEmpty(id) ? catalogo.Elegir(id) : null;
+            if (clip == null) return;
+            if (fuenteMuestra == null)
+            {
+                fuenteMuestra = CrearFuente("Muestra_Volumen");
+                fuenteMuestra.spatialBlend = 0f;
+                fuenteMuestra.ignoreListenerPause = true;
+                fuenteMuestra.priority = 0;
+            }
+            SeccionSonido seccion = ReglaCatalogoSonidos.SeccionDe(id);
+            fuenteMuestra.Stop();
+            fuenteMuestra.clip = clip;
+            fuenteMuestra.volume = VolumenFinal(seccion) * ReglaMezclaSonidos.Para(id).Volumen;
+            fuenteMuestra.outputAudioMixerGroup = MezclaAudio.Grupo(seccion);
+            fuenteMuestra.Play();
+        }
+
         // Volumen de mezcla de la fuente (balance entre secciones del catálogo). Los deslizadores de opciones ya no multiplican aquí:
         // los aplica el AudioMixer por grupo, en decibeles.
         private float VolumenFinal(SeccionSonido seccion)

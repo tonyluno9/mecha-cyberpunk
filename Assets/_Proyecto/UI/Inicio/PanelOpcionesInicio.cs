@@ -247,6 +247,19 @@ namespace MechaCyberpunk.UI.Inicio
             }
         }
 
+        /// <summary>T-volumen-ajustes-24nov: la voz corta que suena al mover VOCES (EFECTOS ya suena con el UI_MOVER de la fila).</summary>
+        public const string MuestraVoces = "JUG_ESFUERZO";
+        /// <summary>Lo mínimo entre dos muestras de voz al mantener la flecha (s).</summary>
+        public const float SegundosEntreMuestras = 0.6f;
+        private float proximaMuestra;
+
+        private void TocarMuestra(SeccionSonido seccion)
+        {
+            if (seccion != SeccionSonido.Voces || Time.unscaledTime < proximaMuestra) return;
+            proximaMuestra = Time.unscaledTime + SegundosEntreMuestras;
+            (Registro<ISonidos>.Actual as MechaCyberpunk.Progresion.Sonido.GestorSonidos)?.ReproducirMuestra(MuestraVoces);
+        }
+
         private void Conectar()
         {
             calidad.Cambio += f => { if (!refrescando) Servicio?.FijarCalidad((CalidadGrafica)f.Indice); };
@@ -256,7 +269,12 @@ namespace MechaCyberpunk.UI.Inicio
             for (int i = 0; i < volumenes.Length; i++)
             {
                 SeccionSonido seccion = SeccionesVolumen[i];
-                volumenes[i].Cambio += f => { if (!refrescando) Servicio?.FijarVolumen(seccion, f.Valor); };
+                volumenes[i].Cambio += f =>
+                {
+                    if (refrescando) return;
+                    Servicio?.FijarVolumen(seccion, f.Valor);
+                    TocarMuestra(seccion);
+                };
             }
             sensibilidad.Cambio += f => { if (!refrescando) Servicio?.FijarSensibilidad(f.Valor); };
             invertirY.Cambio += f => { if (!refrescando) Servicio?.FijarInvertirY(f.Activo); };
