@@ -1929,6 +1929,7 @@ namespace MechaCyberpunk.IA.APie
             }
             textoGrito.text = texto;
             textoGrito.gameObject.SetActive(true);
+            textoGrito.GetComponent<MeshRenderer>().enabled = TextosSobreCabeza.Mostrar; // VR54: sin texto sobre la cabeza (la voz sigue)
         }
 
         /// <summary>Texto del grito que se ve ahora, o null.</summary>
@@ -2389,6 +2390,7 @@ namespace MechaCyberpunk.IA.APie
             }
             KO?.Invoke();
             Vencido?.Invoke(this);
+            RecompensasPandillero.AlCaer(this); // T-drops-24nov: balas según su bando y a veces un botiquín
             // T-686: suelta su dinero y su arma (el jefe, una escopeta); el jugador los recoge.
             EventosBotin.Publicar(new InfoBotin(transform.position, datos.Dinero,
                 esJefe ? ArmaBotin.Escopeta : (datos.UsaPistola ? ArmaBotin.Pistola : ArmaBotin.Ninguna)));
