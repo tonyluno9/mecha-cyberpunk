@@ -85,6 +85,29 @@ namespace MechaCyberpunk.UI.Inicio
             return recorte <= RecorteMaximo ? cubierto : TamanoEncajado(ancho, alto, anchoPantalla, altoPantalla);
         }
 
+        /// <summary>
+        /// T100: el frame de una carga nueva, al azar entre <paramref name="cantidad"/>, nunca el mismo que <paramref name="anterior"/>
+        /// (si hay más de uno). Con <paramref name="anterior"/> fuera de rango (primera carga) cualquiera. -1 si no hay frames.
+        /// </summary>
+        public static int ElegirSinRepetir(int cantidad, int anterior, System.Random azar)
+        {
+            if (cantidad <= 0)
+            {
+                return -1;
+            }
+            if (cantidad == 1)
+            {
+                return 0;
+            }
+            if (anterior < 0 || anterior >= cantidad)
+            {
+                return azar.Next(cantidad);
+            }
+            // Uno de los otros cantidad-1, con la misma probabilidad cada uno.
+            int i = azar.Next(cantidad - 1);
+            return i >= anterior ? i + 1 : i;
+        }
+
         public static float Escala(float t) => Mathf.Lerp(EscalaInicial, EscalaFinal, Progreso(t));
 
         /// <summary>Desplazamiento (px) de la foto <paramref name="indice"/> a los <paramref name="t"/> segundos: cruza de un lado al otro en una dirección propia.</summary>

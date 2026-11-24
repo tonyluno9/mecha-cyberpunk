@@ -12,7 +12,7 @@ namespace MechaCyberpunk.Tests.UI
 {
     /// <summary>
     /// T-1316: ARRESTADO y HAS MUERTO como M33 y M34 (el juego se ve detrás, panel con marco, y se cubre antes de mover al jugador)
-    /// y la pantalla de carga con las fotos L01-L06. Con CAPTURAR_T1316=1 deja capturas en docs/capturas/t-1316/ (sobre una foto real de
+    /// y la pantalla de carga (T100: un frame de las cinemáticas por carga). Con CAPTURAR_T1316=1 deja capturas en docs/capturas/t-1316/ (sobre una foto real de
     /// la calle, como se vería encima del juego).
     /// </summary>
     public class PantallasT1316Pruebas
@@ -72,26 +72,46 @@ namespace MechaCyberpunk.Tests.UI
         }
 
         [UnityTest]
-        public IEnumerator Carga_MuestraLasFotosConZoomYFundido()
+        public IEnumerator Carga_UnFrameAlAzarPorCarga_SinRepetir_YCubreLaPantalla()
         {
+            // T100: un frame de las cinemáticas por carga, quieto, que cubre el lienzo sin deformarse; la carga siguiente trae otro.
             PantallaCargando pantalla = PantallaCargando.Mostrar();
             yield return null;
             FondoCarga fondo = pantalla.GetComponentInChildren<FondoCarga>();
-            Assert.IsNotNull(fondo.Fotos, "hay fotos de carga");
-            Assert.AreEqual(6, fondo.Fotos.Cantidad, "L01-L06");
+            Assert.IsNotNull(fondo.Fotos, "hay frame de carga");
+            Assert.AreEqual(FramesCarga.Cantidad, fondo.Fotos.Cantidad);
             Texture primera = fondo.Fotos.FotoActual;
-            float escala = fondo.Fotos.EscalaActual;
+            Assert.IsNotNull(primera);
+            StringAssert.StartsWith("Carga_C", primera.name, "solo frames de las cinemáticas (no L01-L06)");
+            int indicePrimera = fondo.Fotos.Indice;
+            Assert.AreEqual(indicePrimera, FotosCarga.UltimaElegida);
+            Rect lienzo = ((RectTransform)fondo.Fotos.transform).rect;
+            Vector2 t = fondo.Fotos.TamanoFoto;
+            Assert.GreaterOrEqual(t.x, lienzo.width - 0.5f, "cubre el ancho");
+            Assert.GreaterOrEqual(t.y, lienzo.height - 0.5f, "cubre el alto");
+            Assert.AreEqual((float)primera.width / primera.height, t.x / t.y, 1e-3f, "sin deformar");
             if (Capturar)
             {
                 Foto(pantalla.GetComponentInChildren<Canvas>(), "carga-1", false);
             }
-            yield return EsperarReal(2f);
-            Assert.AreEqual(escala, fondo.Fotos.EscalaActual, 1e-4f, "T-1330: la foto no se acerca (no se recorta)");
-            yield return EsperarReal(ReglaFotosCarga.SegundosPorFoto + ReglaFotosCarga.SegundosFundido - 2f + 0.2f);
-            Assert.AreNotSame(primera, fondo.Fotos.FotoActual, "pasó a la siguiente foto");
-            if (Capturar)
+            yield return EsperarReal(ReglaFotosCarga.SegundosPorFoto + ReglaFotosCarga.SegundosFundido + 0.2f);
+            Assert.AreSame(primera, fondo.Fotos.FotoActual, "en una carga se queda el mismo frame");
+            Assert.AreEqual(1f, fondo.Fotos.EscalaActual, 1e-4f, "sin zoom");
+
+            for (int i = 0; i < 4; i++)
             {
-                Foto(pantalla.GetComponentInChildren<Canvas>(), "carga-2", false);
+                Object.Destroy(PantallaCargando.Actual.gameObject);
+                yield return null;
+                PantallaCargando otra = PantallaCargando.Mostrar();
+                yield return null;
+                FotosCarga fotos = otra.GetComponentInChildren<FondoCarga>().Fotos;
+                Assert.IsNotNull(fotos);
+                Assert.AreNotEqual(indicePrimera, fotos.Indice, "la carga siguiente no repite el frame anterior");
+                indicePrimera = fotos.Indice;
+                if (Capturar && i == 0)
+                {
+                    Foto(otra.GetComponentInChildren<Canvas>(), "carga-2", false);
+                }
             }
         }
 

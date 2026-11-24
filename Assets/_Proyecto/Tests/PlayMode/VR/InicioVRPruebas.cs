@@ -462,6 +462,17 @@ namespace MechaCyberpunk.Tests.VR
             yield return Cuadros(3);
             ComprobarEnPantallaGrande(carga, "La pantalla de carga");
             ComprobarUnaSolaPantalla("La carga");
+
+            // T100: en la pantalla de cine la carga trae su frame de cinemática, encendido y cubriendo el lienzo.
+            FotosCarga fotos = carga.GetComponentInChildren<FotosCarga>(true);
+            Assert.IsNotNull(fotos, "La carga en VR lleva el frame de cinemática.");
+            Assert.IsNotNull(fotos.FotoActual);
+            StringAssert.StartsWith("Carga_C", fotos.FotoActual.name);
+            RawImage imagen = fotos.GetComponentInChildren<RawImage>(true);
+            Assert.IsTrue(imagen.isActiveAndEnabled && imagen.color.a > 0.99f, "El frame se ve.");
+            Rect lienzo = ((RectTransform)fotos.transform).rect;
+            Assert.GreaterOrEqual(fotos.TamanoFoto.x, lienzo.width - 0.5f, "Cubre el ancho de la pantalla de cine.");
+            Assert.GreaterOrEqual(fotos.TamanoFoto.y, lienzo.height - 0.5f, "Cubre el alto de la pantalla de cine.");
         }
 
         [UnityTest]

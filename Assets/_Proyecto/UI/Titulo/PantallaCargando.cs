@@ -11,8 +11,8 @@ using UnityEngine.UI;
 namespace MechaCyberpunk.UI.Titulo
 {
     /// <summary>
-    /// La pantalla de carga (T-537; minimalista desde el pedido de Tony "carga"): solo la ilustración L01-L06 (llena la pantalla sin
-    /// deformarse, con fundido entre fotos), el logo del menú principal chico abajo a la derecha, una frase de consejo con letra fina
+    /// La pantalla de carga (T-537; minimalista desde el pedido de Tony "carga"): solo un frame de las cinemáticas al azar por carga, sin repetir el anterior (T100; llena la pantalla sin
+    /// deformarse, recortando lo que sobra), el logo del menú principal chico abajo a la derecha, una frase de consejo con letra fina
     /// abajo a la izquierda y tres puntos discretos que indican que carga. Sin barra, porcentaje, título ni efectos de glitch.
     /// Sobrevive al cambio de escena. Dos modos: con <see cref="Asignar"/> sigue una carga asíncrona real (el progreso interno suaviza
     /// el avance de Unity y la escena se activa cuando llega al final, ver <see cref="ReglaInicio"/>); sin operación avanza sola hacia
