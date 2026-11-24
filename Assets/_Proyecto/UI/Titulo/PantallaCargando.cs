@@ -3,7 +3,9 @@ using MechaCyberpunk.Progresion;
 using MechaCyberpunk.Progresion.Sonido;
 using MechaCyberpunk.UI.Inicio;
 using MechaCyberpunk.UI.Kit;
+using MechaCyberpunk.Progresion.Partida;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace MechaCyberpunk.UI.Titulo
@@ -14,7 +16,8 @@ namespace MechaCyberpunk.UI.Titulo
     /// abajo a la izquierda y tres puntos discretos que indican que carga. Sin barra, porcentaje, título ni efectos de glitch.
     /// Sobrevive al cambio de escena. Dos modos: con <see cref="Asignar"/> sigue una carga asíncrona real (el progreso interno suaviza
     /// el avance de Unity y la escena se activa cuando llega al final, ver <see cref="ReglaInicio"/>); sin operación avanza sola hacia
-    /// el 90 % (recarga de la ciudad) y se completa cuando el jugador de la escena nueva se registra. Se desvanece al terminar.
+    /// el 90 % (recarga de la ciudad) y se completa cuando el jugador de la escena nueva se registra o, si la escena nueva es el menú
+    /// principal (sin jugador), al cargarla (T96, <see cref="ReglaCierreCarga"/>). Se desvanece al terminar.
     /// </summary>
     public class PantallaCargando : MonoBehaviour
     {
@@ -53,6 +56,7 @@ namespace MechaCyberpunk.UI.Titulo
         private int indiceConsejo;
         private float segundosConsejo;
         private bool jugadorNuevo;
+        private bool menuCargado;
         private bool activada;
 
         public static PantallaCargando Actual => actual;
@@ -67,6 +71,22 @@ namespace MechaCyberpunk.UI.Titulo
         public bool ActivoAsincrono => operacion != null;
         public bool EscenaActivada => activada;
         public float Segundos => Time.realtimeSinceStartup - inicio;
+        /// <summary>T96: true si la escena que se cargó es el menú (no trae jugador) y la carga ya no lo espera.</summary>
+        public bool MenuCargado => menuCargado;
+        /// <summary>T96: true si ya llegó lo que esta carga esperaba (el jugador o el menú principal).</summary>
+        public bool DestinoListo => ReglaCierreCarga.DestinoListo(jugadorNuevo, menuCargado, false, false);
+
+        /// <summary>
+        /// T96: el menú principal avisa al arrancar que ya está en pantalla. Sin jugador en esa escena, la carga que venía (de HAS MUERTO
+        /// o de la pausa) se quita en cuanto termine la operación, en vez de esperar al tope de <see cref="SegundosMaximos"/>.
+        /// </summary>
+        public static void AvisarMenuListo()
+        {
+            if (actual != null)
+            {
+                actual.menuCargado = true;
+            }
+        }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void Reiniciar() => actual = null;
@@ -147,11 +167,13 @@ namespace MechaCyberpunk.UI.Titulo
         private void OnEnable()
         {
             Registro<IJugador>.Agregado += AlLlegarJugador;
+            SceneManager.sceneLoaded += AlCargarEscena;
         }
 
         private void OnDisable()
         {
             Registro<IJugador>.Agregado -= AlLlegarJugador;
+            SceneManager.sceneLoaded -= AlCargarEscena;
         }
 
         private void OnDestroy()
@@ -163,6 +185,20 @@ namespace MechaCyberpunk.UI.Titulo
         }
 
         private void AlLlegarJugador(IJugador jugador) => jugadorNuevo = true;
+
+        // T96: al llegar a una escena de menú (Inicio, o la ciudad en su título cuando ese título es el menú) no habrá jugador que esperar.
+        // sceneLoaded llega después de los Awake de la escena, así que FlujoPartida.EnTitulo ya está decidido (CamaraTitulo.Awake).
+        private void AlCargarEscena(Scene escena, LoadSceneMode modo)
+        {
+            if (modo != LoadSceneMode.Single)
+            {
+                return;
+            }
+            if (ReglaCierreCarga.DestinoListo(false, escena.path == EscenaInicio.Ruta, FlujoPartida.EnTitulo, EscenaInicio.DebeVolverAlInicio))
+            {
+                menuCargado = true;
+            }
+        }
 
         private void Update()
         {
@@ -197,16 +233,17 @@ namespace MechaCyberpunk.UI.Titulo
                     activada = true;
                     operacion.allowSceneActivation = true;
                 }
-                if (activada && jugadorNuevo && operacion.isDone)
+                if (ReglaCierreCarga.PuedeTerminarAsincrona(activada, operacion.isDone, DestinoListo))
                 {
                     Terminar();
                 }
             }
             else
             {
-                float objetivo = jugadorNuevo ? 1f : ReglaInicio.ProgresoSimulado(t, SegundosSimulados);
+                bool listo = DestinoListo;
+                float objetivo = listo ? 1f : ReglaInicio.ProgresoSimulado(t, SegundosSimulados);
                 mostrado = ReglaInicio.Suavizar(mostrado, objetivo, dt, VelocidadBarra);
-                if (jugadorNuevo && t >= SegundosMinimos && mostrado >= 0.999f)
+                if (ReglaCierreCarga.PuedeTerminarSimulada(listo, t, SegundosMinimos, mostrado))
                 {
                     Terminar();
                 }

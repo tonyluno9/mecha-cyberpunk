@@ -3,7 +3,7 @@ Le gustó: en VR el juego se ve bien.
 | # | Tarea | Sesión | Estado |
 |---|---|---|---|
 | T97 | Cinemáticas con frames fijos (salvo campo y despertar) | A (main) | HECHA |
-| T96 | Morir → MENÚ PRINCIPAL: carga infinita | A (main) | PENDIENTE |
+| T96 | Morir → MENÚ PRINCIPAL: carga infinita | A (main) | HECHA |
 | T94 | Modo libre: 2 min de SKULLS antes de la policía | A (main) | PENDIENTE |
 | T90 | Menú de Tino no desaparece en su cinemática | A (main) | PENDIENTE |
 | T93 | Pantalla de muerte con estilo nuevo | A (main) | PENDIENTE |
