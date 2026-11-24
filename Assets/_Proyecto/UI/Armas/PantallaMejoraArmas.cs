@@ -625,12 +625,20 @@ namespace MechaCyberpunk.UI.Armas
             else if (!cartera.IntentarPagar(ReglaMejoraArma.Precio(siguiente), MotivoDinero.Compra))
             {
                 Sonidos.Reproducir(config.SonidoSinDinero);
+                if (PestanasBancoTino.Abierto)
+                {
+                    MechaCyberpunk.Progresion.Sonido.VocesApoyo.TinoSinDineroAlcanza(); // T-voces-personajes-23nov: TINO_VOZ_SIN_DINERO
+                }
                 MostrarAviso(config.TextoNoAlcanza, TrazoH10.Coral);
             }
             else
             {
                 inventario.Agregar(siguiente, 1);
                 Sonidos.Reproducir(config.SonidoCompra);
+                if (PestanasBancoTino.Abierto)
+                {
+                    MechaCyberpunk.Progresion.Sonido.VocesApoyo.TinoCompro(); // T-voces-personajes-23nov: TINO_VOZ_COMPRA
+                }
                 comproAlgo = true;
                 ultimaMejora = ArmaElegida.Nombre + " " + Romanos[siguiente.Nivel];
                 // T-895: primero el escaneo y la pieza regresando; el destello y los números suben cuando termina.

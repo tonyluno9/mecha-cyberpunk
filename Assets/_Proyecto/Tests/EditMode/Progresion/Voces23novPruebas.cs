@@ -153,5 +153,51 @@ namespace MechaCyberpunk.Tests.Progresion
             Assert.That(VocesFaccion.EventoDeSkull(VocesPandilla.LoPerdimos), Is.EqualTo(EventoVoz.LoPerdimos));
             Assert.That(Array.IndexOf(ReglaMezclaSonidos.IdsSkulls, "SKU_MUERTE"), Is.GreaterThanOrEqualTo(0));
         }
+
+        [Test]
+        public void CanepaYTino_Eventos_PidenSuVozGrabadaEn3D()
+        {
+            foreach (string id in new[] { VocesApoyo.CanepaSaludo, VocesApoyo.CanepaReparar, VocesApoyo.CanepaDespedida })
+            {
+                Assert.That(Voces23nov.CarpetaDe(id), Is.EqualTo("Canepa"), id);
+                Assert.That(Voces23nov.Es2D(id), Is.False, id);
+                Assert.That(ReglaMezclaSonidos.Para(id).Grupo, Is.EqualTo(Voces23nov.GrupoCanepa), id);
+            }
+            foreach (string id in new[] { VocesApoyo.TinoSaludo, VocesApoyo.TinoBanco, VocesApoyo.TinoCompra, VocesApoyo.TinoSinDinero, VocesApoyo.TinoDespedida })
+            {
+                Assert.That(Voces23nov.CarpetaDe(id), Is.EqualTo("Tino"), id);
+                Assert.That(Voces23nov.Es2D(id), Is.False, id);
+                Assert.That(ReglaMezclaSonidos.Para(id).MaxVoces, Is.EqualTo(1), id);
+            }
+            Assert.That(VocesApoyo.TocaPuerta(30f, 0f), Is.True);
+            Assert.That(VocesApoyo.TocaPuerta(5f, 0f), Is.False);
+            Assert.That(VocesApoyo.CambioCercania(false, 4f), Is.EqualTo(1), "llega: saluda");
+            Assert.That(VocesApoyo.CambioCercania(true, 7f), Is.EqualTo(0), "en el margen no repite");
+            Assert.That(VocesApoyo.CambioCercania(true, 10f), Is.EqualTo(-1), "se va: despedida");
+        }
+
+        [Test]
+        public void MeseraYPeatones_IdsEnElCatalogo_ConSuGrupo()
+        {
+            // Los literales de Casino (ReglaVozMesera) y de Personaje.Visual (ReglaVozPeaton): este ensamblado de pruebas no los ve.
+            foreach (string id in new[] { "MESERA_ROBOT_SALUDO", "MESERA_ROBOT_SERVIR", "MESERA_ROBOT_SUERTE", "MESERA_ROBOT_DESPEDIDA" })
+            {
+                Assert.That(Voces23nov.CarpetaDe(id), Is.EqualTo("Mesera_Robot"), id);
+                Assert.That(ReglaMezclaSonidos.Para(id).Grupo, Is.EqualTo(Voces23nov.GrupoMesera), id);
+            }
+            foreach (string momento in new[] { "MIEDO", "ENOJO", "POLICIA", "SALUDO", "VENDEDOR", "RISA" })
+            {
+                for (int v = 1; v <= 3; v++)
+                {
+                    string id = "NPC_VOZ" + v + "_" + momento;
+                    Assert.That(Voces23nov.CarpetaDe(id), Is.EqualTo("Peatones"), id);
+                    Assert.That(Voces23nov.Es2D(id), Is.False, id);
+                    PoliticaSonido p = ReglaMezclaSonidos.Para(id);
+                    Assert.That(p.Grupo, Is.EqualTo(Voces23nov.GrupoPeatones), id);
+                    Assert.That(p.MaxVoces, Is.EqualTo(Voces23nov.MaxVocesPeatones), id);
+                    Assert.That(p.DistanciaMaxima, Is.GreaterThan(0f), id);
+                }
+            }
+        }
     }
 }

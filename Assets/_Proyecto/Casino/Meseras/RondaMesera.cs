@@ -71,12 +71,49 @@ namespace MechaCyberpunk.Casino.Meseras
         /// <summary>Grados de giro del modelo (ya calibrado).</summary>
         public float GiroModelo => giroModelo;
 
+        // T-voces-personajes-23nov: su voz (VozMesera): saluda al jugador que pasa junto a ella y dice SERVIR al llegar a su punto con el jugador cerca.
+        private const float SegundosEntreRevisionesVoz = 0.25f;
+        private float ultimoSaludo = float.NegativeInfinity;
+        private float ultimoServir = float.NegativeInfinity;
+        private float proximaRevisionVoz;
+        private bool caminabaAntes;
+
+        private void OnEnable() => VozMesera.Agregar(this);
+
+        private void OnDisable() => VozMesera.Quitar(this);
+
+        private void RevisarVoz()
+        {
+            bool caminaAhora = ronda.EstaCaminando;
+            bool acabaDeParar = caminabaAntes && !caminaAhora;
+            if (!acabaDeParar && Time.time < proximaRevisionVoz)
+            {
+                caminabaAntes = caminaAhora;
+                return;
+            }
+            proximaRevisionVoz = Time.time + SegundosEntreRevisionesVoz;
+            float distancia = VozMesera.DistanciaAlJugador(transform.position);
+            if (ReglaVozMesera.TocaServir(caminabaAntes, caminaAhora, distancia, Time.time, ultimoServir))
+            {
+                if (VozMesera.Decir(this, ReglaVozMesera.Servir))
+                {
+                    ultimoServir = Time.time;
+                }
+            }
+            else if (ReglaVozMesera.TocaSaludo(distancia, Time.time, ultimoSaludo) && VozMesera.Decir(this, ReglaVozMesera.Saludo))
+            {
+                ultimoSaludo = Time.time;
+            }
+            caminabaAntes = caminaAhora;
+        }
+
         private void Update()
         {
             ronda.Avanzar(Time.deltaTime);
             transform.position = ronda.Posicion;
             transform.rotation = Quaternion.RotateTowards(transform.rotation, Mirada(), GradosPorSegundo * Time.deltaTime);
             animador.SetFloat(ParametroVelocidad, ronda.EstaCaminando ? velocidad : 0f);
+            RevisarVoz();
         }
     }
 }

@@ -272,9 +272,54 @@ namespace MechaCyberpunk.Personaje.Visual
             hayGrafo = true;
         }
 
+        // T-voces-personajes-23nov: voz de peatón (una de las tres NPC_VOZn, la misma siempre): los vendedores pregonan y los que platican en pareja se
+        // ríen, cada tanto y solo con el jugador cerca. Una frase a la vez por persona (ReglaVozPeaton) y un silencio común entre todos (VozPeaton).
+        private const float SegundosEntreIntentosVoz = 4f;
+        private const float ProbabilidadPregon = 0.5f;
+        private const float ProbabilidadRisaBanqueta = 0.25f;
+        private const string PrefijoVendedor = "Vendedor_";
+        private readonly ReglaVozPeaton voz = new ReglaVozPeaton();
+        private float proximaVoz;
+        private int numeroVoz;
+        private int conVozGrabada = -1;
+
+        /// <summary>T-voces-personajes-23nov: un vendedor de puesto (sin pareja de plática, o con nombre Vendedor_ de los creadores de escena).</summary>
+        public bool EsVendedor => sinPareja || name.StartsWith(PrefijoVendedor) || (mover != null && mover.name.StartsWith(PrefijoVendedor));
+
+        /// <summary>La voz de peatón (1 a 3) que le tocó; siempre la misma.</summary>
+        public int NumeroVoz => numeroVoz != 0 ? numeroVoz : (numeroVoz = ReglaVozPeaton.VozPara(GetInstanceID()));
+
+        private void RevisarVoz()
+        {
+            if (Time.time < proximaVoz)
+            {
+                return;
+            }
+            proximaVoz = Time.time + SegundosEntreIntentosVoz;
+            bool vendedor = EsVendedor;
+            bool corro = !vendedor && modo == ModoGente.Platicar && companero != null;
+            if ((!vendedor && !corro) || VozPeaton.DistanciaAlJugador(transform.position) > ReglaVozPeaton.DistanciaAmbiente)
+            {
+                return;
+            }
+            if (conVozGrabada < 0)
+            {
+                string nombres = name + "|" + (animador != null ? animador.name : string.Empty) + "|" + (cuerpo != null ? cuerpo.name : string.Empty);
+                // Los vigilantes (guardias de Nova, policías, pandilleros) no usan la voz de los civiles.
+                bool civil = radioMirar == RadioMirarNormal && ReglaVozPeaton.EsCivil(nombres);
+                conVozGrabada = civil && ReglaVozPeaton.UsaVozGrabada(ReglaSonidoNpc.Genero(nombres, GetInstanceID())) ? 1 : 0;
+            }
+            if (conVozGrabada == 0 || UnityEngine.Random.value >= (vendedor ? ProbabilidadPregon : ProbabilidadRisaBanqueta))
+            {
+                return;
+            }
+            VozPeaton.Decir(voz, NumeroVoz, vendedor ? MomentoVozPeaton.Vendedor : MomentoVozPeaton.Risa, transform.position);
+        }
+
         private void Update()
         {
             float dt = Time.deltaTime;
+            RevisarVoz();
             if (Mirar(dt))
             {
                 return;

@@ -145,6 +145,7 @@ namespace MechaCyberpunk.Casino.Tragamonedas
             premioPagado = false;
             girando = true;
             Sonidos.ReproducirEn(ReglaSonidoTragamonedas.Giro, transform.position); // T-1535
+            MechaCyberpunk.Casino.Meseras.VozMesera.DesearSuerte(transform.position); // T-voces-personajes-23nov: MESERA_ROBOT_SUERTE (cada tanto)
             StartCoroutine(Girar());
         }
 
