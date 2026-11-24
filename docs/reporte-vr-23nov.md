@@ -217,3 +217,65 @@ Lleva main `f6e47ad` (T80–T86, HUD final). `Builds\VR` y `Builds\VR3` no se to
 11. Quítate el visor y vuelve a ponértelo: ¿sale el aviso y A te deja seguir?
 12. Sube con B a un carro y a una moto, maneja una cuadra y baja con B: ¿marea?
 13. Siéntate en la silla del Doc o ve una cinemática: ¿llena la pantalla grande?
+
+## Quinta tanda (VR23–VR31) · build en `wtVR\Builds\VR5\CyberCity.exe`
+Main no traía nada nuevo (`f6e47ad` ya estaba incluido). No se tocaron `Builds\VR`, `VR3` ni `VR4`. Tareas en `docs/tareas/vr-23nov-c/`.
+
+### Qué quedó
+- **VR29 (lo grave)**: el Doc, Tino (tienda, banco y mejoras), las máquinas, el campo de tiro, la pausa, las opciones y el mapa ya no se pegan a la cara: se abren completos en el panel fijo, como el menú de Inicio, y se eligen con el láser. **B o Y cierran o regresan** en cualquier pantalla. El cuerpo del Doc y el arma de Tino se ven dentro del panel.
+- **VR25**: las esquinas negras del HUD eran tres degradados oscuros del HUD de PC. En VR ya no salen.
+- **VR26**: la viñeta es BAJA por defecto: cierra ~20 % de lo de antes y entra y sale en 0.1 s. En Opciones: VIÑETA NO / BAJA / MEDIA.
+- **VR27**: el reparto de botones final (tabla de abajo).
+  - **Sacar arma con gesto**: mano derecha a la cadera derecha + grip = pistola; sobre el hombro derecho + grip = arma larga. Vuelve a hacerlo para guardarla.
+  - **Recarga manual**: A suelta el cargador; mano izquierda a la cadera izquierda + grip toma uno nuevo; lo acercas a la pistola y entra.
+  - La rueda de armas ya no parpadea: se abre con X mantenida.
+- **VR28**: una sola tabla cambia todas las teclas de PC por botones de VR en cualquier texto (por ejemplo, "E para hablar" ahora dice "B para hablar").
+- **VR31**: la guía de controles son las 6 imágenes nuevas, con etiquetas cian, en páginas con ANTERIOR / SIGUIENTE / CERRAR. Sale la primera vez y desde Pausa → CONTROLES.
+- **VR24** (cambia la historia también en PC): después de C03 apareces en tu punto de inicio y te salen 3 SKULLS. Pelea protegida: sin policía y no puedes perder. Al vencerlos sale "TIENES Ƀ20,000 EN EL BANCO" y sigue VE CON EL DOC. Ya no hay objetivo de la ranura.
+- **VR30**: hay ruta de chevrones cian en el piso, cada 2 m y hasta 25 m hacia el objetivo. Se puede quitar en Opciones (RUTA SÍ/NO).
+
+### Qué no quedó
+- **VR23 (cosas flotando)**: NO QUEDÓ. Medí los 461 props de la ciudad contra los techos reales y ninguno flota más de 5 cm, así que no se movió nada (lista en `docs/capturas/_tareas/VR23/movidos.txt`). Hace falta que Tony diga en qué lugar exacto vio cosas flotando.
+- Algunas teclas de PC no tienen botón de VR propio y se tradujeron a lo más cercano: R de revancha → A, M (mapa) y T (teléfono) → Y.
+- Las pantallas del taller, la cartelera, la apuesta y el teléfono sí van al panel, pero se cierran con su botón SALIR y no con B/Y.
+
+### Botones (final)
+| Acción | Botón |
+|---|---|
+| Caminar / correr | Stick izquierdo / clic del stick izquierdo |
+| Girar | Stick derecho |
+| Saltar | Clic del stick derecho |
+| Disparar / clic en menús | Gatillo derecho |
+| Sacar / guardar pistola | Mano derecha a la cadera derecha + grip derecho |
+| Sacar / guardar arma larga | Mano derecha sobre el hombro derecho + grip derecho |
+| Recargar | A suelta el cargador + mano izquierda a la cadera izquierda + grip, y lo acercas a la pistola |
+| Interactuar | B |
+| Rueda de armas | Mantener X |
+| Pausa | Y (y Menú) |
+| Cerrar / regresar en pantallas | B o Y |
+| Rueda de prótesis | Grip izquierdo + gatillo izquierdo, o gestos (manos en los muslos / brazos abiertos) |
+| Agarrar / lanzar (implante) | Grip con la mano libre cerca del enemigo |
+| Recentrar | Mantener el stick derecho abajo 1 s |
+
+### Guía de controles
+![Guía VR, página de botones](capturas/_tareas/VR31/guia_pagina_0.png)
+
+### Pruebas (simulador XR)
+- EditMode: 49 de 49 (OpcionesVR, candados de la historia, pelea de inicio VR24).
+- PlayMode VR: 16 clases, 142 pruebas. Falló 1: B cerraba la guía y también la pausa. Lo corregí y la segunda corrida (guía, menús y pantallas fijas, 17 pruebas) pasó completa.
+- Partidas: respaldo en `Logs/respaldo-partidas-vr5`, restaurado.
+
+### Qué probar con el visor (VR5)
+1. Habla con el Doc: ¿se ve todo el cuerpo y su pantalla completa en el panel, eliges con el láser y sales con B o Y?
+2. Lo mismo con Tino (tienda, banco y mejoras), una máquina expendedora y el campo de tiro.
+3. Abre la pausa con Y, entra a Opciones y regresa con B: ¿todo completo y con salida?
+4. ¿El HUD ya no tiene esquinas oscuras?
+5. Gira con el stick: ¿apenas se oscurecen las orillas y vuelve al instante?
+6. Mano derecha a la cadera + grip: ¿sale la pistola? Otra vez: ¿se guarda? Sobre el hombro + grip: ¿sale el arma larga? ¿Las zonas quedan cómodas para tu cuerpo?
+7. A suelta el cargador; mano izquierda a la cadera izquierda + grip; acércalo a la pistola: ¿recarga?
+8. Mantén X: ¿la rueda se queda abierta sin parpadear? Clic del stick derecho: ¿saltas?
+9. Junto a Joel: ¿dice "B para hablar"? ¿Ves alguna tecla de PC en algún aviso o consejo?
+10. La guía (primera vez o Pausa → CONTROLES): ¿cada etiqueta queda junto a su botón real?
+11. Partida nueva: cinemáticas → apareces en tu punto → 3 SKULLS → los vences → aviso de Ƀ20,000 → VE CON EL DOC.
+12. Con VE CON EL DOC: ¿ves los chevrones en el piso con los dos ojos y te llevan?
+13. Si ves algo flotando: ¿dónde exactamente? (para VR23)
