@@ -1,5 +1,6 @@
 using System.Collections;
 using MechaCyberpunk.Core;
+using MechaCyberpunk.Progresion.Recorrido;
 using MechaCyberpunk.VR;
 using MechaCyberpunk.VR.Cinematicas;
 using MechaCyberpunk.VR.Menus;
@@ -31,6 +32,41 @@ namespace MechaCyberpunk.Tests.VR
             Assert.IsFalse(ReglaCineVR.MantenerEnCine(false, false, 0.1f), "Sin cinemática se quita.");
             Assert.IsFalse(ReglaCineVR.MantenerEnCine(true, false, ReglaCineVR.SegundosSinCorte + 0.1f), "Parado mucho tiempo, se quita.");
             Assert.IsFalse(ReglaCineVR.MantenerEnCine(true, true, 0f), "Sonando no es 'mantener': ya está en la pantalla.");
+        }
+
+        /// <summary>T97 en VR: las imágenes fijas de C02 van a la pantalla de cine, con negro alrededor, y se mueven despacio (Ken Burns).</summary>
+        [UnityTest]
+        [Timeout(90000)]
+        public IEnumerator T97_ImagenesFijas_EnLaPantallaDeCineConNegro()
+        {
+            yield return ArmarVR();
+            VideosCineVR.Asegurar();
+#if UNITY_EDITOR
+            DatosCinematica c02 = UnityEditor.AssetDatabase.LoadAssetAtPath<DatosCinematica>(
+                "Assets/_Proyecto/Progresion/Historia/Cinematicas/DatosCinematica_C02_EL_MALETIN.asset");
+#else
+            DatosCinematica c02 = null;
+#endif
+            Assert.IsNotNull(c02);
+            CinematicaPendiente.Reproducir(c02);
+            float limite = Time.realtimeSinceStartup + 20f;
+            while (!VideosCineVR.FijaEnCine && Time.realtimeSinceStartup < limite)
+            {
+                yield return null;
+            }
+            Assert.IsTrue(CinematicaPendiente.EnImagenFija, "C02 va con imágenes fijas.");
+            Assert.IsTrue(VideosCineVR.FijaEnCine, "La imagen fija se ve en la pantalla de cine.");
+            Assert.IsTrue(PantallaCineVR.Visible, "La pantalla grande está prendida.");
+            yield return Cuadros(3);
+            Assert.IsTrue(NegroCineVR.Activo, "Alrededor todo negro.");
+            CinematicaPendiente.SaltarActual();
+            limite = Time.realtimeSinceStartup + 10f;
+            while (CinematicaPendiente.EnCurso && Time.realtimeSinceStartup < limite)
+            {
+                yield return null;
+            }
+            yield return Cuadros(3);
+            Assert.IsFalse(VideosCineVR.FijaEnCine, "Al terminar se quita de la pantalla.");
         }
 
         [UnityTest]
