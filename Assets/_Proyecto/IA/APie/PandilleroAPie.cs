@@ -654,6 +654,7 @@ namespace MechaCyberpunk.IA.APie
         /// <summary>Vuelve a su punto con la vida llena, listo para esperar. El objeto debe estar activo.</summary>
         public void Reaparecer()
         {
+            Hundir(0f);
             Iniciar();
             modelo.Restaurar();
             regla.Reiniciar();
@@ -824,10 +825,21 @@ namespace MechaCyberpunk.IA.APie
             if (modelo.EstaKO)
             {
                 // T-1703 (T71): se quita pasado el tiempo de los datos, pero solo fuera de la vista de la cámara (máximo 120 s a la vista).
-                if (desaparicion >= 0f && ReglaLimpiezaCuerpo.Debe(Time.time - (desaparicion - datos.SegundosParaDesaparecer), datos.SegundosParaDesaparecer, ReglaLimpiezaCuerpo.FueraDeVista(transform.position)))
+                // T-rendimiento-tope-24nov: a los 20 s se hunde en el piso (fundido) y se quita aunque se vea.
+                if (desaparicion >= 0f)
                 {
-                    desaparicion = -1f;
-                    gameObject.SetActive(false);
+                    float caido = Time.time - (desaparicion - datos.SegundosParaDesaparecer);
+                    float fundido = ReglaLimpiezaCuerpo.Fundido(caido);
+                    if (fundido > 0f)
+                    {
+                        Hundir(fundido * ReglaLimpiezaCuerpo.MetrosHundimiento);
+                    }
+                    if (fundido >= 1f || ReglaLimpiezaCuerpo.Debe(caido, datos.SegundosParaDesaparecer, ReglaLimpiezaCuerpo.FueraDeVista(transform.position)))
+                    {
+                        desaparicion = -1f;
+                        Hundir(0f); // vuelve a su altura por si alguien lo reaparece
+                        gameObject.SetActive(false);
+                    }
                 }
                 return;
             }
@@ -2394,6 +2406,19 @@ namespace MechaCyberpunk.IA.APie
             // T-686: suelta su dinero y su arma (el jefe, una escopeta); el jugador los recoge.
             EventosBotin.Publicar(new InfoBotin(transform.position, datos.Dinero,
                 esJefe ? ArmaBotin.Escopeta : (datos.UsaPistola ? ArmaBotin.Pistola : ArmaBotin.Ninguna)));
+        }
+
+        // T-rendimiento-tope-24nov: baja el cuerpo caído hasta <paramref name="metros"/> bajo donde cayó (0 lo devuelve). Con el CharacterController apagado (KO).
+        private float hundido;
+
+        private void Hundir(float metros)
+        {
+            if (Mathf.Approximately(metros, hundido))
+            {
+                return;
+            }
+            transform.position += Vector3.down * (metros - hundido);
+            hundido = metros;
         }
 
         private void PintarCuerpo(Color color)

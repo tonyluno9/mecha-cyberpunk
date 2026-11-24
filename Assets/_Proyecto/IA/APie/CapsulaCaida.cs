@@ -628,6 +628,12 @@ namespace MechaCyberpunk.IA.APie
 
         private void AvanzarDron(float frame)
         {
+            if (enemigo == null)
+            {
+                // El dron se retiró o se destruyó mientras la cápsula lo bajaba: la cápsula termina sola.
+                Terminar();
+                return;
+            }
             if (visible)
             {
                 float altura = CalculoCapsulaCaida.AlturaDron(frame);
