@@ -110,3 +110,43 @@ Build: `wtVR\Builds\VR\CyberCity.exe` (PC, OpenXR, mismas escenas que ConstruirJ
 - El letrero usa TextMeshPro (la fuente LiberationSans del paquete). Si no se ve en el build, es eso.
 - CORRER ALTERNAR usa un botón virtual del Input System. Si falla al crearse, se queda en MANTENER y lo avisa en el log.
 - Nada se probó con el visor, solo con el simulador.
+
+---
+
+## Tercera tanda (V12: sin mareo en Inicio y cinemáticas) · build en `wtVR\Builds\VR3\CyberCity.exe`
+`Builds\VR` y `Builds\VR2` no se tocaron.
+
+**Por qué mareaba y no salía el menú ni el video:** el código usaba `stereoTargetEye` para decidir qué cámara va al visor, y en URP eso no hace nada (avisaba 8791 veces en tu Player.log). La cámara de Menu_Calles, que vuela por las calles, se dibujaba encima de la cabeza y tapaba el menú y el video. Ahora se usa `allowXRRendering`: solo tu cabeza va al visor, revisado cada cuadro y justo antes de dibujar. Las pruebas viejas comprobaban `stereoTargetEye`, por eso pasaban; ya comprueban lo correcto.
+
+### Qué cambió
+- **Inicio**: estás en un cuarto oscuro quieto.
+  - A 4 m hay una pantalla grande con el recorrido de calles; solo tu cabeza mueve la vista.
+  - El video del logo sale en esa pantalla, con audio, y se salta con B o con el gatillo.
+  - El menú está a 1.5 m, abajo de la pantalla, sin encimarse, y se elige con el láser desde el primer momento.
+- **Cinemáticas con cámara** (silla del Doc, asalto, flashback): salen en la pantalla grande, con un fundido corto al empezar y al terminar.
+- **Videos de cinemática**: salen en la pantalla grande.
+- **Pantallas de texto** ("CINEMÁTICA · …", "CONTINUARÁ", HAS MUERTO / arresto, carga): son un panel legible a 1.5 m.
+- **KO**: ya no baja ni ladea la cámara; solo hay fundido.
+- **Arreglo importante**: las cinemáticas apagaban todas las entradas, también el seguimiento de la cabeza. En el visor la imagen se habría quedado pegada a la cara. Ya no pasa, y B salta la cinemática ("B: SALTAR").
+
+### Pruebas (simulador XR)
+- Tanda VR completa, 83 de 83, ninguna omitida. Incluye:
+  - las nuevas `InicioVR`: cuarto quieto, la cabeza no se mueve mientras vuela la cámara, video, B y gatillo saltan, menú bajo la pantalla, botón con el láser sin moverlo antes;
+  - las nuevas `CinematicasVR`: silla del Doc, cámara y video en la pantalla, la cabeza sigue con su seguimiento, B salta.
+- `CiudadVR` 1 de 1.
+- Pruebas de PC de lo tocado: `PantallasT1316` e `IntroInicioT1646` pasan, 8 de 8. Fallan 3 (2 de KO en `VidaAPie` y `HasMuerto` por la jaula), pero fallan igual con el código de antes.
+- Las partidas tienen el mismo md5 que el respaldo de `Logs/respaldo-partidas-v12`.
+
+### Qué probar con el visor (VR3)
+1. Abre el exe: ¿ves el video del logo en la pantalla grande? ¿B lo salta?
+2. ¿Te mareas en Inicio? Tu vista solo debe moverse con tu cabeza. ¿Ves las calles en la pantalla y el menú abajo, legible y elegible con el láser?
+3. NUEVA PARTIDA o CONTINUAR: ¿la carga se ve como panel y llegas a la ciudad sin negro?
+4. Siéntate en la silla del Doc: ¿sale en la pantalla grande sin mover tu cabeza? ¿El fundido tapa bien el salto?
+5. En una cinemática "CINEMÁTICA · …", ¿se lee el panel? ¿B la salta? ¿Tu cabeza sigue moviéndose normal?
+6. Si mueres o te noquean: ¿solo hay fundido y panel, sin que la cámara caiga?
+
+### Riesgos
+- La pantalla grande se dibuja siempre encima de las paredes (en un cuarto chico no la tapan). Puede que la lluvia o las partículas se vean encima de ella.
+- Si miras más de 60° a otro lado durante más de 1 s en Inicio, la pantalla y el menú se vuelven a poner frente a ti.
+- El flashback se salta con ESPACIO; en VR termina solo.
+- Nada se probó con el visor, solo con el simulador.
