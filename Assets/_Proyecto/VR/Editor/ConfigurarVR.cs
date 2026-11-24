@@ -74,7 +74,8 @@ namespace MechaCyberpunk.VR.Editor
                 Debug.LogError("[VR] No hay ajustes de OpenXR para Standalone.");
                 return;
             }
-            ajustes.renderMode = OpenXRSettings.RenderMode.SinglePassInstanced;
+            // VR13: Multi-pass. Con Single Pass Instanced varios shaders propios (neón, letreros, charcos) no se dibujaban en el ojo derecho.
+            ajustes.renderMode = ModoRender;
             Activar<OculusTouchControllerProfile>(ajustes);
             Activar<MetaQuestTouchPlusControllerProfile>(ajustes);
             EditorUtility.SetDirty(ajustes);
@@ -135,8 +136,37 @@ namespace MechaCyberpunk.VR.Editor
             ConstruirVREn("Builds/VR3");
         }
 
+        /// <summary>VR13: modo de dibujo estéreo de OpenXR en PC.</summary>
+        public const OpenXRSettings.RenderMode ModoRender = OpenXRSettings.RenderMode.MultiPass;
+
+        /// <summary>VR13: pone OpenXR (Standalone) en Multi-pass y guarda. Batchmode: -executeMethod MechaCyberpunk.VR.Editor.ConfigurarVR.PonerMultiPass</summary>
+        [MenuItem("Mecha Cyberpunk/VR/Poner Multi-pass (VR13)")]
+        public static void PonerMultiPass()
+        {
+            OpenXRSettings ajustes = OpenXRSettings.GetSettingsForBuildTargetGroup(BuildTargetGroup.Standalone);
+            if (ajustes == null)
+            {
+                Debug.LogError("[VR] No hay ajustes de OpenXR para Standalone.");
+                return;
+            }
+            if (ajustes.renderMode != ModoRender)
+            {
+                ajustes.renderMode = ModoRender;
+                EditorUtility.SetDirty(ajustes);
+                AssetDatabase.SaveAssets();
+            }
+            Debug.Log("[VR] OpenXR Standalone renderMode = " + ajustes.renderMode);
+        }
+
+        /// <summary>Build VR en Builds/VR4 (cuarta tanda). Batchmode: -executeMethod MechaCyberpunk.VR.Editor.ConfigurarVR.ConstruirVR4</summary>
+        public static void ConstruirVR4()
+        {
+            ConstruirVREn("Builds/VR4");
+        }
+
         private static void ConstruirVREn(string carpeta)
         {
+            PonerMultiPass();
             Directory.CreateDirectory(carpeta);
             System.Type tipo = typeof(MechaCyberpunk.Progresion.Prologo.Editor.ConstruirDemo);
             MethodInfo preparar = tipo.GetMethod("PrepararBuildCyberfix", BindingFlags.NonPublic | BindingFlags.Static);
