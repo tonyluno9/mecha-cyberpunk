@@ -9,7 +9,7 @@ Cerrar Unity y Unity Hub, confirmar que no queda ningún Unity.exe, borrar `Temp
 
 ## Qué copiar
 - Solo los .wav de cada carpeta. **No copiar** las subcarpetas `_sin_efecto` (son para comparar). `Policia/_megafono` es opcional (ver abajo).
-- Cada asset con su .meta en el mismo commit. Importar como **Mono**; las frases largas (Jefe_SKULLS, Jefe_Nova, Doc) en **Streaming** o **Compressed in memory**.
+- Cada asset con su .meta en el mismo commit. Importar como **Mono**; las frases largas (Jefe_SKULLS, Jefe_Nova, Doc, Tino, Canepa, Mesera_Robot) en **Streaming** o **Compressed in memory**.
 
 | Carpeta | Archivos | Cuándo suena |
 |---|---|---|
@@ -21,6 +21,10 @@ Cerrar Unity y Unity Hub, confirmar que no queda ningún Unity.exe, borrar `Temp
 | Nova | NOV_VOZ_ALERTA, _ORDEN, _CUBRIRSE, _LO_PERDIMOS, _DOLOR, _MUERTE | Agentes con armadura (voz robótica con casco). CUBRIRSE cuando activan el escudo |
 | Jefe_Nova | NOV_JEFE_FRASE, _REVELACION, _ATAQUE, _MUERTE | Jefe final; REVELACION solo en la escena final |
 | Doc | DOC_VOZ_SALUDO, _SIENTATE, _EXPLICAR, _REVIVIR, _SUERO, _DESPEDIDA | Clínica del Doc: al entrar, al instalar implante, al revivir tras morir, al salir |
+| Canepa | CANEPA_VOZ_SALUDO, _REPARAR, _DESPEDIDA | Taller del Canepa: al entrar, al terminar una reparación, al salir |
+| Tino | TINO_VOZ_SALUDO, _BANCO, _COMPRA, _SIN_DINERO, _DESPEDIDA | Tienda de Tino: al entrar, al abrir la tienda/banco, al comprar, cuando no alcanza el dinero, al salir |
+| Mesera_Robot | MESERA_ROBOT_SALUDO, _SERVIR, _SUERTE, _DESPEDIDA | Mesera robot del casino VivaCoin |
+| Peatones | NPC_VOZ1_*, NPC_VOZ2_*, NPC_VOZ3_* con MIEDO, ENOJO, POLICIA, SALUDO, VENDEDOR, RISA | 3 voces (normal, grave, aguda). A cada peatón se le asigna UNA voz al aparecer y usa siempre esa. MIEDO cuando hay disparos o atropellos, ENOJO si el jugador lo empuja, POLICIA cuando ve un delito, SALUDO al pasar cerca, VENDEDOR en puestos del mercado y tianguis (cada tanto), RISA en grupos platicando |
 
 ## Reglas
 - Cada grupo con varias tomas (_01, _02…) se elige al azar sin repetir la última.
@@ -33,5 +37,5 @@ Cerrar Unity y Unity Hub, confirmar que no queda ningún Unity.exe, borrar `Temp
 - Pruebas solo las necesarias: que los IDs nuevos existan en el catálogo y que cada evento pida el ID correcto.
 - Lo importante es que el usuario pruebe jugando: dejar en la revisión una lista corta de qué hacer para oír cada grupo (pelear con SKULLS, que te persiga la policía, ir con el Doc, morir, etc.).
 
-## Pendiente de grabar (no es parte de esta tarea)
-Tino, Canepa, aliado, mesera robot, peatones y locutor de Nova Radio.
+## Descartado
+Aliado y locutor de Nova Radio no llevan voz. El quejido al instalar implante también se descartó. Peatones solo tienen voz de hombre por ahora.
