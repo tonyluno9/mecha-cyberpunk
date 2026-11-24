@@ -11,7 +11,8 @@ namespace MechaCyberpunk.Progresion.Recorrido
     /// T-cinematicas-narracion-24nov: la cinemática de Tino (C05, videos 25–27: golpea la pistola, la avienta y el jugador la atrapa) sale una
     /// vez, en el momento en que se pone la primera mejora de un arma en el banco de Tino. Mira el arsenal sin tocar el director de la historia:
     /// al aparecer el arsenal anota si ya traía mejora (partida cargada: no sale) y solo dispara si la mejora aparece con el banco abierto.
-    /// Solo con la historia en marcha (<see cref="DirectorRecorrido"/> iniciado). El después lo deja igual: el banco sigue abierto debajo.
+    /// Solo con la historia en marcha (<see cref="DirectorRecorrido"/> iniciado). T90: al empezar la cinemática el banco se cierra solo
+    /// (<see cref="MechaCyberpunk.UI.Hud.CierreMenusCinematica"/>) y al terminar el jugador queda en la calle con control, sin el banco encima.
     /// </summary>
     public class CinematicaPrimeraMejora : MonoBehaviour
     {

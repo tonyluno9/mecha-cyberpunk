@@ -93,6 +93,17 @@ namespace MechaCyberpunk.UI.Rueda
 
         public bool Armada => raiz != null;
 
+        /// <summary>T90: cierra sin activar nada (al empezar una cinemática): el tiempo vuelve en el acto. False si no estaba abierta.</summary>
+        public bool CerrarSinElegir()
+        {
+            if (!abierta || raiz == null)
+            {
+                return false;
+            }
+            Cerrar();
+            return true;
+        }
+
         /// <summary>T-57: el centro de la zona (px de referencia desde el centro, +y arriba): sobre la silueta, o la casilla de LÁSER y MISILES.</summary>
         public static Vector2 PosicionDe(HabilidadProtesis h)
         {

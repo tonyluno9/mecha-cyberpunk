@@ -169,6 +169,24 @@ namespace MechaCyberpunk.UI.Clinica
             Cerrar(false);
         }
 
+        /// <summary>
+        /// T90: cierra la clínica (y la tienda de prótesis de ataque, si estaba en esa pestaña) al empezar una cinemática, con el control devuelto
+        /// en el acto. No toca una operación en curso. True si estaba abierta.
+        /// </summary>
+        public bool CerrarPorCinematica()
+        {
+            if (!abierta)
+            {
+                return false;
+            }
+            if (tiendaPantalla != null && tiendaPantalla.Visible)
+            {
+                tiendaPantalla.Ocultar();
+            }
+            Cerrar(true);
+            return true;
+        }
+
         // La E que abre no cierra, y el control vuelve un cuadro después de salir para que ninguna tecla reabra la pantalla.
         private void Cerrar(bool inmediato)
         {

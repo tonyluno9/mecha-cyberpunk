@@ -227,6 +227,20 @@ namespace MechaCyberpunk.UI.Armas
             }
         }
 
+        /// <summary>
+        /// T90: cierra el banco al empezar una cinemática, sin mirar lo que falta ni el paso del tutorial, sin letrero ni despedida, y devuelve el
+        /// control en el acto (no un cuadro después: la cinemática guarda el estado del control justo después). Devuelve true si estaba abierto.
+        /// </summary>
+        public static bool CerrarPorCinematica()
+        {
+            if (!Abierto)
+            {
+                return false;
+            }
+            actual.CerrarForzado();
+            return true;
+        }
+
         /// <summary>Elige la pestaña (clic o pruebas).</summary>
         public static void Elegir(bool mejorar)
         {
@@ -642,6 +656,34 @@ namespace MechaCyberpunk.UI.Armas
             alCerrar = null;
             MechaCyberpunk.Progresion.Sonido.VocesApoyo.TinoSeDespide(); // T-voces-personajes-23nov: TINO_VOZ_DESPEDIDA al cerrar su banco
             StartCoroutine(DevolverControlDespues());
+            callback?.Invoke();
+        }
+
+        private void CerrarForzado()
+        {
+            if (enMejorar && banco != null && banco.Pantalla != null)
+            {
+                banco.Pantalla.OcultarSinLetrero();
+            }
+            else
+            {
+                CerrarPestana();
+            }
+            abierto = false;
+            raiz.SetActive(false);
+            cambiar.Disable();
+            if (guia != null && guiaEncendida)
+            {
+                guia.Apagar();
+                guiaEncendida = false;
+            }
+            if (controlCongelado != null)
+            {
+                controlCongelado.ActivarControl(true);
+                controlCongelado = null;
+            }
+            Action callback = alCerrar;
+            alCerrar = null;
             callback?.Invoke();
         }
 
