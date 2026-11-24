@@ -24,6 +24,8 @@ namespace MechaCyberpunk.UI.Rueda
         public const int OrdenCanvas = 91;
         public const string NombreAccion = "RuedaExo";
         public const string NombreAccionElegir = "RuedaExoElegir";
+        /// <summary>VR20: el texto del centro en VR (sin Tab ni ratón: se elige con la mano y se suelta).</summary>
+        public const string TextoCentroVR = "ELIGE UNA ZONA Y SUELTA";
 
         /// <summary>T-57: hasta dónde llega el cursor virtual desde el centro (px de referencia), en cada eje.</summary>
         public static readonly Vector2 LimiteCursor = new Vector2(520f, 340f);
@@ -376,7 +378,7 @@ namespace MechaCyberpunk.UI.Rueda
                 c.Estado.text = !tiene ? "SIN IMPLANTE" : estado == EstadoHabilidad.Activa ? "ACTIVA" : estado == EstadoHabilidad.Recargando ? "RECARGANDO" : "LISTA";
             }
             punto.anchoredPosition = cursor;
-            textoCentro.text = resaltada < 0 ? "ELIGE UNA ZONA: CLIC O SUELTA TAB" : NombreDe((HabilidadProtesis)resaltada);
+            textoCentro.text = resaltada < 0 ? (ModoVR.Activo ? TextoCentroVR : "ELIGE UNA ZONA: CLIC O SUELTA TAB") : NombreDe((HabilidadProtesis)resaltada);
         }
 
         private void Armar()

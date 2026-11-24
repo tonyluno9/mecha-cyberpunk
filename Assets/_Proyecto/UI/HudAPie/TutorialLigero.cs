@@ -373,8 +373,11 @@ namespace MechaCyberpunk.UI.Hud
         {
             if (regla.Aviso == AccionTutorial.Habilidades && habilidades != null)
             {
-                return ReglaTutorial.TextoHabilidades(TeclaReal, habilidades.Nivel(HabilidadProtesis.Piernas) > 0,
-                    habilidades.Nivel(HabilidadProtesis.Brazos) > 0, habilidades.Nivel(HabilidadProtesis.Cabeza) > 0);
+                bool piernas = habilidades.Nivel(HabilidadProtesis.Piernas) > 0;
+                bool brazos = habilidades.Nivel(HabilidadProtesis.Brazos) > 0;
+                bool cabeza = habilidades.Nivel(HabilidadProtesis.Cabeza) > 0;
+                // VR20: en VR los gestos y los botones de los controles, no Tab.
+                return ModoVR.Activo ? ReglaTutorial.TextoHabilidadesVR(piernas, brazos, cabeza) : ReglaTutorial.TextoHabilidades(TeclaReal, piernas, brazos, cabeza);
             }
             return ReglaTutorial.Texto(regla.Aviso, TeclaReal);
         }

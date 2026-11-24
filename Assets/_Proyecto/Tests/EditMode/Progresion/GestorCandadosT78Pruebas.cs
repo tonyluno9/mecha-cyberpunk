@@ -18,6 +18,7 @@ namespace MechaCyberpunk.Tests
         [TestCase(PasoRecorrido.Maletin)]
         [TestCase(PasoRecorrido.Ranura)]
         [TestCase(PasoRecorrido.Decision)]
+        [TestCase(PasoRecorrido.PeleaSkulls)]
         public void EmpujonYCinematicas_TodoBloqueado(PasoRecorrido paso)
         {
             GestorCandados.Candados c = GestorCandados.CandadosPara(paso);
@@ -77,7 +78,8 @@ namespace MechaCyberpunk.Tests
         {
             Assert.AreEqual(PasoRecorrido.UsarProtesis, GestorCandados.Siguiente(PasoRecorrido.Suero));
             Assert.AreEqual(PasoRecorrido.Armas, GestorCandados.Siguiente(PasoRecorrido.UsarProtesis));
-            Assert.AreEqual(PasoRecorrido.Dinero, GestorCandados.Siguiente(PasoRecorrido.Decision));
+            Assert.AreEqual(PasoRecorrido.PeleaSkulls, GestorCandados.Siguiente(PasoRecorrido.Decision)); // VR24
+            Assert.AreEqual(PasoRecorrido.Dinero, GestorCandados.Siguiente(PasoRecorrido.PeleaSkulls));
             Assert.AreEqual(PasoRecorrido.GuerraSnakes, GestorCandados.Siguiente(PasoRecorrido.GuerraSkulls));
         }
 

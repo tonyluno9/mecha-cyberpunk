@@ -35,6 +35,7 @@ namespace MechaCyberpunk.Personaje.Combate
         private ControladorAPie controlador;
         private PistolaAPie pistola;
         private ArmasAPie armas;
+        private MechaCyberpunk.Personaje.Vida.VidaAPie vida;
         private ConfigArmasEspeciales cfg;
         private ReglaRayoPlasma plasma;
         private DatosArma datosPlasma;
@@ -87,11 +88,24 @@ namespace MechaCyberpunk.Personaje.Combate
         /// <summary>La última granada o proyectil lanzado (para las pruebas).</summary>
         public ProyectilAPie UltimoProyectil { get; private set; }
 
+        /// <summary>
+        /// VR5: boca del arma en la mano VR. Si no es null, el lanzagranadas y el rifle de plasma disparan desde aquí hacia su +Z (sin la mira de la
+        /// cámara) y el botón lo da <see cref="GatilloExterno"/> en vez del ratón. Sin VR queda en null y todo sigue como antes.
+        /// </summary>
+        public Transform BocaExterna { get; set; }
+
+        /// <summary>VR5: true mientras el gatillo del control VR está abajo (solo cuenta con <see cref="BocaExterna"/>).</summary>
+        public bool GatilloExterno { get; set; }
+
+        /// <summary>VR5: la bola de energía de la carga del plasma (para que VR la deje visible).</summary>
+        public Transform BolaCarga => bolaCarga;
+
         private void Awake()
         {
             controlador = GetComponent<ControladorAPie>();
             pistola = GetComponent<PistolaAPie>();
             armas = GetComponent<ArmasAPie>();
+            vida = GetComponent<MechaCyberpunk.Personaje.Vida.VidaAPie>();
             cfg = ConfigArmasEspeciales.Actual;
             arco = Linea("ArcoGranada", cfg.AnchoArco, cfg.ColorArco);
             laser = Linea("MiraLaserPlasma", AnchoLaser, cfg.ColorRayo);
@@ -302,6 +316,10 @@ namespace MechaCyberpunk.Personaje.Combate
 
         private void Procesar(ArmaAPie arma, CargadorPistola cargador, DatosArma d, bool pulsado)
         {
+            if (BocaExterna != null)
+            {
+                pulsado = GatilloExterno && !controlador.EntradaBloqueada; // VR5: el gatillo del control en vez del ratón
+            }
             bool flanco = pulsado && !pulsadoAntes;
             pulsadoAntes = pulsado;
             if (d.TipoDisparo != TipoDisparoArma.Rayo && plasma != null && plasma.Estado != EstadoPlasma.Reposo)
@@ -357,6 +375,25 @@ namespace MechaCyberpunk.Personaje.Combate
             ApagarPlasma();
         }
 
+        // VR5: la boca de donde sale el disparo especial: la del arma en la mano VR si hay, si no la del arma del cuerpo.
+        private Transform BocaDisparo(ArmaAPie arma) => BocaExterna != null ? BocaExterna : pistola.BocaDe(arma);
+
+        // VR5: hasta dónde llega la línea de mira del plasma desde el cañón en la mano (lo primero que toca que no sea el jugador).
+        private Vector3 FinLaserExterno(Vector3 origen, float alcance)
+        {
+            Vector3 direccion = BocaExterna.forward;
+            int n = Physics.RaycastNonAlloc(origen, direccion, toques, alcance, ~0, QueryTriggerInteraction.Ignore);
+            float cerca = alcance;
+            for (int i = 0; i < n; i++)
+            {
+                if (toques[i].collider.transform.root != transform.root && toques[i].distance < cerca)
+                {
+                    cerca = toques[i].distance;
+                }
+            }
+            return origen + direccion * cerca;
+        }
+
         // ---- Lanzagranadas y granada ----
 
         private Vector3 OrigenLanzada()
@@ -373,8 +410,12 @@ namespace MechaCyberpunk.Personaje.Combate
                 Vector3 mira = controlador.Camara != null ? controlador.Camara.forward : transform.forward;
                 return ReglaBalistica.Elevar(mira, cfg.ElevacionLanzada) * d.VelocidadProyectil;
             }
-            Transform boca = pistola.BocaDe(arma);
+            Transform boca = BocaDisparo(arma);
             origen = boca != null ? boca.position : transform.position + Vector3.up * AlturaManoGranada;
+            if (BocaExterna != null)
+            {
+                return BocaExterna.forward * d.VelocidadProyectil; // VR5: sale por el cañón del arma en la mano
+            }
             Vector3 punto = pistola.PuntoDeMira(d.Alcance);
             ReglaBalistica.DireccionHacia(origen, punto, d.VelocidadProyectil, Physics.gravity.y, out Vector3 direccion);
             return direccion * d.VelocidadProyectil;
@@ -383,7 +424,10 @@ namespace MechaCyberpunk.Personaje.Combate
         private void LanzarProyectil(ArmaAPie arma, DatosArma d)
         {
             Vector3 velocidad = VelocidadDe(arma, d, out Vector3 origen);
-            controlador.MirarAlDisparar();
+            if (BocaExterna == null)
+            {
+                controlador.MirarAlDisparar();
+            }
             Sonidos.Reproducir(PistolaAPie.IdDisparo(arma)); // T-1472: 2D, es el disparo del jugador
             UltimoProyectil = ProyectilAPie.Lanzar(origen, velocidad, d.RadioExplosion, d.Danio, true, 0f, 0f, transform.root);
             pistola.AvisarDisparoEspecial(arma, origen);
@@ -393,9 +437,36 @@ namespace MechaCyberpunk.Personaje.Combate
         {
             Vector3 velocidad = VelocidadDe(arma, d, out Vector3 origen);
             controlador.MirarAlDisparar();
+            SoltarGranadaEn(arma, d, origen, velocidad);
+        }
+
+        private void SoltarGranadaEn(ArmaAPie arma, DatosArma d, Vector3 origen, Vector3 velocidad)
+        {
             Sonidos.Reproducir(SonidosArmasT1472.GranadaSeguro); // T-1472: quita el seguro y lanza
             UltimoProyectil = ProyectilAPie.Lanzar(origen, velocidad, d.RadioExplosion, d.Danio, false, cfg.MechaGranada, cfg.Rebote, transform.root);
             pistola.AvisarDisparoEspecial(arma, origen);
+        }
+
+        /// <summary>
+        /// VR5: lanza la granada de la mano desde <paramref name="origen"/> con <paramref name="velocidad"/> (la de la mano VR), sin la animación:
+        /// gasta una del cargador y tiene el mismo daño, mecha, rebote, sonido y avisos que con el ratón. Devuelve si salió.
+        /// </summary>
+        public bool LanzarGranadaExterna(Vector3 origen, Vector3 velocidad)
+        {
+            if (!isActiveAndEnabled || pistola == null || !pistola.enabled || armas == null || controlador == null
+                || !controlador.ControlActivo || controlador.EntradaBloqueada || (vida != null && vida.EstaKO))
+            {
+                return false;
+            }
+            ArmaAPie arma = armas.ArmaActiva;
+            DatosArma d = pistola.DatosActuales;
+            CargadorPistola cargador = pistola.Cargador;
+            if (d == null || cargador == null || d.TipoDisparo != TipoDisparoArma.Lanzada || !cargador.IntentarDisparar())
+            {
+                return false;
+            }
+            SoltarGranadaEn(arma, d, origen, velocidad);
+            return true;
         }
 
         // Al apuntar se ve el arco hasta lo primero que toca.
@@ -457,13 +528,14 @@ namespace MechaCyberpunk.Personaje.Combate
         // Se apaga al salir el rayo (el rayo ya es la línea).
         private void DibujarLaser(ArmaAPie arma, DatosArma d)
         {
-            bool ver = controlador.Apuntando && EstadoPlasma != EstadoPlasma.Rayo;
+            // VR5: con el arma en la mano VR la línea sale siempre del cañón hacia donde apunta (no hay botón de apuntar).
+            bool ver = (controlador.Apuntando || BocaExterna != null) && EstadoPlasma != EstadoPlasma.Rayo;
             if (ver)
             {
-                Transform boca = pistola.BocaDe(arma);
+                Transform boca = BocaDisparo(arma);
                 Vector3 origen = boca != null ? boca.position : transform.position + Vector3.up * AlturaManoGranada;
                 laser.SetPosition(0, origen);
-                laser.SetPosition(1, pistola.PuntoDeMira(d.Alcance));
+                laser.SetPosition(1, BocaExterna != null ? FinLaserExterno(origen, d.Alcance) : pistola.PuntoDeMira(d.Alcance));
             }
             laser.enabled = ver;
         }
@@ -498,13 +570,13 @@ namespace MechaCyberpunk.Personaje.Combate
             {
                 Sonidos.Reproducir(SonidosArmasT1472.PlasmaEnfriar);
             }
-            Transform boca = pistola.BocaDe(arma);
+            Transform boca = BocaDisparo(arma);
             Vector3 origen = boca != null ? boca.position : transform.position + Vector3.up * AlturaManoGranada;
             if (plasma.Estado == EstadoPlasma.Cargando)
             {
                 if (antes != EstadoPlasma.Cargando)
                 {
-                    IniciarChispeo(pistola.BocaDe(arma));
+                    IniciarChispeo(BocaDisparo(arma));
                 }
                 float c = plasma.Carga;
                 bolaCarga.gameObject.SetActive(true);
@@ -522,14 +594,17 @@ namespace MechaCyberpunk.Personaje.Combate
                     PararChispeo();
                     Sonidos.Reproducir(IdDisparoPlasma); // T-1472: el disparo del jugador suena en 2D
                     PararRayoSonido();
-                    Transform bocaRayo = pistola.BocaDe(arma) != null ? pistola.BocaDe(arma) : transform;
+                    Transform bocaRayo = BocaDisparo(arma) != null ? BocaDisparo(arma) : transform;
                     bucleRayo = Sonidos.ReproducirBucle(SonidosArmasT1472.PlasmaRayo, bocaRayo);
                     bucleCapaRayo = Sonidos.ReproducirBucle(SonidosArmasT1472.PlasmaCapaRayo, bocaRayo); // T-1532
                     pistola.AvisarDisparoEspecial(arma, origen);
                     siguienteZumbido = Time.time;
                     acumuladoTic = TicDanioRayo;
                 }
-                controlador.MirarAlDisparar();
+                if (BocaExterna == null)
+                {
+                    controlador.MirarAlDisparar();
+                }
                 Rayo(origen, d);
                 return;
             }
@@ -538,7 +613,8 @@ namespace MechaCyberpunk.Personaje.Combate
 
         private void Rayo(Vector3 origen, DatosArma d)
         {
-            Vector3 punto = pistola.PuntoDeMira(d.Alcance);
+            // VR5: con el arma en la mano VR el rayo sigue al cañón, no a la mira de la cámara.
+            Vector3 punto = BocaExterna != null ? origen + BocaExterna.forward * d.Alcance : pistola.PuntoDeMira(d.Alcance);
             Vector3 hacia = punto - origen;
             Vector3 direccion = hacia.sqrMagnitude > 0.0001f ? hacia.normalized : transform.forward;
             float largo = d.Alcance;

@@ -135,7 +135,8 @@ namespace MechaCyberpunk.Personaje.Movimiento
                 UltimoDanio = antes - vida.Actual;
                 Debug.Log("[Personaje] T-1310: caída de " + caida.ToString("0.0") + " m, daño " + UltimoDanio.ToString("0.0"));
             }
-            if (config.RodarCaida != null && ReglaParkour.DebeRodar(caida, config.AlturaRodar) && visual != null)
+            // VR (vr/quest3): con visor no rueda al caer (la rodada mueve la cabeza sola).
+            if (!ModoVR.Activo && config.RodarCaida != null && ReglaParkour.DebeRodar(caida, config.AlturaRodar) && visual != null)
             {
                 IniciarRodada(config);
                 Sonidos.ReproducirEn(ReglaSonidosJugador.Rodada, transform.position);

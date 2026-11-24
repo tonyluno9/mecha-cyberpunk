@@ -17,6 +17,11 @@ namespace MechaCyberpunk.Personaje.Combate
 
         public void Empujar(Vector3 velocidad, float segundos)
         {
+            // VR (vr/quest3): al jugador con visor no se le empuja (marea).
+            if (MechaCyberpunk.Core.ModoVR.Activo && GetComponent<MechaCyberpunk.Personaje.Jugador.JugadorAPie>() != null)
+            {
+                return;
+            }
             velocidad.y = 0f;
             empuje.Iniciar(velocidad, segundos);
             pendiente = Vector3.zero;

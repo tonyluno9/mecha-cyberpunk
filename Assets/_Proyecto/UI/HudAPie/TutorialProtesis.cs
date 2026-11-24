@@ -83,7 +83,7 @@ namespace MechaCyberpunk.UI.Hud
                 return;
             }
             string tecla = TeclasHud.Texto(TeclasHud.Buscar(ReglaTutorial.TeclaRuedaExo), ReglaTutorial.TeclaPorOmision(ReglaTutorial.TeclaRuedaExo)).ToUpperInvariant();
-            string aviso = regla.Texto(tecla, tienePiernas, tieneBrazos);
+            string aviso = ModoVR.Activo ? regla.TextoVR(tienePiernas, tieneBrazos) : regla.Texto(tecla, tienePiernas, tieneBrazos); // VR20
             if (string.IsNullOrEmpty(aviso))
             {
                 return;

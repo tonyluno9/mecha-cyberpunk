@@ -94,6 +94,12 @@ namespace MechaCyberpunk.Personaje.Combate
         private float finEsperaCalor = -1f;
 
         public DatosPistola Datos => datos;
+
+        /// <summary>
+        /// VR2: boca del arma en la mano VR. Si no es null, las balas salen de aquí hacia su +Z (sin la mira de la cámara) y Atacar (ratón)
+        /// ya no dispara: dispara <see cref="DispararExterno"/> (el gatillo del control).
+        /// </summary>
+        public Transform BocaExterna { get; set; }
         // El cargador del arma de fuego en la mano; con los puños, el de la pistola.
         private CargadorPistola cargador => cargadores[Indice(armas != null ? armas.ArmaActiva : ArmaAPie.Pistola)];
         public CargadorPistola Cargador => cargador;
@@ -334,11 +340,11 @@ namespace MechaCyberpunk.Personaje.Combate
                 // T-1013: lanzagranadas, granada y rifle de plasma los maneja ArmasEspecialesAPie (proyectiles, arco y rayo).
                 if (!enCarro && d.TipoDisparo != TipoDisparoArma.Bala)
                 {
-                    especiales.Actualizar(activa, actual, d, !controlador.EntradaBloqueada && atacar.action.IsPressed());
+                    especiales.Actualizar(activa, actual, d, BocaExterna == null && !controlador.EntradaBloqueada && atacar.action.IsPressed());
                     ActualizarVisual();
                     return;
                 }
-                bool pidio = !controlador.EntradaBloqueada && (d.Automatica ? atacar.action.IsPressed() : atacar.action.WasPressedThisFrame());
+                bool pidio = BocaExterna == null && !controlador.EntradaBloqueada && (d.Automatica ? atacar.action.IsPressed() : atacar.action.WasPressedThisFrame());
                 pidio = EsperarArmaEnPose(pidio, enCarro, actual);
                 bool sigueRafaga = pidio && activa == ArmaAPie.Fusil && actual.Balas > 0;
                 if (colaRafaga.Avanzar(dispararEsteFrame, sigueRafaga))
@@ -442,6 +448,36 @@ namespace MechaCyberpunk.Personaje.Combate
             {
                 actual.CancelarRecarga();
             }
+        }
+
+        /// <summary>
+        /// VR2: un tiro del arma de bala en la mano desde <see cref="BocaExterna"/> (el gatillo del control VR): mismo cargador, cadencia, daño,
+        /// sonidos, impactos y trazos que con el ratón. Con el cargador vacío empieza la recarga (o suena el clic). Devuelve si salió el tiro.
+        /// </summary>
+        public bool DispararExterno()
+        {
+            if (!enabled || BocaExterna == null || vida.EstaKO || !controlador.ControlActivo || controlador.EntradaBloqueada || EstaEnCarro())
+            {
+                return false;
+            }
+            ArmaAPie activa = armas.ArmaActiva;
+            CargadorPistola actual = EsDeFuego(activa) ? cargadores[(int)activa] : null;
+            DatosArma d = actual != null ? datosArmas[(int)activa] : null;
+            if (d == null || d.TipoDisparo != TipoDisparoArma.Bala)
+            {
+                return false;
+            }
+            if (actual.IntentarDisparar())
+            {
+                Disparar(activa, d);
+                return true;
+            }
+            if (!actual.Recargando && actual.Balas <= 0 && Time.time >= finEsperaVacio)
+            {
+                finEsperaVacio = Time.time + EsperaClicVacio;
+                Sonidos.Reproducir(SonidosArmasT1472.SinBalas);
+            }
+            return false;
         }
 
         // T-1324: sin balas en el cargador no se apunta: se intenta recargar primero (si hay reserva). El rayo de plasma ya en marcha no se corta.
@@ -635,9 +671,16 @@ namespace MechaCyberpunk.Personaje.Combate
             Light luz = luces[(int)arma];
             Transform visualArma = visuales[(int)arma];
             Transform boca = luz != null ? luz.transform : (visualArma != null ? visualArma : camara);
-            Vector3 punto = camara.position + camara.forward * d.Alcance;
+            // VR2: con el arma en la mano VR la bala sale del cañón hacia donde apunta el control, sin la mira de la cámara.
+            bool externo = BocaExterna != null && !desdeCarro;
+            if (externo)
+            {
+                boca = BocaExterna;
+            }
+            Vector3 punto = externo ? boca.position + boca.forward * d.Alcance : camara.position + camara.forward * d.Alcance;
             float alcanceVehiculos = d.Alcance * FactorAlcanceVehiculos;
-            bool hayCentro = BuscarCentroMira(camara, alcanceVehiculos, out RaycastHit centro) && DentroDelAlcance(centro, d.Alcance);
+            RaycastHit centro = default;
+            bool hayCentro = !externo && BuscarCentroMira(camara, alcanceVehiculos, out centro) && DentroDelAlcance(centro, d.Alcance);
             if (hayCentro)
             {
                 punto = centro.point;
@@ -648,7 +691,7 @@ namespace MechaCyberpunk.Personaje.Combate
             Vector3 direccionBase = largo > 0.01f ? haciaPunto / largo : camara.forward;
             float largoAlPunto = largo;
             // T-1486: si lo que marca la mira queda detrás del cañón (pegado al arma), la bala sigue la mira y no sale hacia atrás.
-            if (!desdeCarro && Vector3.Dot(direccionBase, camara.forward) <= 0f)
+            if (!desdeCarro && !externo && Vector3.Dot(direccionBase, camara.forward) <= 0f)
             {
                 direccionBase = camara.forward;
             }
@@ -658,7 +701,7 @@ namespace MechaCyberpunk.Personaje.Combate
                 Vector3 plano = Vector3.ProjectOnPlane(punto - origen, Vector3.up);
                 direccionBase = plano.sqrMagnitude > 0.0001f ? plano.normalized : Vector3.ProjectOnPlane(camara.forward, Vector3.up).normalized;
             }
-            float cono = controlador.Apuntando ? d.DispersionApuntando : d.Dispersion;
+            float cono = controlador.Apuntando || externo ? d.DispersionApuntando : d.Dispersion;
             AjusteSensacion peso = AjusteDe(arma);
             if (peso != null && peso.floracion > 0f)
             {
@@ -712,7 +755,7 @@ namespace MechaCyberpunk.Personaje.Combate
             armaRetroceso = arma;
             finLuz = Time.time + duracionLuz;
             // El destello sale en la punta del arma (la luz del cañón queda un poco más adelante que el arma en la mano).
-            Vector3 puntaArma = !desdeCarro && visualArma != null && luz != null ? Vector3.Lerp(visualArma.position, luz.transform.position, PuntaDelArma) : origen;
+            Vector3 puntaArma = !desdeCarro && !externo && visualArma != null && luz != null ? Vector3.Lerp(visualArma.position, luz.transform.position, PuntaDelArma) : origen;
             Fogonazo?.Invoke(arma, puntaArma);
             Disparo?.Invoke();
         }

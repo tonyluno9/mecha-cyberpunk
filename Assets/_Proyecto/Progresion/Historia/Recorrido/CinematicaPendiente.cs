@@ -21,6 +21,8 @@ namespace MechaCyberpunk.Progresion.Recorrido
     {
         public const string PrefijoTitulo = "CINEMÁTICA · ";
         public const string TextoSaltar = "ENTER: SALTAR";
+        /// <summary>V12: en VR se salta con B (o el gatillo derecho).</summary>
+        public const string TextoSaltarVR = "B: SALTAR";
         public const int OrdenCanvas = 30000;
         private const float VolumenMusicaBajada = 0.2f;
         private const float SegundosSinSaltar = 0.3f;
@@ -194,6 +196,8 @@ namespace MechaCyberpunk.Progresion.Recorrido
             }
             accionesApagadas.Clear();
             InputSystem.ListEnabledActions(accionesApagadas);
+            // V12: en VR el seguimiento de la cabeza y las manos (posición, giro, estado) sigue vivo: si se apaga, la imagen se queda pegada a la cara.
+            accionesApagadas.RemoveAll(EsSeguimientoVR);
             foreach (InputAction accion in accionesApagadas)
             {
                 accion.Disable();
@@ -201,6 +205,29 @@ namespace MechaCyberpunk.Progresion.Recorrido
             musicaAntes = Sonidos.Volumen(SeccionSonido.Musica);
             Sonidos.FijarVolumen(SeccionSonido.Musica, musicaAntes * VolumenMusicaBajada);
             PilaPantallas.Abrir(this);
+        }
+
+        /// <summary>V12: true si la acción es de seguimiento de VR (pose de la cabeza o de un control), que nunca se apaga en VR.</summary>
+        public static bool EsSeguimientoVR(InputAction accion)
+        {
+            if (accion == null || !MechaCyberpunk.Core.ModoVR.Activo)
+            {
+                return false;
+            }
+            string tipo = accion.expectedControlType;
+            if (tipo == "Vector3" || tipo == "Quaternion" || tipo == "Pose")
+            {
+                return true;
+            }
+            string nombre = accion.name ?? string.Empty;
+            // Los botones de los controles (EntradaVR, "VR_..."): B salta la cinemática en VR.
+            if (nombre.StartsWith("VR_", StringComparison.Ordinal))
+            {
+                return true;
+            }
+            return nombre.IndexOf("Tracking", System.StringComparison.OrdinalIgnoreCase) >= 0
+                || nombre.IndexOf("Position", System.StringComparison.OrdinalIgnoreCase) >= 0
+                || nombre.IndexOf("Rotation", System.StringComparison.OrdinalIgnoreCase) >= 0;
         }
 
         private void Liberar()
@@ -278,7 +305,7 @@ namespace MechaCyberpunk.Progresion.Recorrido
             textoSaltar = KitUI.CrearTexto(canvas.transform, "Saltar", RolTexto.Ayuda, TextAnchor.LowerRight);
             KitUI.Colocar(textoSaltar.rectTransform, new Vector2(1f, 0f), new Vector2(-48f, 36f), new Vector2(400f, 40f));
             textoSaltar.color = e.Desactivado;
-            textoSaltar.text = TextoSaltar;
+            textoSaltar.text = ModoVR.Activo ? TextoSaltarVR : TextoSaltar;
         }
 
         private Text TextoCentrado(string nombre, RolTexto rol, Color color, float altura)

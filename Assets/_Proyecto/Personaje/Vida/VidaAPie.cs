@@ -297,7 +297,8 @@ namespace MechaCyberpunk.Personaje.Vida
         private void LateUpdate()
         {
             // En KO el controlador ya no mueve la cámara: aquí cae al piso y se ladea.
-            if (!EstaKO || controlador.Camara == null)
+            // V12-B: en VR no: la cámara es la cabeza del visor y nunca la mueve una animación (el KO es el fundido a negro de AdaptadorVR).
+            if (!EstaKO || controlador.Camara == null || ModoVR.Activo)
             {
                 return;
             }

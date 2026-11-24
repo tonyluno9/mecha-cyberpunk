@@ -28,6 +28,8 @@ namespace MechaCyberpunk.Progresion.Recorrido
         Fin = 19,
         Libre = 20,
         /// <summary>T-78: tras instalar las piernas del Doc, usarlas (Tab, PIERNAS, correr). Va entre Suero y Armas; el número es 21 para no mover los pasos guardados y los saltos de las pruebas (el orden lo da <see cref="GestorCandados.Siguiente"/>).</summary>
-        UsarProtesis = 21
+        UsarProtesis = 21,
+        /// <summary>VR24: tras C03 (Decision), en su punto de inicio, pelea a puños contra 3 SKULLS; al vencerlos, el dinero del maletín y sigue Dinero. Va entre Decision y Dinero (el orden lo da <see cref="GestorCandados.Siguiente"/>).</summary>
+        PeleaSkulls = 22
     }
 }

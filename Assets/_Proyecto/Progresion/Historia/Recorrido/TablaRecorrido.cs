@@ -41,9 +41,15 @@ namespace MechaCyberpunk.Progresion.Recorrido
         public const string ObjetivoSalir = "SAL A LA CALLE";
         public const string ObjetivoRanura = "VE A LA RANURA DEL MURO";
         public const string ObjetivoDoc = "VE CON EL DOC";
+        /// <summary>VR24: la pelea del inicio contra los 3 SKULLS.</summary>
+        public const string ObjetivoPeleaSkulls = "VENCE A LOS SKULLS";
+        /// <summary>VR24: el aviso al vencer a los 3 SKULLS ({0} = la cantidad con <c>Moneda.Texto</c>).</summary>
+        public const string AvisoBanco = "TIENES {0} EN EL BANCO";
         public const string ObjetivoMejora = "INSTALA UNA MEJORA CON EL DOC";
         public const string ObjetivoTino = "VE CON TINO";
         public const string ObjetivoUsarProtesis = "USA TU PRÓTESIS (TAB)";
+        /// <summary>VR20: el mismo objetivo en VR (la prótesis se activa con el gesto o con grip + gatillo izquierdos, no con Tab).</summary>
+        public const string ObjetivoUsarProtesisVR = "USA TU PRÓTESIS (GESTO)";
         public const string ObjetivoInventor = "COMPRA UN ARMA CON TINO";
         public const string ObjetivoComer = "COMPRA ALGO EN LA MÁQUINA";
         public const string PensamientoHambre = "Tengo hambre...";
@@ -86,12 +92,13 @@ namespace MechaCyberpunk.Progresion.Recorrido
         public static IEnumerable<string> Objetivos()
         {
             yield return ObjetivoSalir;
-            yield return ObjetivoRanura;
+            yield return ObjetivoPeleaSkulls;
             yield return ObjetivoDoc;
             yield return ObjetivoMejora;
             yield return ObjetivoInventor;
             yield return ObjetivoTino;
             yield return ObjetivoUsarProtesis;
+            yield return ObjetivoUsarProtesisVR;
             yield return ObjetivoComer;
             yield return ObjetivoTianguis;
             yield return ObjetivoJefeSkulls;

@@ -39,6 +39,8 @@ namespace MechaCyberpunk.UI.Intro
         public FaseIntro Fase => regla != null ? regla.Fase : FaseIntro.Inactiva;
         public bool Saltada => regla != null && regla.Saltada;
         public ConfigIntro Config => config;
+        /// <summary>V12: la textura donde se dibuja el video mientras suena (null sin video o ya cerrada). En VR se ve en la pantalla grande.</summary>
+        public RenderTexture Textura => textura;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void Reiniciar()

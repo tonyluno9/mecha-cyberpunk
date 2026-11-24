@@ -334,7 +334,8 @@ namespace MechaCyberpunk.Personaje.Combate
         private MechaCyberpunk.Personaje.Habilidades.HabilidadesProtesis Habilidades =>
             habilidades != null ? habilidades : (habilidades = GetComponent<MechaCyberpunk.Personaje.Habilidades.HabilidadesProtesis>());
 
-        private float DanioDelGolpe(Component objetivo)
+        /// <summary>Daño del puño contra <paramref name="objetivo"/> (nivel, implantes, habilidades y enemigos). VR2 lo usa para los golpes con las manos.</summary>
+        public float DanioDelGolpe(Component objetivo)
         {
             DatosArma punos = DatosPunos();
             float basico = punos != null ? punos.Danio : datos.DanioGolpe;

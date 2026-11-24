@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.Personaje.Movimiento;
 using MechaCyberpunk.Progresion.Partida;
@@ -87,6 +89,7 @@ namespace MechaCyberpunk.UI.MenuPausa
         private PantallaOpciones pantallaOpciones;
         private OpcionesModernasPausa opcionesModernas;
         private BotonCyberfix volverA;
+        private readonly List<BotonCyberfix> extras = new List<BotonCyberfix>(); // VR20
         private ControladorAPie controlCongelado;
         private bool audioPrevio;
 
@@ -254,9 +257,8 @@ namespace MechaCyberpunk.UI.MenuPausa
             for (int i = 0; i < botones.Length; i++)
             {
                 VestidoH10.Boton(botones[i]);
-                TrazoH10.Colocar((RectTransform)botones[i].transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 1f),
-                    new Vector2(0f, -(InicioFilas + i * (AltoBoton + SeparacionFilas))), new Vector2(AnchoPanelOpciones - 2f * RellenoPanel, AltoBoton));
             }
+            AcomodarFilas();
 
             // Panel de datos reales, a la derecha.
             panelDatos = TrazoH10.Panel(raiz, "PanelDatos", TrazoH10.TurquesaTenue).rectTransform;
@@ -286,6 +288,90 @@ namespace MechaCyberpunk.UI.MenuPausa
             confirmar.transform.SetAsLastSibling();
             VestidoH10.Fuente(raiz);
         }
+
+        // Las filas del panel de opciones, en orden y una debajo de otra; con botones extra (VR20) el panel crece.
+        private void AcomodarFilas()
+        {
+            var filas = new List<BotonCyberfix> { continuar, guardar, cargar, opciones };
+            foreach (BotonCyberfix b in extras)
+            {
+                if (b != null)
+                {
+                    filas.Add(b);
+                }
+            }
+            filas.Add(salir);
+            for (int i = 0; i < filas.Count; i++)
+            {
+                TrazoH10.Colocar((RectTransform)filas[i].transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 1f),
+                    new Vector2(0f, -(InicioFilas + i * (AltoBoton + SeparacionFilas))), new Vector2(AnchoPanelOpciones - 2f * RellenoPanel, AltoBoton));
+            }
+            // Sin extras (PC) queda la altura de siempre.
+            float alto = AltoPaneles + (filas.Count - CantidadBotones) * (AltoBoton + SeparacionFilas);
+            panelOpciones.sizeDelta = new Vector2(panelOpciones.sizeDelta.x, alto);
+        }
+
+        /// <summary>
+        /// VR20: agrega un botón antes de SALIR AL TÍTULO (el modo VR pone CONTROLES). Si ya hay uno con ese texto lo devuelve sin agregar otro.
+        /// </summary>
+        public BotonCyberfix AgregarBoton(string texto, Action alPulsar)
+        {
+            if (menu == null || panelOpciones == null)
+            {
+                return null; // aún sin armar (objeto que nunca despertó)
+            }
+            foreach (BotonCyberfix b in extras)
+            {
+                if (b != null && b.Etiqueta == texto)
+                {
+                    return b;
+                }
+            }
+            BotonCyberfix nuevo = KitUI.CrearBoton(menu.transform, texto, alPulsar);
+            nuevo.Texto.alignment = TextAnchor.MiddleCenter;
+            nuevo.transform.SetSiblingIndex(salir.transform.GetSiblingIndex());
+            extras.Add(nuevo);
+            VestidoH10.Boton(nuevo);
+            AcomodarFilas();
+            if (Abierta && menu.enabled)
+            {
+                menu.Recargar();
+            }
+            return nuevo;
+        }
+
+        /// <summary>VR20: quita un botón que se agregó con <see cref="AgregarBoton"/> (al salir de VR).</summary>
+        public void QuitarBoton(string texto)
+        {
+            bool quitado = false;
+            for (int i = extras.Count - 1; i >= 0; i--)
+            {
+                if (extras[i] == null || extras[i].Etiqueta == texto)
+                {
+                    if (extras[i] != null)
+                    {
+                        extras[i].transform.SetParent(null, false);
+                        Destroy(extras[i].gameObject);
+                    }
+                    extras.RemoveAt(i);
+                    quitado = true;
+                }
+            }
+            if (quitado && panelOpciones != null)
+            {
+                AcomodarFilas();
+            }
+        }
+
+        /// <summary>VR20: algo se abre encima de la pausa (la guía de controles de VR): el menú se apaga hasta <see cref="VolverDeEncima"/>.</summary>
+        public void AbrirEncima(BotonCyberfix desde)
+        {
+            volverA = desde;
+            menu.enabled = false;
+        }
+
+        /// <summary>VR20: lo que se abrió encima se cerró: el menú vuelve con el botón que lo abrió elegido.</summary>
+        public void VolverDeEncima() => AlCerrarEncima();
 
         private Text FilaDato(string etiqueta, ref float y, float alto)
         {
