@@ -59,6 +59,8 @@ namespace MechaCyberpunk.Progresion.Editor
             }
             // Música del menú principal (MUS_MENU_PRINCIPAL) en Assets/Arte/Audio/Musica.
             Leer(CarpetaAudio + "/" + CarpetaMusica, nuevas, false);
+            // T-musica-24nov: la música por fases (MUS_PIANO_INTRO, MUS_CAMPO_TIRO, MUS_FASE_*), en Assets/Arte/Audio/20_Musica (wav y mp3).
+            Leer(CarpetaAudio + "/20_Musica", nuevas, false);
             // Los archivos que ya no se usan (POL_RADIO_DESPACHO_01/02) siguen en Assets pero no entran al catalogo: el ID suena con su alias.
             foreach (string id in MapaSonidos20nov.IdsDescartados)
             {
