@@ -226,7 +226,7 @@ namespace MechaCyberpunk.VR.Menus
             objetoCamara.transform.SetParent(transform, false);
             camaraLaser = objetoCamara.AddComponent<Camera>();
             camaraLaser.enabled = false;
-            camaraLaser.stereoTargetEye = StereoTargetEyeMask.None;
+            SistemaVR.PermitirXR(camaraLaser, false);
             camaraLaser.nearClipPlane = 0.01f;
             camaraLaser.farClipPlane = AlcanceLaser * 2f;
             camaraLaser.fieldOfView = 10f;
@@ -311,8 +311,8 @@ namespace MechaCyberpunk.VR.Menus
 
         private void AlCargarEscena(Scene escena, LoadSceneMode modo)
         {
-            // La cámara de la escena nueva manda dónde queda el rig de menús.
-            rig.ColocarEnEscena();
+            // V12: el rig de menús no se mueve con la escena (cuarto oscuro quieto); solo se asegura su aspecto.
+            rig.ColocarEnCuarto();
             anclaPuesta = false;
             barrido = 0f;
         }
@@ -593,11 +593,19 @@ namespace MechaCyberpunk.VR.Menus
             }
             Vector3 frente = ReglaLienzosVR.FrentePlano(cabeza.forward, cabeza.up);
             distanciaAncla = ReglaLienzosVR.Distancia(DistanciaPared(cabeza.position, frente));
-            ancla = ReglaLienzosVR.PoseFrente(cabeza.position, frente, distanciaAncla);
+            ancla = PoseAncla(cabeza.position, frente, distanciaAncla);
             anclaPuesta = true;
             siguiendo = false;
             segundosFuera = 0f;
         }
+
+        // V12: con el rig de menús (Inicio) el panel va debajo de la pantalla de cine e inclinado hacia la cabeza; si no, el de siempre.
+        private Pose PoseAncla(Vector3 desde, Vector3 frente, float distancia)
+        {
+            return rig.Existe ? ReglaLienzosVR.PoseBajoCine(desde, frente, distancia) : ReglaLienzosVR.PoseFrente(desde, frente, distancia);
+        }
+
+        private float BajadaAncla => rig.Existe ? ReglaLienzosVR.BajadaBajoCine : ReglaLienzosVR.BajadaFrente;
 
         // Con menú: quieto, salvo que quede fuera de la vista un rato. Sin menú (avisos, tutorial): sigue suave a la cabeza.
         private void SeguirCabeza(float dt)
@@ -610,7 +618,7 @@ namespace MechaCyberpunk.VR.Menus
             Vector3 frente = ReglaLienzosVR.FrentePlano(cabeza.forward, cabeza.up);
             float angulo = ReglaLienzosVR.AnguloHacia(cabeza.position, frente, ancla.position);
             Vector3 plano = ancla.position - cabeza.position;
-            float alto = plano.y + ReglaLienzosVR.BajadaFrente;
+            float alto = plano.y + BajadaAncla;
             plano.y = 0f;
             bool lejos = plano.magnitude > ReglaLienzosVR.DistanciaSeguir || Mathf.Abs(alto) > DiferenciaAlturaSeguir;
             if (MenuAbierto)
@@ -632,7 +640,7 @@ namespace MechaCyberpunk.VR.Menus
                 return;
             }
             float distancia = ReglaLienzosVR.Distancia(DistanciaPared(cabeza.position, frente));
-            Pose objetivo = ReglaLienzosVR.PoseFrente(cabeza.position, frente, distancia);
+            Pose objetivo = PoseAncla(cabeza.position, frente, distancia);
             float k = 1f - Mathf.Exp(-ReglaLienzosVR.RapidezSeguir * dt);
             ancla.position = Vector3.Lerp(ancla.position, objetivo.position, k);
             ancla.rotation = Quaternion.Slerp(ancla.rotation, objetivo.rotation, k);

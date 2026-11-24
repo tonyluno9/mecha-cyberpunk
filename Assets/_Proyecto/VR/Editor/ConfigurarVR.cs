@@ -128,6 +128,13 @@ namespace MechaCyberpunk.VR.Editor
             ConstruirVREn("Builds/VR2");
         }
 
+        /// <summary>Build VR en Builds/VR3 (tercera tanda; VR y VR2 se están probando).
+        /// Batchmode: -executeMethod MechaCyberpunk.VR.Editor.ConfigurarVR.ConstruirVR3</summary>
+        public static void ConstruirVR3()
+        {
+            ConstruirVREn("Builds/VR3");
+        }
+
         private static void ConstruirVREn(string carpeta)
         {
             Directory.CreateDirectory(carpeta);

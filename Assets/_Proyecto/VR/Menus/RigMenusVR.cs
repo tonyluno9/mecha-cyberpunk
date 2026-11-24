@@ -1,4 +1,3 @@
-using MechaCyberpunk.UI.Inicio;
 using Unity.XR.CoreUtils;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -8,16 +7,26 @@ using TrackedPoseDriver = UnityEngine.InputSystem.XR.TrackedPoseDriver;
 namespace MechaCyberpunk.VR.Menus
 {
     /// <summary>
-    /// VR4: un rig mínimo para las escenas sin jugador a pie (Inicio, Menu_Calles): cabeza (cámara del visor) y control derecho (para el láser),
-    /// puesto donde está la cámara de la escena. En cuanto hay <see cref="AdaptadorVR"/> se quita y manda el rig del jugador.
+    /// VR4: un rig mínimo para las escenas sin jugador a pie (Inicio, Menu_Calles): cabeza (cámara del visor) y control derecho (para el láser).
+    /// V12: vive en un "cuarto oscuro" quieto, lejos de la ciudad (<see cref="PosicionCuarto"/>), con fondo negro y poca distancia de dibujo:
+    /// la cabeza solo se mueve con el visor, nunca con una animación. Lo que en PC se ve con la cámara de la escena (el recorrido de
+    /// Menu_Calles, el video del logo) en VR va en la pantalla de cine (<see cref="InicioCineVR"/>, que se arma con el rig).
+    /// En cuanto hay <see cref="AdaptadorVR"/> se quita y manda el rig del jugador.
     /// La cámara no lleva la etiqueta MainCamera ni AudioListener: <c>Camera.main</c> y el oído siguen siendo los de la escena,
     /// y al llegar el jugador no quedan dos.
     /// </summary>
     public sealed class RigMenusVR
     {
-        /// <summary>Altura de la cabeza sobre el origen del rig con la que se coloca frente a la cámara de la escena (m).</summary>
+        /// <summary>Altura de la cabeza sobre el origen del rig mientras el visor no da pose (m).</summary>
         public const float AlturaCabeza = 1.6f;
-        private const float MargenLejano = 1f;
+        /// <summary>V12: dónde queda el cuarto oscuro (sin geometría cerca: la ciudad está ~500 m arriba).</summary>
+        public static readonly Vector3 PosicionCuarto = new Vector3(0f, -500f, 0f);
+        /// <summary>V12: hasta dónde dibuja la cabeza del rig (m): la pantalla de cine está a 4 m y la ciudad no se ve.</summary>
+        public const float DistanciaDibujo = 30f;
+        /// <summary>V12: color de fondo del cuarto oscuro.</summary>
+        public static readonly Color ColorCuarto = new Color(0.01f, 0.01f, 0.02f, 1f);
+        // Se dibuja después de las cámaras de la escena (que van a la textura de la pantalla de cine): la ve del cuadro actual.
+        private const float OrdenCamara = 100f;
 
         private GameObject raiz;
 
@@ -45,12 +54,14 @@ namespace MechaCyberpunk.VR.Menus
             objetoCamara.transform.localPosition = new Vector3(0f, AlturaCabeza, 0f);
             Camara = objetoCamara.AddComponent<Camera>();
             Camara.nearClipPlane = 0.05f;
-            Camara.stereoTargetEye = StereoTargetEyeMask.Both;
+            Camara.depth = OrdenCamara;
             UniversalAdditionalCameraData datos = Camara.GetUniversalAdditionalCameraData();
             if (datos != null)
             {
-                // El neón del menú es postproceso (bloom); el antialias de pantalla no, lo hace el MSAA en VR.
-                datos.renderPostProcessing = true;
+                datos.allowXRRendering = true; // V12: en URP esto (no stereoTargetEye) decide qué va al visor
+                // V12: sin postproceso: la pantalla de cine ya trae el de la cámara de la escena (dos veces se vería lavado).
+                datos.renderPostProcessing = false;
+                datos.renderShadows = false;
                 datos.antialiasing = AntialiasingMode.None;
             }
             TrackedPoseDriver cabeza = objetoCamara.AddComponent<TrackedPoseDriver>();
@@ -74,63 +85,36 @@ namespace MechaCyberpunk.VR.Menus
             Origen.CameraFloorOffsetObject = offset.gameObject;
             Origen.Camera = Camara;
             Origen.RequestedTrackingOriginMode = XROrigin.TrackingOriginMode.Floor;
-            ColocarEnEscena();
-            raiz.SetActive(true);
+            // V12: la cámara de la escena va a la pantalla de cine mientras exista el rig.
+            raiz.AddComponent<InicioCineVR>();
+            ColocarEnCuarto();
             SistemaVR.CamaraVR = Camara;
-            Debug.Log("[VR] Rig de menús armado (escena sin jugador a pie).");
+            raiz.SetActive(true);
+            Debug.Log("[VR] Rig de menús armado en el cuarto oscuro (escena sin jugador a pie).");
         }
 
         /// <summary>
-        /// Pone el rig donde está la cámara de la escena (la cabeza queda en su lugar y mirando hacia donde mira) y copia su aspecto
-        /// (fondo, capas, distancia de dibujo). Con Menu_Calles cargada manda la cámara de las calles reales, que es la que se ve.
+        /// V12: deja el rig en el cuarto oscuro, siempre en la misma pose (la cabeza no se mueve aunque cambie la escena), con fondo negro,
+        /// distancia de dibujo corta y sin postproceso. Antes se ponía donde la cámara de la escena: en el visor se veía la ciudad alrededor.
         /// </summary>
-        public void ColocarEnEscena()
+        public void ColocarEnCuarto()
         {
             if (raiz == null)
             {
                 return;
             }
-            Camera escena = CamaraDeEscena();
-            if (escena == null)
+            if (raiz.transform.position != PosicionCuarto || raiz.transform.rotation != Quaternion.identity)
             {
-                return;
+                raiz.transform.SetPositionAndRotation(PosicionCuarto, Quaternion.identity);
             }
-            Vector3 frente = escena.transform.forward;
-            frente.y = 0f;
-            Quaternion giro = frente.sqrMagnitude > 1e-4f ? Quaternion.LookRotation(frente.normalized) : Quaternion.identity;
-            raiz.transform.SetPositionAndRotation(escena.transform.position + Vector3.down * AlturaCabeza, giro);
-            CopiarAspecto(escena);
-        }
-
-        private Camera CamaraDeEscena()
-        {
-            RecorridoCallesMenu recorrido = RecorridoCallesMenu.Actual;
-            if (recorrido != null && recorrido.isActiveAndEnabled && recorrido.Camara != null && recorrido.Camara != Camara)
-            {
-                return recorrido.Camara;
-            }
-            Camera principal = Camera.main;
-            return principal != null && principal != Camara ? principal : null;
-        }
-
-        private void CopiarAspecto(Camera escena)
-        {
             if (Camara == null)
             {
                 return;
             }
-            Camara.clearFlags = escena.clearFlags;
-            Camara.backgroundColor = escena.backgroundColor;
-            Camara.cullingMask = escena.cullingMask;
-            Camara.farClipPlane = Mathf.Max(escena.farClipPlane, Camara.nearClipPlane + MargenLejano);
-            if (escena.TryGetComponent(out UniversalAdditionalCameraData suyos))
-            {
-                UniversalAdditionalCameraData propios = Camara.GetUniversalAdditionalCameraData();
-                if (propios != null)
-                {
-                    propios.renderPostProcessing = suyos.renderPostProcessing;
-                }
-            }
+            Camara.clearFlags = CameraClearFlags.SolidColor;
+            Camara.backgroundColor = ColorCuarto;
+            Camara.cullingMask = ~0;
+            Camara.farClipPlane = DistanciaDibujo;
         }
 
         /// <summary>Quita el rig: se apaga en el acto (un solo XR Origin y una sola cámara de cabeza) y se destruye al final del cuadro.</summary>

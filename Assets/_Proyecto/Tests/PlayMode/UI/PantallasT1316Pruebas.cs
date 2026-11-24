@@ -62,7 +62,7 @@ namespace MechaCyberpunk.Tests.UI
             yield return EsperarReal(0.3f);
             Assert.AreEqual(1f, aviso.Visibilidad);
             Assert.Less(aviso.AlfaFondo, 0.7f, "se ve dónde cayó");
-            Image vineta = aviso.transform.Find("Canvas/Vineta").GetComponent<Image>();
+            Image vineta = aviso.transform.Find(PantallaAviso.NombreCanvas + "/Vineta").GetComponent<Image>();
             Assert.Greater(vineta.color.a, 0.5f, "orillas rojas (la textura las deja solo en los bordes)");
             Assert.Greater(vineta.color.r, vineta.color.b, "la viñeta es roja");
             if (Capturar)

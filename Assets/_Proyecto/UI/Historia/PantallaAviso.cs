@@ -18,6 +18,9 @@ namespace MechaCyberpunk.UI.Historia
         /// <summary>Rojo del aviso HAS MUERTO (M34).</summary>
         public static readonly Color RojoMuerte = new Color(1f, 0.24f, 0.28f, 1f);
 
+        /// <summary>V12-B: nombre del Canvas (antes "Canvas"), para que VR (ReglaLienzosVR) lo reconozca por nombre.</summary>
+        public const string NombreCanvas = "CanvasPantallaAviso";
+
         private const int CantidadCortes = 7;
         private const int TamanoTitulo = 150;
         private const int TamanoDetalle = 54;
@@ -83,7 +86,7 @@ namespace MechaCyberpunk.UI.Historia
             fuerzaVineta = vinetaPedida;
             azar = new System.Random(689);
             reloj = new RelojGlitch(() => (float)azar.NextDouble(), EsperaGlitchMinima, EsperaGlitchMaxima, DuracionGlitch);
-            Canvas canvas = KitUI.CrearCanvas(transform, "Canvas", PantallaFundido.OrdenDibujo - 1);
+            Canvas canvas = KitUI.CrearCanvas(transform, NombreCanvas, PantallaFundido.OrdenDibujo - 1);
             canvas.overrideSorting = true;
             canvas.sortingOrder = PantallaFundido.OrdenDibujo - 1;
             RectTransform lienzo = (RectTransform)canvas.transform;

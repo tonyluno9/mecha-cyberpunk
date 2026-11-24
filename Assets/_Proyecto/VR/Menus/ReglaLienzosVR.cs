@@ -52,13 +52,16 @@ namespace MechaCyberpunk.VR.Menus
         {
             "CanvasH10", "CanvasHabilidades", "CanvasImplantes", "CanvasTerritorio", "CanvasMinimapa", "CanvasHitmarker",
             "CanvasMiraSniper", "CanvasIndicadorDanio", "CanvasVinietaVida", "CanvasMarcador", "BarrasVidaEnemigos",
+            // V12: el video del logo (IntroInicio) en VR se ve en la pantalla de cine; su Canvas (fondo negro a pantalla completa) taparía el menú.
+            "IntroInicio_Pantalla",
         };
 
         /// <summary>
         /// Canvas de pantalla completa que en VR van como panel a <see cref="DistanciaFrente"/> m frente a la cabeza (y quietos en el mundo),
         /// no pegados a ella: la pantalla de carga (PantallaCargando, "CanvasCargando"). Pegada a 0.6 m y más ancha que la vista marea y no se lee.
         /// </summary>
-        private static readonly string[] PanelesDeCarga = { "CanvasCargando" };
+        // V12: también las pantallas negras de texto (cinemática sin video, "CONTINUARÁ", muerte/arresto): panel legible, no pegado a la cara.
+        private static readonly string[] PanelesDeCarga = { "CanvasCargando", "CanvasCinematica", "CanvasPantallaNegra", "CanvasPantallaAviso" };
 
         /// <summary>Tamaño en el mundo de un px de referencia (m/px) del panel de menús a la distancia normal.</summary>
         public static float EscalaFrente => AnchoFrente / AnchoReferencia;
@@ -142,6 +145,27 @@ namespace MechaCyberpunk.VR.Menus
         {
             Vector3 posicion = cabeza + frentePlano * distancia + Vector3.down * BajadaFrente;
             return new Pose(posicion, Quaternion.LookRotation(frentePlano, Vector3.up));
+        }
+
+        /// <summary>
+        /// V12: en Inicio (rig de menús, con la pantalla de cine arriba) el centro del panel va tanto abajo de los ojos (m), para que no tape
+        /// la pantalla grande (<see cref="PantallaCineVR"/>).
+        /// </summary>
+        public const float BajadaBajoCine = 0.6f;
+        // Si una pared acerca el panel, la bajada no pasa de esta fracción de la distancia.
+        private const float BajadaMaximaPorDistancia = 0.8f;
+
+        /// <summary>
+        /// V12: la pose del panel debajo de la pantalla de cine: a <paramref name="distancia"/> m de la cabeza (en línea recta), su centro
+        /// <see cref="BajadaBajoCine"/> m abajo de los ojos e inclinado hacia la cabeza (de frente a la línea de la vista).
+        /// </summary>
+        public static Pose PoseBajoCine(Vector3 cabeza, Vector3 frentePlano, float distancia)
+        {
+            float bajada = Mathf.Min(BajadaBajoCine, distancia * BajadaMaximaPorDistancia);
+            float adelante = Mathf.Sqrt(Mathf.Max(0f, distancia * distancia - bajada * bajada));
+            Vector3 posicion = cabeza + frentePlano * adelante + Vector3.down * bajada;
+            Vector3 hacia = (posicion - cabeza).normalized;
+            return new Pose(posicion, Quaternion.LookRotation(hacia, Vector3.up));
         }
 
         /// <summary>Cuánto se adelanta (m, hacia la cabeza) un Canvas de este orden, escalado con la distancia.</summary>

@@ -61,12 +61,13 @@ namespace MechaCyberpunk.Tests.VR
             Assert.IsTrue(a.Armado);
             yield return Segundos(3f);
 
-            Assert.AreEqual(StereoTargetEyeMask.Both, a.Camara.stereoTargetEye);
+            // V12: en URP lo que manda al visor es allowXRRendering (stereoTargetEye no hace nada).
+            Assert.IsTrue(SistemaVR.VaAlVisor(a.Camara));
             foreach (Camera c in Camera.allCameras)
             {
                 if (c != a.Camara && c.targetTexture == null)
                 {
-                    Assert.AreEqual(StereoTargetEyeMask.None, c.stereoTargetEye, c.name + " no debe verse en el visor.");
+                    Assert.IsFalse(SistemaVR.VaAlVisor(c), c.name + " no debe verse en el visor.");
                 }
             }
 

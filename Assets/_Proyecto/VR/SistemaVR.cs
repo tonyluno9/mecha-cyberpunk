@@ -81,6 +81,16 @@ namespace MechaCyberpunk.VR
                 return;
             }
             Instancia = this;
+            RenderPipelineManager.beginContextRendering += AntesDeDibujar;
+        }
+
+        // V12: justo antes de dibujar el cuadro: una cámara que se prendió este cuadro (cinemática, muerte, Doc) no llega al visor ni un cuadro.
+        private static void AntesDeDibujar(ScriptableRenderContext contexto, System.Collections.Generic.List<Camera> camaras)
+        {
+            if (ModoVR.Activo)
+            {
+                GuardarCamaras();
+            }
         }
 
         private IEnumerator Start()
@@ -247,18 +257,42 @@ namespace MechaCyberpunk.VR
                 {
                     continue;
                 }
-                if (c.stereoTargetEye != StereoTargetEyeMask.None)
-                {
-                    c.stereoTargetEye = StereoTargetEyeMask.None;
-                }
+                // V12: en URP stereoTargetEye no hace nada (y avisaba cada cuadro): la que manda es allowXRRendering.
+                // Sin esto la cámara de la escena (el recorrido de Menu_Calles, cinemáticas) se dibujaba en el visor y movía la vista.
+                PermitirXR(c, false);
             }
             if (vr != null)
             {
-                vr.stereoTargetEye = StereoTargetEyeMask.Both;
+                PermitirXR(vr, true);
                 if (!vr.enabled && vr.gameObject.activeInHierarchy)
                 {
                     vr.enabled = true;
                 }
+            }
+        }
+
+        /// <summary>V12: true si la cámara se dibuja en el visor (URP: allowXRRendering y sin targetTexture).</summary>
+        public static bool VaAlVisor(Camera c)
+        {
+            if (c == null || c.targetTexture != null)
+            {
+                return false;
+            }
+            UniversalAdditionalCameraData datos = c.GetUniversalAdditionalCameraData();
+            return datos == null || datos.allowXRRendering;
+        }
+
+        /// <summary>V12: si la cámara se dibuja en el visor (URP). Solo la cabeza del jugador o del rig de menús lo hace.</summary>
+        public static void PermitirXR(Camera c, bool permitir)
+        {
+            if (c == null)
+            {
+                return;
+            }
+            UniversalAdditionalCameraData datos = c.GetUniversalAdditionalCameraData();
+            if (datos != null && datos.allowXRRendering != permitir)
+            {
+                datos.allowXRRendering = permitir;
             }
         }
 
@@ -306,6 +340,7 @@ namespace MechaCyberpunk.VR
             {
                 return;
             }
+            RenderPipelineManager.beginContextRendering -= AntesDeDibujar;
             DeshacerCalidad();
             EntradaVR.Apagar();
             XRManagerSettings manager = XRGeneralSettings.Instance != null ? XRGeneralSettings.Instance.Manager : null;
