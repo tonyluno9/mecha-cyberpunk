@@ -14,14 +14,14 @@ namespace MechaCyberpunk.Personaje.Combate
     {
         /// <summary>Prefab en Resources (lo crea ModelosPickupsT1523 en Personaje/Editor).</summary>
         public const string RecursoModelo = "MunicionEnPiso_Modelo";
-        private const float RadioRecoger = 1.3f;
+        /// <summary>T-drops-24nov: cargador real (pieza Cargador de W05) a escala de pickup; lo crea RecompensasEnemigoT24nov. Si falta, la caja CB03.</summary>
+        public const string RecursoCargador = "RecompensaCargador_Modelo";
         private const float AlturaFlotar = 0.3f;
         private const float AmplitudFlotar = 0.05f;
         private const float GiroPorSegundo = 100f;
         private const float SegundosAntesDeRecoger = 0.6f;
-        private static readonly ArmaAPie[] Limitadas = { ArmaAPie.Escopeta, ArmaAPie.Fusil, ArmaAPie.Sniper };
-
         private Transform modelo;
+        private ArmaAPie? preferida;
         private float recogibleDesde;
         private bool tomada;
 
@@ -31,7 +31,13 @@ namespace MechaCyberpunk.Personaje.Combate
         public static event Action<ArmaAPie, int> Recogida;
 
         /// <summary>El arma limitada que recibiría las balas ahora (la de la mano si lo es; si no, la primera que tenga), o null si no tiene ninguna.</summary>
-        public static ArmaAPie? ArmaDestino()
+        public static ArmaAPie? ArmaDestino() => ArmaDestino(null);
+
+        /// <summary>
+        /// T-drops-24nov: como <see cref="ArmaDestino()"/>, pero antes que la de la mano prueba <paramref name="delEnemigo"/> (el arma del enemigo
+        /// que soltó las balas) si el jugador la tiene. Ver <see cref="ReglaRecompensasEnemigo.ElegirArma"/>.
+        /// </summary>
+        public static ArmaAPie? ArmaDestino(ArmaAPie? delEnemigo)
         {
             ArsenalJugador arsenal = Registro<ArsenalJugador>.Actual;
             if (arsenal == null)
@@ -39,25 +45,18 @@ namespace MechaCyberpunk.Personaje.Combate
                 return null;
             }
             ArmasAPie armas = UnityEngine.Object.FindFirstObjectByType<ArmasAPie>();
-            if (armas != null && Array.IndexOf(Limitadas, armas.ArmaActiva) >= 0 && arsenal.Tiene(armas.ArmaActiva))
-            {
-                return armas.ArmaActiva;
-            }
-            foreach (ArmaAPie arma in Limitadas)
-            {
-                if (arsenal.Tiene(arma))
-                {
-                    return arma;
-                }
-            }
-            return null;
+            return ReglaRecompensasEnemigo.ElegirArma(delEnemigo, armas != null ? armas.ArmaActiva : ArmaAPie.Punos, arsenal.Tiene);
         }
 
-        public static MunicionEnPiso Crear(Vector3 posicionPiso)
+        public static MunicionEnPiso Crear(Vector3 posicionPiso) => Crear(posicionPiso, null);
+
+        /// <summary>T-drops-24nov: balas que prefieren ir al arma del enemigo que las soltó (si el jugador la tiene).</summary>
+        public static MunicionEnPiso Crear(Vector3 posicionPiso, ArmaAPie? delEnemigo)
         {
             var raiz = new GameObject("MunicionEnPiso");
             raiz.transform.position = posicionPiso;
             var municion = raiz.AddComponent<MunicionEnPiso>();
+            municion.preferida = delEnemigo;
             municion.recogibleDesde = Time.time + SegundosAntesDeRecoger;
             municion.Armar();
             return municion;
@@ -65,10 +64,15 @@ namespace MechaCyberpunk.Personaje.Combate
 
         private void Armar()
         {
-            Color naranja = new Color(1f, 0.65f, 0.15f);
+            ConfigRecompensasEnemigo config = ConfigRecompensasEnemigo.Actual;
+            Color naranja = config.ColorMunicion;
             modelo = new GameObject("Caja").transform;
             modelo.SetParent(transform, false);
-            GameObject prefab = Resources.Load<GameObject>(RecursoModelo);
+            GameObject prefab = Resources.Load<GameObject>(RecursoCargador);
+            if (prefab == null)
+            {
+                prefab = Resources.Load<GameObject>(RecursoModelo);
+            }
             if (prefab != null)
             {
                 // T-1523: modelo real (la caja de metal CB03 a escala de pickup; no hay un modelo de cargador o caja de balas en Assets/Arte).
@@ -88,8 +92,8 @@ namespace MechaCyberpunk.Personaje.Combate
             luz.transform.localPosition = Vector3.up * AlturaFlotar;
             luz.type = LightType.Point;
             luz.color = naranja;
-            luz.intensity = 0.5f;
-            luz.range = 1.2f;
+            luz.intensity = config.IntensidadBrillo;
+            luz.range = config.AlcanceBrillo;
             luz.shadows = LightShadows.None;
         }
 
@@ -129,9 +133,10 @@ namespace MechaCyberpunk.Personaje.Combate
             {
                 return;
             }
-            Vector3 d = jugador.Raiz.position - transform.position;
-            d.y = 0f;
-            if (d.sqrMagnitude <= RadioRecoger * RadioRecoger)
+            // T-drops-24nov: al pasar con el cuerpo o, en VR, al acercar una mano.
+            ConfigRecompensasEnemigo config = ConfigRecompensasEnemigo.Actual;
+            int n = ManosRecogida.Posiciones(out Vector3[] manos);
+            if (ReglaRecompensasEnemigo.Cerca(transform.position, jugador.Raiz.position, config.RadioRecoger, manos, n, config.RadioMano))
             {
                 Recoger();
             }
@@ -144,7 +149,7 @@ namespace MechaCyberpunk.Personaje.Combate
             {
                 return;
             }
-            ArmaAPie? destino = ArmaDestino();
+            ArmaAPie? destino = ArmaDestino(preferida);
             ReservaBalas reserva = Registro<ReservaBalas>.Actual;
             if (destino == null || reserva == null || reserva.Espacio(destino.Value) <= 0)
             {
