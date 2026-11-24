@@ -33,6 +33,42 @@ namespace MechaCyberpunk.Core
         private static bool modoNovaPrevio;
         private static int camionetasLlegadas;
         private static bool puertaForzada;
+        private static FaseModoLibre libre;
+
+        /// <summary>T-historia-libre-23nov: se avisa con el tipo cada vez que muere una unidad de respuesta (no las retiradas). Lo escucha el modo libre.</summary>
+        public static event Action<TipoRespuesta> Baja;
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void LimpiarEventos()
+        {
+            Baja = null;
+            libre = null;
+        }
+
+        /// <summary>
+        /// T-historia-libre-23nov: pone la fase del modo libre (null la quita). Mientras hay una, el director genera solo los tipos de la fase, sostiene sus
+        /// estrellas, no respeta la misión protegida y usa los topes del modo libre (<see cref="ParametrosRespuesta.TopeEnemigosLibre"/> y los demás).
+        /// </summary>
+        public static void PonerModoLibre(FaseModoLibre fase)
+        {
+            if (fase == libre)
+            {
+                return;
+            }
+            libre = fase;
+            Regla.PonerModoLibre(fase);
+            ultimoAhora = float.NaN; // el siguiente Avanzar recalcula aunque sea el mismo instante
+            if (Parametros.Registrar)
+            {
+                Debug.Log("[Respuesta] modo libre: " + (fase != null ? fase.Nombre + " (estrellas " + fase.Estrellas + (fase.ModoNova ? ", NOVA" : string.Empty) + ")" : "apagado"));
+            }
+        }
+
+        /// <summary>T-historia-libre-23nov: la fase del modo libre que manda ahora (null fuera del modo libre).</summary>
+        public static FaseModoLibre ModoLibre => libre;
+
+        /// <summary>T-historia-libre-23nov: enemigos de respuesta vivos que cuentan para el tope del modo libre.</summary>
+        public static int VivosLibre => Regla.VivosLibre;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void Reiniciar()
@@ -72,6 +108,10 @@ namespace MechaCyberpunk.Core
                 if (regla == null)
                 {
                     regla = new ReglaEscaladaRespuesta(Parametros);
+                    if (libre != null)
+                    {
+                        regla.PonerModoLibre(libre);
+                    }
                     for (int i = 0; i < declarados.Length; i++)
                     {
                         if (declarados[i])
@@ -127,9 +167,13 @@ namespace MechaCyberpunk.Core
         /// <summary>Avanza el tiempo del director: cuenta vivos, bajas y retiradas y desbloquea niveles. Varias llamadas en el mismo instante valen una.</summary>
         public static void Avanzar(float ahora, int estrellas)
         {
-            bool mision = MisionProtegida.Activa;
+            bool mision = MisionProtegida.Activa && libre == null; // T-historia-libre-23nov: en el modo libre las peleas protegidas ya no aplican
             bool nova = mision && MisionProtegida.NovaPermitida;
-            if (nova)
+            if (libre != null)
+            {
+                estrellas = Mathf.Max(estrellas, libre.Estrellas);
+            }
+            else if (nova)
             {
                 estrellas = Mathf.Max(estrellas, Parametros.EstrellasNovaEnMision);
             }
@@ -158,6 +202,7 @@ namespace MechaCyberpunk.Core
                 {
                     Regla.RegistrarPerdida(e.Tipo, ahora);
                     Escribir("baja", e.Tipo, ahora);
+                    Baja?.Invoke(e.Tipo);
                 }
                 else
                 {
@@ -197,7 +242,7 @@ namespace MechaCyberpunk.Core
         /// <summary>Cuántas unidades de este tipo caben todavía (cupo y total), para quien manda varias juntas (por ejemplo una nave).</summary>
         public static int Espacio(TipoRespuesta tipo)
         {
-            int total = Parametros.TopeTotal - Regla.VivosTotal;
+            int total = libre != null ? Parametros.TopeEnemigosLibre - Regla.VivosLibre : Parametros.TopeTotal - Regla.VivosTotal;
             int cupo = Regla.CupoActual(tipo) - Regla.Vivos(tipo);
             return Mathf.Max(0, Mathf.Min(total, cupo));
         }

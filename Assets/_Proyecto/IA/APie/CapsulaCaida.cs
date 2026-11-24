@@ -324,8 +324,20 @@ namespace MechaCyberpunk.IA.APie
             return capsula;
         }
 
+        private static int activas;
+
+        /// <summary>T-historia-libre-23nov: cápsulas que hay ahora en escena (cayendo o abriéndose); el modo libre no lanza más de su tope.</summary>
+        public static int Activas => activas;
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void LimpiarActivas() => activas = 0;
+
         private void Awake()
         {
+            if (Application.isPlaying)
+            {
+                activas++;
+            }
             bloque = new MaterialPropertyBlock();
             if (tapa == null || baseYParedes == null || baseYParedes.Length == 0)
             {
@@ -670,6 +682,10 @@ namespace MechaCyberpunk.IA.APie
 
         private void OnDestroy()
         {
+            if (Application.isPlaying)
+            {
+                activas = Mathf.Max(0, activas - 1);
+            }
             LiberarGrafo();
             if (!Terminada && enemigo != null)
             {

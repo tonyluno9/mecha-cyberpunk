@@ -327,6 +327,7 @@ namespace MechaCyberpunk.Progresion.Recorrido
                 if (modoNueva)
                 {
                     AvisosUnicos.Reiniciar();
+                    FaseJuego.Reiniciar(FaseJuego.Fase.Guiada); // T-historia-libre-23nov
                     IrA(PasoRecorrido.Recuerdo);
                 }
                 yield break;
@@ -341,9 +342,13 @@ namespace MechaCyberpunk.Progresion.Recorrido
             {
                 p = PasoRecorrido.Despierta;
             }
-            else if (p == PasoRecorrido.Fin)
+            else if (GestorCandados.DesconectadoPorModoLibre(p))
             {
-                p = PasoRecorrido.Libre;
+                p = PasoRecorrido.Libre; // T-historia-libre-23nov: una partida guardada en la historia vieja (chica en adelante) sigue en el modo libre
+            }
+            if (p != PasoRecorrido.Libre)
+            {
+                FaseJuego.Reiniciar(FaseJuego.Fase.Guiada);
             }
             Debug.Log("[Historia] Reanuda el recorrido en el paso " + (int)p + " (" + p + ")");
             reanudando = true;
@@ -757,7 +762,7 @@ namespace MechaCyberpunk.Progresion.Recorrido
                 GuardarPartida();
                 return;
             }
-            IrA(PasoRecorrido.Chica);
+            IrA(PasoRecorrido.Libre); // T-historia-libre-23nov
         }
 
         private string FaltaEnElBanco() => paso == PasoRecorrido.Armas ? GestorCandados.FaltaEnElBanco(TieneArma(), TieneMejoraDeArma()) : string.Empty;
@@ -827,7 +832,7 @@ namespace MechaCyberpunk.Progresion.Recorrido
         private void EntrarInventor()
         {
             viejo?.Inventor?.DarRegalo(null);
-            IrA(PasoRecorrido.Chica);
+            IrA(PasoRecorrido.Libre); // T-historia-libre-23nov: la chica y lo demás quedan desconectados
         }
 
         // 11. C06 LA CHICA al salir del CIC la primera vez (al alejarse del Inventor).
@@ -847,7 +852,7 @@ namespace MechaCyberpunk.Progresion.Recorrido
         private void EntrarGuerraSkulls()
         {
             // T-78: el mundo ya es libre; la pelea protegida solo se activa al acercarse al Tianguis (ActualizarProteccionTianguis).
-            AvisoTutorialHistoria.Actual?.Mostrar(AvisosUnicos.Libre, GestorCandados.TextoLibre);
+            // VR47 / T-historia-libre-23nov: sin el aviso "YA ERES LIBRE" (Tony no quiere avisos; la historia termina con Tino).
             Prender(viejo != null ? viejo.GruposNeon : null, false);
             if (!hambreResuelta && IniciarHambre())
             {
@@ -1021,10 +1026,39 @@ namespace MechaCyberpunk.Progresion.Recorrido
                 PantallaCreditos.Abrir(() => FlujoPartida.IrAlTitulo()));
         }
 
+        // T-historia-libre-23nov: al CONTINUAR o REINTENTAR (partida cargada en Libre) el modo libre empieza ya; si se llega desde Tino, empieza al salir de su tienda.
         private void EntrarLibre()
         {
             PrepararLibre();
+            if (reanudando)
+            {
+                EmpezarModoLibre(false);
+                return;
+            }
+            sub = 0;
+            FaseJuego.Reiniciar(FaseJuego.Fase.Guiada);
             GuardarPartida();
+        }
+
+        // Sin aviso: el objetivo pequeño SOBREVIVE y la escalada (DirectorModoLibre). Con guardar, aquí queda el punto de REINTENTAR.
+        private void EmpezarModoLibre(bool guardar)
+        {
+            sub = 1;
+            DirectorModoLibre.Iniciar(guardar);
+        }
+
+        // T-historia-libre-23nov: el modo libre empieza la primera vez que sales de la tienda de Tino (banco cerrado, fuera del campo de tiro y lejos de él).
+        private void ActualizarSalidaTino(Transform jugador)
+        {
+            if (sub != 0 || PestanasBancoTino.AbiertoOEnCampo)
+            {
+                return;
+            }
+            PersonajeApoyo inventor = viejo != null ? viejo.Inventor : null;
+            if (inventor == null || Plano(jugador.position, inventor.Posicion) >= DistanciaAlejarseInventor)
+            {
+                EmpezarModoLibre(true);
+            }
         }
 
         private void PrepararLibre()
@@ -1094,12 +1128,15 @@ namespace MechaCyberpunk.Progresion.Recorrido
                         }
                         if (TieneMejoraDeArma() && !PestanasBancoTino.AbiertoOEnCampo)
                         {
-                            IrA(PasoRecorrido.Chica);
+                            IrA(PasoRecorrido.Libre); // T-historia-libre-23nov: la historia termina con Tino; lo de después queda desconectado
                         }
                     }
                     break;
                 case PasoRecorrido.Chica:
                     ActualizarChica(jugador);
+                    break;
+                case PasoRecorrido.Libre:
+                    ActualizarSalidaTino(jugador);
                     break;
                 case PasoRecorrido.GuerraSkulls:
                     if (sub == 0 && !hambreResuelta)
