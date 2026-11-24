@@ -213,6 +213,7 @@ namespace MechaCyberpunk.IA.APie
             }
             ImpulsoNpc impulso = npc.gameObject.AddComponent<ImpulsoNpc>();
             impulso.Lanzar(ReglaImpulsoAtropello.VelocidadDeVuelo(velocidadCarro), direccion, murio);
+            AnimacionCivilMundo.AsustarCerca(npc.position, ReglaVozPeaton.RadioMiedoAtropello, npc); // T-voces-personajes-23nov: los de alrededor gritan de miedo
             Arrollados++;
             Debug.Log("[IA] T25: " + npc.name + " arrollado a " + new Vector3(velocidadCarro.x, 0f, velocidadCarro.z).magnitude.ToString("F1") + " m/s" + (murio ? " (murió)" : ""));
         }

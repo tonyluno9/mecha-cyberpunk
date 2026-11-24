@@ -427,11 +427,19 @@ namespace MechaCyberpunk.UI.Tiendas
                             inventario.Agregar(objeto, 1);
                         }
                         Sonidos.Reproducir("ECO_COMPRA");
+                        if (MechaCyberpunk.UI.Armas.PestanasBancoTino.Abierto)
+                        {
+                            MechaCyberpunk.Progresion.Sonido.VocesApoyo.TinoCompro(); // T-voces-personajes-23nov: TINO_VOZ_COMPRA
+                        }
                         Refiltrar();
                         MostrarAviso(string.Format(config.FormatoComprado, ReglaVistaMercado.Nombre(objeto).ToUpperInvariant()));
                         break;
                     case ResultadoCompra.SinDinero:
                         Sonidos.Reproducir("UI_ERROR"); // T-1474
+                        if (MechaCyberpunk.UI.Armas.PestanasBancoTino.Abierto)
+                        {
+                            MechaCyberpunk.Progresion.Sonido.VocesApoyo.TinoSinDineroAlcanza(); // T-voces-personajes-23nov: TINO_VOZ_SIN_DINERO
+                        }
                         MostrarAviso(config.TextoNoAlcanza);
                         break;
                     default:

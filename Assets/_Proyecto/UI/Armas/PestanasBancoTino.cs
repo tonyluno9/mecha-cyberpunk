@@ -214,6 +214,7 @@ namespace MechaCyberpunk.UI.Armas
                 actual = new GameObject("PestanasBancoTino").AddComponent<PestanasBancoTino>();
             }
             actual.Iniciar(armas, trabajo, alCerrar);
+            MechaCyberpunk.Progresion.Sonido.VocesApoyo.TinoAbrioBanco(); // T-voces-personajes-23nov: TINO_VOZ_BANCO
             return true;
         }
 
@@ -639,6 +640,7 @@ namespace MechaCyberpunk.UI.Armas
             cambiar.Disable();
             Action callback = alCerrar;
             alCerrar = null;
+            MechaCyberpunk.Progresion.Sonido.VocesApoyo.TinoSeDespide(); // T-voces-personajes-23nov: TINO_VOZ_DESPEDIDA al cerrar su banco
             StartCoroutine(DevolverControlDespues());
             callback?.Invoke();
         }

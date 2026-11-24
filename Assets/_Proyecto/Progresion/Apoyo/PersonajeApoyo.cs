@@ -2,6 +2,7 @@ using System;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.IA.APie;
 using MechaCyberpunk.Personaje.Vida;
+using MechaCyberpunk.Progresion.Sonido;
 using MechaCyberpunk.UI.Armas;
 using MechaCyberpunk.UI.Clinica;
 using MechaCyberpunk.UI.Historia;
@@ -117,6 +118,39 @@ namespace MechaCyberpunk.Progresion.Apoyo
         {
             Registro<IInteractuable>.Agregar(this);
             registrado = true;
+            if (datos != null)
+            {
+                VocesApoyo.Registrar(datos.Id, transform); // T-voces-personajes-23nov: Canepa y Tino hablan desde aquí
+            }
+            jugadorCerca = false;
+        }
+
+        // T-voces-personajes-23nov: Tino saluda cuando el jugador se le acerca y se despide cuando se aleja (con margen y enfriamiento).
+        private const float SegundosEntreCercanias = 0.25f;
+        private bool jugadorCerca;
+        private float proximaCercania;
+
+        private void RevisarCercaniaTino()
+        {
+            if (datos == null || datos.Id != VocesApoyo.IdTino || Time.unscaledTime < proximaCercania)
+            {
+                return;
+            }
+            proximaCercania = Time.unscaledTime + SegundosEntreCercanias;
+            IJugador jugador = Registro<IJugador>.Actual;
+            if (jugador == null || jugador.Raiz == null || jugador.Modo != ModoJugador.APie)
+            {
+                return;
+            }
+            Vector3 d = jugador.Raiz.position - transform.position;
+            d.y = 0f;
+            int cambio = VocesApoyo.CambioCercania(jugadorCerca, d.magnitude);
+            if (cambio == 0)
+            {
+                return;
+            }
+            jugadorCerca = cambio > 0;
+            VocesApoyo.TinoCercania(jugadorCerca);
         }
 
         private void Start()
@@ -135,11 +169,16 @@ namespace MechaCyberpunk.Progresion.Apoyo
                 Registro<IInteractuable>.Quitar(this);
                 registrado = false;
             }
+            if (datos != null)
+            {
+                VocesApoyo.Quitar(datos.Id, transform);
+            }
         }
 
         // T-59: el mostrador de armas y el banco de trabajo ya no se ofrecen sueltos; se busca hasta encontrarlos (la ciudad los carga después).
         private void Update()
         {
+            RevisarCercaniaTino();
             if (!(datos != null && datos.Servicio == ServicioApoyo.Mejoras && mostrador == null) || quitadosInteractuables
                 || Time.unscaledTime < proximaBusquedaBanco)
             {
@@ -273,6 +312,10 @@ namespace MechaCyberpunk.Progresion.Apoyo
                 return;
             }
             Registro<ICalor>.Actual.Borrar();
+            if (datos.Id == VocesApoyo.IdCanepa)
+            {
+                VocesApoyo.CanepaTermino(); // T-voces-personajes-23nov: Canepa terminó el trabajo (CANEPA_VOZ_REPARAR)
+            }
             string[] frases = datos.Frases;
             Decir(frases.Length > 0 ? frases[0] : "Listo, nadie te conoce.");
         }

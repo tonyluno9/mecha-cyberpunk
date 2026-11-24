@@ -21,7 +21,14 @@ namespace MechaCyberpunk.Progresion.Sonido
         public const string GrupoNova = "voz-nova";
         public const string GrupoJefeNova = "voz-jefe-nova";
         public const string GrupoDoc = "voz-doc";
-        public const string GrupoOtros = "voz-otros";
+        public const string GrupoCanepa = "voz-canepa";
+        public const string GrupoTino = "voz-tino";
+        public const string GrupoMesera = "voz-mesera";
+        /// <summary>Los peatones: varios a la vez en la calle (uno por peatón lo cuida ReglaVozPeaton), hasta <see cref="MaxVocesPeatones"/>.</summary>
+        public const string GrupoPeatones = "voz-peatones";
+
+        /// <summary>Cuántas voces de peatón suenan a la vez como máximo (la más vieja se corta).</summary>
+        public const int MaxVocesPeatones = 3;
 
         /// <summary>El bucle de respiración del jugador cansado (con fundido de entrada y salida).</summary>
         public const string RespiracionCansado = "JUG_RESPIRACION_CANSADO";
@@ -67,11 +74,11 @@ namespace MechaCyberpunk.Progresion.Sonido
                 "NOV_JEFE_FRASE", "NOV_JEFE_REVELACION", "NOV_JEFE_ATAQUE", "NOV_JEFE_MUERTE"),
             new Carpeta("Doc", GrupoDoc, true, 0f,
                 "DOC_VOZ_SALUDO", "DOC_VOZ_SIENTATE", "DOC_VOZ_EXPLICAR", "DOC_VOZ_REVIVIR", "DOC_VOZ_SUERO", "DOC_VOZ_DESPEDIDA"),
-            // Solo en el catálogo (no se conectan en esta tarea).
-            new Carpeta("Canepa", GrupoOtros, false, 25f, "CANEPA_VOZ_SALUDO", "CANEPA_VOZ_REPARAR", "CANEPA_VOZ_DESPEDIDA"),
-            new Carpeta("Tino", GrupoOtros, false, 25f, "TINO_VOZ_SALUDO", "TINO_VOZ_COMPRA", "TINO_VOZ_BANCO", "TINO_VOZ_SIN_DINERO", "TINO_VOZ_DESPEDIDA"),
-            new Carpeta("Mesera_Robot", GrupoOtros, false, 25f, "MESERA_ROBOT_SALUDO", "MESERA_ROBOT_SERVIR", "MESERA_ROBOT_SUERTE", "MESERA_ROBOT_DESPEDIDA"),
-            new Carpeta("Peatones", GrupoOtros, false, 25f, ArmarPeatones()),
+            // T-voces-personajes-23nov (segunda parte): Canepa en su taller, Tino en su banco, las meseras robot del casino y los peatones. Todas en 3D.
+            new Carpeta("Canepa", GrupoCanepa, false, 25f, "CANEPA_VOZ_SALUDO", "CANEPA_VOZ_REPARAR", "CANEPA_VOZ_DESPEDIDA"),
+            new Carpeta("Tino", GrupoTino, false, 25f, "TINO_VOZ_SALUDO", "TINO_VOZ_COMPRA", "TINO_VOZ_BANCO", "TINO_VOZ_SIN_DINERO", "TINO_VOZ_DESPEDIDA"),
+            new Carpeta("Mesera_Robot", GrupoMesera, false, 30f, "MESERA_ROBOT_SALUDO", "MESERA_ROBOT_SERVIR", "MESERA_ROBOT_SUERTE", "MESERA_ROBOT_DESPEDIDA"),
+            new Carpeta("Peatones", GrupoPeatones, false, 25f, ArmarPeatones()),
         };
 
         private static readonly Dictionary<string, Carpeta> PorId = ArmarPorId();
@@ -154,7 +161,9 @@ namespace MechaCyberpunk.Progresion.Sonido
                 case RespiracionCansado: minimo = 0f; tono = 0f; break;
             }
             if (c.FrasesLargas) tono = 0f; // las frases del Doc y los jefes se oyen tal cual
-            politica = new PoliticaSonido(c.Grupo, 1, 1f, tono, minimo, c.Distancia, 1f, 0.04f);
+            // Los peatones: varios a la vez en la calle (cada uno habla de a una frase: ReglaVozPeaton). Los demás: una sola voz del personaje.
+            int maxVoces = c.Grupo == GrupoPeatones ? MaxVocesPeatones : 1;
+            politica = new PoliticaSonido(c.Grupo, maxVoces, 1f, tono, minimo, c.Distancia, 1f, 0.04f);
             return true;
         }
     }
