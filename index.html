@@ -110,7 +110,7 @@ footer{padding:30px;text-align:center;color:var(--mut);border-top:1px solid var(
 @media(prefers-reduced-motion:reduce){.logo{animation:none;clip-path:none}#hero>img,.rec i,.glitch{animation:none}}
 </style></head><body>
 
-<nav aria-label="Secciones"><b>CYBERCITY</b><a href="#cine">Cinemáticas</a><a href="#historia">Historia</a><a href="#demo">La demo</a><a href="#libre">Modo libre</a><a href="#ciudad">La ciudad</a><a href="#controles">Controles</a><a href="#presentar">Cómo presentarlo</a></nav>
+<nav aria-label="Secciones"><b>CYBERCITY</b><a href="#cine">Cinemáticas</a><a href="#historia">Historia</a><a href="#demo">La demo</a><a href="#libre">Modo libre</a><a href="#ciudad">La ciudad</a><a href="#controles">Controles</a></nav>
 
 <header id="hero">
   <img src="media/L01_Carga_Protagonista.jpg" alt="">
@@ -168,7 +168,7 @@ footer{padding:30px;text-align:center;color:var(--mut);border-top:1px solid var(
 
 <section class="band" id="libre"><div class="wrap">
   <span class="lbl">Modo libre</span><h2>Mientras más caen, más te buscan</h2>
-  <p>Al salir de con Tino empieza la cacería, sin avisos. Cada fase dura un tiempo o hasta que matas a cierto número: lo que pase primero te sube a la siguiente. Los refuerzos llegan poco a poco, los SKULLS te atacan en su zona en todas las fases y los enemigos sueltan munición y botiquines.</p>
+  <p>Al salir de con Tino empieza la cacería, sin avisos. Los refuerzos llegan poco a poco, los SKULLS te atacan en su zona en todas las fases y los enemigos sueltan munición y botiquines.</p>
   <div class="row"><button class="btn" data-m="MUS_FASE_SKULLS">♪ Música SKULLS</button><button class="btn" data-m="MUS_FASE_POLICIA">♪ Música Policía</button><button class="btn" data-m="MUS_FASE_NOVA">♪ Música NOVA</button></div>
   <div class="phases" id="phases"></div>
   <div class="cut dead"><h3>HAS MUERTO</h3>
@@ -195,27 +195,6 @@ footer{padding:30px;text-align:center;color:var(--mut);border-top:1px solid var(
   <p class="hint" id="ctlnote" style="margin-top:10px"></p>
   <h3 style="margin-top:30px">Guía de gestos VR</h3>
   <div class="gal" id="gal"></div>
-</div></section>
-
-<section class="band alt" id="presentar"><div class="wrap">
-  <span class="lbl">Ideas</span><h2>Cómo presentar CYBERCITY</h2>
-  <div class="ideas">
-    <div class="cut card"><b>Abre a oscuras con el logo</b>Luces apagadas, esta página en pantalla completa con "Presentar". El logo se pinta con aerosol y arranca el recuerdo del campo. No digas nada hasta que despierte.</div>
-    <div class="cut card"><b>Tu voz ya está en la película</b>La narración que grabaste suena en cada clip. Si prefieres decirla en vivo, apaga "Seguido" y pasa los clips tú con las flechas.</div>
-    <div class="cut card"><b>Corta al juego cuando Tino te da el arma</b>Ahí acaba la historia. Cambias al build en vivo: el campo de tiro y la escalada hasta NOVA, frente a todos.</div>
-    <div class="cut card"><b>Reta al salón</b>Un compañero juega el modo libre y la pantalla HAS MUERTO da su marca. El mejor tiempo del día gana. Si llevas el Quest 3, que lo prueben en VR.</div>
-    <div class="cut card"><b>Cuéntales que la cara es la tuya</b>El protagonista lo diseñaste basado en ti. Dilo después del primer clip donde se te ve: engancha al público.</div>
-    <div class="cut card"><b>Cierra con las gafas</b>Tu toma quitándote las gafas de VR y un glitch: "¿y si Cyber City sigue ahí?". Deja la duda y enciende las luces.</div>
-  </div>
-  <h3 style="margin-top:32px">Guion sugerido · unos 7 minutos</h3>
-  <div class="tl">
-    <div class="cut"><span>0:00–0:20</span>Luces apagadas. Página en pantalla completa: logo pintándose.</div>
-    <div class="cut"><span>0:20–3:00</span>Cinemáticas seguidas con tu narración (C01 a C09).</div>
-    <div class="cut"><span>3:00–3:30</span>Tú, en vivo: el mundo, NOVA, los SKULLS y quién eres.</div>
-    <div class="cut"><span>3:30–5:30</span>Juego en vivo: campo de tiro y escalada Policía → NOVA.</div>
-    <div class="cut"><span>5:30–6:30</span>Controles PC/VR y reto al salón.</div>
-    <div class="cut"><span>6:30–7:00</span>Tu toma quitándote las gafas, glitch, fin.</div>
-  </div>
 </div></section>
 
 <footer>CYBERCITY · proyecto universitario en Unity 6 · Tony</footer>
@@ -305,7 +284,7 @@ const S=[['C01','El recuerdo','Un niño corre por el campo con su hermano y su m
 $('steps').innerHTML=S.map(([im,b,t])=>`<li class="cut">${im?`<img src="${M+(im==='C01'?'C01a':im)}.jpg" alt="" loading="lazy">`:'<div class="noimg">SOBREVIVE</div>'}<div><b>${b}</b>${t}</div></li>`).join('');
 /* fases */
 const P=[['1 · Policía','Policías a pie y en patrulla.','5 min o 20 policías','var(--yel)',17],['2 · Persecución','Patrullas que llegan manejando, abren la puerta y se bajan a pelear.','5 min, 6 patrullas o 30 policías','var(--yel)',33],['3 · Refuerzos','Camiones y policía pesada.','5 min o 40 policías','var(--coral)',50],['4 · Drones NOVA','NOVA toma el cielo.','4 min o 10 drones','var(--cyan)',67],['5 · Soldados NOVA','Caen cápsulas con soldados E15 y E18.','5 min o 20 soldados','var(--cyan)',84],['6 · NOVA pesada','E16, soldados y drones. Sin fin.','hasta que caigas','#8fb3ff',100]];
-$('phases').innerHTML=P.map(([h,t,u,c,w])=>`<div class="cut" style="--c:${c};--w:${w}%"><h3>${h}</h3>${t}<div class="meter"><i></i></div><span class="hint">${u}</span></div>`).join('');
+$('phases').innerHTML=P.map(([h,t,u,c,w])=>`<div class="cut" style="--c:${c};--w:${w}%"><h3>${h}</h3>${t}<div class="meter"><i></i></div></div>`).join('');
 const fx=new Audio();document.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{const on=b.getAttribute('aria-pressed')!=='true';document.querySelectorAll('[data-m]').forEach(x=>x.setAttribute('aria-pressed','false'));fx.pause();if(on){fx.src=M+b.dataset.m+'.mp3';fx.volume=.5;fx.play().catch(()=>{});b.setAttribute('aria-pressed','true')}});
 const tg=[['s1',47],['s2',38],['s3',21]];let dn=false;
 const io=new IntersectionObserver(es=>{if(dn||!es[0].isIntersecting)return;dn=true;let t=0;const iv=setInterval(()=>{t++;const f=Math.min(1,t/40);tg.forEach(([id,v])=>$(id).textContent=Math.round(v*f));const s=Math.round(1312*f);$('s4').textContent=`${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`;if(t>=40)clearInterval(iv)},30)});io.observe(document.querySelector('.dead'));
