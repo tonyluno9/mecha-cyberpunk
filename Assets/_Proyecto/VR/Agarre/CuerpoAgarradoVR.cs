@@ -65,6 +65,8 @@ namespace MechaCyberpunk.VR
         private Vector3 velocidadPrevia;
         private Vector3 sacudida;
         private float finSacudida;
+        private float ultimoSonidoChoque = -1f;
+        private int sonidosChoque;
 
         public Estado EstadoActual { get; private set; }
         public ManoVR Mano => mano;
@@ -322,7 +324,7 @@ namespace MechaCyberpunk.VR
 
         private void OnCollisionEnter(Collision choque)
         {
-            if (EstadoActual != Estado.Volando || Time.time < proximoChoque)
+            if (EstadoActual != Estado.Volando)
             {
                 return;
             }
@@ -332,13 +334,25 @@ namespace MechaCyberpunk.VR
             }
             // Solo cuenta la rapidez contra la superficie (no lo que resbala por el piso).
             float rapidez = choque.contactCount > 0 ? Mathf.Abs(Vector3.Dot(choque.relativeVelocity, choque.GetContact(0).normal)) : choque.relativeVelocity.magnitude;
+            Vector3 punto = choque.contactCount > 0 ? choque.GetContact(0).point : transform.position;
+            // VR39: el golpe del cuerpo suena aparte del daño: fuerte, con enfriamiento, una sola vez si está muerto y nunca quieto.
+            bool quieto = velocidadPrevia.magnitude < ReglaAgarreVR.RapidezQuieto;
+            if (ReglaSonidoChoqueCuerpo.DebeSonar(rapidez, Time.time, ultimoSonidoChoque, sonidosChoque, EstaDerrotado, quieto))
+            {
+                ultimoSonidoChoque = Time.time;
+                sonidosChoque++;
+                Sonidos.ReproducirEn(ReglaSonidosJugador.GolpeCarne, punto);
+            }
+            if (Time.time < proximoChoque)
+            {
+                return;
+            }
             float danio = ReglaAgarreVR.DanioChoque(rapidez);
             if (danio <= 0f)
             {
                 return;
             }
             proximoChoque = Time.time + ReglaAgarreVR.SegundosEntreChoques;
-            Vector3 punto = choque.contactCount > 0 ? choque.GetContact(0).point : transform.position;
             Vector3 direccion = velocidadPrevia.sqrMagnitude > 1e-4f ? velocidadPrevia.normalized : transform.forward;
             ResultadoDanio resultado = Daniar(danio, punto, direccion);
             ChoquesConDanio++;
@@ -348,7 +362,6 @@ namespace MechaCyberpunk.VR
             {
                 otro.RecibirDanio(new InfoDanio(danio, TipoDanio.Golpe, punto, direccion, null));
             }
-            Sonidos.ReproducirEn(ReglaSonidosJugador.GolpeCarne, punto);
         }
 
         // Lo endereza en el piso, le devuelve lo que se apagó y se quita.

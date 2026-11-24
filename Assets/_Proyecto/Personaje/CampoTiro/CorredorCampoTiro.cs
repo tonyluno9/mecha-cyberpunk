@@ -57,6 +57,10 @@ namespace MechaCyberpunk.CampoTiro
         private void Update()
         {
             CampoDeTiro.Actualizar();
+            if (CampoDeTiro.EstaDentro)
+            {
+                GuardiaSalaCampoTiro.Vigilar(CampoDeTiro.Sala, Time.time); // VR50: nadie de la ciudad entra ni cruza la sala
+            }
             if (CampoDeTiro.EstaDentro && !CampoDeTiro.EnTransicion && !CampoDeTiro.MenuAbierto && PilaPantallas.Vacia &&
                 Keyboard.current != null && Keyboard.current.eKey.wasPressedThisFrame)
             {
