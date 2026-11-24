@@ -279,3 +279,8 @@ Main no traía nada nuevo (`f6e47ad` ya estaba incluido). No se tocaron `Builds\
 11. Partida nueva: cinemáticas → apareces en tu punto → 3 SKULLS → los vences → aviso de Ƀ20,000 → VE CON EL DOC.
 12. Con VE CON EL DOC: ¿ves los chevrones en el piso con los dos ojos y te llevan?
 13. Si ves algo flotando: ¿dónde exactamente? (para VR23)
+
+## Sexta tanda (VR35) · build en `wtVR\Builds\VR6\CyberCity.exe`
+- **Qué quedó:** golpes con las manos (bastan 0.8 m/s, un golpe cada 0.3 s por mano y enemigo; cada uno suena, vibra y el enemigo reacciona). Se ven los puños de PJ01 y ya no los controles. Con el grip sujetas a un enemigo sin necesidad de implante, y con la otra mano le pegas hasta que cae; con implante de brazos, al soltar con fuerza sale lanzado. Los textos dicen "GOLPEA CON TUS MANOS · GRIP: SUJETAR", y el gatillo derecho sin arma no hace nada. Los SKULLS se acercan a 0.8 m y no retroceden. Pruebas con el simulador XR: 107 PlayMode y 40 EditMode, todas pasan.
+- **Por qué casi no detectaba:** no eran capas ni triggers (el SKULL tiene un CharacterController en la capa Default y sí se encontraba). Fallaba el alcance: el SKULL se paraba a 1.05 m y regresaba a 2.6 m, mientras que la esfera de 8 cm estaba en la palma y con el brazo estirado no llegaba. Además, al final del golpe la mano ya va lenta, por debajo del umbral de 1.5 m/s, y no se podía volver a pegar sin sacar la mano y meterla otra vez.
+- **Qué probar con el visor:** (1) ¿ves tus puños con los dedos cerrados y bien orientados? (2) en la pelea de los 3 SKULLS, ¿cada golpe que toca les baja vida? (3) grip izquierdo cerca de uno, ¿lo sujetas? ¿le pegas con la derecha hasta que cae y se suelta? (4) ¿ganas y sale el aviso de Ƀ20,000? (5) ¿algún aviso dice todavía "gatillo derecho: golpe"?
