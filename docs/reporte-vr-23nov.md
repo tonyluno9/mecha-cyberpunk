@@ -150,3 +150,70 @@ Build: `wtVR\Builds\VR\CyberCity.exe` (PC, OpenXR, mismas escenas que ConstruirJ
 - Si miras más de 60° a otro lado durante más de 1 s en Inicio, la pantalla y el menú se vuelven a poner frente a ti.
 - El flashback se salta con ESPACIO; en VR termina solo.
 - Nada se probó con el visor, solo con el simulador.
+
+---
+
+## Cuarta tanda (VR13–VR22) · build en `wtVR\Builds\VR4\CyberCity.exe`
+Lleva main `f6e47ad` (T80–T86, HUD final). `Builds\VR` y `Builds\VR3` no se tocaron. Tareas en `docs/tareas/vr-23nov-b/`.
+
+### Qué quedó
+- **VR13**: OpenXR en Multi-pass. Los dos ojos dibujan todo (neón, letreros, charcos).
+- **VR14**: el HUD final de PC completo (vida, dinero, minimapa, objetivo, arma, avisos, tutoriales, subtítulos) va en un panel curvo de 70° a 1.3 m, pegado a la cabeza con un retraso suave. Ya no hay HUD en la muñeca.
+- **VR15**: hay una sola pantalla curva de 105° a 3.5 m en un cuarto oscuro. En ella van el logo, el menú sobre las calles (como en PC), la carga y las cinemáticas. El láser apunta sobre ella.
+- **VR16**: en VR se salta "Lo molestan": no hay SKULLS ni aviso, y se pasa directo al maletín.
+- **VR17**: el láser y el cañón salen de la punta del control (pose "aim").
+- **VR18**: el giro es SUAVE por defecto, hasta 120°/s. En Opciones se puede cambiar la velocidad (30–180) o poner giro por pasos.
+- **VR19**: botones nuevos (tabla de abajo). El stick derecho ya no cambia de arma.
+- **VR20**: gestos de prótesis.
+  - Piernas: las dos manos en los muslos con grip durante 0.5 s.
+  - Brazos: los brazos abiertos a los lados con grip durante 0.5 s.
+  - La guía de controles usa los modelos reales de los controles. Sale la primera vez y desde Pausa → CONTROLES.
+  - Los textos de prótesis ya no dicen "Tab".
+- **VR22**: si te quitas el visor o se cae Link, el juego se pausa con el aviso "VISOR DESCONECTADO". A o el gatillo recentran y sigues.
+- **VR21**: ya se puede manejar carros y motos. Subes con B, la cabeza va en el asiento y bajas con B.
+
+### Qué no quedó
+- **VR23** (cosas flotando): NO QUEDÓ, no dio tiempo.
+- Los tutoriales generales (no los de prótesis) y algunos consejos de carga todavía dicen teclas de PC.
+- Mientras estás en VR se ignora la orden de cerrar de OpenXR. Así el juego no se cierra solo si se cae Link, pero "salir de la app" desde el menú del visor tampoco lo cierra: queda en pausa y se cierra desde la PC.
+
+### Botones (final)
+| Acción | Botón |
+|---|---|
+| Caminar / correr | Stick izquierdo / clic del stick izquierdo |
+| Girar | Stick derecho (suave) |
+| Saltar | A |
+| Interactuar / subir y bajar del carro | B |
+| Disparar / clic en menús | Gatillo derecho |
+| Agarrar y lanzar (implante) | Grip de cualquier mano |
+| Granada | Grip derecho para tomarla, soltar para lanzar |
+| Recargar | X |
+| Rueda de armas | Mantener Y; eliges con la mano izquierda o el stick izquierdo |
+| Rueda de prótesis | Mantener grip izquierdo + gatillo izquierdo |
+| Prótesis de piernas / brazos | Gesto: manos en los muslos / brazos abiertos, con grip 0.5 s |
+| Pausa / Opciones | Menú (izquierdo) |
+| Recentrar | Mantener el stick derecho abajo 1 s |
+| Carro: acelerar / frenar / dirigir / freno de mano | Gatillo derecho / gatillo izquierdo / stick izquierdo / A |
+
+### Pruebas
+- **Tanda VR:** 113 pruebas. Después de los arreglos pasan todas las clases nuevas y viejas.
+- **PC (EditMode):** 60 de 60.
+- **PC (PlayMode):** fallan 6 pruebas, todas fallos viejos que también fallan en la base:
+  - 5 por `JaulaClandestino`;
+  - 1 de la cama del prólogo.
+- **Partidas:** respaldo en `Logs/respaldo-partidas-vr4`, restaurado al final.
+
+### Qué probar con el visor (VR4)
+1. Cierra un ojo y luego el otro frente al bar, el neón del mercado y el cartel de tacos: ¿se ven igual?
+2. Al abrir: ¿una sola pantalla grande con logo → menú sobre las calles → carga?
+3. ¿El láser cae justo donde apuntas en el menú?
+4. En la ciudad: ¿se lee el HUD (dinero, vida, minimapa, objetivo) al mirar a cualquier lado?
+5. ¿El HUD se ve transparente sobre el mundo, sin fondo negro?
+6. Partida nueva: ¿no salen los SKULLS y aparece el siguiente objetivo?
+7. Stick derecho a medias y a fondo: ¿gira suave y sin saltos?
+8. A salta, X recarga, Y + mano izquierda eligen arma: ¿funcionan?
+9. ¿Sale la guía de controles la primera vez y se entiende?
+10. Con prótesis: ¿el gesto de muslos y el de brazos abiertos la activan?
+11. Quítate el visor y vuelve a ponértelo: ¿sale el aviso y A te deja seguir?
+12. Sube con B a un carro y a una moto, maneja una cuadra y baja con B: ¿marea?
+13. Siéntate en la silla del Doc o ve una cinemática: ¿llena la pantalla grande?
