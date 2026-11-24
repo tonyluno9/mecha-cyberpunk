@@ -1,5 +1,8 @@
 using System.Collections;
+using MechaCyberpunk.Core;
+using MechaCyberpunk.Economia;
 using MechaCyberpunk.Personaje.Combate;
+using MechaCyberpunk.Personaje.Jugador;
 using MechaCyberpunk.VR;
 using NUnit.Framework;
 using UnityEngine;
@@ -44,6 +47,139 @@ namespace MechaCyberpunk.Tests.VR
             Assert.AreEqual(ArmaAPie.Punos, ReglaGestosArmaVR.QueSacar(ZonaArmaVR.HombroDerecho, ArmaAPie.RiflePlasma, ArmaAPie.Pistola, ArmaAPie.Fusil));
             Assert.AreEqual(ArmaAPie.Pistola, ReglaGestosArmaVR.QueSacar(ZonaArmaVR.HombroDerecho, ArmaAPie.Pistola, ArmaAPie.Pistola, ArmaAPie.Punos),
                 "Sin arma larga el hombro no hace nada.");
+        }
+
+        [Test]
+        public void T95_Espalda_ZonaAmpliaEncimaODetrasDelHombro()
+        {
+            Vector3[] espalda =
+            {
+                new Vector3(0.15f, -0.1f, -0.12f), // sobre el hombro, atrás
+                new Vector3(0.25f, 0.05f, -0.2f), // detrás, a la altura de los ojos
+                new Vector3(0.1f, 0.3f, 0.05f), // encima de la cabeza
+                new Vector3(0f, 0.2f, -0.3f), // detrás de la nuca, alto
+                new Vector3(0.35f, -0.3f, -0.15f) // detrás del hombro, bajo
+            };
+            foreach (Vector3 p in espalda)
+            {
+                Assert.AreEqual(ZonaArmaVR.HombroDerecho, ReglaGestosArmaVR.Zona(p, true), "Espalda en " + p);
+            }
+            Vector3[] fuera =
+            {
+                new Vector3(0.2f, -0.4f, 0.3f), // apuntando al frente
+                new Vector3(0.2f, 0.1f, 0.5f), // apuntando arriba al frente
+                new Vector3(0.7f, -0.1f, -0.1f), // brazo estirado al lado
+                new Vector3(0.25f, -0.6f, -0.1f) // cadera: no es espalda
+            };
+            foreach (Vector3 p in fuera)
+            {
+                Assert.AreNotEqual(ZonaArmaVR.HombroDerecho, ReglaGestosArmaVR.Zona(p, true), "No es espalda en " + p);
+            }
+            Assert.AreEqual(ZonaArmaVR.CaderaDerecha, ReglaGestosArmaVR.Zona(new Vector3(0.3f, -0.75f, 0.1f), true), "Cadera holgada.");
+            // Mirando casi recto al piso, el giro sale de la coronilla: la espalda sigue detrás.
+            Vector3 abajo = new Vector3(0f, -1f, 0.01f).normalized;
+            Vector3 arribaAbajo = new Vector3(0f, 0.01f, 1f).normalized;
+            Vector3 local = ReglaGestosArmaVR.EnCabeza(Cabeza + new Vector3(0.2f, 0.05f, -0.2f), Cabeza, abajo, arribaAbajo);
+            Assert.AreEqual(ZonaArmaVR.HombroDerecho, ReglaGestosArmaVR.Zona(local, true), "Mirando al piso la espalda no brinca.");
+        }
+
+        [Test]
+        public void T95_ElegirLarga_FusilLuegoEscopetaLuegoLasDemas()
+        {
+            Assert.AreEqual(ArmaAPie.Fusil, ReglaGestosArmaVR.ElegirLarga(a => a == ArmaAPie.Fusil || a == ArmaAPie.Escopeta || a == ArmaAPie.Sniper));
+            Assert.AreEqual(ArmaAPie.Escopeta, ReglaGestosArmaVR.ElegirLarga(a => a == ArmaAPie.Escopeta || a == ArmaAPie.Sniper));
+            Assert.AreEqual(ArmaAPie.Sniper, ReglaGestosArmaVR.ElegirLarga(a => a == ArmaAPie.Sniper || a == ArmaAPie.Pistola));
+            Assert.AreEqual(ArmaAPie.Punos, ReglaGestosArmaVR.ElegirLarga(a => a == ArmaAPie.Pistola || a == ArmaAPie.Punos));
+            Assert.AreEqual(ArmaAPie.Revolver, ReglaGestosArmaVR.ElegirCorta(a => a == ArmaAPie.Revolver || a == ArmaAPie.Pistola, ArmaAPie.Revolver));
+            Assert.AreEqual(ArmaAPie.Pistola, ReglaGestosArmaVR.ElegirCorta(a => a == ArmaAPie.Pistola, ArmaAPie.Revolver));
+        }
+
+        [Test]
+        public void T95_Funda_SacaAlPulsarYGuardaAlSoltarEnSuZona()
+        {
+            var funda = new ReglaFundaVR();
+            ArmaAPie mano = ArmaAPie.Punos;
+            for (int i = 0; i < 5; i++)
+            {
+                mano = funda.Avanzar(true, false, ZonaArmaVR.CaderaDerecha, mano, ArmaAPie.Pistola, ArmaAPie.Fusil);
+                Assert.AreEqual(ArmaAPie.Pistola, mano, "Pulsar en la cadera saca la pistola.");
+                mano = funda.Avanzar(false, false, ZonaArmaVR.Ninguna, mano, ArmaAPie.Punos, ArmaAPie.Punos);
+                mano = funda.Avanzar(false, true, ZonaArmaVR.CaderaDerecha, mano, ArmaAPie.Punos, ArmaAPie.Punos);
+                Assert.AreEqual(ArmaAPie.Punos, mano, "Volver a la cadera y soltar la guarda.");
+                Assert.IsTrue(funda.Guardo);
+
+                mano = funda.Avanzar(true, false, ZonaArmaVR.HombroDerecho, mano, ArmaAPie.Pistola, ArmaAPie.Fusil);
+                Assert.AreEqual(ArmaAPie.Fusil, mano, "Pulsar en la espalda saca el fusil.");
+                mano = funda.Avanzar(false, false, ZonaArmaVR.Ninguna, mano, ArmaAPie.Punos, ArmaAPie.Punos);
+                mano = funda.Avanzar(false, true, ZonaArmaVR.HombroDerecho, mano, ArmaAPie.Punos, ArmaAPie.Punos);
+                Assert.AreEqual(ArmaAPie.Punos, mano, "Volver a la espalda y soltar lo guarda.");
+            }
+
+            // Sacar y soltar sin salir de la zona no la guarda al instante.
+            mano = funda.Avanzar(true, false, ZonaArmaVR.CaderaDerecha, ArmaAPie.Punos, ArmaAPie.Pistola, ArmaAPie.Fusil);
+            mano = funda.Avanzar(false, true, ZonaArmaVR.CaderaDerecha, mano, ArmaAPie.Punos, ArmaAPie.Punos);
+            Assert.AreEqual(ArmaAPie.Pistola, mano, "Sacar y soltar ahí mismo deja la pistola en la mano.");
+            Assert.IsFalse(funda.Guardo);
+            // Soltar fuera de la zona no guarda; la pistola en la espalda tampoco.
+            mano = funda.Avanzar(true, false, ZonaArmaVR.Ninguna, mano, ArmaAPie.Punos, ArmaAPie.Punos);
+            mano = funda.Avanzar(false, true, ZonaArmaVR.HombroDerecho, mano, ArmaAPie.Punos, ArmaAPie.Punos);
+            Assert.AreEqual(ArmaAPie.Pistola, mano, "La pistola no se guarda en la espalda.");
+            // Con la pistola en la mano, pulsar y soltar en la cadera la guarda.
+            mano = funda.Avanzar(true, false, ZonaArmaVR.CaderaDerecha, mano, ArmaAPie.Pistola, ArmaAPie.Fusil);
+            Assert.AreEqual(ArmaAPie.Pistola, mano, "Pulsar con la pistola en la cadera no la cambia todavía.");
+            mano = funda.Avanzar(false, true, ZonaArmaVR.CaderaDerecha, mano, ArmaAPie.Punos, ArmaAPie.Punos);
+            Assert.AreEqual(ArmaAPie.Punos, mano);
+            // Con la pistola en la mano, pulsar en la espalda cambia al fusil y soltar ahí no lo guarda.
+            mano = funda.Avanzar(true, false, ZonaArmaVR.HombroDerecho, ArmaAPie.Pistola, ArmaAPie.Pistola, ArmaAPie.Fusil);
+            Assert.AreEqual(ArmaAPie.Fusil, mano);
+            mano = funda.Avanzar(false, true, ZonaArmaVR.HombroDerecho, mano, ArmaAPie.Punos, ArmaAPie.Punos);
+            Assert.AreEqual(ArmaAPie.Fusil, mano);
+            // Soltar sin haber pulsado (p. ej. tras una pausa) no hace nada.
+            funda.Reiniciar();
+            Assert.AreEqual(ArmaAPie.Fusil, funda.Avanzar(false, true, ZonaArmaVR.HombroDerecho, ArmaAPie.Fusil, ArmaAPie.Punos, ArmaAPie.Punos));
+        }
+
+        [UnityTest]
+        public IEnumerator T95_CincoVeces_PistolaEnLaCaderaYFusilEnLaEspalda()
+        {
+            yield return ArmarVR();
+            ArmasAPie armas = jugador.GetComponent<ArmasAPie>();
+            GestosArmaVR gestos = jugador.GetComponent<GestosArmaVR>();
+            Assert.IsNotNull(gestos);
+            ArsenalJugador arsenal = Registro<ArsenalJugador>.Actual;
+            Assert.IsNotNull(arsenal, "Hay arsenal.");
+            Registro<ServicioInventario>.Actual.Agregar(arsenal.Catalogo.Buscar(ArmaAPie.Fusil, 0), 1);
+            yield return Cuadros(2);
+            Assert.IsTrue(armas.TieneArma(ArmaAPie.Fusil), "El jugador tiene el fusil.");
+            Assert.IsTrue(armas.TieneArma(ArmaAPie.Pistola), "El jugador tiene la pistola.");
+            armas.Equipar(ArmaAPie.Punos);
+            yield return Cuadros(3);
+            Vector3 espalda = new Vector3(0.2f, 1.65f, -0.15f);
+            for (int i = 0; i < 5; i++)
+            {
+                yield return SacarYGuardar(armas, CaderaDer, ArmaAPie.Pistola, "Pistola, vuelta " + i);
+                yield return SacarYGuardar(armas, espalda, ArmaAPie.Fusil, "Fusil, vuelta " + i);
+            }
+            Assert.AreEqual(10, gestos.Guardadas, "Se guardó 10 veces.");
+            Assert.AreEqual(20, gestos.Cambios, "10 sacadas y 10 guardadas.");
+        }
+
+        private IEnumerator SacarYGuardar(ArmasAPie armas, Vector3 zona, ArmaAPie esperada, string que)
+        {
+            PonerMano(true, zona, Quaternion.identity);
+            yield return Cuadros(3);
+            Mantener(controlDer.gripButton);
+            yield return Cuadros(2);
+            Assert.AreEqual(esperada, armas.ArmaActiva, que + ": grip en la zona la saca.");
+            PonerMano(true, ManoDerReposo, Quaternion.identity);
+            yield return Cuadros(4);
+            Assert.AreEqual(esperada, armas.ArmaActiva, que + ": sigue en la mano al apuntar.");
+            PonerMano(true, zona, Quaternion.identity);
+            yield return Cuadros(3);
+            Soltar(controlDer.gripButton);
+            yield return Cuadros(2);
+            Assert.AreEqual(ArmaAPie.Punos, armas.ArmaActiva, que + ": soltar el grip en la zona la guarda.");
+            yield return Cuadros(2);
         }
 
         [Test]

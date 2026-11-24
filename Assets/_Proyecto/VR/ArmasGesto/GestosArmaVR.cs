@@ -6,9 +6,10 @@ using UnityEngine;
 namespace MechaCyberpunk.VR
 {
     /// <summary>
-    /// VR27: sacar y guardar armas con gestos. Mano derecha en la cadera derecha + grip derecho = sacar (o guardar) el arma corta equipada (pistola
-    /// o revólver); mano derecha sobre el hombro derecho + grip derecho = el arma larga equipada (la última larga que se tuvo en la mano; si no, la
-    /// primera que se tenga). Equipa con <see cref="ArmasAPie.Equipar"/> (lo mismo que la rueda de PC: suena el sacar del arma o el cambio a puños) y
+    /// VR27 y T95: sacar y guardar armas con gestos. Mano derecha en la cadera derecha + grip derecho = sacar el arma corta (pistola o revólver);
+    /// mano derecha encima o detrás del hombro derecho + grip derecho = sacar el arma larga (fusil primero, luego escopeta, luego las demás).
+    /// T95: con el arma en la mano, llevarla a su zona (corta a la cadera, larga a la espalda) y soltar el grip la guarda (<see cref="ReglaFundaVR"/>),
+    /// con el sonido del arma y el del cambio a puños. Solo con <see cref="ModoVR.Activo"/>. Equipa con <see cref="ArmasAPie.Equipar"/> (lo mismo que la rueda de PC: suena el sacar del arma o el cambio a puños) y
     /// vibra. Las zonas están en <see cref="ReglaGestosArmaVR"/>. Un grip en la zona es del gesto: ese cuadro no agarra enemigos ni toma granadas
     /// (<see cref="GripTomado"/>). Lo agrega <see cref="ArranqueCombateVR"/>.
     /// </summary>
@@ -21,24 +22,21 @@ namespace MechaCyberpunk.VR
         private const float SegundosNada = 0.04f;
         private const float SegundosEntreIntentosRueda = 0.5f;
 
-        private static readonly ArmaAPie[] OrdenCortas = { ArmaAPie.Pistola, ArmaAPie.Revolver };
-        private static readonly ArmaAPie[] OrdenLargas =
-        {
-            ArmaAPie.Fusil, ArmaAPie.Escopeta, ArmaAPie.Subfusil, ArmaAPie.Sniper, ArmaAPie.RiflePlasma, ArmaAPie.Lanzagranadas
-        };
-
         private static int cuadroGripDerecho = -1;
         private static int cuadroGripIzquierdo = -1;
 
         private AdaptadorVR adaptador;
         private ArmasAPie armas;
         private ArmaAPie ultimaCorta = ArmaAPie.Pistola;
-        private ArmaAPie ultimaLarga = ArmaAPie.Punos;
+        private readonly ReglaFundaVR funda = new ReglaFundaVR();
         private bool ruedaConX;
         private float siguienteIntentoRueda;
 
         /// <summary>Veces que el gesto sacó o guardó un arma (para las pruebas).</summary>
         public int Cambios { get; private set; }
+
+        /// <summary>T95: veces que se guardó un arma soltando el grip en su zona (para las pruebas).</summary>
+        public int Guardadas { get; private set; }
 
         /// <summary>La última zona en que se pulsó el grip derecho (para las pruebas).</summary>
         public ZonaArmaVR UltimaZona { get; private set; }
@@ -74,7 +72,7 @@ namespace MechaCyberpunk.VR
                 return ZonaArmaVR.Ninguna;
             }
             Transform cabeza = adaptador.Camara.transform;
-            Vector3 local = ReglaGestosArmaVR.EnCabeza(mano.transform.position, cabeza.position, cabeza.forward);
+            Vector3 local = ReglaGestosArmaVR.EnCabeza(mano.transform.position, cabeza.position, cabeza.forward, cabeza.up);
             return ReglaGestosArmaVR.Zona(local, mano.Derecha);
         }
 
@@ -96,33 +94,63 @@ namespace MechaCyberpunk.VR
                 Destroy(this);
                 return;
             }
-            if (!adaptador.Armado)
+            if (!ModoVR.Activo || !adaptador.Armado)
             {
                 return;
             }
             AsegurarRuedaConX();
             Recordar(armas.ArmaActiva);
-            if (Pausa.Activa || MenusVR.MenuAbierto || (adaptador.Jugador != null && adaptador.Jugador.Modo != ModoJugador.APie) || MechaCyberpunk.VR.Guia.GestosProtesisVR.EnPose || !EntradaVR.Pulso(EntradaVR.GripDerecho))
+            if (Pausa.Activa || MenusVR.MenuAbierto || (adaptador.Jugador != null && adaptador.Jugador.Modo != ModoJugador.APie) || MechaCyberpunk.VR.Guia.GestosProtesisVR.EnPose)
+            {
+                funda.Reiniciar();
+                return;
+            }
+            bool pulso = EntradaVR.Pulso(EntradaVR.GripDerecho);
+            bool solto = EntradaVR.Solto(EntradaVR.GripDerecho);
+            if (!pulso && !funda.Sostenido)
             {
                 return;
             }
             ManoVR mano = adaptador.ManoDerecha;
             ZonaArmaVR zona = ZonaDe(adaptador, mano);
-            UltimaZona = zona;
-            if (zona == ZonaArmaVR.Ninguna)
-            {
-                return;
-            }
-            TomarGrip(true);
             ArmaAPie activa = armas.ArmaActiva;
-            ArmaAPie destino = ReglaGestosArmaVR.QueSacar(zona, activa, Elegir(OrdenCortas, ultimaCorta), Elegir(OrdenLargas, ultimaLarga));
+            ArmaAPie corta = ArmaAPie.Punos;
+            ArmaAPie larga = ArmaAPie.Punos;
+            if (pulso)
+            {
+                UltimaZona = zona;
+                if (zona != ZonaArmaVR.Ninguna)
+                {
+                    TomarGrip(true);
+                    corta = ReglaGestosArmaVR.ElegirCorta(armas.TieneArma, ultimaCorta);
+                    larga = ReglaGestosArmaVR.ElegirLarga(armas.TieneArma);
+                }
+            }
+            ArmaAPie destino = funda.Avanzar(pulso, solto, zona, activa, corta, larga);
+            bool guardo = funda.Guardo;
             if (destino != activa && armas.PuedeCambiar && armas.Equipar(destino))
             {
                 Cambios++;
-                mano.Vibrar(AmplitudSacar, SegundosSacar);
+                if (guardo)
+                {
+                    Guardadas++;
+                    // T95: suena el arma al entrar a la funda (Equipar a puños ya suena el cambio).
+                    string id = SonidosArmasT1472.IdSacar(activa);
+                    if (id != null && mano != null)
+                    {
+                        Sonidos.ReproducirEn(id, mano.transform.position);
+                    }
+                }
+                if (mano != null)
+                {
+                    mano.Vibrar(AmplitudSacar, SegundosSacar);
+                }
                 return;
             }
-            mano.Vibrar(AmplitudNada, SegundosNada); // no hay arma de esa clase: un toque corto para que se sepa que el gesto llegó
+            if (pulso && zona != ZonaArmaVR.Ninguna && mano != null)
+            {
+                mano.Vibrar(AmplitudNada, SegundosNada); // no hay arma de esa clase (o ya está en la mano): un toque corto para que se sepa que el gesto llegó
+            }
         }
 
         // VR27: X (mantener) abre la rueda. AdaptadorVR la pone al armarse, pero la acción Rueda puede encenderse después (la enciende la rueda en su
@@ -146,27 +174,6 @@ namespace MechaCyberpunk.VR
             {
                 ultimaCorta = activa;
             }
-            else if (ReglaGestosArmaVR.EsLarga(activa))
-            {
-                ultimaLarga = activa;
-            }
-        }
-
-        // La última de esa clase si se sigue teniendo; si no, la primera que se tenga en el orden; Punos si ninguna.
-        private ArmaAPie Elegir(ArmaAPie[] orden, ArmaAPie ultima)
-        {
-            if (ultima != ArmaAPie.Punos && armas.TieneArma(ultima))
-            {
-                return ultima;
-            }
-            foreach (ArmaAPie a in orden)
-            {
-                if (armas.TieneArma(a))
-                {
-                    return a;
-                }
-            }
-            return ArmaAPie.Punos;
         }
     }
 }
