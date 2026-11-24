@@ -119,6 +119,11 @@ namespace MechaCyberpunk.VR
 
         private bool QuiereDisparar()
         {
+            // VR4: con un menú abierto o el láser sobre un botón, el gatillo es clic de UI, no disparo.
+            if (MechaCyberpunk.VR.Menus.MenusVR.BloqueaDisparo)
+            {
+                return false;
+            }
             if (!PistolaAPie.EsDeFuego(armas.ArmaActiva))
             {
                 return false;

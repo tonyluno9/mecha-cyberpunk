@@ -119,6 +119,11 @@ namespace MechaCyberpunk.Personaje.Interaccion
                         CandadosMundo.Negar(); // T-78: el inicio guiado todavía no deja robar carros
                         break;
                     }
+                    if (montable != null && montable.Modo == ModoJugador.Carro && ModoVR.Activo)
+                    {
+                        CandadosMundo.Negar("NO DISPONIBLE EN VR"); // VR4: en VR no se maneja (MenusVR.TextoNoDisponible)
+                        break;
+                    }
                     jugador.Subir(montable);
                     LimpiarCandidatos();
                     break;

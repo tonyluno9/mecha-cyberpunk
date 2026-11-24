@@ -130,7 +130,8 @@ namespace MechaCyberpunk.VR
                     continue;
                 }
                 Component objetivo = c.GetComponentInParent<IRecibeDanio>() as Component;
-                if (objetivo == null || objetivo.transform.root == raiz || !estado.TocandoAhora.Add(objetivo))
+                // VR3: al que se sostiene o va volando lo maneja AgarreImplanteVR (si no, el lanzamiento contaría también como puñetazo).
+                if (objetivo == null || objetivo.transform.root == raiz || objetivo.GetComponentInParent<CuerpoAgarradoVR>() != null || !estado.TocandoAhora.Add(objetivo))
                 {
                     continue;
                 }

@@ -15,6 +15,8 @@ using UnityEngine.TestTools;
 namespace MechaCyberpunk.Tests.VR
 {
     /// <summary>VR1 en la ciudad real (Ciudad_Prologo) con el simulador: el rig se arma en el jugador de la escena, el visor solo ve su cámara y se camina.</summary>
+    // Carga la ciudad entera y deja su estado (menús, pausa, objetos que no se destruyen): va en su propia tanda con -testFilter CiudadVRPruebas.
+    [Explicit("Tanda aparte: carga Ciudad_Prologo")]
     public class CiudadVRPruebas : BaseJugadorVR
     {
         private const string RutaEscena = "Assets/_Proyecto/Escenas/Ciudad_Prologo.unity";
