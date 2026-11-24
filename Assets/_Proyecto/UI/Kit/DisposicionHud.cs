@@ -66,6 +66,9 @@ namespace MechaCyberpunk.UI.Kit
         // T-700: el minimapa cuadrado arriba a la derecha (como H10). Abajo a la izquierda van las casillas de objetos (114 px a 62 px del borde),
         // con su línea de efectos encima; la ayuda de controles y los aliados suben sobre ellas.
         public static RanuraHud Minimapa => new RanuraHud(EsquinaHud.ArribaDerecha, MargenSuperiorH10, LadoMinimapa, MargenH10);
+        /// <summary>T-historia-libre-23nov: el contador del modo libre (SKULLS, POLICÍAS, NOVA y tiempo), pequeño, debajo del minimapa.</summary>
+        public static RanuraHud MarcadorLibre => new RanuraHud(EsquinaHud.ArribaDerecha, Minimapa.Fin + Hueco * 2f, AltoMarcadorLibre, MargenH10);
+        public const float AltoMarcadorLibre = 64f;
         public static RanuraHud AyudaControles => new RanuraHud(EsquinaHud.AbajoIzquierda, 232f, FilasAyuda * F, MargenH10);
         /// <summary>T-521: los aliados, compactos, sobre la ayuda de controles (la fila crece hacia arriba).</summary>
         public static RanuraHud Pandilla => new RanuraHud(EsquinaHud.AbajoIzquierda, AyudaControles.Fin + Hueco * 2f, AltoAliados, MargenH10);

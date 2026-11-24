@@ -192,6 +192,10 @@ namespace MechaCyberpunk.Progresion.Prologo.Clinica
             {
                 return;
             }
+            if (FaseJuego.ModoLibre || FaseJuego.Actual == FaseJuego.Fase.Muerto)
+            {
+                return; // T-historia-libre-23nov: en el modo libre morir abre HAS MUERTO con REINTENTAR (DirectorModoLibre), no la clínica
+            }
             // T-946: la etapa de la historia solo manda si hay un prólogo que maneje esa caída; en la ciudad no lo hay y una partida nueva se queda en PeleaTutorial.
             IHistoria historia = FindFirstObjectByType<DirectorPrologo>() != null ? Registro<IHistoria>.Actual : null;
             bool enFlujo = peleasDelFlujo > 0 || (llamado != null && llamado.Estado == EstadoLlamado.EnArena);

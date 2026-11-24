@@ -144,6 +144,10 @@ namespace MechaCyberpunk.IA.APie
         // T-1631: cápsula CP01 con un dron dentro; la escala sale de la tabla por el nombre del modelo (con 0.3 si no se reconoce).
         private static bool LanzarCapsulaDron(GameObject dron, string nombre, Vector3 punto, Quaternion rotacion, System.Action<GameObject> alTerminar)
         {
+            if (CapsulasLlenas)
+            {
+                return false; // T-historia-libre-23nov: el dron llega volando, sin cápsula
+            }
             float escala = CalculoCapsulaCaida.TipoDronDeNombre(nombre, out TipoCapsulaCaida tipo) || CalculoCapsulaCaida.TipoDronDeNombre("Dron_" + nombre, out tipo)
                 ? CalculoCapsulaCaida.EscalaDe(tipo) : DronSinTipoEscala;
             return CapsulaCaida.LanzarDron(dron, punto, rotacion, escala, alTerminar) != null;
@@ -323,10 +327,13 @@ namespace MechaCyberpunk.IA.APie
         public bool BuscarPuntoNave(Vector3 jugador, out Vector3 suelo, out float altura)
         {
             float radio = config.RadioLibreNave;
+            // T-historia-libre-23nov: en el modo libre la nave suelta a sus soldados al menos a MetrosMinimosRefuerzo (también a tus espaldas).
+            float minimo = DirectorRespuesta.ModoLibre != null ? Mathf.Max(DistanciaNaveMin, DirectorRespuesta.Parametros.MetrosMinimosRefuerzo) : DistanciaNaveMin;
+            float maximo = Mathf.Max(DistanciaNaveMax, minimo + (DistanciaNaveMax - DistanciaNaveMin));
             for (int i = 0; i < Intentos; i++)
             {
                 float angulo = Random.Range(0f, Mathf.PI * 2f);
-                float d = Random.Range(DistanciaNaveMin, DistanciaNaveMax);
+                float d = Random.Range(minimo, maximo);
                 Vector3 arriba = new Vector3(jugador.x + Mathf.Cos(angulo) * d, jugador.y + AltoDeBusquedaNave, jugador.z + Mathf.Sin(angulo) * d);
                 if (!Physics.Raycast(arriba, Vector3.down, out RaycastHit golpe, AltoDeBusquedaNave * 2f, ~0, QueryTriggerInteraction.Ignore)
                     || golpe.normal.y < 0.7f || Mathf.Abs(golpe.point.y - jugador.y) > MismoPisoNave)
@@ -479,8 +486,15 @@ namespace MechaCyberpunk.IA.APie
         }
 
         // T-1620: un solo agente por vuelta; el director decide si toca (nivel desbloqueado, cooldown de reposición, topes por tipo y totales).
+        // T-historia-libre-23nov: en el modo libre no caen más cápsulas de las del tope a la vez.
+        private static bool CapsulasLlenas => DirectorRespuesta.ModoLibre != null && CapsulaCaida.Activas >= DirectorRespuesta.Parametros.TopeCapsulasLibre;
+
         private void GenerarGradual(Vector3 donde)
         {
+            if (CapsulasLlenas)
+            {
+                return;
+            }
             if (Intentar(TipoRespuesta.NovaHumanoide, guardias, humanoides, donde, "Nova_Guardia_")
                 || Intentar(TipoRespuesta.RobotMediano, guardias, medianos, donde, "Nova_Elite_")
                 || Intentar(TipoRespuesta.Perro, perros, config.Perros, donde, "Nova_Perro_"))
@@ -604,12 +618,26 @@ namespace MechaCyberpunk.IA.APie
         {
             float min = config != null ? config.DistanciaMinima : 22f;
             float max = config != null ? config.DistanciaMaxima : 34f;
+            // T-historia-libre-23nov: en el modo libre los refuerzos salen lejos y fuera de la vista (nunca a tus espaldas a menos de MetrosMinimosRefuerzo).
+            bool libre = DirectorRespuesta.ModoLibre != null;
+            ParametrosRespuesta numeros = DirectorRespuesta.Parametros;
+            Camera camara = libre ? Camera.main : null;
+            Vector3 adelante = camara != null ? camara.transform.forward : Vector3.zero;
+            if (libre)
+            {
+                min = Mathf.Max(min, numeros.MetrosMinimosRefuerzo);
+                max = Mathf.Max(max, min + (config != null ? config.DistanciaMaxima - config.DistanciaMinima : 12f));
+            }
             for (int i = 0; i < Intentos; i++)
             {
                 bool estricto = i < Intentos / 2;
                 float angulo = Random.Range(0f, Mathf.PI * 2f);
                 float d = Random.Range(min, max);
                 Vector3 arriba = jugador + new Vector3(Mathf.Cos(angulo) * d, AlturaSonda, Mathf.Sin(angulo) * d);
+                if (libre && !ReglaPuntoRefuerzo.Vale(jugador, adelante, arriba, numeros.MetrosMinimosRefuerzo, numeros.GradosVistaRefuerzo))
+                {
+                    continue;
+                }
                 if (!Physics.Raycast(arriba, Vector3.down, out RaycastHit golpe, CaidaMaxima, ~0, QueryTriggerInteraction.Ignore))
                 {
                     continue;

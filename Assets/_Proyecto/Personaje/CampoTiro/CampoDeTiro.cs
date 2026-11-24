@@ -142,6 +142,7 @@ namespace MechaCyberpunk.CampoTiro
             }
             AsegurarCorredor();
             EstaDentro = true;
+            FaseJuego.Fijar(FaseJuego.Fase.CampoTiro); // T-historia-libre-23nov (en el modo libre no retrocede)
             EnTransicion = true;
             corredor.StartCoroutine(RutinaEntrar(conFundido));
             return true;
@@ -433,6 +434,7 @@ namespace MechaCyberpunk.CampoTiro
             }
             controlador.Empujar(Mathf.DeltaAngle(controlador.GiroCamara, giroPrevio), inclinacionPrevia - controlador.Inclinacion);
             EstaDentro = false;
+            SalirDeFase();
             menu.MostrarMarcador(false);
             controlador.ActivarControl(true);
             if (volverAlBanco)
@@ -504,11 +506,21 @@ namespace MechaCyberpunk.CampoTiro
             }
         }
 
+        // T-historia-libre-23nov: al salir del campo antes del modo libre se vuelve a la historia guiada (en el modo libre no se toca).
+        private static void SalirDeFase()
+        {
+            if (FaseJuego.Actual == FaseJuego.Fase.CampoTiro)
+            {
+                FaseJuego.Fijar(FaseJuego.Fase.Guiada);
+            }
+        }
+
         private static void Abandonar()
         {
             LimpiarEstadoDelCampo();
             EstaDentro = false;
             EnTransicion = false;
+            SalirDeFase();
             volverAlBanco = false;
             if (menu != null)
             {

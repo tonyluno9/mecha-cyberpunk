@@ -113,6 +113,12 @@ namespace MechaCyberpunk.Progresion.Recorrido
             }
         }
 
+        /// <summary>
+        /// T-historia-libre-23nov: los pasos de la historia vieja que quedan desconectados (no borrados) desde el modo libre: del Inventor al Fin.
+        /// Una partida guardada en uno de ellos sigue en <see cref="PasoRecorrido.Libre"/>.
+        /// </summary>
+        public static bool DesconectadoPorModoLibre(PasoRecorrido paso) => paso >= PasoRecorrido.Inventor && paso <= PasoRecorrido.Fin;
+
         /// <summary>True si la distancia al Doc ya es grande y el jugador sigue alejándose (aviso suave, sin paredes).</summary>
         public static bool DebeAvisarLejosDelDoc(float distancia, float distanciaAntes) => distancia > MetrosLejosDelDoc && distancia > distanciaAntes + 0.1f;
 
