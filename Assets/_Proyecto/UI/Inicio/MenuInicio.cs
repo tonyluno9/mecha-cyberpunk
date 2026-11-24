@@ -156,6 +156,8 @@ namespace MechaCyberpunk.UI.Inicio
         {
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
+            // T96: si se llegó aquí con una carga encima (HAS MUERTO o pausa → MENÚ PRINCIPAL), se quita: el menú no trae jugador que esperar.
+            PantallaCargando.AvisarMenuListo();
             // T-1646: si hay intro de video, el menú espera a que termine o se salte (sin video queda igual que siempre).
             intro = GetComponent<IntroInicio>();
             if (intro != null && intro.DebeReproducir)
