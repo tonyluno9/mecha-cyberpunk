@@ -242,7 +242,7 @@ namespace MechaCyberpunk.Core
         /// <summary>Cuántas unidades de este tipo caben todavía (cupo y total), para quien manda varias juntas (por ejemplo una nave).</summary>
         public static int Espacio(TipoRespuesta tipo)
         {
-            int total = libre != null ? Parametros.TopeEnemigosLibre - Regla.VivosLibre : Parametros.TopeTotal - Regla.VivosTotal;
+            int total = libre != null ? Parametros.TopeEnemigosLibreActual - Regla.VivosLibre : Parametros.TopeTotal - Regla.VivosTotal;
             int cupo = Regla.CupoActual(tipo) - Regla.Vivos(tipo);
             return Mathf.Max(0, Mathf.Min(total, cupo));
         }

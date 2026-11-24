@@ -292,7 +292,7 @@ namespace MechaCyberpunk.Core
                 case TipoRespuesta.Jefe:
                     AjusteTipoRespuesta a = p.AjusteDe(tipo);
                     return a != null ? a.Tope : 0;
-                default: return p.TopeEnemigosLibre;
+                default: return p.TopeEnemigosLibreActual;
             }
         }
 
@@ -381,9 +381,9 @@ namespace MechaCyberpunk.Core
                 }
                 if (tipo == TipoRespuesta.Patrulla || tipo == TipoRespuesta.Camioneta)
                 {
-                    return Vivos(TipoRespuesta.Patrulla) + Vivos(TipoRespuesta.Camioneta) < p.TopePatrullasLibre && VivosLibre < p.TopeEnemigosLibre;
+                    return Vivos(TipoRespuesta.Patrulla) + Vivos(TipoRespuesta.Camioneta) < p.TopePatrullasLibre && VivosLibre < p.TopeEnemigosLibreActual;
                 }
-                return VivosLibre < p.TopeEnemigosLibre;
+                return VivosLibre < p.TopeEnemigosLibreActual;
             }
             int nivel = NivelDe(tipo);
             if (NivelDesbloqueado <= 0 || nivel > NivelDesbloqueado || nivel > TopeDeNivel(Estrellas)

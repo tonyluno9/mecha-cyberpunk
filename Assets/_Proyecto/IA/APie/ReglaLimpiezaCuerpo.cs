@@ -13,6 +13,16 @@ namespace MechaCyberpunk.IA.APie
         /// <summary>Máximo (s): pasado esto se quita aunque esté a la vista.</summary>
         public const float SegundosMaximos = 120f;
 
+        /// <summary>T-rendimiento-tope-24nov: a los 20 s de caer, el cuerpo de un pandillero, policía o NOVA se hunde en el piso y se quita, se vea o no.</summary>
+        public const float SegundosHastaFundido = 20f;
+        /// <summary>Duración (s) del hundimiento antes de quitarlo.</summary>
+        public const float SegundosFundido = 1.5f;
+        /// <summary>Cuánto se hunde (m) durante el fundido.</summary>
+        public const float MetrosHundimiento = 1.2f;
+
+        /// <summary>T-rendimiento-tope-24nov: avance del fundido (0 = intacto, 1 = se quita) de un cuerpo caído hace <paramref name="segundos"/>.</summary>
+        public static float Fundido(float segundos) => Mathf.Clamp01((segundos - SegundosHastaFundido) / SegundosFundido);
+
         /// <summary>True si el cuerpo (caído hace <paramref name="segundos"/>) debe limpiarse ahora.</summary>
         public static bool Debe(float segundos, float minimo, bool fueraDeVista)
         {

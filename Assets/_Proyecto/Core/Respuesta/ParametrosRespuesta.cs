@@ -46,8 +46,13 @@ namespace MechaCyberpunk.Core
         [Min(0f)] public float SegundosFaseSkulls = 45f;
         [Tooltip("Fases 1 a 6 de la escalada del modo libre: cada una dura su tiempo o hasta sus bajas (lo que pase primero).")]
         public FaseModoLibre[] FasesLibre = FasesLibrePorOmision();
-        [Tooltip("Modo libre: máximo de enemigos de respuesta vivos a la vez (policías a pie, drones, NOVA; sin contar los vehículos). Valor conservador; lo ajusta T-rendimiento-tope-24nov.")]
-        [Min(1)] public int TopeEnemigosLibre = 12;
+        [Tooltip("Modo libre en PC: máximo de enemigos de respuesta vivos a la vez (policías a pie, drones, NOVA; sin contar los vehículos). T-rendimiento-tope-24nov: medido en el build de PC (RTX 5070 Laptop, 2560x1600, Ultra): 24 enemigos dan 87.6 fps de promedio y 62.8 el 1 % más bajo; 31 dan 83.9 / 60.6.")]
+        [Min(1)] public int TopeEnemigosLibre = 24;
+        [Tooltip("Modo libre en VR: máximo de enemigos vivos a la vez. Conservador (VR dibuja dos veces y pide 72 fps estables); sin medir en el visor.")]
+        [Min(1)] public int TopeEnemigosLibreVR = 12;
+
+        /// <summary>El tope de enemigos del modo libre según el modo (PC o VR).</summary>
+        public int TopeEnemigosLibreActual => ModoVR.Activo ? Mathf.Min(TopeEnemigosLibreVR, TopeEnemigosLibre) : TopeEnemigosLibre;
         [Tooltip("Modo libre: máximo de patrullas y camionetas a la vez.")]
         [Min(0)] public int TopePatrullasLibre = 3;
         [Tooltip("Modo libre: máximo de drones a la vez.")]
