@@ -173,6 +173,17 @@ namespace MechaCyberpunk.UI.Rueda
             return true;
         }
 
+        /// <summary>T90: cierra sin elegir nada (al empezar una cinemática): el tiempo y el HUD vuelven en el acto. False si no estaba abierta.</summary>
+        public bool CerrarSinElegir()
+        {
+            if (!abierta || raiz == null || accion == null)
+            {
+                return false;
+            }
+            Cerrar(false);
+            return true;
+        }
+
         public bool Armada => raiz != null;
 
         public Text TextoNombre => textoNombre;

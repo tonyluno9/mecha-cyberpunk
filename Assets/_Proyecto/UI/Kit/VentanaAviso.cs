@@ -69,6 +69,43 @@ namespace MechaCyberpunk.UI.Kit
             }
         }
 
+        /// <summary>
+        /// T90: cierra la ventana abierta y descarta las de la cola (al empezar una cinemática): el tiempo, la pausa, el cursor y el control vuelven
+        /// en el acto y no se reabre sola. Los avisos de cada una cuentan como entendidos. Devuelve true si había una abierta.
+        /// </summary>
+        public static bool CerrarTodas()
+        {
+            if (!Abierta)
+            {
+                return false;
+            }
+            actual.CerrarCola();
+            return true;
+        }
+
+        private void CerrarCola()
+        {
+            var avisos = new List<Action>();
+            if (alEntender != null)
+            {
+                avisos.Add(alEntender);
+            }
+            alEntender = null;
+            foreach (KeyValuePair<string, Action> pendiente in cola)
+            {
+                if (pendiente.Value != null)
+                {
+                    avisos.Add(pendiente.Value);
+                }
+            }
+            cola.Clear();
+            Restaurar();
+            foreach (Action aviso in avisos)
+            {
+                aviso();
+            }
+        }
+
         private void Awake()
         {
             if (actual == null)

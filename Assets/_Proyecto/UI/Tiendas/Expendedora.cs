@@ -110,6 +110,17 @@ namespace MechaCyberpunk.UI.Tiendas
 
         private void AlSalir() => Cerrar(false);
 
+        /// <summary>T90: cierra al empezar una cinemática, con el control devuelto en el acto. True si estaba abierta.</summary>
+        public bool CerrarPorCinematica()
+        {
+            if (!abierta)
+            {
+                return false;
+            }
+            Cerrar(true);
+            return true;
+        }
+
         // La E que cierra es la misma que abre: el control vuelve un cuadro después (como MostradorTienda).
         private void Cerrar(bool inmediato)
         {

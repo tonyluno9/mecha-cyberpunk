@@ -328,6 +328,17 @@ namespace MechaCyberpunk.UI.Armas
             }
         }
 
+        /// <summary>T90: cierra el menú sin el letrero ARMA MEJORADA (al empezar una cinemática: no debe salir encima de ella).</summary>
+        public void OcultarSinLetrero()
+        {
+            comproAlgo = false;
+            Ocultar();
+            if (canvasLetrero != null)
+            {
+                canvasLetrero.gameObject.SetActive(false);
+            }
+        }
+
         private void DesactivarEntrada()
         {
             izquierda.Disable();

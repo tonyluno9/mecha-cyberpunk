@@ -119,6 +119,17 @@ namespace MechaCyberpunk.UI.Tiendas
             Cerrar(false);
         }
 
+        /// <summary>T90: cierra al empezar una cinemática, con el control devuelto en el acto. True si estaba abierto.</summary>
+        public bool CerrarPorCinematica()
+        {
+            if (!abierta)
+            {
+                return false;
+            }
+            Cerrar(true);
+            return true;
+        }
+
         /// <summary>
         /// T-59: Tino vende las armas desde su banco. Abre la pantalla de este mostrador sin horario ni control propio (quien la abre congela y devuelve el
         /// control; <see cref="PestanasBancoTino"/>). <paramref name="alSalir"/> avisa Esc o SALIR.

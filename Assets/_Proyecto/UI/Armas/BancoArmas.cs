@@ -115,6 +115,21 @@ namespace MechaCyberpunk.UI.Armas
 
         private void AlSalir() => Cerrar(false);
 
+        /// <summary>T90: cierra al empezar una cinemática, sin letrero y con el control devuelto en el acto. True si estaba abierto.</summary>
+        public bool CerrarPorCinematica()
+        {
+            if (!abierta)
+            {
+                return false;
+            }
+            if (pantalla != null)
+            {
+                pantalla.OcultarSinLetrero();
+            }
+            Cerrar(true);
+            return true;
+        }
+
         private void Cerrar(bool inmediato)
         {
             if (pantalla != null)
