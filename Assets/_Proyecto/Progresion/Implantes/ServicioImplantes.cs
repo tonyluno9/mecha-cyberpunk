@@ -114,6 +114,7 @@ namespace MechaCyberpunk.Progresion
 
             Lista[(int)implante.Espacio] = implante;
             Instalado?.Invoke(implante.Espacio, implante.Nivel);
+            MechaCyberpunk.Progresion.Sonido.VocesDoc.Decir(MechaCyberpunk.Progresion.Sonido.VocesDoc.Explicar); // T-voces-23nov: el Doc explica el implante que te puso
             Cambio?.Invoke();
             return ResultadoImplante.Instalado;
         }

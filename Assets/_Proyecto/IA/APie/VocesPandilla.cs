@@ -33,7 +33,7 @@ namespace MechaCyberpunk.IA.APie
         /// T-1655 (T32): interruptor general de las voces y los subtítulos de los SKULLS. En false (por ahora, hasta que Tony diga qué voz va)
         /// no suena ninguna voz SKU_* ni sale ningún subtítulo ni grito de un SKULL. Para volver a prenderlas, ponlo en true.
         /// </summary>
-        public static bool VocesSkullsActivas { get; set; } = false;
+        public static bool VocesSkullsActivas { get; set; } = true; // T-voces-23nov: ya están las voces grabadas
 
         private static readonly ReglaVocesPandilla Cola = new ReglaVocesPandilla();
 

@@ -134,10 +134,15 @@ namespace MechaCyberpunk.Trafico.Peatones
                 return;
             }
             float? distancia = jugador.HasValue ? DistanciaPlano(jugador.Value, transform.position) : (float?)null;
-            if (regla.Herido(distancia) == EstadoCivil.Huyendo)
+            EstadoCivil estado = regla.Herido(distancia);
+            if (estado == EstadoCivil.Huyendo)
             {
                 Vector3 origen = jugador.HasValue ? jugador.Value : info.Punto - info.Direccion;
                 IniciarHuida(origen);
+            }
+            else if (estado == EstadoCivil.Revancha)
+            {
+                SendMessage(MensajeEnojado, SendMessageOptions.DontRequireReceiver); // T-voces-personajes-23nov: el puente dice su frase de enojo
             }
         }
 
@@ -260,6 +265,8 @@ namespace MechaCyberpunk.Trafico.Peatones
         /// <summary>T-1516: platica (parámetro: 0 o 1, qué clip de plática) y deja de platicar. Se repite cada <see cref="SegundosEntreAvisos"/> s mientras dura.</summary>
         public const string MensajePlaticar = "AlPlaticarCivil";
         public const string MensajeDejarPlaticar = "AlDejarPlaticarCivil";
+        /// <summary>T-voces-personajes-23nov: el jugador le pegó y se le pone al tiro (revancha): el puente dice su frase de enojo.</summary>
+        public const string MensajeEnojado = "AlEnojarCivil";
         public const float SegundosEntreAvisos = 1f;
         private const float ProbabilidadHuirTrasAgacharse = 0.5f;
 

@@ -23,6 +23,11 @@ namespace MechaCyberpunk.Trafico.Persecucion
         private const float DistanciaDirecta = 28f;
         private const float DistanciaMegafono = 35f;
         private const float SegundosEntreMegafono = 7f;
+
+        /// <summary>T-voces-23nov: lo que dice el altavoz de la patrulla en persecución, por turnos (cada ID elige su toma al azar sin repetir).</summary>
+        public static readonly string[] IdsMegafono = { "POL_VOZ_ALTAVOZ", "POL_MEGAFONO_ALTO", "POL_VOZ_ALTAVOZ", "POL_MEGAFONO_RENDIRSE" };
+
+        private int turnoMegafono;
         // T-581: de cerca solo va directo si no hay una pared en medio; si no, regresa por donde vino hasta la calle.
         private const float AlturaVista = 1f;
         private const float AlturaOjos = 2.2f;
@@ -960,7 +965,9 @@ namespace MechaCyberpunk.Trafico.Persecucion
             if (VeAlJugador && distancia <= DistanciaMegafono && Time.time >= proximoMegafono)
             {
                 proximoMegafono = Time.time + SegundosEntreMegafono;
-                Sonidos.ReproducirEn("CAL_PATRULLA_MEGAFONO", transform.position);
+                // T-voces-23nov: el altavoz de la patrulla con las voces grabadas (antes CAL_PATRULLA_MEGAFONO = POL_RADIO_AVISO), turnándose.
+                Sonidos.ReproducirEn(IdsMegafono[turnoMegafono % IdsMegafono.Length], transform.position);
+                turnoMegafono++;
             }
             VaDirecto = VeAlJugador && distancia <= DistanciaDirecta && libre;
             if (!PoliciasBajaron && VaDirecto && distancia <= config.DistanciaParaBajarPolicias)

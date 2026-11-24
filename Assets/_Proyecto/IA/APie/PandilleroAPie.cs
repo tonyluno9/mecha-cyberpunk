@@ -298,12 +298,12 @@ namespace MechaCyberpunk.IA.APie
                 {
                     return; // T-78: con el candado de pandillas nadie pasa a alerta contra el jugador (los SKULLS de la historia van como Acosando)
                 }
-                if (!value && alerta && !siempreAlerta && !EstaKO && EsSkull)
+                if (!value && alerta && !siempreAlerta && !EstaKO && TieneVozGrabada)
                 {
-                    // T-1623: el jugador se fue (o murió): lo perdimos / ganamos.
+                    // T-1623: el jugador se fue (o murió): lo perdimos / ganamos. T-voces-23nov: también el matón, el jefe, la policía y Nova.
                     DecirSkull(vidaJugador != null && vidaJugador.EstaKO ? VocesPandilla.Ganamos : VocesPandilla.LoPerdimos);
                 }
-                if (value && !alerta && EsSkull)
+                if (value && !alerta && TieneVozGrabada)
                 {
                     // T-1623: los SKULLS gritan con su voz; el maleante de calle primero provoca (ahí suena PROVOCAR) y grita al empezar a atacar.
                     if (!EsMaleanteDeCalle)
@@ -720,7 +720,7 @@ namespace MechaCyberpunk.IA.APie
             {
                 VolverseHostil(); // T-1528: el jugador respondió
             }
-            if (!modelo.EstaKO && EsSkull && Time.time >= proximoDolor)
+            if (!modelo.EstaKO && TieneVozGrabada && Time.time >= proximoDolor)
             {
                 // T-1623: se queja al recibir daño (quemado si fue una explosión); no en cada bala.
                 if (DecirSkull(porExplosion ? VocesPandilla.Quemado : VocesPandilla.Dolor))
@@ -1330,7 +1330,7 @@ namespace MechaCyberpunk.IA.APie
             if (salida.Impacto && atacable && !gritoCombateDado)
             {
                 gritoCombateDado = true;
-                DecirSkull(VocesPandilla.GritoAlerta, true); // T-1623: empieza el combate
+                DecirEvento(EventoVoz.InicioCombate, true); // T-1623: empieza el combate (T-voces-23nov: la policía "¡alto!", Nova da la orden)
             }
             else if (estadoAntes != EstadoPandillero.Recargando && regla.Estado == EstadoPandillero.Recargando && UnityEngine.Random.value < ProbabilidadRecargando)
             {
@@ -1695,7 +1695,7 @@ namespace MechaCyberpunk.IA.APie
             }
             Vector3 punto = raizJugador.position + Vector3.up * AlturaCentroImpacto;
             recibeJugador.RecibirDanio(new InfoDanio(cantidad, TipoDanio.Golpe, punto, direccion, null));
-            DecirSkull(UnityEngine.Random.value < ProbabilidadRisa ? VocesPandilla.RisaBurla : VocesPandilla.Insulto); // T-1623
+            DecirAlPegar(); // T-1623; T-voces-23nov: el matón grita al pegar con el brazo
         }
 
         /// <summary>Le pega a otro objetivo (por ejemplo un rival de otra pandilla) con <paramref name="cantidad"/> de daño.</summary>
@@ -2094,7 +2094,7 @@ namespace MechaCyberpunk.IA.APie
             }
             Vector3 punto = posicionJugador + Vector3.up * AlturaCentroImpacto;
             recibeJugador.RecibirDanio(new InfoDanio(datos.DanioGolpe, TipoDanio.Golpe, punto, transform.forward, null));
-            DecirSkull(UnityEngine.Random.value < ProbabilidadRisa ? VocesPandilla.RisaBurla : VocesPandilla.Insulto); // T-1623
+            DecirAlPegar(); // T-1623; T-voces-23nov: el matón grita al pegar con el brazo
         }
 
         private void ActualizarBrazo()
@@ -2135,7 +2135,121 @@ namespace MechaCyberpunk.IA.APie
         public bool EsSkull => datos != null && Pandilla == IdPandilla.Calaveras && !datos.EsPolicia && !datos.JefeCuerpoACuerpo && !datos.PerroRobot && !esJefe
             && (sonidoNova == null || !sonidoNova.EsRobot);
 
-        private bool DecirSkull(string id, bool prioridad = false) => EsSkull && VocesPandilla.Decir(transform, id, prioridad);
+        /// <summary>
+        /// T-1623: una voz de los SKULLS en uno de sus momentos. T-voces-23nov: los mismos momentos sirven al matón, al jefe de los SKULLS, a la policía y a
+        /// Nova, cada uno con su voz grabada (<see cref="VocesFaccion"/>); si su facción no tiene voz para ese momento, se queda callado.
+        /// </summary>
+        private bool DecirSkull(string id, bool prioridad = false)
+        {
+            FaccionVoz faccion = FaccionVoz;
+            if (faccion == FaccionVoz.Skulls)
+            {
+                return VocesPandilla.Decir(transform, id, prioridad);
+            }
+            return faccion != FaccionVoz.Ninguna && VocesFaccion.Decir(faccion, transform, VocesFaccion.EventoDeSkull(id), prioridad);
+        }
+
+        /// <summary>T-voces-23nov: la voz de su facción en ese momento (ver <see cref="VocesFaccion.Id"/>).</summary>
+        private bool DecirEvento(EventoVoz evento, bool prioridad = false) => VocesFaccion.Decir(FaccionVoz, transform, evento, prioridad);
+
+        // T-voces-23nov: al conectar un golpe el matón grita su ataque; los demás se burlan como antes (la policía: "¡ríndete!").
+        private void DecirAlPegar()
+        {
+            if (FaccionVoz == FaccionVoz.Maton)
+            {
+                DecirEvento(EventoVoz.Ataque, true);
+                return;
+            }
+            DecirSkull(UnityEngine.Random.value < ProbabilidadRisa ? VocesPandilla.RisaBurla : VocesPandilla.Insulto);
+        }
+
+        private int esMaton = -1;
+
+        /// <summary>T-voces-23nov: el pandillero grandote de los SKULLS con el brazo robótico (modelo E20_MatonSkulls).</summary>
+        public bool EsMaton
+        {
+            get
+            {
+                if (esMaton < 0)
+                {
+                    bool porNombre = name.IndexOf("Maton", StringComparison.OrdinalIgnoreCase) >= 0
+                        || (visual != null && visual.name.IndexOf("Maton", StringComparison.OrdinalIgnoreCase) >= 0);
+                    if (visual == null)
+                    {
+                        return porNombre; // sin visual todavía: no se guarda
+                    }
+                    esMaton = porNombre ? 1 : 0;
+                }
+                return esMaton == 1;
+            }
+        }
+
+        /// <summary>T-voces-23nov: de quién es su voz grabada (Ninguna: civiles, perros, robots y otras pandillas siguen con lo de antes).</summary>
+        public FaccionVoz FaccionVoz
+        {
+            get
+            {
+                if (datos == null || datos.PerroRobot || (sonidoNova != null && sonidoNova.EsRobot))
+                {
+                    return FaccionVoz.Ninguna;
+                }
+                if (EsDeNova)
+                {
+                    return sonidoNova == null || ReglaSonidoEnemigo.LlevaArmaduraNova(sonidoNova.Tipo) ? FaccionVoz.Nova : FaccionVoz.Ninguna;
+                }
+                if (datos.EsPolicia)
+                {
+                    return FaccionVoz.Policia;
+                }
+                if (Pandilla == IdPandilla.Calaveras)
+                {
+                    if (esJefe || datos.JefeCuerpoACuerpo)
+                    {
+                        return FaccionVoz.JefeSkulls;
+                    }
+                    return EsMaton ? FaccionVoz.Maton : FaccionVoz.Skulls;
+                }
+                return FaccionVoz.Ninguna;
+            }
+        }
+
+        /// <summary>T-voces-23nov: si tiene voz grabada propia (y no los gritos de librería PAN_RIVAL_*).</summary>
+        public bool TieneVozGrabada => FaccionVoz != FaccionVoz.Ninguna;
+
+        // T-voces-23nov: otro policía cercano avisa que cayó un oficial (lo pide el que cae, con retraso para no pisar su muerte).
+        private void DecirOficialCaido()
+        {
+            if (!EstaKO)
+            {
+                DecirEvento(EventoVoz.OficialCaido, true);
+            }
+        }
+
+        private const float SegundosAntesOficialCaido = 1.6f;
+        private const float DistanciaOficialCaido = 30f;
+
+        private void AvisarOficialCaido()
+        {
+            PandilleroAPie mejor = null;
+            float menor = DistanciaOficialCaido * DistanciaOficialCaido;
+            foreach (PandilleroAPie otro in Activos)
+            {
+                if (otro == null || otro == this || !otro.isActiveAndEnabled || otro.EstaKO || otro.FaccionVoz != FaccionVoz.Policia)
+                {
+                    continue;
+                }
+                float d = (otro.transform.position - transform.position).sqrMagnitude;
+                if (d < menor)
+                {
+                    menor = d;
+                    mejor = otro;
+                }
+            }
+            if (mejor != null)
+            {
+                mejor.Invoke(nameof(DecirOficialCaido), SegundosAntesOficialCaido);
+            }
+        }
 
         // Plática ambiental (sin haber visto al jugador), "ganamos" si el jugador cae, y reinicio de los avisos al calmarse.
         private void ActualizarVocesSkulls()
@@ -2181,7 +2295,8 @@ namespace MechaCyberpunk.IA.APie
         // T-1533: un robot de Nova no grita con voz humana (su voz y su muerte suenan por SonidosEnemigoAPie).
         private void GritarPandillero(string id)
         {
-            if ((sonidoNova != null && sonidoNova.EsRobot) || (EsSkull && !VocesPandilla.VocesSkullsActivas))
+            // T-voces-23nov: los que tienen voz grabada (SKULLS, matón, jefe, policía, Nova) ya no usan la de librería.
+            if ((sonidoNova != null && sonidoNova.EsRobot) || (EsSkull && !VocesPandilla.VocesSkullsActivas) || TieneVozGrabada)
             {
                 return;
             }
@@ -2227,7 +2342,8 @@ namespace MechaCyberpunk.IA.APie
         {
             turnos?.Soltar(this);
             EventosRuido.PublicarMuerte(transform.position); // T-1622: los civiles que lo ven gritan y huyen
-            if (esJefe)
+            FaccionVoz faccionVoz = FaccionVoz;
+            if (esJefe && faccionVoz != FaccionVoz.JefeSkulls)
             {
                 Sonidos.ReproducirEn("PAN_JEFE_CAE", transform.position);
             }
@@ -2259,7 +2375,18 @@ namespace MechaCyberpunk.IA.APie
             PonerBrazo(0f);
             PintarBrazo(datos.ColorKO);
             pintadoAviso = false;
-            GritarPandillero("PAN_RIVAL_CAE");
+            if (faccionVoz != FaccionVoz.Ninguna)
+            {
+                DecirEvento(EventoVoz.Muerte, true); // T-voces-23nov: la muerte grabada de su facción (antes PAN_RIVAL_CAE de librería)
+                if (faccionVoz == FaccionVoz.Policia)
+                {
+                    AvisarOficialCaido();
+                }
+            }
+            else
+            {
+                GritarPandillero("PAN_RIVAL_CAE");
+            }
             KO?.Invoke();
             Vencido?.Invoke(this);
             // T-686: suelta su dinero y su arma (el jefe, una escopeta); el jugador los recoge.

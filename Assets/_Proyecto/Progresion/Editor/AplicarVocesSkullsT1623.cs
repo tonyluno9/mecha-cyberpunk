@@ -41,7 +41,8 @@ namespace MechaCyberpunk.Progresion.Editor
             List<CatalogoSonidos.Entrada> lista = new List<CatalogoSonidos.Entrada>();
             foreach (CatalogoSonidos.Entrada e in catalogo.Entradas)
             {
-                if (e != null && !ReglaMezclaSonidos.EsVozSkulls(e.id))
+                // T-voces-23nov: solo se rehacen los IDs de los SKULLS comunes; el matón y el jefe (SKU_MATON_*, SKU_JEFE_*) los deja AplicarVoces23nov.
+                if (e != null && System.Array.IndexOf(ReglaMezclaSonidos.IdsSkulls, e.id) < 0)
                 {
                     lista.Add(e);
                 }
@@ -97,7 +98,7 @@ namespace MechaCyberpunk.Progresion.Editor
                 string ruta = AssetDatabase.GUIDToAssetPath(guid);
                 AudioClip clip = AssetDatabase.LoadAssetAtPath<AudioClip>(ruta);
                 string id = Variante.Match(Path.GetFileNameWithoutExtension(ruta)).Groups[1].Value;
-                if (clip == null || !ReglaMezclaSonidos.EsVozSkulls(id))
+                if (clip == null || System.Array.IndexOf(ReglaMezclaSonidos.IdsSkulls, id) < 0)
                 {
                     continue;
                 }

@@ -125,6 +125,18 @@ MonoBehaviour:
     finales:
     - {fileID: 8300000, guid: 449d6eeb65643ba546af42dedf209761, type: 3}
     provisionales: []
+  - id: CANEPA_VOZ_DESPEDIDA
+    finales:
+    - {fileID: 8300000, guid: 52bf19999d31e7f4582b89f905515a42, type: 3}
+    provisionales: []
+  - id: CANEPA_VOZ_REPARAR
+    finales:
+    - {fileID: 8300000, guid: 5b3bc80278dba8e48b647a28bfec6347, type: 3}
+    provisionales: []
+  - id: CANEPA_VOZ_SALUDO
+    finales:
+    - {fileID: 8300000, guid: fc97bfcc7e715854d9591f30f75bb153, type: 3}
+    provisionales: []
   - id: CAS_CARTAS_BARAJAR
     finales:
     - {fileID: 8300000, guid: 989d223abc28392119961a3362425893, type: 3}
@@ -210,6 +222,30 @@ MonoBehaviour:
   - id: DES_CRISTAL_VENTANA
     finales:
     - {fileID: 8300000, guid: f0f7e21abbc28765f9997b2d33e57e9e, type: 3}
+    provisionales: []
+  - id: DOC_VOZ_DESPEDIDA
+    finales:
+    - {fileID: 8300000, guid: 7c5bdd128b95b744e8fad88ceed15f80, type: 3}
+    provisionales: []
+  - id: DOC_VOZ_EXPLICAR
+    finales:
+    - {fileID: 8300000, guid: c0e3fce6d7c5a9241a60278356190194, type: 3}
+    provisionales: []
+  - id: DOC_VOZ_REVIVIR
+    finales:
+    - {fileID: 8300000, guid: 99a822a7f68a35942a5bccf2c890ba74, type: 3}
+    provisionales: []
+  - id: DOC_VOZ_SALUDO
+    finales:
+    - {fileID: 8300000, guid: 03969fd93b80284428c1743fe27fe5da, type: 3}
+    provisionales: []
+  - id: DOC_VOZ_SIENTATE
+    finales:
+    - {fileID: 8300000, guid: 6e43747265ef9bc42baf96450f234d55, type: 3}
+    provisionales: []
+  - id: DOC_VOZ_SUERO
+    finales:
+    - {fileID: 8300000, guid: 34201e6a41769084daaffb08999af177, type: 3}
     provisionales: []
   - id: DRN_PES_AMETRALLADORA
     finales:
@@ -421,13 +457,59 @@ MonoBehaviour:
     finales:
     - {fileID: 8300000, guid: 8851ce8680aa9194e88752d749f79594, type: 3}
     provisionales: []
+  - id: JUG_DOLOR_FUERTE
+    finales:
+    - {fileID: 8300000, guid: 5e53facd4442b8844934ff23ff8a1ef9, type: 3}
+    - {fileID: 8300000, guid: ef0ce98b11b6a574ebff026272aaab0a, type: 3}
+    - {fileID: 8300000, guid: 865ec565f913f7c4d88200eebe85f00c, type: 3}
+    provisionales: []
+  - id: JUG_DOLOR_LEVE
+    finales:
+    - {fileID: 8300000, guid: fd6633e4434615746b8b0bc1dd6a1640, type: 3}
+    - {fileID: 8300000, guid: b7b487ae5e15d074b959d757a05f2bd6, type: 3}
+    - {fileID: 8300000, guid: 4c7a4c2814b3e0845afb46e12900b927, type: 3}
+    - {fileID: 8300000, guid: 658c939cec1c53e49a194043a1536a69, type: 3}
+    provisionales: []
+  - id: JUG_ESFUERZO
+    finales:
+    - {fileID: 8300000, guid: 01d2fd8d147db5746973263769b012d4, type: 3}
+    - {fileID: 8300000, guid: 59b372336eaf9c04ebc1529007bc2487, type: 3}
+    - {fileID: 8300000, guid: 0f127d1263b113841a8e9505fb83160a, type: 3}
+    - {fileID: 8300000, guid: ca06e93ea5c004c4e858e065b66b5f5a, type: 3}
+    provisionales: []
   - id: JUG_LATIDO_VIDA_BAJA
     finales:
     - {fileID: 8300000, guid: cb36e1bb21ace7148afa7a432200e36e, type: 3}
     provisionales: []
+  - id: JUG_MUERTE
+    finales:
+    - {fileID: 8300000, guid: c4a13ba0192d2fc44b25bc0a02992365, type: 3}
+    - {fileID: 8300000, guid: 0640792a730dc8c4bbb3f386c4801b13, type: 3}
+    provisionales: []
+  - id: JUG_QUEMADO
+    finales:
+    - {fileID: 8300000, guid: d69dd2d3aacd5504e989d62c25902221, type: 3}
+    - {fileID: 8300000, guid: 2a088360b1b973942af477af93f4cee4, type: 3}
+    provisionales: []
+  - id: JUG_RESPIRACION_CANSADO
+    finales:
+    - {fileID: 8300000, guid: 2b79e2cd225ab2740ac3f07d2d7cffce, type: 3}
+    provisionales: []
   - id: JUG_RODADA
     finales:
     - {fileID: 8300000, guid: 6583b2f9367adb74f85b324925ee2c8a, type: 3}
+    provisionales: []
+  - id: JUG_SALTO
+    finales:
+    - {fileID: 8300000, guid: ba86dd497ab3f3347a9547fec5831df0, type: 3}
+    - {fileID: 8300000, guid: 9919f991dd7af604d87251e32b1d71cc, type: 3}
+    - {fileID: 8300000, guid: 2b2f0a9b4e769dd468f398609c6abe4a, type: 3}
+    provisionales: []
+  - id: JUG_TOS
+    finales:
+    - {fileID: 8300000, guid: a8f35dc3c5f193247adff332effeef14, type: 3}
+    - {fileID: 8300000, guid: 45d42edd64831bf4ca55c25905584e1e, type: 3}
+    - {fileID: 8300000, guid: 6232ea7e92764ce46947f3d50553f367, type: 3}
     provisionales: []
   - id: JUG_TREPAR
     finales:
@@ -457,6 +539,22 @@ MonoBehaviour:
   - id: MEL_GOLPE_METAL
     finales:
     - {fileID: 8300000, guid: b43325d948db80d1cfceb9451d950a91, type: 3}
+    provisionales: []
+  - id: MESERA_ROBOT_DESPEDIDA
+    finales:
+    - {fileID: 8300000, guid: 6f083b2ba2c443149997066f22ca04c2, type: 3}
+    provisionales: []
+  - id: MESERA_ROBOT_SALUDO
+    finales:
+    - {fileID: 8300000, guid: 360326d4c77b22a4996eecff4555688b, type: 3}
+    provisionales: []
+  - id: MESERA_ROBOT_SERVIR
+    finales:
+    - {fileID: 8300000, guid: 2291d5b07bf092a4a83a710c3f0c1d8d, type: 3}
+    provisionales: []
+  - id: MESERA_ROBOT_SUERTE
+    finales:
+    - {fileID: 8300000, guid: ab49f143dd7e15a41807fde3b8e59400, type: 3}
     provisionales: []
   - id: MIS_TEMPORIZADOR
     finales:
@@ -512,6 +610,32 @@ MonoBehaviour:
     finales:
     - {fileID: 8300000, guid: 80aa3fe081cb37371488690126a78a04, type: 3}
     provisionales: []
+  - id: NOV_JEFE_ATAQUE
+    finales:
+    - {fileID: 8300000, guid: 2b39f3b2603f5c84f9c89efee0574c3a, type: 3}
+    - {fileID: 8300000, guid: 2423fc590715c4f49bff0655855b7fa6, type: 3}
+    - {fileID: 8300000, guid: 4b8e571b362115c4cba74e3b708d239d, type: 3}
+    - {fileID: 8300000, guid: b7234d01d7c41194baf5fbdb17d1c45f, type: 3}
+    provisionales: []
+  - id: NOV_JEFE_FRASE
+    finales:
+    - {fileID: 8300000, guid: 8f2a8da12439a1e44af0308b856be654, type: 3}
+    - {fileID: 8300000, guid: caf76b559f95bc0439be0ea7a40d1b14, type: 3}
+    - {fileID: 8300000, guid: 82fe14e6ab0a8c447a3b463417f73163, type: 3}
+    - {fileID: 8300000, guid: bda46de9bae1c28448916dd7d1892b87, type: 3}
+    - {fileID: 8300000, guid: a572fa22f582f4e47b574fb50500fac2, type: 3}
+    provisionales: []
+  - id: NOV_JEFE_MUERTE
+    finales:
+    - {fileID: 8300000, guid: a6822be01d6f24d408d2de10fd769e0f, type: 3}
+    - {fileID: 8300000, guid: 6a5fe578c133d414da6d5f5dd941d6d1, type: 3}
+    provisionales: []
+  - id: NOV_JEFE_REVELACION
+    finales:
+    - {fileID: 8300000, guid: cb28220fd46116d4b9b5baafc0ab5c8d, type: 3}
+    - {fileID: 8300000, guid: 4c0bd31cb06688b43a6d3a858fedba7e, type: 3}
+    - {fileID: 8300000, guid: fe9962ceb6044864d9821d371e4a2f1a, type: 3}
+    provisionales: []
   - id: NOV_JETPACK_LOOP
     finales:
     - {fileID: 8300000, guid: d27ca3b8b1b2cfaa48623eeb2fb11f1d, type: 3}
@@ -544,6 +668,41 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 400ee22d09c4a75ed38e6a36c189a20e, type: 3}
     - {fileID: 8300000, guid: f06d07b4db9e1008a9833f268fbcef41, type: 3}
     provisionales: []
+  - id: NOV_VOZ_ALERTA
+    finales:
+    - {fileID: 8300000, guid: 20a5effeaa2950f43afb0dd408f3e60f, type: 3}
+    - {fileID: 8300000, guid: d72526927f75df946b01c9f97634bf1b, type: 3}
+    - {fileID: 8300000, guid: de68ff69e6bcc1943b5c17aa54766544, type: 3}
+    - {fileID: 8300000, guid: 8edc09dba504fed4fbc0b91ae35643da, type: 3}
+    provisionales: []
+  - id: NOV_VOZ_CUBRIRSE
+    finales:
+    - {fileID: 8300000, guid: 7eccd3904fb74c844a3b967b51eba452, type: 3}
+    - {fileID: 8300000, guid: 8a074b571b30cfc4d8bd0d82788db02f, type: 3}
+    provisionales: []
+  - id: NOV_VOZ_DOLOR
+    finales:
+    - {fileID: 8300000, guid: d59eea1194048754a9d74d6af679978e, type: 3}
+    - {fileID: 8300000, guid: 72e842bb36c0fba41ba40c8f7afd3b76, type: 3}
+    - {fileID: 8300000, guid: ca047737c07b3ed4eadcf08f78ac745f, type: 3}
+    provisionales: []
+  - id: NOV_VOZ_LO_PERDIMOS
+    finales:
+    - {fileID: 8300000, guid: 8d639831ac952434b82fd2b94d8068f1, type: 3}
+    - {fileID: 8300000, guid: 78baca56b4979074ab00a63a4016b069, type: 3}
+    provisionales: []
+  - id: NOV_VOZ_MUERTE
+    finales:
+    - {fileID: 8300000, guid: 1bdfc0cec8305dd4b97259ddfe78b2d5, type: 3}
+    - {fileID: 8300000, guid: 2aaaa08d4cc19654f87877e14e6f0837, type: 3}
+    provisionales: []
+  - id: NOV_VOZ_ORDEN
+    finales:
+    - {fileID: 8300000, guid: a6ea7fd5899e6384c84f501886294e4e, type: 3}
+    - {fileID: 8300000, guid: f15f631b1c067ce4a94881e92e6ef1ee, type: 3}
+    - {fileID: 8300000, guid: 9e166434ff615ed4bb709951705293f7, type: 3}
+    - {fileID: 8300000, guid: ec2cf1919cd925a4c874349487fff7ff, type: 3}
+    provisionales: []
   - id: NPC_H_DOLOR
     finales:
     - {fileID: 8300000, guid: de47dbe8531eccbfbd6d751473a6be68, type: 3}
@@ -551,6 +710,123 @@ MonoBehaviour:
   - id: NPC_M_DOLOR
     finales:
     - {fileID: 8300000, guid: be1ee58838604d46d94b3b1270dbf18d, type: 3}
+    provisionales: []
+  - id: NPC_VOZ1_ENOJO
+    finales:
+    - {fileID: 8300000, guid: ca2130a864a32f5469ad19361f3b9201, type: 3}
+    - {fileID: 8300000, guid: 13e36fcba6950b746826bf09699264c1, type: 3}
+    - {fileID: 8300000, guid: 55f295237d6e22a4c8222ecd86f60cd4, type: 3}
+    - {fileID: 8300000, guid: 8f35247c88f0c554eb028a2b8d34dfd6, type: 3}
+    provisionales: []
+  - id: NPC_VOZ1_MIEDO
+    finales:
+    - {fileID: 8300000, guid: f5950fa8f07a6f04da549c29b2ceb363, type: 3}
+    - {fileID: 8300000, guid: 0df2e7bc53e46194c9bd317a6a944980, type: 3}
+    - {fileID: 8300000, guid: ddffb738762792c40951ba66e03428f2, type: 3}
+    - {fileID: 8300000, guid: a15b538d420baaa4baaa9a6f9bd373ed, type: 3}
+    provisionales: []
+  - id: NPC_VOZ1_POLICIA
+    finales:
+    - {fileID: 8300000, guid: a0bf7b88eed631a42bc0c26d2832655b, type: 3}
+    - {fileID: 8300000, guid: 8deb2b241c9f8bf4fbfc6125f7e61753, type: 3}
+    provisionales: []
+  - id: NPC_VOZ1_RISA
+    finales:
+    - {fileID: 8300000, guid: eeb0dc78b4dbf784e90a74d785b712e1, type: 3}
+    - {fileID: 8300000, guid: 76a8d61f5b2267d48ba242af798b2232, type: 3}
+    - {fileID: 8300000, guid: 09fe568dc2efc7547bfcd7d169bd104f, type: 3}
+    provisionales: []
+  - id: NPC_VOZ1_SALUDO
+    finales:
+    - {fileID: 8300000, guid: 722443a5940570c4da5f3cb2e4a2d120, type: 3}
+    - {fileID: 8300000, guid: b4c2d2f3f7a438442bbf3fb5f28561c5, type: 3}
+    - {fileID: 8300000, guid: a4bc63e9d3195314c8153b8b86d52dcd, type: 3}
+    provisionales: []
+  - id: NPC_VOZ1_VENDEDOR
+    finales:
+    - {fileID: 8300000, guid: 603b64588dc72aa4a8647b9ab56c9a99, type: 3}
+    - {fileID: 8300000, guid: 37aef0ee42aa25945ab35d92178e99d6, type: 3}
+    - {fileID: 8300000, guid: e5efc067dd9c33e42ad3b7f353c9d58b, type: 3}
+    - {fileID: 8300000, guid: 5dae78455a98d0f43b27700bf14c38fd, type: 3}
+    - {fileID: 8300000, guid: fd574d38cc9f168448caca796711a95f, type: 3}
+    provisionales: []
+  - id: NPC_VOZ2_ENOJO
+    finales:
+    - {fileID: 8300000, guid: b6abd15406867454386da0afb48de6a3, type: 3}
+    - {fileID: 8300000, guid: c7d19eb3e83ab394f8ccf7f239bf2667, type: 3}
+    - {fileID: 8300000, guid: ea6d19a8640e0c74e9c30b8bcfddcd99, type: 3}
+    - {fileID: 8300000, guid: c5ae4d65c85c12647be96f6b2c7b7659, type: 3}
+    provisionales: []
+  - id: NPC_VOZ2_MIEDO
+    finales:
+    - {fileID: 8300000, guid: 7979fbdea31a50941980f938a89efb28, type: 3}
+    - {fileID: 8300000, guid: 9b8d059faec0a964dba343d10ffd514a, type: 3}
+    - {fileID: 8300000, guid: e338cc95e83cd2c4ebe129746b010cec, type: 3}
+    - {fileID: 8300000, guid: 97d67a1773eea844482812820cfb49fc, type: 3}
+    provisionales: []
+  - id: NPC_VOZ2_POLICIA
+    finales:
+    - {fileID: 8300000, guid: e87505216a903cc4c9aa87d73292011d, type: 3}
+    - {fileID: 8300000, guid: 72a4bdb4c738e614080d6240d56b4869, type: 3}
+    provisionales: []
+  - id: NPC_VOZ2_RISA
+    finales:
+    - {fileID: 8300000, guid: 7c2ea815c67db094e83eada926afbf66, type: 3}
+    - {fileID: 8300000, guid: 56fbb8fa01027794385791eec6e70715, type: 3}
+    - {fileID: 8300000, guid: 6ba3abf33b5a35648b996c7d70b52288, type: 3}
+    provisionales: []
+  - id: NPC_VOZ2_SALUDO
+    finales:
+    - {fileID: 8300000, guid: 35c303ef1a6f01d4e8b1465b1536bc34, type: 3}
+    - {fileID: 8300000, guid: 5a723a1983cd9d2418bc27b78e9272a4, type: 3}
+    - {fileID: 8300000, guid: f82307682447b284c903e3ba41833fe3, type: 3}
+    provisionales: []
+  - id: NPC_VOZ2_VENDEDOR
+    finales:
+    - {fileID: 8300000, guid: 89f59c106af6f3b46b9ec7c1f2f5c733, type: 3}
+    - {fileID: 8300000, guid: 963eed19a011b464fa1943266c93a6a6, type: 3}
+    - {fileID: 8300000, guid: 283c6ba3c5a376f42ac798922ca4e791, type: 3}
+    - {fileID: 8300000, guid: 365828993d792734c82893c80741d5fc, type: 3}
+    - {fileID: 8300000, guid: 6b43076698b9ae343a152707e1ac3156, type: 3}
+    provisionales: []
+  - id: NPC_VOZ3_ENOJO
+    finales:
+    - {fileID: 8300000, guid: d04021577fa3e644abf455fc9dc1464d, type: 3}
+    - {fileID: 8300000, guid: 78698ee7d0011bf44a609e40a6c2b049, type: 3}
+    - {fileID: 8300000, guid: 38c768e9952967841aa2c8c727b894e0, type: 3}
+    - {fileID: 8300000, guid: 12f34d4326e22604382c38b455160203, type: 3}
+    provisionales: []
+  - id: NPC_VOZ3_MIEDO
+    finales:
+    - {fileID: 8300000, guid: ec1ca393cf11d1a4da48b879feed0e73, type: 3}
+    - {fileID: 8300000, guid: 88a1a0972a2430a46ad3df6524d758d9, type: 3}
+    - {fileID: 8300000, guid: e49164e2618017f42b9ec605b2aa493d, type: 3}
+    - {fileID: 8300000, guid: e05955433dd17c5428a505be2c00e577, type: 3}
+    provisionales: []
+  - id: NPC_VOZ3_POLICIA
+    finales:
+    - {fileID: 8300000, guid: 6764d47a119211d4ca0f9aff7b137d82, type: 3}
+    - {fileID: 8300000, guid: dfdde998a053ba44099fd512cfeb7e17, type: 3}
+    provisionales: []
+  - id: NPC_VOZ3_RISA
+    finales:
+    - {fileID: 8300000, guid: b454fa76f9eacad4bb9d42992a96190e, type: 3}
+    - {fileID: 8300000, guid: 3d4ebed8a3397db48ac17b482acfd500, type: 3}
+    - {fileID: 8300000, guid: 29fcec72ff9a0ed4d837fe9370509ed4, type: 3}
+    provisionales: []
+  - id: NPC_VOZ3_SALUDO
+    finales:
+    - {fileID: 8300000, guid: 7bff492b1d34e6d4bb88881caba3bcef, type: 3}
+    - {fileID: 8300000, guid: 0b1c575b01b7db54791cafc53d44d8b5, type: 3}
+    - {fileID: 8300000, guid: 550e6e954bb98534eaa62d8c9b3bee8e, type: 3}
+    provisionales: []
+  - id: NPC_VOZ3_VENDEDOR
+    finales:
+    - {fileID: 8300000, guid: 6a98a6fc1e157684fbfbcb5074b65840, type: 3}
+    - {fileID: 8300000, guid: 1932787199a3b6a489905027e7e37aa7, type: 3}
+    - {fileID: 8300000, guid: 9a1ee4bff9d373e42baa16fcfa5100a6, type: 3}
+    - {fileID: 8300000, guid: 304ef88a7e070574c88dcc40444a231d, type: 3}
+    - {fileID: 8300000, guid: b7e8667496680384c924cf39082497ca, type: 3}
     provisionales: []
   - id: OBJ_AIRE_ACONDICIONADO
     finales:
@@ -627,6 +903,23 @@ MonoBehaviour:
     finales:
     - {fileID: 8300000, guid: 2d9ff78006f1835247f4ade2335b11e1, type: 3}
     provisionales: []
+  - id: POL_MEGAFONO_ALTO
+    finales:
+    - {fileID: 8300000, guid: 7a30929808efe874f8d72272759bed67, type: 3}
+    - {fileID: 8300000, guid: ad12c193bd1487547bef669e9dccece6, type: 3}
+    - {fileID: 8300000, guid: 2f9033de02b694f458d9fa5833a6134b, type: 3}
+    - {fileID: 8300000, guid: e640b7b2986262c498df5bf7ac192d5d, type: 3}
+    provisionales: []
+  - id: POL_MEGAFONO_LO_PERDIMOS
+    finales:
+    - {fileID: 8300000, guid: 5496a593b8a25984cad3f13394eefe7a, type: 3}
+    - {fileID: 8300000, guid: a292e6437aaace44c9319118e16639d9, type: 3}
+    provisionales: []
+  - id: POL_MEGAFONO_RENDIRSE
+    finales:
+    - {fileID: 8300000, guid: 05e9bddcc973b2b44b4f2f854cc140f4, type: 3}
+    - {fileID: 8300000, guid: 1d0bb0e945401b14f9533030b4c0b58d, type: 3}
+    provisionales: []
   - id: POL_RADIO_AVISO
     finales:
     - {fileID: 8300000, guid: 176a7dad85fe80c47af92bf4d1f39366, type: 3}
@@ -650,6 +943,52 @@ MonoBehaviour:
   - id: POL_SIRENA_MURO
     finales:
     - {fileID: 8300000, guid: 5e7b9ff9f794fecda45c0d994f807497, type: 3}
+    provisionales: []
+  - id: POL_VOZ_ALTAVOZ
+    finales:
+    - {fileID: 8300000, guid: 132dfd055a0e07849a4b4a3693fc6de2, type: 3}
+    - {fileID: 8300000, guid: 372c6a2e75c79cd40816e71543db7c68, type: 3}
+    - {fileID: 8300000, guid: 73ba4677674088c48be0eddade846b02, type: 3}
+    provisionales: []
+  - id: POL_VOZ_ALTO
+    finales:
+    - {fileID: 8300000, guid: 3742f344981d68448bbb4d9293d962f3, type: 3}
+    - {fileID: 8300000, guid: b0a091f0b7805f2419f85f817df6107d, type: 3}
+    - {fileID: 8300000, guid: 38ed93e060fe0584a872223948357e3b, type: 3}
+    - {fileID: 8300000, guid: 58192b91837f711428d0139c0058aaee, type: 3}
+    provisionales: []
+  - id: POL_VOZ_DOLOR
+    finales:
+    - {fileID: 8300000, guid: fabc22389afc7774a9cd3bdd802aaa51, type: 3}
+    - {fileID: 8300000, guid: bd9462f87dc77c944b61abccb48cf7c5, type: 3}
+    - {fileID: 8300000, guid: e70d980e8f13fce489d3ec7300deb04b, type: 3}
+    - {fileID: 8300000, guid: 1775be2004453414c91e92f62c114f58, type: 3}
+    provisionales: []
+  - id: POL_VOZ_LO_PERDIMOS
+    finales:
+    - {fileID: 8300000, guid: 30e2623ce0c104f4c9480adb2f2a87dd, type: 3}
+    - {fileID: 8300000, guid: 086d9bde07a30f246be7ca5533b242ae, type: 3}
+    provisionales: []
+  - id: POL_VOZ_MUERTE
+    finales:
+    - {fileID: 8300000, guid: e4029dc274291fa469a21481f813d28e, type: 3}
+    - {fileID: 8300000, guid: 7a2140de039bd8448a6580c5605bce38, type: 3}
+    - {fileID: 8300000, guid: 6f63f61d7eb9cfb4baf4fc26a8841d22, type: 3}
+    provisionales: []
+  - id: POL_VOZ_OFICIAL_CAIDO
+    finales:
+    - {fileID: 8300000, guid: ab10db337c3043644b6bc6dac47ddb8d, type: 3}
+    - {fileID: 8300000, guid: ccdfec3f841160f4682d263afa69d1d3, type: 3}
+    provisionales: []
+  - id: POL_VOZ_REFUERZOS
+    finales:
+    - {fileID: 8300000, guid: 25ce96b29b0e9664983397f5b19eed17, type: 3}
+    - {fileID: 8300000, guid: d8b4f5edb8d0a8d41980cf3f3b6a6918, type: 3}
+    provisionales: []
+  - id: POL_VOZ_RENDIRSE
+    finales:
+    - {fileID: 8300000, guid: d42fd957665f1ab4d952b24b6272165a, type: 3}
+    - {fileID: 8300000, guid: d55f042ee6fa57849b3b14b0aa3bc5b3, type: 3}
     provisionales: []
   - id: RAD_CAMBIAR_ESTACION
     finales:
@@ -746,11 +1085,84 @@ MonoBehaviour:
     - {fileID: 8300000, guid: ee3e320a351d27d4184a2615b7c842bf, type: 3}
     - {fileID: 8300000, guid: 1f69cb7e0a6999640aea294e6e308e9d, type: 3}
     provisionales: []
+  - id: SKU_JEFE_CASTIGO
+    finales:
+    - {fileID: 8300000, guid: f32835232553ae545ae5db5da5fc0b44, type: 3}
+    - {fileID: 8300000, guid: 89fdc769580ba7443af07e39c514f2a7, type: 3}
+    - {fileID: 8300000, guid: 7b3ca837037e76340b244f31f3be4075, type: 3}
+    provisionales: []
+  - id: SKU_JEFE_DERROTA
+    finales:
+    - {fileID: 8300000, guid: ee79337f70c8fe2488aeca5fd66aa3ca, type: 3}
+    - {fileID: 8300000, guid: cc14449c99d85bb4b87bc4c7f2aa8f5b, type: 3}
+    provisionales: []
+  - id: SKU_JEFE_DOLOR
+    finales:
+    - {fileID: 8300000, guid: 6fbc8c6fe9062ee4399a599963ef7411, type: 3}
+    - {fileID: 8300000, guid: 1a3a88e3fb005f44985dae5595ecd1c3, type: 3}
+    - {fileID: 8300000, guid: 8d1762a0ea50bea45a8e96bf402b52d7, type: 3}
+    provisionales: []
+  - id: SKU_JEFE_ENFRENTAMIENTO
+    finales:
+    - {fileID: 8300000, guid: e089f883a43750046af1f92487555a34, type: 3}
+    - {fileID: 8300000, guid: 6304b0b40efaa2b449c48cd947f1064b, type: 3}
+    - {fileID: 8300000, guid: f428ad6411cce364d9f4390384b4b2c7, type: 3}
+    - {fileID: 8300000, guid: a84e5eba47eadc5468696b9696020ce7, type: 3}
+    provisionales: []
+  - id: SKU_JEFE_GUARDIAS
+    finales:
+    - {fileID: 8300000, guid: 89907572146ed2a4c8efa700ffbd83ff, type: 3}
+    - {fileID: 8300000, guid: 4e12929d3748ef44180c757d0c8303bf, type: 3}
+    provisionales: []
+  - id: SKU_JEFE_MALETIN
+    finales:
+    - {fileID: 8300000, guid: 2623088acb656aa4681d326dca702336, type: 3}
+    - {fileID: 8300000, guid: 1f797bb37054c3f42b17b7c181075cf7, type: 3}
+    - {fileID: 8300000, guid: 8beaed074e9119346b61659d09e19abd, type: 3}
+    - {fileID: 8300000, guid: 269dd2cc426e3764aaa8dbe2a4879d2f, type: 3}
+    - {fileID: 8300000, guid: e623cbc37ba59124d8a7e4690ad2a9ee, type: 3}
+    provisionales: []
   - id: SKU_LO_PERDIMOS
     finales:
     - {fileID: 8300000, guid: 913e6a33936bf674a822b1e5e556de3f, type: 3}
     - {fileID: 8300000, guid: 9546bca90fbcb2d4da07c5a9ae3fdfcc, type: 3}
     - {fileID: 8300000, guid: 618f107ff5df42944acd04bd62816065, type: 3}
+    provisionales: []
+  - id: SKU_MATON_ATAQUE
+    finales:
+    - {fileID: 8300000, guid: 138301bcdbd46154cade4f1870db4210, type: 3}
+    - {fileID: 8300000, guid: 26e180f88896e0c438f26c17706a50d2, type: 3}
+    - {fileID: 8300000, guid: 9a5a3f0c1ec5cac468fb709e253d1f3b, type: 3}
+    - {fileID: 8300000, guid: 9fe68db8590d63147b8757674ee871e8, type: 3}
+    - {fileID: 8300000, guid: be01d650baa4c214389398759b85cc83, type: 3}
+    provisionales: []
+  - id: SKU_MATON_DOLOR
+    finales:
+    - {fileID: 8300000, guid: 6672d4f13bf871940bb56787892bcfaa, type: 3}
+    - {fileID: 8300000, guid: 418176452af17db49b176c1f31ed3335, type: 3}
+    - {fileID: 8300000, guid: 5058dc2ce9e3cf3439e81eb46cd7488e, type: 3}
+    provisionales: []
+  - id: SKU_MATON_MUERTE
+    finales:
+    - {fileID: 8300000, guid: 2d6809f4105591945a4ff276474f88d9, type: 3}
+    - {fileID: 8300000, guid: 2acb3d269a495b04b91cebb74164d483, type: 3}
+    provisionales: []
+  - id: SKU_MATON_PROVOCAR
+    finales:
+    - {fileID: 8300000, guid: 1315b6523b5022f40b3a4ffe6550add4, type: 3}
+    - {fileID: 8300000, guid: cf244ec1781fe0449992a1754d8268bd, type: 3}
+    - {fileID: 8300000, guid: 4e1606fe53f1975498f75e8da645842e, type: 3}
+    provisionales: []
+  - id: SKU_MATON_RISA
+    finales:
+    - {fileID: 8300000, guid: e61936f562886934ca74a41173e3cd47, type: 3}
+    - {fileID: 8300000, guid: b48a0a04ee3598a4b9ed1abcff31afeb, type: 3}
+    provisionales: []
+  - id: SKU_MUERTE
+    finales:
+    - {fileID: 8300000, guid: 6cbc5fac299963e4aa9e27c60291156c, type: 3}
+    - {fileID: 8300000, guid: 05062784a0bf17b49888ce755c736749, type: 3}
+    - {fileID: 8300000, guid: f26426ee0583b4545a9173bd3a2fef48, type: 3}
     provisionales: []
   - id: SKU_PROVOCAR
     finales:
@@ -792,6 +1204,26 @@ MonoBehaviour:
   - id: TIE_EQUIPAR
     finales:
     - {fileID: 8300000, guid: ed4371e75da885b469e04bfbb478d3b9, type: 3}
+    provisionales: []
+  - id: TINO_VOZ_BANCO
+    finales:
+    - {fileID: 8300000, guid: a2c08efb349f5ad42aae0efe41cdf44a, type: 3}
+    provisionales: []
+  - id: TINO_VOZ_COMPRA
+    finales:
+    - {fileID: 8300000, guid: 1acf2a016c8ef844bb859174fcf284c3, type: 3}
+    provisionales: []
+  - id: TINO_VOZ_DESPEDIDA
+    finales:
+    - {fileID: 8300000, guid: f71ed09c7c2fa2a4a9b09a7f5e0d36b9, type: 3}
+    provisionales: []
+  - id: TINO_VOZ_SALUDO
+    finales:
+    - {fileID: 8300000, guid: 705d564caac4ec444ad122519cd047f8, type: 3}
+    provisionales: []
+  - id: TINO_VOZ_SIN_DINERO
+    finales:
+    - {fileID: 8300000, guid: 73fd7be4136d7644bb6d17e5f934edb3, type: 3}
     provisionales: []
   - id: UI_ATRAS
     finales:
@@ -1045,6 +1477,12 @@ MonoBehaviour:
     encendido: 1
   - id: CAL_SUBE_NIVEL
     encendido: 1
+  - id: CANEPA_VOZ_DESPEDIDA
+    encendido: 1
+  - id: CANEPA_VOZ_REPARAR
+    encendido: 1
+  - id: CANEPA_VOZ_SALUDO
+    encendido: 1
   - id: CAS_CARTAS_BARAJAR
     encendido: 1
   - id: CAS_CARTAS_REPARTIR
@@ -1086,6 +1524,18 @@ MonoBehaviour:
   - id: CON_VENDA
     encendido: 1
   - id: DES_CRISTAL_VENTANA
+    encendido: 1
+  - id: DOC_VOZ_DESPEDIDA
+    encendido: 1
+  - id: DOC_VOZ_EXPLICAR
+    encendido: 1
+  - id: DOC_VOZ_REVIVIR
+    encendido: 1
+  - id: DOC_VOZ_SALUDO
+    encendido: 1
+  - id: DOC_VOZ_SIENTATE
+    encendido: 1
+  - id: DOC_VOZ_SUERO
     encendido: 1
   - id: DRN_PES_AMETRALLADORA
     encendido: 1
@@ -1205,7 +1655,15 @@ MonoBehaviour:
     encendido: 1
   - id: JUG_DANIO
     encendido: 1
+  - id: JUG_DOLOR_FUERTE
+    encendido: 1
+  - id: JUG_DOLOR_LEVE
+    encendido: 1
+  - id: JUG_ESFUERZO
+    encendido: 1
   - id: JUG_LATIDO_VIDA_BAJA
+    encendido: 1
+  - id: JUG_MUERTE
     encendido: 1
   - id: JUG_PASO_ASFALTO
     encendido: 1
@@ -1215,7 +1673,15 @@ MonoBehaviour:
     encendido: 1
   - id: JUG_PASO_METAL
     encendido: 1
+  - id: JUG_QUEMADO
+    encendido: 1
+  - id: JUG_RESPIRACION_CANSADO
+    encendido: 1
   - id: JUG_RODADA
+    encendido: 1
+  - id: JUG_SALTO
+    encendido: 1
+  - id: JUG_TOS
     encendido: 1
   - id: JUG_TREPAR
     encendido: 1
@@ -1232,6 +1698,14 @@ MonoBehaviour:
   - id: MEL_GOLPE_CARNE
     encendido: 1
   - id: MEL_GOLPE_METAL
+    encendido: 1
+  - id: MESERA_ROBOT_DESPEDIDA
+    encendido: 1
+  - id: MESERA_ROBOT_SALUDO
+    encendido: 1
+  - id: MESERA_ROBOT_SERVIR
+    encendido: 1
+  - id: MESERA_ROBOT_SUERTE
     encendido: 1
   - id: MIS_TEMPORIZADOR
     encendido: 1
@@ -1263,15 +1737,71 @@ MonoBehaviour:
     encendido: 1
   - id: NOV_ESCUDO_IMPACTO
     encendido: 1
+  - id: NOV_JEFE_ATAQUE
+    encendido: 1
+  - id: NOV_JEFE_FRASE
+    encendido: 1
+  - id: NOV_JEFE_MUERTE
+    encendido: 1
+  - id: NOV_JEFE_REVELACION
+    encendido: 1
   - id: NOV_JETPACK_LOOP
     encendido: 1
   - id: NOV_PASOS_CAMINAR
     encendido: 1
   - id: NOV_PASOS_CORRER
     encendido: 1
+  - id: NOV_VOZ_ALERTA
+    encendido: 1
+  - id: NOV_VOZ_CUBRIRSE
+    encendido: 1
+  - id: NOV_VOZ_DOLOR
+    encendido: 1
+  - id: NOV_VOZ_LO_PERDIMOS
+    encendido: 1
+  - id: NOV_VOZ_MUERTE
+    encendido: 1
+  - id: NOV_VOZ_ORDEN
+    encendido: 1
   - id: NPC_H_DOLOR
     encendido: 1
   - id: NPC_M_DOLOR
+    encendido: 1
+  - id: NPC_VOZ1_ENOJO
+    encendido: 1
+  - id: NPC_VOZ1_MIEDO
+    encendido: 1
+  - id: NPC_VOZ1_POLICIA
+    encendido: 1
+  - id: NPC_VOZ1_RISA
+    encendido: 1
+  - id: NPC_VOZ1_SALUDO
+    encendido: 1
+  - id: NPC_VOZ1_VENDEDOR
+    encendido: 1
+  - id: NPC_VOZ2_ENOJO
+    encendido: 1
+  - id: NPC_VOZ2_MIEDO
+    encendido: 1
+  - id: NPC_VOZ2_POLICIA
+    encendido: 1
+  - id: NPC_VOZ2_RISA
+    encendido: 1
+  - id: NPC_VOZ2_SALUDO
+    encendido: 1
+  - id: NPC_VOZ2_VENDEDOR
+    encendido: 1
+  - id: NPC_VOZ3_ENOJO
+    encendido: 1
+  - id: NPC_VOZ3_MIEDO
+    encendido: 1
+  - id: NPC_VOZ3_POLICIA
+    encendido: 1
+  - id: NPC_VOZ3_RISA
+    encendido: 1
+  - id: NPC_VOZ3_SALUDO
+    encendido: 1
+  - id: NPC_VOZ3_VENDEDOR
     encendido: 1
   - id: OBJ_AIRE_ACONDICIONADO
     encendido: 1
@@ -1309,6 +1839,12 @@ MonoBehaviour:
     encendido: 1
   - id: POL_ESTRELLA_SUBE
     encendido: 1
+  - id: POL_MEGAFONO_ALTO
+    encendido: 1
+  - id: POL_MEGAFONO_LO_PERDIMOS
+    encendido: 1
+  - id: POL_MEGAFONO_RENDIRSE
+    encendido: 1
   - id: POL_NOVA_AVISO
     encendido: 1
   - id: POL_RADIO_AVISO
@@ -1322,6 +1858,22 @@ MonoBehaviour:
   - id: POL_SIRENA_LOOP
     encendido: 1
   - id: POL_SIRENA_MURO
+    encendido: 1
+  - id: POL_VOZ_ALTAVOZ
+    encendido: 1
+  - id: POL_VOZ_ALTO
+    encendido: 1
+  - id: POL_VOZ_DOLOR
+    encendido: 1
+  - id: POL_VOZ_LO_PERDIMOS
+    encendido: 1
+  - id: POL_VOZ_MUERTE
+    encendido: 1
+  - id: POL_VOZ_OFICIAL_CAIDO
+    encendido: 1
+  - id: POL_VOZ_REFUERZOS
+    encendido: 1
+  - id: POL_VOZ_RENDIRSE
     encendido: 1
   - id: PUN_GOLPE_AIRE
     encendido: 1
@@ -1371,7 +1923,31 @@ MonoBehaviour:
     encendido: 1
   - id: SKU_INSULTO
     encendido: 1
+  - id: SKU_JEFE_CASTIGO
+    encendido: 1
+  - id: SKU_JEFE_DERROTA
+    encendido: 1
+  - id: SKU_JEFE_DOLOR
+    encendido: 1
+  - id: SKU_JEFE_ENFRENTAMIENTO
+    encendido: 1
+  - id: SKU_JEFE_GUARDIAS
+    encendido: 1
+  - id: SKU_JEFE_MALETIN
+    encendido: 1
   - id: SKU_LO_PERDIMOS
+    encendido: 1
+  - id: SKU_MATON_ATAQUE
+    encendido: 1
+  - id: SKU_MATON_DOLOR
+    encendido: 1
+  - id: SKU_MATON_MUERTE
+    encendido: 1
+  - id: SKU_MATON_PROVOCAR
+    encendido: 1
+  - id: SKU_MATON_RISA
+    encendido: 1
+  - id: SKU_MUERTE
     encendido: 1
   - id: SKU_PROVOCAR
     encendido: 1
@@ -1388,6 +1964,16 @@ MonoBehaviour:
   - id: TIE_DESEQUIPAR
     encendido: 1
   - id: TIE_EQUIPAR
+    encendido: 1
+  - id: TINO_VOZ_BANCO
+    encendido: 1
+  - id: TINO_VOZ_COMPRA
+    encendido: 1
+  - id: TINO_VOZ_DESPEDIDA
+    encendido: 1
+  - id: TINO_VOZ_SALUDO
+    encendido: 1
+  - id: TINO_VOZ_SIN_DINERO
     encendido: 1
   - id: UI_ACEPTAR
     encendido: 1

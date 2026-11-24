@@ -39,6 +39,95 @@ namespace MechaCyberpunk.IA.APie
 
         public VisualPersonaje Visual => visual != null ? visual : (visual = GetComponentInChildren<VisualPersonaje>(false));
 
+        // T-voces-personajes-23nov: su voz grabada (una de las tres de NPC_VOZn, la misma siempre), una frase a la vez (ReglaVozPeaton) y la lista de los
+        // activos para que un atropello asuste a los de alrededor. Las mujeres y los robots no tienen voz grabada: conservan su sonido de antes.
+        private static readonly System.Collections.Generic.List<AnimacionCivilMundo> Activos = new System.Collections.Generic.List<AnimacionCivilMundo>();
+        private readonly ReglaVozPeaton voz = new ReglaVozPeaton();
+        private int numeroVoz;
+        private const float SegundosEnojoTrasDolor = 0.8f;
+        private const float ProbabilidadRisa = 0.35f;
+        /// <summary>Más rápido que esto (m/s) va corriendo: no saluda.</summary>
+        private const float VelocidadMaximaSaludo = 2.5f;
+
+        /// <summary>La voz de peatón (1 a 3) que le tocó al aparecer; siempre la misma.</summary>
+        public int NumeroVoz => numeroVoz != 0 ? numeroVoz : (numeroVoz = ReglaVozPeaton.VozPara(GetInstanceID()));
+
+        private string NombreVisual
+        {
+            get
+            {
+                PeatonVariado peaton = GetComponent<PeatonVariado>();
+                return peaton != null ? peaton.NombreVisual : name;
+            }
+        }
+
+        private bool TieneVozGrabada => ReglaVozPeaton.UsaVozGrabada(ReglaSonidoNpc.Genero(NombreVisual, GetInstanceID()));
+
+        private bool Hablar(MomentoVozPeaton momento) => !muerto && TieneVozGrabada && VozPeaton.Decir(voz, NumeroVoz, momento, transform.position);
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void LimpiarActivos() => Activos.Clear();
+
+        private void OnEnable() => Activos.Add(this);
+
+        private void OnDisable() => Activos.Remove(this);
+
+        /// <summary>
+        /// T-voces-personajes-23nov: un atropello en <paramref name="punto"/> asusta a los peatones a menos de <paramref name="radio"/> (menos al arrollado,
+        /// <paramref name="excepto"/>, que ya suena su dolor): gritan de miedo con su voz. Devuelve cuántos gritaron.
+        /// </summary>
+        public static int AsustarCerca(Vector3 punto, float radio, Transform excepto)
+        {
+            int gritaron = 0;
+            for (int i = Activos.Count - 1; i >= 0; i--)
+            {
+                AnimacionCivilMundo c = Activos[i];
+                if (c == null || (excepto != null && (c.transform == excepto || c.transform.IsChildOf(excepto) || excepto.IsChildOf(c.transform))))
+                {
+                    continue;
+                }
+                Vector3 d = c.transform.position - punto;
+                d.y = 0f;
+                if (d.sqrMagnitude <= radio * radio && c.Hablar(MomentoVozPeaton.Miedo))
+                {
+                    gritaron++;
+                }
+            }
+            return gritaron;
+        }
+
+        /// <summary>
+        /// T-voces-personajes-23nov: el jugador le pegó y se le pone al tiro (PeatonMundo en revancha): tras su quejido de dolor dice su frase de enojo.
+        /// </summary>
+        public void AlEnojarCivil()
+        {
+            if (isActiveAndEnabled && !muerto)
+            {
+                StartCoroutine(EnojoTrasDolor());
+            }
+        }
+
+        private System.Collections.IEnumerator EnojoTrasDolor()
+        {
+            yield return new WaitForSeconds(SegundosEnojoTrasDolor);
+            Hablar(MomentoVozPeaton.Enojo);
+        }
+
+        // El jugador a pie pasa a menos de 3 m y el peatón no va corriendo: lo saluda (enfriamiento de 30 s por peatón y silencio común entre todos).
+        private void RevisarSaludo()
+        {
+            if (muerto || !VozPeaton.JugadorAPie() || VozPeaton.DistanciaAlJugador(transform.position) > ReglaVozPeaton.DistanciaSaludo)
+            {
+                return;
+            }
+            VisualPersonaje v = Visual;
+            if (v != null && (v.Caido || v.Velocidad > VelocidadMaximaSaludo))
+            {
+                return;
+            }
+            Hablar(MomentoVozPeaton.Saludo);
+        }
+
         /// <summary>
         /// T-1533: recibe daño (de bala, golpe o atropello, herido o muerto): suena su voz de dolor, de hombre o de mujer según el visual que trae el peatón
         /// (<see cref="ReglaSonidoNpc"/>); los robots sueltan chispas.
@@ -49,6 +138,7 @@ namespace MechaCyberpunk.IA.APie
             string nombre = peaton != null ? peaton.NombreVisual : name;
             Vector3 donde = punto != Vector3.zero ? punto : transform.position + Vector3.up;
             Sonidos.ReproducirEn(ReglaSonidoNpc.IdDolor(nombre, GetInstanceID()), donde);
+            voz.Ocupar(Time.time, ReglaVozPeaton.SegundosDolor); // T-voces-personajes-23nov: el quejido no se pisa con otra frase suya
         }
 
         /// <summary>Recibe un golpe sin morir: reacción de daño según la dirección (del atacante al personaje).</summary>
@@ -99,6 +189,7 @@ namespace MechaCyberpunk.IA.APie
         /// <summary>T-1561: llama a la policía (NPC_LlamarPolicia en bucle, mezclado desde lo que hacía). Se corta con <see cref="AlDejarDeLlamarPoliciaCivil"/>.</summary>
         public void AlLlamarPoliciaCivil()
         {
+            Hablar(MomentoVozPeaton.Policia); // T-voces-personajes-23nov: vio el delito y llama a la policía (NPC_VOZn_POLICIA)
             ConfigClipsNpcT1561 config = ConfigClipsNpcT1561.Actual;
             if (config == null || config.LlamarPolicia == null || Visual == null || Visual.Animador == null || Visual.Caido || muerto)
             {
@@ -142,6 +233,7 @@ namespace MechaCyberpunk.IA.APie
         /// <summary>T-1506: empieza a huir: juega NPC_Asustarse una vez (brinco atrás con las manos a la cara) y sigue corriendo. Sin clip configurado, no hace nada.</summary>
         public void AlAsustarCivil()
         {
+            Hablar(MomentoVozPeaton.Miedo); // T-voces-personajes-23nov: sale corriendo (disparo, muerte vista o golpe): NPC_VOZn_MIEDO
             ConfigClipsNovaNpc config = ConfigClipsNovaNpc.Actual;
             if (Visual == null || Visual.Animador == null || config == null || config.Asustarse == null || Visual.Caido)
             {
@@ -239,6 +331,11 @@ namespace MechaCyberpunk.IA.APie
             {
                 StartCoroutine(CorregirFrente(++medicionFrente));
             }
+            // T-voces-personajes-23nov: en el corro, cada tanto se ríe (solo con el jugador cerca; enfriamiento por peatón y silencio común).
+            if (UnityEngine.Random.value < ProbabilidadRisa && VozPeaton.DistanciaAlJugador(transform.position) <= ReglaVozPeaton.DistanciaAmbiente)
+            {
+                Hablar(MomentoVozPeaton.Risa);
+            }
         }
 
         // T-1622: variedad de plática (Platicar A-D y Discutir 1-3 del controlador base; sin AccionNpc usa los dos clips de siempre) y giro de frente.
@@ -304,11 +401,22 @@ namespace MechaCyberpunk.IA.APie
             }
         }
 
-        /// <summary>T-1622: grita de miedo (no hay voz de miedo en el catálogo: usa la voz de dolor de hombre o mujer; no más de un grito cada 2.5 s).</summary>
+        /// <summary>
+        /// T-1622: grita de miedo (no más de un grito cada 2.5 s). T-voces-personajes-23nov: los hombres con su voz grabada (NPC_VOZn_MIEDO); las mujeres y
+        /// los robots, que aún no tienen voz de miedo, siguen con su voz de dolor (NPC_M_DOLOR) o sus chispas.
+        /// </summary>
         public void AlGritarCivil()
         {
             if (Time.time < proximoGrito || muerto)
             {
+                return;
+            }
+            if (TieneVozGrabada)
+            {
+                if (Hablar(MomentoVozPeaton.Miedo))
+                {
+                    proximoGrito = Time.time + SegundosEntreGritos;
+                }
                 return;
             }
             proximoGrito = Time.time + SegundosEntreGritos;
@@ -344,6 +452,7 @@ namespace MechaCyberpunk.IA.APie
             RestaurarFrente();
             accionPlaticaPuesta = false;
             postura?.Reiniciar();
+            voz.Reiniciar(); // conserva su número de voz: es el mismo peatón
             if (Visual != null)
             {
                 Reproductor().Detener();
@@ -362,6 +471,7 @@ namespace MechaCyberpunk.IA.APie
             {
                 OcultarCuerpo();
             }
+            RevisarSaludo();
             RevisarPostura(segundosEntreRevisiones);
         }
 

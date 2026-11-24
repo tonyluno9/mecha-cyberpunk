@@ -242,14 +242,25 @@ namespace MechaCyberpunk.IA.APie
             if (agachado && !agachadoAntes && ReglaSonidoEnemigo.EscudoAlCubrirse(tipo))
             {
                 Sonidos.ReproducirEn(ReglaSonidoEnemigo.IdEscudoActivar, PuntoOido);
+                DecirCubrirse();
             }
             agachadoAntes = agachado;
             bool pelea = enemigo.EnPelea;
             if (pelea && !enPeleaAntes && ReglaSonidoEnemigo.EscudoAlPelear(tipo))
             {
                 Sonidos.ReproducirEn(ReglaSonidoEnemigo.IdEscudoActivar, PuntoOido);
+                DecirCubrirse();
             }
             enPeleaAntes = pelea;
+        }
+
+        // T-voces-23nov: el agente de Nova con casco grita "¡cúbranse!" cuando prende el escudo (los robots no hablan).
+        private void DecirCubrirse()
+        {
+            if (ReglaSonidoEnemigo.LlevaArmaduraNova(tipo))
+            {
+                VocesFaccion.Decir(FaccionVoz.Nova, transform, EventoVoz.Escudo, true);
+            }
         }
 
         // El perro gruñe cuando avisa la mordida.

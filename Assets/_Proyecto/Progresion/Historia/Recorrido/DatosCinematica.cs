@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Video;
 
@@ -21,15 +22,66 @@ namespace MechaCyberpunk.Progresion.Recorrido
         [Min(0.5f)] [SerializeField] private float duracion = 5f;
         [Tooltip("Opcional: el video real. Si está, se reproduce en vez de la pantalla negra y dura lo que dura el clip.")]
         [SerializeField] private VideoClip video;
+        [Tooltip("T-cinematicas-videos-23nov: los clips en orden, uno tras otro sin negro entre ellos. Si la lista tiene clips, manda sobre Video.")]
+        [SerializeField] private VideoClip[] videos = new VideoClip[0];
+        [Tooltip("Segundos de pantalla pendiente después de los videos (la parte que aún no tiene video). 0 = sin parte pendiente.")]
+        [Min(0f)] [SerializeField] private float segundosPendientes;
+        [Tooltip("La línea de la parte pendiente.")]
+        [TextArea(2, 5)] [SerializeField] private string textoPendiente = string.Empty;
 
         public string Id => id;
         public string Nombre => nombre;
         public string Texto => texto;
         public float Duracion => duracion;
-        public VideoClip Video => video;
+        /// <summary>El primer clip (o null si no hay ninguno).</summary>
+        public VideoClip Video => Clips.Count > 0 ? Clips[0] : null;
 
-        /// <summary>Segundos que dura el contenido: el clip si hay video, si no la duración de los datos.</summary>
-        public float DuracionEfectiva => video != null && video.length > 0.1 ? (float)video.length : duracion;
+        /// <summary>Los clips en orden: la lista si tiene alguno; si no, el clip suelto; si no, vacía.</summary>
+        public IReadOnlyList<VideoClip> Clips
+        {
+            get
+            {
+                var lista = new List<VideoClip>();
+                if (videos != null)
+                {
+                    foreach (VideoClip c in videos)
+                    {
+                        if (c != null) lista.Add(c);
+                    }
+                }
+                if (lista.Count == 0 && video != null) lista.Add(video);
+                return lista;
+            }
+        }
+
+        /// <summary>Segundos de pantalla pendiente tras los videos (solo cuenta si hay videos).</summary>
+        public float SegundosPendientes => segundosPendientes;
+
+        /// <summary>La línea de la parte pendiente (si está vacía se usa <see cref="Texto"/>).</summary>
+        public string TextoPendiente => string.IsNullOrEmpty(textoPendiente) ? texto : textoPendiente;
+
+        /// <summary>Segundos de los videos sumados.</summary>
+        public float DuracionVideos
+        {
+            get
+            {
+                float total = 0f;
+                foreach (VideoClip c in Clips) total += (float)c.length;
+                return total;
+            }
+        }
+
+        /// <summary>Segundos que dura el contenido: los clips (más la parte pendiente) si hay video, si no la duración de los datos.</summary>
+        public float DuracionEfectiva => Clips.Count > 0 && DuracionVideos > 0.1f ? DuracionVideos + segundosPendientes : duracion;
+
+        /// <summary>Pone los clips en orden y la parte pendiente (editor y pruebas).</summary>
+        public void ConfigurarVideos(VideoClip[] clips, float pendientes, string lineaPendiente)
+        {
+            videos = clips ?? new VideoClip[0];
+            video = null;
+            segundosPendientes = Mathf.Max(0f, pendientes);
+            textoPendiente = lineaPendiente ?? string.Empty;
+        }
 
         /// <summary>Para crear los datos desde código (editor y pruebas).</summary>
         public void Configurar(string nuevoId, string nuevoNombre, string nuevoTexto, float nuevaDuracion)

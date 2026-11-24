@@ -72,6 +72,7 @@ namespace MechaCyberpunk.Progresion.Sonido
         {
             "SKU_AMBIENTE", "SKU_PROVOCAR", "SKU_ULTIMO_AVISO", "SKU_INSULTO", "SKU_RISA_BURLA", "SKU_GRITO_ALERTA", "SKU_COBERTURA",
             "SKU_RECARGANDO", "SKU_DOLOR", "SKU_QUEMADO", "SKU_HUIR", "SKU_GANAMOS", "SKU_LO_PERDIMOS",
+            "SKU_MUERTE", // T-voces-23nov: la muerte grabada
         };
 
         /// <summary>T-1623: se oyen hasta 25 m.</summary>
@@ -86,7 +87,7 @@ namespace MechaCyberpunk.Progresion.Sonido
         public static bool EsVozSkulls(string id) => id != null && id.StartsWith(PrefijoSkulls, StringComparison.Ordinal);
 
         /// <summary>T-1623: si la voz baja un poco la música y el ambiente mientras suena.</summary>
-        public static bool BajaPorVoz(string id) => EsVozSkulls(id);
+        public static bool BajaPorVoz(string id) => EsVozSkulls(id) || Voces23nov.BajaPorVoz(id); // T-voces-23nov: y las voces grabadas
 
         /// <summary>T-1471: variación chica del tono del disparo (±2.5 %).</summary>
         public const float VariacionDisparo = 0.025f;
@@ -98,7 +99,7 @@ namespace MechaCyberpunk.Progresion.Sonido
 
         /// <summary>Si el ID es de los que suenan por defecto (los minimos de T-620 y los que regresan en T-977).</summary>
         public static bool EncendidoPorDefecto(string id) =>
-            Array.IndexOf(IdsEncendidos, id) >= 0 || EsVozSkulls(id) || Array.IndexOf(IdsRegresados, id) >= 0 || Array.IndexOf(IdsArmasT1309, id) >= 0
+            Array.IndexOf(IdsEncendidos, id) >= 0 || EsVozSkulls(id) || Voces23nov.EsVoz(id) || Array.IndexOf(IdsRegresados, id) >= 0 || Array.IndexOf(IdsArmasT1309, id) >= 0
             || MapaSonidos19nov.EsNuevo(id) || MapaSonidos19nov.Enciende(id); // T-1471: los nuevos y los viejos mapeados
 
         /// <summary>T-1471: los mapeados que no son disparo ni recarga llevan el volumen de su política nueva (UI 0.55, impactos 0.65...), no el parejo de T-620.</summary>
@@ -151,7 +152,7 @@ namespace MechaCyberpunk.Progresion.Sonido
                 || id == "FUE_LOOP_CHICO" || id == "FUE_LOOP_GRANDE" || MapaSonidos20nov.EsInteriorAmbiente(id)) return 200;
             if ((id.StartsWith("ARM_", StringComparison.Ordinal) && id.Contains("_DISPARO")) || id == "DRN_PES_AMETRALLADORA") return 32;
             if (id.StartsWith("HUD_", StringComparison.Ordinal) || id.StartsWith("MIS_", StringComparison.Ordinal)) return 40;
-            if (EsVozSkulls(id)) return 48;
+            if (EsVozSkulls(id) || Voces23nov.EsVoz(id)) return 48; // T-voces-23nov
             if (id.StartsWith("PAN_", StringComparison.Ordinal) || id.StartsWith("JUG_", StringComparison.Ordinal) || id.StartsWith("POL_", StringComparison.Ordinal)
                 || id.StartsWith("NPC_", StringComparison.Ordinal) || id.StartsWith("ROB_VOZ", StringComparison.Ordinal) || id == "NOV_CAIDA_Y_ENCENDIDO") return 48;
             if (id.StartsWith("PAS_", StringComparison.Ordinal) || id.StartsWith(PrefijoPaso, StringComparison.Ordinal) || id == "NOV_PASOS_CAMINAR" || id == "NOV_PASOS_CORRER") return 160;
@@ -196,6 +197,8 @@ namespace MechaCyberpunk.Progresion.Sonido
         private static PoliticaSonido ParaBase(string id)
         {
             if (string.IsNullOrEmpty(id)) return SinPolitica;
+            // T-voces-23nov: las voces grabadas (jugador, matón, jefes, policía, Nova, Doc...): una por personaje a la vez.
+            if (Voces23nov.TryPolitica(id, out PoliticaSonido voz)) return voz;
             // T-1623: una voz de SKULLS a la vez (la nueva corta la vieja), +-4 % de tono y se oye hasta 25 m.
             if (EsVozSkulls(id)) return new PoliticaSonido("voz-skulls", 1, 0.9f, 0.04f, 0.05f, DistanciaVozSkulls, 1f, 0.05f);
             if (MapaSonidos20nov.TryFila(id, out TablaMezcla20nov.Fila fila)) return Politica20nov(fila); // T-1531
