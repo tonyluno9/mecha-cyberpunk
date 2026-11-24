@@ -16,7 +16,7 @@ namespace MechaCyberpunk.VR
         private readonly ReglaStickArmaVR regla = new ReglaStickArmaVR();
         private AdaptadorVR adaptador;
 
-        /// <summary>VR51: true con el visor del francotirador activo (<see cref="MiraArmaVR"/>): el stick derecho vertical es zoom, no recentra.</summary>
+        /// <summary>VR51/T101: true apuntando con el francotirador (<see cref="MiraArmaVR"/>): el stick derecho vertical es zoom, no recentra.</summary>
         public bool ZoomActivo { get; set; }
 
         /// <summary>Cuántas veces pidió recentrar (para las pruebas).</summary>
