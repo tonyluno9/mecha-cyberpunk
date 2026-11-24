@@ -125,6 +125,18 @@ MonoBehaviour:
     finales:
     - {fileID: 8300000, guid: 449d6eeb65643ba546af42dedf209761, type: 3}
     provisionales: []
+  - id: CANEPA_VOZ_DESPEDIDA
+    finales:
+    - {fileID: 8300000, guid: 52bf19999d31e7f4582b89f905515a42, type: 3}
+    provisionales: []
+  - id: CANEPA_VOZ_REPARAR
+    finales:
+    - {fileID: 8300000, guid: 5b3bc80278dba8e48b647a28bfec6347, type: 3}
+    provisionales: []
+  - id: CANEPA_VOZ_SALUDO
+    finales:
+    - {fileID: 8300000, guid: fc97bfcc7e715854d9591f30f75bb153, type: 3}
+    provisionales: []
   - id: CAS_CARTAS_BARAJAR
     finales:
     - {fileID: 8300000, guid: 989d223abc28392119961a3362425893, type: 3}
@@ -210,6 +222,30 @@ MonoBehaviour:
   - id: DES_CRISTAL_VENTANA
     finales:
     - {fileID: 8300000, guid: f0f7e21abbc28765f9997b2d33e57e9e, type: 3}
+    provisionales: []
+  - id: DOC_VOZ_DESPEDIDA
+    finales:
+    - {fileID: 8300000, guid: 7c5bdd128b95b744e8fad88ceed15f80, type: 3}
+    provisionales: []
+  - id: DOC_VOZ_EXPLICAR
+    finales:
+    - {fileID: 8300000, guid: c0e3fce6d7c5a9241a60278356190194, type: 3}
+    provisionales: []
+  - id: DOC_VOZ_REVIVIR
+    finales:
+    - {fileID: 8300000, guid: 99a822a7f68a35942a5bccf2c890ba74, type: 3}
+    provisionales: []
+  - id: DOC_VOZ_SALUDO
+    finales:
+    - {fileID: 8300000, guid: 03969fd93b80284428c1743fe27fe5da, type: 3}
+    provisionales: []
+  - id: DOC_VOZ_SIENTATE
+    finales:
+    - {fileID: 8300000, guid: 6e43747265ef9bc42baf96450f234d55, type: 3}
+    provisionales: []
+  - id: DOC_VOZ_SUERO
+    finales:
+    - {fileID: 8300000, guid: 34201e6a41769084daaffb08999af177, type: 3}
     provisionales: []
   - id: DRN_PES_AMETRALLADORA
     finales:
@@ -421,13 +457,59 @@ MonoBehaviour:
     finales:
     - {fileID: 8300000, guid: 8851ce8680aa9194e88752d749f79594, type: 3}
     provisionales: []
+  - id: JUG_DOLOR_FUERTE
+    finales:
+    - {fileID: 8300000, guid: 5e53facd4442b8844934ff23ff8a1ef9, type: 3}
+    - {fileID: 8300000, guid: ef0ce98b11b6a574ebff026272aaab0a, type: 3}
+    - {fileID: 8300000, guid: 865ec565f913f7c4d88200eebe85f00c, type: 3}
+    provisionales: []
+  - id: JUG_DOLOR_LEVE
+    finales:
+    - {fileID: 8300000, guid: fd6633e4434615746b8b0bc1dd6a1640, type: 3}
+    - {fileID: 8300000, guid: b7b487ae5e15d074b959d757a05f2bd6, type: 3}
+    - {fileID: 8300000, guid: 4c7a4c2814b3e0845afb46e12900b927, type: 3}
+    - {fileID: 8300000, guid: 658c939cec1c53e49a194043a1536a69, type: 3}
+    provisionales: []
+  - id: JUG_ESFUERZO
+    finales:
+    - {fileID: 8300000, guid: 01d2fd8d147db5746973263769b012d4, type: 3}
+    - {fileID: 8300000, guid: 59b372336eaf9c04ebc1529007bc2487, type: 3}
+    - {fileID: 8300000, guid: 0f127d1263b113841a8e9505fb83160a, type: 3}
+    - {fileID: 8300000, guid: ca06e93ea5c004c4e858e065b66b5f5a, type: 3}
+    provisionales: []
   - id: JUG_LATIDO_VIDA_BAJA
     finales:
     - {fileID: 8300000, guid: cb36e1bb21ace7148afa7a432200e36e, type: 3}
     provisionales: []
+  - id: JUG_MUERTE
+    finales:
+    - {fileID: 8300000, guid: c4a13ba0192d2fc44b25bc0a02992365, type: 3}
+    - {fileID: 8300000, guid: 0640792a730dc8c4bbb3f386c4801b13, type: 3}
+    provisionales: []
+  - id: JUG_QUEMADO
+    finales:
+    - {fileID: 8300000, guid: d69dd2d3aacd5504e989d62c25902221, type: 3}
+    - {fileID: 8300000, guid: 2a088360b1b973942af477af93f4cee4, type: 3}
+    provisionales: []
+  - id: JUG_RESPIRACION_CANSADO
+    finales:
+    - {fileID: 8300000, guid: 2b79e2cd225ab2740ac3f07d2d7cffce, type: 3}
+    provisionales: []
   - id: JUG_RODADA
     finales:
     - {fileID: 8300000, guid: 6583b2f9367adb74f85b324925ee2c8a, type: 3}
+    provisionales: []
+  - id: JUG_SALTO
+    finales:
+    - {fileID: 8300000, guid: ba86dd497ab3f3347a9547fec5831df0, type: 3}
+    - {fileID: 8300000, guid: 9919f991dd7af604d87251e32b1d71cc, type: 3}
+    - {fileID: 8300000, guid: 2b2f0a9b4e769dd468f398609c6abe4a, type: 3}
+    provisionales: []
+  - id: JUG_TOS
+    finales:
+    - {fileID: 8300000, guid: a8f35dc3c5f193247adff332effeef14, type: 3}
+    - {fileID: 8300000, guid: 45d42edd64831bf4ca55c25905584e1e, type: 3}
+    - {fileID: 8300000, guid: 6232ea7e92764ce46947f3d50553f367, type: 3}
     provisionales: []
   - id: JUG_TREPAR
     finales:
@@ -457,6 +539,22 @@ MonoBehaviour:
   - id: MEL_GOLPE_METAL
     finales:
     - {fileID: 8300000, guid: b43325d948db80d1cfceb9451d950a91, type: 3}
+    provisionales: []
+  - id: MESERA_ROBOT_DESPEDIDA
+    finales:
+    - {fileID: 8300000, guid: 6f083b2ba2c443149997066f22ca04c2, type: 3}
+    provisionales: []
+  - id: MESERA_ROBOT_SALUDO
+    finales:
+    - {fileID: 8300000, guid: 360326d4c77b22a4996eecff4555688b, type: 3}
+    provisionales: []
+  - id: MESERA_ROBOT_SERVIR
+    finales:
+    - {fileID: 8300000, guid: 2291d5b07bf092a4a83a710c3f0c1d8d, type: 3}
+    provisionales: []
+  - id: MESERA_ROBOT_SUERTE
+    finales:
+    - {fileID: 8300000, guid: ab49f143dd7e15a41807fde3b8e59400, type: 3}
     provisionales: []
   - id: MIS_TEMPORIZADOR
     finales:
@@ -512,6 +610,32 @@ MonoBehaviour:
     finales:
     - {fileID: 8300000, guid: 80aa3fe081cb37371488690126a78a04, type: 3}
     provisionales: []
+  - id: NOV_JEFE_ATAQUE
+    finales:
+    - {fileID: 8300000, guid: 2b39f3b2603f5c84f9c89efee0574c3a, type: 3}
+    - {fileID: 8300000, guid: 2423fc590715c4f49bff0655855b7fa6, type: 3}
+    - {fileID: 8300000, guid: 4b8e571b362115c4cba74e3b708d239d, type: 3}
+    - {fileID: 8300000, guid: b7234d01d7c41194baf5fbdb17d1c45f, type: 3}
+    provisionales: []
+  - id: NOV_JEFE_FRASE
+    finales:
+    - {fileID: 8300000, guid: 8f2a8da12439a1e44af0308b856be654, type: 3}
+    - {fileID: 8300000, guid: caf76b559f95bc0439be0ea7a40d1b14, type: 3}
+    - {fileID: 8300000, guid: 82fe14e6ab0a8c447a3b463417f73163, type: 3}
+    - {fileID: 8300000, guid: bda46de9bae1c28448916dd7d1892b87, type: 3}
+    - {fileID: 8300000, guid: a572fa22f582f4e47b574fb50500fac2, type: 3}
+    provisionales: []
+  - id: NOV_JEFE_MUERTE
+    finales:
+    - {fileID: 8300000, guid: a6822be01d6f24d408d2de10fd769e0f, type: 3}
+    - {fileID: 8300000, guid: 6a5fe578c133d414da6d5f5dd941d6d1, type: 3}
+    provisionales: []
+  - id: NOV_JEFE_REVELACION
+    finales:
+    - {fileID: 8300000, guid: cb28220fd46116d4b9b5baafc0ab5c8d, type: 3}
+    - {fileID: 8300000, guid: 4c0bd31cb06688b43a6d3a858fedba7e, type: 3}
+    - {fileID: 8300000, guid: fe9962ceb6044864d9821d371e4a2f1a, type: 3}
+    provisionales: []
   - id: NOV_JETPACK_LOOP
     finales:
     - {fileID: 8300000, guid: d27ca3b8b1b2cfaa48623eeb2fb11f1d, type: 3}
@@ -543,437 +667,6 @@ MonoBehaviour:
     - {fileID: 8300000, guid: d709cbc26dcb747571bdf7ea904a8b2e, type: 3}
     - {fileID: 8300000, guid: 400ee22d09c4a75ed38e6a36c189a20e, type: 3}
     - {fileID: 8300000, guid: f06d07b4db9e1008a9833f268fbcef41, type: 3}
-    provisionales: []
-  - id: NPC_H_DOLOR
-    finales:
-    - {fileID: 8300000, guid: de47dbe8531eccbfbd6d751473a6be68, type: 3}
-    provisionales: []
-  - id: NPC_M_DOLOR
-    finales:
-    - {fileID: 8300000, guid: be1ee58838604d46d94b3b1270dbf18d, type: 3}
-    provisionales: []
-  - id: OBJ_AIRE_ACONDICIONADO
-    finales:
-    - {fileID: 8300000, guid: ab01267d19d21f3bc3a1436fa37fc802, type: 3}
-    provisionales: []
-  - id: OBJ_CAMARA_SEGURIDAD
-    finales:
-    - {fileID: 8300000, guid: 525cbf7ccb44f2612fb9d776d8d5a740, type: 3}
-    provisionales: []
-  - id: OBJ_MAQUINA_EXPENDEDORA
-    finales:
-    - {fileID: 8300000, guid: 3c11b62c1e3c835ec94e642f9b257ffc, type: 3}
-    provisionales: []
-  - id: OBJ_REFRIGERADOR
-    finales:
-    - {fileID: 8300000, guid: 9a6834aacd04f489d0f2a2a3670f57b8, type: 3}
-    provisionales: []
-  - id: OBJ_TELE_REINICIO
-    finales:
-    - {fileID: 8300000, guid: ff38bda5b00b0e03fbd6d4b0a28d7433, type: 3}
-    provisionales: []
-  - id: OBJ_TRANSFORMADOR
-    finales:
-    - {fileID: 8300000, guid: a9d1ac466b31fc808e4f5edfab854757, type: 3}
-    provisionales: []
-  - id: PAN_ARRESTADO_ESPOSAS
-    finales:
-    - {fileID: 8300000, guid: cdc27bf2b10bde2ec566df95f10c185f, type: 3}
-    provisionales: []
-  - id: PAN_HAS_MUERTO
-    finales:
-    - {fileID: 8300000, guid: 6d40d151559f6ad59cf9c65315e9c818, type: 3}
-    provisionales: []
-  - id: PAS_CONCRETO
-    finales:
-    - {fileID: 8300000, guid: a5c2ef1d444e309499ed8707d94cb1a0, type: 3}
-    provisionales: []
-  - id: PAS_GRAVA
-    finales:
-    - {fileID: 8300000, guid: 1d3589a92ecb5374ea5e43dbaf78e114, type: 3}
-    - {fileID: 8300000, guid: 9040c435d409cf147afcd5207310236a, type: 3}
-    - {fileID: 8300000, guid: d48beacebfd241a419ed0e5a1f274eda, type: 3}
-    - {fileID: 8300000, guid: e2fc8a36b872d0949a3c78b6f1cdab5f, type: 3}
-    - {fileID: 8300000, guid: 0abf6ba6a4a6f27409073f3777995eff, type: 3}
-    - {fileID: 8300000, guid: 667daac9e1ecacd428c90f9122d22172, type: 3}
-    - {fileID: 8300000, guid: ca3c5b5e9fc2de9438f52e233739c913, type: 3}
-    - {fileID: 8300000, guid: 5ac7acd04410ecd4f952f8a9444b5fe9, type: 3}
-    provisionales: []
-  - id: PAS_MADERA
-    finales:
-    - {fileID: 8300000, guid: 555049df0247c6146b644b290bad8919, type: 3}
-    - {fileID: 8300000, guid: bf1f15cfa302fbc4ab162a25cde74622, type: 3}
-    provisionales: []
-  - id: PAS_METAL
-    finales:
-    - {fileID: 8300000, guid: fd1ede9b7ceaeeb4e93b828044d97c8f, type: 3}
-    provisionales: []
-  - id: PAS_MOJADO
-    finales:
-    - {fileID: 8300000, guid: 85a264cd74ead7d4a9d75948bc463074, type: 3}
-    provisionales: []
-  - id: PAS_TIERRA
-    finales:
-    - {fileID: 8300000, guid: 2fe5b88b64ed4d342a10386ee2d13b1f, type: 3}
-    - {fileID: 8300000, guid: ed95c3faeecadee479d5c67ed04e11f2, type: 3}
-    - {fileID: 8300000, guid: 4eb1edcfe4c38044d9beef2e3a41e9f3, type: 3}
-    - {fileID: 8300000, guid: 35c1c953538655446aaadf3d82c1f787, type: 3}
-    - {fileID: 8300000, guid: f5ea4f385467ece44bb2af44989d8942, type: 3}
-    - {fileID: 8300000, guid: 3dc1045ee0481fb44a64db70aa498dd4, type: 3}
-    - {fileID: 8300000, guid: ae10ac8676df2fb438ea96b6eb374132, type: 3}
-    - {fileID: 8300000, guid: 6ddb92f262f7feb4a9ee1caba7e7efbb, type: 3}
-    provisionales: []
-  - id: POL_ESTRELLA_SUBE
-    finales:
-    - {fileID: 8300000, guid: 2d9ff78006f1835247f4ade2335b11e1, type: 3}
-    provisionales: []
-  - id: POL_RADIO_AVISO
-    finales:
-    - {fileID: 8300000, guid: 176a7dad85fe80c47af92bf4d1f39366, type: 3}
-    - {fileID: 8300000, guid: a69ea336ce9204d4fa0c2fc146a2588c, type: 3}
-    - {fileID: 8300000, guid: b890aa29e9fd4cd41a82db03b0d79531, type: 3}
-    - {fileID: 8300000, guid: 5434b463697b6054aa12769896f9a90a, type: 3}
-    - {fileID: 8300000, guid: f2c5258bd6eff2a8108854577d61c278, type: 3}
-    provisionales: []
-  - id: POL_RADIO_ESTATICA
-    finales:
-    - {fileID: 8300000, guid: 941eac1759d5ddc577df5874948d03f9, type: 3}
-    provisionales: []
-  - id: POL_SIRENA_CORTA
-    finales:
-    - {fileID: 8300000, guid: 1ae8b5effbda53d4680eee618cfa9ef1, type: 3}
-    provisionales: []
-  - id: POL_SIRENA_LOOP
-    finales:
-    - {fileID: 8300000, guid: ce4d1dacb7d70a04b8e16c31d1d9932f, type: 3}
-    provisionales: []
-  - id: POL_SIRENA_MURO
-    finales:
-    - {fileID: 8300000, guid: 5e7b9ff9f794fecda45c0d994f807497, type: 3}
-    provisionales: []
-  - id: RAD_CAMBIAR_ESTACION
-    finales:
-    - {fileID: 8300000, guid: 442d645223178e847378bdb05da5a246, type: 3}
-    provisionales: []
-  - id: RAD_EST1_CUMBIA_PERCUSION
-    finales:
-    - {fileID: 8300000, guid: 2e5f496fb8fedd451169d0535606ae60, type: 3}
-    provisionales: []
-  - id: ROB_CHISPAS_DANIO
-    finales:
-    - {fileID: 8300000, guid: 9fcd6980eb1f620645639410ca1ac55c, type: 3}
-    provisionales: []
-  - id: ROB_ENCENDER
-    finales:
-    - {fileID: 8300000, guid: e574198cafff91939b17c1b58838351c, type: 3}
-    provisionales: []
-  - id: ROB_MUERTE
-    finales:
-    - {fileID: 8300000, guid: e2196466a50dc906da3af6da02447a74, type: 3}
-    provisionales: []
-  - id: ROB_PERRO_GRUNIDO
-    finales:
-    - {fileID: 8300000, guid: 00381ac94c20089920e6a020da6d8a12, type: 3}
-    provisionales: []
-  - id: ROB_PERRO_MOVER
-    finales:
-    - {fileID: 8300000, guid: 53df87b091697fbab8bfdebac973a297, type: 3}
-    provisionales: []
-  - id: ROB_PES_HIDRAULICA
-    finales:
-    - {fileID: 8300000, guid: 0fed9a306c13a8db8e9a698eef73c45e, type: 3}
-    provisionales: []
-  - id: ROB_PES_LLEGADA
-    finales:
-    - {fileID: 8300000, guid: e2469b4c5f83ea60bb8b9077d92eace0, type: 3}
-    - {fileID: 8300000, guid: f1a7b7e3e4f6c59613d124ae199243a0, type: 3}
-    provisionales: []
-  - id: ROB_PES_PLACA_CAE
-    finales:
-    - {fileID: 8300000, guid: 386bfb1acd207636a1242122dbff944d, type: 3}
-    provisionales: []
-  - id: ROB_SERVOS
-    finales:
-    - {fileID: 8300000, guid: 6df052646763bd7d1828f10df7bb3122, type: 3}
-    provisionales: []
-  - id: ROB_VOZ_ALERTA
-    finales:
-    - {fileID: 8300000, guid: f13969dd293ed28210e3c2341c702f83, type: 3}
-    - {fileID: 8300000, guid: 6609f4c0afc998b4ea8916a7b4161876, type: 3}
-    - {fileID: 8300000, guid: 390ad6100d1c5bc41ae30f43f34118d3, type: 3}
-    - {fileID: 8300000, guid: 86f2d566449606b48b9a6b27260a00d9, type: 3}
-    - {fileID: 8300000, guid: 6439eb1e491a0b94eacb7529ff5bd6a8, type: 3}
-    provisionales: []
-  - id: TIE_COMPRAR
-    finales:
-    - {fileID: 8300000, guid: f23a7167f1e66e843ba396f759526536, type: 3}
-    provisionales: []
-  - id: TIE_DESEQUIPAR
-    finales:
-    - {fileID: 8300000, guid: 1e66bb9141afe4e409e71e58f0ca6d19, type: 3}
-    provisionales: []
-  - id: TIE_EQUIPAR
-    finales:
-    - {fileID: 8300000, guid: ed4371e75da885b469e04bfbb478d3b9, type: 3}
-    provisionales: []
-  - id: UI_ATRAS
-    finales:
-    - {fileID: 8300000, guid: de72fceec4d67a547bcbc8591d88f698, type: 3}
-    provisionales: []
-  - id: UI_ERROR
-    finales:
-    - {fileID: 8300000, guid: f927a857be4e1494096da9b2063410ba, type: 3}
-    provisionales: []
-  - id: UI_LOGO_INTRO
-    finales:
-    - {fileID: 8300000, guid: f08bf437adf36c743b36b38196d77133, type: 3}
-    provisionales: []
-  - id: UI_MENU_ABRIR
-    finales:
-    - {fileID: 8300000, guid: 5886abb28018672469fd23ac91fd53f3, type: 3}
-    provisionales: []
-  - id: UI_MENU_CERRAR
-    finales:
-    - {fileID: 8300000, guid: c7c041593ec1b8f42a49eed330e043d3, type: 3}
-    provisionales: []
-  - id: UI_MOVER
-    finales:
-    - {fileID: 8300000, guid: 791b131d2418ad84aab80f2d8ccbd02a, type: 3}
-    provisionales: []
-  - id: UI_PESTANA
-    finales:
-    - {fileID: 8300000, guid: c30e1b849c204b74fabe6e996e3e8262, type: 3}
-    provisionales: []
-  - id: UI_SELECCIONAR
-    finales:
-    - {fileID: 8300000, guid: 4896229cc632ed34eaaa5d2a4a66ef6a, type: 3}
-    provisionales: []
-  - id: VEH_ACELERON
-    finales:
-    - {fileID: 8300000, guid: 898564544dc36f14a93dd1c04582511e, type: 3}
-    - {fileID: 8300000, guid: 8163da0450eb3df488360e3491169de5, type: 3}
-    provisionales: []
-  - id: VEH_ALARMA
-    finales:
-    - {fileID: 8300000, guid: 49f1c19a72747c44c83ca0258713965d, type: 3}
-    provisionales: []
-  - id: VEH_CHOQUE
-    finales:
-    - {fileID: 8300000, guid: 843d3a2b0706de94c870ae26d9e67370, type: 3}
-    - {fileID: 8300000, guid: fa7b43c2f6b49c6499f044a43fccd542, type: 3}
-    provisionales: []
-  - id: VEH_CHOQUE_FUERTE
-    finales:
-    - {fileID: 8300000, guid: 634b4f7c8e7f1ec499e643a27a8c9101, type: 3}
-    - {fileID: 8300000, guid: 51763732522f8af4395880da67073bc0, type: 3}
-    provisionales: []
-  - id: VEH_CLAXON_CAMION
-    finales:
-    - {fileID: 8300000, guid: d5d72fcb19b69d84d8ef6e8b73093419, type: 3}
-    provisionales: []
-  - id: VEH_CLAXON_NORMAL
-    finales:
-    - {fileID: 8300000, guid: a44768ce25855e048b18a3c29530648e, type: 3}
-    - {fileID: 8300000, guid: 80ad51b7fc64fcb4b958c6bb62717193, type: 3}
-    provisionales: []
-  - id: VEH_CRISTAL_ROMPER
-    finales:
-    - {fileID: 8300000, guid: 2d943bafdeb37084dbde96e979b59ede, type: 3}
-    provisionales: []
-  - id: VEH_ELECTRICO_ACELERAR
-    finales:
-    - {fileID: 8300000, guid: f0259faeec57ecc4cacb85108dc5b627, type: 3}
-    - {fileID: 8300000, guid: 0e8b0c5ce3d5dd7498117d60b1fb2444, type: 3}
-    provisionales: []
-  - id: VEH_ELECTRICO_ARRANQUE
-    finales:
-    - {fileID: 8300000, guid: 3d750f0cd7360cb4994fa6ea85ae6c31, type: 3}
-    provisionales: []
-  - id: VEH_ELECTRICO_MOVER
-    finales:
-    - {fileID: 8300000, guid: df441e858284f824f8ab6eb861ce9758, type: 3}
-    provisionales: []
-  - id: VEH_ELECTRICO_PASAR
-    finales:
-    - {fileID: 8300000, guid: 898489435c133fe4988fcdc0a6580cf1, type: 3}
-    provisionales: []
-  - id: VEH_FRENO_FUERTE
-    finales:
-    - {fileID: 8300000, guid: 4be1b317c26b1b54c9ba5836a9dadae1, type: 3}
-    provisionales: []
-  - id: VEH_LLANTAS_GRAVA
-    finales:
-    - {fileID: 8300000, guid: 2c08f28de474306458ae62448ebb4cc4, type: 3}
-    provisionales: []
-  - id: VEH_NORMAL_APAGAR
-    finales:
-    - {fileID: 8300000, guid: 8604c2efae66eb1489ac3238b3a0365a, type: 3}
-    - {fileID: 8300000, guid: 8c4d7b3c15d957344810af7a5a4f4930, type: 3}
-    - {fileID: 8300000, guid: 8baa2d5d25e47e446a9e7e0ac946a2b2, type: 3}
-    provisionales: []
-  - id: VEH_NORMAL_ARRANQUE
-    finales:
-    - {fileID: 8300000, guid: fb4be486f2b56b54987c16a323d566ad, type: 3}
-    - {fileID: 8300000, guid: 4a430b87dc62c5549b76c046eb4e4702, type: 3}
-    - {fileID: 8300000, guid: 794c527becef4c447a1be7fe231ea50b, type: 3}
-    provisionales: []
-  - id: VEH_NORMAL_RALENTI
-    finales:
-    - {fileID: 8300000, guid: 33b5f5d0f3830514880d3063c7eab241, type: 3}
-    - {fileID: 8300000, guid: a0bc4b177166cb9438e1515175787d92, type: 3}
-    - {fileID: 8300000, guid: fbe5e05713c838e4c891613e4d1e1c74, type: 3}
-    provisionales: []
-  - id: VEH_PESADO_APAGAR
-    finales:
-    - {fileID: 8300000, guid: 9212884331184864ba5efc90a30f5deb, type: 3}
-    provisionales: []
-  - id: VEH_PESADO_ARRANQUE
-    finales:
-    - {fileID: 8300000, guid: 2cc37a316dd0f3c41add66373c529bbd, type: 3}
-    provisionales: []
-  - id: VEH_PESADO_RALENTI
-    finales:
-    - {fileID: 8300000, guid: 5447c1d6129d2f74cbac916ec3ba3f1f, type: 3}
-    provisionales: []
-  - id: VEH_PUENTE
-    finales:
-    - {fileID: 8300000, guid: b095ea30083448e4e994c5df0e6c95be, type: 3}
-    provisionales: []
-  - id: VEH_PUERTA_ABRIR
-    finales:
-    - {fileID: 8300000, guid: e604929e377d3b34a92c4ab7ec575922, type: 3}
-    provisionales: []
-  - id: VEH_PUERTA_CERRAR
-    finales:
-    - {fileID: 8300000, guid: c728f1e8a207f474b86f8cf7731c8fe1, type: 3}
-    provisionales: []
-  - id: VEH_TOPE
-    finales:
-    - {fileID: 8300000, guid: 08fbbf02374911a4bb0cfad5332e4493, type: 3}
-    provisionales: []
-  - id: CANEPA_VOZ_DESPEDIDA
-    finales:
-    - {fileID: 8300000, guid: 52bf19999d31e7f4582b89f905515a42, type: 3}
-    provisionales: []
-  - id: CANEPA_VOZ_REPARAR
-    finales:
-    - {fileID: 8300000, guid: 5b3bc80278dba8e48b647a28bfec6347, type: 3}
-    provisionales: []
-  - id: CANEPA_VOZ_SALUDO
-    finales:
-    - {fileID: 8300000, guid: fc97bfcc7e715854d9591f30f75bb153, type: 3}
-    provisionales: []
-  - id: DOC_VOZ_DESPEDIDA
-    finales:
-    - {fileID: 8300000, guid: 7c5bdd128b95b744e8fad88ceed15f80, type: 3}
-    provisionales: []
-  - id: DOC_VOZ_EXPLICAR
-    finales:
-    - {fileID: 8300000, guid: c0e3fce6d7c5a9241a60278356190194, type: 3}
-    provisionales: []
-  - id: DOC_VOZ_REVIVIR
-    finales:
-    - {fileID: 8300000, guid: 99a822a7f68a35942a5bccf2c890ba74, type: 3}
-    provisionales: []
-  - id: DOC_VOZ_SALUDO
-    finales:
-    - {fileID: 8300000, guid: 03969fd93b80284428c1743fe27fe5da, type: 3}
-    provisionales: []
-  - id: DOC_VOZ_SIENTATE
-    finales:
-    - {fileID: 8300000, guid: 6e43747265ef9bc42baf96450f234d55, type: 3}
-    provisionales: []
-  - id: DOC_VOZ_SUERO
-    finales:
-    - {fileID: 8300000, guid: 34201e6a41769084daaffb08999af177, type: 3}
-    provisionales: []
-  - id: JUG_DOLOR_FUERTE
-    finales:
-    - {fileID: 8300000, guid: 5e53facd4442b8844934ff23ff8a1ef9, type: 3}
-    - {fileID: 8300000, guid: ef0ce98b11b6a574ebff026272aaab0a, type: 3}
-    - {fileID: 8300000, guid: 865ec565f913f7c4d88200eebe85f00c, type: 3}
-    provisionales: []
-  - id: JUG_DOLOR_LEVE
-    finales:
-    - {fileID: 8300000, guid: fd6633e4434615746b8b0bc1dd6a1640, type: 3}
-    - {fileID: 8300000, guid: b7b487ae5e15d074b959d757a05f2bd6, type: 3}
-    - {fileID: 8300000, guid: 4c7a4c2814b3e0845afb46e12900b927, type: 3}
-    - {fileID: 8300000, guid: 658c939cec1c53e49a194043a1536a69, type: 3}
-    provisionales: []
-  - id: JUG_ESFUERZO
-    finales:
-    - {fileID: 8300000, guid: 01d2fd8d147db5746973263769b012d4, type: 3}
-    - {fileID: 8300000, guid: 59b372336eaf9c04ebc1529007bc2487, type: 3}
-    - {fileID: 8300000, guid: 0f127d1263b113841a8e9505fb83160a, type: 3}
-    - {fileID: 8300000, guid: ca06e93ea5c004c4e858e065b66b5f5a, type: 3}
-    provisionales: []
-  - id: JUG_MUERTE
-    finales:
-    - {fileID: 8300000, guid: c4a13ba0192d2fc44b25bc0a02992365, type: 3}
-    - {fileID: 8300000, guid: 0640792a730dc8c4bbb3f386c4801b13, type: 3}
-    provisionales: []
-  - id: JUG_QUEMADO
-    finales:
-    - {fileID: 8300000, guid: d69dd2d3aacd5504e989d62c25902221, type: 3}
-    - {fileID: 8300000, guid: 2a088360b1b973942af477af93f4cee4, type: 3}
-    provisionales: []
-  - id: JUG_RESPIRACION_CANSADO
-    finales:
-    - {fileID: 8300000, guid: 2b79e2cd225ab2740ac3f07d2d7cffce, type: 3}
-    provisionales: []
-  - id: JUG_SALTO
-    finales:
-    - {fileID: 8300000, guid: ba86dd497ab3f3347a9547fec5831df0, type: 3}
-    - {fileID: 8300000, guid: 9919f991dd7af604d87251e32b1d71cc, type: 3}
-    - {fileID: 8300000, guid: 2b2f0a9b4e769dd468f398609c6abe4a, type: 3}
-    provisionales: []
-  - id: JUG_TOS
-    finales:
-    - {fileID: 8300000, guid: a8f35dc3c5f193247adff332effeef14, type: 3}
-    - {fileID: 8300000, guid: 45d42edd64831bf4ca55c25905584e1e, type: 3}
-    - {fileID: 8300000, guid: 6232ea7e92764ce46947f3d50553f367, type: 3}
-    provisionales: []
-  - id: MESERA_ROBOT_DESPEDIDA
-    finales:
-    - {fileID: 8300000, guid: 6f083b2ba2c443149997066f22ca04c2, type: 3}
-    provisionales: []
-  - id: MESERA_ROBOT_SALUDO
-    finales:
-    - {fileID: 8300000, guid: 360326d4c77b22a4996eecff4555688b, type: 3}
-    provisionales: []
-  - id: MESERA_ROBOT_SERVIR
-    finales:
-    - {fileID: 8300000, guid: 2291d5b07bf092a4a83a710c3f0c1d8d, type: 3}
-    provisionales: []
-  - id: MESERA_ROBOT_SUERTE
-    finales:
-    - {fileID: 8300000, guid: ab49f143dd7e15a41807fde3b8e59400, type: 3}
-    provisionales: []
-  - id: NOV_JEFE_ATAQUE
-    finales:
-    - {fileID: 8300000, guid: 2b39f3b2603f5c84f9c89efee0574c3a, type: 3}
-    - {fileID: 8300000, guid: 2423fc590715c4f49bff0655855b7fa6, type: 3}
-    - {fileID: 8300000, guid: 4b8e571b362115c4cba74e3b708d239d, type: 3}
-    - {fileID: 8300000, guid: b7234d01d7c41194baf5fbdb17d1c45f, type: 3}
-    provisionales: []
-  - id: NOV_JEFE_FRASE
-    finales:
-    - {fileID: 8300000, guid: 8f2a8da12439a1e44af0308b856be654, type: 3}
-    - {fileID: 8300000, guid: caf76b559f95bc0439be0ea7a40d1b14, type: 3}
-    - {fileID: 8300000, guid: 82fe14e6ab0a8c447a3b463417f73163, type: 3}
-    - {fileID: 8300000, guid: bda46de9bae1c28448916dd7d1892b87, type: 3}
-    - {fileID: 8300000, guid: a572fa22f582f4e47b574fb50500fac2, type: 3}
-    provisionales: []
-  - id: NOV_JEFE_MUERTE
-    finales:
-    - {fileID: 8300000, guid: a6822be01d6f24d408d2de10fd769e0f, type: 3}
-    - {fileID: 8300000, guid: 6a5fe578c133d414da6d5f5dd941d6d1, type: 3}
-    provisionales: []
-  - id: NOV_JEFE_REVELACION
-    finales:
-    - {fileID: 8300000, guid: cb28220fd46116d4b9b5baafc0ab5c8d, type: 3}
-    - {fileID: 8300000, guid: 4c0bd31cb06688b43a6d3a858fedba7e, type: 3}
-    - {fileID: 8300000, guid: fe9962ceb6044864d9821d371e4a2f1a, type: 3}
     provisionales: []
   - id: NOV_VOZ_ALERTA
     finales:
@@ -1009,6 +702,14 @@ MonoBehaviour:
     - {fileID: 8300000, guid: f15f631b1c067ce4a94881e92e6ef1ee, type: 3}
     - {fileID: 8300000, guid: 9e166434ff615ed4bb709951705293f7, type: 3}
     - {fileID: 8300000, guid: ec2cf1919cd925a4c874349487fff7ff, type: 3}
+    provisionales: []
+  - id: NPC_H_DOLOR
+    finales:
+    - {fileID: 8300000, guid: de47dbe8531eccbfbd6d751473a6be68, type: 3}
+    provisionales: []
+  - id: NPC_M_DOLOR
+    finales:
+    - {fileID: 8300000, guid: be1ee58838604d46d94b3b1270dbf18d, type: 3}
     provisionales: []
   - id: NPC_VOZ1_ENOJO
     finales:
@@ -1127,6 +828,81 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 304ef88a7e070574c88dcc40444a231d, type: 3}
     - {fileID: 8300000, guid: b7e8667496680384c924cf39082497ca, type: 3}
     provisionales: []
+  - id: OBJ_AIRE_ACONDICIONADO
+    finales:
+    - {fileID: 8300000, guid: ab01267d19d21f3bc3a1436fa37fc802, type: 3}
+    provisionales: []
+  - id: OBJ_CAMARA_SEGURIDAD
+    finales:
+    - {fileID: 8300000, guid: 525cbf7ccb44f2612fb9d776d8d5a740, type: 3}
+    provisionales: []
+  - id: OBJ_MAQUINA_EXPENDEDORA
+    finales:
+    - {fileID: 8300000, guid: 3c11b62c1e3c835ec94e642f9b257ffc, type: 3}
+    provisionales: []
+  - id: OBJ_REFRIGERADOR
+    finales:
+    - {fileID: 8300000, guid: 9a6834aacd04f489d0f2a2a3670f57b8, type: 3}
+    provisionales: []
+  - id: OBJ_TELE_REINICIO
+    finales:
+    - {fileID: 8300000, guid: ff38bda5b00b0e03fbd6d4b0a28d7433, type: 3}
+    provisionales: []
+  - id: OBJ_TRANSFORMADOR
+    finales:
+    - {fileID: 8300000, guid: a9d1ac466b31fc808e4f5edfab854757, type: 3}
+    provisionales: []
+  - id: PAN_ARRESTADO_ESPOSAS
+    finales:
+    - {fileID: 8300000, guid: cdc27bf2b10bde2ec566df95f10c185f, type: 3}
+    provisionales: []
+  - id: PAN_HAS_MUERTO
+    finales:
+    - {fileID: 8300000, guid: 6d40d151559f6ad59cf9c65315e9c818, type: 3}
+    provisionales: []
+  - id: PAS_CONCRETO
+    finales:
+    - {fileID: 8300000, guid: a5c2ef1d444e309499ed8707d94cb1a0, type: 3}
+    provisionales: []
+  - id: PAS_GRAVA
+    finales:
+    - {fileID: 8300000, guid: 1d3589a92ecb5374ea5e43dbaf78e114, type: 3}
+    - {fileID: 8300000, guid: 9040c435d409cf147afcd5207310236a, type: 3}
+    - {fileID: 8300000, guid: d48beacebfd241a419ed0e5a1f274eda, type: 3}
+    - {fileID: 8300000, guid: e2fc8a36b872d0949a3c78b6f1cdab5f, type: 3}
+    - {fileID: 8300000, guid: 0abf6ba6a4a6f27409073f3777995eff, type: 3}
+    - {fileID: 8300000, guid: 667daac9e1ecacd428c90f9122d22172, type: 3}
+    - {fileID: 8300000, guid: ca3c5b5e9fc2de9438f52e233739c913, type: 3}
+    - {fileID: 8300000, guid: 5ac7acd04410ecd4f952f8a9444b5fe9, type: 3}
+    provisionales: []
+  - id: PAS_MADERA
+    finales:
+    - {fileID: 8300000, guid: 555049df0247c6146b644b290bad8919, type: 3}
+    - {fileID: 8300000, guid: bf1f15cfa302fbc4ab162a25cde74622, type: 3}
+    provisionales: []
+  - id: PAS_METAL
+    finales:
+    - {fileID: 8300000, guid: fd1ede9b7ceaeeb4e93b828044d97c8f, type: 3}
+    provisionales: []
+  - id: PAS_MOJADO
+    finales:
+    - {fileID: 8300000, guid: 85a264cd74ead7d4a9d75948bc463074, type: 3}
+    provisionales: []
+  - id: PAS_TIERRA
+    finales:
+    - {fileID: 8300000, guid: 2fe5b88b64ed4d342a10386ee2d13b1f, type: 3}
+    - {fileID: 8300000, guid: ed95c3faeecadee479d5c67ed04e11f2, type: 3}
+    - {fileID: 8300000, guid: 4eb1edcfe4c38044d9beef2e3a41e9f3, type: 3}
+    - {fileID: 8300000, guid: 35c1c953538655446aaadf3d82c1f787, type: 3}
+    - {fileID: 8300000, guid: f5ea4f385467ece44bb2af44989d8942, type: 3}
+    - {fileID: 8300000, guid: 3dc1045ee0481fb44a64db70aa498dd4, type: 3}
+    - {fileID: 8300000, guid: ae10ac8676df2fb438ea96b6eb374132, type: 3}
+    - {fileID: 8300000, guid: 6ddb92f262f7feb4a9ee1caba7e7efbb, type: 3}
+    provisionales: []
+  - id: POL_ESTRELLA_SUBE
+    finales:
+    - {fileID: 8300000, guid: 2d9ff78006f1835247f4ade2335b11e1, type: 3}
+    provisionales: []
   - id: POL_MEGAFONO_ALTO
     finales:
     - {fileID: 8300000, guid: 7a30929808efe874f8d72272759bed67, type: 3}
@@ -1143,6 +919,30 @@ MonoBehaviour:
     finales:
     - {fileID: 8300000, guid: 05e9bddcc973b2b44b4f2f854cc140f4, type: 3}
     - {fileID: 8300000, guid: 1d0bb0e945401b14f9533030b4c0b58d, type: 3}
+    provisionales: []
+  - id: POL_RADIO_AVISO
+    finales:
+    - {fileID: 8300000, guid: 176a7dad85fe80c47af92bf4d1f39366, type: 3}
+    - {fileID: 8300000, guid: a69ea336ce9204d4fa0c2fc146a2588c, type: 3}
+    - {fileID: 8300000, guid: b890aa29e9fd4cd41a82db03b0d79531, type: 3}
+    - {fileID: 8300000, guid: 5434b463697b6054aa12769896f9a90a, type: 3}
+    - {fileID: 8300000, guid: f2c5258bd6eff2a8108854577d61c278, type: 3}
+    provisionales: []
+  - id: POL_RADIO_ESTATICA
+    finales:
+    - {fileID: 8300000, guid: 941eac1759d5ddc577df5874948d03f9, type: 3}
+    provisionales: []
+  - id: POL_SIRENA_CORTA
+    finales:
+    - {fileID: 8300000, guid: 1ae8b5effbda53d4680eee618cfa9ef1, type: 3}
+    provisionales: []
+  - id: POL_SIRENA_LOOP
+    finales:
+    - {fileID: 8300000, guid: ce4d1dacb7d70a04b8e16c31d1d9932f, type: 3}
+    provisionales: []
+  - id: POL_SIRENA_MURO
+    finales:
+    - {fileID: 8300000, guid: 5e7b9ff9f794fecda45c0d994f807497, type: 3}
     provisionales: []
   - id: POL_VOZ_ALTAVOZ
     finales:
@@ -1189,6 +989,59 @@ MonoBehaviour:
     finales:
     - {fileID: 8300000, guid: d42fd957665f1ab4d952b24b6272165a, type: 3}
     - {fileID: 8300000, guid: d55f042ee6fa57849b3b14b0aa3bc5b3, type: 3}
+    provisionales: []
+  - id: RAD_CAMBIAR_ESTACION
+    finales:
+    - {fileID: 8300000, guid: 442d645223178e847378bdb05da5a246, type: 3}
+    provisionales: []
+  - id: RAD_EST1_CUMBIA_PERCUSION
+    finales:
+    - {fileID: 8300000, guid: 2e5f496fb8fedd451169d0535606ae60, type: 3}
+    provisionales: []
+  - id: ROB_CHISPAS_DANIO
+    finales:
+    - {fileID: 8300000, guid: 9fcd6980eb1f620645639410ca1ac55c, type: 3}
+    provisionales: []
+  - id: ROB_ENCENDER
+    finales:
+    - {fileID: 8300000, guid: e574198cafff91939b17c1b58838351c, type: 3}
+    provisionales: []
+  - id: ROB_MUERTE
+    finales:
+    - {fileID: 8300000, guid: e2196466a50dc906da3af6da02447a74, type: 3}
+    provisionales: []
+  - id: ROB_PERRO_GRUNIDO
+    finales:
+    - {fileID: 8300000, guid: 00381ac94c20089920e6a020da6d8a12, type: 3}
+    provisionales: []
+  - id: ROB_PERRO_MOVER
+    finales:
+    - {fileID: 8300000, guid: 53df87b091697fbab8bfdebac973a297, type: 3}
+    provisionales: []
+  - id: ROB_PES_HIDRAULICA
+    finales:
+    - {fileID: 8300000, guid: 0fed9a306c13a8db8e9a698eef73c45e, type: 3}
+    provisionales: []
+  - id: ROB_PES_LLEGADA
+    finales:
+    - {fileID: 8300000, guid: e2469b4c5f83ea60bb8b9077d92eace0, type: 3}
+    - {fileID: 8300000, guid: f1a7b7e3e4f6c59613d124ae199243a0, type: 3}
+    provisionales: []
+  - id: ROB_PES_PLACA_CAE
+    finales:
+    - {fileID: 8300000, guid: 386bfb1acd207636a1242122dbff944d, type: 3}
+    provisionales: []
+  - id: ROB_SERVOS
+    finales:
+    - {fileID: 8300000, guid: 6df052646763bd7d1828f10df7bb3122, type: 3}
+    provisionales: []
+  - id: ROB_VOZ_ALERTA
+    finales:
+    - {fileID: 8300000, guid: f13969dd293ed28210e3c2341c702f83, type: 3}
+    - {fileID: 8300000, guid: 6609f4c0afc998b4ea8916a7b4161876, type: 3}
+    - {fileID: 8300000, guid: 390ad6100d1c5bc41ae30f43f34118d3, type: 3}
+    - {fileID: 8300000, guid: 86f2d566449606b48b9a6b27260a00d9, type: 3}
+    - {fileID: 8300000, guid: 6439eb1e491a0b94eacb7529ff5bd6a8, type: 3}
     provisionales: []
   - id: SKU_AMBIENTE
     finales:
@@ -1340,6 +1193,18 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 11540353f0227a844a7db3c5bded4cd6, type: 3}
     - {fileID: 8300000, guid: c6867c3b13e58e44498497527904070b, type: 3}
     provisionales: []
+  - id: TIE_COMPRAR
+    finales:
+    - {fileID: 8300000, guid: f23a7167f1e66e843ba396f759526536, type: 3}
+    provisionales: []
+  - id: TIE_DESEQUIPAR
+    finales:
+    - {fileID: 8300000, guid: 1e66bb9141afe4e409e71e58f0ca6d19, type: 3}
+    provisionales: []
+  - id: TIE_EQUIPAR
+    finales:
+    - {fileID: 8300000, guid: ed4371e75da885b469e04bfbb478d3b9, type: 3}
+    provisionales: []
   - id: TINO_VOZ_BANCO
     finales:
     - {fileID: 8300000, guid: a2c08efb349f5ad42aae0efe41cdf44a, type: 3}
@@ -1359,6 +1224,141 @@ MonoBehaviour:
   - id: TINO_VOZ_SIN_DINERO
     finales:
     - {fileID: 8300000, guid: 73fd7be4136d7644bb6d17e5f934edb3, type: 3}
+    provisionales: []
+  - id: UI_ATRAS
+    finales:
+    - {fileID: 8300000, guid: de72fceec4d67a547bcbc8591d88f698, type: 3}
+    provisionales: []
+  - id: UI_ERROR
+    finales:
+    - {fileID: 8300000, guid: f927a857be4e1494096da9b2063410ba, type: 3}
+    provisionales: []
+  - id: UI_LOGO_INTRO
+    finales:
+    - {fileID: 8300000, guid: f08bf437adf36c743b36b38196d77133, type: 3}
+    provisionales: []
+  - id: UI_MENU_ABRIR
+    finales:
+    - {fileID: 8300000, guid: 5886abb28018672469fd23ac91fd53f3, type: 3}
+    provisionales: []
+  - id: UI_MENU_CERRAR
+    finales:
+    - {fileID: 8300000, guid: c7c041593ec1b8f42a49eed330e043d3, type: 3}
+    provisionales: []
+  - id: UI_MOVER
+    finales:
+    - {fileID: 8300000, guid: 791b131d2418ad84aab80f2d8ccbd02a, type: 3}
+    provisionales: []
+  - id: UI_PESTANA
+    finales:
+    - {fileID: 8300000, guid: c30e1b849c204b74fabe6e996e3e8262, type: 3}
+    provisionales: []
+  - id: UI_SELECCIONAR
+    finales:
+    - {fileID: 8300000, guid: 4896229cc632ed34eaaa5d2a4a66ef6a, type: 3}
+    provisionales: []
+  - id: VEH_ACELERON
+    finales:
+    - {fileID: 8300000, guid: 898564544dc36f14a93dd1c04582511e, type: 3}
+    - {fileID: 8300000, guid: 8163da0450eb3df488360e3491169de5, type: 3}
+    provisionales: []
+  - id: VEH_ALARMA
+    finales:
+    - {fileID: 8300000, guid: 49f1c19a72747c44c83ca0258713965d, type: 3}
+    provisionales: []
+  - id: VEH_CHOQUE
+    finales:
+    - {fileID: 8300000, guid: 843d3a2b0706de94c870ae26d9e67370, type: 3}
+    - {fileID: 8300000, guid: fa7b43c2f6b49c6499f044a43fccd542, type: 3}
+    provisionales: []
+  - id: VEH_CHOQUE_FUERTE
+    finales:
+    - {fileID: 8300000, guid: 634b4f7c8e7f1ec499e643a27a8c9101, type: 3}
+    - {fileID: 8300000, guid: 51763732522f8af4395880da67073bc0, type: 3}
+    provisionales: []
+  - id: VEH_CLAXON_CAMION
+    finales:
+    - {fileID: 8300000, guid: d5d72fcb19b69d84d8ef6e8b73093419, type: 3}
+    provisionales: []
+  - id: VEH_CLAXON_NORMAL
+    finales:
+    - {fileID: 8300000, guid: a44768ce25855e048b18a3c29530648e, type: 3}
+    - {fileID: 8300000, guid: 80ad51b7fc64fcb4b958c6bb62717193, type: 3}
+    provisionales: []
+  - id: VEH_CRISTAL_ROMPER
+    finales:
+    - {fileID: 8300000, guid: 2d943bafdeb37084dbde96e979b59ede, type: 3}
+    provisionales: []
+  - id: VEH_ELECTRICO_ACELERAR
+    finales:
+    - {fileID: 8300000, guid: f0259faeec57ecc4cacb85108dc5b627, type: 3}
+    - {fileID: 8300000, guid: 0e8b0c5ce3d5dd7498117d60b1fb2444, type: 3}
+    provisionales: []
+  - id: VEH_ELECTRICO_ARRANQUE
+    finales:
+    - {fileID: 8300000, guid: 3d750f0cd7360cb4994fa6ea85ae6c31, type: 3}
+    provisionales: []
+  - id: VEH_ELECTRICO_MOVER
+    finales:
+    - {fileID: 8300000, guid: df441e858284f824f8ab6eb861ce9758, type: 3}
+    provisionales: []
+  - id: VEH_ELECTRICO_PASAR
+    finales:
+    - {fileID: 8300000, guid: 898489435c133fe4988fcdc0a6580cf1, type: 3}
+    provisionales: []
+  - id: VEH_FRENO_FUERTE
+    finales:
+    - {fileID: 8300000, guid: 4be1b317c26b1b54c9ba5836a9dadae1, type: 3}
+    provisionales: []
+  - id: VEH_LLANTAS_GRAVA
+    finales:
+    - {fileID: 8300000, guid: 2c08f28de474306458ae62448ebb4cc4, type: 3}
+    provisionales: []
+  - id: VEH_NORMAL_APAGAR
+    finales:
+    - {fileID: 8300000, guid: 8604c2efae66eb1489ac3238b3a0365a, type: 3}
+    - {fileID: 8300000, guid: 8c4d7b3c15d957344810af7a5a4f4930, type: 3}
+    - {fileID: 8300000, guid: 8baa2d5d25e47e446a9e7e0ac946a2b2, type: 3}
+    provisionales: []
+  - id: VEH_NORMAL_ARRANQUE
+    finales:
+    - {fileID: 8300000, guid: fb4be486f2b56b54987c16a323d566ad, type: 3}
+    - {fileID: 8300000, guid: 4a430b87dc62c5549b76c046eb4e4702, type: 3}
+    - {fileID: 8300000, guid: 794c527becef4c447a1be7fe231ea50b, type: 3}
+    provisionales: []
+  - id: VEH_NORMAL_RALENTI
+    finales:
+    - {fileID: 8300000, guid: 33b5f5d0f3830514880d3063c7eab241, type: 3}
+    - {fileID: 8300000, guid: a0bc4b177166cb9438e1515175787d92, type: 3}
+    - {fileID: 8300000, guid: fbe5e05713c838e4c891613e4d1e1c74, type: 3}
+    provisionales: []
+  - id: VEH_PESADO_APAGAR
+    finales:
+    - {fileID: 8300000, guid: 9212884331184864ba5efc90a30f5deb, type: 3}
+    provisionales: []
+  - id: VEH_PESADO_ARRANQUE
+    finales:
+    - {fileID: 8300000, guid: 2cc37a316dd0f3c41add66373c529bbd, type: 3}
+    provisionales: []
+  - id: VEH_PESADO_RALENTI
+    finales:
+    - {fileID: 8300000, guid: 5447c1d6129d2f74cbac916ec3ba3f1f, type: 3}
+    provisionales: []
+  - id: VEH_PUENTE
+    finales:
+    - {fileID: 8300000, guid: b095ea30083448e4e994c5df0e6c95be, type: 3}
+    provisionales: []
+  - id: VEH_PUERTA_ABRIR
+    finales:
+    - {fileID: 8300000, guid: e604929e377d3b34a92c4ab7ec575922, type: 3}
+    provisionales: []
+  - id: VEH_PUERTA_CERRAR
+    finales:
+    - {fileID: 8300000, guid: c728f1e8a207f474b86f8cf7731c8fe1, type: 3}
+    provisionales: []
+  - id: VEH_TOPE
+    finales:
+    - {fileID: 8300000, guid: 08fbbf02374911a4bb0cfad5332e4493, type: 3}
     provisionales: []
   interruptores:
   - id: AMB_AZOTEA_CIUDAD
@@ -1850,7 +1850,7 @@ MonoBehaviour:
   - id: POL_RADIO_AVISO
     encendido: 1
   - id: POL_RADIO_DESPACHO
-    encendido: 1
+    encendido: 0
   - id: POL_RADIO_ESTATICA
     encendido: 1
   - id: POL_SIRENA_CORTA
@@ -2087,6 +2087,10 @@ MonoBehaviour:
     encendido: 1
   - id: ZON_RESPETO_SUBE
     encendido: 1
+  - id: JUG_ROPA_ROCE
+    encendido: 0
+  - id: JUG_ROPA_MOVER
+    encendido: 0
   gananciaEfectos: 1
   gananciaVoces: 0.85
   gananciaAmbiente: 1
