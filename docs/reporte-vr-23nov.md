@@ -56,7 +56,7 @@ Build: `wtVR\Builds\VR\CyberCity.exe` (PC, OpenXR, mismas escenas que ConstruirJ
 
 ---
 
-## Segunda tanda (V5–V11) · build nuevo en `wtVR\Builds\VR2\CyberCity.exe`
+## Segunda tanda (V5–V11) · build en `wtVR\Builds\VR2\CyberCity.exe` (PENDIENTE: el build se cortó por falta de memoria en la máquina; hay que relanzarlo)
 `Builds\VR` (el que estás probando) no se tocó. Se metió lo nuevo de `main` con merge normal.
 
 ### Botones nuevos o que cambiaron
