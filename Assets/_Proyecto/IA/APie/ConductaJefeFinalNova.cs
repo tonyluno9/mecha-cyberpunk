@@ -125,6 +125,10 @@ namespace MechaCyberpunk.IA.APie
         /// <summary>Empieza la pelea (el recinto se cerró).</summary>
         public void Activar()
         {
+            if (!activo && pandillero != null)
+            {
+                VocesFaccion.Decir(FaccionVoz.JefeNova, pandillero.transform, EventoVoz.InicioCombate, true); // T-voces-23nov: su frase al empezar
+            }
             activo = true;
         }
 
@@ -154,6 +158,10 @@ namespace MechaCyberpunk.IA.APie
             LimpiarAros();
             OcultarOnda();
             Gritar(GritoSobrecarga);
+            if (pandillero != null)
+            {
+                VocesFaccion.Decir(FaccionVoz.JefeNova, pandillero.transform, EventoVoz.Escudo, true); // T-voces-23nov: otra frase al romperse su escudo
+            }
         }
 
         private void AlVencer(PandilleroAPie vencido)
@@ -168,6 +176,7 @@ namespace MechaCyberpunk.IA.APie
             OcultarOnda();
             Registro<ITerritorio>.Actual?.RegistrarVencido(vencido.transform.position, IdPandilla.Nova, true);
             Gritar(GritoFinal);
+            VocesFaccion.Decir(FaccionVoz.JefeNova, vencido.transform, EventoVoz.Muerte, true); // T-voces-23nov
             Debug.Log("[IA] Jefe final de Nova vencido.");
             Derrotado?.Invoke();
         }
@@ -297,6 +306,7 @@ namespace MechaCyberpunk.IA.APie
         {
             ReglaJefeFinalNova.Parametros c = regla.Config;
             p.AnimarGolpe(true);
+            VocesFaccion.Decir(FaccionVoz.JefeNova, p.transform, EventoVoz.Ataque); // T-voces-23nov: el canal de una voz evita que grite en cada golpe
             if (distancia > c.RadioPunetazo)
             {
                 return;

@@ -163,12 +163,14 @@ namespace MechaCyberpunk.Progresion.Apoyo
             CrearCamara(jugador);
             CrearBarra();
             CrearLuz();
+            MechaCyberpunk.Progresion.Sonido.VocesDoc.Decir(MechaCyberpunk.Progresion.Sonido.VocesDoc.Sientate); // T-voces-23nov
             yield return Durante(config.SegundosSentarse, t => PonerPeso(t));
 
             // El brazo baja y la luz late.
             yield return Durante(config.SegundosBajarBrazo, t => MoverBrazo(Mathf.SmoothStep(0f, 1f, t)));
 
             // La barra se llena; al final la vida queda llena.
+            MechaCyberpunk.Progresion.Sonido.VocesDoc.Decir(MechaCyberpunk.Progresion.Sonido.VocesDoc.Suero); // T-voces-23nov: el suero
             yield return Durante(config.SegundosCurar, t =>
             {
                 Barra = Mathf.Lerp(inicio, 1f, t);

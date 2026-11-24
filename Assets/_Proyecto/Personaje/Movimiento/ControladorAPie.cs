@@ -218,8 +218,39 @@ namespace MechaCyberpunk.Personaje.Movimiento
             AplicarCursor(true);
         }
 
+        // T-voces-23nov: tras correr un buen rato jadea (JUG_RESPIRACION_CANSADO, bucle 2D con fundido de entrada y salida en el gestor).
+        private readonly ReglaRespiracionCansado respiracion = new ReglaRespiracionCansado();
+        private int bucleRespiracion = Sonidos.SinBucle;
+
+        /// <summary>T-voces-23nov: true mientras suena la respiración de cansado.</summary>
+        public bool Jadeando => respiracion.Sonando;
+
+        private void ActualizarRespiracion(float dt, bool corriendo)
+        {
+            bool sonar = respiracion.Avanzar(dt, corriendo);
+            if (sonar && bucleRespiracion == Sonidos.SinBucle)
+            {
+                bucleRespiracion = Sonidos.ReproducirBucle(VozJugador.RespiracionCansado, null);
+            }
+            else if (!sonar && bucleRespiracion != Sonidos.SinBucle)
+            {
+                PararRespiracion();
+            }
+        }
+
+        private void PararRespiracion()
+        {
+            if (bucleRespiracion != Sonidos.SinBucle)
+            {
+                Sonidos.DetenerBucle(bucleRespiracion);
+                bucleRespiracion = Sonidos.SinBucle;
+            }
+        }
+
         private void OnDisable()
         {
+            PararRespiracion();
+            respiracion.Reiniciar();
             EventosLugares.JugadorEntro -= AlEntrarLugar;
             EventosLugares.JugadorSalio -= AlSalirLugar;
             mover.action.Disable();
@@ -373,7 +404,7 @@ namespace MechaCyberpunk.Personaje.Movimiento
             }
             if (enPiso && movimiento.DespegoEsteFrame)
             {
-                Sonidos.Reproducir(VozJugador.Id("JUG_SALTO"));
+                Sonidos.Reproducir(VozJugador.Id(VozJugador.Salto)); // T-voces-23nov: la voz grabada del salto (2D)
                 saltoSuper = Habilidades != null && Habilidades.FactorSalto > 1f; // T-1535: con las piernas activas el salto es súper
                 if (saltoSuper)
                 {
@@ -424,6 +455,7 @@ namespace MechaCyberpunk.Personaje.Movimiento
             tiempoAire = enPiso ? 0f : tiempoAire + dt;
             // T55: sin la respiración al correr (JUG_CORRER_RESPIRA era un sonido de la primera versión).
             bool moviendo = enPiso && velocidad.sqrMagnitude > UmbralPaso * UmbralPaso;
+            ActualizarRespiracion(dt, moviendo && quiereCorrer);
             if (moviendo && !estabaMoviendo)
             {
                 zancada.Reiniciar(MetrosPorPasoCaminar * FraccionPrimerPaso);

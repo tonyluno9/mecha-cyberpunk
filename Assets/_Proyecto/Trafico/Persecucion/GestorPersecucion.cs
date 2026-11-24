@@ -406,10 +406,14 @@ namespace MechaCyberpunk.Trafico.Persecucion
             }
         }
 
+        /// <summary>T-voces-23nov: la voz de la policía que se oye por el radio cuando escapas.</summary>
+        public const string IdLoPerdimos = "POL_VOZ_LO_PERDIMOS";
+
         /// <summary>Saliste de la vista y del círculo de búsqueda el tiempo suficiente (T-665): ya no te buscan.</summary>
         private void Escapar()
         {
             Debug.Log("[Trafico] El jugador escapó de la policía.");
+            Sonidos.Reproducir(IdLoPerdimos); // T-voces-23nov: por el radio, en 2D (las patrullas ya están lejos)
             EventosPolicia.PublicarEscape();
             calor.Borrar();
         }

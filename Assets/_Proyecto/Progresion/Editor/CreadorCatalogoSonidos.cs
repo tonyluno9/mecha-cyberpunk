@@ -51,8 +51,12 @@ namespace MechaCyberpunk.Progresion.Editor
             {
                 Leer(CarpetaAudio + "/" + carpeta, nuevas, false);
             }
-            // T-1623: las voces de los SKULLS (19_Voces/SKULLS).
+            // T-1623: las voces de los SKULLS (19_Voces/SKULLS). T-voces-23nov: y todas las demás carpetas de 19_Voces (Jugador, Policia, Policia/_megafono, Nova, Doc...).
             Leer(CarpetaAudio + "/19_Voces/SKULLS", nuevas, false);
+            foreach (Voces23nov.Carpeta carpetaVoz in Voces23nov.Carpetas)
+            {
+                if (carpetaVoz.Nombre != "SKULLS") Leer(Voces23nov.CarpetaRaiz + "/" + carpetaVoz.Nombre, nuevas, false);
+            }
             // Música del menú principal (MUS_MENU_PRINCIPAL) en Assets/Arte/Audio/Musica.
             Leer(CarpetaAudio + "/" + CarpetaMusica, nuevas, false);
             // Los archivos que ya no se usan (POL_RADIO_DESPACHO_01/02) siguen en Assets pero no entran al catalogo: el ID suena con su alias.
