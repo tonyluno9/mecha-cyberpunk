@@ -121,7 +121,7 @@ footer{padding:30px;text-align:center;color:var(--mut);border-top:1px solid var(
 .vs{display:grid;grid-template-columns:1fr 1fr;gap:6px}
 </style></head><body>
 
-<nav aria-label="Secciones"><b>CYBERCITY</b><a href="#cine">Cinemáticas</a><a href="#historia">Historia</a><a href="#demo">La demo</a><a href="#libre">Modo libre</a><a href="#ciudad">La ciudad</a><a href="#juego">En el juego</a><a href="#controles">Controles</a></nav>
+<nav aria-label="Secciones"><b>CYBERCITY</b><a href="#cine">Cinemáticas</a><a href="#historia">Historia</a><a href="#demo">La demo</a><a href="#libre">Modo libre</a><a href="#ia">IA policía</a><a href="#ciudad">La ciudad</a><a href="#juego">En el juego</a><a href="#controles">Controles</a></nav>
 
 <header id="hero">
   <img src="media/L01_Carga_Protagonista.jpg" alt="">
@@ -187,7 +187,21 @@ footer{padding:30px;text-align:center;color:var(--mut);border-top:1px solid var(
     <p class="hint" style="margin:14px auto 0">Pantalla final (números de muestra). REINTENTAR te deja justo después del campo de tiro, con tu arma, mejoras y dinero; se guarda tu mejor récord.</p></div>
 </div></section>
 
-<section class="band alt" id="ciudad"><div class="wrap grid2">
+<section class="band alt" id="ia"><div class="wrap">
+  <span class="lbl">Inteligencia artificial</span><h2>La policía piensa</h2>
+  <p>Los policías no siguen un camino fijo: usan inteligencia artificial para buscarte y atacarte. Cada uno decide qué hacer según lo que ve y dónde estás.</p>
+  <div class="grid2" style="margin-top:20px">
+    <div class="ideas">
+      <div class="cut card"><b>Te buscan</b>Te rastrean por la ciudad hasta encontrarte.</div>
+      <div class="cut card"><b>Llegan en sus coches</b>Las patrullas calculan la ruta por las calles y manejan hasta donde estás.</div>
+      <div class="cut card"><b>Se bajan a pelear</b>Frenan, abren la puerta y se bajan para atacarte a pie.</div>
+      <div class="cut card"><b>Toman decisiones</b>Deciden por su cuenta cómo acercarse y cuándo atacarte.</div>
+    </div>
+    <img class="cut" src="media/cap/noche_patrulla.jpg" alt="Patrulla de noche en la calle" loading="lazy" style="width:100%;aspect-ratio:16/10;object-fit:cover">
+  </div>
+</div></section>
+
+<section class="band" id="ciudad"><div class="wrap grid2">
   <div><span class="lbl">La ciudad</span><h2>Cuatro barrios, una luz por barrio</h2>
   <p>Cuadras cortas, calles que doblan y callejones. Carros y motos que puedes robar y manejar, cámaras de NOVA y la ranura del muro.</p>
   <img class="cut" src="media/L06_Carga_Techos.jpg" alt="Los techos de Cyber City" style="margin-top:14px;aspect-ratio:16/9;object-fit:cover;width:100%"></div>
@@ -199,7 +213,7 @@ footer{padding:30px;text-align:center;color:var(--mut);border-top:1px solid var(
   </div>
 </div></section>
 
-<section class="band" id="juego"><div class="wrap">
+<section class="band alt" id="juego"><div class="wrap">
   <span class="lbl">En el juego</span><h2>Así se ve CYBERCITY</h2>
   <h3>Implantes</h3><p>Te puedes poner prótesis en los ojos, los brazos y las piernas.</p>
   <div class="shots"><figure class="cut big"><img src="media/cap/imp_doc.jpg" alt="Con el Doc" loading="lazy"><figcaption><b>Con el Doc</b>El holograma de tu cuerpo con las prótesis: ojos, brazos, piernas y sinapsis.</figcaption></figure><figure class="cut sm"><img src="media/cap/imp_calle.jpg" alt="En plena calle" loading="lazy"><figcaption><b>En plena calle</b>Activa las prótesis desde el holograma del cuerpo.</figcaption></figure><figure class="cut sm"><img src="media/cap/imp_instalado.jpg" alt="Implante instalado" loading="lazy"><figcaption><b>Implante instalado</b>La clínica del Doc al terminar de instalar el exo de piernas.</figcaption></figure></div>
@@ -213,7 +227,7 @@ footer{padding:30px;text-align:center;color:var(--mut);border-top:1px solid var(
   <div class="shots"><figure class="cut "><img src="media/cap/ene_nova.jpg" alt="NOVA" loading="lazy"><figcaption><b>NOVA</b>Robots y soldados de NOVA en la calle.</figcaption></figure><figure class="cut "><img src="media/cap/dia_skulls.jpg" alt="SKULLS" loading="lazy"><figcaption><b>SKULLS</b>La pandilla en la calle, de día.</figcaption></figure><figure class="cut"><img class="hoja" src="media/cap/ene_skull.png" alt="SKULLS" loading="lazy"><figcaption><b>SKULLS</b>Pandillero de la calle.</figcaption></figure><figure class="cut"><img class="hoja" src="media/cap/ene_guardia.png" alt="Guardia de NOVA" loading="lazy"><figcaption><b>NOVA</b>Guardia de la corporación.</figcaption></figure><figure class="cut"><img class="hoja" src="media/cap/ene_policia.png" alt="Policía" loading="lazy"><figcaption><b>Policía</b>A pie, con chaleco y gorra.</figcaption></figure><figure class="cut"><img class="hoja" src="media/cap/ene_patrulla.png" alt="Patrullas" loading="lazy"><figcaption><b>Patrullas</b>Llegan manejando, abren la puerta y se bajan a pelear.</figcaption></figure><figure class="cut"><img class="hoja" src="media/cap/ene_dron.png" alt="Drones" loading="lazy"><figcaption><b>Drones</b>El dron de policía con torreta.</figcaption></figure><figure class="cut"><img class="hoja" src="media/cap/ene_maton.png" alt="Matón de los SKULLS" loading="lazy"><figcaption><b>Matón de los SKULLS</b>El grandote con pañuelo de calavera y brazo robótico.</figcaption></figure><figure class="cut"><img class="hoja" src="media/cap/ene_robot.png" alt="Robot pesado de NOVA" loading="lazy"><figcaption><b>Robot pesado de NOVA</b>Cañón rotatorio y escudo.</figcaption></figure></div>
 </div></section>
 
-<section class="band alt" id="controles"><div class="wrap">
+<section class="band" id="controles"><div class="wrap">
   <span class="lbl">Controles</span><h2>Cómo se juega</h2>
   <div class="tabs" role="tablist"><button class="btn" role="tab" aria-selected="true" data-t="pc">PC · teclado y ratón</button><button class="btn" role="tab" aria-selected="false" data-t="vr">VR · Meta Quest 3</button></div>
   <div class="cut card" style="padding:8px 10px"><table id="ctl"></table></div>
