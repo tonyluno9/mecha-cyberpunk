@@ -370,6 +370,20 @@ namespace MechaCyberpunk.Tests.VR
 
         // ---- Pruebas ----
 
+        /// <summary>T96 en VR: HAS MUERTO → MENÚ PRINCIPAL saca la carga y, al llegar al menú, la carga se quita sola (sin quedarse encima).</summary>
+        [UnityTest]
+        [Timeout(90000)]
+        public IEnumerator T96_MuerteAlMenu_EnVR_LaCargaSeQuitaAlLlegarAlMenu()
+        {
+            FlujoPartida.Interceptar(_ => EditorSceneManager.LoadSceneAsyncInPlayMode(EscenaInicio.Ruta, new LoadSceneParameters(LoadSceneMode.Single)));
+            PantallaCargando.Mostrar();
+            MechaCyberpunk.Progresion.Recorrido.DirectorModoLibre.IrAlMenu();
+            Assert.IsTrue(PantallaCargando.Visible, "Sale la carga al elegir MENÚ PRINCIPAL.");
+            yield return EsperarHasta(() => Object.FindFirstObjectByType<MenuInicio>() != null, "el menú principal", 30f);
+            yield return EsperarHasta(() => !PantallaCargando.Visible, "que la carga se quite al llegar al menú", 15f);
+            Assert.IsNotNull(MenusVR.Actual, "En VR el menú se usa con el rig de menús.");
+        }
+
         [UnityTest]
         [Timeout(180000)]
         public IEnumerator Inicio_MenuEnPanelFrenteALaCabeza_BotonesConLaserYGatillo()
