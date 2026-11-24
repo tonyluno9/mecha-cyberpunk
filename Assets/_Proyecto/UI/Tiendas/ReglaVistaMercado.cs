@@ -28,7 +28,7 @@ namespace MechaCyberpunk.UI.Tiendas
     {
         public const int Barras = 4;
         public const float DanioLleno = 100f;
-        public const float CargadorLleno = 40f;
+        public const float CargadorLleno = 80f; // T92: los cargadores van al doble
         public const float CadenciaLlena = 100f;
         public const float AlcanceLleno = 150f;
         private const float SegundosCadencia = 10f;

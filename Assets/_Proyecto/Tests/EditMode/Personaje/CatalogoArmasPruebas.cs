@@ -79,8 +79,8 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.AreEqual(39 + 6 + 8, tienda.Ofertas.Count, "Además del kit, las 4 municiones y el brazo, las 3 balas de arma (T-720) y las 5 de las armas nuevas (T-1013)");
 
             DatosArma sniper = catalogo.Buscar(ArmaAPie.Sniper, 0);
-            Assert.AreEqual(4, sniper.Cargador, "Sniper base: 4 balas");
-            Assert.AreEqual(5, catalogo.Buscar(ArmaAPie.Sniper, 1).Cargador, "SNIPER I: 5 balas");
+            Assert.AreEqual(8, sniper.Cargador, "Sniper base: 8 balas (T92)");
+            Assert.AreEqual(10, catalogo.Buscar(ArmaAPie.Sniper, 1).Cargador, "SNIPER I: 10 balas (T92)");
             foreach (ArmaAPie tipo in System.Enum.GetValues(typeof(ArmaAPie)))
             {
                 if (tipo == ArmaAPie.Sniper || tipo == ArmaAPie.Punos)

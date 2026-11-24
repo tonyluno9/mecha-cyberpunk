@@ -164,7 +164,7 @@ namespace MechaCyberpunk.Tests.Personaje
         }
 
         [UnityTest]
-        public IEnumerator Pistola_DespuesDeOchoDisparos_ElSiguienteClicNoHaceDanioYRecarga()
+        public IEnumerator Pistola_DespuesDeDieciseisDisparos_ElSiguienteClicNoHaceDanioYRecarga()
         {
             yield return Calentar();
             ObjetivoContador contador = CrearContador(15f);
@@ -176,25 +176,25 @@ namespace MechaCyberpunk.Tests.Personaje
                 yield return Clic();
                 yield return Esperar(pistola.Datos.TiempoEntreDisparos + 0.05f);
             }
-            Assert.AreEqual(8, contador.Golpes);
+            Assert.AreEqual(16, contador.Golpes);
             Assert.AreEqual(0, pistola.Balas);
             Assert.IsFalse(pistola.Recargando);
             Assert.AreEqual(TipoDanio.Disparo, contador.Ultimo.Tipo);
 
             yield return Clic();
-            Assert.AreEqual(8, contador.Golpes, "El clic vacío no hace daño");
-            Assert.AreEqual(8, disparos);
+            Assert.AreEqual(16, contador.Golpes, "El clic vacío no hace daño");
+            Assert.AreEqual(16, disparos);
             Assert.IsTrue(pistola.Recargando);
 
             yield return Clic();
-            Assert.AreEqual(8, contador.Golpes, "Recargando no dispara");
+            Assert.AreEqual(16, contador.Golpes, "Recargando no dispara");
 
             yield return Esperar(pistola.Datos.TiempoRecarga + 0.1f);
             Assert.IsFalse(pistola.Recargando);
-            Assert.AreEqual(8, pistola.Balas);
+            Assert.AreEqual(16, pistola.Balas);
 
             yield return Clic();
-            Assert.AreEqual(9, contador.Golpes, "Tras recargar vuelve a disparar");
+            Assert.AreEqual(17, contador.Golpes, "Tras recargar vuelve a disparar");
         }
 
         [UnityTest]
@@ -203,12 +203,12 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return Calentar();
             yield return ElegirEnRueda(1);
             yield return Clic();
-            Assert.AreEqual(7, pistola.Balas);
+            Assert.AreEqual(15, pistola.Balas);
 
             yield return Tecla(teclado.rKey);
             Assert.IsTrue(pistola.Recargando);
             yield return Esperar(pistola.Datos.TiempoRecarga + 0.1f);
-            Assert.AreEqual(8, pistola.Balas);
+            Assert.AreEqual(16, pistola.Balas);
         }
 
         [UnityTest]
@@ -227,7 +227,7 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return Esperar(0.4f);
 
             Assert.AreEqual(0, disparos);
-            Assert.AreEqual(8, pistola.Balas);
+            Assert.AreEqual(16, pistola.Balas);
             Assert.Less(muneco.Actual, maxima, "El golpe de puños sigue funcionando");
         }
 
@@ -260,7 +260,7 @@ namespace MechaCyberpunk.Tests.Personaje
             yield return Tecla(teclado.rKey);
 
             Assert.AreEqual(0, disparos);
-            Assert.AreEqual(8, pistola.Balas);
+            Assert.AreEqual(16, pistola.Balas);
 
             yield return ElegirEnRueda(0);
             Assert.AreEqual(ArmaAPie.Pistola, armas.ArmaActiva, "En KO tampoco se cambia de arma");

@@ -46,7 +46,7 @@ namespace MechaCyberpunk.Tests.VR
             yield return Cuadros(4);
             Assert.IsFalse(aviso.Visible, "Con balas no hay aviso.");
 
-            float fin = Time.time + 15f;
+            float fin = Time.time + 30f; // T92: el cargador de la pistola va al doble (16)
             while (pistola.Balas > 0 && Time.time < fin)
             {
                 yield return Pulsar(controlDer.triggerButton);

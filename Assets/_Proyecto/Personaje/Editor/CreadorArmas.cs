@@ -47,42 +47,56 @@ namespace MechaCyberpunk.Personaje.Editor
             public float rayo;
         }
 
+        // T92: los cargadores de las armas de fuego van al doble (los puños y la granada de mano siguen en 1).
         private static readonly Familia[] Familias =
         {
             new Familia { arma = ArmaAPie.Punos, clave = "punos", nombre = "Puños", danio = new[] { 20f, 26f, 32f, 40f },
                 cargador = new[] { 1, 1, 1, 1 }, recarga = new[] { 0.45f, 0.4f, 0.35f, 0.3f }, entre = 0.45f, alcance = 2f,
                 precio = new[] { 0, 100, 200, 350 } },
             new Familia { arma = ArmaAPie.Pistola, clave = "pistola", nombre = "Pistola", danio = new[] { 25f, 30f, 36f, 44f },
-                cargador = new[] { 8, 10, 12, 15 }, recarga = new[] { 1.4f, 1.2f, 1.0f, 0.8f }, entre = 0.25f, alcance = 60f,
+                cargador = new[] { 16, 20, 24, 30 }, recarga = new[] { 1.4f, 1.2f, 1.0f, 0.8f }, entre = 0.25f, alcance = 60f,
                 precio = new[] { 150, 150, 300, 500 } },
             new Familia { arma = ArmaAPie.Escopeta, clave = "escopeta", nombre = "Escopeta", danio = new[] { 9f, 11f, 13f, 16f }, perdigones = 8,
-                cargador = new[] { 4, 5, 6, 8 }, recarga = new[] { 2.4f, 2.0f, 1.7f, 1.4f }, entre = 0.9f, alcance = 20f, inicioCaida = 0.3f, danioMinimo = 0.2f,
+                cargador = new[] { 8, 10, 12, 16 }, recarga = new[] { 2.4f, 2.0f, 1.7f, 1.4f }, entre = 0.9f, alcance = 20f, inicioCaida = 0.3f, danioMinimo = 0.2f,
                 dispersion = 6f, dispersionApuntando = 4f, precio = new[] { 350, 250, 450, 700 } },
             new Familia { arma = ArmaAPie.Fusil, clave = "fusil", nombre = "Fusil", danio = new[] { 15f, 18f, 21f, 25f },
-                cargador = new[] { 30, 30, 35, 40 }, recarga = new[] { 2.0f, 1.8f, 1.6f, 1.3f }, entre = 0.11f, automatica = true, alcance = 150f, inicioCaida = 0.6f, danioMinimo = 0.6f,
+                cargador = new[] { 60, 60, 70, 80 }, recarga = new[] { 2.0f, 1.8f, 1.6f, 1.3f }, entre = 0.11f, automatica = true, alcance = 150f, inicioCaida = 0.6f, danioMinimo = 0.6f,
                 dispersion = 1.5f, dispersionApuntando = 0.6f, precio = new[] { 700, 350, 600, 850 } },
             new Familia { arma = ArmaAPie.Sniper, clave = "sniper", nombre = "Sniper", danio = new[] { 40f, 44f, 48f, 52f },
-                cargador = new[] { 4, 5, 6, 7 }, recarga = new[] { 2.8f, 2.5f, 2.2f, 1.9f }, entre = 1.2f, alcance = 300f,
+                cargador = new[] { 8, 10, 12, 14 }, recarga = new[] { 2.8f, 2.5f, 2.2f, 1.9f }, entre = 1.2f, alcance = 300f,
                 dispersion = 1.2f, dispersionApuntando = 0f, precio = new[] { 2200, 400, 650, 900 } },
             // T-1013: las armas nuevas (imageassets/modelos3d/armas_nuevas).
             new Familia { arma = ArmaAPie.Subfusil, clave = "subfusil", nombre = "Subfusil", danio = new[] { 11f, 13f, 15f, 18f },
-                cargador = new[] { 25, 30, 35, 40 }, recarga = new[] { 1.6f, 1.4f, 1.25f, 1.1f }, entre = 0.07f, automatica = true, alcance = 70f, inicioCaida = 0.4f, danioMinimo = 0.5f,
+                cargador = new[] { 50, 60, 70, 80 }, recarga = new[] { 1.6f, 1.4f, 1.25f, 1.1f }, entre = 0.07f, automatica = true, alcance = 70f, inicioCaida = 0.4f, danioMinimo = 0.5f,
                 dispersion = 2.5f, dispersionApuntando = 1.5f, precio = new[] { 500, 300, 500, 700 } },
             new Familia { arma = ArmaAPie.Revolver, clave = "revolver", nombre = "Revólver", danio = new[] { 55f, 65f, 78f, 95f },
-                cargador = new[] { 6, 6, 6, 6 }, recarga = new[] { 2.2f, 2.0f, 1.7f, 1.5f }, entre = 0.55f, alcance = 70f,
+                cargador = new[] { 12, 12, 12, 12 }, recarga = new[] { 2.2f, 2.0f, 1.7f, 1.5f }, entre = 0.55f, alcance = 70f,
                 dispersion = 1.5f, dispersionApuntando = 0.3f, precio = new[] { 400, 300, 500, 700 } },
             new Familia { arma = ArmaAPie.Lanzagranadas, clave = "lanzagranadas", nombre = "Lanzagranadas", danio = new[] { 120f, 140f, 165f, 200f },
-                cargador = new[] { 6, 6, 6, 6 }, recarga = new[] { 3.0f, 2.7f, 2.3f, 2.0f }, entre = 0.8f, alcance = 60f,
+                cargador = new[] { 12, 12, 12, 12 }, recarga = new[] { 3.0f, 2.7f, 2.3f, 2.0f }, entre = 0.8f, alcance = 60f,
                 precio = new[] { 1500, 600, 900, 1300 }, tipo = TipoDisparoArma.Proyectil, radio = new[] { 4.5f, 5f, 5.5f, 6f }, velocidad = 28f },
             new Familia { arma = ArmaAPie.Granada, clave = "granada", nombre = "Granada", danio = new[] { 150f, 170f, 195f, 230f },
                 cargador = new[] { 1, 1, 1, 1 }, recarga = new[] { 0.6f, 0.55f, 0.5f, 0.45f }, entre = 0.8f, alcance = 40f,
                 precio = new[] { 300, 300, 500, 700 }, tipo = TipoDisparoArma.Lanzada, radio = new[] { 5f, 5.5f, 6f, 6.5f }, velocidad = 16f },
             new Familia { arma = ArmaAPie.RiflePlasma, clave = "rifleplasma", nombre = "Rifle de plasma", danio = new[] { 400f, 470f, 550f, 650f },
-                cargador = new[] { 3, 3, 4, 5 }, recarga = new[] { 3.0f, 2.7f, 2.3f, 2.0f }, entre = 0.5f, alcance = 80f,
+                cargador = new[] { 6, 6, 8, 10 }, recarga = new[] { 3.0f, 2.7f, 2.3f, 2.0f }, entre = 0.5f, alcance = 80f,
                 precio = new[] { 2500, 800, 1200, 1600 }, tipo = TipoDisparoArma.Rayo, carga = 3f, rayo = 5f }
         };
 
         private static readonly string[] Numerales = { string.Empty, " I", " II", " III" };
+
+        /// <summary>T92: el cargador de la tabla para un arma y nivel; -1 si no está en la tabla.</summary>
+        public static int CargadorDe(ArmaAPie arma, int nivel)
+        {
+            foreach (Familia f in Familias)
+            {
+                if (f.arma == arma && nivel >= 0 && nivel < f.cargador.Length)
+                {
+                    return f.cargador[nivel];
+                }
+            }
+            return -1;
+        }
 
         [MenuItem("Mecha Cyberpunk/Crear T-403 armas")]
         public static void Crear()

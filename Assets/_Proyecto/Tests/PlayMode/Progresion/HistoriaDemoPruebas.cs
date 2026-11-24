@@ -277,7 +277,7 @@ namespace MechaCyberpunk.Tests.Progresion
             Assert.AreEqual("VE CON EL INVENTOR AL CIC", Objetivo);
             Assert.IsFalse(doc.TieneRegalo, "Fuera del paso Doc vuelve a cobrar");
 
-            // c. EL INVENTOR: E cambia la pistola a PISTOLA I (cargador 10) sin cobrar.
+            // c. EL INVENTOR: E cambia la pistola a PISTOLA I (cargador 20) sin cobrar.
             PersonajeApoyo inventor = Profe(DirectorPandillas.IdInventor);
             Assert.IsNotNull(inventor);
             Assert.AreEqual(0, arsenal.Nivel(ArmaAPie.Pistola));
@@ -285,7 +285,7 @@ namespace MechaCyberpunk.Tests.Progresion
             yield return Pulsar(teclado.eKey);
             yield return EsperarHasta(() => director.Paso == PasoHistoria.Tianguis, "usar a EL INVENTOR", 5f);
             Assert.AreEqual(1, arsenal.Nivel(ArmaAPie.Pistola), "PISTOLA I");
-            Assert.AreEqual(10, arsenal.Datos(ArmaAPie.Pistola).Cargador, "La PISTOLA I trae 10 balas");
+            Assert.AreEqual(20, arsenal.Datos(ArmaAPie.Pistola).Cargador, "La PISTOLA I trae 20 balas (T92)");
             Assert.AreEqual(500, cartera.Dinero, "EL INVENTOR no cobra en la historia");
             Assert.AreEqual("PISTOLA I: MÁS DAÑO Y MÁS BALAS", pantalla.Ayuda);
             Assert.IsFalse(inventor.TieneRegalo);

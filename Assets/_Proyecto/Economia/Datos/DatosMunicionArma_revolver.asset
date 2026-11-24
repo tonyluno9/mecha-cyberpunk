@@ -16,8 +16,8 @@ MonoBehaviour:
   nombre: "Balas de rev\xF3lver"
   tipo: 3
   valorVenta: 0
-  maximo: 60
+  maximo: 120
   oferta: {fileID: 11400000, guid: 9006bfbaba0a4a14a8409dbda3e57a91, type: 2}
   arma: 6
-  balasPorPaquete: 12
-  balasIniciales: 24
+  balasPorPaquete: 24
+  balasIniciales: 48

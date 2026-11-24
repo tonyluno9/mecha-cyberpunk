@@ -237,14 +237,14 @@ namespace MechaCyberpunk.Tests.UI
 
             yield return ElegirEnRueda(1);
             Assert.IsNotNull(h10.IconoArma.sprite, "La pistola trae su holograma");
-            StringAssert.StartsWith("8", h10.TextoBalas.text.Replace("<size=32><color=#8fdcdacc>", string.Empty), "8 balas en el cargador");
-            StringAssert.Contains("| 8", h10.TextoBalas.text);
+            StringAssert.StartsWith("16", h10.TextoBalas.text.Replace("<size=32><color=#8fdcdacc>", string.Empty), "16 balas en el cargador (T92)");
+            StringAssert.Contains("| 16", h10.TextoBalas.text);
             Assert.IsTrue(string.IsNullOrEmpty(h10.TextosAyuda[0].text) && string.IsNullOrEmpty(h10.TextosAyuda[1].text), "Con el cargador lleno no hay ayudas");
 
             yield return Clic();
             yield return null;
             Assert.AreEqual("[R] Recargar", h10.TextosAyuda[0].text, "Faltan balas: ofrece recargar con la R real");
-            StringAssert.StartsWith("7", h10.TextoBalas.text.Replace("<size=32><color=#8fdcdacc>", string.Empty));
+            StringAssert.StartsWith("15", h10.TextoBalas.text.Replace("<size=32><color=#8fdcdacc>", string.Empty));
 
             yield return Tecla(teclado.rKey);
             yield return Esperar(jugador.GetComponent<MechaCyberpunk.Personaje.Combate.PistolaAPie>().Datos.TiempoRecarga + 0.3f);

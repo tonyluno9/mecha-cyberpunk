@@ -16,8 +16,8 @@ MonoBehaviour:
   nombre: Balas de fusil
   tipo: 3
   valorVenta: 0
-  maximo: 240
+  maximo: 480
   oferta: {fileID: 11400000, guid: a5c7b0bcd7a97064e9c700e8a9a86726, type: 2}
   arma: 3
-  balasPorPaquete: 60
-  balasIniciales: 60
+  balasPorPaquete: 120
+  balasIniciales: 120

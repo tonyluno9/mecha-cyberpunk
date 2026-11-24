@@ -128,7 +128,7 @@ namespace MechaCyberpunk.Tests.Personaje
                 }
             }
             Assert.IsTrue(catalogo.Buscar(ArmaAPie.Subfusil, 0).Automatica, "El subfusil es automático");
-            Assert.AreEqual(6, catalogo.Buscar(ArmaAPie.Revolver, 0).Cargador, "El revólver tiene 6 recámaras");
+            Assert.AreEqual(12, catalogo.Buscar(ArmaAPie.Revolver, 0).Cargador, "El revólver lleva 12 balas (T92; el tambor sigue con 6 recámaras)");
             Assert.Greater(catalogo.Buscar(ArmaAPie.Lanzagranadas, 0).RadioExplosion, 3f);
             Assert.Greater(catalogo.Buscar(ArmaAPie.Granada, 0).RadioExplosion, 3f);
             DatosArma plasma = catalogo.Buscar(ArmaAPie.RiflePlasma, 0);

@@ -16,8 +16,8 @@ MonoBehaviour:
   nombre: Balas de subfusil
   tipo: 3
   valorVenta: 0
-  maximo: 240
+  maximo: 480
   oferta: {fileID: 11400000, guid: a33bf7aba7a216542a8cab8457943d58, type: 2}
   arma: 5
-  balasPorPaquete: 60
-  balasIniciales: 60
+  balasPorPaquete: 120
+  balasIniciales: 120
