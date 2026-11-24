@@ -28,6 +28,7 @@ namespace MechaCyberpunk.Progresion.Recorrido
         private const float AnchoBarra = 900f;
         private const float AltoBarra = 6f;
         private const float AlfaFondoBarra = 0.15f;
+        private const float MargenVideo = 10f;
 
         private sealed class Pedido
         {
@@ -106,8 +107,17 @@ namespace MechaCyberpunk.Progresion.Recorrido
         private Canvas canvas;
         private Image negro;
         private RawImage pantallaVideo;
-        private VideoPlayer video;
-        private RenderTexture texturaVideo;
+        // T-cinematicas-videos-23nov: dos VideoPlayer alternados; mientras uno suena, el otro ya prepara el clip siguiente (sin negro entre clips).
+        private readonly VideoPlayer[] reproductores = new VideoPlayer[2];
+        private readonly RenderTexture[] texturas = new RenderTexture[2];
+        private readonly bool[] acabo = new bool[2];
+        private IReadOnlyList<VideoClip> clips;
+        private int clipActual;
+        private int activo;
+        private bool cambiando;
+        private bool enPendiente;
+        private float pendienteInicio;
+        private VideoPlayer video => clips != null && clips.Count > 0 ? reproductores[activo] : null;
         private bool videoIniciado;
         private Text textoTitulo;
         private Text textoLinea;
@@ -142,12 +152,22 @@ namespace MechaCyberpunk.Progresion.Recorrido
             saltarPedido = false;
             enNegroLlamado = false;
             inicio = Time.unscaledTime;
-            Debug.Log("[Historia] Cinemática " + d.Id + " · " + d.Nombre + " (" + d.DuracionEfectiva.ToString("0.0") + " s" + (d.Video != null ? ", video" : ", pendiente") + ")");
+            clips = d.Clips;
+            clipActual = 0;
+            activo = 0;
+            cambiando = false;
+            enPendiente = false;
+            // Con videos, el final lo marca el último clip (o la parte pendiente): el tope de la regla lleva margen por si el video se atrasa.
+            if (clips.Count > 0)
+            {
+                regla = new ReglaCinematica(d.DuracionEfectiva + MargenVideo);
+            }
+            Debug.Log("[Historia] Cinemática " + d.Id + " · " + d.Nombre + " (" + d.DuracionEfectiva.ToString("0.0") + " s" + (clips.Count > 0 ? ", " + clips.Count + " clips" : ", pendiente") + ")");
             Bloquear();
             ArmarPantalla(d);
-            if (d.Video != null)
+            if (clips.Count > 0)
             {
-                PrepararVideo(d.Video);
+                PrepararVideos();
             }
             Aplicar();
         }
@@ -224,7 +244,7 @@ namespace MechaCyberpunk.Progresion.Recorrido
             negro = KitUI.CrearImagen(canvas.transform, "Negro", new Color(0f, 0f, 0f, 0f));
             KitUI.Estirar(negro.rectTransform);
             negro.raycastTarget = true;
-            if (d.Video != null)
+            if (d.Clips.Count > 0)
             {
                 GameObject v = new GameObject("Video", typeof(RectTransform), typeof(RawImage));
                 v.transform.SetParent(canvas.transform, false);
@@ -234,7 +254,7 @@ namespace MechaCyberpunk.Progresion.Recorrido
                 pantallaVideo.enabled = false;
             }
             EstiloCyberfix e = KitUI.Estilo;
-            bool pendiente = d.Video == null;
+            bool pendiente = d.Clips.Count == 0;
             textoTitulo = TextoCentrado("Titulo", RolTexto.Titulo, e.Turquesa, 0.56f);
             textoTitulo.text = PrefijoTitulo + d.Nombre;
             textoTitulo.enabled = pendiente;
@@ -274,52 +294,151 @@ namespace MechaCyberpunk.Progresion.Recorrido
             return texto;
         }
 
-        private void PrepararVideo(VideoClip clip)
+        private void PrepararVideos()
         {
-            texturaVideo = new RenderTexture((int)clip.width, (int)clip.height, 0);
-            pantallaVideo.texture = texturaVideo;
-            video = gameObject.AddComponent<VideoPlayer>();
-            video.playOnAwake = false;
-            video.clip = clip;
-            video.renderMode = VideoRenderMode.RenderTexture;
-            video.targetTexture = texturaVideo;
-            video.isLooping = false;
-            AudioSource fuente = gameObject.GetComponent<AudioSource>();
-            if (fuente == null)
-            {
-                fuente = gameObject.AddComponent<AudioSource>();
-            }
-            fuente.playOnAwake = false;
-            fuente.spatialBlend = 0f;
             IMezclaAudio mezcla = Registro<IMezclaAudio>.Actual;
-            if (mezcla != null)
+            for (int i = 0; i < 2; i++)
             {
-                fuente.outputAudioMixerGroup = mezcla.Grupo(SeccionSonido.Voces);
+                // Cada reproductor en su hijo, con su AudioSource (2D, grupo Efectos: los videos traen solo efectos).
+                var hijo = new GameObject("Video" + i);
+                hijo.transform.SetParent(transform, false);
+                VideoPlayer vp = hijo.AddComponent<VideoPlayer>();
+                vp.playOnAwake = false;
+                vp.renderMode = VideoRenderMode.RenderTexture;
+                vp.isLooping = false;
+                vp.skipOnDrop = true;
+                AudioSource fuente = hijo.AddComponent<AudioSource>();
+                fuente.playOnAwake = false;
+                fuente.spatialBlend = 0f;
+                if (mezcla != null)
+                {
+                    fuente.outputAudioMixerGroup = mezcla.Grupo(SeccionSonido.Efectos);
+                }
+                vp.audioOutputMode = VideoAudioOutputMode.AudioSource;
+                vp.SetTargetAudioSource(0, fuente);
+                int indice = i;
+                vp.loopPointReached += _ => acabo[indice] = true;
+                reproductores[i] = vp;
             }
-            video.audioOutputMode = VideoAudioOutputMode.AudioSource;
-            video.SetTargetAudioSource(0, fuente);
-            video.Prepare();
+            Cargar(0, 0);
+            if (clips.Count > 1)
+            {
+                Cargar(1, 1);
+            }
+        }
+
+        /// <summary>Pone el clip <paramref name="indiceClip"/> en el reproductor <paramref name="r"/> y lo prepara (su textura del tamaño del clip).</summary>
+        private void Cargar(int r, int indiceClip)
+        {
+            VideoClip clip = clips[indiceClip];
+            VideoPlayer vp = reproductores[r];
+            if (texturas[r] == null || texturas[r].width != (int)clip.width || texturas[r].height != (int)clip.height)
+            {
+                if (texturas[r] != null)
+                {
+                    texturas[r].Release();
+                    Destroy(texturas[r]);
+                }
+                texturas[r] = new RenderTexture((int)clip.width, (int)clip.height, 0);
+            }
+            acabo[r] = false;
+            vp.clip = clip;
+            vp.targetTexture = texturas[r];
+            vp.Prepare();
+        }
+
+        /// <summary>
+        /// Lleva la cadena de clips: al acabar uno arranca el siguiente (ya preparado) y deja ver el último cuadro del anterior hasta que el nuevo pinta.
+        /// Devuelve true cuando ya no queda nada que ver (fin del contenido).
+        /// </summary>
+        private bool AvanzarVideos()
+        {
+            if (enPendiente || clips == null || clips.Count == 0 || !videoIniciado)
+            {
+                return false;
+            }
+            int otro = 1 - activo;
+            if (cambiando)
+            {
+                // El nuevo ya pintó su primer cuadro: se cambia la imagen y el viejo prepara el que sigue.
+                if (reproductores[otro].frame > 0 || acabo[otro])
+                {
+                    pantallaVideo.texture = texturas[otro];
+                    reproductores[activo].Stop();
+                    activo = otro;
+                    cambiando = false;
+                    if (clipActual + 1 < clips.Count)
+                    {
+                        Cargar(1 - activo, clipActual + 1);
+                    }
+                }
+                return false;
+            }
+            if (!acabo[activo])
+            {
+                return false;
+            }
+            if (clipActual + 1 < clips.Count)
+            {
+                clipActual++;
+                reproductores[otro].Play();
+                cambiando = true;
+                return false;
+            }
+            // Se acabó el último clip: la parte pendiente si la hay; si no, termina el contenido.
+            if (pedido.Datos.SegundosPendientes > 0.05f)
+            {
+                enPendiente = true;
+                pendienteInicio = Time.unscaledTime;
+                reproductores[activo].Stop();
+                pantallaVideo.enabled = false;
+                textoTitulo.enabled = true;
+                textoLinea.text = pedido.Datos.TextoPendiente;
+                textoLinea.enabled = true;
+                barraFondo.enabled = true;
+                barraRelleno.enabled = true;
+                return false;
+            }
+            return true;
+        }
+
+        /// <summary>Índice del clip en pantalla (para pruebas).</summary>
+        public static int ClipActual => EnCurso && instancia.clips != null ? instancia.clipActual : -1;
+
+        /// <summary>True si la cinemática en pantalla está en su parte pendiente (sin video, tras los clips).</summary>
+        public static bool EnPartePendiente => EnCurso && instancia.enPendiente;
+
+        /// <summary>0 a 1 de la barra: la de la parte pendiente si se está en ella; si no, la de la regla.</summary>
+        private float ProgresoBarra()
+        {
+            if (!enPendiente)
+            {
+                return regla.Progreso;
+            }
+            float seg = pedido.Datos.SegundosPendientes;
+            return seg <= 0f ? 1f : Mathf.Clamp01((Time.unscaledTime - pendienteInicio) / seg);
         }
 
         private void LimpiarPantalla()
         {
-            if (video != null)
+            for (int i = 0; i < 2; i++)
             {
-                video.Stop();
-                Destroy(video);
-                video = null;
+                if (reproductores[i] != null)
+                {
+                    reproductores[i].Stop();
+                    Destroy(reproductores[i].gameObject);
+                    reproductores[i] = null;
+                }
+                if (texturas[i] != null)
+                {
+                    texturas[i].Release();
+                    Destroy(texturas[i]);
+                    texturas[i] = null;
+                }
             }
-            AudioSource fuente = GetComponent<AudioSource>();
-            if (fuente != null)
-            {
-                Destroy(fuente);
-            }
-            if (texturaVideo != null)
-            {
-                texturaVideo.Release();
-                Destroy(texturaVideo);
-                texturaVideo = null;
-            }
+            clips = null;
+            enPendiente = false;
+            cambiando = false;
             videoIniciado = false;
             if (canvas != null)
             {
@@ -342,6 +461,14 @@ namespace MechaCyberpunk.Progresion.Recorrido
                 saltar = true;
             }
             saltarPedido = false;
+            if (AvanzarVideos())
+            {
+                saltar = true; // el último clip acabó: se sale como al saltar
+            }
+            if (enPendiente && Time.unscaledTime - pendienteInicio >= pedido.Datos.SegundosPendientes)
+            {
+                saltar = true;
+            }
             // El video espera a estar preparado (con tope de 5 s): el contenido no corre hasta que el primer cuadro puede verse.
             bool esperaVideo = video != null && !videoIniciado && !video.isPrepared
                 && regla.Actual == ReglaCinematica.Fase.FundidoEntrada && regla.EnFase >= ReglaCinematica.SegundosFundido - 0.01f
@@ -367,13 +494,20 @@ namespace MechaCyberpunk.Progresion.Recorrido
                     {
                         video.Play();
                         videoIniciado = true;
+                        pantallaVideo.texture = texturas[activo];
                         pantallaVideo.enabled = true;
                     }
                     break;
                 case ReglaCinematica.Fase.FundidoSalida:
-                    if (video != null)
+                    for (int i = 0; i < 2; i++)
                     {
-                        video.Stop();
+                        if (reproductores[i] != null)
+                        {
+                            reproductores[i].Stop();
+                        }
+                    }
+                    if (pantallaVideo != null)
+                    {
                         pantallaVideo.enabled = false;
                     }
                     textoTitulo.enabled = false;
@@ -436,7 +570,7 @@ namespace MechaCyberpunk.Progresion.Recorrido
             SetAlfa(textoSaltar, alfa);
             if (barraRelleno != null)
             {
-                barraRelleno.rectTransform.anchorMax = new Vector2(regla.Progreso, 1f);
+                barraRelleno.rectTransform.anchorMax = new Vector2(ProgresoBarra(), 1f);
                 SetAlfa(barraRelleno, alfa);
                 SetAlfa(barraFondo, AlfaFondoBarra * alfa);
             }
