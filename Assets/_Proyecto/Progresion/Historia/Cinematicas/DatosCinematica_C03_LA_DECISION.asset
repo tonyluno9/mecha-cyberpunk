@@ -18,3 +18,10 @@ MonoBehaviour:
     barrio por el malet\xEDn. Se da la vuelta."
   duracion: 22
   video: {fileID: 0}
+  videos:
+  - {fileID: 32900000, guid: fffe29e5868dc3641ba54ecc98b026f4, type: 3}
+  - {fileID: 32900000, guid: 0585a19f6ee3c044da976d8bbf543bb8, type: 3}
+  - {fileID: 32900000, guid: 6810d19c57adca14dae69b160c816da6, type: 3}
+  segundosPendientes: 6
+  textoPendiente: "Desde la grieta ve c\xF3mo los SKULLS golpean al vendedor. Duda\u2026
+    y regresa por ellos."

@@ -17,3 +17,8 @@ MonoBehaviour:
   texto: "Un ni\xF1o corre en el campo con su hermano. Su mam\xE1 los llama. Despierta."
   duracion: 9
   video: {fileID: 0}
+  videos:
+  - {fileID: 32900000, guid: a8cee62261d240f4ab0c1b3a077b2fbf, type: 3}
+  - {fileID: 32900000, guid: 5e969f11ac7d88d498714d7450e82a2c, type: 3}
+  segundosPendientes: 0
+  textoPendiente: 
