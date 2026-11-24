@@ -350,6 +350,7 @@ namespace MechaCyberpunk.Progresion.Prologo.Clinica
                 reloj.AvanzarHasta(ReglaDoctor.HoraDeDespertar(reloj.Hora, datos.HorasInconsciente));
             }
             Sonidos.Reproducir("ECO_CLINICA_DESPERTAR");
+            MechaCyberpunk.Progresion.Sonido.VocesDoc.Decir(MechaCyberpunk.Progresion.Sonido.VocesDoc.Revivir); // T-voces-23nov: el Doc te habla al despertar
         }
 
         // Camilla, o la cama de casa, o donde cayó (con un aviso).

@@ -1,3 +1,4 @@
+using MechaCyberpunk.Core;
 using MechaCyberpunk.Personaje.Movimiento;
 using UnityEngine;
 
@@ -71,6 +72,7 @@ namespace MechaCyberpunk.Personaje.Vida
             if (!regla.Ardiendo)
             {
                 Mostrar(false);
+                Sonidos.Reproducir(VozJugador.Id(VozJugador.Tos)); // T-voces-23nov: tose por el humo al apagarse
             }
             else if (luz != null)
             {

@@ -30,6 +30,7 @@ namespace MechaCyberpunk.Progresion.Sonido
         private readonly Dictionary<SeccionSonido, float> volumenes = new Dictionary<SeccionSonido, float>();
         private readonly Dictionary<string, int> conteo = new Dictionary<string, int>();
         private readonly Dictionary<int, Bucle> bucles = new Dictionary<int, Bucle>();
+        private readonly List<int> terminados = new List<int>(); // T-voces-23nov: bucles que terminaron su fundido de salida
         private AudioSource[] fuentes;
         private AudioSource[] cruce;
         private string[] idCruce = new string[2];
@@ -70,6 +71,9 @@ namespace MechaCyberpunk.Progresion.Sonido
             public string id;
             public float relativo;
             public float factor = 1f; // T-1535: lo que baja un bucle de clima al ir en carro
+            public float fundido = 1f; // T-voces-23nov: nivel del fundido de entrada y salida (la respiración del jugador)
+            public float segundosFundido;
+            public bool saliendo;
         }
 
         public string UltimoId { get; private set; }
@@ -378,6 +382,15 @@ namespace MechaCyberpunk.Progresion.Sonido
 
         public int ReproducirBucle(string id, Transform sigue)
         {
+            // T-voces-23nov: si un bucle con fundido de este ID se estaba apagando, vuelve a subir en vez de empezar otro.
+            foreach (KeyValuePair<int, Bucle> par in bucles)
+            {
+                if (par.Value.id == id && par.Value.saliendo)
+                {
+                    par.Value.saliendo = false;
+                    return par.Key;
+                }
+            }
             AudioClip clip = Preparar(id);
             if (clip == null) return Sonidos.SinBucle;
             // T-620: un bucle por ID y cabe en las 12 voces. T-1471: la sirena permite varios (una por patrulla, hasta su MaxVoces).
@@ -406,13 +419,20 @@ namespace MechaCyberpunk.Progresion.Sonido
             f.Play();
             ContarSonado(id);
             int numero = siguienteBucle++;
-            bucles[numero] = new Bucle { fuente = f, sigue = sigue, seccion = seccion, id = id, relativo = relativo };
+            float segundosFundido = Voces23nov.SegundosFundido(id);
+            bucles[numero] = new Bucle { fuente = f, sigue = sigue, seccion = seccion, id = id, relativo = relativo, segundosFundido = segundosFundido, fundido = segundosFundido > 0f ? 0f : 1f };
+            if (segundosFundido > 0f) f.volume = 0f;
             return numero;
         }
 
         public void DetenerBucle(int bucle)
         {
             if (!bucles.TryGetValue(bucle, out Bucle b)) return;
+            if (b.segundosFundido > 0f && b.fuente != null)
+            {
+                b.saliendo = true; // T-voces-23nov: baja con fundido y Update lo quita al llegar a 0
+                return;
+            }
             bucles.Remove(bucle);
             if (b.fuente != null) Destroy(b.fuente.gameObject);
         }
@@ -494,11 +514,27 @@ namespace MechaCyberpunk.Progresion.Sonido
                 cruce[i].volume = nivelCruce[i] * VolumenFinal(SeccionSonido.Ambiente) * ReglaMezclaSonidos.VolumenAmbiente(idCruce[i]) * factorDuck * factorDuckVoz;
                 if (meta == 0f && nivelCruce[i] == 0f && cruce[i].isPlaying) cruce[i].Stop();
             }
-            foreach (Bucle b in bucles.Values)
+            terminados.Clear();
+            foreach (KeyValuePair<int, Bucle> par in bucles)
             {
+                Bucle b = par.Value;
+                if (b.segundosFundido > 0f)
+                {
+                    // T-voces-23nov: fundido de entrada y salida del bucle (respiración del jugador).
+                    b.fundido = Mathf.MoveTowards(b.fundido, b.saliendo ? 0f : 1f, Time.unscaledDeltaTime / b.segundosFundido);
+                    if (b.saliendo && b.fundido <= 0f) terminados.Add(par.Key);
+                }
                 if (b.sigue != null && b.fuente != null) b.fuente.transform.position = b.sigue.position;
                 // T-1531: el ducking también baja los bucles de ambiente (clima, interiores, objetos); sirenas y fuego no.
-                if (b.fuente != null) b.fuente.volume = VolumenFinal(b.seccion) * b.relativo * b.factor * (b.seccion == SeccionSonido.Ambiente ? factorDuck * factorDuckVoz : (b.seccion == SeccionSonido.Musica ? factorDuckVoz : 1f));
+                if (b.fuente != null) b.fuente.volume = VolumenFinal(b.seccion) * b.relativo * b.factor * (b.seccion == SeccionSonido.Ambiente ? factorDuck * factorDuckVoz : (b.seccion == SeccionSonido.Musica ? factorDuckVoz : 1f)) * b.fundido;
+            }
+            foreach (int numero in terminados)
+            {
+                if (bucles.TryGetValue(numero, out Bucle b))
+                {
+                    bucles.Remove(numero);
+                    if (b.fuente != null) Destroy(b.fuente.gameObject);
+                }
             }
         }
     }

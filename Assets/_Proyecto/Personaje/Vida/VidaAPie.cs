@@ -236,9 +236,12 @@ namespace MechaCyberpunk.Personaje.Vida
         private ResultadoDanio AplicarAVida(InfoDanio info, float cantidad)
         {
             float aplicado = modelo.Aplicar(cantidad);
+            bool prendio = false;
             if (info.Tipo == TipoDanio.Explosion && quemadura != null && !modelo.EstaKO)
             {
+                bool yaArdia = quemadura.Ardiendo;
                 quemadura.Prender(info.Punto); // T-691: una explosión te prende fuego
+                prendio = !yaArdia && quemadura.Ardiendo;
             }
             ResultadoDanio resultado = new ResultadoDanio(aplicado, TipoBloqueo.Ninguno, modelo.EstaKO);
             if (info.Tipo == TipoDanio.Explosion && aplicado > 0f)
@@ -246,7 +249,15 @@ namespace MechaCyberpunk.Personaje.Vida
                 Sonidos.Reproducir(ReglaSonidoVida.ZumbidoOido); // T-1535: el pitido en el oído tras una explosión que te alcanza
             }
             EventosPelea.PublicarImpacto(null, info, resultado);
-            Sonidos.ReproducirEn(VozJugador.Id("JUG_DANIO"), transform.position);
+            // T-voces-23nov: la voz grabada del jugador (2D): quemado si la explosión lo prendió; si no, dolor leve o fuerte según el daño. Al caer suena la muerte.
+            if (!modelo.EstaKO)
+            {
+                string voz = prendio ? VozJugador.Quemado : VozJugador.IdDolor(aplicado, modelo.Maxima, info.Tipo == TipoDanio.Explosion);
+                if (voz.Length > 0)
+                {
+                    Sonidos.Reproducir(VozJugador.Id(voz));
+                }
+            }
             return resultado;
         }
 
@@ -341,7 +352,7 @@ namespace MechaCyberpunk.Personaje.Vida
         private void AlLlegarAKO()
         {
             controlador.ActivarControl(false);
-            Sonidos.ReproducirEn(VozJugador.Id("JUG_CAE_DERROTADO"), transform.position);
+            Sonidos.Reproducir(VozJugador.Id(VozJugador.Muerte)); // T-voces-23nov: antes JUG_CAE_DERROTADO (librería)
             Debug.Log("[Personaje] KO a pie");
             KO?.Invoke();
         }

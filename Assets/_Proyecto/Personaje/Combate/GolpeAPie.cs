@@ -412,6 +412,7 @@ namespace MechaCyberpunk.Personaje.Combate
             {
                 Sonidos.ReproducirEn(ReglaSonidosJugador.IdGolpe(false), origen); // al conectar suena SensacionGolpe
             }
+            Sonidos.Reproducir(VozJugador.Id(VozJugador.Esfuerzo)); // T-voces-23nov: el esfuerzo al golpear o empujar (2D; la política evita metralleta)
             Impacto?.Invoke();
         }
 

@@ -126,7 +126,7 @@ namespace MechaCyberpunk.Personaje.Visual
             {
                 // Una sola llamada por alerta (no suma calor en cada disparo de la misma balacera).
                 proximaLlamada = finAlerta;
-                Sonidos.ReproducirEn("CAL_PATRULLA_MEGAFONO", transform.position);
+                Sonidos.ReproducirEn("NOV_VOZ_ALERTA", transform.position + Vector3.up * 1.6f); // T-voces-23nov: la voz grabada de Nova (antes el radio de la policía)
                 Registro<ICalor>.Actual?.Sumar(calorAlReaccionar, MotivoCalor.Otro);
             }
         }

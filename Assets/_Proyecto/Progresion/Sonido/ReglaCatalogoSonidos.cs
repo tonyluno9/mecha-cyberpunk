@@ -16,6 +16,7 @@ namespace MechaCyberpunk.Progresion.Sonido
             // T-1531: las voces de NPC y de robot, el clima y los objetos que zumban (ambiente), la radio (música) y los avisos de misión (interfaz).
             if (id != null && id.StartsWith("ROB_VOZ", StringComparison.Ordinal)) return SeccionSonido.Voces;
             if (MapaSonidos20nov.EsInteriorAmbiente(id)) return SeccionSonido.Ambiente;
+            if (Voces23nov.EsVoz(id)) return SeccionSonido.Voces; // T-voces-23nov: JUG_, POL_, NOV_, DOC_... de 19_Voces
             switch (prefijo)
             {
                 case "PAN": return SeccionSonido.Voces;
