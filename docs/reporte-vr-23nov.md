@@ -375,3 +375,8 @@ Main no traía nada nuevo (`f6e47ad` ya estaba incluido). No se tocaron `Builds\
 5. Manos: ¿solo ves el guante, sin antebrazo? ¿El corte de la muñeca se ve limpio?
 6. Con el visor puesto, ¿la ventana del PC muestra lo mismo que ves?
 7. Con un objetivo activo, sube a un carro y a una moto. ¿La línea de ruta sigue y vuelve normal al bajarte?
+
+## Décima tanda (vr-24nov tarde) · build en `wtVR\Builds\VR10\CyberCity.exe`
+- **Qué juntó:** todo lo de main de la sesión A: T97 (cinemáticas con imágenes fijas), T96 (muerte al menú sin carga), T94, T90, T93 y T92. La sesión A ya ponía las imágenes fijas de T97 en la pantalla de cine de VR con fondo negro. Agregué pruebas VR de T97 y T96, y pasan con el simulador. Main en `19fb956`.
+- **Choques:** ninguno; el merge fue directo (fast-forward).
+- **Qué probar con el visor:** (1) en C02–C05, ¿las imágenes fijas salen en la pantalla grande con negro alrededor y se mueven despacio? (2) En HAS MUERTO, al elegir MENÚ PRINCIPAL, ¿llegas al menú sin la carga encima? (3) ¿Te salen el doble de balas (T92) y se cierra el menú de Tino al empezar su cinemática (T90)?
