@@ -13,7 +13,7 @@ namespace MechaCyberpunk.Progresion.Recorrido
     /// <summary>
     /// T-1625 (T10, 10.1): reproduce una <see cref="DatosCinematica"/>. Sin video: fundido a negro de 0.5 s, "CINEMÁTICA · NOMBRE", una línea con lo que pasa,
     /// barra de progreso y "ENTER: SALTAR"; dura exactamente la duración y vuelve con otro fundido. Con VideoClip: el video a pantalla completa con su audio.
-    /// Durante la cinemática: <see cref="CinematicaEnCurso"/> activo, el jugador sin control, la entrada apagada, el HUD oculto y la música baja.
+    /// Durante la cinemática: <see cref="CinematicaEnCurso"/> activo, el jugador sin control, la entrada apagada, el HUD oculto y, mientras suena la narración, DuckingNarracion.Activo (la música de fases se baja sola con esa bandera).
     /// <c>enNegro</c> se llama cuando la pantalla ya está negra y va a empezar el fundido de salida (momento de acomodar el mundo sin que se vea);
     /// <c>alTerminar</c> al devolver el control. Si ya hay una en curso, las nuevas hacen fila.
     /// </summary>
@@ -23,8 +23,15 @@ namespace MechaCyberpunk.Progresion.Recorrido
         public const string TextoSaltar = "ENTER: SALTAR";
         /// <summary>V12: en VR se salta con B (o el gatillo derecho).</summary>
         public const string TextoSaltarVR = "B: SALTAR";
+        /// <summary>T-omitir-cinematicas-24nov: el botón visible abajo a la derecha (clic o ENTER en PC; láser y gatillo, o B, en VR).</summary>
+        public const string TextoOmitir = "OMITIR";
+        public const string NombreCanvasOmitir = "CanvasOmitirCinematica";
+        private const float AnchoBotonOmitir = 260f;
+        private const float AltoBotonOmitir = 56f;
+        private const float MargenBotonX = 48f;
+        private const float MargenBotonY = 36f;
+        private const float SeparacionAyuda = 12f;
         public const int OrdenCanvas = 30000;
-        private const float VolumenMusicaBajada = 0.2f;
         private const float SegundosSinSaltar = 0.3f;
         private const float AltoPorLetra = 1.4f;
         private const float AnchoBarra = 900f;
@@ -121,6 +128,18 @@ namespace MechaCyberpunk.Progresion.Recorrido
         private float pendienteInicio;
         private VideoPlayer video => clips != null && clips.Count > 0 ? reproductores[activo] : null;
         private bool videoIniciado;
+        // T-cinematicas-narracion-24nov: la frase del clip en pantalla (un AudioSource 2D en el grupo Voces) y su regla de tiempo.
+        private AudioSource narrador;
+        private readonly AudioSource[] fuentesVideo = new AudioSource[2];
+        private ReglaNarracion reglaClip;
+        private int reproductorClip;
+        private bool fundiendoVoz;
+        private Canvas canvasOmitir;
+        private CanvasGroup grupoOmitir;
+        private RectTransform rectOmitir;
+        private bool cursorGuardado;
+        private CursorLockMode cursorAntes;
+        private bool cursorVisibleAntes;
         private Text textoTitulo;
         private Text textoLinea;
         private Image barraFondo;
@@ -131,7 +150,6 @@ namespace MechaCyberpunk.Progresion.Recorrido
         private bool controlAntes;
         private readonly List<Canvas> canvasOcultos = new List<Canvas>();
         private readonly List<InputAction> accionesApagadas = new List<InputAction>();
-        private float musicaAntes = -1f;
 
         private void OnDestroy()
         {
@@ -202,8 +220,15 @@ namespace MechaCyberpunk.Progresion.Recorrido
             {
                 accion.Disable();
             }
-            musicaAntes = Sonidos.Volumen(SeccionSonido.Musica);
-            Sonidos.FijarVolumen(SeccionSonido.Musica, musicaAntes * VolumenMusicaBajada);
+            // T-omitir-cinematicas-24nov: en PC el ratón queda libre para pulsar OMITIR; al terminar vuelve como estaba.
+            if (!ModoVR.Activo)
+            {
+                cursorGuardado = true;
+                cursorAntes = Cursor.lockState;
+                cursorVisibleAntes = Cursor.visible;
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+            }
             PilaPantallas.Abrir(this);
         }
 
@@ -246,10 +271,12 @@ namespace MechaCyberpunk.Progresion.Recorrido
                 }
             }
             canvasOcultos.Clear();
-            if (musicaAntes >= 0f)
+            DuckingNarracion.Activo = false;
+            if (cursorGuardado)
             {
-                Sonidos.FijarVolumen(SeccionSonido.Musica, musicaAntes);
-                musicaAntes = -1f;
+                cursorGuardado = false;
+                Cursor.lockState = cursorAntes;
+                Cursor.visible = cursorVisibleAntes;
             }
             if (controlador != null)
             {
@@ -303,10 +330,42 @@ namespace MechaCyberpunk.Progresion.Recorrido
             barraFondo.enabled = pendiente;
             barraRelleno.enabled = pendiente;
             textoSaltar = KitUI.CrearTexto(canvas.transform, "Saltar", RolTexto.Ayuda, TextAnchor.LowerRight);
-            KitUI.Colocar(textoSaltar.rectTransform, new Vector2(1f, 0f), new Vector2(-48f, 36f), new Vector2(400f, 40f));
+            KitUI.Colocar(textoSaltar.rectTransform, new Vector2(1f, 0f), new Vector2(-MargenBotonX, MargenBotonY + AltoBotonOmitir + SeparacionAyuda),
+                new Vector2(400f, 40f));
             textoSaltar.color = e.Desactivado;
             textoSaltar.text = ModoVR.Activo ? TextoSaltarVR : TextoSaltar;
+            ArmarOmitir();
         }
+
+        /// <summary>
+        /// T-omitir-cinematicas-24nov: "OMITIR" abajo a la derecha, en su propio Canvas encima de la cinemática (así en VR no se apaga con el
+        /// negro cuando el video pasa a la pantalla de cine, y el láser lo puede pulsar). Clic, ENTER, B o gatillo saltan la cinemática completa.
+        /// </summary>
+        private void ArmarOmitir()
+        {
+            canvasOmitir = KitUI.CrearCanvas(transform, NombreCanvasOmitir, OrdenCanvas + 1);
+            canvasOmitir.overrideSorting = true;
+            grupoOmitir = canvasOmitir.gameObject.AddComponent<CanvasGroup>();
+            grupoOmitir.alpha = 0f;
+            BotonCyberfix boton = KitUI.CrearBoton(canvasOmitir.transform, TextoOmitir, () => SaltarActual());
+            rectOmitir = (RectTransform)boton.transform;
+            KitUI.Colocar(rectOmitir, new Vector2(1f, 0f), new Vector2(-MargenBotonX, MargenBotonY), new Vector2(AnchoBotonOmitir, AltoBotonOmitir));
+        }
+
+        /// <summary>True si este cuadro se hizo clic izquierdo sobre OMITIR (en PC la entrada de la UI está apagada en la cinemática: se mira aquí).</summary>
+        private bool ClicEnOmitir()
+        {
+            Mouse raton = Mouse.current;
+            if (raton == null || rectOmitir == null || canvasOmitir == null || !canvasOmitir.enabled || !raton.leftButton.wasPressedThisFrame)
+            {
+                return false;
+            }
+            Camera camara = canvasOmitir.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvasOmitir.worldCamera;
+            return RectTransformUtility.RectangleContainsScreenPoint(rectOmitir, raton.position.ReadValue(), camara);
+        }
+
+        /// <summary>T-omitir-cinematicas-24nov: el botón OMITIR de la cinemática en pantalla (null si ninguna). Para pruebas.</summary>
+        public static RectTransform BotonOmitir => EnCurso ? instancia.rectOmitir : null;
 
         private Text TextoCentrado(string nombre, RolTexto rol, Color color, float altura)
         {
@@ -343,9 +402,21 @@ namespace MechaCyberpunk.Progresion.Recorrido
                 }
                 vp.audioOutputMode = VideoAudioOutputMode.AudioSource;
                 vp.SetTargetAudioSource(0, fuente);
+                fuentesVideo[i] = fuente;
                 int indice = i;
                 vp.loopPointReached += _ => acabo[indice] = true;
                 reproductores[i] = vp;
+            }
+            // T-cinematicas-narracion-24nov: la voz en off va 2D por el grupo Voces (los deslizadores de voces la controlan).
+            var objetoVoz = new GameObject("Narracion");
+            objetoVoz.transform.SetParent(transform, false);
+            narrador = objetoVoz.AddComponent<AudioSource>();
+            narrador.playOnAwake = false;
+            narrador.loop = false;
+            narrador.spatialBlend = 0f;
+            if (mezcla != null)
+            {
+                narrador.outputAudioMixerGroup = mezcla.Grupo(SeccionSonido.Voces);
             }
             Cargar(0, 0);
             if (clips.Count > 1)
@@ -385,6 +456,7 @@ namespace MechaCyberpunk.Progresion.Recorrido
                 return false;
             }
             int otro = 1 - activo;
+            reglaClip?.Avanzar(Time.unscaledDeltaTime, acabo[reproductorClip]);
             if (cambiando)
             {
                 // El nuevo ya pintó su primer cuadro: se cambia la imagen y el viejo prepara el que sigue.
@@ -401,7 +473,8 @@ namespace MechaCyberpunk.Progresion.Recorrido
                 }
                 return false;
             }
-            if (!acabo[activo])
+            // Con narración: el último cuadro se queda congelado hasta que acaba la frase y luego va la pausa (ReglaNarracion).
+            if (!acabo[activo] || (reglaClip != null && !reglaClip.Listo))
             {
                 return false;
             }
@@ -409,6 +482,7 @@ namespace MechaCyberpunk.Progresion.Recorrido
             {
                 clipActual++;
                 reproductores[otro].Play();
+                EmpezarClip(clipActual, otro);
                 cambiando = true;
                 return false;
             }
@@ -428,6 +502,75 @@ namespace MechaCyberpunk.Progresion.Recorrido
             }
             return true;
         }
+
+        /// <summary>T-cinematicas-narracion-24nov: el clip <paramref name="indice"/> acaba de empezar en el reproductor <paramref name="r"/>: arranca su frase.</summary>
+        private void EmpezarClip(int indice, int r)
+        {
+            reproductorClip = r;
+            AudioClip voz = pedido.Datos.Narracion(indice);
+            reglaClip = new ReglaNarracion(voz != null ? voz.length : 0f, pedido.Datos.Pausa(indice));
+            if (narrador == null)
+            {
+                return;
+            }
+            narrador.Stop();
+            narrador.clip = voz;
+            narrador.volume = 1f;
+            if (voz != null)
+            {
+                narrador.Play();
+            }
+        }
+
+        /// <summary>
+        /// Baja los efectos del video (~-6 dB) y avisa a la música (<see cref="DuckingNarracion"/>) mientras suena la frase; al saltar, la frase
+        /// se apaga con un fundido de <see cref="ReglaNarracion.SegundosFundidoVoz"/> s.
+        /// </summary>
+        private void AplicarNarracion(float dt)
+        {
+            bool sonando = reglaClip != null && reglaClip.VozSonando && !fundiendoVoz && regla.Actual == ReglaCinematica.Fase.Contenido;
+            DuckingNarracion.Activo = sonando;
+            float volumenVideo = sonando ? ReglaNarracion.VolumenVideoConVoz : 1f;
+            for (int i = 0; i < 2; i++)
+            {
+                if (fuentesVideo[i] != null)
+                {
+                    fuentesVideo[i].volume = volumenVideo;
+                }
+            }
+            if (fundiendoVoz && narrador != null)
+            {
+                narrador.volume = Mathf.Max(0f, narrador.volume - dt / ReglaNarracion.SegundosFundidoVoz);
+                if (narrador.volume <= 0f)
+                {
+                    narrador.Stop();
+                    fundiendoVoz = false;
+                }
+            }
+        }
+
+        /// <summary>
+        /// V12/VR: true si el VideoPlayer es el de la cinemática en pantalla y su cuadro sigue a la vista aunque ya no corra (congelado mientras
+        /// acaba la frase, o en la pausa). La pantalla de cine de VR lo deja puesto mientras tanto.
+        /// </summary>
+        public static bool SosteniendoCuadro(VideoPlayer v)
+        {
+            if (v == null || !EnCurso || instancia.regla == null || instancia.regla.Actual != ReglaCinematica.Fase.Contenido)
+            {
+                return false;
+            }
+            CinematicaPendiente c = instancia;
+            return c.videoIniciado && !c.enPendiente && !c.cambiando && c.clips != null && c.clips.Count > 0 && c.reproductores[c.activo] == v;
+        }
+
+        /// <summary>True si el cuadro del clip en pantalla está congelado esperando a que acabe su frase (para pruebas).</summary>
+        public static bool CuadroCongelado => EnCurso && instancia.reglaClip != null && instancia.reglaClip.Congelado;
+
+        /// <summary>True si la frase del clip en pantalla está sonando (para pruebas).</summary>
+        public static bool NarracionSonando => EnCurso && instancia.reglaClip != null && instancia.reglaClip.VozSonando && !instancia.fundiendoVoz;
+
+        /// <summary>El AudioSource de la narración de la cinemática en pantalla (null si ninguna o sin videos). Para pruebas.</summary>
+        public static AudioSource FuenteNarracion => EnCurso ? instancia.narrador : null;
 
         /// <summary>Índice del clip en pantalla (para pruebas).</summary>
         public static int ClipActual => EnCurso && instancia.clips != null ? instancia.clipActual : -1;
@@ -463,6 +606,23 @@ namespace MechaCyberpunk.Progresion.Recorrido
                     texturas[i] = null;
                 }
             }
+            if (narrador != null)
+            {
+                narrador.Stop();
+                Destroy(narrador.gameObject);
+                narrador = null;
+            }
+            fuentesVideo[0] = null;
+            fuentesVideo[1] = null;
+            reglaClip = null;
+            fundiendoVoz = false;
+            if (canvasOmitir != null)
+            {
+                Destroy(canvasOmitir.gameObject);
+                canvasOmitir = null;
+                grupoOmitir = null;
+                rectOmitir = null;
+            }
             clips = null;
             enPendiente = false;
             cambiando = false;
@@ -484,6 +644,10 @@ namespace MechaCyberpunk.Progresion.Recorrido
             Keyboard teclado = Keyboard.current;
             if (teclado != null && Time.unscaledTime - inicio >= SegundosSinSaltar
                 && (teclado.enterKey.wasPressedThisFrame || teclado.numpadEnterKey.wasPressedThisFrame))
+            {
+                saltar = true;
+            }
+            if (Time.unscaledTime - inicio >= SegundosSinSaltar && ClicEnOmitir())
             {
                 saltar = true;
             }
@@ -509,6 +673,7 @@ namespace MechaCyberpunk.Progresion.Recorrido
             {
                 return;
             }
+            AplicarNarracion(Time.unscaledDeltaTime);
             Aplicar();
         }
 
@@ -520,6 +685,7 @@ namespace MechaCyberpunk.Progresion.Recorrido
                     if (video != null)
                     {
                         video.Play();
+                        EmpezarClip(0, activo);
                         videoIniciado = true;
                         pantallaVideo.texture = texturas[activo];
                         pantallaVideo.enabled = true;
@@ -542,6 +708,16 @@ namespace MechaCyberpunk.Progresion.Recorrido
                     barraFondo.enabled = false;
                     barraRelleno.enabled = false;
                     textoSaltar.enabled = false;
+                    if (canvasOmitir != null)
+                    {
+                        canvasOmitir.enabled = false;
+                    }
+                    // Saltar corta la frase con un fundido corto (nunca de golpe); la música ya puede volver.
+                    if (narrador != null && narrador.isPlaying)
+                    {
+                        fundiendoVoz = true;
+                    }
+                    DuckingNarracion.Activo = false;
                     LlamarEnNegro();
                     break;
                 case ReglaCinematica.Fase.Terminada:
@@ -595,6 +771,10 @@ namespace MechaCyberpunk.Progresion.Recorrido
             SetAlfa(textoTitulo, alfa);
             SetAlfa(textoLinea, alfa);
             SetAlfa(textoSaltar, alfa);
+            if (grupoOmitir != null)
+            {
+                grupoOmitir.alpha = alfa;
+            }
             if (barraRelleno != null)
             {
                 barraRelleno.rectTransform.anchorMax = new Vector2(ProgresoBarra(), 1f);

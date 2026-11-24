@@ -17,3 +17,17 @@ MonoBehaviour:
   texto: El Inventor le mejora la pistola.
   duracion: 4
   video: {fileID: 0}
+  videos:
+  - {fileID: 32900000, guid: 9b107777c83f4b24480d04fd1f9f3a78, type: 3}
+  - {fileID: 32900000, guid: 69b5c446a60dd38488961cece6f224f8, type: 3}
+  - {fileID: 32900000, guid: 520cd43bc5f627348972cdf1dcff8172, type: 3}
+  narraciones:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  pausas:
+  - 1
+  - 1
+  - 1
+  segundosPendientes: 0
+  textoPendiente: 
