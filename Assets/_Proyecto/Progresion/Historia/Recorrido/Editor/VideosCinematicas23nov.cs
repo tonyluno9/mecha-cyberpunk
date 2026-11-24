@@ -42,6 +42,13 @@ namespace MechaCyberpunk.Progresion.Recorrido.Editor
                     informe.Add(id + ": no hay DatosCinematica");
                     continue;
                 }
+                // T97: las que ya tienen imágenes fijas en Frames/ las pone FramesCinematicasT97 (no se les vuelven a poner los videos).
+                string frames = CarpetaVideos + "/" + id + "/" + FramesCinematicasT97.SubcarpetaFrames;
+                if (AssetDatabase.IsValidFolder(frames) && AssetDatabase.FindAssets("t:Texture2D", new[] { frames }).Length > 0)
+                {
+                    informe.Add(id + ": imágenes fijas (T97), no se toca");
+                    continue;
+                }
                 List<VideoClip> clips = Clips(id);
                 float pendientes = 0f;
                 string linea = string.Empty;

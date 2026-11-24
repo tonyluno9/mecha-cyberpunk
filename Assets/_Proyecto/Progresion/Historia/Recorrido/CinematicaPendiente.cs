@@ -126,7 +126,8 @@ namespace MechaCyberpunk.Progresion.Recorrido
         private bool cambiando;
         private bool enPendiente;
         private float pendienteInicio;
-        private VideoPlayer video => clips != null && clips.Count > 0 ? reproductores[activo] : null;
+        // El reproductor de la toma en pantalla si es video (null si no hay tomas o la toma es imagen fija).
+        private VideoPlayer video => hayVideos && clips != null && clipActual < clips.Count && clips[clipActual] != null ? reproductores[activo] : null;
         private bool videoIniciado;
         // T-cinematicas-narracion-24nov: la frase del clip en pantalla (un AudioSource 2D en el grupo Voces) y su regla de tiempo.
         private AudioSource narrador;
@@ -134,6 +135,14 @@ namespace MechaCyberpunk.Progresion.Recorrido
         private ReglaNarracion reglaClip;
         private int reproductorClip;
         private bool fundiendoVoz;
+        // T97: las tomas que son imagen fija se componen (Ken Burns y fundido con la anterior) en el lienzo, que se ve en pantallaVideo.
+        private bool hayVideos;
+        private bool enFoto;
+        private RenderTexture lienzo;
+        private RenderTexture lienzoAnterior;
+        private bool hayAnterior;
+        private Texture2D fotoActual;
+        private ReglaFotoCinematica reglaFoto;
         private Canvas canvasOmitir;
         private CanvasGroup grupoOmitir;
         private RectTransform rectOmitir;
@@ -177,17 +186,24 @@ namespace MechaCyberpunk.Progresion.Recorrido
             activo = 0;
             cambiando = false;
             enPendiente = false;
+            enFoto = false;
+            hayAnterior = false;
+            hayVideos = false;
+            foreach (VideoClip c in clips)
+            {
+                hayVideos |= c != null;
+            }
             // Con videos, el final lo marca el último clip (o la parte pendiente): el tope de la regla lleva margen por si el video se atrasa.
             if (clips.Count > 0)
             {
                 regla = new ReglaCinematica(d.DuracionEfectiva + MargenVideo);
             }
-            Debug.Log("[Historia] Cinemática " + d.Id + " · " + d.Nombre + " (" + d.DuracionEfectiva.ToString("0.0") + " s" + (clips.Count > 0 ? ", " + clips.Count + " clips" : ", pendiente") + ")");
+            Debug.Log("[Historia] Cinemática " + d.Id + " · " + d.Nombre + " (" + d.DuracionEfectiva.ToString("0.0") + " s" + (clips.Count > 0 ? ", " + clips.Count + " tomas, " + d.CantidadFotos + " fijas" : ", pendiente") + ")");
             Bloquear();
             ArmarPantalla(d);
             if (clips.Count > 0)
             {
-                PrepararVideos();
+                PrepararTomas();
             }
             Aplicar();
         }
@@ -380,10 +396,11 @@ namespace MechaCyberpunk.Progresion.Recorrido
             return texto;
         }
 
-        private void PrepararVideos()
+        private void PrepararTomas()
         {
             IMezclaAudio mezcla = Registro<IMezclaAudio>.Actual;
-            for (int i = 0; i < 2; i++)
+            // T97: sin ninguna toma de video no se crean VideoPlayer (las imágenes fijas van en el lienzo).
+            for (int i = 0; i < 2 && hayVideos; i++)
             {
                 // Cada reproductor en su hijo, con su AudioSource (2D, grupo Efectos: los videos traen solo efectos).
                 var hijo = new GameObject("Video" + i);
@@ -418,18 +435,37 @@ namespace MechaCyberpunk.Progresion.Recorrido
             {
                 narrador.outputAudioMixerGroup = mezcla.Grupo(SeccionSonido.Voces);
             }
-            Cargar(0, 0);
+            if (clips[0] != null)
+            {
+                Cargar(0, 0);
+            }
             if (clips.Count > 1)
             {
                 Cargar(1, 1);
             }
         }
 
-        /// <summary>Pone el clip <paramref name="indiceClip"/> en el reproductor <paramref name="r"/> y lo prepara (su textura del tamaño del clip).</summary>
+        /// <summary>T97: si la toma que sigue es video, la prepara en el reproductor libre.</summary>
+        private void PrecargarSiguiente()
+        {
+            if (clipActual + 1 < clips.Count)
+            {
+                Cargar(1 - activo, clipActual + 1);
+            }
+        }
+
+        /// <summary>
+        /// Pone el clip <paramref name="indiceClip"/> en el reproductor <paramref name="r"/> y lo prepara (su textura del tamaño del clip).
+        /// T97: si esa toma es imagen fija no hace nada.
+        /// </summary>
         private void Cargar(int r, int indiceClip)
         {
             VideoClip clip = clips[indiceClip];
             VideoPlayer vp = reproductores[r];
+            if (clip == null || vp == null)
+            {
+                return;
+            }
             if (texturas[r] == null || texturas[r].width != (int)clip.width || texturas[r].height != (int)clip.height)
             {
                 if (texturas[r] != null)
@@ -447,40 +483,60 @@ namespace MechaCyberpunk.Progresion.Recorrido
 
         /// <summary>
         /// Lleva la cadena de clips: al acabar uno arranca el siguiente (ya preparado) y deja ver el último cuadro del anterior hasta que el nuevo pinta.
+        /// T97: una toma puede ser imagen fija (se compone en el lienzo y dura su narración + pausa, o 3 s); la siguiente entra con un fundido corto.
         /// Devuelve true cuando ya no queda nada que ver (fin del contenido).
         /// </summary>
-        private bool AvanzarVideos()
+        private bool AvanzarTomas()
         {
             if (enPendiente || clips == null || clips.Count == 0 || !videoIniciado)
             {
                 return false;
             }
             int otro = 1 - activo;
-            reglaClip?.Avanzar(Time.unscaledDeltaTime, acabo[reproductorClip]);
+            float dt = Time.unscaledDeltaTime;
+            bool tomaFoto = enFoto && !cambiando;
+            if (tomaFoto)
+            {
+                // T97: la imagen fija corre su tiempo (narración + pausa, o 3 s) y se dibuja con su Ken Burns y el fundido de entrada.
+                reglaFoto.Avanzar(dt);
+                reglaClip?.Avanzar(dt, true);
+                DibujarFoto();
+            }
+            else
+            {
+                reglaClip?.Avanzar(dt, acabo[reproductorClip]);
+            }
             if (cambiando)
             {
                 // El nuevo ya pintó su primer cuadro: se cambia la imagen y el viejo prepara el que sigue.
                 if (reproductores[otro].frame > 0 || acabo[otro])
                 {
                     pantallaVideo.texture = texturas[otro];
-                    reproductores[activo].Stop();
+                    if (reproductores[activo] != null)
+                    {
+                        reproductores[activo].Stop();
+                    }
                     activo = otro;
                     cambiando = false;
-                    if (clipActual + 1 < clips.Count)
-                    {
-                        Cargar(1 - activo, clipActual + 1);
-                    }
+                    enFoto = false;
+                    PrecargarSiguiente();
                 }
                 return false;
             }
             // Con narración: el último cuadro se queda congelado hasta que acaba la frase y luego va la pausa (ReglaNarracion).
-            if (!acabo[activo] || (reglaClip != null && !reglaClip.Listo))
+            bool listo = tomaFoto ? reglaFoto.Listo : acabo[activo] && (reglaClip == null || reglaClip.Listo);
+            if (!listo)
             {
                 return false;
             }
             if (clipActual + 1 < clips.Count)
             {
                 clipActual++;
+                if (clips[clipActual] == null)
+                {
+                    EmpezarFoto(clipActual);
+                    return false;
+                }
                 reproductores[otro].Play();
                 EmpezarClip(clipActual, otro);
                 cambiando = true;
@@ -490,8 +546,12 @@ namespace MechaCyberpunk.Progresion.Recorrido
             if (pedido.Datos.SegundosPendientes > 0.05f)
             {
                 enPendiente = true;
+                enFoto = false;
                 pendienteInicio = Time.unscaledTime;
-                reproductores[activo].Stop();
+                if (reproductores[activo] != null)
+                {
+                    reproductores[activo].Stop();
+                }
                 pantallaVideo.enabled = false;
                 textoTitulo.enabled = true;
                 textoLinea.text = pedido.Datos.TextoPendiente;
@@ -521,6 +581,74 @@ namespace MechaCyberpunk.Progresion.Recorrido
                 narrador.Play();
             }
         }
+
+        /// <summary>
+        /// T97: empieza la toma <paramref name="indice"/>, que es una imagen fija: guarda lo que se veía (para el fundido cruzado), pone el lienzo
+        /// en pantalla, arranca su frase y su tiempo (<see cref="ReglaFotoCinematica"/>) y prepara el video que siga, si sigue uno.
+        /// </summary>
+        private void EmpezarFoto(int indice)
+        {
+            AsegurarLienzos();
+            Texture antes = pantallaVideo != null && pantallaVideo.enabled ? pantallaVideo.texture : null;
+            hayAnterior = antes != null;
+            if (hayAnterior)
+            {
+                Graphics.Blit(antes, lienzoAnterior);
+            }
+            if (hayVideos && reproductores[activo] != null)
+            {
+                reproductores[activo].Stop();
+            }
+            fotoActual = pedido.Datos.Foto(indice);
+            EmpezarClip(indice, activo);
+            AudioClip voz = pedido.Datos.Narracion(indice);
+            reglaFoto = new ReglaFotoCinematica(ReglaFotoCinematica.Duracion(voz != null ? voz.length : 0f, pedido.Datos.Pausa(indice)));
+            enFoto = true;
+            cambiando = false;
+            DibujarFoto();
+            pantallaVideo.texture = lienzo;
+            pantallaVideo.enabled = true;
+            if (hayVideos && indice > 0)
+            {
+                PrecargarSiguiente();
+            }
+        }
+
+        private void AsegurarLienzos()
+        {
+            if (lienzo == null)
+            {
+                lienzo = new RenderTexture(LienzoFotoCinematica.Ancho, LienzoFotoCinematica.Alto, 0) { name = "LienzoCinematica" };
+                lienzo.Create();
+            }
+            if (lienzoAnterior == null)
+            {
+                lienzoAnterior = new RenderTexture(LienzoFotoCinematica.Ancho, LienzoFotoCinematica.Alto, 0) { name = "LienzoCinematicaAnterior" };
+                lienzoAnterior.Create();
+            }
+        }
+
+        // Compone la imagen fija en el lienzo: la toma anterior abajo y esta encima con su fundido de entrada y su encuadre Ken Burns.
+        private void DibujarFoto()
+        {
+            if (lienzo == null || reglaFoto == null)
+            {
+                return;
+            }
+            float aspecto = fotoActual != null && fotoActual.height > 0 ? (float)fotoActual.width / fotoActual.height : LienzoFotoCinematica.Aspecto;
+            Rect uv = ReglaFotoCinematica.Encuadre(reglaFoto.Avance, clipActual, aspecto, LienzoFotoCinematica.Aspecto);
+            LienzoFotoCinematica.Componer(lienzo, hayAnterior ? lienzoAnterior : null, fotoActual, uv, reglaFoto.AlfaEntrada);
+        }
+
+        /// <summary>
+        /// T97/VR: el lienzo con la imagen fija que está en pantalla (null si no hay cinemática, la toma es video o ya no está en el contenido).
+        /// En VR <c>VideosCineVR</c> lo pone en la pantalla grande.
+        /// </summary>
+        public static RenderTexture TexturaFija => EnCurso && instancia.enFoto && instancia.lienzo != null && instancia.regla != null
+            && instancia.regla.Actual == ReglaCinematica.Fase.Contenido ? instancia.lienzo : null;
+
+        /// <summary>T97: true si la toma en pantalla es una imagen fija (para pruebas).</summary>
+        public static bool EnImagenFija => EnCurso && instancia.enFoto;
 
         /// <summary>
         /// Baja los efectos del video (~-6 dB) y avisa a la música (<see cref="DuckingNarracion"/>) mientras suena la frase; al saltar, la frase
@@ -560,7 +688,8 @@ namespace MechaCyberpunk.Progresion.Recorrido
                 return false;
             }
             CinematicaPendiente c = instancia;
-            return c.videoIniciado && !c.enPendiente && !c.cambiando && c.clips != null && c.clips.Count > 0 && c.reproductores[c.activo] == v;
+            // T97: con una imagen fija en pantalla ningún video sostiene su cuadro (la pantalla de cine muestra el lienzo, ver TexturaFija).
+            return c.videoIniciado && !c.enPendiente && !c.cambiando && !c.enFoto && c.clips != null && c.clips.Count > 0 && c.reproductores[c.activo] == v;
         }
 
         /// <summary>True si el cuadro del clip en pantalla está congelado esperando a que acabe su frase (para pruebas).</summary>
@@ -627,11 +756,29 @@ namespace MechaCyberpunk.Progresion.Recorrido
             enPendiente = false;
             cambiando = false;
             videoIniciado = false;
+            enFoto = false;
+            hayAnterior = false;
+            hayVideos = false;
+            fotoActual = null;
+            reglaFoto = null;
+            LiberarLienzo(ref lienzo);
+            LiberarLienzo(ref lienzoAnterior);
             if (canvas != null)
             {
                 Destroy(canvas.gameObject);
                 canvas = null;
             }
+        }
+
+        private static void LiberarLienzo(ref RenderTexture textura)
+        {
+            if (textura == null)
+            {
+                return;
+            }
+            textura.Release();
+            Destroy(textura);
+            textura = null;
         }
 
         private void Update()
@@ -652,7 +799,7 @@ namespace MechaCyberpunk.Progresion.Recorrido
                 saltar = true;
             }
             saltarPedido = false;
-            if (AvanzarVideos())
+            if (AvanzarTomas())
             {
                 saltar = true; // el último clip acabó: se sale como al saltar
             }
@@ -689,6 +836,12 @@ namespace MechaCyberpunk.Progresion.Recorrido
                         videoIniciado = true;
                         pantallaVideo.texture = texturas[activo];
                         pantallaVideo.enabled = true;
+                    }
+                    else if (clips != null && clips.Count > 0 && clips[0] == null)
+                    {
+                        // T97: la primera toma es una imagen fija: entra con su fundido desde el negro.
+                        videoIniciado = true;
+                        EmpezarFoto(0);
                     }
                     break;
                 case ReglaCinematica.Fase.FundidoSalida:

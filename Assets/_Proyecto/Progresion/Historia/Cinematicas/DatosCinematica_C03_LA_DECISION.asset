@@ -19,12 +19,19 @@ MonoBehaviour:
   duracion: 22
   video: {fileID: 0}
   videos:
-  - {fileID: 32900000, guid: fffe29e5868dc3641ba54ecc98b026f4, type: 3}
-  - {fileID: 32900000, guid: 0585a19f6ee3c044da976d8bbf543bb8, type: 3}
-  - {fileID: 32900000, guid: 6810d19c57adca14dae69b160c816da6, type: 3}
-  - {fileID: 32900000, guid: 7d3de02f7f680b9469d3c46a0e9b420e, type: 3}
-  - {fileID: 32900000, guid: 02581a3b40b831642a5fbe18554a06ec, type: 3}
-  - {fileID: 32900000, guid: a2fd22637ef03a64a8e27c0a323d9240, type: 3}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  fotos:
+  - {fileID: 2800000, guid: 951a98a2f9a7bb84abdadf50853399ef, type: 3}
+  - {fileID: 2800000, guid: e64eb520d12373140b6f2ef390c7ec7e, type: 3}
+  - {fileID: 2800000, guid: b85bd2628e8eaf44c8094de018386eda, type: 3}
+  - {fileID: 2800000, guid: 5977c977a036a074e8b0415142dfa53e, type: 3}
+  - {fileID: 2800000, guid: 71ecb1ffcf0d46f499f14ba53fd7cf97, type: 3}
+  - {fileID: 2800000, guid: 278da193495367d40b6880b60679d93e, type: 3}
   narraciones:
   - {fileID: 8300000, guid: 822d20181747e984ab9c56e34949e224, type: 3}
   - {fileID: 8300000, guid: fcda6a01f96c02d439f42b2782f06df9, type: 3}
