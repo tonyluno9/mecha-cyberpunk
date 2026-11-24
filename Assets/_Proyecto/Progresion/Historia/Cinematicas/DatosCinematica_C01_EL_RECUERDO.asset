@@ -20,5 +20,11 @@ MonoBehaviour:
   videos:
   - {fileID: 32900000, guid: a8cee62261d240f4ab0c1b3a077b2fbf, type: 3}
   - {fileID: 32900000, guid: 5e969f11ac7d88d498714d7450e82a2c, type: 3}
+  narraciones:
+  - {fileID: 0}
+  - {fileID: 0}
+  pausas:
+  - 1
+  - 1
   segundosPendientes: 0
   textoPendiente: 

@@ -24,6 +24,7 @@ Cerrar Unity y Unity Hub, confirmar que no queda ningún Unity.exe, borrar `Temp
 | Canepa | CANEPA_VOZ_SALUDO, _REPARAR, _DESPEDIDA | Taller del Canepa: al entrar, al terminar una reparación, al salir |
 | Tino | TINO_VOZ_SALUDO, _BANCO, _COMPRA, _SIN_DINERO, _DESPEDIDA | Tienda de Tino: al entrar, al abrir la tienda/banco, al comprar, cuando no alcanza el dinero, al salir |
 | Mesera_Robot | MESERA_ROBOT_SALUDO, _SERVIR, _SUERTE, _DESPEDIDA | Mesera robot del casino VivaCoin |
+| Narracion | NAR_C02, NAR_C03, NAR_C04_F08..F11, NAR_C05_F12/F12B/F12C/F13/F14/F15, NAR_C06_G01..G03, NAR_C07_G04..G06 | Voz en off del protagonista sobre las cinemáticas C02–C07: cada archivo va sobre el clip de video con el mismo código (guion completo en docs/guion-narracion-cinematicas.md). 2D, sin distancia. F15 dura ~7 s: alargar el clip o congelar el último cuadro |
 | Peatones | NPC_VOZ1_*, NPC_VOZ2_*, NPC_VOZ3_* con MIEDO, ENOJO, POLICIA, SALUDO, VENDEDOR, RISA | 3 voces (normal, grave, aguda). A cada peatón se le asigna UNA voz al aparecer y usa siempre esa. MIEDO cuando hay disparos o atropellos, ENOJO si el jugador lo empuja, POLICIA cuando ve un delito, SALUDO al pasar cerca, VENDEDOR en puestos del mercado y tianguis (cada tanto), RISA en grupos platicando |
 
 ## Reglas

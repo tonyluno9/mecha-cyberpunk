@@ -17,6 +17,17 @@ MonoBehaviour:
   texto: 'El Doc le inyecta el suero: ahora aguanta cualquier mejora.'
   duracion: 5
   video: {fileID: 0}
-  videos: []
+  videos:
+  - {fileID: 32900000, guid: 250e02cc41acd6f4c9436ba81cad6d01, type: 3}
+  - {fileID: 32900000, guid: 4dc395877af2666408de9e73eadba11e, type: 3}
+  - {fileID: 32900000, guid: 5b217ba2ecd0b8b4095ad77cc25b02c5, type: 3}
+  narraciones:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  pausas:
+  - 1
+  - 1
+  - 1
   segundosPendientes: 0
   textoPendiente: 
