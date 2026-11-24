@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using MechaCyberpunk.Core;
 using UnityEngine;
 
@@ -9,7 +10,8 @@ namespace MechaCyberpunk.CampoTiro
     /// T-1722 (T79): un maniquí del campo de tiro. Usa SOLO el visual de un enemigo de Nova (sin IA ni NavMesh: se le quitan los scripts), con una caja de
     /// colisión. Recibe el daño de las balas del jugador por <see cref="IRecibeDanio"/>, cae al llegar a 0 y reaparece a los pocos segundos.
     /// T86: muestra su barra de vida (<see cref="BarraVidaObjetivo"/>) y ningún número de daño.
-    /// T85: toca su idle (el AnimatorController del Nova, cuyo estado por defecto es Idle), se ve holográfico y aparece con un destello que se asienta en 0.5 s.
+    /// T85: toca su idle (el AnimatorController del Nova, cuyo estado por defecto es Idle) y aparece con un destello holográfico de 0.5 s.
+    /// VR50: pasado el destello vuelve a su modelo con sus materiales reales (ya no se queda holográfico); al reaparecer destella otra vez.
     /// </summary>
     public class ObjetivoTiro : MonoBehaviour, IRecibeDanio
     {
@@ -32,6 +34,11 @@ namespace MechaCyberpunk.CampoTiro
         private Material materialHolo;
         private Color colorHolo;
         private float edadAparicion = 99f;
+        private Renderer[] dibujos = new Renderer[0];
+        private Material[][] materialesReales = new Material[0][];
+        private UnityEngine.Rendering.ShadowCastingMode[] sombrasReales = new UnityEngine.Rendering.ShadowCastingMode[0];
+        private bool[] recibeSombraReal = new bool[0];
+        private bool enHolo;
         private GameObject plataforma;
         private BarraVidaObjetivo barra;
 
@@ -56,8 +63,8 @@ namespace MechaCyberpunk.CampoTiro
             }
         }
         public bool TieneAnimador => animador != null && animador.runtimeAnimatorController != null;
-        /// <summary>True si el visual usa el material holográfico.</summary>
-        public bool Holografico => materialHolo != null;
+        /// <summary>True mientras el visual lleva el material holográfico (solo durante el destello de aparición, VR50).</summary>
+        public bool Holografico => enHolo;
         /// <summary>Opacidad actual del material holográfico (0 a 1): empieza en 1 (destello) y se asienta en la del material.</summary>
         public float AlfaHolo => materialHolo != null ? materialHolo.GetColor("_BaseColor").a : 0f;
         public bool BarraVisible => barra != null && barra.Visible;
@@ -158,7 +165,8 @@ namespace MechaCyberpunk.CampoTiro
             animador.enabled = true;
         }
 
-        // Material holográfico propio (para animar el destello) en todos los dibujos del visual. Se queda así: el objetivo es un holograma.
+        // Material holográfico propio (para animar el destello) en todos los dibujos del visual. VR50: se guardan sus materiales reales y se devuelven al
+        // terminar el destello (<see cref="SegundosAparicion"/>).
         private void PonerHolo(DatosCampoTiro datos)
         {
             if (datos == null || datos.MaterialHolo == null)
@@ -167,23 +175,66 @@ namespace MechaCyberpunk.CampoTiro
             }
             materialHolo = new Material(datos.MaterialHolo);
             colorHolo = datos.MaterialHolo.GetColor("_BaseColor");
+            List<Renderer> lista = new List<Renderer>();
             foreach (Renderer dibujo in visual.GetComponentsInChildren<Renderer>(true))
             {
-                if (!(dibujo is MeshRenderer) && !(dibujo is SkinnedMeshRenderer))
+                if (dibujo is MeshRenderer || dibujo is SkinnedMeshRenderer)
+                {
+                    lista.Add(dibujo);
+                }
+            }
+            dibujos = lista.ToArray();
+            materialesReales = new Material[dibujos.Length][];
+            sombrasReales = new UnityEngine.Rendering.ShadowCastingMode[dibujos.Length];
+            recibeSombraReal = new bool[dibujos.Length];
+            for (int i = 0; i < dibujos.Length; i++)
+            {
+                materialesReales[i] = dibujos[i].sharedMaterials;
+                sombrasReales[i] = dibujos[i].shadowCastingMode;
+                recibeSombraReal[i] = dibujos[i].receiveShadows;
+            }
+            EmpezarDestello();
+        }
+
+        private void EmpezarDestello()
+        {
+            if (materialHolo == null)
+            {
+                return;
+            }
+            for (int i = 0; i < dibujos.Length; i++)
+            {
+                if (dibujos[i] == null)
                 {
                     continue;
                 }
-                Material[] lista = new Material[Mathf.Max(1, dibujo.sharedMaterials.Length)];
-                for (int i = 0; i < lista.Length; i++)
+                Material[] holo = new Material[Mathf.Max(1, materialesReales[i].Length)];
+                for (int k = 0; k < holo.Length; k++)
                 {
-                    lista[i] = materialHolo;
+                    holo[k] = materialHolo;
                 }
-                dibujo.sharedMaterials = lista;
-                dibujo.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-                dibujo.receiveShadows = false;
+                dibujos[i].sharedMaterials = holo;
+                dibujos[i].shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                dibujos[i].receiveShadows = false;
             }
+            enHolo = true;
             edadAparicion = 0f;
             AplicarAparicion(0f);
+        }
+
+        private void QuitarHolo()
+        {
+            for (int i = 0; i < dibujos.Length; i++)
+            {
+                if (dibujos[i] == null)
+                {
+                    continue;
+                }
+                dibujos[i].sharedMaterials = materialesReales[i];
+                dibujos[i].shadowCastingMode = sombrasReales[i];
+                dibujos[i].receiveShadows = recibeSombraReal[i];
+            }
+            enHolo = false;
         }
 
         // t=0: destello casi blanco y opaco; t=1: cian translúcido asentado.
@@ -279,16 +330,20 @@ namespace MechaCyberpunk.CampoTiro
                 transform.rotation = giroBase;
                 caja.enabled = true;
                 barra?.Poner(1f, true);
-                edadAparicion = 0f;
+                EmpezarDestello();
             }
         }
 
         private void Update()
         {
-            if (materialHolo != null && edadAparicion < SegundosAparicion)
+            if (enHolo)
             {
                 edadAparicion += Time.deltaTime;
                 AplicarAparicion(Mathf.Clamp01(edadAparicion / SegundosAparicion));
+                if (edadAparicion >= SegundosAparicion)
+                {
+                    QuitarHolo(); // VR50: el destello se apaga y queda el modelo real
+                }
             }
             if (!caido)
             {

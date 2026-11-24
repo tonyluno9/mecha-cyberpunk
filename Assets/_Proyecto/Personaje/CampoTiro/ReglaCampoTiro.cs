@@ -51,6 +51,8 @@ namespace MechaCyberpunk.CampoTiro
                 case TipoObjetivoTiro.RobotPesado: return 400f;
                 case TipoObjetivoTiro.Perro: return 80f;
                 case TipoObjetivoTiro.Elite: return 250f;
+                case TipoObjetivoTiro.Skull: return 100f;
+                case TipoObjetivoTiro.Policia: return 120f;
                 default: return 100f;
             }
         }
@@ -66,6 +68,8 @@ namespace MechaCyberpunk.CampoTiro
                 case TipoObjetivoTiro.RobotPesado: return "ROBOT PESADO";
                 case TipoObjetivoTiro.Perro: return "PERRO ROBOT";
                 case TipoObjetivoTiro.Elite: return "ELITE";
+                case TipoObjetivoTiro.Skull: return "SKULL";
+                case TipoObjetivoTiro.Policia: return "POLICÍA";
                 default: return "GUARDIA";
             }
         }

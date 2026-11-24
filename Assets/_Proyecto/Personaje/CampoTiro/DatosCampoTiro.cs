@@ -17,6 +17,8 @@ namespace MechaCyberpunk.CampoTiro
         [SerializeField] private GameObject visualPerro;
         [SerializeField] private GameObject visualElite;
         [SerializeField] private GameObject visualGuardia;
+        [SerializeField] private GameObject visualSkull;
+        [SerializeField] private GameObject visualPolicia;
         [SerializeField] private Material materialBlanco;
         [SerializeField] private Material materialTurquesa;
         [SerializeField] private Material materialRejilla;
@@ -26,6 +28,8 @@ namespace MechaCyberpunk.CampoTiro
         [SerializeField] private RuntimeAnimatorController controlPerro;
         [SerializeField] private RuntimeAnimatorController controlElite;
         [SerializeField] private RuntimeAnimatorController controlGuardia;
+        [SerializeField] private RuntimeAnimatorController controlSkull;
+        [SerializeField] private RuntimeAnimatorController controlPolicia;
 
         public GameObject[] Costales => costales;
         public Material MaterialBlanco => materialBlanco;
@@ -44,6 +48,8 @@ namespace MechaCyberpunk.CampoTiro
                 case TipoObjetivoTiro.RobotPesado: return controlRobotPesado;
                 case TipoObjetivoTiro.Perro: return controlPerro;
                 case TipoObjetivoTiro.Elite: return controlElite;
+                case TipoObjetivoTiro.Skull: return controlSkull;
+                case TipoObjetivoTiro.Policia: return controlPolicia;
                 default: return controlGuardia;
             }
         }
@@ -56,8 +62,19 @@ namespace MechaCyberpunk.CampoTiro
                 case TipoObjetivoTiro.RobotPesado: return visualRobotPesado;
                 case TipoObjetivoTiro.Perro: return visualPerro;
                 case TipoObjetivoTiro.Elite: return visualElite;
+                case TipoObjetivoTiro.Skull: return visualSkull;
+                case TipoObjetivoTiro.Policia: return visualPolicia;
                 default: return visualGuardia;
             }
+        }
+
+        /// <summary>VR50: el SKULL y el policía (modelo y AnimatorController reales). Lo usa el método de editor.</summary>
+        public void ConfigurarExtra(GameObject skull, GameObject policia, RuntimeAnimatorController cSkull, RuntimeAnimatorController cPolicia)
+        {
+            visualSkull = skull;
+            visualPolicia = policia;
+            controlSkull = cSkull;
+            controlPolicia = cPolicia;
         }
 
         /// <summary>Lo usa el método de editor para llenar el asset.</summary>
