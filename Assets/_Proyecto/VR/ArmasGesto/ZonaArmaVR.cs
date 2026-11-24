@@ -6,7 +6,7 @@ namespace MechaCyberpunk.VR
         Ninguna,
         /// <summary>Mano derecha en la cadera derecha: sacar o guardar el arma corta.</summary>
         CaderaDerecha,
-        /// <summary>Mano derecha sobre el hombro derecho (arriba y atrás): sacar o guardar el arma larga.</summary>
+        /// <summary>Mano derecha encima o detrás del hombro derecho (T95: zona amplia, de la cabeza para arriba): sacar o guardar el arma larga.</summary>
         HombroDerecho,
         /// <summary>Mano izquierda en la cadera izquierda: tomar un cargador nuevo.</summary>
         CaderaIzquierda

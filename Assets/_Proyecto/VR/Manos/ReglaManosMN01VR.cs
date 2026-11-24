@@ -139,6 +139,29 @@ namespace MechaCyberpunk.VR.Manos
             return r;
         }
 
+        /// <summary>T87: índice del hueso del antebrazo (raíz del rig; la mano es su único hijo).</summary>
+        public const int IndiceAntebrazo = 0;
+        /// <summary>T87: escala (uniforme) a la que se encoge el antebrazo oculto: sus vértices quedan a menos de 1 mm del punto de corte.</summary>
+        public const float EscalaAntebrazoOculto = 0.001f;
+        /// <summary>T87: metros detrás de la muñeca (hacia el codo) donde se juntan los vértices del antebrazo: cierra el puño del guante en punta corta.</summary>
+        public const float RetrocesoCorteAntebrazo = 0.03f;
+
+        /// <summary>
+        /// T87: cómo ocultar el antebrazo sin mover la mano. El antebrazo (<paramref name="posAntebrazo"/>, <paramref name="rotAntebrazo"/>, locales a su
+        /// padre, escala 1) se encoge a <paramref name="escala"/> con su origen en el punto de corte, a <paramref name="retroceso"/> m de la muñeca hacia
+        /// el codo; la mano (<paramref name="posMano"/>, local al antebrazo) se recoloca y se contra-escala por 1/<paramref name="escala"/> para que su
+        /// pose en el mundo (y la de los dedos) quede idéntica. Devuelve la nueva posición local del antebrazo y la de la mano.
+        /// </summary>
+        public static void ColapsoAntebrazo(Vector3 posAntebrazo, Quaternion rotAntebrazo, Vector3 posMano, float retroceso, float escala,
+            out Vector3 nuevaPosAntebrazo, out Vector3 nuevaPosMano)
+        {
+            float largo = posMano.magnitude;
+            float k = largo > 1e-6f ? Mathf.Clamp01(retroceso / largo) : 0f;
+            float s = Mathf.Max(1e-6f, escala);
+            nuevaPosAntebrazo = posAntebrazo + rotAntebrazo * (posMano * (1f - k));
+            nuevaPosMano = posMano * (k / s);
+        }
+
         /// <summary>Fracción (0..1) del camino hacia la pose objetivo que se recorre en <paramref name="dt"/> s.</summary>
         public static float Mezcla(float dt) => dt <= 0f ? 0f : 1f - Mathf.Exp(-dt / SegundosMezcla);
 

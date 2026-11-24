@@ -3,7 +3,8 @@ using UnityEngine;
 namespace MechaCyberpunk.VR
 {
     /// <summary>
-    /// VR51, lógica pura de la mira del arma en VR (<see cref="MiraArmaVR"/>):
+    /// VR51/T91, lógica pura de la mira del arma en VR (<see cref="MiraArmaVR"/>):
+    /// - <see cref="PosicionReticula"/> y <see cref="LadoAngular"/> (T91): la retícula pegada a la cabeza, sobre la línea ojo-punto de impacto.
     /// - <see cref="PuntoColimado"/>: dónde se ve la retícula de una mira holográfica (colimada): la línea que sale del ojo paralela al cañón cruza
     ///   el vidrio ahí. Así la retícula marca la dirección del cañón sin importar dónde esté el ojo.
     /// - Zoom del visor del francotirador con el stick derecho en vertical: arriba acerca (baja el campo de visión), abajo aleja; bajo
@@ -65,5 +66,26 @@ namespace MechaCyberpunk.VR
 
         /// <summary>True si el punto (en unidades del vidrio, desde su centro) cae dentro de un vidrio redondo de ese radio.</summary>
         public static bool DentroDelVidrio(Vector2 enVidrio, float radio) => enVidrio.sqrMagnitude <= radio * radio;
+
+        /// <summary>
+        /// T91: dónde va la retícula pegada a la cabeza. <paramref name="objetivoEnCabeza"/> es el punto donde pega la bala, relativo al ojo y
+        /// en los ejes de la cabeza (m, +z adelante). La retícula va sobre la línea ojo-objetivo, a la distancia del objetivo limitada entre
+        /// <paramref name="distanciaMinima"/> y <paramref name="distanciaMaxima"/>: así su centro tapa justo el punto de impacto (y, a la
+        /// distancia real, los dos ojos la ven en el mismo sitio). False si el objetivo queda detrás de la cabeza o pegado al ojo.
+        /// </summary>
+        public static bool PosicionReticula(Vector3 objetivoEnCabeza, float distanciaMinima, float distanciaMaxima, out Vector3 posicion)
+        {
+            posicion = Vector3.forward * distanciaMinima;
+            float largo = objetivoEnCabeza.magnitude;
+            if (largo < 1e-4f || objetivoEnCabeza.z <= 0f)
+            {
+                return false;
+            }
+            posicion = objetivoEnCabeza / largo * Mathf.Clamp(largo, distanciaMinima, Mathf.Max(distanciaMinima, distanciaMaxima));
+            return true;
+        }
+
+        /// <summary>T91: lado (m) que ocupa <paramref name="grados"/> de la vista a <paramref name="distancia"/> m del ojo.</summary>
+        public static float LadoAngular(float distancia, float grados) => 2f * Mathf.Max(0f, distancia) * Mathf.Tan(Mathf.Clamp(grados, 0f, 179f) * 0.5f * Mathf.Deg2Rad);
     }
 }

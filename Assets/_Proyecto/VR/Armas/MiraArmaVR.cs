@@ -2,56 +2,70 @@ using MechaCyberpunk.Core;
 using MechaCyberpunk.Personaje.Combate;
 using MechaCyberpunk.VR.Menus;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 namespace MechaCyberpunk.VR
 {
     /// <summary>
-    /// VR51: apuntar con el gatillo IZQUIERDO las armas largas de bala. Pistola y revólver se quedan a una mano, sin mira (no cambian).
+    /// T91 (antes VR51): apuntar con el gatillo IZQUIERDO las armas de bala. Mientras está apretado sale una retícula a vista completa delante de
+    /// los ojos (un Canvas World Space hijo de la cámara XR, pegado a la cabeza), alineada con el cañón: cada cuadro se busca dónde pega la bala
+    /// (el rayo de la boca del arma, como dispara <see cref="PistolaAPie"/> en VR) y la retícula se pone sobre la línea ojo-impacto
+    /// (<see cref="ReglaMiraVR.PosicionReticula"/>), con tamaño angular fijo. Al soltar el gatillo izquierdo se quita. Ya no hay mira en el arma.
     /// <list type="bullet">
-    /// <item>Subfusil, fusil y escopeta: con el gatillo izquierdo apretado sale una mira holográfica EN el arma (un vidrio sobre el cañón, no en
-    ///   pantalla), sin zoom. La retícula está colimada como una de verdad: se ve donde la línea paralela al cañón que sale del ojo cruza el vidrio
-    ///   (<see cref="ReglaMiraVR.PuntoColimado"/>), así que al alinear el ojo con el arma marca a dónde va la bala. El gatillo derecho dispara.</item>
-    /// <item>Francotirador: igual, pero la mira es un visor con aumento (una cámara en el cañón dibuja en el visor). El stick derecho en vertical
-    ///   hace zoom mientras el visor está activo (<see cref="ReglaMiraVR.Zoom"/>); ese rato el stick derecho no recentra y
-    ///   <see cref="BloqueaGiro"/> avisa que no debe girar.</item>
+    /// <item>Pistola y revólver: cruz simple con punto (<see cref="TipoMira.Cruz"/>).</item>
+    /// <item>Subfusil: punto rojo (<see cref="TipoMira.PuntoRojo"/>).</item>
+    /// <item>Fusil y escopeta: retícula de mira, anillo con trazos y punto; la de la escopeta es más ancha (<see cref="TipoMira.Mira"/>).</item>
+    /// <item>Francotirador: visor a vista completa con bordes negros; una cámara en el cañón dibuja el círculo. El stick derecho en vertical
+    ///   hace zoom (<see cref="ReglaMiraVR.AvanzarZoom"/>); ese rato el stick derecho no recentra y <see cref="BloqueaGiro"/> avisa que no debe girar.</item>
     /// </list>
-    /// El lanzagranadas (arco) y el plasma (carga) con el gatillo izquierdo los hace <see cref="ArmasEspecialesVR"/>. Todo con UI (sprites de
-    /// <see cref="SpritesMiraVR"/>) en un Canvas World Space colgado del arma en la mano. Corre después de <see cref="PistolaVR"/>, que coloca el
-    /// arma. Lo agrega <see cref="ArranqueCombateVR"/>.
+    /// El lanzagranadas (arco) y el plasma (carga) con el gatillo izquierdo los hace <see cref="ArmasEspecialesVR"/>. Los Canvas van en la capa UI,
+    /// que la cámara del visor no dibuja, y con un material que se dibuja encima de todo (el arma no tapa la retícula). Corre después de
+    /// <see cref="PistolaVR"/>, que coloca el arma. Lo agrega <see cref="ArranqueCombateVR"/>.
     /// </summary>
     [DefaultExecutionOrder(125)]
     public class MiraArmaVR : MonoBehaviour
     {
-        /// <summary>Qué mira lleva un arma en VR.</summary>
+        /// <summary>Qué retícula lleva un arma en VR.</summary>
         public enum TipoMira
         {
             Ninguna,
-            Holografica,
+            Cruz,
+            PuntoRojo,
+            Mira,
             Visor
         }
 
-        /// <summary>El vidrio de la mira va esto (m) por encima del cañón.</summary>
-        public const float AlturaMira = 0.055f;
-        /// <summary>Dónde va el vidrio entre la empuñadura (0) y la boca (1).</summary>
-        public const float FraccionMira = 0.35f;
-        /// <summary>Ancho del vidrio holográfico (m).</summary>
-        public const float AnchoVidrio = 0.055f;
-        /// <summary>Ancho del visor del francotirador (m).</summary>
-        public const float AnchoVisor = 0.05f;
-        /// <summary>Unidades del Canvas a lo ancho del vidrio.</summary>
-        public const float UnidadesVidrio = 100f;
+        /// <summary>Hasta dónde (m) se busca el punto de impacto desde la boca.</summary>
+        public const float AlcanceReticula = 150f;
+        /// <summary>La retícula nunca va más cerca del ojo que esto (m).</summary>
+        public const float DistanciaMinima = 0.3f;
+        /// <summary>Ni más lejos que esto (m): más allá la diferencia entre los ojos ya no se nota.</summary>
+        public const float DistanciaMaxima = 60f;
+        /// <summary>El visor del francotirador va a esta distancia del ojo (m).</summary>
+        public const float DistanciaVisor = 0.5f;
+        /// <summary>Lo que abarca el lienzo de la retícula (°): <see cref="Unidades"/> unidades del Canvas.</summary>
+        public const float AnguloReticula = 24f;
+        /// <summary>Lo que abarca el círculo del visor (°): <see cref="Unidades"/> unidades del Canvas.</summary>
+        public const float AnguloVisor = 40f;
+        /// <summary>Unidades del Canvas a lo ancho del lienzo.</summary>
+        public const float Unidades = 100f;
         /// <summary>Lado de la textura del visor (px).</summary>
         public const int ResolucionVisor = 512;
+        /// <summary>La retícula de la escopeta es esto más ancha (el cono de perdigones).</summary>
+        public const float EscalaEscopeta = 1.6f;
         private const int ProfundidadVisor = 16;
         private const float CercaVisor = 0.05f;
         private const float LejosVisor = 1500f;
-        private const float TamanoReticula = 16f;
-        private const float TamanoPunto = 4f;
+        private const float BordeNegro = 2000f;
+        private const int ColaEncima = 4000;
+        private const int OrdenLienzo = 50;
+        private const int CapaUIPorDefecto = 5;
 
-        private static readonly Color ColorReticula = new Color(1f, 0.22f, 0.18f, 0.95f);
-        private static readonly Color ColorVidrio = new Color(0.30f, 0.92f, 0.90f, 0.35f);
-        private static readonly Color ColorCruz = new Color(0.05f, 0.05f, 0.05f, 0.95f);
+        private static readonly Color ColorCian = new Color(0.30f, 0.92f, 0.90f, 0.95f);
+        private static readonly Color ColorRojo = new Color(1f, 0.22f, 0.18f, 0.95f);
+        private static readonly Color ColorHalo = new Color(1f, 0.22f, 0.18f, 0.25f);
+        private static readonly Color ColorCruzVisor = new Color(0.05f, 0.05f, 0.05f, 0.95f);
 
         private static bool bloqueaGiro;
 
@@ -61,10 +75,12 @@ namespace MechaCyberpunk.VR
         private PistolaVR pistolaVR;
         private CambioArmaStickVR stick;
 
+        private Material materialEncima;
         private Canvas lienzo;
-        private RectTransform reticula;
-        private GameObject holografica;
-        private GameObject visor;
+        private Canvas lienzoVisor;
+        private GameObject cruz;
+        private GameObject puntoRojo;
+        private RectTransform mira;
         private RawImage imagenVisor;
         private Camera camaraVisor;
         private RenderTexture texturaVisor;
@@ -75,11 +91,14 @@ namespace MechaCyberpunk.VR
         /// </summary>
         public static bool BloqueaGiro => bloqueaGiro;
 
-        /// <summary>La mira que se ve ahora (Ninguna si no se apunta).</summary>
+        /// <summary>La retícula que se ve ahora (Ninguna si no se apunta).</summary>
         public TipoMira Activa { get; private set; }
 
-        /// <summary>True si la retícula holográfica se ve en el vidrio (el ojo está alineado con el arma).</summary>
-        public bool ReticulaVisible => reticula != null && reticula.gameObject.activeInHierarchy;
+        /// <summary>True si la retícula (o el visor) se ve delante de los ojos.</summary>
+        public bool ReticulaVisible => (lienzo != null && lienzo.gameObject.activeInHierarchy) || (lienzoVisor != null && lienzoVisor.gameObject.activeInHierarchy);
+
+        /// <summary>El punto (mundo) donde pega la bala según el último cuadro con retícula.</summary>
+        public Vector3 PuntoImpacto { get; private set; }
 
         /// <summary>El campo de visión del visor del francotirador (°).</summary>
         public float Fov => regla.Fov;
@@ -87,18 +106,25 @@ namespace MechaCyberpunk.VR
         /// <summary>La cámara del visor (null si no se creó).</summary>
         public Camera CamaraVisor => camaraVisor;
 
-        /// <summary>El Canvas de la mira (null si no se creó).</summary>
+        /// <summary>El Canvas de la retícula (null si no se creó).</summary>
         public Canvas Lienzo => lienzo;
 
-        /// <summary>La mira de cada arma en VR.</summary>
+        /// <summary>El Canvas del visor del francotirador (null si no se creó).</summary>
+        public Canvas LienzoVisor => lienzoVisor;
+
+        /// <summary>La retícula de cada arma en VR.</summary>
         public static TipoMira MiraDe(ArmaAPie arma)
         {
             switch (arma)
             {
+                case ArmaAPie.Pistola:
+                case ArmaAPie.Revolver:
+                    return TipoMira.Cruz;
                 case ArmaAPie.Subfusil:
+                    return TipoMira.PuntoRojo;
                 case ArmaAPie.Fusil:
                 case ArmaAPie.Escopeta:
-                    return TipoMira.Holografica;
+                    return TipoMira.Mira;
                 case ArmaAPie.Sniper:
                     return TipoMira.Visor;
                 default:
@@ -137,6 +163,10 @@ namespace MechaCyberpunk.VR
             {
                 Destroy(lienzo.gameObject);
             }
+            if (lienzoVisor != null)
+            {
+                Destroy(lienzoVisor.gameObject);
+            }
             if (camaraVisor != null)
             {
                 Destroy(camaraVisor.gameObject);
@@ -145,6 +175,10 @@ namespace MechaCyberpunk.VR
             {
                 texturaVisor.Release();
                 Destroy(texturaVisor);
+            }
+            if (materialEncima != null)
+            {
+                Destroy(materialEncima);
             }
         }
 
@@ -163,59 +197,73 @@ namespace MechaCyberpunk.VR
             ArmaAPie activa = armas.ArmaActiva;
             TipoMira tipo = MiraDe(activa);
             bool bloqueado = MenusVR.MenuAbierto || Pausa.Activa || (adaptador.Jugador != null && adaptador.Jugador.Modo != ModoJugador.APie);
-            Transform arma = pistolaVR.Arma;
             Transform boca = pistolaVR.Boca;
-            bool apunta = !bloqueado && tipo != TipoMira.Ninguna && pistolaVR.ArmaVisible && arma != null && boca != null
+            Camera cabeza = adaptador.Camara;
+            bool apunta = !bloqueado && tipo != TipoMira.Ninguna && pistolaVR.ArmaVisible && pistolaVR.Arma != null && boca != null && cabeza != null
                 && EntradaVR.Sostenido(EntradaVR.GatilloIzquierdo);
             if (!apunta)
             {
                 Ocultar();
                 return;
             }
-            Mostrar(tipo, arma, boca);
-            if (tipo == TipoMira.Visor)
-            {
-                regla.AvanzarZoom(EntradaVR.Eje(EntradaVR.StickDerecho).y, Time.unscaledDeltaTime);
-                camaraVisor.fieldOfView = regla.Fov;
-            }
-            else
-            {
-                MoverReticula(boca);
-            }
-        }
-
-        private void Mostrar(TipoMira tipo, Transform arma, Transform boca)
-        {
-            Asegurar();
+            Asegurar(cabeza.transform);
             Activa = tipo;
             bloqueaGiro = tipo == TipoMira.Visor;
             if (stick != null)
             {
                 stick.ZoomActivo = bloqueaGiro;
             }
-            if (lienzo.transform.parent != arma)
-            {
-                lienzo.transform.SetParent(arma, false);
-            }
-            Vector3 bocaLocal = arma.InverseTransformPoint(boca.position);
-            lienzo.transform.localPosition = new Vector3(bocaLocal.x, bocaLocal.y + AlturaMira, bocaLocal.z * FraccionMira);
-            lienzo.transform.localRotation = Quaternion.Inverse(arma.rotation) * boca.rotation; // de frente al cañón
-            float ancho = tipo == TipoMira.Visor ? AnchoVisor : AnchoVidrio;
-            lienzo.transform.localScale = Vector3.one * (ancho / UnidadesVidrio);
-            if (!lienzo.gameObject.activeSelf)
-            {
-                lienzo.gameObject.SetActive(true);
-            }
-            holografica.SetActive(tipo == TipoMira.Holografica);
-            visor.SetActive(tipo == TipoMira.Visor);
+            PuntoImpacto = ReglaImpactoBala.BuscarPrimero(boca.position, boca.forward, AlcanceReticula, transform.root, null, out RaycastHit impacto)
+                ? impacto.point
+                : boca.position + boca.forward * AlcanceReticula;
+
+            Transform ojo = cabeza.transform;
+            Vector3 enCabeza = Quaternion.Inverse(ojo.rotation) * (PuntoImpacto - ojo.position);
+            bool ve = ReglaMiraVR.PosicionReticula(enCabeza, DistanciaMinima, DistanciaMaxima, out Vector3 posicion);
             if (tipo == TipoMira.Visor)
             {
+                Activar(lienzo, false);
+                Activar(lienzoVisor, true);
+                Vector3 direccion = ve ? posicion.normalized : Vector3.forward;
+                Colocar(lienzoVisor, ojo, direccion * DistanciaVisor, AnguloVisor);
+                regla.AvanzarZoom(EntradaVR.Eje(EntradaVR.StickDerecho).y, Time.unscaledDeltaTime);
+                camaraVisor.fieldOfView = regla.Fov;
                 camaraVisor.transform.SetPositionAndRotation(boca.position, boca.rotation); // sigue al cañón (aquí, después de que PistolaVR lo coloca)
                 camaraVisor.enabled = true;
+                return;
             }
-            else if (camaraVisor.enabled)
+            Activar(lienzoVisor, false);
+            if (camaraVisor.enabled)
             {
                 camaraVisor.enabled = false;
+            }
+            Activar(lienzo, ve);
+            if (!ve)
+            {
+                return;
+            }
+            Colocar(lienzo, ojo, posicion, AnguloReticula);
+            cruz.SetActive(tipo == TipoMira.Cruz);
+            puntoRojo.SetActive(tipo == TipoMira.PuntoRojo);
+            mira.gameObject.SetActive(tipo == TipoMira.Mira);
+            mira.localScale = Vector3.one * (activa == ArmaAPie.Escopeta ? EscalaEscopeta : 1f);
+        }
+
+        // Pone el lienzo en la posición (ejes de la cabeza, m) mirando al ojo, con el ancho que abarca esos grados de la vista.
+        private static void Colocar(Canvas c, Transform ojo, Vector3 posicion, float grados)
+        {
+            Transform t = c.transform;
+            Vector3 mundo = ojo.position + ojo.rotation * posicion;
+            t.SetPositionAndRotation(mundo, Quaternion.LookRotation(mundo - ojo.position, ojo.up));
+            float escalaPadre = Mathf.Max(1e-4f, Mathf.Abs(ojo.lossyScale.x));
+            t.localScale = Vector3.one * (ReglaMiraVR.LadoAngular(posicion.magnitude, grados) / Unidades / escalaPadre);
+        }
+
+        private static void Activar(Canvas c, bool activo)
+        {
+            if (c != null && c.gameObject.activeSelf != activo)
+            {
+                c.gameObject.SetActive(activo);
             }
         }
 
@@ -227,40 +275,31 @@ namespace MechaCyberpunk.VR
             {
                 stick.ZoomActivo = false;
             }
-            if (lienzo != null && lienzo.gameObject.activeSelf)
-            {
-                lienzo.gameObject.SetActive(false);
-            }
+            Activar(lienzo, false);
+            Activar(lienzoVisor, false);
             if (camaraVisor != null && camaraVisor.enabled)
             {
                 camaraVisor.enabled = false;
             }
         }
 
-        // La retícula colimada: donde la línea paralela al cañón que sale del ojo cruza el vidrio; fuera del vidrio no se ve.
-        private void MoverReticula(Transform boca)
+        private static int CapaUI
         {
-            Camera cabeza = adaptador.Camara;
-            if (cabeza == null)
+            get
             {
-                reticula.gameObject.SetActive(false);
-                return;
-            }
-            Transform plano = lienzo.transform;
-            bool ve = ReglaMiraVR.PuntoColimado(cabeza.transform.position, boca.forward, plano.position, plano.forward, out Vector3 punto);
-            Vector3 local = plano.InverseTransformPoint(punto);
-            Vector2 enVidrio = new Vector2(local.x, local.y);
-            ve &= ReglaMiraVR.DentroDelVidrio(enVidrio, UnidadesVidrio * 0.5f - TamanoReticula * 0.5f);
-            reticula.gameObject.SetActive(ve);
-            if (ve)
-            {
-                reticula.anchoredPosition = enVidrio;
+                int capa = LayerMask.NameToLayer("UI");
+                return capa >= 0 ? capa : CapaUIPorDefecto;
             }
         }
 
-        // Crea lo que falte. El Canvas cuelga del arma: si la copia del arma se destruye, se vuelve a armar (la textura y la cámara se reusan).
-        private void Asegurar()
+        // Crea lo que falte. Los Canvas cuelgan de la cámara XR (siguen a la cabeza aun si el casco se mueve después del LateUpdate).
+        private void Asegurar(Transform cabeza)
         {
+            if (materialEncima == null)
+            {
+                materialEncima = new Material(Canvas.GetDefaultCanvasMaterial()) { name = "ReticulaEncimaVR", renderQueue = ColaEncima };
+                materialEncima.SetInt("unity_GUIZTestMode", (int)CompareFunction.Always); // el arma y las paredes cercanas no tapan la retícula
+            }
             if (texturaVisor == null)
             {
                 texturaVisor = new RenderTexture(ResolucionVisor, ResolucionVisor, ProfundidadVisor, RenderTextureFormat.ARGB32) { name = "VisorSniperVR" };
@@ -275,43 +314,68 @@ namespace MechaCyberpunk.VR
                 camaraVisor.nearClipPlane = CercaVisor;
                 camaraVisor.farClipPlane = LejosVisor;
                 camaraVisor.fieldOfView = regla.Fov;
+                camaraVisor.cullingMask = ~(1 << CapaUI); // no se ve a sí misma ni la retícula
                 camaraVisor.enabled = false;
             }
-            if (lienzo != null)
+            if (lienzo == null)
             {
-                return;
+                lienzo = NuevoLienzo("ReticulaVR", cabeza);
+                var rt = (RectTransform)lienzo.transform;
+                // Pistola y revólver: cruz simple con punto.
+                cruz = Hijo(rt, "Cruz", Unidades).gameObject;
+                Imagen(cruz.transform, "Trazos", SpritesMiraVR.CruzSimple, ColorCian, 40f);
+                Imagen(cruz.transform, "Punto", SpritesMiraVR.Punto, ColorCian, 6f);
+                // Subfusil: punto rojo con un halo tenue.
+                puntoRojo = Hijo(rt, "PuntoRojo", Unidades).gameObject;
+                Imagen(puntoRojo.transform, "Halo", SpritesMiraVR.Punto, ColorHalo, 22f);
+                Imagen(puntoRojo.transform, "Punto", SpritesMiraVR.Punto, ColorRojo, 11f);
+                // Fusil y escopeta: anillo, trazos y punto rojo.
+                mira = Hijo(rt, "Mira", Unidades);
+                Imagen(mira, "Anillo", SpritesMiraVR.Anillo, ColorCian, 60f);
+                Imagen(mira, "Trazos", SpritesMiraVR.CruzSimple, ColorCian, 48f);
+                Imagen(mira, "Punto", SpritesMiraVR.Punto, ColorRojo, 5f);
             }
-            var raiz = new GameObject("MiraArmaVR", typeof(RectTransform));
+            if (lienzoVisor == null)
+            {
+                lienzoVisor = NuevoLienzo("VisorFrancotiradorVR", cabeza);
+                var rt = (RectTransform)lienzoVisor.transform;
+                // La imagen de la cámara del cañón; encima, el agujero negro la recorta en círculo, y cuatro paneles negros tapan el resto de la vista.
+                RectTransform cuadro = Hijo(rt, "Imagen", Unidades);
+                imagenVisor = cuadro.gameObject.AddComponent<RawImage>();
+                imagenVisor.texture = texturaVisor;
+                imagenVisor.material = materialEncima;
+                imagenVisor.raycastTarget = false;
+                Imagen(rt, "Cruz", SpritesMiraVR.Cruz, ColorCruzVisor, Unidades);
+                Imagen(rt, "Centro", SpritesMiraVR.Punto, ColorRojo, 2.5f);
+                Imagen(rt, "Agujero", SpritesMiraVR.Agujero, Color.black, Unidades);
+                float mitad = Unidades * 0.5f;
+                Panel(rt, "Arriba", new Vector2(0f, mitad + BordeNegro * 0.5f), new Vector2(Unidades + 2f * BordeNegro, BordeNegro));
+                Panel(rt, "Abajo", new Vector2(0f, -(mitad + BordeNegro * 0.5f)), new Vector2(Unidades + 2f * BordeNegro, BordeNegro));
+                Panel(rt, "Izquierda", new Vector2(-(mitad + BordeNegro * 0.5f), 0f), new Vector2(BordeNegro, Unidades));
+                Panel(rt, "Derecha", new Vector2(mitad + BordeNegro * 0.5f, 0f), new Vector2(BordeNegro, Unidades));
+            }
+        }
+
+        private Canvas NuevoLienzo(string nombre, Transform cabeza)
+        {
+            var raiz = new GameObject(nombre, typeof(RectTransform));
             raiz.SetActive(false);
+            raiz.layer = CapaUI;
             raiz.AddComponent<IgnorarOcultarVR>();
-            lienzo = raiz.AddComponent<Canvas>();
-            lienzo.renderMode = RenderMode.WorldSpace;
+            raiz.transform.SetParent(cabeza, false);
+            Canvas c = raiz.AddComponent<Canvas>();
+            c.renderMode = RenderMode.WorldSpace;
+            c.sortingOrder = OrdenLienzo;
             var rt = (RectTransform)raiz.transform;
-            rt.sizeDelta = new Vector2(UnidadesVidrio, UnidadesVidrio);
+            rt.sizeDelta = new Vector2(Unidades, Unidades);
             rt.pivot = new Vector2(0.5f, 0.5f);
-
-            // Holográfica: el vidrio (un anillo tenue) y la retícula roja (anillo con punto) que se mueve dentro.
-            holografica = Hijo(rt, "Holografica", UnidadesVidrio).gameObject;
-            Imagen(holografica.transform, "Vidrio", SpritesMiraVR.Anillo, ColorVidrio, UnidadesVidrio);
-            reticula = Imagen(holografica.transform, "Reticula", SpritesMiraVR.Anillo, ColorReticula, TamanoReticula);
-            Imagen(reticula, "Punto", SpritesMiraVR.Punto, ColorReticula, TamanoPunto);
-
-            // Visor: la imagen de la cámara del cañón, recortada en círculo, con la cruz y un borde.
-            visor = Hijo(rt, "Visor", UnidadesVidrio).gameObject;
-            RectTransform mascara = Imagen(visor.transform, "Mascara", SpritesMiraVR.Circulo, Color.white, UnidadesVidrio);
-            mascara.gameObject.AddComponent<Mask>().showMaskGraphic = false;
-            RectTransform cuadro = Hijo(mascara, "Imagen", UnidadesVidrio);
-            imagenVisor = cuadro.gameObject.AddComponent<RawImage>();
-            imagenVisor.texture = texturaVisor;
-            imagenVisor.raycastTarget = false;
-            Imagen(mascara, "Cruz", SpritesMiraVR.Cruz, ColorCruz, UnidadesVidrio);
-            Imagen(mascara, "Centro", SpritesMiraVR.Punto, ColorReticula, TamanoPunto);
-            Imagen(visor.transform, "Borde", SpritesMiraVR.Anillo, ColorVidrio, UnidadesVidrio);
+            return c;
         }
 
         private static RectTransform Hijo(Transform padre, string nombre, float lado)
         {
             var g = new GameObject(nombre, typeof(RectTransform));
+            g.layer = padre.gameObject.layer;
             g.transform.SetParent(padre, false);
             var r = (RectTransform)g.transform;
             r.anchorMin = r.anchorMax = r.pivot = new Vector2(0.5f, 0.5f);
@@ -320,14 +384,22 @@ namespace MechaCyberpunk.VR
             return r;
         }
 
-        private static RectTransform Imagen(Transform padre, string nombre, Sprite sprite, Color color, float lado)
+        private RectTransform Imagen(Transform padre, string nombre, Sprite sprite, Color color, float lado)
         {
             RectTransform r = Hijo(padre, nombre, lado);
             Image i = r.gameObject.AddComponent<Image>();
             i.sprite = sprite;
             i.color = color;
+            i.material = materialEncima;
             i.raycastTarget = false;
             return r;
+        }
+
+        private void Panel(Transform padre, string nombre, Vector2 posicion, Vector2 tamano)
+        {
+            RectTransform r = Imagen(padre, nombre, null, Color.black, 1f);
+            r.sizeDelta = tamano;
+            r.anchoredPosition = posicion;
         }
     }
 }

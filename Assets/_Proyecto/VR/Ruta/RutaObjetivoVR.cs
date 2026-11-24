@@ -13,7 +13,9 @@ namespace MechaCyberpunk.VR.Ruta
     /// sigue sin línea). La ruta sale de las calles del barrio (<see cref="CalculoRutaGps"/>, la del mapa); si no hay, del NavMesh; y si tampoco, una
     /// recta corta que apunta al objetivo (<see cref="ServicioObjetivos.Posicion"/>, el punto de la flecha del HUD). Se recalcula cada medio segundo,
     /// el inicio sigue los pies cada cuadro y se oculta al llegar, sin objetivo, en cinemáticas o en pausa, fuera de VR, con
-    /// <see cref="OpcionesVR.Ruta"/> en false (RUTA: NO) o si el jugador no va a pie. Los chevrones de VR30 se quitaron. Lo agrega <see cref="SistemaVR"/>.
+    /// <see cref="OpcionesVR.Ruta"/> en false (RUTA: NO) o en el mecha. T89: también se ve manejando carro o moto (<see cref="ModoJugador.Carro"/>):
+    /// sale de la posición del vehículo ocupado (<see cref="CalcularOrigen(IJugador, out Vector3, out Transform)"/>) y el rayo al piso no cuenta la carrocería.
+    /// Los chevrones de VR30 se quitaron. Lo agrega <see cref="SistemaVR"/>.
     /// </summary>
     public class RutaObjetivoVR : MonoBehaviour
     {
@@ -33,6 +35,7 @@ namespace MechaCyberpunk.VR.Ruta
         private float proximoCalculo;
         private Vector3 metaCalculada;
         private string origenRuta = "ninguna";
+        private Transform vehiculo;
         private readonly List<Vector3> crudos = new List<Vector3>();
         private readonly List<Vector3> puntos = new List<Vector3>();
 
@@ -120,7 +123,7 @@ namespace MechaCyberpunk.VR.Ruta
                 return false;
             }
             IJugador j = Registro<IJugador>.Actual;
-            if (j == null || j.Raiz == null || j.Modo != ModoJugador.APie)
+            if (!CalcularOrigen(j, out pies, out vehiculo))
             {
                 return false;
             }
@@ -129,9 +132,45 @@ namespace MechaCyberpunk.VR.Ruta
             {
                 return false;
             }
-            pies = j.Raiz.position;
             meta = servicio.Posicion;
             return !ReglaRutaVR.Llego(pies, meta);
+        }
+
+        /// <summary>
+        /// T89: de dónde sale la ruta. A pie, los pies (<see cref="IJugador.Raiz"/>). Manejando (<see cref="ModoJugador.Carro"/>: carro o moto), la
+        /// posición del vehículo ocupado (el <see cref="IMontable"/> de modo Carro con <see cref="IMontable.Ocupado"/>; si no se encuentra, la raíz,
+        /// que sigue al asiento), y <paramref name="vehiculo"/> es su transform para que el rayo al piso no pegue en la carrocería. En el mecha, false.
+        /// </summary>
+        public static bool CalcularOrigen(IJugador jugador, out Vector3 origen, out Transform vehiculo)
+        {
+            origen = default;
+            vehiculo = null;
+            if (jugador == null || jugador.Raiz == null)
+            {
+                return false;
+            }
+            if (jugador.Modo == ModoJugador.APie)
+            {
+                origen = jugador.Raiz.position;
+                return true;
+            }
+            if (jugador.Modo != ModoJugador.Carro)
+            {
+                return false;
+            }
+            IReadOnlyList<IMontable> montables = Registro<IMontable>.Todos;
+            for (int i = montables.Count - 1; i >= 0; i--)
+            {
+                IMontable m = montables[i];
+                if (m is Component c && c != null && m.Ocupado && m.Modo == ModoJugador.Carro)
+                {
+                    vehiculo = c.transform;
+                    origen = vehiculo.position;
+                    return true;
+                }
+            }
+            origen = jugador.Raiz.position; // la raíz sigue al asiento (IMontable)
+            return true;
         }
 
         private void Ocultar()
@@ -175,8 +214,8 @@ namespace MechaCyberpunk.VR.Ruta
             ReglaRutaVR.Recortar(crudos, puntos);
         }
 
-        // El piso bajo un punto (sin contar al jugador); si no hay, el mismo punto.
-        private static Vector3 Suelo(Vector3 punto)
+        // El piso bajo un punto (sin contar al jugador ni el vehículo que maneja); si no hay, el mismo punto.
+        private Vector3 Suelo(Vector3 punto)
         {
             RaycastHit[] golpes = Physics.RaycastAll(punto + Vector3.up * AlturaRayoSuelo, Vector3.down, LargoRayoSuelo, ~0, QueryTriggerInteraction.Ignore);
             float mejor = float.MaxValue;
@@ -185,7 +224,9 @@ namespace MechaCyberpunk.VR.Ruta
             Transform jugador = Registro<IJugador>.Actual != null ? Registro<IJugador>.Actual.Raiz : null;
             foreach (RaycastHit g in golpes)
             {
-                if ((jugador != null && g.collider.transform.IsChildOf(jugador)) || g.distance >= mejor)
+                if ((jugador != null && g.collider.transform.IsChildOf(jugador)) || (vehiculo != null && g.collider.transform.IsChildOf(vehiculo))
+                    || (g.collider.attachedRigidbody != null && vehiculo != null && g.collider.attachedRigidbody.transform.IsChildOf(vehiculo))
+                    || g.distance >= mejor)
                 {
                     continue;
                 }

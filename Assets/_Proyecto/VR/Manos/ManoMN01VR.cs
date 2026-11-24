@@ -19,6 +19,8 @@ namespace MechaCyberpunk.VR.Manos
         [SerializeField] private Renderer[] mallas = new Renderer[0];
         [SerializeField] private Material materialNormal;
         [SerializeField] private Material materialProtesis;
+        [Tooltip("T87: en VR solo se ve la mano con el guante; el antebrazo se encoge al puño del guante (sin tocar el FBX).")]
+        [SerializeField] private bool ocultarAntebrazo = true;
 
         private PoseManoMN01 abierta;
         private PoseManoMN01 puno;
@@ -26,6 +28,11 @@ namespace MechaCyberpunk.VR.Manos
         private Material copiaProtesis;
         private bool brillando;
         private bool listaPoses;
+        private bool antebrazoColapsado;
+        private Vector3 antebrazoPosOriginal;
+        private Vector3 antebrazoEscalaOriginal;
+        private Vector3 manoPosOriginal;
+        private Vector3 manoEscalaOriginal;
 
         public bool Derecha => derecha;
         public PoseManoVR Pose { get; private set; }
@@ -34,6 +41,8 @@ namespace MechaCyberpunk.VR.Manos
         public bool Brillando => brillando;
         public int CantidadHuesos => huesos != null ? huesos.Length : 0;
         public int CantidadPoses => poses != null ? poses.Length : 0;
+        /// <summary>T87: true si el antebrazo está oculto ahora mismo (encogido al punto de corte).</summary>
+        public bool AntebrazoOculto => antebrazoColapsado;
 
         /// <summary>Un hueso por su índice en <see cref="ReglaManosMN01VR.Huesos"/> (null si falta).</summary>
         public Transform Hueso(int indice) => huesos != null && indice >= 0 && indice < huesos.Length ? huesos[indice] : null;
@@ -102,6 +111,20 @@ namespace MechaCyberpunk.VR.Manos
             Aplicar(pose, grip, gatillo, 1f);
         }
 
+        /// <summary>T87: muestra u oculta el antebrazo; se aplica en el siguiente <see cref="Aplicar"/> (o ya, si la mano tiene pose).</summary>
+        public void FijarOcultarAntebrazo(bool ocultar)
+        {
+            ocultarAntebrazo = ocultar;
+            if (!ocultar)
+            {
+                RestaurarAntebrazo();
+            }
+            else if (listaPoses)
+            {
+                ColapsarAntebrazo();
+            }
+        }
+
         /// <summary>
         /// Lleva los huesos hacia la pose objetivo: la base de <paramref name="pose"/>, el grip (0..1) y el gatillo (0..1); <paramref name="mezcla"/>
         /// es la fracción del camino de este cuadro (<see cref="ReglaManosMN01VR.Mezcla"/>; 1 = de golpe).
@@ -118,6 +141,7 @@ namespace MechaCyberpunk.VR.Manos
             Gatillo = Mathf.Clamp01(gatillo);
             PoseManoMN01 basePose = PoseDe(ReglaManosMN01VR.ClipDe(pose)) ?? abierta;
             bool conPosiciones = basePose.Posiciones != null && basePose.Posiciones.Length == huesos.Length;
+            RestaurarAntebrazo(); // la mezcla parte de las posiciones de la pose, no de las del antebrazo encogido
             for (int i = 0; i < huesos.Length; i++)
             {
                 Quaternion objetivo = ReglaManosMN01VR.Rotacion(i, pose, Grip, Gatillo, abierta.Rotaciones[i], puno.Rotaciones[i], basePose.Rotaciones[i],
@@ -129,6 +153,54 @@ namespace MechaCyberpunk.VR.Manos
                     h.localPosition = mezcla >= 1f ? basePose.Posiciones[i] : Vector3.Lerp(h.localPosition, basePose.Posiciones[i], mezcla);
                 }
             }
+            if (ocultarAntebrazo)
+            {
+                ColapsarAntebrazo();
+            }
+        }
+
+        // T87: el antebrazo es la raíz del rig y la mano su único hijo. Se encoge el antebrazo (escala casi 0) con su origen a unos cm detrás de la
+        // muñeca: todo lo pesado a él se junta en ese punto y cierra el puño del guante; la mano se recoloca y se contra-escala y queda igual en el
+        // mundo. Así no hace falta leer la malla (el FBX no es Read/Write) y funciona igual en el editor y en el Quest.
+        private void ColapsarAntebrazo()
+        {
+            Transform antebrazo = Hueso(ReglaManosMN01VR.IndiceAntebrazo);
+            Transform mano = Hueso(ReglaManosMN01VR.IndiceMano);
+            if (antebrazoColapsado || antebrazo == null || mano == null || mano.parent != antebrazo)
+            {
+                return;
+            }
+            antebrazoPosOriginal = antebrazo.localPosition;
+            antebrazoEscalaOriginal = antebrazo.localScale;
+            manoPosOriginal = mano.localPosition;
+            manoEscalaOriginal = mano.localScale;
+            float escala = ReglaManosMN01VR.EscalaAntebrazoOculto;
+            ReglaManosMN01VR.ColapsoAntebrazo(antebrazoPosOriginal, antebrazo.localRotation, Vector3.Scale(antebrazoEscalaOriginal, manoPosOriginal),
+                ReglaManosMN01VR.RetrocesoCorteAntebrazo, escala, out Vector3 nuevaAntebrazo, out Vector3 nuevaMano);
+            antebrazo.localPosition = nuevaAntebrazo;
+            antebrazo.localScale = antebrazoEscalaOriginal * escala;
+            mano.localPosition = new Vector3(nuevaMano.x / antebrazoEscalaOriginal.x, nuevaMano.y / antebrazoEscalaOriginal.y, nuevaMano.z / antebrazoEscalaOriginal.z);
+            mano.localScale = manoEscalaOriginal / escala;
+            antebrazoColapsado = true;
+        }
+
+        private void RestaurarAntebrazo()
+        {
+            if (!antebrazoColapsado)
+            {
+                return;
+            }
+            antebrazoColapsado = false;
+            Transform antebrazo = Hueso(ReglaManosMN01VR.IndiceAntebrazo);
+            Transform mano = Hueso(ReglaManosMN01VR.IndiceMano);
+            if (antebrazo == null || mano == null)
+            {
+                return;
+            }
+            antebrazo.localPosition = antebrazoPosOriginal;
+            antebrazo.localScale = antebrazoEscalaOriginal;
+            mano.localPosition = manoPosOriginal;
+            mano.localScale = manoEscalaOriginal;
         }
 
         /// <summary>
