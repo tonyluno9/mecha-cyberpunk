@@ -16,8 +16,8 @@ MonoBehaviour:
   nombre: Celdas de plasma
   tipo: 3
   valorVenta: 0
-  maximo: 9
+  maximo: 18
   oferta: {fileID: 11400000, guid: 361895d9e0bf43243a926f30011b32fe, type: 2}
   arma: 9
-  balasPorPaquete: 3
-  balasIniciales: 3
+  balasPorPaquete: 6
+  balasIniciales: 6

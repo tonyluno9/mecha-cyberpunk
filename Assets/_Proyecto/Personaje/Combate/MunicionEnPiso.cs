@@ -20,6 +20,7 @@ namespace MechaCyberpunk.Personaje.Combate
         private const float AmplitudFlotar = 0.05f;
         private const float GiroPorSegundo = 100f;
         private const float SegundosAntesDeRecoger = 0.6f;
+        private const int BalasSinDatos = 12; // T92: sin datos del arma, un paquete de 12 (antes 6)
         private Transform modelo;
         private ArmaAPie? preferida;
         private float recogibleDesde;
@@ -156,7 +157,7 @@ namespace MechaCyberpunk.Personaje.Combate
                 return;
             }
             DatosMunicionArma datos = ReservaBalas.Datos(destino.Value);
-            int entraron = reserva.Agregar(destino.Value, datos != null ? datos.BalasPorPaquete : 6);
+            int entraron = reserva.Agregar(destino.Value, datos != null ? datos.BalasPorPaquete : BalasSinDatos);
             if (entraron <= 0)
             {
                 return;

@@ -209,7 +209,7 @@ namespace MechaCyberpunk.Tests.UI
             StringAssert.Contains("PRIMERO EL CARGADOR", pantalla.EtiquetaPieza(PiezaArma.Canon));
             StringAssert.Contains("Ƀ150", pantalla.EtiquetaPieza(PiezaArma.Cargador));
             StringAssert.Contains("Ƀ500", pantalla.Dinero);
-            StringAssert.StartsWith("CARGADOR 8 → 10", pantalla.TextoTabla(1), "La tabla muestra el cargador antes y después");
+            StringAssert.StartsWith("CARGADOR 16 → 20", pantalla.TextoTabla(1), "La tabla muestra el cargador antes y después");
 
             VistaHologramaArma vista = pantalla.Vista;
             Assert.IsTrue(vista.ConModelo, "La pistola se ve con su modelo W01");

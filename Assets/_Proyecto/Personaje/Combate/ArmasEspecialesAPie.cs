@@ -206,8 +206,7 @@ namespace MechaCyberpunk.Personaje.Combate
             {
                 if (t != null && t.Arma == arma)
                 {
-                    DatosArma d = pistola.DatosActuales;
-                    t.Girar(d != null && d.Cargador > 0 ? d.Cargador : TamborArma.RecamarasPorOmision, cfg.SegundosGiroTambor);
+                    t.Girar(TamborArma.RecamarasPorOmision, cfg.SegundosGiroTambor); // T92: el cargador va al doble, pero el tambor sigue con sus 6 recámaras
                 }
             }
         }

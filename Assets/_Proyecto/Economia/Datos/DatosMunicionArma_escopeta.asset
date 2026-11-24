@@ -16,8 +16,8 @@ MonoBehaviour:
   nombre: Balas de escopeta
   tipo: 3
   valorVenta: 0
-  maximo: 40
+  maximo: 80
   oferta: {fileID: 11400000, guid: 5a7e6e6111d2f0c44a8eb459a69a6235, type: 2}
   arma: 2
-  balasPorPaquete: 8
-  balasIniciales: 16
+  balasPorPaquete: 16
+  balasIniciales: 32

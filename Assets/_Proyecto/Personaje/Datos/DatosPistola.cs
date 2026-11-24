@@ -16,7 +16,7 @@ namespace MechaCyberpunk.Personaje
         [Min(0.01f)] [SerializeField] private float tiempoEntreDisparos = 0.25f;
 
         [Tooltip("Balas que caben en el cargador. En esta fase la reserva es infinita.")]
-        [Min(1)] [SerializeField] private int balasPorCargador = 8;
+        [Min(1)] [SerializeField] private int balasPorCargador = 16; // T92: al doble
 
         [Tooltip("Tiempo que tarda la recarga (s).")]
         [Min(0.01f)] [SerializeField] private float tiempoRecarga = 1.4f;

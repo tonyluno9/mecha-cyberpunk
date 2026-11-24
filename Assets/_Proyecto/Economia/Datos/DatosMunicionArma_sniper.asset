@@ -16,8 +16,8 @@ MonoBehaviour:
   nombre: Balas de sniper
   tipo: 3
   valorVenta: 0
-  maximo: 40
+  maximo: 80
   oferta: {fileID: 11400000, guid: bf5949f1f82159c47a4c70af7a696173, type: 2}
   arma: 4
-  balasPorPaquete: 10
-  balasIniciales: 20
+  balasPorPaquete: 20
+  balasIniciales: 40

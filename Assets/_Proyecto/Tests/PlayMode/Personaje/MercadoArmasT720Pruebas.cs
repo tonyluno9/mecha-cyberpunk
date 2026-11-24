@@ -316,7 +316,7 @@ namespace MechaCyberpunk.Tests.Personaje
 
             armas.Equipar(ArmaAPie.Escopeta); yield return null; // T-991: ya no hay tecla 3
             Assert.AreEqual(ArmaAPie.Escopeta, armas.ArmaActiva, "La escopeta comprada se equipa");
-            Assert.AreEqual(4, armas.Balas);
+            Assert.AreEqual(8, armas.Balas);
             Time.timeScale = 8f;
             while (armas.Balas > 0)
             {
@@ -325,10 +325,10 @@ namespace MechaCyberpunk.Tests.Personaje
             }
             int reservaAntes = reserva.Cantidad(ArmaAPie.Escopeta);
             yield return Pulsar(teclado.rKey);
-            yield return EsperarHasta(() => !armas.Recargando && armas.Balas == 4, "recargar la escopeta", 10f);
+            yield return EsperarHasta(() => !armas.Recargando && armas.Balas == 8, "recargar la escopeta", 10f);
             Time.timeScale = 1f;
-            Assert.AreEqual(reservaAntes - 4, reserva.Cantidad(ArmaAPie.Escopeta), "La recarga gasta 4 balas de la reserva");
-            Assert.AreEqual(reservaAntes - 4, armas.Reserva, "El arma en la mano informa su reserva");
+            Assert.AreEqual(reservaAntes - 8, reserva.Cantidad(ArmaAPie.Escopeta), "La recarga gasta 8 balas de la reserva");
+            Assert.AreEqual(reservaAntes - 8, armas.Reserva, "El arma en la mano informa su reserva");
 
             // i. Sin reserva no hay recarga.
             reserva.Tomar(ArmaAPie.Escopeta, 999);

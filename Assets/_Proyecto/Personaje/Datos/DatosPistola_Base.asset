@@ -15,5 +15,7 @@ MonoBehaviour:
   danio: 25
   alcance: 60
   tiempoEntreDisparos: 0.25
-  balasPorCargador: 8
+  balasPorCargador: 16
   tiempoRecarga: 1.4
+  calorPorDisparo: 2
+  segundosEntreCalor: 0.5

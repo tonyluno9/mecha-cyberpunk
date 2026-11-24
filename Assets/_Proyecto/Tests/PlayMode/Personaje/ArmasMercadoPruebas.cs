@@ -347,8 +347,8 @@ namespace MechaCyberpunk.Tests.Personaje
 
             yield return ElegirEnRueda(4);
             Assert.AreEqual(ArmaAPie.Sniper, armas.ArmaActiva, "La rueda saca el sniper");
-            Assert.AreEqual(5, armas.TamanoCargador, "SNIPER I: cargador de 5");
-            Assert.AreEqual(5, armas.Balas);
+            Assert.AreEqual(10, armas.TamanoCargador, "SNIPER I: cargador de 10 (T92)");
+            Assert.AreEqual(10, armas.Balas);
             Assert.IsFalse(mira.Visible, "Sin clic derecho no hay mira");
             Assert.AreEqual(60f, camara.fieldOfView, 1f, "FOV normal 60 (T-723)");
 
@@ -404,7 +404,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.IsFalse(mira.Visible, "Al soltar se apaga la mira");
             Assert.AreEqual(1f, controlador.FactorSensibilidad, 0.01f);
 
-            // f. R recarga a 5 balas.
+            // f. R recarga a 10 balas (T92).
             Time.timeScale = 8f;
             while (armas.Balas > 0)
             {
@@ -414,7 +414,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Time.timeScale = 1f;
             yield return Pulsar(teclado.rKey);
             Assert.IsTrue(armas.Recargando, "R recarga");
-            yield return EsperarHasta(() => !armas.Recargando && armas.Balas == 5, "recargar a 5 balas", 10f);
+            yield return EsperarHasta(() => !armas.Recargando && armas.Balas == 10, "recargar a 10 balas", 10f);
 
             // g. La rueda saca el fusil; mantener el clic dispara solo, 8 o más balas en 1 s.
             yield return ElegirEnRueda(3);
@@ -426,7 +426,7 @@ namespace MechaCyberpunk.Tests.Personaje
             Assert.IsFalse(mira.Visible, "El fusil no usa la mira del sniper");
             Release(raton.rightButton);
             yield return new WaitForSecondsRealtime(0.4f);
-            Assert.AreEqual(30, armas.TamanoCargador, "Fusil base: cargador de 30");
+            Assert.AreEqual(60, armas.TamanoCargador, "Fusil base: cargador de 60 (T92)");
             int antesFusil = armas.Balas;
             Press(raton.leftButton);
             yield return new WaitForSecondsRealtime(1f);

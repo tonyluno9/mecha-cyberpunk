@@ -16,8 +16,8 @@ MonoBehaviour:
   nombre: Granadas de mano
   tipo: 3
   valorVenta: 0
-  maximo: 10
+  maximo: 20
   oferta: {fileID: 11400000, guid: afda920600fdd9947bbd3937c5f73624, type: 2}
   arma: 8
-  balasPorPaquete: 3
-  balasIniciales: 3
+  balasPorPaquete: 6
+  balasIniciales: 6
