@@ -27,31 +27,35 @@ Partida nueva hasta el campo de tiro → sale "ERES LIBRE" → matar SKULLS → 
 
 ## Escalada PROGRESIVA (regla final de Tony, 24-nov 02:29) — esto manda sobre todo lo anterior
 Cada fase dura un TIEMPO MÁXIMO o hasta que matas un NÚMERO de enemigos de esa fase: lo que pase PRIMERO te sube a la siguiente. Ejemplo de Tony: los policías vienen durante 5 min, a menos que mates a 20 policías; ahí salta a la siguiente fase. Un evento grande (explotar un camión) NUNCA salta fases.
-Valores iniciales (en ConfigRespuesta, para ajustar jugando):
-| Fase | Qué llega | Sube cuando pasan… | …o cuando matas |
+> **Cambio T99 (24-nov mediodía, Tony):** TODAS las fases duran **1 min o 10 bajas de esa fase**, lo que pase PRIMERO. Ya no hay mínimo de 2 min en la fase 0 ni tiempos de 4–5 min. Esto manda sobre los valores viejos (5 min / 20 policías, etc.).
+
+Valores (C#: `ParametrosRespuesta.SegundosFaseSkulls`/`SkullsFaseSkulls` para la fase 0 y `FasesLibrePorOmision()` con `SegundosFaseLibre` = 60 y `MuertesFaseLibre` = 10 para las fases 1 a 5; ConfigRespuesta.asset no tiene estos campos serializados, así que manda el default de C#):
+| Fase | Qué llega | Sube cuando pasan… | …o cuando matas (de esa fase) |
 |---|---|---|---|
-| 0 (T94) | Solo SKULLS: goteo de grupos de 2–3 que te buscan (máx. 6 vivos); ~20 % con pistola, el resto a golpes. Sin policía aunque tengas estrellas. Música SKULLS | al menos 2 min (tope 4 min) | 10 SKULLS, pero solo cuenta pasados los 2 min |
-| 1 | Policías a pie y en patrulla | 5 min | 20 policías |
-| 2 | Más patrullas (persecución) | 5 min | 6 patrullas inutilizadas o 30 policías |
-| 3 | Camiones / refuerzos pesados de policía | 5 min | 40 policías |
-| 4 | Drones de NOVA | 4 min | 10 drones |
-| 5 | Soldados NOVA (E15/E18) en cápsulas | 5 min | 20 soldados |
-| 6 | NOVA pesada (E16) + soldados + drones, sin fin | — | — |
-- **Fase 0 SKULLS (T94, 24-nov):** al salir de Tino, antes de la policía. Dura al menos `SegundosFaseSkulls` (120 s); pasado ese tiempo termina en cuanto llevas `SkullsFaseSkulls` (10) SKULLS vencidos (los del goteo y los del mapa), y a los `SegundosMaximosFaseSkulls` (240 s) termina siempre para que no se atore. El goteo (`GoteoSkullsLibre`, regla pura `ReglaFaseSkulls`) manda un grupo de `SkullsPorGrupoMin`–`SkullsPorGrupoMax` (2–3) cada `SegundosEntreGruposSkulls` (12 s; el primero a los 4 s), hasta `SkullsVivosFaseSkulls` (6) vivos y siempre dentro del tope de enemigos (24 PC / 12 VR: los SKULLS del goteo cuentan en ese tope también después de la fase 0). Aparecen entre 25 y 45 m, fuera de tu vista y con camino por el NavMesh, y vienen a buscarte. `FraccionSkullsArmados` (20 %) llega con pistola (SkullRefuerzo; nunca rifles) y al acercarse pelea con su IA de siempre; el resto pelea a golpes (`ConductaSkullLibre`, con el daño y ritmo de sus datos, dos pegando a la vez). Durante la fase 0 el director de respuesta tiene una fase sin tipos: no llega policía aunque tengas estrellas. Al terminar empieza la fase 1 y la música cambia de SKULLS a policía (FaseJuego). Todo en ConfigRespuesta y común a PC y VR.
+| 0 SKULLS | Solo SKULLS: goteo de grupos de 2–3 (máx. 6 vivos); ~20 % con pistola. Sin policía aunque tengas estrellas. Música SKULLS | 60 s | 10 SKULLS (del goteo o del mapa) |
+| 1 | Policías a pie y patrullas (2 estrellas) | 60 s | 10 policías a pie o patrullas |
+| 2 | Más patrullas (3 estrellas) | 60 s | 10 policías a pie o patrullas |
+| 3 | Camiones / refuerzos pesados (4 estrellas): policías, patrullas, camionetas, drones | 60 s | 10 de esos |
+| 4 | Drones de NOVA (5 estrellas, modo NOVA) | 60 s | 10 drones |
+| 5 | Soldados NOVA E15/E18 en cápsulas, más drones | 60 s | 10 soldados, robots medianos o drones |
+| 6 | NOVA pesada (E16) + soldados + perros + drones, sin fin | — | — |
+- Solo cuentan las bajas de los tipos que llegan en la fase actual (un policía rezagado muerto en la fase de drones no cuenta). Las retiradas no cuentan.
+- Sube de una en una: las bajas de sobra no pasan a la fase nueva y el reloj vuelve a 0 al cambiar, así que un evento grande (explotar un camión) nunca salta fases.
+- **Fase 0 SKULLS (T94, con T99):** al salir de Tino, antes de la policía. Termina a los `SegundosFaseSkulls` (60 s) o en cuanto llevas `SkullsFaseSkulls` (10) SKULLS vencidos (los del goteo y los del mapa), lo que pase primero (`SegundosMaximosFaseSkulls` se quitó). El goteo (`GoteoSkullsLibre`, regla pura `ReglaFaseSkulls`) manda un grupo de `SkullsPorGrupoMin`–`SkullsPorGrupoMax` (2–3) cada `SegundosEntreGruposSkulls` (12 s; el primero a los 4 s), hasta `SkullsVivosFaseSkulls` (6) vivos y siempre dentro del tope de enemigos (24 PC / 12 VR: los SKULLS del goteo cuentan en ese tope también después de la fase 0). Aparecen entre 25 y 45 m, fuera de tu vista y con camino por el NavMesh, y vienen a buscarte. `FraccionSkullsArmados` (20 %) llega con pistola (SkullRefuerzo; nunca rifles) y al acercarse pelea con su IA de siempre; el resto pelea a golpes (`ConductaSkullLibre`). Durante la fase 0 el director de respuesta tiene una fase sin tipos: no llega policía aunque tengas estrellas. Al terminar empieza la fase 1 y la música cambia de SKULLS a policía (FaseJuego). Todo común a PC y VR.
 - Llegan POCO A POCO y sin huecos: un goteo constante que reemplaza a los que matas, hasta el tope de enemigos simultáneos (ver T-rendimiento-tope-24nov). Nunca "de repente nada".
 - Las patrullas llegan MANEJANDO desde otras calles, se estacionan cerca, ABREN LA PUERTA con la animación que ya existía (PuertasCarro de PA01: la de la patrulla que abre la puerta y con ruedas que giran — volver a usarla), se bajan los policías y te atacan.
 - Los refuerzos aparecen lejos y fuera de tu vista (nunca a tus espaldas a menos de 25 m).
 - Los SKULLS siguen hostiles en su zona en todas las fases.
 - En el reporte: valores usados y en qué minuto llega cada fase jugando normal.
 
-### Minutos de cada fase si solo pasa el tiempo (con la fase 0 de T94)
+### Minutos de cada fase si no matas a nadie (T99)
 | Fase | Empieza en el minuto (solo tiempo) | Lo más pronto (matando rápido) |
 |---|---|---|
 | 0 SKULLS | 0:00 | 0:00 |
-| 1 Policía a pie y patrullas | 4:00 (tope de la fase 0 si no matas 10 SKULLS) | 2:00 (10 SKULLS vencidos en los 2 primeros minutos) |
-| 2 Más patrullas | 9:00 | 2:00 + 20 policías |
-| 3 Camiones | 14:00 | — |
-| 4 Drones de NOVA | 19:00 | — |
-| 5 Soldados NOVA | 23:00 | — |
-| 6 NOVA pesada (sin fin) | 28:00 | — |
-Jugando normal (peleando con los SKULLS que llegan) la fase 0 dura ~2 min, así que todo lo demás llega ~2 min antes que en la columna de solo tiempo.
+| 1 Policía a pie y patrullas | 1:00 | en cuanto caen 10 SKULLS |
+| 2 Más patrullas | 2:00 | +10 bajas de la fase 1 |
+| 3 Camiones | 3:00 | +10 bajas de la fase 2 |
+| 4 Drones de NOVA | 4:00 | +10 bajas de la fase 3 |
+| 5 Soldados NOVA | 5:00 | +10 bajas de la fase 4 |
+| 6 NOVA pesada (sin fin) | 6:00 | +10 bajas de la fase 5 |
+Los minutos son de juego corriendo: el reloj se detiene en el campo de tiro, en cinemáticas y en pausa. Matando, cada fase llega antes que en la columna de solo tiempo (nunca después).

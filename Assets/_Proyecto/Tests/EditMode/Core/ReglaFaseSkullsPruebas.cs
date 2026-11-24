@@ -3,15 +3,14 @@ using NUnit.Framework;
 
 namespace MechaCyberpunk.Tests
 {
-    /// <summary>T94: la fase 0 del modo libre (SKULLS) dura al menos 2 min, espera ~10 SKULLS vencidos, tiene tope y gotea grupos dentro de los topes.</summary>
+    /// <summary>T94/T99: la fase 0 del modo libre (SKULLS) termina a 1 min o a 10 SKULLS vencidos (lo que pase primero) y gotea grupos dentro de los topes.</summary>
     public class ReglaFaseSkullsPruebas
     {
         private static ParametrosRespuesta Numeros()
         {
             ParametrosRespuesta p = ParametrosRespuesta.PorOmision();
-            p.SegundosFaseSkulls = 120f;
+            p.SegundosFaseSkulls = 60f;
             p.SkullsFaseSkulls = 10;
-            p.SegundosMaximosFaseSkulls = 240f;
             p.SegundosPrimerGrupoSkulls = 4f;
             p.SegundosEntreGruposSkulls = 12f;
             p.SkullsPorGrupoMin = 2;
@@ -30,41 +29,35 @@ namespace MechaCyberpunk.Tests
         }
 
         [Test]
-        public void PorOmision_DosMinutosDiezSkullsTopeCuatro_VeintePorCientoArmados()
+        public void PorOmision_UnMinutoODiezSkulls_VeintePorCientoArmados()
         {
             ParametrosRespuesta p = new ParametrosRespuesta();
-            Assert.AreEqual(120f, p.SegundosFaseSkulls);
+            Assert.AreEqual(60f, p.SegundosFaseSkulls);
             Assert.AreEqual(10, p.SkullsFaseSkulls);
-            Assert.AreEqual(240f, p.SegundosMaximosFaseSkulls);
             Assert.AreEqual(0.2f, p.FraccionSkullsArmados, 1e-5f);
         }
 
         [Test]
-        public void Terminada_DiezSkullsAntesDeDosMinutos_EsperaLosDosMinutos()
+        public void Terminada_UnMinutoSinBajas_Termina()
         {
             ReglaFaseSkulls r = new ReglaFaseSkulls(Numeros());
-            Matar(r, 10);
-            Assert.IsFalse(r.Avanzar(119f));
+            Assert.IsFalse(r.Avanzar(59f));
             Assert.IsFalse(r.Terminada);
             Assert.IsTrue(r.Avanzar(1f));
         }
 
         [Test]
-        public void Terminada_DosMinutosConPocosSkulls_EsperaAlDecimo()
+        public void Terminada_DiezSkullsAntesDelMinuto_TerminaSinEsperar()
         {
             ReglaFaseSkulls r = new ReglaFaseSkulls(Numeros());
+            Assert.IsFalse(r.Avanzar(5f));
             Matar(r, 9);
-            Assert.IsFalse(r.Avanzar(150f));
+            Assert.IsFalse(r.Terminada);
             r.RegistrarMuerte();
-            Assert.IsTrue(r.Terminada);
-        }
-
-        [Test]
-        public void Terminada_SinMatarANadie_TerminaEnElTope()
-        {
-            ReglaFaseSkulls r = new ReglaFaseSkulls(Numeros());
-            Assert.IsFalse(r.Avanzar(239f));
-            Assert.IsTrue(r.Avanzar(1f));
+            Assert.IsTrue(r.Terminada, "sin mínimo de 2 min (T99)");
+            Assert.AreEqual(10, r.Muertes);
+            r.RegistrarMuerte();
+            Assert.AreEqual(10, r.Muertes, "las de sobra ya no cuentan");
         }
 
         [Test]
@@ -84,7 +77,7 @@ namespace MechaCyberpunk.Tests
             Assert.AreEqual(0, r.CuantosGenerar(0, 24, 0f), "entre grupos");
             r.Avanzar(1f);
             Assert.AreEqual(2, r.CuantosGenerar(0, 24, 0f));
-            r.Avanzar(240f);
+            r.Avanzar(60f);
             Assert.AreEqual(0, r.CuantosGenerar(0, 24, 0f), "terminada: ya no salen");
         }
 

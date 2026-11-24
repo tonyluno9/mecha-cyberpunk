@@ -42,12 +42,10 @@ namespace MechaCyberpunk.Core
 
         // ----- T-historia-libre-23nov: modo libre (escalada progresiva tras el campo de tiro) -----
         [Header("Modo libre (T-historia-libre-23nov)")]
-        [Tooltip("T94: fase 0 del modo libre (solo SKULLS, sin policía aunque tengas estrellas): segundos MÍNIMOS que dura (s). Termina al pasar este tiempo si ya mataste SkullsFaseSkulls; si no, cuando los mates (o al tope SegundosMaximosFaseSkulls).")]
-        [Min(0f)] public float SegundosFaseSkulls = 120f;
-        [Tooltip("T94: SKULLS vencidos en la fase 0 para que termine (cuenta desde el principio de la fase; solo la deja terminar tras SegundosFaseSkulls). 0 = solo el tiempo.")]
+        [Tooltip("T99: fase 0 del modo libre (solo SKULLS, sin policía aunque tengas estrellas): tiempo MÁXIMO que dura (s). Termina a este tiempo o al vencer SkullsFaseSkulls, lo que pase primero. 0 = sin límite de tiempo.")]
+        [Min(0f)] public float SegundosFaseSkulls = 60f;
+        [Tooltip("T99: SKULLS vencidos en la fase 0 (los del goteo y los del mapa) que la terminan antes del tiempo. 0 = solo el tiempo.")]
         [Min(0)] public int SkullsFaseSkulls = 10;
-        [Tooltip("T94: tope de la fase 0 para que no se atore: a estos segundos llega la policía aunque no hayas matado a los SKULLS pedidos (s).")]
-        [Min(0f)] public float SegundosMaximosFaseSkulls = 240f;
         [Tooltip("T94: segundos entre dos grupos de SKULLS del goteo de la fase 0 (s).")]
         [Min(0.5f)] public float SegundosEntreGruposSkulls = 12f;
         [Tooltip("T94: segundos hasta el primer grupo de SKULLS al empezar la fase 0 (s).")]
@@ -86,22 +84,34 @@ namespace MechaCyberpunk.Core
         [Tooltip("Modo libre: medio ángulo de la vista (°); un refuerzo no aparece dentro de él.")]
         [Range(0f, 180f)] public float GradosVistaRefuerzo = 70f;
 
-        /// <summary>T-historia-libre-23nov: las fases de Tony (24-nov 02:29): policía a pie, más patrullas, camiones, drones de NOVA, soldados NOVA, NOVA pesada sin fin.</summary>
+        /// <summary>T99: tiempo máximo de cada fase 1 a 5 del modo libre (s): a este tiempo sube a la siguiente si no mataste antes las bajas.</summary>
+        public const float SegundosFaseLibre = 60f;
+
+        /// <summary>T99: enemigos de la fase (los tipos que llegan en ella) que hay que matar para subir antes del tiempo.</summary>
+        public const int MuertesFaseLibre = 10;
+
+        /// <summary>
+        /// T-historia-libre-23nov / T99 (Tony, 24-nov mediodía): policía a pie, más patrullas, camiones, drones de NOVA, soldados NOVA, NOVA pesada sin fin.
+        /// Cada fase 1 a 5 sube a la siguiente a los 60 s o al matar 10 de los enemigos que llegan en ella, lo que pase primero; la 6 no termina.
+        /// </summary>
         public static FaseModoLibre[] FasesLibrePorOmision()
         {
-            TipoRespuesta[] policias = { TipoRespuesta.PoliciaAPie };
-            TipoRespuesta[] soldados = { TipoRespuesta.NovaHumanoide, TipoRespuesta.RobotMediano };
+            TipoRespuesta[] fase1 = { TipoRespuesta.PoliciaAPie, TipoRespuesta.Patrulla };
+            TipoRespuesta[] fase2 = { TipoRespuesta.PoliciaAPie, TipoRespuesta.Patrulla };
+            TipoRespuesta[] fase3 = { TipoRespuesta.PoliciaAPie, TipoRespuesta.Patrulla, TipoRespuesta.Camioneta, TipoRespuesta.Dron };
+            TipoRespuesta[] fase4 = { TipoRespuesta.Dron };
+            TipoRespuesta[] fase5 = { TipoRespuesta.NovaHumanoide, TipoRespuesta.RobotMediano, TipoRespuesta.Dron };
+            TipoRespuesta[] fase6 = { TipoRespuesta.NovaHumanoide, TipoRespuesta.RobotMediano, TipoRespuesta.Perro, TipoRespuesta.RobotGrande, TipoRespuesta.Dron };
+            const float s = SegundosFaseLibre;
+            const int m = MuertesFaseLibre;
             return new[]
             {
-                new FaseModoLibre("POLICIA A PIE Y PATRULLAS", 300f, 2, false, new[] { TipoRespuesta.PoliciaAPie, TipoRespuesta.Patrulla }, 20, policias),
-                new FaseModoLibre("MAS PATRULLAS", 300f, 3, false, new[] { TipoRespuesta.PoliciaAPie, TipoRespuesta.Patrulla }, 30, policias,
-                    6, new[] { TipoRespuesta.Patrulla, TipoRespuesta.Camioneta }),
-                new FaseModoLibre("CAMIONES Y REFUERZOS PESADOS", 300f, 4, false,
-                    new[] { TipoRespuesta.PoliciaAPie, TipoRespuesta.Patrulla, TipoRespuesta.Camioneta, TipoRespuesta.Dron }, 40, policias),
-                new FaseModoLibre("DRONES DE NOVA", 240f, 5, true, new[] { TipoRespuesta.Dron }, 10, new[] { TipoRespuesta.Dron }),
-                new FaseModoLibre("SOLDADOS NOVA", 300f, 5, true, new[] { TipoRespuesta.NovaHumanoide, TipoRespuesta.RobotMediano, TipoRespuesta.Dron }, 20, soldados),
-                new FaseModoLibre("NOVA PESADA", 0f, 5, true,
-                    new[] { TipoRespuesta.NovaHumanoide, TipoRespuesta.RobotMediano, TipoRespuesta.Perro, TipoRespuesta.RobotGrande, TipoRespuesta.Dron }, 0, null),
+                new FaseModoLibre("POLICIA A PIE Y PATRULLAS", s, 2, false, fase1, m, fase1),
+                new FaseModoLibre("MAS PATRULLAS", s, 3, false, fase2, m, fase2),
+                new FaseModoLibre("CAMIONES Y REFUERZOS PESADOS", s, 4, false, fase3, m, fase3),
+                new FaseModoLibre("DRONES DE NOVA", s, 5, true, fase4, m, fase4),
+                new FaseModoLibre("SOLDADOS NOVA", s, 5, true, fase5, m, fase5),
+                new FaseModoLibre("NOVA PESADA", 0f, 5, true, fase6, 0, null),
             };
         }
 

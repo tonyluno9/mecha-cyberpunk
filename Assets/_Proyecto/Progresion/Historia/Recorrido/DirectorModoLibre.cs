@@ -87,8 +87,9 @@ namespace MechaCyberpunk.Progresion.Recorrido
             MisionProtegida.Desactivar();
             GuardarPuntoReintento(guardarReintento);
             gameObject.AddComponent<MarcadorModoLibre>().Configurar(this);
-            Debug.Log("[Historia] Empieza el modo libre (SOBREVIVE). Fases: " + regla.Total + ", fase 0 SKULLS de " + numeros.SegundosFaseSkulls + " s o "
-                + numeros.SkullsFaseSkulls + " SKULLS (tope " + numeros.SegundosMaximosFaseSkulls + " s).");
+            Debug.Log("[Historia] Empieza el modo libre (SOBREVIVE). Fases: " + regla.Total + ", fase 0 SKULLS hasta " + numeros.SegundosFaseSkulls + " s o "
+                + numeros.SkullsFaseSkulls + " SKULLS (T99: lo que pase primero; luego la fase 1 " + regla.Fase.Segundos + " s o "
+                + regla.Fase.Muertes + " bajas).");
         }
 
         private void Awake()
