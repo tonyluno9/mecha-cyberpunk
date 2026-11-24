@@ -1,0 +1,14 @@
+{
+    "name": "MechaCyberpunk.Tests.PlayMode.VR",
+    "rootNamespace": "MechaCyberpunk.Tests",
+    "references": ["UnityEngine.TestRunner", "UnityEditor.TestRunner", "Unity.InputSystem", "Unity.InputSystem.TestFramework", "MechaCyberpunk.Core", "MechaCyberpunk.VR", "MechaCyberpunk.Combate", "MechaCyberpunk.UI", "MechaCyberpunk.IA", "MechaCyberpunk.Pelea", "MechaCyberpunk.Personaje", "MechaCyberpunk.Personaje.Visual", "MechaCyberpunk.CampoTiro", "MechaCyberpunk.Trafico", "MechaCyberpunk.Vehiculos", "MechaCyberpunk.Economia", "MechaCyberpunk.Progresion", "MechaCyberpunk.Progresion.Apoyo", "MechaCyberpunk.Progresion.Prologo", "MechaCyberpunk.Mundo", "UnityEngine.UI", "Unity.TextMeshPro", "Unity.Cinemachine", "Unity.XR.CoreUtils", "Unity.XR.Interaction.Toolkit"],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": ["nunit.framework.dll"],
+    "autoReferenced": false,
+    "defineConstraints": ["UNITY_INCLUDE_TESTS"],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

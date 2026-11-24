@@ -107,6 +107,21 @@ namespace MechaCyberpunk.VR
 
         public static Vector2 Eje(InputAction a) => a != null && a.enabled ? a.ReadValue<Vector2>() : Vector2.zero;
 
+        /// <summary>Tira las acciones y las vuelve a crear encendidas (las pruebas lo usan tras reiniciar el Input System).</summary>
+        public static void Recrear()
+        {
+            if (creadas)
+            {
+                foreach (InputAction a in Todas())
+                {
+                    a.Disable();
+                    a.Dispose();
+                }
+            }
+            creadas = false;
+            Encender();
+        }
+
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void Reiniciar()
         {

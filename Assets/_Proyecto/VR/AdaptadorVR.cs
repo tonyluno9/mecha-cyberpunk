@@ -497,6 +497,15 @@ namespace MechaCyberpunk.VR
             }
         }
 
+        private bool destruyendoJugador = true;
+
+        /// <summary>Quita el rig y deja al jugador como en el modo normal (tercera persona).</summary>
+        public void Desarmar()
+        {
+            destruyendoJugador = false;
+            Destroy(this);
+        }
+
         private void OnDestroy()
         {
             if (vida != null)
@@ -515,7 +524,8 @@ namespace MechaCyberpunk.VR
                     par.Key.shadowCastingMode = par.Value;
                 }
             }
-            if (Camara != null && padreCamaraOriginal != null)
+            // Si se quita el adaptador con el jugador vivo (salir de VR), la cámara vuelve a la tercera persona.
+            if (Camara != null && padreCamaraOriginal != null && !destruyendoJugador)
             {
                 Camara.transform.SetParent(padreCamaraOriginal, false);
                 Camara.transform.SetLocalPositionAndRotation(poseCamaraOriginal.position, poseCamaraOriginal.rotation);

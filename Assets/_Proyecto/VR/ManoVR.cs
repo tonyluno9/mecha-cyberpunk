@@ -12,6 +12,7 @@ namespace MechaCyberpunk.VR
     public class ManoVR : MonoBehaviour
     {
         private const int Muestras = 4;
+        private const float VentanaSegundos = 0.05f;
 
         [SerializeField] private bool derecha;
 
@@ -49,10 +50,16 @@ namespace MechaCyberpunk.VR
 
         private void LateUpdate()
         {
-            float t = Time.unscaledTime;
-            Vector3 enRig = rig != null ? rig.InverseTransformPoint(transform.position) : transform.position;
+            float t = Time.time;
+            // Posición del control en el cuarto (la pone el TrackedPoseDriver): no cambia al caminar con el stick ni al reacomodar el rig.
+            Vector3 enRig = transform.localPosition;
             historial.Enqueue((transform.position, enRig, t));
-            while (historial.Count > Muestras)
+            // Ventana de ~50 ms (4–5 cuadros a 90 Hz); con cuadros muy rápidos se guardan más muestras.
+            while (historial.Count > Muestras && t - historial.Peek().t > VentanaSegundos)
+            {
+                historial.Dequeue();
+            }
+            while (historial.Count > 64)
             {
                 historial.Dequeue();
             }
@@ -62,9 +69,9 @@ namespace MechaCyberpunk.VR
             {
                 Velocidad = (transform.position - primero.mundo) / dt;
                 Vector3 relativaLocal = (enRig - primero.rig) / dt;
-                VelocidadRelativa = rig != null ? rig.TransformDirection(relativaLocal) : Velocidad;
+                VelocidadRelativa = transform.parent != null ? transform.parent.TransformDirection(relativaLocal) : relativaLocal;
             }
-            float dtCuadro = Mathf.Max(Time.unscaledDeltaTime, 1e-4f);
+            float dtCuadro = Mathf.Max(Time.deltaTime, 1e-4f);
             Quaternion delta = transform.rotation * Quaternion.Inverse(rotacionPrevia);
             delta.ToAngleAxis(out float angulo, out Vector3 eje);
             if (angulo > 180f)
