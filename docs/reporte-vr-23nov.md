@@ -291,3 +291,68 @@ Main no traía nada nuevo (`f6e47ad` ya estaba incluido). No se tocaron `Builds\
 - **Main final:** `bc2bf35` (merge --no-ff de vr/quest3, sin force). Se hizo con commit-tree porque main está sacada en la carpeta principal; esa carpeta no se tocó.
 - **Modo PC:** compila. Pasan las pruebas de voces (Voces23nov, mesera, peatones), las de la historia (PeleaInicioVR24, GestorCandados, SaltarMolestiaVR16) y los videos de main (VideosCinematicas23nov). En el simulador XR pasan cinemáticas VR (10), golpes VR35 y agarre. Hubo que ajustar una prueba vieja de VR, que buscaba el VideoPlayer en la raíz.
 - **Qué probar con el visor:** (1) en C01, ¿el video sale en la pantalla grande sin negro entre clips, y B lo salta? (2) ¿suenan las voces (Doc, Tino, SKULLS, peatones)? (3) al golpear con las manos, ¿se oye el esfuerzo y les baja vida a los 3 SKULLS?
+
+## Octava tanda (vr-24nov) · build en `wtVR\Builds\VR8\CyberCity.exe`
+- **Qué quedó** (compila; con el simulador XR pasan sus pruebas: PlayMode VR 217 de 219 en la corrida completa, las 2 restantes pasan solas):
+  - **Menús:** todos los menús se usan como la máquina expendedora, con el botón resaltado, imán al más cercano, láser que se corta en el panel con punto, y vibración (VR44).
+  - **Pantallas de NPC:** no los tapa el NPC (VR42), y el cuerpo del Doc y el arma de Tino se ven dentro del panel (VR43).
+  - **Cinemáticas:** con fondo negro total y de corrido, con la narración y el piano que trajo main (VR36).
+  - **Armas:**
+    - Rueda: X más el grip izquierdo, y al soltar el grip eliges arma, granada o consumible (VR46).
+    - Gatillo izquierdo: mira holográfica, zoom del francotirador, arco del lanzagranadas y carga del plasma (VR51).
+    - Recarga: solo manual (VR52).
+  - **Guía y tutorial:**
+    - Guía nueva de 16 páginas, sin rueda de prótesis y con el gesto de visión (VR31b).
+    - Tarjetas de tutorial a un lado de la vista con APRENDIDO, una vez por partida (VR62).
+    - Gestos de prótesis más fáciles (VR45).
+  - **Golpes:** cuentan desde cualquier ángulo (VR37).
+  - **Giro:** a 60°/s con viñeta solo al girar (VR38).
+  - **Carro:** sin carrocería visible (VR48).
+  - **Ruta:** vuelve la línea de antes (VR41).
+  - **Manos:** nuevas MN01 con poses de grip, gatillo, pistola, granada y señalar, y brillo cian con la prótesis de brazos (VR40).
+- **Qué no quedó:**
+  - El agarre a dos manos del arma larga (VR51, opcional).
+  - VR23, VR55 y VR56 siguen en espera.
+  - VR39, VR47, VR50, VR53 y VR54 los hizo la sesión A en main y ya vienen incluidos.
+  - La prueba de "la guía sale sola la primera vez" falla solo después de la ciudad. Esa función ya está apagada en el juego, porque la reemplazan las tarjetas.
+- **Main:** `5343a09` (merge --no-ff, sin force ni rebase).
+  - Del merge de main solo chocaron VideosCineVR, donde quedaron juntos el cuadro congelado de la narración y el cine de corrido, y los .meta de las manos, donde se tomaron los de main.
+  - El postprocesador T250 forzaba Humanoid en todo PJ01/. Ahora las manos se importan como Generic.
+- **Modo PC:**
+  - Lo que cambió en PC (rueda, plasma y recarga) va detrás de `ModoVR.Activo`.
+  - EditMode tiene 53 fallas; ninguna es de VR, Opciones ni Combate. Son del mundo, los personajes y las IDs de música nueva de main.
+  - En PlayMode de PC pasan los videos y la narración de main, CuerposBotin y las armas a distancia.
+  - Cinco fallas de PC no son de esta tanda: las de la granada y la rueda con pausa también fallaban en la base, y tres de Inventario son por el error de la escena JaulaClandestino.
+
+| Botón / gesto | VR |
+|---|---|
+| Stick izquierdo / clic | Caminar / correr |
+| Stick derecho ↔ / clic / ↓ 1 s | Girar (60°/s) / saltar / recentrar |
+| B | Interactuar (hablar, usar, subir y bajar del vehículo) |
+| Y o Menú | Pausa (B o Y cierran pantallas) |
+| Láser + gatillo derecho | Aceptar en menús (botón resaltado) |
+| Gatillo derecho | Disparar |
+| Gatillo izquierdo (mantener) | Mira (subfusil, fusil, escopeta), visor con zoom en el stick derecho ↕ (francotirador), arco (lanzagranadas), carga (plasma). Pistola y revólver: nada |
+| Mano a la cadera / sobre el hombro + grip derecho | Sacar o guardar arma corta / larga |
+| A, luego mano izquierda a la cadera izquierda + grip | Soltar el cargador, tomar uno y meterlo (sin balas: "A: RECARGAR") |
+| Mantén X + grip izquierdo y mueve la mano | Rueda de armas; al soltar el grip se elige (armas, granada, papitas, bebida, café) |
+| Grip derecho (con granada) | Tomarla; al soltar se lanza |
+| Manos | Golpear desde cualquier ángulo; grip cerca de un enemigo para sujetarlo |
+| Los dos grips 0.5 s | Manos de la cadera a la rodilla: PIERNAS · brazos en T: BRAZOS · manos a los lados de la cabeza: VISIÓN |
+| Carro | Gatillo derecho acelera, gatillo izquierdo frena o va en reversa, stick izquierdo dirige, A freno de mano, B subir o bajar |
+
+**Qué probar con el visor:**
+1. Partida nueva: ¿la cinemática se ve solo en la pantalla grande, con todo negro alrededor, de corrido, con narración y piano?
+2. Al aparecer: ¿salen las tarjetas MOVERSE, RECENTRAR y GOLPE a un lado, sin tapar las manos, y se cierran con APRENDIDO o al hacer el gesto?
+3. 3 SKULLS: ¿les pegas de frente, de lado, de arriba y al cuerpo, y a todos les baja vida?
+4. Girar con el stick: ¿ya no marea? (VELOCIDAD DE GIRO y VIÑETA en Opciones)
+5. ¿Las manos nuevas se ven bien, cierran con el grip, doblan el índice con el gatillo y quedan en su lugar?
+6. Doc: ¿nada tapa el panel y se ve el cuerpo? ¿cambia al elegir prótesis? ¿sale la tarjeta de la prótesis instalada?
+7. Prótesis: piernas (manos abajo y los dos grips), brazos (en T) y visión (manos a la cabeza). ¿Se activan a la primera?
+8. Tino: ¿el botón se resalta, el láser no atraviesa y compras sin batallar? ¿se ve el arma en el panel?
+9. Rueda: mantén X y luego el grip izquierdo para moverla; suelta el grip. ¿Cambias a cada arma y te comes unas papitas?
+10. Campo de tiro: ¿la mira con el gatillo izquierdo en subfusil y fusil? ¿el zoom del francotirador? ¿el arco del lanzagranadas? ¿la carga del plasma con su aviso?
+11. Vacía el cargador: ¿no recarga solo y sale "A: RECARGAR"?
+12. Sube a 3 carros: ¿ves limpio desde el cristal, sin la carrocería? ¿La moto sigue igual?
+13. Con VE CON EL DOC, ¿ves la línea de ruta de antes en el piso?
+14. Pausa → CONTROLES: ¿las 16 páginas con su imagen y su frase?
