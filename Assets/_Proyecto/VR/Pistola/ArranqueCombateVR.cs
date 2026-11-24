@@ -57,6 +57,20 @@ namespace MechaCyberpunk.VR
             {
                 jugador.AddComponent<RecargaManualVR>();
             }
+            // VR52: el aviso "A: RECARGAR" con el cargador vacío (en VR no se recarga solo).
+            if (jugador.GetComponent<PistolaVR>() != null && jugador.GetComponent<AvisoRecargaVR>() == null)
+            {
+                jugador.AddComponent<AvisoRecargaVR>();
+            }
+            // VR46: la rueda de armas se elige con el grip izquierdo y la mano. VR51: la mira con el gatillo izquierdo (después del stick derecho).
+            if (jugador.GetComponent<RuedaArmasVR>() == null)
+            {
+                jugador.AddComponent<RuedaArmasVR>();
+            }
+            if (jugador.GetComponent<PistolaVR>() != null && jugador.GetComponent<MiraArmaVR>() == null)
+            {
+                jugador.AddComponent<MiraArmaVR>();
+            }
             if (jugador.GetComponent<GolpeAPie>() != null && jugador.GetComponent<GolpesManosVR>() == null)
             {
                 jugador.AddComponent<GolpesManosVR>();

@@ -47,6 +47,18 @@ namespace MechaCyberpunk.Arte.Editor
                 return;
             }
 
+            if (assetPath.StartsWith(CarpetaManosVR))
+            {
+                // VR40: manos de VR MN01 (rig de solo mano, 17 huesos): Generic con sus 9 clips; no son un personaje Humanoid de PJ01.
+                ModelImporter manos = (ModelImporter)assetImporter;
+                manos.importAnimation = true;
+                manos.animationType = ModelImporterAnimationType.Generic;
+                manos.avatarSetup = ModelImporterAvatarSetup.CreateFromThisModel;
+                manos.materialImportMode = ModelImporterMaterialImportMode.None;
+                manos.useFileScale = true;
+                return;
+            }
+
             if (EsPersonajeDeTripo(assetPath))
             {
                 // T-500: personajes de Tripo con esqueleto y animaciones: se conservan (T-520: Humanoid con el avatar de su propio esqueleto).
@@ -84,6 +96,9 @@ namespace MechaCyberpunk.Arte.Editor
         };
 
         public const string CarpetaPerroRobot = "Assets/Arte/Personajes/E17_PerroRobotNova/";
+
+        /// <summary>VR40: manos de VR del protagonista (Generic, no Humanoid).</summary>
+        public const string CarpetaManosVR = "Assets/Arte/Personajes/PJ01/ManosVR/";
 
         public static bool EsPersonajeDeTripo(string ruta)
         {

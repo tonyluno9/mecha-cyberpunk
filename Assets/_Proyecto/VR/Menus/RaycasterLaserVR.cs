@@ -55,7 +55,7 @@ namespace MechaCyberpunk.VR.Menus
                         continue;
                     }
                     int capa = SortingLayer.GetLayerValueFromID(c.sortingLayerID);
-                    int orden = c.sortingOrder;
+                    int orden = OrdenDe(c);
                     IList<Graphic> graficos = GraphicRegistry.GetRaycastableGraphicsForCanvas(c);
                     for (int i = 0; i < graficos.Count; i++)
                     {
@@ -100,6 +100,19 @@ namespace MechaCyberpunk.VR.Menus
                 hay = true;
             }
             return hay;
+        }
+
+        /// <summary>
+        /// VR44: el orden de dibujo con el que cuenta un Canvas: el suyo si es raíz o lo sobreescribe; si no, el de su raíz
+        /// (un anidado sin orden propio se dibuja con su raíz).
+        /// </summary>
+        public static int OrdenDe(Canvas c)
+        {
+            if (c == null)
+            {
+                return int.MinValue;
+            }
+            return c.isRootCanvas || c.overrideSorting || c.rootCanvas == null ? c.sortingOrder : c.rootCanvas.sortingOrder;
         }
 
         private bool Toca(Graphic g, Ray rayo, float distanciaMaxima, out float distancia, out Vector3 punto, out Vector2 pantalla)

@@ -90,6 +90,7 @@ namespace MechaCyberpunk.UI.Rueda
         private Text textoNombre;
         private Text textoDetalle;
         private RectTransform punto;
+        private Image fondo;
         private InputAction accion;
         private bool estabaPulsada;
         private Vector2 movimientoPendiente;
@@ -135,6 +136,42 @@ namespace MechaCyberpunk.UI.Rueda
 
         /// <summary>El cursor virtual (px de referencia desde el centro, +y arriba).</summary>
         public Vector2 Cursor => cursor;
+
+        /// <summary>
+        /// VR46 (solo VR): con true el ratón no mueve el cursor; lo pone <see cref="PonerCursor"/> (la mano izquierda con el grip, RuedaArmasVR).
+        /// En PC queda en false y nada cambia.
+        /// </summary>
+        public bool CursorExterno { get; set; }
+
+        /// <summary>VR46 (solo VR): el texto del centro sin nada resaltado (null: "SUELTA PARA CERRAR", el de PC).</summary>
+        public string TextoSinElegir { get; set; }
+
+        /// <summary>VR46 (solo VR): pone el cursor (px de referencia desde el centro, se limita al radio) y recalcula lo resaltado.</summary>
+        public void PonerCursor(Vector2 posicion)
+        {
+            cursor = ReglaRuedaArmas.MoverCursor(Vector2.zero, posicion);
+            if (abierta)
+            {
+                int antes = resaltada;
+                resaltada = ReglaRuedaArmas.CasillaResaltada(cursor, disposicion, Disponible);
+                if (resaltada >= 0 && resaltada != antes)
+                {
+                    Sonidos.Reproducir("UI_MOVER");
+                }
+                Dibujar();
+            }
+        }
+
+        /// <summary>VR46 (solo VR): elige lo resaltado (equipa el arma o usa el objeto) y cierra, como soltar la tecla. False si no estaba abierta.</summary>
+        public bool ElegirYCerrar()
+        {
+            if (!abierta || raiz == null || accion == null)
+            {
+                return false;
+            }
+            Cerrar(true);
+            return true;
+        }
 
         public bool Armada => raiz != null;
 
@@ -248,7 +285,10 @@ namespace MechaCyberpunk.UI.Rueda
                 Cerrar(true);
                 return;
             }
-            cursor = ReglaRuedaArmas.MoverCursor(cursor, movimientoPendiente);
+            if (!CursorExterno)
+            {
+                cursor = ReglaRuedaArmas.MoverCursor(cursor, movimientoPendiente);
+            }
             movimientoPendiente = Vector2.zero;
             int antes = resaltada;
             resaltada = ReglaRuedaArmas.CasillaResaltada(cursor, disposicion, Disponible);
@@ -319,6 +359,7 @@ namespace MechaCyberpunk.UI.Rueda
             cursor = Vector2.zero;
             movimientoPendiente = Vector2.zero;
             resaltada = -1;
+            fondo.enabled = !ModoVR.Activo; // VR46: en el visor sin fondo ni marco, solo la rueda flotando
             OcultarHud();
             Disponer();
             raiz.SetActive(true);
@@ -546,7 +587,7 @@ namespace MechaCyberpunk.UI.Rueda
                 textoNombre.text = string.Empty;
                 textoDetalle.color = TurquesaSuave;
                 textoDetalle.fontSize = 24;
-                textoDetalle.text = "SUELTA PARA CERRAR";
+                textoDetalle.text = TextoSinElegir ?? "SUELTA PARA CERRAR";
                 return;
             }
             if (ReglaRuedaArmas.EsArma(resaltada))
@@ -576,7 +617,7 @@ namespace MechaCyberpunk.UI.Rueda
             raiz.transform.SetParent(canvas.transform, false);
             KitUI.Estirar((RectTransform)raiz.transform);
 
-            Image fondo = KitUI.CrearImagen(raiz.transform, "Fondo", new Color(0f, 0.01f, 0.03f, AlfaFondo));
+            fondo = KitUI.CrearImagen(raiz.transform, "Fondo", new Color(0f, 0.01f, 0.03f, AlfaFondo));
             fondo.raycastTarget = false;
             KitUI.Estirar(fondo.rectTransform);
 

@@ -14,9 +14,13 @@ namespace MechaCyberpunk.VR
     /// <item>Sacar / guardar arma: gesto con la mano derecha en la cadera (corta) o sobre el hombro (larga) + grip derecho (VR/ArmasGesto).</item>
     /// <item>Recargar: A suelta el cargador; la mano izquierda en la cadera izquierda + grip toma uno nuevo y se mete en el arma (VR/Recarga).</item>
     /// <item>Interactuar (la E del teclado): B (derecho).</item>
-    /// <item>Rueda de armas: mantener X (izquierdo); se elige moviendo la mano izquierda o con el stick izquierdo (no camina con la rueda abierta).</item>
+    /// <item>Rueda de armas: mantener X (izquierdo); VR46: el selector se mueve solo con el grip izquierdo apretado (mano izquierda) y al soltar el grip
+    /// se elige (arma, granada o consumible). El stick izquierdo ya no la mueve (no camina con la rueda abierta).</item>
+    /// <item>VR51: gatillo izquierdo = apuntar: mira holográfica (subfusil, fusil, escopeta), visor con zoom en el stick derecho vertical (francotirador),
+    /// arco de caída (lanzagranadas), cargar (plasma; el derecho suelta el rayo). Pistola y revólver sin mira.</item>
+    /// <item>VR52: sin recarga automática (salvo la granada): vacío, el gatillo hace clic y sale "A: RECARGAR".</item>
     /// <item>Pausa / opciones: Y (izquierdo) o Menú.</item>
-    /// <item>Rueda de prótesis (la de Tab): mantener grip izquierdo + gatillo izquierdo (el gesto lo pone VR/Guia).</item>
+    /// <item>Prótesis: solo gestos con los dos grips (VR/Guia): manos de la cadera a la rodilla = piernas, brazos en cruz = brazos, manos a los lados de la cabeza = visión. Sin rueda de prótesis en VR.</item>
     /// <item>Agarrar / lanzar (implante): grip con la mano libre cerca del enemigo.</item>
     /// <item>Recentrar: mantener el stick derecho abajo 1 s.</item>
     /// </list>

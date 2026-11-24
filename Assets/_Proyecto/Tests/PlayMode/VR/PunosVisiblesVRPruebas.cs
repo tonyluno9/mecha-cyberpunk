@@ -7,7 +7,10 @@ using UnityEngine.TestTools;
 
 namespace MechaCyberpunk.Tests.VR
 {
-    /// <summary>VR35: al armarse el rig, cada mano lleva el puño de PJ01 (malla real con piel) y los modelos de los controles se ocultan.</summary>
+    /// <summary>
+    /// VR35: al armarse el rig, cada mano lleva el puño de PJ01 (malla real con piel) y los modelos de los controles se ocultan. VR40: con los
+    /// prefabs MN01 la mano es la MN01 (también malla con piel bajo PunoVR); lo mismo se comprueba.
+    /// </summary>
     public class PunosVisiblesVRPruebas : BaseJugadorVR
     {
         [UnityTest]

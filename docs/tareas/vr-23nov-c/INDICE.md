@@ -15,4 +15,4 @@ Bien según Tony: intro, video, menú, láser (perfecto), carga tipo cine. Rama 
 | VR31 | Imágenes de la guía de controles | 2 | HECHO (captura en docs/capturas/_tareas/VR31/) |
 | VR32 | Videos reales de las cinemáticas | — | LO HACE LA SESIÓN DE MAIN (docs/tareas/pendientes/T-cinematicas-videos-23nov.md); llega a VR con merge de main |
 | — | Voces de personajes | — | LO HACE LA SESIÓN DE MAIN (docs/tareas/pendientes/T-voces-personajes-23nov.md); llega a VR con merge de main |
-| VR34 | Cuerpo completo en VR (manos → IK → piernas) | — | EN ESPERA (hasta que Tony diga) |
+| VR34 | Cuerpo completo en VR | — | CANCELADA (24-nov: solo manos, ver vr-24nov/VR40) |

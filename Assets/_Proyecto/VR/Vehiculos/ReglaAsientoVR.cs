@@ -74,6 +74,9 @@ namespace MechaCyberpunk.VR
             return ojosLocal;
         }
 
+        /// <summary>VR48: true si al manejar se oculta la carrocería para la cámara (en carros sí; la moto se ve como está).</summary>
+        public static bool OcultarCarroceria(bool moto) => !moto;
+
         /// <summary>El yaw (°) de un frente; si el frente es casi vertical (vehículo volcado), se queda el <paramref name="previo"/>.</summary>
         public static float Yaw(Vector3 frente, float previo)
         {

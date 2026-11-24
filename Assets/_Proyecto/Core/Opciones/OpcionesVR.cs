@@ -6,7 +6,7 @@ namespace MechaCyberpunk.Core
     /// <summary>
     /// V8–V10 (rama vr/quest3): las opciones de comodidad de VR. Las escribe la pantalla de OPCIONES (UI) y las lee el AdaptadorVR (VR)
     /// cada cuadro; viven en Core porque UI y VR no se referencian. Se guardan en PlayerPrefs al cambiar (como los subtítulos).
-    /// Por defecto: giro SUAVE a 120°/s (VR18; POR PASOS queda como opción), viñeta BAJA (VR26: NO / BAJA / MEDIA), correr MANTENER y RUTA SÍ.
+    /// Por defecto: giro SUAVE a 60°/s (VR38; antes 120, VR18; POR PASOS queda como opción), viñeta BAJA (VR26: NO / BAJA / MEDIA), correr MANTENER y RUTA SÍ.
     /// </summary>
     public static class OpcionesVR
     {
@@ -17,13 +17,16 @@ namespace MechaCyberpunk.Core
         public const string ClaveNivelVineta = "opcion_vr_vineta_nivel";
         /// <summary>RUTA: SÍ/NO (la ruta guía en VR).</summary>
         public const string ClaveRuta = "opcion_vr_ruta";
-        /// <summary>VR18: VELOCIDAD DE GIRO (°/s con el stick a fondo, giro SUAVE). Se guarda como entero.</summary>
-        public const string ClaveVelocidadGiro = "opcion_vr_velocidad_giro";
+        /// <summary>
+        /// VR18: VELOCIDAD DE GIRO (°/s con el stick a fondo, giro SUAVE). Se guarda como entero. VR38: la clave cambió (_v2) para que el 120 viejo
+        /// guardado no se quede: el nuevo por defecto es 60.
+        /// </summary>
+        public const string ClaveVelocidadGiro = "opcion_vr_velocidad_giro_v2";
 
         /// <summary>VR18: SUAVE por defecto (antes POR PASOS). La clave del giro cambió para que el valor viejo guardado no lo deje en pasos.</summary>
         public const ModoGiroVR GiroPorDefecto = ModoGiroVR.Suave;
-        /// <summary>VR18: °/s del giro suave con el stick a fondo (proporcional al stick).</summary>
-        public const float VelocidadGiroPorDefecto = 120f;
+        /// <summary>VR18/VR38: °/s del giro suave con el stick a fondo (proporcional al stick). VR38: 60 (antes 120 mareaba).</summary>
+        public const float VelocidadGiroPorDefecto = 60f;
         public const float VelocidadGiroMinima = 30f;
         public const float VelocidadGiroMaxima = 180f;
         public const float PasoVelocidadGiro = 15f;
@@ -34,6 +37,10 @@ namespace MechaCyberpunk.Core
         public const float AperturaVinetaBaja = 0.94f;
         /// <summary>VR26: apertura de la viñeta en MEDIA.</summary>
         public const float AperturaVinetaMedia = 0.85f;
+        /// <summary>VR38: apertura de la viñeta mientras se gira con el stick en BAJA (un poco más cerrada que al caminar: "que se vea un poquito").</summary>
+        public const float AperturaVinetaGiroBaja = 0.86f;
+        /// <summary>VR38: apertura de la viñeta mientras se gira con el stick en MEDIA.</summary>
+        public const float AperturaVinetaGiroMedia = 0.78f;
         /// <summary>VR26: segundos que tarda la viñeta en entrar y en salir.</summary>
         public const float SegundosVineta = 0.1f;
         public const ModoCorrerVR CorrerPorDefecto = ModoCorrerVR.Mantener;
@@ -88,6 +95,20 @@ namespace MechaCyberpunk.Core
             {
                 case NivelVinetaVR.Baja: return AperturaVinetaBaja;
                 case NivelVinetaVR.Media: return AperturaVinetaMedia;
+                default: return 1f;
+            }
+        }
+
+        /// <summary>
+        /// VR38: la apertura de la viñeta mientras se gira con el stick derecho (más cerrada que <see cref="AperturaVineta"/>, que es la de caminar);
+        /// NO = 1 (abierta).
+        /// </summary>
+        public static float AperturaVinetaGiro(NivelVinetaVR nivel)
+        {
+            switch (nivel)
+            {
+                case NivelVinetaVR.Baja: return AperturaVinetaGiroBaja;
+                case NivelVinetaVR.Media: return AperturaVinetaGiroMedia;
                 default: return 1f;
             }
         }

@@ -48,7 +48,7 @@ namespace MechaCyberpunk.Tests.Core
             Assert.AreEqual(NivelVinetaVR.Baja, OpcionesVR.NivelVineta, "VR26: VIÑETA BAJA por defecto.");
             Assert.IsTrue(OpcionesVR.Ruta, "RUTA: SÍ por defecto.");
             Assert.AreEqual(ModoCorrerVR.Mantener, OpcionesVR.Correr);
-            Assert.AreEqual(120f, OpcionesVR.VelocidadGiro, 1e-3f, "VR18: 120°/s a fondo por defecto.");
+            Assert.AreEqual(60f, OpcionesVR.VelocidadGiro, 1e-3f, "VR38: 60°/s a fondo por defecto (antes 120).");
         }
 
         [Test]

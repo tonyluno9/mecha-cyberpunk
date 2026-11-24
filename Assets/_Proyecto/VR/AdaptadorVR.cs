@@ -40,9 +40,8 @@ namespace MechaCyberpunk.VR
         private const float RearmeGiro = 0.35f;
         private const float VelocidadVineta = 0.4f;
         private const string GrupoVR = "VR";
-        /// <summary>V10/VR18: giro suave con el stick derecho a fondo (°/s): la VELOCIDAD DE GIRO de Opciones (120 por defecto).</summary>
+        /// <summary>V10/VR18: giro suave con el stick derecho a fondo (°/s): la VELOCIDAD DE GIRO de Opciones (VR38: 60 por defecto).</summary>
         public static float VelocidadGiroSuave => OpcionesVR.VelocidadGiro;
-        private const float ZonaMuertaGiroSuave = 0.15f;
         private const float SegundosVinetaGiroSuave = 0.1f;
         /// <summary>V9: con CORRER ALTERNAR, el stick de mover por debajo de esto (0..1) durante <see cref="SegundosApagarCorrer"/> apaga correr.</summary>
         public const float ZonaReposoCorrer = 0.2f;
@@ -72,6 +71,15 @@ namespace MechaCyberpunk.VR
 
         /// <summary>Giro del rig en el mundo (°): solo cambia con el stick derecho.</summary>
         public float GiroRig => giroRig;
+
+        /// <summary>VR38: velocidad del giro suave ahora (°/s, con signo): sube suave hasta la de Opciones y baja rápido al soltar.</summary>
+        public float VelocidadGiroActual => velocidadGiroActual;
+
+        /// <summary>VR38: true mientras la viñeta es la de girar con el stick (un poco más cerrada que la de caminar).</summary>
+        public bool VinetaDeGiro => vinetaPuesta && segundosVinetaGiro > 0f;
+
+        /// <summary>VR38: la apertura que se le pide a la viñeta ahora (1 = abierta).</summary>
+        public float AperturaVinetaActual => aperturaActual;
 
         /// <summary>True mientras la viñeta de movimiento o de giro está pedida (con VIÑETA: NO nunca).</summary>
         public bool VinetaPuesta => vinetaPuesta;
@@ -103,6 +111,8 @@ namespace MechaCyberpunk.VR
         private TunnelingVignetteController vineta;
         private bool vinetaPuesta;
         private float segundosVinetaGiro;
+        private float velocidadGiroActual;
+        private float aperturaActual = 1f;
         private readonly VignetteParameters parametros = new VignetteParameters();
         private readonly ProveedorFundido fundido = new ProveedorFundido();
         private float segundosFundido;
@@ -455,19 +465,23 @@ namespace MechaCyberpunk.VR
         private void ActualizarGiro(float dt)
         {
             float x = EntradaVR.Eje(EntradaVR.StickDerecho).x;
-            bool puedeGirar = Controlador == null || Controlador.ControlActivo;
+            bool puedeGirar = (Controlador == null || Controlador.ControlActivo) && !MiraArmaVR.BloqueaGiro;
             if (OpcionesVR.Giro == ModoGiroVR.Suave)
             {
                 float fuerza = Mathf.Abs(x);
-                if (puedeGirar && fuerza > ZonaMuertaGiroSuave)
+                // VR38: más lento por defecto (60°/s), zona muerta de 0.2 y aceleración suave (ReglaGiroSuaveVR); viñeta de giro mientras gira.
+                float objetivo = puedeGirar ? ReglaGiroSuaveVR.Objetivo(x, VelocidadGiroSuave) : 0f;
+                velocidadGiroActual = puedeGirar ? ReglaGiroSuaveVR.Siguiente(velocidadGiroActual, objetivo, VelocidadGiroSuave, dt) : 0f;
+                if (Mathf.Abs(velocidadGiroActual) > 0f)
                 {
-                    giroRig = Mathf.Repeat(giroRig + Mathf.Sign(x) * ProporcionGiroSuave(fuerza) * VelocidadGiroSuave * dt, 360f);
+                    giroRig = Mathf.Repeat(giroRig + velocidadGiroActual * dt, 360f);
                     segundosVinetaGiro = Mathf.Max(segundosVinetaGiro, SegundosVinetaGiroSuave);
                 }
                 // Si se cambia a pasos con el stick ladeado, no salta un paso hasta soltarlo.
                 giroArmado = fuerza < RearmeGiro;
                 return;
             }
+            velocidadGiroActual = 0f;
             if (giroArmado && Mathf.Abs(x) > UmbralGiro && puedeGirar)
             {
                 giroArmado = false;
@@ -481,11 +495,7 @@ namespace MechaCyberpunk.VR
         }
 
         /// <summary>VR18: qué fracción de la velocidad de giro da el stick (0 dentro de la zona muerta, 1 a fondo, lineal entre medio).</summary>
-        public static float ProporcionGiroSuave(float fuerza)
-        {
-            float f = Mathf.Abs(fuerza);
-            return f <= ZonaMuertaGiroSuave ? 0f : Mathf.Clamp01((f - ZonaMuertaGiroSuave) / (1f - ZonaMuertaGiroSuave));
-        }
+        public static float ProporcionGiroSuave(float fuerza) => ReglaGiroSuaveVR.Proporcion(fuerza);
 
         // V9: la acción Correr del mapa APie siempre tiene, además, el botón de un dispositivo virtual. Con MANTENER, Correr también va
         // al clic del stick izquierdo (como antes). Con ALTERNAR ese binding se quita y el adaptador prende y apaga el botón virtual.
@@ -694,7 +704,12 @@ namespace MechaCyberpunk.VR
             v.y = 0f;
             // V10: con VIÑETA: NO no se cierra la vista al moverse ni al girar (el fundido del KO sí sale).
             bool moviendo = OpcionesVR.Vineta && (v.magnitude > VelocidadVineta || segundosVinetaGiro > 0f);
-            parametros.apertureSize = OpcionesVR.AperturaVineta(OpcionesVR.NivelVineta); // VR26: BAJA o MEDIA
+            // VR26: BAJA o MEDIA. VR38: al girar con el stick un poco más cerrada que al caminar; el cambio entre las dos va suave (~0.1 s).
+            NivelVinetaVR nivel = OpcionesVR.NivelVineta;
+            float deseada = segundosVinetaGiro > 0f ? OpcionesVR.AperturaVinetaGiro(nivel) : OpcionesVR.AperturaVineta(nivel);
+            float rapidezApertura = (1f - OpcionesVR.AperturaVinetaGiroMedia) / Mathf.Max(0.01f, OpcionesVR.SegundosVineta);
+            aperturaActual = vinetaPuesta || moviendo ? Mathf.MoveTowards(aperturaActual, deseada, rapidezApertura * dt) : deseada;
+            parametros.apertureSize = aperturaActual;
             if (moviendo != vinetaPuesta)
             {
                 vinetaPuesta = moviendo;

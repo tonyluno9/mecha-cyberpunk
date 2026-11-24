@@ -77,6 +77,7 @@ namespace MechaCyberpunk.Tests.VR
                 GuiaControlesVR.Actual.Cerrar();
             }
             GuiaControlesVR.MostrarEnSimulador = false;
+            ArranqueGuiaVR.Activo = false;
             if (habiaClave)
             {
                 PlayerPrefs.SetInt(GuiaControlesVR.ClaveVista, claveAntes);
@@ -222,6 +223,7 @@ namespace MechaCyberpunk.Tests.VR
         public IEnumerator Guia_PrimeraVezSaleSolaConLosModelosReales_YLaSegundaNo()
         {
             PlayerPrefs.DeleteKey(GuiaControlesVR.ClaveVista);
+            ArranqueGuiaVR.Activo = true; // VR62: en el juego ya no sale sola (la reemplazan las tarjetas); se enciende para probarla
             yield return ArmarVR();
             Assert.IsNotNull(jugador.GetComponent<ArranqueGuiaVR>(), "La primera vez el jugador VR espera para mostrar la guía.");
             // Con el simulador solo sale si se pide (se pide ya armado: con el tiempo en 0 la espera de ArmarVR no terminaría).
@@ -238,20 +240,23 @@ namespace MechaCyberpunk.Tests.VR
 
             // VR31: páginas con las imágenes (importadas como Sprite), etiquetas en la de botones y frase en las de gestos.
             Assert.AreEqual(0, guia.Pagina, "Empieza en la página de botones.");
-            Assert.AreEqual(6, GuiaControlesVR.Paginas);
+            Assert.AreEqual(16, GuiaControlesVR.Paginas, "VR31b: 16 páginas.");
             Assert.IsNotNull(guia.Imagen.sprite, "La imagen de la página está en Resources/GuiaVR.");
             StringAssert.Contains("Controles_Botones", guia.Imagen.sprite.name);
             Assert.AreEqual(TextosGuiaVR.Etiquetas.Length, guia.Etiquetas.Count, "Una etiqueta por botón.");
             Assert.IsTrue(guia.Etiquetas[0].gameObject.activeInHierarchy, "Las etiquetas se ven en la página de botones.");
             guia.IrSiguiente();
             Assert.AreEqual(1, guia.Pagina);
-            StringAssert.Contains("SacarPistola", guia.Imagen.sprite.name);
+            StringAssert.Contains("MoverseGirar", guia.Imagen.sprite.name);
+            guia.IrA((int)PaginaGuiaVR.SacarPistola);
+            StringAssert.Contains("SacarPistola_v2", guia.Imagen.sprite.name);
             StringAssert.Contains("PISTOLA", guia.Frase);
             Assert.IsFalse(guia.Etiquetas[0].gameObject.activeInHierarchy, "En los gestos no van las etiquetas de los botones.");
+            guia.IrA(1);
             guia.IrAnterior();
             guia.IrAnterior();
             Assert.AreEqual(GuiaControlesVR.Paginas - 1, guia.Pagina, "ANTERIOR da la vuelta.");
-            StringAssert.Contains("BRAZOS", guia.Frase);
+            StringAssert.Contains("Manejar", guia.Imagen.sprite.name);
             guia.IrA(0);
             var textos = new List<string>();
             foreach (Text t in guia.Etiquetas)

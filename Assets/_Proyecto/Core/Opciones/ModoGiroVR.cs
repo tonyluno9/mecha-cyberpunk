@@ -5,7 +5,7 @@ namespace MechaCyberpunk.Core
     {
         /// <summary>Pasos de 45° (soltar el stick para el siguiente).</summary>
         PorPasos,
-        /// <summary>Giro continuo, proporcional al stick (hasta OpcionesVR.VelocidadGiro, 120°/s por defecto). Es el de por defecto (VR18).</summary>
+        /// <summary>Giro continuo, proporcional al stick (hasta OpcionesVR.VelocidadGiro, 60°/s por defecto, VR38). Es el de por defecto (VR18).</summary>
         Suave
     }
 }

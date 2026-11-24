@@ -33,10 +33,26 @@ namespace MechaCyberpunk.Personaje.Combate
         public float RestanteRayo { get; private set; }
 
         /// <summary>
+        /// VR51 (solo VR): con true la carga llena no suelta el rayo sola: se queda en <see cref="EstadoPlasma.Cargando"/> con
+        /// <see cref="Carga"/> 1 mientras se mantenga cargando, hasta que <see cref="Avanzar(float, bool, System.Func{bool}, bool)"/> reciba
+        /// disparar. En PC queda en false.
+        /// </summary>
+        public bool RetenerCarga { get; set; }
+
+        /// <summary>True con la carga completa esperando el disparo (solo con <see cref="RetenerCarga"/>).</summary>
+        public bool CargaLlena => Estado == EstadoPlasma.Cargando && Carga >= 1f;
+
+        /// <summary>
         /// Avanza <paramref name="dt"/> s con el botón <paramref name="pulsado"/>. <paramref name="puedeDisparar"/> dice si hay carga en el arma (se pide al
         /// terminar de cargar). Devuelve true en el cuadro en que empieza el rayo (para gastar la celda y avisar del disparo).
         /// </summary>
-        public bool Avanzar(float dt, bool pulsado, System.Func<bool> puedeDisparar)
+        public bool Avanzar(float dt, bool pulsado, System.Func<bool> puedeDisparar) => Avanzar(dt, pulsado, puedeDisparar, true);
+
+        /// <summary>
+        /// Como <see cref="Avanzar(float, bool, System.Func{bool})"/>; con <see cref="RetenerCarga"/> el rayo sale solo con la carga llena y
+        /// <paramref name="disparar"/> (VR51: el gatillo derecho). Sin <see cref="RetenerCarga"/>, <paramref name="disparar"/> no cuenta.
+        /// </summary>
+        public bool Avanzar(float dt, bool pulsado, System.Func<bool> puedeDisparar, bool disparar)
         {
             switch (Estado)
             {
@@ -49,7 +65,7 @@ namespace MechaCyberpunk.Personaje.Combate
                     {
                         Estado = EstadoPlasma.Cargando;
                         Carga = 0f;
-                        return AvanzarCarga(dt, puedeDisparar);
+                        return AvanzarCarga(dt, puedeDisparar, disparar);
                     }
                     return false;
                 case EstadoPlasma.Cargando:
@@ -58,7 +74,7 @@ namespace MechaCyberpunk.Personaje.Combate
                         Cancelar();
                         return false;
                     }
-                    return AvanzarCarga(dt, puedeDisparar);
+                    return AvanzarCarga(dt, puedeDisparar, disparar);
                 default:
                     RestanteRayo -= dt;
                     if (RestanteRayo <= 0f)
@@ -72,7 +88,7 @@ namespace MechaCyberpunk.Personaje.Combate
             }
         }
 
-        private bool AvanzarCarga(float dt, System.Func<bool> puedeDisparar)
+        private bool AvanzarCarga(float dt, System.Func<bool> puedeDisparar, bool disparar)
         {
             Carga = segundosCarga <= 0f ? 1f : Carga + dt / segundosCarga;
             if (Carga < 1f)
@@ -80,6 +96,10 @@ namespace MechaCyberpunk.Personaje.Combate
                 return false;
             }
             Carga = 1f;
+            if (RetenerCarga && !disparar)
+            {
+                return false; // VR51: llena, esperando el gatillo derecho
+            }
             if (puedeDisparar != null && !puedeDisparar())
             {
                 // Sin carga en el arma: se queda en reposo hasta que se suelte el botón.

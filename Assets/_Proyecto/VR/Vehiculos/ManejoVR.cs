@@ -4,6 +4,7 @@ using MechaCyberpunk.Personaje.Jugador;
 using MechaCyberpunk.Vehiculos.Carro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
 using UnityEngine.XR.Interaction.Toolkit.Locomotion.Comfort;
 
 namespace MechaCyberpunk.VR
@@ -22,6 +23,8 @@ namespace MechaCyberpunk.VR
     /// el cambio de arma del stick derecho y el agarre se pausan (el gatillo derecho es el acelerador). El clic del stick derecho recentra la
     /// cabeza en el asiento.</item>
     /// <item>Viñeta suave al girar o acelerar fuerte (<see cref="ReglaVinetaManejoVR"/>), salvo con VIÑETA: NO. Fundido corto al subir y bajar.</item>
+    /// <item>VR48: en carros (no en motos) la carrocería y el interior no se dibujan para la cámara mientras se maneja (sus MeshRenderer y
+    /// SkinnedMeshRenderer pasan a solo-sombra): se ve limpio, como desde el parabrisas. Los colliders no se tocan; al bajar vuelven.</item>
     /// <item>Al bajar todo vuelve como estaba y el rig se recentra a pie (ojos a 1.72 m, mirando hacia donde quedó el cuerpo).</item>
     /// </list>
     /// </summary>
@@ -82,6 +85,8 @@ namespace MechaCyberpunk.VR
         private float aceleracionSuave;
         private readonly List<(InputAction accion, string ruta)> agregados = new List<(InputAction, string)>();
         private readonly List<(Behaviour componente, bool prendido)> pausados = new List<(Behaviour, bool)>();
+        private readonly List<(Renderer renderer, ShadowCastingMode sombra, bool forzado)> ocultos = new List<(Renderer, ShadowCastingMode, bool)>();
+        private bool esMoto;
 
         public VignetteParameters vignetteParameters => parametros;
 
@@ -102,6 +107,9 @@ namespace MechaCyberpunk.VR
 
         /// <summary>True mientras la viñeta de manejo está pedida.</summary>
         public bool VinetaPuesta => vinetaPuesta;
+
+        /// <summary>VR48: cuántos renderers del carro están ocultos para la cámara ahora (0 a pie y en moto).</summary>
+        public int RenderersOcultos => ocultos.Count;
 
         /// <summary>Cuántos bindings VR van puestos en el mapa del vehículo.</summary>
         public int BindingsPuestos => agregados.Count;
@@ -250,6 +258,7 @@ namespace MechaCyberpunk.VR
 
             PonerBindings();
             Pausar();
+            OcultarCarroceria();
             Recentrar();
             vineta = cabeza.GetComponentInChildren<TunnelingVignetteController>(true);
             recentrar?.Enable();
@@ -264,6 +273,7 @@ namespace MechaCyberpunk.VR
             recentrar?.Disable();
             QuitarBindings();
             Reanudar();
+            MostrarCarroceria();
             PonerVineta(false);
             if (cuerpo != null)
             {
@@ -320,6 +330,7 @@ namespace MechaCyberpunk.VR
         private void CalcularOjos()
         {
             bool moto = vehiculo.GetComponent<ManejoMoto>() != null || vehiculo.name.ToLowerInvariant().Contains("moto");
+            esMoto = moto;
             float escala = vehiculo.lossyScale.y;
             Bounds caja = BoundsLocales(vehiculo);
             Transform asiento = montable.Asiento;
@@ -530,6 +541,51 @@ namespace MechaCyberpunk.VR
                 mapa.Enable();
             }
             agregados.Clear();
+        }
+
+        // ---- VR48: la carrocería no se ve desde dentro ----
+
+        // Los renderers de malla del carro pasan a solo-sombra (la cámara no los dibuja, la sombra en el piso queda); los que no daban sombra se
+        // apagan con forceRenderingOff. Partículas, estelas y líneas se quedan. Nada del jugador ni marcado con IgnorarOcultarVR.
+        private void OcultarCarroceria()
+        {
+            MostrarCarroceria();
+            if (vehiculo == null || !ReglaAsientoVR.OcultarCarroceria(esMoto))
+            {
+                return;
+            }
+            foreach (Renderer r in vehiculo.GetComponentsInChildren<Renderer>())
+            {
+                if (r == null || !(r is MeshRenderer || r is SkinnedMeshRenderer) || r.transform.IsChildOf(transform)
+                    || r.GetComponentInParent<IgnorarOcultarVR>() != null)
+                {
+                    continue;
+                }
+                ShadowCastingMode sombra = r.shadowCastingMode;
+                bool forzado = r.forceRenderingOff;
+                if (sombra == ShadowCastingMode.Off)
+                {
+                    r.forceRenderingOff = true;
+                }
+                else
+                {
+                    r.shadowCastingMode = ShadowCastingMode.ShadowsOnly;
+                }
+                ocultos.Add((r, sombra, forzado));
+            }
+        }
+
+        private void MostrarCarroceria()
+        {
+            foreach (var (r, sombra, forzado) in ocultos)
+            {
+                if (r != null)
+                {
+                    r.shadowCastingMode = sombra;
+                    r.forceRenderingOff = forzado;
+                }
+            }
+            ocultos.Clear();
         }
 
         // ---- Lo que no va dentro del vehículo ----

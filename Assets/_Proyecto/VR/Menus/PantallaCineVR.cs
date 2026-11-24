@@ -32,6 +32,16 @@ namespace MechaCyberpunk.VR.Menus
         /// <summary>Orden de dibujo del fondo y de la capa de encima (los Canvas del mundo y los fundidos usan órdenes mayores).</summary>
         public const int OrdenFondo = -50;
         public const int OrdenEncima = -49;
+        /// <summary>VR36: la capa UI de Unity (integrada, índice 5).</summary>
+        public static int CapaUI
+        {
+            get
+            {
+                int capa = LayerMask.NameToLayer("UI");
+                return capa >= 0 ? capa : CapaUIPorDefecto;
+            }
+        }
+        private const int CapaUIPorDefecto = 5;
         private const int Segmentos = 64;
         private const int Cola = 3000;
         private const float DiferenciaAspecto = 0.01f;
@@ -235,6 +245,8 @@ namespace MechaCyberpunk.VR.Menus
         {
             var objeto = new GameObject(nombre);
             objeto.transform.SetParent(transform, false);
+            // VR36: en la capa UI (de Unity, no propia): con la cinemática en negro la cabeza solo dibuja esa capa (NegroCineVR).
+            objeto.layer = CapaUI;
             filtro = objeto.AddComponent<MeshFilter>();
             MeshRenderer r = objeto.AddComponent<MeshRenderer>();
             r.sharedMaterial = material;

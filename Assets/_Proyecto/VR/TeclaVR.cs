@@ -35,7 +35,17 @@ namespace MechaCyberpunk.VR
         public const string BotonGirar = "STICK DER.";
         public const string BotonPausa = "Y";
         public const string BotonRecentrar = "STICK DER. ABAJO 1 S";
-        public const string BotonRuedaProtesis = "GRIP IZQ. + GATILLO IZQ.";
+        /// <summary>
+        /// VR31b: en VR ya no hay rueda de prótesis: las prótesis se activan solo con gestos y los dos grips. Las teclas de PC de la rueda de
+        /// prótesis (Tab, Q) y la acción Habilidades dicen esto. Se queda el nombre por compatibilidad.
+        /// </summary>
+        public const string BotonRuedaProtesis = "GESTO + LOS DOS GRIPS";
+        /// <summary>VR31b: la rueda de armas con la mano: mantener X, mover la mano izquierda con el grip izquierdo y soltarlo para elegir.</summary>
+        public const string AyudaRueda = "MANTÉN X · GRIP IZQ. Y MUEVE LA MANO · SUELTA EL GRIP: ELIGE";
+        /// <summary>VR31b: el aviso de la historia "MANTÉN RUEDA Y ELIGE LA PISTOLA PARA EQUIPARLA" en VR.</summary>
+        public const string AvisoRuedaPistola = "MANTÉN X, CON EL GRIP IZQ. MUEVE LA MANO A LA PISTOLA Y SUELTA EL GRIP · O MANO DERECHA A LA CADERA + GRIP";
+        /// <summary>VR31b/VR45: los tres gestos de las prótesis, para los avisos.</summary>
+        public const string AyudaProtesis = "PRÓTESIS CON LOS DOS GRIPS: MANOS DE LA CADERA A LA RODILLA = PIERNAS · BRAZOS EN CRUZ = BRAZOS · MANOS A LOS LADOS DE LA CABEZA = VISIÓN";
         /// <summary>Aceptar en los menús (el láser apunta).</summary>
         public const string BotonAceptar = "GATILLO DER.";
         /// <summary>Cerrar o regresar en los menús.</summary>
@@ -173,9 +183,9 @@ namespace MechaCyberpunk.VR
         {
             { "Apunta con el botón derecho del ratón antes de disparar.", "Apunta con la mano y dispara con el gatillo derecho." },
             { "Mantén TAB para elegir un arma o usar un objeto; la rueda del ratón también cambia de arma.",
-                "Mantén X para la rueda de armas y objetos; elige con la mano o con el stick." },
+                "Mantén X para la rueda de armas y objetos; con el grip izquierdo mueve la mano y suelta el grip para elegir." },
             { "Con implantes, las teclas 1, 2 y 3 activan las habilidades de piernas, brazos y cabeza.",
-                "Con prótesis: manos en los muslos (piernas) o brazos abiertos (brazos) + los dos grips; o grip + gatillo izquierdos para el menú." },
+                "Con prótesis y los dos grips: manos de la cadera a la rodilla (piernas), brazos en cruz (brazos) o manos a los lados de la cabeza (visión)." },
             { "Mantén SHIFT para correr y ESPACIO para saltar.", "Clic del stick izquierdo para correr y clic del stick derecho para saltar." },
             { "Recarga con R antes de entrar a una pelea larga.", "Recarga antes de una pelea larga: A suelta el cargador y la mano izquierda toma otro de la cadera." },
         };
@@ -192,12 +202,24 @@ namespace MechaCyberpunk.VR
             new Regla(@"TE CUBRE DETRÁS", "AGÁCHATE DETRÁS DE UNA CAJA O MURO PARA CUBRIRTE"),
             new Regla(@"\bTE AGACHA\b", "AGÁCHATE CON EL CUERPO PARA AGACHARTE"),
             new Regla(@"RUEDA PARA ESQUIVAR", "AGACHADO + " + BotonSaltar + ": RUEDA PARA ESQUIVAR"),
-            new Regla(@"PARA ELEGIR UN ARMA O USAR UN OBJETO", BotonRueda + " PARA ELEGIR UN ARMA O USAR UN OBJETO · ELIGE CON LA MANO O EL STICK"),
+            new Regla(@"PARA ELEGIR UN ARMA O USAR UN OBJETO", BotonRueda + " PARA ELEGIR UN ARMA O USAR UN OBJETO · GRIP IZQ. Y MUEVE LA MANO · SUELTA EL GRIP: ELIGE"),
+            // VR31b: la rueda de prótesis ya no existe en VR. El aviso que era solo el menú ("O MANTÉN GRIP + GATILLO IZQUIERDOS PARA EL MENÚ
+            // DE PRÓTESIS") y el tutorial de PC de la rueda ("MANTÉN TAB PARA ABRIR EL MENÚ DE PRÓTESIS...") dicen los tres gestos.
+            new Regla(@"^\s*O\s+MANT[ÉE]N\s+GRIP\s+\+\s+GATILLO\s+IZQUIERDOS\s+PARA\s+EL\s+MEN[ÚU]\s+DE\s+PR[ÓO]TESIS\s*$", AyudaProtesis),
+            new Regla(@"PARA ABRIR EL MEN[ÚU] DE PR[ÓO]TESIS", AyudaProtesis),
+            // VR31b: en la clínica Tab cambia de pestaña (no es la rueda de prótesis): en VR la pestaña se elige con el láser.
+            new Regla(@"^\s*\[TAB\]\s*PR[ÓO]TESIS DE ATAQUE\s*$", "PRÓTESIS DE ATAQUE"),
+            // VR31b: el aviso de la historia para equipar la pistola con la rueda.
+            new Regla(@"ELIGE LA PISTOLA PARA EQUIPARLA", AvisoRuedaPistola),
+            new Regla(@"Y ELIGE CON EL RAT[ÓO]N:", AyudaProtesis),
         };
 
         /// <summary>Teclas y frases de teclado y ratón que se cambian dentro del texto, en este orden.</summary>
         private static readonly Regla[] Reglas =
         {
+            // VR31b: sin rueda de prótesis; VR45: las piernas son de la cadera a la rodilla.
+            new Regla(@"\s*·\s*O\s+MANT[ÉE]N\s+GRIP\s+\+\s+GATILLO\s+IZQUIERDOS\s+PARA\s+EL\s+MEN[ÚU]\s+DE\s+PR[ÓO]TESIS", string.Empty),
+            new Regla(@"\bMANOS EN LOS MUSLOS\b", "MANOS DE LA CADERA A LA RODILLA"),
             new Regla(@"\bW\s*/?\s*A\s*/?\s*S\s*/?\s*D\b", BotonMover),
             new Regla(@"\bBOT[ÓO]N DERECHO DEL RAT[ÓO]N\b", "LA MANO"),
             new Regla(@"\bRUEDA DEL RAT[ÓO]N\b", "RUEDA DE ARMAS (" + BotonRueda + ")"),

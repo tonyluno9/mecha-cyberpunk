@@ -10,9 +10,11 @@ using UnityEngine.UI;
 namespace MechaCyberpunk.VR.Guia
 {
     /// <summary>
-    /// VR20/VR31: la guía de controles de VR. Un panel del mundo a <see cref="Distancia"/> m frente a la cabeza, quieto, con el estilo H10 del juego
-    /// (TrazoH10: fondo oscuro, línea turquesa, letra Rajdhani) y páginas con las imágenes de Assets/Arte/UI/ControlesVR (<see cref="TextosGuiaVR.Paginas"/>):
-    /// botones → sacar pistola → arma larga → recargar → prótesis piernas → prótesis brazos. En la de botones cada etiqueta va junto a su punto cian
+    /// VR20/VR31/VR31b: la guía de controles de VR. Un panel del mundo a <see cref="Distancia"/> m frente a la cabeza, quieto, con el estilo H10 del juego
+    /// (TrazoH10: fondo oscuro, línea turquesa, letra Rajdhani) y las 16 páginas con las imágenes de Assets/Arte/UI/ControlesVR (<see cref="TextosGuiaVR.Paginas"/>,
+    /// en el orden de <see cref="PaginaGuiaVR"/>: botones, moverse, interactuar, pistola, arma larga, disparar, recargar, rueda de armas, granada,
+    /// golpe, agarrar, las tres prótesis, recentrar y manejar). El botón bajo el láser se resalta, con zona de clic ampliada (imán al más
+    /// cercano) y una vibración leve al pasar de botón. En la de botones cada etiqueta va junto a su punto cian
     /// con una línea fina; en las de gestos, una frase corta abajo. ANTERIOR / SIGUIENTE / CERRAR con el láser y el gatillo derecho; el stick derecho
     /// a los lados cambia de página; B, Y o Menú/Esc la cierran.
     /// Mientras está abierta va en <see cref="PilaPantallas"/> (el láser se ve, el gatillo no dispara y Menú no abre la pausa). Abierta sola
@@ -66,6 +68,8 @@ namespace MechaCyberpunk.VR.Guia
         private BotonCyberfix anterior;
         private PantallaPausa pausa;
         private BotonCyberfix botonPausa;
+        private BotonCyberfix ultimoApuntado;
+        private BotonCyberfix[] botones = new BotonCyberfix[0];
         private CanvasGroup grupoPausa;
         private Personaje.Movimiento.ControladorAPie congelado;
         private Transform manoLaser;
@@ -361,6 +365,7 @@ namespace MechaCyberpunk.VR.Guia
             anterior = CrearBoton(rect, TextosGuiaVR.Anterior, IrAnterior, -370f);
             siguiente = CrearBoton(rect, TextosGuiaVR.Siguiente, IrSiguiente, 0f);
             cerrar = CrearBoton(rect, TextosGuiaVR.Cerrar, Cerrar, 370f);
+            botones = new[] { cerrar, siguiente, anterior };
             VestidoH10.Fuente(rect);
         }
 
@@ -459,6 +464,7 @@ namespace MechaCyberpunk.VR.Guia
                 return null;
             }
             sprite = Sprite.Create(textura, new Rect(0f, 0f, textura.width, textura.height), new Vector2(0.5f, 0.5f));
+            sprite.name = textura.name;
             creados.Add(sprite);
             return sprite;
         }
@@ -482,6 +488,11 @@ namespace MechaCyberpunk.VR.Guia
             {
                 apuntado.Elegir();
             }
+            if (apuntado != null && apuntado != ultimoApuntado)
+            {
+                VibrarLeve(); // VR31b (como VR44): vibración leve al pasar a otro botón
+            }
+            ultimoApuntado = apuntado;
             if (apuntado != null && EntradaVR.Pulso(EntradaVR.GatilloDerecho))
             {
                 apuntado.Pulsar(); // CERRAR llama a Cerrar; ANTERIOR y SIGUIENTE cambian de página
@@ -512,6 +523,18 @@ namespace MechaCyberpunk.VR.Guia
             else if (teclado != null && teclado.leftArrowKey.wasPressedThisFrame)
             {
                 IrAnterior();
+            }
+        }
+
+        private const float AmplitudPasar = 0.15f;
+        private const float SegundosPasar = 0.03f;
+
+        private static void VibrarLeve()
+        {
+            AdaptadorVR a = AdaptadorVR.Actual;
+            if (a != null && a.ManoDerecha != null)
+            {
+                a.ManoDerecha.Vibrar(AmplitudPasar, SegundosPasar);
             }
         }
 
@@ -580,18 +603,44 @@ namespace MechaCyberpunk.VR.Guia
             return rect.rect.Contains(new Vector2(enBoton.x, enBoton.y));
         }
 
-        // El botón (ANTERIOR, SIGUIENTE o CERRAR) que toca el rayo; null si ninguno.
+        // El botón (ANTERIOR, SIGUIENTE o CERRAR) que toca el rayo; null si ninguno. VR31b (como VR44): zona de clic más grande
+        // (<see cref="MargenIman"/> px alrededor) y, si toca la zona de dos, gana el más cercano.
         private BotonCyberfix BotonApuntado()
         {
-            if (ApuntaA(cerrar, out _))
+            if (!RayoAlPanel(out Vector2 px, out _))
             {
-                return cerrar;
+                return null;
             }
-            if (ApuntaA(siguiente, out _))
+            BotonCyberfix mejor = null;
+            float mejorDistancia = float.MaxValue;
+            foreach (BotonCyberfix b in botones)
             {
-                return siguiente;
+                float d = DistanciaABoton(b, px);
+                if (d <= MargenIman && d < mejorDistancia)
+                {
+                    mejor = b;
+                    mejorDistancia = d;
+                }
             }
-            return ApuntaA(anterior, out _) ? anterior : null;
+            return mejor;
+        }
+
+        /// <summary>Zona extra alrededor de cada botón que también cuenta como apuntado (px del panel).</summary>
+        public const float MargenIman = 40f;
+
+        // Distancia (px del panel) del punto al rectángulo del botón; 0 si está dentro.
+        private float DistanciaABoton(BotonCyberfix boton, Vector2 px)
+        {
+            if (boton == null)
+            {
+                return float.MaxValue;
+            }
+            var rect = (RectTransform)boton.transform;
+            Vector3 local = rect.InverseTransformPoint(canvas.transform.TransformPoint(new Vector3(px.x, px.y, 0f)));
+            Rect r = rect.rect;
+            float dx = Mathf.Max(r.xMin - local.x, 0f, local.x - r.xMax);
+            float dy = Mathf.Max(r.yMin - local.y, 0f, local.y - r.yMax);
+            return Mathf.Sqrt(dx * dx + dy * dy);
         }
 
         // Devuelve el tiempo, el control y la pausa como estaban.

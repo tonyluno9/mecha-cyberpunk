@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using MechaCyberpunk.Core;
-using MechaCyberpunk.VR.Menus;
 using MechaCyberpunk.Progresion.Recorrido;
+using MechaCyberpunk.VR.Menus;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Video;
@@ -39,6 +39,8 @@ namespace MechaCyberpunk.VR.Cinematicas
             public Texture Evaluada;
             public bool EnPantalla;
             public bool Mostrando;
+            public bool Sonaba;
+            public float SegundosParado;
             public readonly List<Canvas> Fuentes = new List<Canvas>();
             public readonly List<Canvas> Apagados = new List<Canvas>();
         }
@@ -175,11 +177,11 @@ namespace MechaCyberpunk.VR.Cinematicas
                     seguidos.RemoveAt(i);
                     continue;
                 }
-                Actualizar(s, hayJugador);
+                Actualizar(s, hayJugador, Time.unscaledDeltaTime);
             }
         }
 
-        private void Actualizar(Seguido s, bool hayJugador)
+        private void Actualizar(Seguido s, bool hayJugador, float dt)
         {
             VideoPlayer v = s.Video;
             bool excluido = excluidos.Contains(v);
@@ -207,15 +209,26 @@ namespace MechaCyberpunk.VR.Cinematicas
                 s.Evaluada = textura;
                 s.EnPantalla = textura != null && BuscarFuentes(textura, s.Fuentes);
             }
-            bool alCine = ReglaCineVR.VideoAlCine(hayJugador, excluido, corriendo, s.Redirigido, s.EnPantalla);
+            // Main: con narración el cuadro se congela o hay pausa entre clips (corriendo); VR36: el que vuelve a sonar pasa al frente.
+            bool reproduciendo = corriendo;
+            bool empezo = reproduciendo && !s.Sonaba;
+            s.Sonaba = reproduciendo;
+            s.SegundosParado = reproduciendo ? 0f : s.SegundosParado + dt;
+            bool alCine = ReglaCineVR.VideoAlCine(hayJugador, excluido, reproduciendo, s.Redirigido, s.EnPantalla);
             if (alCine && textura != null)
             {
-                if (!s.Mostrando || !PantallaCineVR.Tiene(v))
+                if (!s.Mostrando || empezo || !PantallaCineVR.Tiene(v))
                 {
                     s.Mostrando = true;
                     PantallaCineVR.Mostrar(v, textura, Aspecto(v, textura), Prioridad);
                     Debug.Log("[VR] Video " + v.name + ": a la pantalla de cine.");
                 }
+                ApagarFuentes(s);
+            }
+            else if (s.Mostrando && textura != null
+                && ReglaCineVR.MantenerEnCine(CinematicaPendiente.EnCurso, reproduciendo, s.SegundosParado))
+            {
+                // VR36: entre un clip y el siguiente se queda el último cuadro en la pantalla: las cinemáticas van de corrido, sin cortes.
                 ApagarFuentes(s);
             }
             else if (s.Mostrando)
