@@ -363,7 +363,16 @@ namespace MechaCyberpunk.Tests.VR
             GameObject objeto = GameObject.Find("CinematicaPendiente");
             Assert.IsNotNull(objeto);
             extras.Add(objeto);
-            VideoPlayer video = objeto.GetComponent<VideoPlayer>();
+            // Main (T-cinematicas-videos-23nov): dos VideoPlayer hijos alternados; el primer clip va en el que lo tiene cargado.
+            VideoPlayer video = null;
+            foreach (VideoPlayer v in objeto.GetComponentsInChildren<VideoPlayer>(true))
+            {
+                if (v.clip == clip)
+                {
+                    video = v;
+                    break;
+                }
+            }
             Assert.IsNotNull(video, "La cinemática con clip arma su VideoPlayer.");
             yield return EsperarVideo(video);
             yield return Cuadros(2);

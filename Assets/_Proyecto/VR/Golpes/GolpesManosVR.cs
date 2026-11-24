@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using MechaCyberpunk.Core;
 using MechaCyberpunk.IA.APie;
+using MechaCyberpunk.Personaje;
 using MechaCyberpunk.Personaje.Combate;
 using MechaCyberpunk.Personaje.Jugador;
 using MechaCyberpunk.Personaje.Movimiento;
@@ -251,6 +252,7 @@ namespace MechaCyberpunk.VR
             }
             // El mismo sonido que el golpe a pie al conectar (SensacionGolpe): carne o metal según el objetivo.
             Sonidos.ReproducirEn(ReglaSonidosJugador.IdGolpeConectado(objetivo.transform.root.name + " " + objetivo.name), punto);
+            Sonidos.Reproducir(VozJugador.Id(VozJugador.Esfuerzo)); // Voces de main: el esfuerzo del jugador también al golpear con las manos en VR.
             Golpeo?.Invoke(estado.Mano.Derecha, objetivo, resultado);
         }
     }
