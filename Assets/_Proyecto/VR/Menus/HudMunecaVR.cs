@@ -8,6 +8,7 @@ namespace MechaCyberpunk.VR.Menus
     /// <summary>
     /// VR4: el HUD de la muñeca izquierda. Un panel chico (con el kit de UI) sobre el control izquierdo con la vida y el dinero,
     /// leídos de los servicios reales (<see cref="IVida"/> del jugador y <see cref="ICartera"/> del registro). Se ve al voltear la muñeca.
+    /// VR14: ya no se crea (el HUD de PC va completo en <see cref="HudCascoVR"/>); queda por si se quiere volver a usar.
     /// </summary>
     public sealed class HudMunecaVR
     {

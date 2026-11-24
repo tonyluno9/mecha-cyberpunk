@@ -13,7 +13,7 @@ namespace MechaCyberpunk.Tests.VR
     /// <summary>
     /// VR5: las armas especiales en VR con el simulador: el lanzagranadas dispara desde el cañón en la mano hacia donde apunta el control, la granada
     /// se toma con el grip y sale con la velocidad de la mano al soltarlo, el rifle de plasma carga y suelta el rayo con el gatillo sostenido, y el
-    /// stick derecho en vertical cambia de arma (mantenerlo abajo 1 s recentra y no cambia).
+    /// stick derecho en vertical ya no cambia de arma (VR19: las armas van en la rueda); mantenerlo abajo 1 s recentra.
     /// </summary>
     public class ArmasEspecialesVRPruebas : BaseJugadorVR
     {
@@ -195,29 +195,25 @@ namespace MechaCyberpunk.Tests.VR
         }
 
         [UnityTest]
-        public IEnumerator StickDerechoArribaYAbajo_CambiaDeArma()
+        public IEnumerator StickDerechoArribaYAbajo_YaNoCambiaDeArma()
         {
             yield return Preparar(ArmaAPie.Granada);
             Assert.IsTrue(armas.Equipar(ArmaAPie.Pistola));
             yield return Cuadros(3);
-            ArmaAPie siguiente = ReglaStickArmaVR.Siguiente(ArmaAPie.Pistola, 1, armas.TieneArma);
-            Assert.AreNotEqual(ArmaAPie.Pistola, siguiente, "Con la granada hay otra arma después de la pistola.");
 
             Stick(true, new Vector2(0f, 1f));
-            yield return Cuadros(2);
-            Assert.AreEqual(siguiente, armas.ArmaActiva, "Arriba cambia al instante a la siguiente.");
             yield return Cuadros(5);
-            Assert.AreEqual(siguiente, armas.ArmaActiva, "Sostener arriba no sigue cambiando.");
+            Assert.AreEqual(ArmaAPie.Pistola, armas.ArmaActiva, "VR19: arriba ya no cambia de arma.");
             Stick(true, Vector2.zero);
             yield return Cuadros(2);
 
             Stick(true, new Vector2(0f, -1f));
             yield return Cuadros(3);
-            Assert.AreEqual(siguiente, armas.ArmaActiva, "Abajo no cambia hasta soltar.");
             Stick(true, Vector2.zero);
-            yield return Cuadros(2);
-            Assert.AreEqual(ArmaAPie.Pistola, armas.ArmaActiva, "Un toque abajo vuelve a la anterior al soltar.");
-            Assert.AreEqual(0, stick.Recentrados);
+            yield return Cuadros(3);
+            Assert.AreEqual(ArmaAPie.Pistola, armas.ArmaActiva, "VR19: un toque abajo ya no cambia de arma.");
+            Assert.AreEqual(0, stick.Cambios);
+            Assert.AreEqual(0, stick.Recentrados, "Un toque no recentra.");
         }
 
         [UnityTest]
@@ -241,17 +237,16 @@ namespace MechaCyberpunk.Tests.VR
         public void ReglaStick_TiemposDeAbajo()
         {
             var regla = new ReglaStickArmaVR();
-            Assert.AreEqual(GestoStickVR.ArmaSiguiente, regla.Avanzar(new Vector2(0f, 0.9f), 0.01f));
-            Assert.AreEqual(GestoStickVR.Nada, regla.Avanzar(new Vector2(0f, 0.9f), 0.01f), "Sin rearme no repite.");
-            Assert.AreEqual(GestoStickVR.Nada, regla.Avanzar(new Vector2(0f, 0.5f), 0.01f), "Sobre 0.35 sigue sin rearmar.");
+            Assert.AreEqual(GestoStickVR.Nada, regla.Avanzar(new Vector2(0f, 0.9f), 0.01f), "VR19: arriba no pide nada.");
+            Assert.AreEqual(GestoStickVR.Nada, regla.Avanzar(new Vector2(0f, 0.9f), 2f));
             Assert.AreEqual(GestoStickVR.Nada, regla.Avanzar(Vector2.zero, 0.01f));
             Assert.AreEqual(GestoStickVR.Nada, regla.Avanzar(new Vector2(0.95f, 0.8f), 0.01f), "En diagonal manda el giro.");
             Assert.AreEqual(GestoStickVR.Nada, regla.Avanzar(Vector2.zero, 0.01f));
 
-            // Toque abajo de 0.3 s: anterior al soltar.
+            // Toque abajo de 0.3 s: VR19, ya no pide el arma anterior.
             Assert.AreEqual(GestoStickVR.Nada, regla.Avanzar(new Vector2(0f, -0.9f), 0.1f));
             Assert.AreEqual(GestoStickVR.Nada, regla.Avanzar(new Vector2(0f, -0.9f), 0.3f));
-            Assert.AreEqual(GestoStickVR.ArmaAnterior, regla.Avanzar(Vector2.zero, 0.01f));
+            Assert.AreEqual(GestoStickVR.Nada, regla.Avanzar(Vector2.zero, 0.01f));
 
             // Abajo 0.7 s: al soltar no pide nada.
             regla.Avanzar(new Vector2(0f, -0.9f), 0.1f);

@@ -12,7 +12,7 @@ namespace MechaCyberpunk.VR.Cinematicas
     /// <summary>
     /// V12-B: en VR la cabeza del jugador nunca la mueve una animación. Cada cuadro busca las cámaras de cinemática que se prenden
     /// (la silla del Doc, el asalto del prólogo, el flashback, o cualquiera que en PC tape la vista del jugador: ver
-    /// <see cref="ReglaCineVR.EsCamaraDeCine"/>) y las manda a una RenderTexture que se ve en <see cref="PantallaCineVR"/>, quieta a 4 m frente
+    /// <see cref="ReglaCineVR.EsCamaraDeCine"/>) y las manda a una RenderTexture que se ve en <see cref="PantallaCineVR"/> (VR15: la pantalla grande curva, ~105° a 3.5 m), quieta frente
     /// a la cabeza, con un fundido corto al empezar y al terminar (tapa el salto del jugador al asiento y de vuelta).
     /// Al apagarse o destruirse la cámara se quita de la pantalla y recupera su targetTexture (null).
     /// No toca: la cabeza del visor, la del rig de menús, la del láser (ya tiene textura), cámaras con textura (minimapa, retratos,
@@ -23,9 +23,9 @@ namespace MechaCyberpunk.VR.Cinematicas
     [DefaultExecutionOrder(10000)]
     public class CamarasCineVR : MonoBehaviour
     {
-        /// <summary>Tamaño de la textura de cada cámara de cinemática (px, 16:9).</summary>
-        public const int AnchoTextura = 1280;
-        public const int AltoTextura = 720;
+        /// <summary>Tamaño de la textura de cada cámara de cinemática (px, 16:9; VR15: la pantalla grande mide ~105° de la vista).</summary>
+        public const int AnchoTextura = 1920;
+        public const int AltoTextura = 1080;
         /// <summary>Prioridad en <see cref="PantallaCineVR"/> (más la profundidad de la cámara: gana la que en PC queda encima). Los videos van más alto.</summary>
         public const int PrioridadBase = 10;
         /// <summary>Fundido a negro al empezar y al terminar una cámara de cinemática (s).</summary>

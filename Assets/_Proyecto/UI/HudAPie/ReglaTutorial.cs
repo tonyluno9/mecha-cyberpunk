@@ -154,6 +154,23 @@ namespace MechaCyberpunk.UI.Hud
         }
 
         /// <summary>
+        /// VR20: el aviso de las habilidades de prótesis en VR, sin Tab ni ratón: los gestos de las que se tienen y el menú con grip + gatillo izquierdos.
+        /// Vacío si no hay ninguna.
+        /// </summary>
+        public static string TextoHabilidadesVR(bool piernas, bool brazos, bool cabeza)
+        {
+            if (!piernas && !brazos && !cabeza)
+            {
+                return string.Empty;
+            }
+            List<string> partes = new List<string>();
+            if (piernas) partes.Add(ReglaTutorialProtesis.GestoPiernasVR);
+            if (brazos) partes.Add(ReglaTutorialProtesis.GestoBrazosVR);
+            partes.Add(ReglaTutorialProtesis.MenuVR);
+            return string.Join(" · ", partes);
+        }
+
+        /// <summary>
         /// T-992: el aviso de las habilidades de prótesis, solo con las que se tienen: "MANTÉN TAB Y ELIGE CON EL RATÓN: PIERNAS · BRAZOS". T-1329: sin tecla suelta por habilidad. Vacío si no hay ninguna.
         /// </summary>
         public static string TextoHabilidades(Func<string, string> tecla, bool piernas, bool brazos, bool cabeza)

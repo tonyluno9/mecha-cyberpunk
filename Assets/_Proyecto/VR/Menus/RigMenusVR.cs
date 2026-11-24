@@ -10,7 +10,7 @@ namespace MechaCyberpunk.VR.Menus
     /// VR4: un rig mínimo para las escenas sin jugador a pie (Inicio, Menu_Calles): cabeza (cámara del visor) y control derecho (para el láser).
     /// V12: vive en un "cuarto oscuro" quieto, lejos de la ciudad (<see cref="PosicionCuarto"/>), con fondo negro y poca distancia de dibujo:
     /// la cabeza solo se mueve con el visor, nunca con una animación. Lo que en PC se ve con la cámara de la escena (el recorrido de
-    /// Menu_Calles, el video del logo) en VR va en la pantalla de cine (<see cref="InicioCineVR"/>, que se arma con el rig).
+    /// Menu_Calles, el video del logo, el menú y la carga) en VR va en una sola pantalla grande curva (<see cref="InicioCineVR"/>, VR15).
     /// En cuanto hay <see cref="AdaptadorVR"/> se quita y manda el rig del jugador.
     /// La cámara no lleva la etiqueta MainCamera ni AudioListener: <c>Camera.main</c> y el oído siguen siendo los de la escena,
     /// y al llegar el jugador no quedan dos.
@@ -21,7 +21,7 @@ namespace MechaCyberpunk.VR.Menus
         public const float AlturaCabeza = 1.6f;
         /// <summary>V12: dónde queda el cuarto oscuro (sin geometría cerca: la ciudad está ~500 m arriba).</summary>
         public static readonly Vector3 PosicionCuarto = new Vector3(0f, -500f, 0f);
-        /// <summary>V12: hasta dónde dibuja la cabeza del rig (m): la pantalla de cine está a 4 m y la ciudad no se ve.</summary>
+        /// <summary>V12: hasta dónde dibuja la cabeza del rig (m): la pantalla grande está a 3.5 m y la ciudad no se ve.</summary>
         public const float DistanciaDibujo = 30f;
         /// <summary>V12: color de fondo del cuarto oscuro.</summary>
         public static readonly Color ColorCuarto = new Color(0.01f, 0.01f, 0.02f, 1f);
@@ -35,6 +35,8 @@ namespace MechaCyberpunk.VR.Menus
         public GameObject Raiz => raiz;
         public Camera Camara { get; private set; }
         public Transform ManoDerecha { get; private set; }
+        /// <summary>VR15: de dónde sale el láser: la pose aim del control derecho (<see cref="ManoVR.Apuntado"/>; sin pose aim, la mano).</summary>
+        public Transform Apuntado { get; private set; }
         public XROrigin Origen { get; private set; }
 
         public void Crear(Transform padre)
@@ -73,6 +75,9 @@ namespace MechaCyberpunk.VR.Menus
             TrackedPoseDriver pose = objetoMano.AddComponent<TrackedPoseDriver>();
             Configurar(pose, EntradaVR.Der + "/devicePosition", EntradaVR.Der + "/deviceRotation");
             ManoDerecha = objetoMano.transform;
+            ManoVR manoVR = objetoMano.AddComponent<ManoVR>();
+            manoVR.Configurar(true, raiz.transform);
+            Apuntado = manoVR.Apuntado != null ? manoVR.Apuntado : ManoDerecha;
             RecursosVR recursos = RecursosVR.Cargar();
             if (recursos != null && recursos.controlDerecho != null)
             {
@@ -85,8 +90,9 @@ namespace MechaCyberpunk.VR.Menus
             Origen.CameraFloorOffsetObject = offset.gameObject;
             Origen.Camera = Camara;
             Origen.RequestedTrackingOriginMode = XROrigin.TrackingOriginMode.Floor;
-            // V12: la cámara de la escena va a la pantalla de cine mientras exista el rig.
-            raiz.AddComponent<InicioCineVR>();
+            // VR15: mientras exista el rig, Inicio (cámara de la escena y Canvas) va en la pantalla grande. Vive aparte (DontDestroyOnLoad):
+            // la carga sigue en ella aunque el rig se quite al armarse el jugador.
+            InicioCineVR.Asegurar();
             ColocarEnCuarto();
             SistemaVR.CamaraVR = Camara;
             raiz.SetActive(true);
@@ -133,6 +139,7 @@ namespace MechaCyberpunk.VR.Menus
             raiz = null;
             Camara = null;
             ManoDerecha = null;
+            Apuntado = null;
             Origen = null;
             Debug.Log("[VR] Rig de menús quitado.");
         }

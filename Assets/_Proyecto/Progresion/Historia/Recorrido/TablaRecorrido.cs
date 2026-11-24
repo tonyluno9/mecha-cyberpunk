@@ -44,6 +44,8 @@ namespace MechaCyberpunk.Progresion.Recorrido
         public const string ObjetivoMejora = "INSTALA UNA MEJORA CON EL DOC";
         public const string ObjetivoTino = "VE CON TINO";
         public const string ObjetivoUsarProtesis = "USA TU PRÓTESIS (TAB)";
+        /// <summary>VR20: el mismo objetivo en VR (la prótesis se activa con el gesto o con grip + gatillo izquierdos, no con Tab).</summary>
+        public const string ObjetivoUsarProtesisVR = "USA TU PRÓTESIS (GESTO)";
         public const string ObjetivoInventor = "COMPRA UN ARMA CON TINO";
         public const string ObjetivoComer = "COMPRA ALGO EN LA MÁQUINA";
         public const string PensamientoHambre = "Tengo hambre...";
@@ -92,6 +94,7 @@ namespace MechaCyberpunk.Progresion.Recorrido
             yield return ObjetivoInventor;
             yield return ObjetivoTino;
             yield return ObjetivoUsarProtesis;
+            yield return ObjetivoUsarProtesisVR;
             yield return ObjetivoComer;
             yield return ObjetivoTianguis;
             yield return ObjetivoJefeSkulls;

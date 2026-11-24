@@ -23,12 +23,12 @@ namespace MechaCyberpunk.VR.Menus
     /// <list type="bullet">
     /// <item>Cada Canvas de pantalla (Overlay o Screen Space Camera) pasa a World Space: los menús, tiendas y avisos como un panel a 1.5 m frente a la
     /// cabeza (1920 px = 1.6 m) que se coloca al abrirse un menú y se queda quieto; sin menú sigue suave a la cabeza. Los fundidos y pantallas
-    /// negras van pegados a la cabeza. El HUD de pantalla (mira, minimapa, HUD H10...) no se ve: vida y dinero van en la muñeca izquierda.
+    /// negras van pegados a la cabeza. VR14: el HUD de pantalla de PC va completo en el HUD de casco (<see cref="HudCascoVR"/>), pegado a la cabeza.
     /// Al salir de VR todo vuelve como estaba.</item>
     /// <item>Láser del control derecho: se ve con un menú abierto o al apuntar a algo de la UI que se pueda usar; el gatillo derecho hace clic.
     /// Mientras <see cref="BloqueaDisparo"/> la pistola (VR2) no debe disparar.</item>
-    /// <item>Botón Menú del control izquierdo = Esc (abre y cierra la pausa, cierra el mapa...). Y = la rueda de armas (se elige apuntando con el láser).</item>
-    /// <item>Los carros y motos no se manejan en VR: al intentar subir sale "NO DISPONIBLE EN VR" 2 s.</item>
+    /// <item>Botón Menú del control izquierdo = Esc (abre y cierra la pausa, cierra el mapa...). Y (mantener) = la rueda de armas: se elige moviendo la mano izquierda o con el stick izquierdo (VR19).</item>
+    /// <item>VR21: los carros y motos ya se manejan en VR (VR/Vehiculos/ManejoVR); <see cref="TextoNoDisponible"/> queda para otros avisos.</item>
     /// <item>En escenas sin jugador a pie (Inicio) arma un rig mínimo (cabeza y control derecho) para poder elegir con el láser.</item>
     /// </list>
     /// </summary>
@@ -50,7 +50,6 @@ namespace MechaCyberpunk.VR.Menus
         private const float LargoLaser = 3f;
         private const float GrosorLaser = 0.004f;
         private const float DistanciaAviso = 1.2f;
-        private const float SegundosBajarCarro = 3f;
         private const float EscalaOculto = 1e-5f;
         private const float BajadaOculto = 1000f;
         private const float ToleranciaSeguir = 3f;
@@ -74,7 +73,7 @@ namespace MechaCyberpunk.VR.Menus
         private readonly List<LienzoConvertidoVR> lienzos = new List<LienzoConvertidoVR>();
         private readonly HashSet<Canvas> vistos = new HashSet<Canvas>();
         private readonly PunteroUIVR puntero = new PunteroUIVR();
-        private readonly HudMunecaVR hud = new HudMunecaVR();
+        private readonly HudCascoVR casco = new HudCascoVR();
         private readonly PanelAvisoVR aviso = new PanelAvisoVR();
         private readonly RigMenusVR rig = new RigMenusVR();
         private readonly RaycastHit[] golpes = new RaycastHit[16];
@@ -89,7 +88,6 @@ namespace MechaCyberpunk.VR.Menus
         private Transform raizJugador;
         private AdaptadorVR adaptador;
         private JugadorAPie jugador;
-        private IVida vida;
         private float barrido;
         private float sinJugador;
         private Pose ancla;
@@ -119,7 +117,8 @@ namespace MechaCyberpunk.VR.Menus
         public bool AvisoVisible => aviso.Visible;
         public string TextoAviso => aviso.Texto;
         public Pose Ancla => ancla;
-        public HudMunecaVR Hud => hud;
+        /// <summary>VR14: el HUD de casco (el HUD de PC en un panel curvo pegado a la cabeza).</summary>
+        public HudCascoVR Casco => casco;
         public bool RigMenusArmado => rig.Existe;
         /// <summary>La raíz del rig de menús (null si no hay).</summary>
         public GameObject RaizRigMenus => rig.Raiz;
@@ -153,6 +152,31 @@ namespace MechaCyberpunk.VR.Menus
             Actual = null;
             MenuAbierto = false;
             UIApuntada = false;
+            Reclamado = null;
+        }
+
+        /// <summary>
+        /// VR15: Canvas de pantalla que maneja otro (la pantalla grande de Inicio, <see cref="InicioCineVR"/>): el barrido no los pasa a
+        /// World Space ni al casco, y si ya lo había hecho los suelta (<see cref="SoltarLienzo"/>).
+        /// </summary>
+        public static Func<Canvas, bool> Reclamado { get; set; }
+
+        /// <summary>VR15: deja de manejar este Canvas (vuelve a como estaba antes de VR); el barrido lo puede volver a tomar después.</summary>
+        public void SoltarLienzo(Canvas canvas)
+        {
+            if (canvas == null)
+            {
+                return;
+            }
+            for (int i = lienzos.Count - 1; i >= 0; i--)
+            {
+                if (lienzos[i].Canvas == canvas)
+                {
+                    lienzos[i].Restaurar();
+                    lienzos.RemoveAt(i);
+                }
+            }
+            vistos.Remove(canvas);
         }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
@@ -234,6 +258,7 @@ namespace MechaCyberpunk.VR.Menus
             raycaster = gameObject.AddComponent<RaycasterLaserVR>();
             raycaster.Configurar(camaraLaser);
             CrearLinea();
+            casco.Crear(transform);
             Debug.Log("[VR] Menús VR listos.");
         }
 
@@ -301,7 +326,7 @@ namespace MechaCyberpunk.VR.Menus
             }
             lienzos.Clear();
             vistos.Clear();
-            hud.Destruir();
+            casco.Destruir();
             aviso.Destruir();
             QuitarRig(false);
             CambiarJugador(null);
@@ -348,12 +373,12 @@ namespace MechaCyberpunk.VR.Menus
             ActualizarLaser();
             ActualizarRueda();
             ActualizarPausa();
-            hud.Actualizar(dt, vida, Registro<ICartera>.Actual);
             aviso.Actualizar(dt);
         }
 
         private void LateUpdate()
         {
+            casco.Actualizar(ModoVR.Activo ? cabeza : null, Time.unscaledDeltaTime, MostrarCasco());
             if (!ModoVR.Activo || cabeza == null)
             {
                 return;
@@ -378,6 +403,9 @@ namespace MechaCyberpunk.VR.Menus
                         int orden = l.Canvas.sortingOrder - ReglaLienzosVR.OrdenPantallaCompleta;
                         Vector3 cerca = cabeza.position + frente * (ReglaLienzosVR.DistanciaCompleta - ReglaLienzosVR.Adelanto(orden, 1f));
                         l.Colocar(cerca, cabeza.rotation, ReglaLienzosVR.EscalaCompleta);
+                        break;
+                    case TipoLienzoVR.Casco:
+                        // Screen Space Camera sobre la cámara del casco: el Canvas no se mueve.
                         break;
                     default:
                         l.Colocar(cabeza.position + Vector3.down * BajadaOculto, Quaternion.identity, EscalaOculto);
@@ -411,24 +439,17 @@ namespace MechaCyberpunk.VR.Menus
                     QuitarRig();
                 }
                 cabeza = a.Camara.transform;
-                mano = a.ManoDerecha != null ? a.ManoDerecha.transform : null;
+                // VR17: el láser sale de la pose aim del control (la punta), no de la grip.
+                mano = a.ManoDerecha != null ? a.ManoDerecha.Apuntado : null;
                 if (a != adaptador)
                 {
                     CambiarJugador(a);
-                }
-                if (!hud.Existe && a.ManoIzquierda != null)
-                {
-                    hud.Crear(a.ManoIzquierda.transform);
                 }
                 return;
             }
             if (adaptador != null || jugador != null)
             {
                 CambiarJugador(null);
-            }
-            if (hud.Existe && hud.Mano == null)
-            {
-                hud.Destruir();
             }
             sinJugador += dt;
             if (!rig.Existe && sinJugador > SegundosSinJugadorParaRig)
@@ -438,7 +459,7 @@ namespace MechaCyberpunk.VR.Menus
             if (rig.Existe)
             {
                 cabeza = rig.Camara.transform;
-                mano = rig.ManoDerecha;
+                mano = rig.Apuntado; // VR15: la pose aim del control del rig de menús (sin pose aim, la mano)
             }
             else
             {
@@ -462,7 +483,7 @@ namespace MechaCyberpunk.VR.Menus
                 linea.enabled = false;
                 linea.transform.SetParent(transform, false);
             }
-            if (mano == manoRig)
+            if (mano != null && manoRig != null && mano.IsChildOf(manoRig))
             {
                 mano = null;
             }
@@ -479,12 +500,9 @@ namespace MechaCyberpunk.VR.Menus
             {
                 jugador.ModoCambio -= AlCambiarModoJugador;
             }
-            hud.Destruir();
             adaptador = nuevo;
             jugador = nuevo != null ? nuevo.Jugador : null;
             raizJugador = nuevo != null ? nuevo.transform.root : null;
-            VidaAPie v = nuevo != null ? nuevo.GetComponent<VidaAPie>() : null;
-            vida = v != null ? v : null;
             if (jugador != null)
             {
                 jugador.ModoCambio += AlCambiarModoJugador;
@@ -507,11 +525,16 @@ namespace MechaCyberpunk.VR.Menus
             Canvas[] todos = FindObjectsByType<Canvas>(FindObjectsInactive.Include, FindObjectsSortMode.None);
             foreach (Canvas c in todos)
             {
+                if (c != null && Reclamado != null && Reclamado(c))
+                {
+                    SoltarLienzo(c); // VR15: va en la pantalla grande de Inicio
+                    continue;
+                }
                 if (c == null || vistos.Contains(c))
                 {
                     continue;
                 }
-                if (c == hud.Canvas || c == aviso.Canvas)
+                if (c == aviso.Canvas)
                 {
                     vistos.Add(c);
                     continue;
@@ -526,27 +549,49 @@ namespace MechaCyberpunk.VR.Menus
                 }
                 TipoLienzoVR tipo = ReglaLienzosVR.Clasificar(c.name, c.sortingOrder);
                 var l = new LienzoConvertidoVR(c, tipo);
-                l.Convertir();
+                l.Convertir(casco.Camara);
                 lienzos.Add(l);
                 vistos.Add(c);
                 if (tipo == TipoLienzoVR.Frente && !anclaPuesta)
                 {
                     ColocarAncla();
                 }
-                Debug.Log("[VR] Canvas " + c.name + " a World Space (" + tipo + ").");
+                Debug.Log("[VR] Canvas " + c.name + (tipo == TipoLienzoVR.Casco ? " al HUD de casco (" : " a World Space (") + tipo + ").");
             }
             foreach (LienzoConvertidoVR l in lienzos)
             {
                 // Si el juego lo volvió a poner en pantalla, se convierte otra vez.
-                if (l.Canvas.renderMode != RenderMode.WorldSpace)
+                if (!l.EstaConvertido(casco.Camara))
                 {
-                    l.Convertir();
+                    l.Convertir(casco.Camara);
                 }
                 else
                 {
                     l.Refrescar();
                 }
             }
+        }
+
+        // VR14: el HUD de casco se ve con el jugador armado, si hay HUD encendido y ningún menú encima (la rueda sí: va en el HUD).
+        private bool MostrarCasco()
+        {
+            if (!ModoVR.Activo || cabeza == null || rig.Existe || PantallaCargando.Visible)
+            {
+                return false;
+            }
+            bool rueda = RuedaArmasObjetos.Abierta || RuedaHabilidadesExo.Abierta;
+            if (MenuAbierto && !rueda)
+            {
+                return false;
+            }
+            foreach (LienzoConvertidoVR l in lienzos)
+            {
+                if (l.Tipo == TipoLienzoVR.Casco && l.Canvas != null && l.Canvas.isActiveAndEnabled)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         // ---- Panel frente a la cabeza ----
@@ -845,11 +890,23 @@ namespace MechaCyberpunk.VR.Menus
             bindingsPropios.Clear();
         }
 
-        // Con la rueda abierta, el punto del láser sobre la rueda hace de ratón: se manda la diferencia como movimiento del ratón,
-        // que es lo que la rueda ya lee (sin tocar su código).
+        private readonly ReglaRuedaManoVR ruedaMano = new ReglaRuedaManoVR();
+
+        // Con la rueda abierta se manda la diferencia como movimiento del ratón, que es lo que la rueda ya lee (sin tocar su código).
+        // VR19: la de armas (Y) se elige con la mano izquierda o el stick izquierdo (ReglaRuedaManoVR); la de prótesis, con el láser.
         private void ActualizarRueda()
         {
             Mouse raton = Mouse.current;
+            if (!RuedaArmasObjetos.Abierta)
+            {
+                ruedaMano.Cerrar();
+            }
+            if (raton != null && RuedaArmasObjetos.Abierta && RuedaArmasObjetos.Actual != null && adaptador != null && adaptador.ManoIzquierda != null
+                && adaptador.Rig != null)
+            {
+                ElegirConManoIzquierda(raton);
+                return;
+            }
             if (mano == null || raton == null)
             {
                 return;
@@ -885,22 +942,54 @@ namespace MechaCyberpunk.VR.Menus
                 return;
             }
             var rt = (RectTransform)lienzoRueda.transform;
-            Vector3 normal = rt.forward;
-            float denominador = Vector3.Dot(normal, mano.forward);
-            if (denominador <= 1e-5f)
+            Vector3 punto;
+            if (casco.Usa(lienzoRueda))
             {
-                return;
+                // VR14: la rueda va en el HUD de casco: el láser toca el panel curvo y ese punto se pasa al Canvas.
+                if (!casco.PuntoEnHud(new Ray(mano.position, mano.forward), out punto))
+                {
+                    return;
+                }
             }
-            float t = Vector3.Dot(rt.position - mano.position, normal) / denominador;
-            if (t < 0f || t > AlcanceLaser)
+            else
             {
-                return;
+                Vector3 normal = rt.forward;
+                float denominador = Vector3.Dot(normal, mano.forward);
+                if (denominador <= 1e-5f)
+                {
+                    return;
+                }
+                float t = Vector3.Dot(rt.position - mano.position, normal) / denominador;
+                if (t < 0f || t > AlcanceLaser)
+                {
+                    return;
+                }
+                punto = mano.position + mano.forward * t;
             }
-            Vector3 local = rt.InverseTransformPoint(mano.position + mano.forward * t);
+            Vector3 local = rt.InverseTransformPoint(punto);
             Vector2 objetivo = new Vector2(local.x, local.y) - rt.rect.center;
             objetivo = circular ? Vector2.ClampMagnitude(objetivo, limite.x)
                 : new Vector2(Mathf.Clamp(objetivo.x, -limite.x, limite.x), Mathf.Clamp(objetivo.y, -limite.y, limite.y));
             Vector2 delta = objetivo - cursor;
+            if (delta.sqrMagnitude > 0.25f)
+            {
+                InputSystem.QueueDeltaStateEvent(raton.delta, delta);
+            }
+        }
+
+        // VR19: el cursor de la rueda de armas sigue a la mano izquierda (en el plano de la rueda, desde donde estaba al abrir) o al stick izquierdo.
+        private void ElegirConManoIzquierda(Mouse raton)
+        {
+            RuedaArmasObjetos rueda = RuedaArmasObjetos.Actual;
+            Transform rig = adaptador.Rig;
+            Canvas lienzo = rueda.GetComponentInChildren<Canvas>(true);
+            Transform plano = lienzo != null && lienzo.renderMode == RenderMode.WorldSpace ? lienzo.transform : cabeza;
+            Vector3 derecha = plano != null ? plano.right : rig.right;
+            Vector3 arriba = plano != null ? plano.up : rig.up;
+            Vector3 manoIzq = rig.InverseTransformPoint(adaptador.ManoIzquierda.transform.position);
+            Vector2 objetivo = ruedaMano.Avanzar(manoIzq, rig.InverseTransformDirection(derecha), rig.InverseTransformDirection(arriba),
+                EntradaVR.Eje(EntradaVR.StickIzquierdo), ReglaRuedaArmas.RadioMaximo);
+            Vector2 delta = objetivo - rueda.Cursor;
             if (delta.sqrMagnitude > 0.25f)
             {
                 InputSystem.QueueDeltaStateEvent(raton.delta, delta);
@@ -970,29 +1059,9 @@ namespace MechaCyberpunk.VR.Menus
             aviso.Mostrar(texto, pose, ReglaLienzosVR.EscalaFrente * distancia / ReglaLienzosVR.DistanciaFrente, SegundosAviso);
         }
 
-        // Respaldo por si falta el parche de InteraccionAPie: si de todos modos subió a un carro, se baja en cuanto pueda.
+        // VR21: en VR ya se maneja (VR/Vehiculos/ManejoVR). Antes aquí se bajaba al jugador si subía a un carro; ya no hace nada.
         private void AlCambiarModoJugador(ModoJugador modo)
         {
-            if (modo != ModoJugador.Carro || !ModoVR.Activo || jugador == null)
-            {
-                return;
-            }
-            Debug.LogWarning("[VR] El jugador subió a un carro en VR (¿falta el parche de InteraccionAPie?): se baja.");
-            MostrarAviso(TextoNoDisponible);
-            StartCoroutine(BajarDelCarro(jugador));
-        }
-
-        private IEnumerator BajarDelCarro(JugadorAPie quien)
-        {
-            float fin = Time.unscaledTime + SegundosBajarCarro;
-            while (quien != null && quien.Modo == ModoJugador.Carro && Time.unscaledTime < fin)
-            {
-                if (quien.Bajar())
-                {
-                    yield break;
-                }
-                yield return null;
-            }
         }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]

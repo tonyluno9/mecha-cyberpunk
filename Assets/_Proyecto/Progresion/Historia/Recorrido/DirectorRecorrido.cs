@@ -86,6 +86,9 @@ namespace MechaCyberpunk.Progresion.Recorrido
         }
 
         public PasoRecorrido Paso => paso;
+
+        /// <summary>VR16: true si la última vez que se entró a "Lo molestan" se saltó por estar en VR (lo leen las pruebas).</summary>
+        public bool MolestiaSaltadaEnVR { get; private set; }
         public bool Iniciado => iniciado;
         public string ClaveGuardado => Clave;
 
@@ -552,6 +555,16 @@ namespace MechaCyberpunk.Progresion.Recorrido
         // 3. Dos SKULLS le salen al paso. Pelea protegida.
         private void EntrarMolestan()
         {
+            MolestiaSaltadaEnVR = false;
+            if (GestorCandados.SeSaltaEnVR(PasoRecorrido.Molestan, ModoVR.Activo))
+            {
+                // VR16: con visor no hay SKULLS que empujan ni aviso: se da por jugado y sigue igual que al terminar la escena (Maletín).
+                Debug.Log("[Historia] VR16: en VR se salta el paso 3 (Lo molestan).");
+                Quitar();
+                MolestiaSaltadaEnVR = true;
+                AlTerminarMolestia();
+                return;
+            }
             MisionProtegida.Activar("historia: los SKULLS lo molestan", false);
             Quitar();
             if (molestia != null)
@@ -701,7 +714,7 @@ namespace MechaCyberpunk.Progresion.Recorrido
         private void EntrarUsarProtesis()
         {
             Quitar();
-            (Registro<IObjetivos>.Actual as ServicioObjetivos)?.Fijar(new Objetivo(TablaRecorrido.ObjetivoUsarProtesis, IdLugar.Ninguno));
+            (Registro<IObjetivos>.Actual as ServicioObjetivos)?.Fijar(new Objetivo(ModoVR.Activo ? TablaRecorrido.ObjetivoUsarProtesisVR : TablaRecorrido.ObjetivoUsarProtesis, IdLugar.Ninguno));
             GuardarPartida();
         }
 

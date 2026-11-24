@@ -126,7 +126,8 @@ namespace MechaCyberpunk.VR
             if (EntradaVR.Pulso(grip))
             {
                 // VR5: con la granada en la mano el grip derecho toma la granada (ArmasEspecialesVR), no agarra.
-                if (!(mano.Derecha && armas != null && ArmasEspecialesVR.TomaElGrip(armas.ArmaActiva)))
+                // VR20: con las dos manos en la pose de un gesto de prótesis el grip es el gesto, no agarra.
+                if (!MechaCyberpunk.VR.Guia.GestosProtesisVR.EnPose && !(mano.Derecha && armas != null && ArmasEspecialesVR.TomaElGrip(armas.ArmaActiva)))
                 {
                     IntentarAgarrar(mano);
                 }

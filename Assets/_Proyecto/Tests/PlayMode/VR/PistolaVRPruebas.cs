@@ -9,7 +9,7 @@ using UnityEngine.TestTools;
 
 namespace MechaCyberpunk.Tests.VR
 {
-    /// <summary>VR2: la pistola en la mano derecha (apunta con el control, dispara con el gatillo, recarga con A) y los golpes con las manos.</summary>
+    /// <summary>VR2: la pistola en la mano derecha (apunta con el control, dispara con el gatillo, recarga con X) y los golpes con las manos.</summary>
     public class PistolaVRPruebas : BaseJugadorVR
     {
         private static readonly Vector3 ManoDerReposo = new Vector3(0.2f, 1.2f, 0.3f);
@@ -118,14 +118,14 @@ namespace MechaCyberpunk.Tests.VR
         }
 
         [UnityTest]
-        public IEnumerator BotonARecargaLaPistola()
+        public IEnumerator BotonXRecargaLaPistola()
         {
             yield return ArmarConPistola();
             yield return Pulsar(controlDer.triggerButton);
             yield return Cuadros(2);
             Assert.AreEqual(pistola.TamanoCargador - 1, pistola.Balas, "Antes de recargar debe faltar una bala.");
-            yield return Pulsar(controlDer.primaryButton);
-            Assert.IsTrue(pistola.Recargando, "A debe empezar la recarga.");
+            yield return Pulsar(controlIzq.primaryButton);
+            Assert.IsTrue(pistola.Recargando, "X (VR19) debe empezar la recarga.");
             float fin = Time.time + 6f;
             while (pistola.Recargando && Time.time < fin)
             {

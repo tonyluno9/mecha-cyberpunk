@@ -10,7 +10,9 @@ namespace MechaCyberpunk.VR
     /// VR2: el arma de fuego en la mano (la de <see cref="ArmasAPie"/>, con su modelo real: W01 con su corredera, cargador y mira) va en la mano
     /// derecha del rig, con el cañón hacia adelante del control. El gatillo derecho dispara por <see cref="PistolaAPie.DispararExterno"/>: la bala
     /// sale de la boca del arma hacia donde apunta, con el mismo cargador, cadencia, daño, sonidos, impactos y trazos que con el ratón.
-    /// Recargar es A (binding de VR1 sobre la acción Recargar, que ya lee PistolaAPie). Mientras se ve el arma se oculta el modelo del control derecho.
+    /// Recargar es X (VR19; binding de VR1 sobre la acción Recargar, que ya lee PistolaAPie). Mientras se ve el arma se oculta el modelo del control derecho.
+    /// VR17: el arma sigue montada en la grip (la empuñadura en la mano), pero girada como la pose aim (<see cref="ManoVR.Apuntado"/>): el cañón
+    /// apunta a donde apunta el control, igual que el láser.
     /// Al armarse pone la pistola en la mano si el jugador estaba con los puños.
     /// </summary>
     [DefaultExecutionOrder(120)]
@@ -18,7 +20,7 @@ namespace MechaCyberpunk.VR
     {
         /// <summary>Dónde queda la empuñadura (pivote del arma) en el espacio del control (m).</summary>
         public static readonly Vector3 PosicionEnMano = Vector3.zero;
-        /// <summary>Giro del arma respecto al control, en X (°; negativo levanta el cañón). El grip de OpenXR ya apunta como el índice estirado.</summary>
+        /// <summary>Giro extra del arma respecto a la pose aim, en X (°; negativo levanta el cañón). La aim de OpenXR ya apunta como el control.</summary>
         public const float InclinacionGrados = 0f;
         /// <summary>Si es true, al armarse el rig se pone la pistola en la mano (si se tiene y se estaba con los puños).</summary>
         public static bool EquiparAlArmar = true;
@@ -162,9 +164,11 @@ namespace MechaCyberpunk.VR
                     return;
                 }
                 bocaMano = new GameObject("BocaManoVR").transform;
-                bocaMano.SetParent(mano.transform, false);
-                bocaMano.localPosition = Vector3.forward * LargoBocaSinModelo;
+                // VR17: sin modelo, la boca es la punta del control (la pose aim).
+                bocaMano.SetParent(mano.Apuntado, false);
+                bocaMano.localPosition = Vector3.zero;
             }
+            AlinearConApuntado();
             ArmaAPie activa = armas.ArmaActiva;
             ArmaEnMano nueva = PistolaAPie.EsDeFuego(activa) && !OcultarArma ? Obtener(activa) : null;
             if (nueva != mostrada)
@@ -183,10 +187,23 @@ namespace MechaCyberpunk.VR
                     mostrada.Sosten.SetActive(true);
                 }
                 MostrarControl(mostrada == null);
+                AlinearConApuntado();
             }
             armaMostrada = mostrada != null ? activa : ArmaAPie.Punos;
             // En VR el ratón no dispara: siempre hay boca externa (con los puños PistolaAPie no dispara de todos modos).
             pistola.BocaExterna = Boca;
+        }
+
+        /// <summary>Giro local del arma en la mano (grip): el de la pose aim más la inclinación.</summary>
+        public Quaternion GiroArmaEnMano => (mano != null ? mano.Apuntado.localRotation : Quaternion.identity) * Quaternion.Euler(InclinacionGrados, 0f, 0f);
+
+        // VR17: el arma visible gira como la pose aim (su empuñadura sigue en la grip), así su cañón apunta como el láser.
+        private void AlinearConApuntado()
+        {
+            if (mostrada != null && mostrada.Sosten != null)
+            {
+                mostrada.Sosten.transform.localRotation = GiroArmaEnMano;
+            }
         }
 
         private ArmaEnMano Obtener(ArmaAPie arma)
@@ -212,7 +229,7 @@ namespace MechaCyberpunk.VR
             sosten.SetActive(false);
             sosten.transform.SetParent(mano.transform, false);
             sosten.transform.localPosition = PosicionEnMano;
-            sosten.transform.localRotation = Quaternion.Euler(InclinacionGrados, 0f, 0f);
+            sosten.transform.localRotation = GiroArmaEnMano;
             sosten.AddComponent<IgnorarOcultarVR>();
 
             GameObject visual = Instantiate(original, sosten.transform, false);

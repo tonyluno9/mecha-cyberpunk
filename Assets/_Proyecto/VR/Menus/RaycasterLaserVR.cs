@@ -91,6 +91,14 @@ namespace MechaCyberpunk.VR.Menus
                     }
                 }
             }
+            // VR15: la pantalla grande curva de Inicio (sus Canvas van en una textura): gana si no hay un panel más cerca.
+            InicioCineVR inicio = InicioCineVR.Actual;
+            if (inicio != null && inicio.Lanzar(rayo, distanciaMaxima, out RaycastResult enPantalla)
+                && (!hay || enPantalla.distance < resultado.distance))
+            {
+                resultado = enPantalla;
+                hay = true;
+            }
             return hay;
         }
 

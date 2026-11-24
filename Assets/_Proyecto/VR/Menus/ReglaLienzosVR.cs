@@ -45,16 +45,65 @@ namespace MechaCyberpunk.VR.Menus
         public const float RapidezSeguir = 3f;
 
         /// <summary>
-        /// Los Canvas del HUD de pantalla que en VR no se ven (nombres de KitUI.CrearCanvas). Vida y dinero van en la muñeca.
-        /// Casi todos van anidados en el Canvas raíz HudAPie (que sí va al frente, con avisos, tutorial y rueda): esos se encogen a 0.
+        /// Los Canvas que en VR no se ven (nombres de KitUI.CrearCanvas). Si van anidados en un Canvas convertido se encogen a 0.
+        /// VR14: la mira del francotirador (taparía el HUD de casco) y las barras sobre los enemigos (se colocan con la pantalla del PC, que
+        /// en el visor no coincide con el mundo).
         /// </summary>
         private static readonly string[] Ocultos =
         {
-            "CanvasH10", "CanvasHabilidades", "CanvasImplantes", "CanvasTerritorio", "CanvasMinimapa", "CanvasHitmarker",
-            "CanvasMiraSniper", "CanvasIndicadorDanio", "CanvasVinietaVida", "CanvasMarcador", "BarrasVidaEnemigos",
+            "CanvasMiraSniper", "BarrasVidaEnemigos",
             // V12: el video del logo (IntroInicio) en VR se ve en la pantalla de cine; su Canvas (fondo negro a pantalla completa) taparía el menú.
             "IntroInicio_Pantalla",
         };
+
+        /// <summary>
+        /// VR14: los Canvas raíz del HUD de pantalla de PC que en VR van al HUD de casco (<see cref="TipoLienzoVR.Casco"/>), con su diseño,
+        /// colores y posiciones de PC. HudAPie lleva anidados vida, arma, objetivo, H10, habilidades, implantes, avisos, tutoriales y la rueda;
+        /// los demás pueden ser raíz según la escena (minimapa, territorio, marcador del objetivo, subtítulos, aviso de guardado, asalto).
+        /// </summary>
+        private static readonly string[] DelCasco =
+        {
+            "HudAPie", "CanvasH10", "CanvasHabilidades", "CanvasImplantes", "CanvasTerritorio", "CanvasMinimapa", "CanvasHitmarker",
+            "CanvasIndicadorDanio", "CanvasVinietaVida", "CanvasMarcador", "CanvasAvisos", "CanvasAvisoMensaje", "CanvasTutorial",
+            "PanelSubtitulos", "Subtitulos", "CanvasAvisoGuardado", "CanvasAsalto",
+        };
+
+        /// <summary>
+        /// VR14: grupos hijos directos de un Canvas del casco que en VR se encogen a 0: la mira de PC (en VR se apunta con la mano) y el aviso
+        /// "E · interactuar" (en VR va el letrero con B sobre el objeto, <see cref="AvisoInteraccionVR"/>).
+        /// </summary>
+        private static readonly string[] GruposOcultosCasco = { "Mira", "Interaccion" };
+
+        /// <summary>VR14: el panel del HUD de casco: distancia a la cabeza (m, radio de la curva) y ancho (°).</summary>
+        public const float RadioCasco = 1.3f;
+        public const float GradosCasco = 70f;
+        /// <summary>Qué tan rápido gira el panel del casco tras la cabeza (1/s): un leve retraso suave.</summary>
+        public const float RapidezCasco = 12f;
+
+        /// <summary>Alto del panel del casco (m): el del arco de <see cref="GradosCasco"/> a <see cref="RadioCasco"/> con la proporción 16:9.</summary>
+        public static float AltoCasco => RadioCasco * GradosCasco * Mathf.Deg2Rad * AltoReferencia / AnchoReferencia;
+
+        /// <summary>VR14: true si este hijo directo de un Canvas del casco se encoge a 0 en VR.</summary>
+        public static bool EsGrupoOcultoCasco(string nombre)
+        {
+            return Empieza(nombre, GruposOcultosCasco, true);
+        }
+
+        private static bool Empieza(string nombre, string[] lista, bool exacto = false)
+        {
+            if (string.IsNullOrEmpty(nombre))
+            {
+                return false;
+            }
+            foreach (string p in lista)
+            {
+                if (exacto ? nombre == p : nombre.StartsWith(p, StringComparison.Ordinal))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
 
         /// <summary>
         /// Canvas de pantalla completa que en VR van como panel a <see cref="DistanciaFrente"/> m frente a la cabeza (y quietos en el mundo),
@@ -97,20 +146,18 @@ namespace MechaCyberpunk.VR.Menus
             {
                 return TipoLienzoVR.PantallaCompleta;
             }
-            if (!string.IsNullOrEmpty(nombre))
+            if (Empieza(nombre, Ocultos))
             {
-                foreach (string o in Ocultos)
-                {
-                    if (nombre.StartsWith(o, StringComparison.Ordinal))
-                    {
-                        return TipoLienzoVR.Oculto;
-                    }
-                }
+                return TipoLienzoVR.Oculto;
+            }
+            if (Empieza(nombre, DelCasco))
+            {
+                return TipoLienzoVR.Casco;
             }
             return TipoLienzoVR.Frente;
         }
 
-        /// <summary>True si un Canvas (raíz o anidado) con este nombre es HUD de pantalla que en VR no se ve.</summary>
+        /// <summary>True si un Canvas (raíz o anidado) con este nombre es de los que en VR no se ven.</summary>
         public static bool EsOculto(string nombre)
         {
             return Clasificar(nombre, 0) == TipoLienzoVR.Oculto;

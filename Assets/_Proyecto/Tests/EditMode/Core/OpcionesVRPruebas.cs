@@ -7,8 +7,8 @@ namespace MechaCyberpunk.Tests.Core
     /// <summary>V8–V10: las opciones de comodidad de VR se guardan en PlayerPrefs y se vuelven a leer igual (o por defecto si no hay nada).</summary>
     public class OpcionesVRPruebas
     {
-        private static readonly string[] Claves = { OpcionesVR.ClaveGiro, OpcionesVR.ClaveVineta, OpcionesVR.ClaveCorrer };
-        private readonly int?[] guardadas = new int?[3];
+        private static readonly string[] Claves = { OpcionesVR.ClaveGiro, OpcionesVR.ClaveVineta, OpcionesVR.ClaveCorrer, OpcionesVR.ClaveVelocidadGiro };
+        private readonly int?[] guardadas = new int?[4];
 
         [SetUp]
         public void Preparar()
@@ -42,9 +42,22 @@ namespace MechaCyberpunk.Tests.Core
         [Test]
         public void Recargar_SinNadaGuardado_DaLosPorDefecto()
         {
-            Assert.AreEqual(ModoGiroVR.PorPasos, OpcionesVR.Giro);
+            Assert.AreEqual(ModoGiroVR.Suave, OpcionesVR.Giro, "VR18: el giro es SUAVE por defecto.");
             Assert.IsTrue(OpcionesVR.Vineta);
             Assert.AreEqual(ModoCorrerVR.Mantener, OpcionesVR.Correr);
+            Assert.AreEqual(120f, OpcionesVR.VelocidadGiro, 1e-3f, "VR18: 120°/s a fondo por defecto.");
+        }
+
+        [Test]
+        public void VelocidadGiro_SeGuardaYSeLimitaAlRango()
+        {
+            OpcionesVR.FijarVelocidadGiro(75f);
+            OpcionesVR.Recargar();
+            Assert.AreEqual(75f, OpcionesVR.VelocidadGiro, 1e-3f);
+            OpcionesVR.FijarVelocidadGiro(1000f);
+            Assert.AreEqual(OpcionesVR.VelocidadGiroMaxima, OpcionesVR.VelocidadGiro, 1e-3f);
+            OpcionesVR.FijarVelocidadGiro(-5f);
+            Assert.AreEqual(OpcionesVR.VelocidadGiroMinima, OpcionesVR.VelocidadGiro, 1e-3f);
         }
 
         [Test]
@@ -89,8 +102,8 @@ namespace MechaCyberpunk.Tests.Core
             OpcionesVR.Cambio += Contar;
             try
             {
-                OpcionesVR.FijarGiro(ModoGiroVR.Suave);
-                OpcionesVR.FijarGiro(ModoGiroVR.Suave);
+                OpcionesVR.FijarGiro(ModoGiroVR.PorPasos);
+                OpcionesVR.FijarGiro(ModoGiroVR.PorPasos);
                 Assert.AreEqual(1, avisos, "Fijar el mismo valor no vuelve a avisar.");
                 OpcionesVR.FijarVineta(false);
                 Assert.AreEqual(2, avisos);

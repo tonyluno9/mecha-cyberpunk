@@ -19,6 +19,7 @@ namespace MechaCyberpunk.Tests.VR
         private ModoGiroVR giroAntes;
         private bool vinetaAntes;
         private ModoCorrerVR correrAntes;
+        private float velocidadAntes;
 
         public override void Setup()
         {
@@ -27,7 +28,9 @@ namespace MechaCyberpunk.Tests.VR
             giroAntes = OpcionesVR.Giro;
             vinetaAntes = OpcionesVR.Vineta;
             correrAntes = OpcionesVR.Correr;
+            velocidadAntes = OpcionesVR.VelocidadGiro;
             OpcionesVR.FijarGiro(OpcionesVR.GiroPorDefecto);
+            OpcionesVR.FijarVelocidadGiro(OpcionesVR.VelocidadGiroPorDefecto);
             OpcionesVR.FijarVineta(OpcionesVR.VinetaPorDefecto);
             OpcionesVR.FijarCorrer(OpcionesVR.CorrerPorDefecto);
         }
@@ -37,6 +40,7 @@ namespace MechaCyberpunk.Tests.VR
             OpcionesVR.FijarGiro(giroAntes);
             OpcionesVR.FijarVineta(vinetaAntes);
             OpcionesVR.FijarCorrer(correrAntes);
+            OpcionesVR.FijarVelocidadGiro(velocidadAntes);
             base.TearDown();
         }
 
@@ -63,9 +67,9 @@ namespace MechaCyberpunk.Tests.VR
             float quieto = Mathf.DeltaAngle(antes, adaptador.GiroRig);
             Debug.Log("[VR] Giro suave: " + parcial.ToString("0.0") + "° en 0.2 s, " + total.ToString("0.0") + "° en 0.6 s.");
             Assert.Greater(parcial, 5f, "Empieza a girar enseguida.");
-            Assert.Less(parcial, 35f, "No es un paso de 45°: es gradual (~90°/s).");
+            Assert.Less(parcial, 35f, "No es un paso de 45°: es gradual (~120°/s).");
             Assert.Greater(total, parcial + 20f, "Sigue girando mientras se mantiene el stick.");
-            Assert.AreEqual(AdaptadorVR.VelocidadGiroSuave * 0.6f, total, 25f, "A fondo gira a ~90°/s.");
+            Assert.AreEqual(AdaptadorVR.VelocidadGiroSuave * 0.6f, total, 25f, "A fondo gira a ~120°/s (VELOCIDAD DE GIRO).");
             Assert.AreEqual(total, quieto, 3f, "Al soltar el stick deja de girar.");
         }
 
@@ -169,18 +173,23 @@ namespace MechaCyberpunk.Tests.VR
             Assert.IsTrue(panel.VinetaVR.gameObject.activeSelf);
             Assert.IsTrue(panel.CorrerVR.gameObject.activeSelf);
             Assert.IsFalse(panel.Sensibilidad.gameObject.activeSelf, "En VR no sale la sensibilidad del ratón.");
-            Assert.AreEqual(PanelOpcionesInicio.TextosGiroVR[(int)ModoGiroVR.PorPasos], panel.GiroVR.TextoValor);
+            Assert.IsTrue(panel.VelocidadGiroVR.gameObject.activeSelf, "VR18: sale la VELOCIDAD DE GIRO.");
+            Assert.AreEqual(PanelOpcionesInicio.TextosGiroVR[(int)ModoGiroVR.Suave], panel.GiroVR.TextoValor, "VR18: GIRO es SUAVE por defecto.");
+            Assert.AreEqual(PanelOpcionesInicio.TextoVelocidadGiro(120f), panel.VelocidadGiroVR.TextoValor);
             Assert.IsTrue(panel.VinetaVR.Activo);
             Assert.AreEqual(PanelOpcionesInicio.TextosCorrerVR[(int)ModoCorrerVR.Mantener], panel.CorrerVR.TextoValor);
 
             panel.GiroVR.Mover(1);
+            panel.VelocidadGiroVR.Mover(-1);
             panel.VinetaVR.Mover(-1);
             panel.CorrerVR.Mover(1);
-            Assert.AreEqual(ModoGiroVR.Suave, OpcionesVR.Giro, "GIRO → SUAVE se guarda.");
+            Assert.AreEqual(ModoGiroVR.PorPasos, OpcionesVR.Giro, "GIRO → POR PASOS se guarda.");
+            Assert.AreEqual(120f - OpcionesVR.PasoVelocidadGiro, OpcionesVR.VelocidadGiro, 0.01f, "VELOCIDAD DE GIRO se guarda.");
             Assert.IsFalse(OpcionesVR.Vineta, "VIÑETA → NO se guarda.");
             Assert.AreEqual(ModoCorrerVR.Alternar, OpcionesVR.Correr, "CORRER → ALTERNAR se guarda.");
             OpcionesVR.Recargar();
-            Assert.AreEqual(ModoGiroVR.Suave, OpcionesVR.Giro);
+            Assert.AreEqual(ModoGiroVR.PorPasos, OpcionesVR.Giro);
+            Assert.AreEqual(120f - OpcionesVR.PasoVelocidadGiro, OpcionesVR.VelocidadGiro, 0.01f);
             Assert.IsFalse(OpcionesVR.Vineta);
             Assert.AreEqual(ModoCorrerVR.Alternar, OpcionesVR.Correr);
 

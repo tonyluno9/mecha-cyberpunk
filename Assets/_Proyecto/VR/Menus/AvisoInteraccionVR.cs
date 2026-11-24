@@ -12,7 +12,7 @@ namespace MechaCyberpunk.VR.Menus
     /// V6: en VR el aviso de interactuar del HUD de pantalla (el cuadrito "E · Hablar" del HUD H10) no se ve. Este componente lo pone como un
     /// letrero chico de TextMeshPro en el mundo, flotando sobre lo que se usaría con B (el candidato de <see cref="InteraccionAPie"/>: Tino, máquinas,
     /// el Doc, la terminal del campo de tiro, puertas...) y de cara a la cabeza, con la tecla del control ("B · Hablar", <see cref="TeclaVR"/>).
-    /// Los carros y motos dicen <see cref="MenusVR.TextoNoDisponible"/>. Lo que no se puede usar no sale aquí: ese aviso ya lo muestra el HUD a pie
+    /// Los carros y motos dicen "B · Subir al carro" (VR21: en VR se maneja). Lo que no se puede usar no sale aquí: ese aviso ya lo muestra el HUD a pie
     /// en el panel frente a la cabeza (MenusVR). Se agrega solo al jugador cuando el rig VR está armado (<see cref="AdaptadorVR.Listo"/>);
     /// sin VR no existe y en PC nada cambia.
     /// </summary>
@@ -194,7 +194,7 @@ namespace MechaCyberpunk.VR.Menus
 
         /// <summary>
         /// El texto del letrero para el candidato de ahora (vacío si no hay o no se puede usar): lo mismo que dice el HUD H10 en pantalla
-        /// (<see cref="ReglaAyudasH10.TextoInteraccion"/>) pero con B; los carros y motos, "NO DISPONIBLE EN VR".
+        /// (<see cref="ReglaAyudasH10.TextoInteraccion"/>) pero con B (VR21: los carros y motos también, "B · Subir al carro").
         /// </summary>
         private string Mensaje(out bool noDisponible)
         {
@@ -212,12 +212,7 @@ namespace MechaCyberpunk.VR.Menus
                     {
                         return string.Empty;
                     }
-                    if (montable.Modo == ModoJugador.Carro)
-                    {
-                        // VR4: en VR no se maneja; al pulsar B sale el mismo aviso frente a la cabeza.
-                        noDisponible = true;
-                        return MenusVR.TextoNoDisponible;
-                    }
+                    // VR21: en VR ya se maneja: los carros y motos dicen "B · Subir al carro" / "B · Subir a la moto".
                     c.Candidato = TipoCandidatoInteraccion.Montable;
                     c.NombreCandidato = montable.Nombre;
                     break;

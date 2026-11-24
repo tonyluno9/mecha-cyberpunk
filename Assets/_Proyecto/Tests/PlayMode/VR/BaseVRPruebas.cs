@@ -9,7 +9,7 @@ using UnityEngine.TestTools;
 
 namespace MechaCyberpunk.Tests.VR
 {
-    /// <summary>VR1: rig en el jugador, cabeza a la altura de PJ01, caminar hacia donde mira la cabeza, giro de 45°, cuerpo solo sombra.</summary>
+    /// <summary>VR1: rig en el jugador, cabeza a la altura de PJ01, caminar hacia donde mira la cabeza, giro de 45° (con POR PASOS), cuerpo solo sombra.</summary>
     public class BaseVRPruebas : BaseJugadorVR
     {
         [UnityTest]
@@ -62,6 +62,21 @@ namespace MechaCyberpunk.Tests.VR
 
         [UnityTest]
         public IEnumerator StickDerechoGira45GradosPorPaso()
+        {
+            // VR18: el giro por defecto es SUAVE; POR PASOS queda como opción.
+            ModoGiroVR giroAntes = OpcionesVR.Giro;
+            OpcionesVR.FijarGiro(ModoGiroVR.PorPasos);
+            try
+            {
+                yield return StickDerechoGira45GradosPorPasoCuerpo();
+            }
+            finally
+            {
+                OpcionesVR.FijarGiro(giroAntes);
+            }
+        }
+
+        private IEnumerator StickDerechoGira45GradosPorPasoCuerpo()
         {
             yield return ArmarVR();
             float antes = adaptador.GiroRig;

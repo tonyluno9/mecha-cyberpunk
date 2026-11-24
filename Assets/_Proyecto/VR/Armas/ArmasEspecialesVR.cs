@@ -136,7 +136,7 @@ namespace MechaCyberpunk.VR
 
         private void LeerGrip(bool bloqueado)
         {
-            if (!GranadaTomada && !bloqueado && EntradaVR.Pulso(EntradaVR.GripDerecho))
+            if (!GranadaTomada && !bloqueado && !MechaCyberpunk.VR.Guia.GestosProtesisVR.EnPose && EntradaVR.Pulso(EntradaVR.GripDerecho))
             {
                 Tomar();
             }

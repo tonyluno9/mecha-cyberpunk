@@ -18,6 +18,46 @@ namespace MechaCyberpunk.VR
         /// <summary>Prefijo que se pone en VR a una acción sin tecla ("Hablar" → "B · Hablar").</summary>
         public const string PrefijoVR = "B · ";
 
+        // VR19: los botones de los controles (Quest Touch Plus) para los letreros y ayudas en VR. Ver la tabla en EntradaVR.
+        public const string BotonSaltar = "A";
+        public const string BotonInteractuar = "B";
+        public const string BotonRecargar = "X";
+        public const string BotonRueda = "MANTÉN Y";
+        public const string BotonDisparar = "GATILLO DER.";
+        public const string BotonAgarrar = "GRIP";
+        public const string BotonMover = "STICK IZQ.";
+        public const string BotonCorrer = "CLIC STICK IZQ.";
+        public const string BotonGirar = "STICK DER.";
+        public const string BotonPausa = "MENÚ";
+        public const string BotonRecentrar = "STICK DER. ABAJO 1 S";
+        public const string BotonRuedaProtesis = "GRIP IZQ. + GATILLO IZQ.";
+
+        /// <summary>
+        /// VR19: el botón de VR para una acción del mapa APie (los nombres de <c>ReglaTutorial</c>: "Saltar", "Recargar", "Interactuar", "Rueda"...),
+        /// para que una ayuda escrita con la tecla del teclado diga el botón del control. Null si la acción no tiene botón en VR.
+        /// </summary>
+        public static string Boton(string accion)
+        {
+            switch (accion)
+            {
+                case "Mover": return BotonMover;
+                case "Correr": return BotonCorrer;
+                case "Saltar": return BotonSaltar;
+                case "Interactuar": return BotonInteractuar;
+                case "Recargar": return BotonRecargar;
+                case "Rueda": return BotonRueda;
+                case "Atacar":
+                case "Disparar": return BotonDisparar;
+                case "Agarrar": return BotonAgarrar;
+                case "Pausa": return BotonPausa;
+                case "Girar": return BotonGirar;
+                case "Recentrar": return BotonRecentrar;
+                case "Habilidades":
+                case "RuedaProtesis": return BotonRuedaProtesis;
+                default: return null;
+            }
+        }
+
         /// <summary>El texto con cada E-tecla cambiada por B. Null o vacío devuelve vacío.</summary>
         public static string Convertir(string texto)
         {

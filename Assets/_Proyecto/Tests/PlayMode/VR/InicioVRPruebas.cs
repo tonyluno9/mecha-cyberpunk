@@ -29,9 +29,10 @@ namespace MechaCyberpunk.Tests.VR
 {
     /// <summary>
     /// V7: el menú de Inicio (Escenas/Inicio.unity) en VR con el simulador de XR. Sin jugador a pie, MenusVR arma su rig de menús
-    /// (cabeza y control derecho): el menú sale como panel a 1.5 m frente a la cabeza y NUEVA PARTIDA, CONTINUAR, OPCIONES y SALIR
+    /// (cabeza y control derecho). VR15: todo Inicio (logo, menú sobre las calles, carga) va en UNA pantalla grande curva (~105° a 3.5 m)
+    /// compuesta como en PC (los Canvas en Screen Space Camera hacia su textura, ninguno como panel aparte); NUEVA PARTIDA, CONTINUAR, OPCIONES y SALIR
     /// se eligen con el láser del control derecho y el gatillo. Al cargar la partida se pasa del rig de menús al del jugador
-    /// (AdaptadorVR) sin quedarse en negro ni duplicar cámaras, oídos ni XR Origin. La pantalla de carga va como panel frente a la cabeza.
+    /// (AdaptadorVR) sin quedarse en negro ni duplicar cámaras, oídos ni XR Origin; la carga sigue en la pantalla grande hasta que se quita.
     /// La carga usa Pruebas_APie (jugador a pie y piso) en vez de la ciudad entera. Partidas y opciones van a una carpeta temporal:
     /// partida_auto.json y las ranuras de Tony no se tocan.
     /// </summary>
@@ -41,7 +42,6 @@ namespace MechaCyberpunk.Tests.VR
         private static readonly Vector3 CabezaCuarto = new Vector3(0f, 1.6f, 0f);
         private static readonly Vector3 ManoDerechaCuarto = new Vector3(0.2f, 1.2f, 0.3f);
         private static readonly Vector3 ManoIzquierdaCuarto = new Vector3(-0.2f, 1.2f, 0.3f);
-        private const float ToleranciaDistancia = 0.15f;
         private const float SegundosEntradaMenu = 1.2f;
 
         private XRSimulatedHMD visor;
@@ -209,6 +209,17 @@ namespace MechaCyberpunk.Tests.VR
             return rt.TransformPoint(rt.rect.center);
         }
 
+        // VR17: el láser sale de ManoVR.Apuntado (hijo de la mano); el giro del control se pone en el espacio del cuarto (el padre de la mano).
+        private static Quaternion CuartoDe(Transform laser)
+        {
+            Transform cuarto = laser.parent;
+            if (cuarto != null && cuarto.GetComponent<ManoVR>() != null)
+            {
+                cuarto = cuarto.parent;
+            }
+            return cuarto != null ? cuarto.rotation : Quaternion.identity;
+        }
+
         // Gira el control derecho (en su lugar de siempre) para que el láser apunte a un punto del mundo.
         private IEnumerator ApuntarA(Vector3 punto)
         {
@@ -217,14 +228,27 @@ namespace MechaCyberpunk.Tests.VR
             Transform mano = MenusVR.Actual.ManoLaser;
             Assert.IsNotNull(mano, "Hay un control del que sale el láser.");
             Quaternion mundo = Quaternion.LookRotation(punto - mano.position);
-            Quaternion padre = mano.parent != null ? mano.parent.rotation : Quaternion.identity;
+            Quaternion padre = CuartoDe(mano);
             PonerMano(true, ManoDerechaCuarto, Quaternion.Inverse(padre) * mundo);
             yield return Cuadros(4);
         }
 
+        // VR15: a dónde apuntar para tocar un elemento: si su Canvas va en la pantalla grande, al punto de la curva donde se ve; si no, a su centro.
+        private static Vector3 PuntoDe(Component elemento)
+        {
+            InicioCineVR inicio = InicioCineVR.Actual;
+            Canvas lienzo = elemento.GetComponentInParent<Canvas>();
+            Canvas raiz = lienzo != null ? lienzo.rootCanvas : null;
+            if (inicio != null && inicio.EnPantalla(raiz) && inicio.PuntoEnPantalla((RectTransform)elemento.transform, out Vector3 punto))
+            {
+                return punto;
+            }
+            return CentroDe(elemento);
+        }
+
         private IEnumerator PulsarConLaser(Component boton, string nombre)
         {
-            yield return ApuntarA(CentroDe(boton));
+            yield return ApuntarA(PuntoDe(boton));
             Assert.IsTrue(MenusVR.UIApuntada, "El láser apunta a " + nombre + ".");
             Assert.IsTrue(MenusVR.Actual.LaserVisible, "El láser se ve apuntando a " + nombre + ".");
             yield return Pulsar(controlDer.triggerButton);
@@ -244,55 +268,70 @@ namespace MechaCyberpunk.Tests.VR
             }, "el menú de inicio con su primer botón elegido", 20f);
             menu.SoloAnotarCarga = true;
             yield return EsperarHasta(() => MenusVR.Actual != null && MenusVR.Actual.RigMenusArmado
-                && menu.Canvas.renderMode == RenderMode.WorldSpace, "el rig de menús y el menú en panel", 5f);
+                && InicioCineVR.Actual != null && InicioCineVR.Actual.EnPantalla(menu.Canvas), "el rig de menús y el menú en la pantalla grande", 5f);
             // Las animaciones de entrada de los paneles y botones.
             yield return new WaitForSecondsRealtime(SegundosEntradaMenu);
             alListo(menu);
         }
 
-        // Un Canvas a 1.5 m frente a la cabeza, mirando hacia ella, de 1.6 m de ancho.
-        private static void ComprobarPanelFrente(Canvas canvas, Transform cabeza, string que)
+        // VR15: el Canvas se dibuja en la pantalla grande (Screen Space Camera sobre la cámara de la UI, que dibuja en la textura de
+        // encima), no como panel en el mundo.
+        private static void ComprobarEnPantallaGrande(Canvas canvas, string que)
         {
-            Assert.AreEqual(RenderMode.WorldSpace, canvas.renderMode, que + " pasa a World Space (el Overlay no se ve en el visor).");
-            Assert.AreEqual(TipoLienzoVR.Frente, MenusVR.Actual.TipoDe(canvas), que + " va como panel frente a la cabeza.");
-            Vector3 hacia = canvas.transform.position - cabeza.position;
+            InicioCineVR inicio = InicioCineVR.Actual;
+            Assert.IsNotNull(inicio, "Hay pantalla grande de Inicio.");
+            Assert.IsTrue(inicio.Activa, "La pantalla grande de Inicio está activa.");
+            Assert.AreEqual(RenderMode.ScreenSpaceCamera, canvas.renderMode, que + " va en Screen Space Camera (compuesto como en PC).");
+            Assert.AreSame(inicio.CamaraUI, canvas.worldCamera, que + " lo dibuja la cámara de la UI de la pantalla grande.");
+            Assert.IsTrue(inicio.EnPantalla(canvas), que + " va en la pantalla grande.");
+            Assert.IsNull(MenusVR.Actual.TipoDe(canvas), que + " no va como panel en el mundo.");
+            Assert.AreSame(inicio.TexturaUI, inicio.CamaraUI.targetTexture, "La cámara de la UI dibuja en la textura de encima.");
+            Assert.IsTrue(PantallaCineVR.Visible, "La pantalla grande se ve.");
+            Assert.AreSame(inicio.TexturaUI, PantallaCineVR.TexturaEncima, "La pantalla grande compone la UI encima del fondo.");
+        }
+
+        // VR15: una sola pantalla: ningún Canvas raíz va como panel en el mundo (World Space frente a la cabeza, fundido pegado o casco),
+        // y todos los de pantalla van en la pantalla grande.
+        private static void ComprobarUnaSolaPantalla(string que)
+        {
+            int enPantalla = 0;
+            foreach (Canvas c in Object.FindObjectsByType<Canvas>(FindObjectsInactive.Exclude, FindObjectsSortMode.None))
+            {
+                if (c == null || !c.isActiveAndEnabled || !c.isRootCanvas)
+                {
+                    continue;
+                }
+                Assert.IsNull(MenusVR.Actual.TipoDe(c), que + ": " + c.name + " no debe ir como panel aparte.");
+                if (c.renderMode != RenderMode.WorldSpace)
+                {
+                    Assert.IsTrue(InicioCineVR.Actual.EnPantalla(c), que + ": " + c.name + " va en la pantalla grande.");
+                    enPantalla++;
+                }
+            }
+            Assert.Greater(enPantalla, 0, que + ": hay Canvas en la pantalla grande.");
+        }
+
+        // VR15: la pantalla grande es curva, ~105° de ancho, a ~3.5 m de la cabeza (en todo su ancho), alto según 16:9 del arco,
+        // centrada en los ojos y enfrente.
+        private static void ComprobarPantallaGrande(Transform cabeza)
+        {
+            Assert.IsTrue(PantallaCineVR.Visible, "La pantalla grande se ve.");
+            Vector3 izquierda = PantallaCineVR.PuntoEnUV(new Vector2(0f, 0.5f)) - cabeza.position;
+            Vector3 derecha = PantallaCineVR.PuntoEnUV(new Vector2(1f, 0.5f)) - cabeza.position;
+            Vector3 centro = PantallaCineVR.Centro - cabeza.position;
+            float alto = Vector3.Distance(PantallaCineVR.PuntoEnUV(new Vector2(0.5f, 1f)), PantallaCineVR.PuntoEnUV(new Vector2(0.5f, 0f)));
+            float grados = Vector3.Angle(new Vector3(izquierda.x, 0f, izquierda.z), new Vector3(derecha.x, 0f, derecha.z));
+            Debug.Log("[VR] Pantalla grande: " + grados.ToString("0.0") + "° de ancho, a " + centro.magnitude.ToString("0.00") + " m, "
+                + PantallaCineVR.AnchoMundo.ToString("0.00") + " x " + alto.ToString("0.00") + " m.");
+            Assert.AreEqual(PantallaCineVR.Grados, grados, 3f, "La pantalla mide ~105° de ancho.");
+            Assert.Greater(grados, 100f, "Llena casi toda la vista.");
+            Assert.AreEqual(PantallaCineVR.Radio, new Vector2(centro.x, centro.z).magnitude, 0.2f, "El centro a ~3.5 m.");
+            Assert.AreEqual(PantallaCineVR.Radio, new Vector2(izquierda.x, izquierda.z).magnitude, 0.2f, "El borde izquierdo también a ~3.5 m (curva).");
+            Assert.AreEqual(PantallaCineVR.Radio, new Vector2(derecha.x, derecha.z).magnitude, 0.2f, "El borde derecho también a ~3.5 m (curva).");
+            Assert.AreEqual(16f / 9f, PantallaCineVR.AnchoMundo / alto, 0.05f, "Alto según 16:9 del arco.");
+            Assert.AreEqual(0f, centro.y, 0.2f, "Centrada a la altura de los ojos.");
             Vector3 frente = ReglaLienzosVR.FrentePlano(cabeza.forward, cabeza.up);
-            float ancho = ((RectTransform)canvas.transform).rect.width * canvas.transform.lossyScale.x;
-            Debug.Log("[VR] " + que + " a " + hacia.magnitude.ToString("0.00") + " m de la cabeza; ancho " + ancho.ToString("0.00") + " m.");
-            Assert.AreEqual(ReglaLienzosVR.DistanciaFrente, hacia.magnitude, ToleranciaDistancia, que + " a 1.5 m de la cabeza.");
-            // V12: en Inicio el panel va ~17° abajo de la vista (debajo de la pantalla de cine): cos 17° ≈ 0.95.
-            Assert.Greater(Vector3.Dot(frente, hacia.normalized), 0.9f, que + " enfrente de la cabeza.");
-            Assert.Greater(Vector3.Dot(canvas.transform.forward, hacia.normalized), 0.95f, que + " de cara a la cabeza (se lee derecho).");
-            Assert.AreEqual(ReglaLienzosVR.AnchoFrente, ancho, 0.15f, que + ": 1920 px ≈ 1.6 m.");
-        }
-
-        // V12: grados sobre (o bajo, negativo) el horizonte de la cabeza.
-        private static float Elevacion(Vector3 desde, Vector3 punto)
-        {
-            Vector3 d = punto - desde;
-            return Mathf.Atan2(d.y, new Vector2(d.x, d.z).magnitude) * Mathf.Rad2Deg;
-        }
-
-        // V12: el menú de Inicio va debajo de la pantalla de cine (no se tapan): su centro, ~0.45 m bajo los ojos, queda más abajo en la vista
-        // que el borde de abajo de la pantalla grande.
-        private static void ComprobarDebajoDeLaPantalla(Canvas canvas, Transform cabeza, string que)
-        {
-            Assert.IsTrue(PantallaCineVR.Visible, "La pantalla de cine se ve.");
-            Texture t = PantallaCineVR.TexturaActual;
-            float aspecto = t.height > 0 ? (float)t.width / t.height : 16f / 9f;
-            float alto = PantallaCineVR.AnchoMundo / aspecto;
-            Vector3 bordeAbajo = PantallaCineVR.Centro + Vector3.down * (alto * 0.5f);
-            float elevacionPantalla = Elevacion(cabeza.position, bordeAbajo);
-            float elevacionPanel = Elevacion(cabeza.position, canvas.transform.position);
-            Debug.Log("[VR] " + que + ": centro a " + elevacionPanel.ToString("0.0") + "°, borde de abajo de la pantalla a " + elevacionPantalla.ToString("0.0") + "°.");
-            Assert.Less(elevacionPanel, elevacionPantalla, que + " va más abajo que la pantalla de cine.");
-            // Que no se encimen: el borde de arriba del panel también queda abajo del borde de abajo de la pantalla.
-            var rect = (RectTransform)canvas.transform;
-            Vector3 bordeArribaPanel = canvas.transform.position + canvas.transform.up * (rect.rect.height * 0.5f * canvas.transform.lossyScale.y);
-            float elevacionArribaPanel = Elevacion(cabeza.position, bordeArribaPanel);
-            Debug.Log("[VR] " + que + ": borde de arriba a " + elevacionArribaPanel.ToString("0.0") + "°.");
-            Assert.Less(elevacionArribaPanel, elevacionPantalla, que + ": su borde de arriba no tapa la pantalla de cine.");
-            Assert.AreEqual(ReglaLienzosVR.BajadaBajoCine, cabeza.position.y - canvas.transform.position.y, 0.1f, que + ": su centro ~" + ReglaLienzosVR.BajadaBajoCine + " m bajo los ojos.");
+            Assert.Greater(Vector3.Dot(frente, new Vector3(centro.x, 0f, centro.z).normalized), 0.95f, "Enfrente de la cabeza.");
         }
 
         // V12: una cámara con RecorridoCallesMenu como la de Menu_Calles (que en batch no se carga), avanzando por una calle de prueba.
@@ -359,7 +398,10 @@ namespace MechaCyberpunk.Tests.VR
                 }
             }
             Assert.IsTrue(MenusVR.MenuAbierto, "Sin jugador, el panel de Inicio cuenta como menú abierto (quieto, láser visible).");
-            ComprobarPanelFrente(menu.Canvas, vr.Cabeza, "El menú de inicio");
+            // VR15: una sola pantalla grande curva; el menú va en ella (compuesto sobre las calles como en PC), no como panel aparte.
+            ComprobarEnPantallaGrande(menu.Canvas, "El menú de inicio");
+            ComprobarUnaSolaPantalla("Inicio");
+            ComprobarPantallaGrande(vr.Cabeza);
 
             // Una partida guardada (en la carpeta temporal) para que salga CONTINUAR.
             ServicioGuardado servicio = ServicioGuardado.Actual;
@@ -384,8 +426,9 @@ namespace MechaCyberpunk.Tests.VR
             Assert.AreEqual(EstadoInicio.Principal, menu.Estado);
 
             // Apuntando fuera de los botones el gatillo no elige nada.
-            yield return ApuntarA(CentroDe(menu.Continuar) + Vector3.up * 3f);
-            Assert.IsFalse(MenusVR.UIApuntada, "Fuera del panel no apunta a la UI.");
+            // VR15: arriba del borde de arriba de la pantalla grande (no toca nada).
+            yield return ApuntarA(PantallaCineVR.Centro + Vector3.up * (PantallaCineVR.AltoMundo * 0.5f + 2f));
+            Assert.IsFalse(MenusVR.UIApuntada, "Fuera de la pantalla no apunta a la UI.");
             yield return Pulsar(controlDer.triggerButton);
             yield return Cuadros(2);
             Assert.AreEqual(EstadoInicio.Principal, menu.Estado, "Fuera de los botones el gatillo no hace nada.");
@@ -398,12 +441,13 @@ namespace MechaCyberpunk.Tests.VR
             Assert.AreEqual(ServicioGuardado.PrimeraRanura, FlujoPartida.RanuraPendiente, "con la ranura más reciente.");
             Assert.IsTrue(PantallaCargando.Visible, "Sale la pantalla de carga.");
 
-            // La pantalla de carga: panel a 1.5 m frente a la cabeza, no Overlay (que en el visor no se ve).
+            // VR15: la pantalla de carga va en la misma pantalla grande (no Overlay, que en el visor no se ve, ni panel aparte).
             Canvas carga = PantallaCargando.Actual.GetComponentInChildren<Canvas>(true);
             Assert.IsNotNull(carga);
-            yield return EsperarHasta(() => carga.renderMode == RenderMode.WorldSpace, "la carga en World Space", 2f);
+            yield return EsperarHasta(() => InicioCineVR.Actual.EnPantalla(carga), "la carga en la pantalla grande", 2f);
             yield return Cuadros(3);
-            ComprobarPanelFrente(carga, vr.Cabeza, "La pantalla de carga");
+            ComprobarEnPantallaGrande(carga, "La pantalla de carga");
+            ComprobarUnaSolaPantalla("La carga");
         }
 
         [UnityTest]
@@ -431,7 +475,8 @@ namespace MechaCyberpunk.Tests.VR
             yield return new WaitForSecondsRealtime(0.6f);
             Assert.AreEqual("Inicio", SceneManager.GetActiveScene().name, "Mientras carga sigue Inicio.");
             Assert.IsTrue(vr.RigMenusArmado, "Mientras carga manda el rig de menús.");
-            ComprobarPanelFrente(carga, vr.Cabeza, "La pantalla de carga");
+            ComprobarEnPantallaGrande(carga, "La pantalla de carga");
+            ComprobarUnaSolaPantalla("La carga");
 
             yield return EsperarHasta(() => operacion.isDone, "que termine la carga de la escena", 60f);
             Assert.AreEqual("Pruebas_APie", SceneManager.GetActiveScene().name, "La escena nueva quedó activa.");
@@ -443,12 +488,23 @@ namespace MechaCyberpunk.Tests.VR
             Assert.IsFalse(vr.RigMenusArmado, "El rig de menús se quita al armarse el del jugador.");
             Assert.IsTrue(raizRig == null || !raizRig.activeInHierarchy, "El rig de menús quedó destruido o apagado.");
             Assert.AreSame(a.Camara.transform, vr.Cabeza, "La cabeza es la cámara del jugador.");
-            Assert.AreSame(a.ManoDerecha.transform, vr.ManoLaser, "El láser sale del control derecho del jugador.");
+            Assert.AreSame(a.ManoDerecha.Apuntado, vr.ManoLaser, "El láser sale del control derecho del jugador (su pose aim, VR17).");
+
+            // VR15: con el rig del jugador la carga sigue en la pantalla grande (frente a la cabeza nueva) hasta que se quita.
+            if (PantallaCargando.Visible && carga != null)
+            {
+                ComprobarEnPantallaGrande(carga, "La carga con el rig del jugador");
+                Assert.IsNull(InicioCineVR.Actual.CamaraEscena, "La cabeza del jugador no va al fondo de la pantalla grande.");
+                Assert.IsTrue(SistemaVR.VaAlVisor(a.Camara), "La cabeza del jugador va al visor.");
+            }
 
             // La carga termina y se desvanece: no se queda nada encima de la vista.
             yield return EsperarHasta(() => !PantallaCargando.Visible
                 && Object.FindObjectsByType<PantallaCargando>(FindObjectsInactive.Include, FindObjectsSortMode.None).Length == 0,
                 "que la pantalla de carga se desvanezca y se quite", 15f);
+            yield return Cuadros(2);
+            Assert.IsFalse(InicioCineVR.Actual.Activa, "Al entrar a la partida la pantalla grande de Inicio se quita.");
+            Assert.IsFalse(PantallaCineVR.Visible, "Y no queda pantalla grande delante.");
             Assert.IsTrue(PantallaFundido.Actual == null || PantallaFundido.Actual.Alfa < 0.01f, "Ningún fundido se queda en negro.");
 
             // Una sola cámara de cabeza (MainCamera y visor), un solo oído, un solo XR Origin.
@@ -522,9 +578,9 @@ namespace MechaCyberpunk.Tests.VR
             {
                 Assert.IsNull(principal.targetTexture, "La cámara de Inicio recupera su targetTexture al cambiar al recorrido.");
             }
-            Vector3 haciaPantalla = PantallaCineVR.Centro - cabeza.transform.position;
-            Assert.AreEqual(PantallaCineVR.Distancia, new Vector2(haciaPantalla.x, haciaPantalla.z).magnitude, 0.2f, "La pantalla a 4 m.");
-            Assert.AreEqual(PantallaCineVR.Ancho, PantallaCineVR.AnchoMundo, 0.1f, "La pantalla mide 5 m de ancho.");
+            // VR15: una sola pantalla grande curva (~105°, a 3.5 m) con el menú compuesto encima de las calles.
+            ComprobarPantallaGrande(cabeza.transform);
+            Assert.AreSame(InicioCineVR.Actual.TexturaUI, PantallaCineVR.TexturaEncima, "El menú va encima de las calles en la misma pantalla.");
 
             // Sin tracking nuevo la cabeza no se mueve aunque el recorrido avance.
             Vector3 posicion = cabeza.transform.position;
@@ -535,16 +591,21 @@ namespace MechaCyberpunk.Tests.VR
             Assert.Less(Vector3.Distance(posicion, cabeza.transform.position), 0.001f, "La cabeza no se movió.");
             Assert.Less(Quaternion.Angle(giro, cabeza.transform.rotation), 0.1f, "La cabeza no giró.");
 
-            // El menú: a 1.5 m, debajo de la pantalla y de cara a la cabeza.
+            // El menú: en la pantalla grande, no como panel aparte; nada más va frente a la cabeza.
             Assert.IsTrue(menu.Canvas.enabled, "El menú se ve.");
-            ComprobarPanelFrente(menu.Canvas, cabeza.transform, "El menú de inicio");
-            ComprobarDebajoDeLaPantalla(menu.Canvas, cabeza.transform, "El menú de inicio");
+            ComprobarEnPantallaGrande(menu.Canvas, "El menú de inicio");
+            ComprobarUnaSolaPantalla("Inicio con el recorrido");
 
-            // OPCIONES con el láser y el gatillo, sin barrer antes el láser: el control se apunta una vez y se aprieta.
+            // OPCIONES con el láser (hasta el punto de la curva donde se ve el botón) y el gatillo, sin barrer antes el láser:
+            // el control se apunta una vez y se aprieta.
             Transform mano = vr.ManoLaser;
             Assert.IsNotNull(mano);
-            Quaternion mundo = Quaternion.LookRotation(CentroDe(menu.BotonOpciones) - mano.position);
-            Quaternion padre = mano.parent != null ? mano.parent.rotation : Quaternion.identity;
+            Vector3 puntoOpciones = PuntoDe(menu.BotonOpciones);
+            Assert.IsTrue(PantallaCineVR.Tocar(new Ray(cabeza.transform.position, puntoOpciones - cabeza.transform.position), out _, out Vector3 enCurva, out _),
+                "OPCIONES se ve dentro de la pantalla grande.");
+            Assert.Less(Vector3.Distance(enCurva, puntoOpciones), 0.05f, "El punto de OPCIONES está sobre la curva.");
+            Quaternion mundo = Quaternion.LookRotation(puntoOpciones - mano.position);
+            Quaternion padre = CuartoDe(mano);
             PonerMano(true, ManoDerechaCuarto, Quaternion.Inverse(padre) * mundo);
             yield return Cuadros(2);
             Assert.IsTrue(MenusVR.UIApuntada, "El láser apunta a OPCIONES.");
@@ -590,9 +651,8 @@ namespace MechaCyberpunk.Tests.VR
                 Assert.Inconclusive("El video del logo terminó o falló antes de verse (¿no se puede reproducir en este editor?).");
             }
 
+            // VR15: el video del logo va en la misma pantalla grande, con su Canvas (negro y video) encima de todo, como en PC.
             Assert.IsNotNull(intro.Textura, "La intro dibuja el video en una textura.");
-            Assert.AreSame(intro.Textura, PantallaCineVR.TexturaActual, "La pantalla de cine muestra el video (gana a las calles).");
-            Assert.IsFalse(menu.Canvas.enabled, "El menú no se ve mientras suena el logo.");
             Canvas lienzoIntro = null;
             foreach (Canvas c in intro.GetComponentsInChildren<Canvas>(true))
             {
@@ -602,8 +662,27 @@ namespace MechaCyberpunk.Tests.VR
                 }
             }
             Assert.IsNotNull(lienzoIntro, "La intro arma su Canvas.");
-            yield return EsperarHasta(() => MenusVR.Actual.TipoDe(lienzoIntro) != null, "el Canvas de la intro pasado por MenusVR", 2f);
-            Assert.AreEqual(TipoLienzoVR.Oculto, MenusVR.Actual.TipoDe(lienzoIntro), "El negro de la intro no tapa nada en VR.");
+            ComprobarEnPantallaGrande(lienzoIntro, "El video del logo");
+            RawImage video = null;
+            foreach (RawImage r in lienzoIntro.GetComponentsInChildren<RawImage>(true))
+            {
+                if (r.texture == intro.Textura)
+                {
+                    video = r;
+                }
+            }
+            Assert.IsNotNull(video, "El Canvas de la intro muestra el video.");
+            Assert.Greater(lienzoIntro.sortingOrder, menu.Canvas.sortingOrder, "El logo tapa el menú mientras suena (como en PC).");
+            ComprobarPantallaGrande(MenusVR.Actual.Cabeza);
+            ComprobarUnaSolaPantalla("El logo");
+            // La cabeza no se mueve con el video.
+            Vector3 cabezaVideo = MenusVR.Actual.Cabeza.position;
+            yield return Cuadros(10);
+            Assert.Less(Vector3.Distance(cabezaVideo, MenusVR.Actual.Cabeza.position), 0.001f, "La cabeza no se mueve con el video.");
+            if (intro.Fase != FaseIntro.Video)
+            {
+                Assert.Inconclusive("El video del logo terminó antes de poder saltarlo.");
+            }
 
             yield return Pulsar(boton);
             yield return EsperarHasta(() => !menu.IntroEnCurso, "que " + nombre + " salte la intro", 3f);
@@ -613,10 +692,11 @@ namespace MechaCyberpunk.Tests.VR
             Assert.AreEqual(EstadoInicio.Principal, menu.Estado, "Saltar la intro no pulsa nada del menú.");
             Assert.IsTrue(menu.Canvas.enabled, "El menú se ve al acabar la intro.");
             Assert.IsFalse(InicioCineVR.Actual.IntroEnPantalla, "El video ya no está en la pantalla.");
-            Assert.AreSame(InicioCineVR.Actual.Textura, PantallaCineVR.TexturaActual, "La pantalla pasa a la cámara de la escena.");
+            Assert.AreSame(InicioCineVR.Actual.Textura, PantallaCineVR.TexturaActual, "El fondo de la pantalla es la cámara de la escena.");
             Transform cabeza = MenusVR.Actual.Cabeza;
-            ComprobarPanelFrente(menu.Canvas, cabeza, "El menú tras la intro");
-            ComprobarDebajoDeLaPantalla(menu.Canvas, cabeza, "El menú tras la intro");
+            ComprobarEnPantallaGrande(menu.Canvas, "El menú tras la intro");
+            ComprobarPantallaGrande(cabeza);
+            ComprobarUnaSolaPantalla("El menú tras la intro");
         }
 
         // Un Canvas Overlay como los del kit (1920x1080) con un botón de 400x200 px en el centro.

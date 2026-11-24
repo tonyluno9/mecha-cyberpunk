@@ -5,14 +5,35 @@ namespace MechaCyberpunk.VR
 {
     /// <summary>
     /// Botones de los controles Meta Quest Touch (OpenXR) y del simulador de XR, por uso ({LeftHand}/{RightHand}).
-    /// Mapa: stick izq = caminar (clic = correr), stick der = giro de 45°, X = saltar, B = interactuar (E),
-    /// gatillo der = disparar, A = recargar, grip = agarrar, Y = rueda (Tab), Menú izq = pausa.
-    /// Las acciones se encienden solas mientras <see cref="Core.ModoVR.Activo"/>.
+    /// Reparto VR19 (23-nov):
+    /// <list type="bullet">
+    /// <item>Caminar / correr: stick izquierdo / clic del stick izquierdo.</item>
+    /// <item>Girar: stick derecho (SUAVE por defecto, VR18; POR PASOS en Opciones).</item>
+    /// <item>Saltar: A (derecho).</item>
+    /// <item>Interactuar (la E del teclado): B (derecho).</item>
+    /// <item>Disparar: gatillo derecho (también es el clic del láser en los menús).</item>
+    /// <item>Agarrar / lanzar: grip de cualquier mano (con el implante de BRAZOS; con la granada, el grip derecho la toma).</item>
+    /// <item>Recargar: X (izquierdo).</item>
+    /// <item>Rueda de armas: mantener Y (izquierdo); se elige moviendo la mano izquierda o con el stick izquierdo (no camina con la rueda abierta).</item>
+    /// <item>Rueda de prótesis (la de Tab): mantener grip izquierdo + gatillo izquierdo (el gesto lo pone VR/Guia).</item>
+    /// <item>Pausa / opciones: Menú (izquierdo).</item>
+    /// <item>Recentrar: mantener el stick derecho abajo 1 s.</item>
+    /// </list>
+    /// El stick derecho ya no cambia de arma. Las acciones se encienden solas mientras <see cref="Core.ModoVR.Activo"/>.
     /// </summary>
     public static class EntradaVR
     {
         public const string Izq = "<XRController>{LeftHand}";
         public const string Der = "<XRController>{RightHand}";
+
+        /// <summary>VR19: Saltar = A (primario derecho).</summary>
+        public const string RutaSaltar = Der + "/{PrimaryButton}";
+        /// <summary>VR19: Interactuar = B (secundario derecho).</summary>
+        public const string RutaInteractuar = Der + "/{SecondaryButton}";
+        /// <summary>VR19: Recargar = X (primario izquierdo).</summary>
+        public const string RutaRecargar = Izq + "/{PrimaryButton}";
+        /// <summary>VR19: Rueda de armas = mantener Y (secundario izquierdo).</summary>
+        public const string RutaRueda = Izq + "/{SecondaryButton}";
 
         public static InputAction StickIzquierdo { get; private set; }
         public static InputAction StickDerecho { get; private set; }

@@ -7,7 +7,12 @@ namespace MechaCyberpunk.VR.Menus
         Frente,
         /// <summary>Fundidos, pantallas negras y de carga: pegado a la cabeza y más grande que la vista.</summary>
         PantallaCompleta,
-        /// <summary>HUD de pantalla (mira, minimapa, barras sobre enemigos...): no se ve en VR; vida y dinero van en la muñeca.</summary>
+        /// <summary>Lo que en VR no se ve (la mira del francotirador, las barras sobre los enemigos, el negro de la intro).</summary>
         Oculto,
+        /// <summary>
+        /// VR14: el HUD de pantalla de PC (vida, dinero, minimapa, objetivo, arma, avisos, tutoriales, subtítulos...): Screen Space Camera
+        /// sobre la cámara del HUD de casco (<see cref="HudCascoVR"/>), que lo dibuja en un panel curvo pegado a la cabeza.
+        /// </summary>
+        Casco,
     }
 }

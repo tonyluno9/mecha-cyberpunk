@@ -85,6 +85,12 @@ namespace MechaCyberpunk.Progresion.Recorrido
             }
         }
 
+        /// <summary>
+        /// VR16: true si el paso no se juega con visor (<paramref name="vr"/> = <see cref="ModoVR.Activo"/>). Solo "Lo molestan" (los SKULLS que
+        /// empujan y el aviso de que no puede con ellos): en VR se da por hecho y la historia sigue en <see cref="Siguiente"/>. Sin VR nunca.
+        /// </summary>
+        public static bool SeSaltaEnVR(PasoRecorrido paso, bool vr) => vr && paso == PasoRecorrido.Molestan;
+
         /// <summary>True si la distancia al Doc ya es grande y el jugador sigue alejándose (aviso suave, sin paredes).</summary>
         public static bool DebeAvisarLejosDelDoc(float distancia, float distanciaAntes) => distancia > MetrosLejosDelDoc && distancia > distanciaAntes + 0.1f;
 

@@ -8,7 +8,7 @@ using UnityEngine.Video;
 namespace MechaCyberpunk.VR.Cinematicas
 {
     /// <summary>
-    /// V12-B: los videos de cinemática en VR se ven en <see cref="PantallaCineVR"/> (quieta a 4 m frente a la cabeza), con su audio de siempre.
+    /// V12-B: los videos de cinemática en VR se ven en <see cref="PantallaCineVR"/> (VR15: la pantalla grande curva, ~105° a 3.5 m, quieta frente a la cabeza), con su audio de siempre.
     /// <list type="bullet">
     /// <item>Un VideoPlayer que dibuja sobre una cámara (plano cercano o lejano) se pasaría pegado a la cara: se manda a una RenderTexture propia
     /// y se le devuelve su modo al apagarse.</item>

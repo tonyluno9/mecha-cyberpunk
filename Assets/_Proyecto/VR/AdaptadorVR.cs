@@ -25,7 +25,8 @@ namespace MechaCyberpunk.VR
     /// a la altura de los ojos de PJ01 (1.72 m de una persona de 1.84 m) sea cual sea la estatura real. El cuerpo de PJ01 solo
     /// da sombra; se ven los controles de los Starter Assets como manos.
     /// Caminar: stick izquierdo (lo mueve el mismo ControladorAPie, con sus velocidades 1.62 / 4.53, clic del stick = correr) hacia
-    /// donde mira la cabeza. Giro por pasos de 45° con el stick derecho. Viñeta al moverse y al girar. Caminar en el cuarto empuja
+    /// donde mira la cabeza. Giro con el stick derecho: SUAVE por defecto (VR18, proporcional al stick, hasta <see cref="OpcionesVR.VelocidadGiro"/>)
+    /// o por pasos de 45°. Viñeta al moverse y al girar. Caminar en el cuarto empuja
     /// la cápsula (con colisión) para que la cabeza no atraviese paredes.
     /// V8–V10: <see cref="Recentrar"/> (altura y frente), y las opciones de <see cref="OpcionesVR"/>: giro por pasos o suave,
     /// viñeta sí o no, y correr manteniendo o alternando el clic del stick (alternar se apaga solo al soltar el stick de mover).
@@ -39,8 +40,8 @@ namespace MechaCyberpunk.VR
         private const float RearmeGiro = 0.35f;
         private const float VelocidadVineta = 0.4f;
         private const string GrupoVR = "VR";
-        /// <summary>V10: giro suave con el stick derecho a fondo (°/s).</summary>
-        public const float VelocidadGiroSuave = 90f;
+        /// <summary>V10/VR18: giro suave con el stick derecho a fondo (°/s): la VELOCIDAD DE GIRO de Opciones (120 por defecto).</summary>
+        public static float VelocidadGiroSuave => OpcionesVR.VelocidadGiro;
         private const float ZonaMuertaGiroSuave = 0.15f;
         private const float SegundosVinetaGiroSuave = 0.1f;
         /// <summary>V9: con CORRER ALTERNAR, el stick de mover por debajo de esto (0..1) durante <see cref="SegundosApagarCorrer"/> apaga correr.</summary>
@@ -49,6 +50,7 @@ namespace MechaCyberpunk.VR
         private const string AccionCorrer = "Correr";
         private const string LayoutCorrerVirtual = "CorrerVirtualVR";
         private static readonly string RutaClicCorrer = EntradaVR.Izq + "/{Primary2DAxisClick}";
+        private static readonly string RutaMover = EntradaVR.Izq + "/{Primary2DAxis}";
         private static readonly string RutaCorrerVirtual = "<" + LayoutCorrerVirtual + ">/correr";
 
         /// <summary>El adaptador del jugador actual (null sin VR).</summary>
@@ -117,6 +119,8 @@ namespace MechaCyberpunk.VR
         private bool correrAlternado;
         private float segundosStickQuieto;
         private bool clicCorrerPrevio;
+        private InputAction accionMover;
+        private bool moverApagado;
         private static readonly List<(InputAction accion, string ruta)> bindingsAgregados = new List<(InputAction, string)>();
 
         public VignetteParameters vignetteParameters => parametros;
@@ -380,14 +384,14 @@ namespace MechaCyberpunk.VR
             }
         }
 
-        // Caminar, correr, saltar, interactuar y recargar con los controles (lo demás lo ponen VR2–VR4).
+        // Caminar, correr, saltar, interactuar y recargar con los controles (lo demás lo ponen VR2–VR4). VR19: saltar con A, recargar con X.
         private static void AgregarBindingsBase()
         {
-            AgregarBinding("Mover", EntradaVR.Izq + "/{Primary2DAxis}");
+            AgregarBinding("Mover", RutaMover);
             AgregarBinding(AccionCorrer, RutaClicCorrer);
-            AgregarBinding("Saltar", EntradaVR.Izq + "/{PrimaryButton}");
-            AgregarBinding("Interactuar", EntradaVR.Der + "/{SecondaryButton}");
-            AgregarBinding("Recargar", EntradaVR.Der + "/{PrimaryButton}");
+            AgregarBinding("Saltar", EntradaVR.RutaSaltar);
+            AgregarBinding("Interactuar", EntradaVR.RutaInteractuar);
+            AgregarBinding("Recargar", EntradaVR.RutaRecargar);
         }
 
         private void Update()
@@ -406,9 +410,48 @@ namespace MechaCyberpunk.VR
             float dt = Time.deltaTime;
             ActualizarGiro(dt);
             ActualizarCorrer(dt);
+            ApagarMoverConRueda(MechaCyberpunk.UI.Rueda.RuedaArmasObjetos.Abierta);
         }
 
-        // V10: por pasos de 45° (hay que soltar el stick para el siguiente) o suave, proporcional al stick, con viñeta mientras gira.
+        /// <summary>VR19: true mientras el stick izquierdo no camina (la rueda de armas está abierta y se elige con él).</summary>
+        public bool MoverApagado => moverApagado;
+
+        // VR19: con la rueda de armas abierta el stick izquierdo elige en la rueda y no camina. Se anula solo el binding del stick (override vacío,
+        // sin apagar el mapa: así no se suelta la Y que mantiene la rueda); el teclado sigue igual.
+        private void ApagarMoverConRueda(bool apagar)
+        {
+            if (apagar == moverApagado)
+            {
+                return;
+            }
+            if (accionMover == null)
+            {
+                accionMover = BuscarAccionAPie("Mover");
+                if (accionMover == null)
+                {
+                    return;
+                }
+            }
+            moverApagado = apagar;
+            for (int i = 0; i < accionMover.bindings.Count; i++)
+            {
+                InputBinding b = accionMover.bindings[i];
+                if (b.path == RutaMover && b.groups == GrupoVR)
+                {
+                    if (apagar)
+                    {
+                        accionMover.ApplyBindingOverride(i, string.Empty);
+                    }
+                    else
+                    {
+                        accionMover.RemoveBindingOverride(i);
+                    }
+                }
+            }
+        }
+
+        // V10/VR18: suave (por defecto), proporcional al stick pasada la zona muerta y hasta VELOCIDAD DE GIRO a fondo, con viñeta mientras
+        // gira; o por pasos de 45° (hay que soltar el stick para el siguiente).
         private void ActualizarGiro(float dt)
         {
             float x = EntradaVR.Eje(EntradaVR.StickDerecho).x;
@@ -418,8 +461,7 @@ namespace MechaCyberpunk.VR
                 float fuerza = Mathf.Abs(x);
                 if (puedeGirar && fuerza > ZonaMuertaGiroSuave)
                 {
-                    float proporcion = Mathf.Clamp01((fuerza - ZonaMuertaGiroSuave) / (1f - ZonaMuertaGiroSuave));
-                    giroRig = Mathf.Repeat(giroRig + Mathf.Sign(x) * proporcion * VelocidadGiroSuave * dt, 360f);
+                    giroRig = Mathf.Repeat(giroRig + Mathf.Sign(x) * ProporcionGiroSuave(fuerza) * VelocidadGiroSuave * dt, 360f);
                     segundosVinetaGiro = Mathf.Max(segundosVinetaGiro, SegundosVinetaGiroSuave);
                 }
                 // Si se cambia a pasos con el stick ladeado, no salta un paso hasta soltarlo.
@@ -436,6 +478,13 @@ namespace MechaCyberpunk.VR
             {
                 giroArmado = true;
             }
+        }
+
+        /// <summary>VR18: qué fracción de la velocidad de giro da el stick (0 dentro de la zona muerta, 1 a fondo, lineal entre medio).</summary>
+        public static float ProporcionGiroSuave(float fuerza)
+        {
+            float f = Mathf.Abs(fuerza);
+            return f <= ZonaMuertaGiroSuave ? 0f : Mathf.Clamp01((f - ZonaMuertaGiroSuave) / (1f - ZonaMuertaGiroSuave));
         }
 
         // V9: la acción Correr del mapa APie siempre tiene, además, el botón de un dispositivo virtual. Con MANTENER, Correr también va
@@ -586,7 +635,8 @@ namespace MechaCyberpunk.VR
 
         /// <summary>
         /// V8: recentrar. Pone los ojos a 1.72 m (como <see cref="Recalibrar"/>) y gira el rig para que la cabeza, tal como está en el
-        /// cuarto, quede mirando al frente del cuerpo del jugador (el giro del ControladorAPie). Lo llama el gesto del stick derecho.
+        /// cuarto, quede mirando al frente del cuerpo del jugador (el giro del ControladorAPie). Lo llama el gesto del stick derecho
+        /// (mantenerlo abajo 1 s, <see cref="CambioArmaStickVR"/>).
         /// </summary>
         public void Recentrar()
         {
@@ -639,7 +689,8 @@ namespace MechaCyberpunk.VR
         private void ActualizarVineta(float dt)
         {
             segundosVinetaGiro = Mathf.Max(0f, segundosVinetaGiro - dt);
-            Vector3 v = capsula != null ? capsula.velocity : Vector3.zero;
+            // VR21: en el carro la cápsula está apagada y puede guardar su última velocidad: la viñeta de manejo la pone ManejoVR.
+            Vector3 v = (Jugador == null || Jugador.Modo == ModoJugador.APie) && capsula != null && capsula.enabled ? capsula.velocity : Vector3.zero;
             v.y = 0f;
             // V10: con VIÑETA: NO no se cierra la vista al moverse ni al girar (el fundido del KO sí sale).
             bool moviendo = OpcionesVR.Vineta && (v.magnitude > VelocidadVineta || segundosVinetaGiro > 0f);
@@ -722,6 +773,10 @@ namespace MechaCyberpunk.VR
             if (vida != null)
             {
                 vida.KO -= AlKO;
+            }
+            if (moverApagado)
+            {
+                ApagarMoverConRueda(false);
             }
             if (Actual == this)
             {

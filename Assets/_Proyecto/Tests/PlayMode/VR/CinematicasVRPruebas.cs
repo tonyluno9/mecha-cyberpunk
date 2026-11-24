@@ -121,7 +121,16 @@ namespace MechaCyberpunk.Tests.VR
             Assert.AreSame(cine.targetTexture, PantallaCineVR.TexturaActual, "La pantalla muestra lo que ve la cámara de la cinemática.");
             float distancia = Vector3.Distance(PantallaCineVR.Centro, cabeza.transform.position);
             Debug.Log("[VR] Pantalla de cine a " + distancia.ToString("0.00") + " m de la cabeza.");
-            Assert.AreEqual(PantallaCineVR.Distancia, distancia, 0.5f, "La pantalla queda a ~4 m frente a la cabeza.");
+            Assert.AreEqual(PantallaCineVR.Distancia, distancia, 0.5f, "La pantalla queda a ~3.5 m frente a la cabeza.");
+            // VR15: la misma pantalla grande curva de Inicio, que llena casi toda la vista (no un recuadro chico).
+            Vector3 izquierda = PantallaCineVR.PuntoEnUV(new Vector2(0f, 0.5f)) - cabeza.transform.position;
+            Vector3 derecha = PantallaCineVR.PuntoEnUV(new Vector2(1f, 0.5f)) - cabeza.transform.position;
+            float grados = Vector3.Angle(new Vector3(izquierda.x, 0f, izquierda.z), new Vector3(derecha.x, 0f, derecha.z));
+            Debug.Log("[VR] Pantalla de cinemática: " + grados.ToString("0.0") + "° de ancho.");
+            Assert.AreEqual(PantallaCineVR.Grados, grados, 3f, "La pantalla de la cinemática mide ~105° de ancho.");
+            Assert.AreEqual(PantallaCineVR.Radio, new Vector2(izquierda.x, izquierda.z).magnitude, 0.5f, "Curva: el borde también a ~3.5 m.");
+            Assert.AreEqual(16f / 9f, PantallaCineVR.AnchoMundo / PantallaCineVR.AltoMundo, 0.05f, "Alto según 16:9.");
+            Assert.IsNull(PantallaCineVR.TexturaEncima, "En la ciudad no hay capa de Inicio encima.");
 
             // La cinemática mueve su cámara (como el asalto o el flashback): la cabeza no se entera.
             for (int i = 0; i < 30; i++)
@@ -197,9 +206,13 @@ namespace MechaCyberpunk.Tests.VR
             yield return Cuadros(2);
             Assert.IsTrue(CamarasCineVR.EstaRedirigida(escena), "La forzada va a la pantalla de cine.");
             Assert.AreSame(escena.targetTexture, PantallaCineVR.TexturaActual);
+            RenderTexture texturaForzada = escena.targetTexture;
             Object.Destroy(escena.gameObject);
             yield return Cuadros(2);
-            Assert.IsFalse(PantallaCineVR.Visible);
+            // VR15: sin jugador puede estar la pantalla grande de Inicio (rig de menús); la cámara forzada ya no está en ella.
+            Assert.IsFalse(PantallaCineVR.Visible && PantallaCineVR.TexturaActual == texturaForzada, "La cámara forzada se quita de la pantalla.");
+            Assert.IsTrue(!PantallaCineVR.Visible || (InicioCineVR.Actual != null && InicioCineVR.Actual.Activa),
+                "Si la pantalla sigue, es la de Inicio (rig de menús), no la de la cinemática.");
         }
 
         // ---------- Videos ----------

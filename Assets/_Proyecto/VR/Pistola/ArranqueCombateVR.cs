@@ -5,7 +5,7 @@ namespace MechaCyberpunk.VR
 {
     /// <summary>
     /// VR2: cuando el rig VR queda armado en el jugador a pie, le agrega la pistola en la mano derecha (<see cref="PistolaVR"/>), las armas especiales
-    /// (<see cref="ArmasEspecialesVR"/>, VR5), el cambio de arma con el stick (<see cref="CambioArmaStickVR"/>, VR5) y los golpes
+    /// (<see cref="ArmasEspecialesVR"/>, VR5), el recentrar con el stick derecho (<see cref="CambioArmaStickVR"/>; desde VR19 ya no cambia de arma) y los golpes
     /// con las manos (<see cref="GolpesManosVR"/>). Sin VR no hace nada (el adaptador no se arma).
     /// </summary>
     public static class ArranqueCombateVR
@@ -39,7 +39,7 @@ namespace MechaCyberpunk.VR
             {
                 jugador.AddComponent<PistolaVR>();
             }
-            // VR5: lanzagranadas y plasma con el gatillo desde el cañón en la mano, la granada con el grip, y el cambio de arma con el stick.
+            // VR5: lanzagranadas y plasma con el gatillo desde el cañón en la mano, la granada con el grip, y recentrar con el stick derecho (VR19).
             if (jugador.GetComponent<PistolaVR>() != null && jugador.GetComponent<ArmasEspecialesAPie>() != null && jugador.GetComponent<ArmasEspecialesVR>() == null)
             {
                 jugador.AddComponent<ArmasEspecialesVR>();

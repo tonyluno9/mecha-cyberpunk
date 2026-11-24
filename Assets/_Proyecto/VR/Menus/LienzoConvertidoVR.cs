@@ -48,9 +48,26 @@ namespace MechaCyberpunk.VR.Menus
             tamanoOriginal = rect.sizeDelta;
         }
 
-        /// <summary>Lo pasa a World Space con el tamaño de la pantalla de referencia (1920 x 1080 px).</summary>
-        public void Convertir()
+        /// <summary>Distancia del Canvas del casco a la cámara del HUD (m): dentro de su near y far.</summary>
+        public const float DistanciaPlanoCasco = 1f;
+
+        /// <summary>
+        /// Lo pasa a World Space con el tamaño de la pantalla de referencia (1920 x 1080 px). VR14: si es del casco, a Screen Space Camera
+        /// sobre <paramref name="camaraCasco"/> (la cámara del HUD de casco, que dibuja a una textura de 1920 x 1080: mismo diseño que en PC).
+        /// </summary>
+        public void Convertir(Camera camaraCasco = null)
         {
+            if (Tipo == TipoLienzoVR.Casco)
+            {
+                if (camaraCasco != null)
+                {
+                    Canvas.renderMode = RenderMode.ScreenSpaceCamera;
+                    Canvas.worldCamera = camaraCasco;
+                    Canvas.planeDistance = DistanciaPlanoCasco;
+                }
+                Refrescar();
+                return;
+            }
             Canvas.renderMode = RenderMode.WorldSpace;
             Canvas.worldCamera = null;
             var rect = (RectTransform)Canvas.transform;
@@ -61,9 +78,19 @@ namespace MechaCyberpunk.VR.Menus
             Refrescar();
         }
 
+        /// <summary>True si sigue como se convirtió (el juego no lo volvió a poner en pantalla).</summary>
+        public bool EstaConvertido(Camera camaraCasco)
+        {
+            if (Tipo == TipoLienzoVR.Casco)
+            {
+                return camaraCasco == null || (Canvas.renderMode == RenderMode.ScreenSpaceCamera && Canvas.worldCamera == camaraCasco);
+            }
+            return Canvas.renderMode == RenderMode.WorldSpace;
+        }
+
         /// <summary>
         /// Vuelve a buscar los Canvas anidados, apaga los GraphicRaycaster nuevos y encoge a 0 los anidados que son HUD de pantalla
-        /// (mira, minimapa, HUD H10...: en VR vida y dinero van en la muñeca).
+        /// (mira del francotirador, barras de enemigos).
         /// </summary>
         public void Refrescar()
         {
@@ -78,14 +105,19 @@ namespace MechaCyberpunk.VR.Menus
                 {
                     continue;
                 }
-                Transform t = anidado.transform;
-                if (!encogidos.ContainsKey(t))
+                Encoger(anidado.transform);
+            }
+            if (Tipo == TipoLienzoVR.Casco)
+            {
+                // VR14: la mira de PC y el aviso "E · interactuar" no van en el casco.
+                Transform raiz = Canvas.transform;
+                for (int i = 0; i < raiz.childCount; i++)
                 {
-                    encogidos[t] = t.localScale;
-                }
-                if (t.localScale != Vector3.zero)
-                {
-                    t.localScale = Vector3.zero;
+                    Transform hijo = raiz.GetChild(i);
+                    if (ReglaLienzosVR.EsGrupoOcultoCasco(hijo.name))
+                    {
+                        Encoger(hijo);
+                    }
                 }
             }
             Canvas.GetComponentsInChildren(true, temporal);
@@ -99,6 +131,18 @@ namespace MechaCyberpunk.VR.Menus
                         apagados.Add(g);
                     }
                 }
+            }
+        }
+
+        private void Encoger(Transform t)
+        {
+            if (!encogidos.ContainsKey(t))
+            {
+                encogidos[t] = t.localScale;
+            }
+            if (t.localScale != Vector3.zero)
+            {
+                t.localScale = Vector3.zero;
             }
         }
 

@@ -13,7 +13,7 @@ namespace MechaCyberpunk.Tests.VR
 {
     /// <summary>
     /// VR4: los Canvas de pantalla pasan a un panel frente a la cabeza, el láser del control derecho con el gatillo pulsa botones,
-    /// el botón Menú del control izquierdo abre y cierra la pausa real, no se sube a carros en VR y el HUD va en la muñeca izquierda.
+    /// el botón Menú del control izquierdo abre y cierra la pausa real, (VR21) sí se sube a carros en VR y (VR14) ya no hay HUD en la muñeca: va en el casco (HudCascoVRPruebas).
     /// </summary>
     public class MenusVRPruebas : BaseJugadorVR
     {
@@ -149,7 +149,7 @@ namespace MechaCyberpunk.Tests.VR
         }
 
         [UnityTest]
-        public IEnumerator IntentarSubirAUnCarro_NoSubeYAvisa()
+        public IEnumerator SubirAUnCarro_SubeYNoLoBaja()
         {
             yield return ArmarVR();
             GameObject carro = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(RutaCarro), new Vector3(0f, 0f, 4f), Quaternion.identity);
@@ -182,27 +182,26 @@ namespace MechaCyberpunk.Tests.VR
             Assert.IsNotNull(interaccion.MontableCandidato, "El carro es el candidato de B.");
             yield return Pulsar(controlDer.secondaryButton);
             yield return Segundos(0.5f);
-            Assert.AreEqual(ModoJugador.APie, jugadorAPie.Modo, "En VR no se maneja.");
-            Assert.IsNull(jugadorAPie.MontableActual);
-            Assert.AreEqual(0, subidas, "Con el parche de InteraccionAPie ni siquiera sube.");
-            Assert.IsTrue(MenusVR.Actual.AvisoVisible, "Sale el aviso.");
-            Assert.AreEqual(MenusVR.TextoNoDisponible, MenusVR.Actual.TextoAviso);
-            yield return Segundos(MenusVR.SegundosAviso + 0.3f);
-            Assert.IsFalse(MenusVR.Actual.AvisoVisible, "El aviso se va solo a los 2 s.");
+            // VR21: en VR ya se maneja: sube, no sale "NO DISPONIBLE EN VR" y MenusVR ya no lo baja.
+            Assert.AreEqual(ModoJugador.Carro, jugadorAPie.Modo, "En VR se maneja: B sube al carro.");
+            Assert.AreSame(montable, jugadorAPie.MontableActual);
+            Assert.AreEqual(1, subidas);
+            Assert.IsFalse(MenusVR.Actual.AvisoVisible && MenusVR.Actual.TextoAviso == MenusVR.TextoNoDisponible, "Ya no sale NO DISPONIBLE EN VR.");
+            yield return Segundos(1f);
+            Assert.AreEqual(ModoJugador.Carro, jugadorAPie.Modo, "Nadie lo baja solo.");
         }
 
         [UnityTest]
-        public IEnumerator HudDeLaMunecaIzquierda_MuestraVidaYDinero()
+        public IEnumerator SinHudEnLaMunecaIzquierda_ElHudVaEnElCasco()
         {
             yield return ArmarVR();
             yield return Segundos(0.5f);
-            HudMunecaVR hud = MenusVR.Actual.Hud;
-            Assert.IsTrue(hud.Existe, "El HUD de la muñeca existe.");
-            Assert.IsTrue(hud.Canvas.transform.IsChildOf(adaptador.ManoIzquierda.transform), "Va colgado del control izquierdo.");
-            Assert.AreEqual(RenderMode.WorldSpace, hud.Canvas.renderMode);
-            StringAssert.Contains(HudMunecaVR.TextoVida, hud.Texto);
-            StringAssert.Contains(HudMunecaVR.TextoDinero, hud.Texto);
-            Debug.Log("[VR] HUD de la muñeca: " + hud.Texto.Replace("\n", " | "));
+            Assert.IsNull(GameObject.Find(HudMunecaVR.NombreCanvas), "VR14: ya no hay HUD en la muñeca.");
+            foreach (Canvas c in adaptador.ManoIzquierda.GetComponentsInChildren<Canvas>(true))
+            {
+                Assert.AreNotEqual(HudMunecaVR.NombreCanvas, c.name, "Nada de la muñeca cuelga del control izquierdo.");
+            }
+            Assert.IsTrue(MenusVR.Actual.Casco.Existe, "El HUD de casco existe.");
         }
     }
 }

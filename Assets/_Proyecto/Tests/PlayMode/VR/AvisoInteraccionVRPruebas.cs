@@ -14,7 +14,7 @@ namespace MechaCyberpunk.Tests.VR
 {
     /// <summary>
     /// V6: en VR el aviso de interactuar sale como un letrero sobre lo que se usa, de cara a la cabeza y con B en lugar de E;
-    /// lejos, o si no se puede usar, no sale. Los carros dicen "NO DISPONIBLE EN VR". La terminal del campo de tiro se usa con B.
+    /// lejos, o si no se puede usar, no sale. Los carros dicen "B · Subir al carro" (VR21). La terminal del campo de tiro se usa con B.
     /// </summary>
     public class AvisoInteraccionVRPruebas : BaseJugadorVR
     {
@@ -112,7 +112,7 @@ namespace MechaCyberpunk.Tests.VR
         }
 
         [UnityTest]
-        public IEnumerator CarroCerca_LetreroDiceNoDisponibleEnVR()
+        public IEnumerator CarroCerca_LetreroDiceBSubirAlCarro()
         {
             yield return ArmarVR();
             AvisoInteraccionVR aviso = Aviso();
@@ -133,7 +133,8 @@ namespace MechaCyberpunk.Tests.VR
             yield return EsperarCandidato(interaccion, () => interaccion.MontableCandidato != null);
             Assert.IsNotNull(interaccion.MontableCandidato, "El carro es el candidato de B.");
             Assert.IsTrue(aviso.Visible);
-            Assert.AreEqual(MenusVR.TextoNoDisponible, aviso.Texto, "En VR los carros no se manejan.");
+            // VR21: en VR ya se maneja: el letrero ofrece subir con B.
+            Assert.AreEqual(MechaCyberpunk.VR.TeclaVR.PrefijoVR + MechaCyberpunk.UI.Hud.ReglaAyudasH10.TextoSubirCarro, aviso.Texto, "En VR los carros se manejan: B sube.");
             Debug.Log("[VR] Letrero del carro en " + aviso.Letrero.position.ToString("F2") + " (subida en " + montable.PuntoSubida.ToString("F2") + ").");
             Assert.Greater(aviso.Letrero.position.y, carro.transform.position.y + 1.2f, "Sobre el techo del carro.");
             AssertDeCaraALaCabeza(aviso.Letrero);

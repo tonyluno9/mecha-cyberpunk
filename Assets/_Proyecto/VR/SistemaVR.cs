@@ -82,6 +82,11 @@ namespace MechaCyberpunk.VR
             }
             Instancia = this;
             RenderPipelineManager.beginContextRendering += AntesDeDibujar;
+            // VR22: pausa si el visor se quita o se desconecta (solo actúa con ModoVR.Activo).
+            if (GetComponent<DesconexionVR>() == null)
+            {
+                gameObject.AddComponent<DesconexionVR>();
+            }
         }
 
         // V12: justo antes de dibujar el cuadro: una cámara que se prendió este cuadro (cinemática, muerte, Doc) no llega al visor ni un cuadro.
