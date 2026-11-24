@@ -356,3 +356,22 @@ Main no traía nada nuevo (`f6e47ad` ya estaba incluido). No se tocaron `Builds\
 12. Sube a 3 carros: ¿ves limpio desde el cristal, sin la carrocería? ¿La moto sigue igual?
 13. Con VE CON EL DOC, ¿ves la línea de ruta de antes en el piso?
 14. Pausa → CONTROLES: ¿las 16 páginas con su imagen y su frase?
+
+## Novena tanda (vr-24nov tarde) · build en `wtVR\Builds\VR9\CyberCity.exe`
+- **Qué quedó** (compila; con el simulador XR pasan las 39 pruebas de las clases tocadas):
+  - **Retícula (T91):** al mantener el gatillo izquierdo sale una retícula grande pegada a la cabeza, con el centro donde pega la bala. Pistola y revólver: cruz. Subfusil: punto rojo. Fusil y escopeta: anillo de mira. Francotirador: visor con bordes negros y zoom. Lanzagranadas: el arco de siempre. Ya no hay mira en el modelo del arma.
+  - **Fundas (T95):** con la mano detrás o encima del hombro derecho y el grip sacas el arma larga: primero el fusil, luego la escopeta y luego las demás. La zona es mucho más grande. Para guardar, lleva la pistola o el revólver a la cadera derecha, o el arma larga a la espalda, y suelta el grip. Suena.
+  - **Manos (T87):** solo la mano con el guante; el antebrazo se encoge en Unity, sin tocar el FBX.
+  - **Ventana del PC (T88):** muestra solo el ojo izquierdo del visor, sin la imagen doble ni el desfase.
+  - **Ruta (T89):** la línea sale del carro o de la moto mientras manejas y vuelve a salir de los pies al bajarte.
+- **Qué no quedó:** todo quedó escrito. La medida de las zonas, el corte de la muñeca y el tamaño de la retícula solo se ajustan con el visor.
+- **Main:** `c4cc567` (merge --no-ff; main no había avanzado).
+
+**Qué probar con el visor:**
+1. Campo de tiro: con cada arma, mantén el gatillo izquierdo. ¿La retícula se ve grande, y la bala pega en su centro? ¿Ya no hay mira en el arma? ¿Al soltar vuelve la vista normal?
+2. Francotirador: ¿se ve el visor negro y funciona el zoom con el stick derecho?
+3. Lleva la mano detrás del hombro y aprieta el grip. ¿Sale el fusil (o la escopeta si no tienes fusil)? Haz 5 veces seguidas sacar y guardar en la espalda.
+4. Pistola: llévala a la cadera derecha y suelta el grip. ¿Se guarda con sonido? Hazlo 5 veces. ¿Se te guarda sola cuando no quieres, con el brazo colgando?
+5. Manos: ¿solo ves el guante, sin antebrazo? ¿El corte de la muñeca se ve limpio?
+6. Con el visor puesto, ¿la ventana del PC muestra lo mismo que ves?
+7. Con un objetivo activo, sube a un carro y a una moto. ¿La línea de ruta sigue y vuelve normal al bajarte?
