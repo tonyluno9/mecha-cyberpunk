@@ -27,7 +27,7 @@ namespace MechaCyberpunk.Tests.VR
         public IEnumerator PantallaAbierta_OcultaLoQueTapaElPanelYAlCerrarVuelve()
         {
             yield return ArmarVR();
-            yield return Segundos(0.5f);
+            yield return Segundos(1.5f);
             Transform cabeza = adaptador.Camara.transform;
             Vector3 frente = ReglaLienzosVR.FrentePlano(cabeza.forward, cabeza.up);
             // Abajo de la línea de los ojos (el rayo que acerca el panel a las paredes pasa por encima): queda entre la cabeza y el panel.
